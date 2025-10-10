@@ -1,0 +1,11 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.58982900000003">
+<testsuite name="Pages\MyProfile\MyProfileImagesTest.spec.ts" timestamp="2025-10-10T03:58:35.415Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.349" errors="0">
+<testcase name="My Profile Tests - Remmi E2E › Test 6: User can edit and delete low resolution and agent face thumbnails" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="37.349">
+<system-out>
+<![CDATA[✅ Verified: Low Resolution and Agent Face thumbnails are visible
+✅ Successfully edited, deleted, and re-uploaded Agent Face thumbnail
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>
