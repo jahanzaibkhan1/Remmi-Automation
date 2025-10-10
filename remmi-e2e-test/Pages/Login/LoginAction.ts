@@ -13,6 +13,7 @@ export class LoginActions {
   /** Navigate to login page */
   async gotoLogin() {
     await this.page.goto('/login');
+    await this.page.waitForLoadState('networkidle')
   }
 
   /** Fill email and password fields */

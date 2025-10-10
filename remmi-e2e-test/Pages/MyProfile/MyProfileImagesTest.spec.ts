@@ -3,6 +3,7 @@ import { MyProfileActions } from './MyProfileActions';
 import { LoginActions } from '../Login/LoginAction';
 import { LoginUsers } from '../../fixture/test-data';
 import path from 'path';
+import fs from 'fs';
 
 const manager = LoginUsers.manager;
 
@@ -45,6 +46,45 @@ async function manageExistingThumbnails() {
   await profile.manageExistingThumbnails(imagePath1, imagePath2);
 }
 
+async function validateImageResolutionWarning() {
+  await profile.navigateToProfilePage();
+  const imagePath = path.resolve(__dirname, 'Images/High.jpg');
+  await profile.validateImageResolutionWarning(imagePath);
+}
+
+async function VerifyInvalidImageFormats(){
+  await profile.navigateToProfilePage();
+  const invalidImagePath = path.resolve(__dirname, 'Images/invalidImage.webp');
+
+  // 🛠 Ensure the "Images" folder exists
+  if (!fs.existsSync(path.dirname(invalidImagePath))) {
+    fs.mkdirSync(path.dirname(invalidImagePath), { recursive: true });
+  }
+
+  // 🧪 Create a dummy invalid file if it doesn't exist
+  if (!fs.existsSync(invalidImagePath)) {
+    fs.writeFileSync(invalidImagePath, 'This is not a valid image file');
+    console.log('⚠️ Created dummy invalid image file at:', invalidImagePath);
+  }
+  // Upload the invalid image
+  await profile.VerifyInvalidImageFormats(invalidImagePath);
+}
+
+async function ChangeProfileImage(){
+  await profile.navigateToProfilePage();
+  const imagePath = path.resolve(__dirname, 'Images/Profile.jpg');
+
+  await profile.ChangeProfileImage(imagePath);
+
+
+}
+
+async function VerifyProfileImagePersistsAfterReload(){
+  await profile.navigateToProfilePage();
+  const imagePath = path.resolve(__dirname, ' Images/Profile.jpg');
+  await profile.VerifyProfileImagePersistsAfterReload(imagePath);
+}
+
 test.describe('My Profile Tests - Remmi E2E', () => {
   test.beforeEach(async ({ page }) => {
     login = new LoginActions(page);
@@ -80,4 +120,18 @@ test.describe('My Profile Tests - Remmi E2E', () => {
   test('Test 6: User can edit and delete low resolution and agent face thumbnails', async () => {
     await manageExistingThumbnails();
   });
+  test('Test 7: User can edit and delete low resolution and agent face thumbnails', async () => {
+    await validateImageResolutionWarning()
+  });
+  test('Test 8: Verify invalid image formats cannot be uploaded', async () => {
+    await VerifyInvalidImageFormats()
+  });
+
+  test('Test 9: Verify system allows changing profile image', async () => {
+    await ChangeProfileImage()
+  });
+
+  // test('Test 1o: Verified profile image persists after reload', async () => {
+  //   await VerifyProfileImagePersistsAfterReload();
+  // });
 });

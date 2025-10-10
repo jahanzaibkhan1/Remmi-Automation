@@ -169,4 +169,7 @@ export class MyProfileLocators {
   defaultProfileCheckbox(): Locator {
     return this.page.locator('div:nth-child(4) > .d-flex.align-items-center.my-2 > .d-flex > .p-element > .p-checkbox > .p-checkbox-box');
   }
+  InvalidImageFormatsError(): Locator{
+    return this.page.getByRole('alert', { name: 'Unsupported file format!' })
+  }
 }
