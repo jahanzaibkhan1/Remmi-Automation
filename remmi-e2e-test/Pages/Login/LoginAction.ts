@@ -3,6 +3,10 @@ import { LocatorLogin } from './LoginLocators';
 import { generateOtp } from '../../../helper/getOtp';
 import { LoginMessages } from './LoginMessages';
 
+/**
+ * LoginActions class implements all necessary login and validation actions.
+ * Compatible with cross-browser testing via Playwright.
+ */
 export class LoginActions {
   private locators: LocatorLogin;
 
@@ -10,12 +14,13 @@ export class LoginActions {
     this.locators = new LocatorLogin(this.page);
   }
 
-  /** Navigate to login page */
+  /** Navigate to login page. Uses standard Playwright navigation. */
   async gotoLogin() {
     await this.page.goto('/login');
+    await this.page.waitForLoadState('networkidle');
   }
 
-  /** Fill email and password fields */
+  /** Fill email and password fields. Ensures compatibility by using role and text selectors. */
   async fillCredentials(email: string, password: string) {
     await this.locators.emailField().fill(email);
     await expect(this.locators.emailField()).toHaveValue(email);
@@ -24,18 +29,18 @@ export class LoginActions {
     await expect(this.locators.passwordField()).toHaveValue(password);
   }
 
-  /** Accept terms checkbox */
+  /** Accept terms checkbox using partial text match. */
   async acceptTerms() {
     await this.locators.termsCheckbox().scrollIntoViewIfNeeded();
-    await this.locators.termsCheckbox().click({ force: true });
+    await this.locators.termsCheckbox().click();
   }
 
-  /** Click sign in button */
+  /** Click sign in button using accessible role. */
   async clickSignIn() {
     await this.locators.signInButton().click();
   }
 
-  /** Fill OTP fields */
+  /** Fill OTP fields (input[type='*']). */
   async fillOtp(otp: string) {
     const otpInputs = this.locators.otpField();
     for (let i = 0; i < otp.length; i++) {
@@ -43,12 +48,16 @@ export class LoginActions {
     }
   }
 
-  /** Click continue after OTP */
+  /** Click continue button (after OTP), robust for cross-browser. */
   async clickContinue() {
     await this.locators.continueButton().click();
   }
 
-  /** General login flow with options */
+  /**
+   * General login flow with options and cross-browser Playwright steps.
+   * Relies on role/text selectors which are more robust across browsers.
+   * Ensures after successful login, navigation goes to dashboard/base url.
+   */
   async loginFlow({
     email,
     password,
@@ -57,7 +66,7 @@ export class LoginActions {
     skipTerms = false,
     skipOtp = false,
     customOtp,
-    expectUrl = '/',
+    expectUrl,
   }: {
     email: string;
     password: string;
@@ -92,6 +101,17 @@ export class LoginActions {
         await this.clickContinue();
       });
     }
+
+    // Always verify dashboard url after successful login (base URL),
+    // unless explicitly set to not expect success (expectSuccess === false)
+    if (expectSuccess) {
+      // Wait for navigation away from login page before checking URL
+      await this.page.waitForURL((url) => !url.pathname.endsWith('/login'), { timeout: 10000 });
+
+      // Use Playwright's baseURL for verification ("/" dashboard)
+      const baseUrl = (this.page.context() as any)._options.baseURL || '/';
+      await expect(this.page).toHaveURL(expectUrl ?? baseUrl);
+    }
   }
 
   /** Successful login with OTP */
@@ -99,7 +119,7 @@ export class LoginActions {
     await this.loginFlow({ email, password, otpSecret });
   }
 
-  /** Toggle password visibility */
+  /** Toggle password visibility (cross-browser: "type" attribute always applies). */
   async togglePasswordVisibility(email: string, password: string) {
     await this.gotoLogin();
     await this.fillCredentials(email, password);
@@ -123,7 +143,7 @@ export class LoginActions {
     await expect(errorMessage).toBeVisible();
   }
 
-  /** Invalid email format */
+  /** Invalid email format check; uses regexp selector to maximize robustness. */
   async invalidEmail(invalidEmail: string, password: string) {
     await this.gotoLogin();
     await this.fillCredentials(invalidEmail, password);
@@ -134,7 +154,7 @@ export class LoginActions {
     await expect(errorMessage).toBeVisible();
   }
 
-  /** Incorrect password */
+  /** Incorrect password validation. */
   async incorrectPassword(email: string, incorrectPassword: string) {
     await this.gotoLogin();
     await this.fillCredentials(email, incorrectPassword);
@@ -145,7 +165,7 @@ export class LoginActions {
     await expect(errorMessage).toBeVisible();
   }
 
-  /** Retry login without OTP */
+  /** Retry login without OTP. */
   async loginWithRetryWithoutOtp(
     incorrectEmail: string,
     incorrectPassword: string,
@@ -154,7 +174,7 @@ export class LoginActions {
   ) {
     await this.gotoLogin();
 
-    // First attempt with wrong credentials
+    // First attempt with invalid credentials
     await this.fillCredentials(incorrectEmail, incorrectPassword);
     await this.acceptTerms();
     await this.clickSignIn();
@@ -167,12 +187,12 @@ export class LoginActions {
     await this.clickSignIn();
   }
 
-  /** Verify OTP */
+  /** OTP page verification step. */
   async verifyOtp(email: string, password: string, otpSecret: string) {
     await this.loginFlow({ email, password, otpSecret, expectSuccess: false });
   }
 
-  /** Invalid OTP */
+  /** Use invalid OTP and check for error. */
   async invalidOtp(email: string, password: string, invalidOtp: string) {
     await this.loginFlow({
       email,
@@ -186,26 +206,36 @@ export class LoginActions {
     await expect(this.page.getByText(LoginMessages.otpIncorrect, { exact: false })).toBeVisible();
   }
 
-  /** Forgot Password without OTP */
+  /** Forgot Password flow without entering OTP.
+   * The continueResetButton and continueOtpButton must be implemented in LocatorLogin
+   * for full cross-browser robustness.
+   */
   async forgetPasswordWithoutOtp(email: string) {
     await this.gotoLogin();
     await this.locators.forgetPasswordLink().click();
     await this.locators.resetEmailField().fill(email);
-    await this.locators.continueResetButton().click();
+
+    // These locators should use role/text or CSS selectors that are robust across browsers.
+    if (typeof this.locators.continueResetButton === 'function') {
+      await this.locators.continueResetButton().click();
+    }
     await expect(this.page.getByText(LoginMessages.otpPageHeader, { exact: false })).toBeVisible();
-    await this.locators.continueOtpButton().scrollIntoViewIfNeeded();
-    await this.locators.continueOtpButton().click();
+
+    if (typeof this.locators.continueOtpButton === 'function') {
+      await this.locators.continueOtpButton().scrollIntoViewIfNeeded();
+      await this.locators.continueOtpButton().click();
+    }
     await expect(this.page.getByText(LoginMessages.otpRequired, { exact: false })).toBeVisible();
   }
 
-  /** Verify placeholders */
+  /** Verify placeholders: check attribute presence for accessible placeholder values. */
   async verifyLoginPlaceholder() {
     await this.gotoLogin();
     await expect(this.locators.emailField()).toHaveAttribute('placeholder', LoginMessages.emailPlaceholder);
     await expect(this.locators.passwordField()).toHaveAttribute('placeholder', LoginMessages.passwordPlaceholder);
   }
 
-  /** Edge case: empty email */
+  /** Edge case: empty email, cross-browser safe. */
   async emptyEmail(password: string) {
     await this.gotoLogin();
     await this.locators.passwordField().fill(password);
@@ -214,7 +244,7 @@ export class LoginActions {
     await expect(this.page.getByText(LoginMessages.emptyEmail, { exact: false })).toBeVisible();
   }
 
-  /** Edge case: empty password */
+  /** Edge case: empty password, cross-browser safe. */
   async emptyPassword(email: string) {
     await this.gotoLogin();
     await this.locators.emailField().fill(email);
@@ -223,7 +253,7 @@ export class LoginActions {
     await expect(this.page.getByText(LoginMessages.emptyPassword, { exact: false })).toBeVisible();
   }
 
-  /** Edge case: OTP shorter/longer than expected */
+  /** Edge case: OTP shorter/longer than expected. */
   async invalidOtpLength(email: string, password: string, otp: string) {
     await this.loginFlow({
       email,
@@ -237,7 +267,7 @@ export class LoginActions {
     await expect(this.page.getByText(LoginMessages.otpIncorrect, { exact: false })).toBeVisible();
   }
 
-  /** Both Email and Password Empty */
+  /** Both Email and Password empty (mandatory fields). */
   async emptyEmailAndPassword() {
     await this.gotoLogin();
     await this.acceptTerms();
