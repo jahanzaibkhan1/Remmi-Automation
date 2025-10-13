@@ -1,0 +1,53 @@
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="70.78776300000027">
+<testsuite name="Pages\MyProfile\MyProfileImagesTest.spec.ts" timestamp="2025-10-13T12:19:44.546Z" hostname="chromium" tests="1" failures="1" skipped="0" time="60.313" errors="0">
+<testcase name="My Profile Tests - Remmi E2E › Test 7: Verify system shows a warning when low resolution image is too small" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="60.313">
+<failure message="MyProfileImagesTest.spec.ts:138:7 Test 7: Verify system shows a warning when low resolution image is too small" type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\MyProfileImagesTest.spec.ts:138:7 › My Profile Tests - Remmi E2E › Test 7: Verify system shows a warning when low resolution image is too small 
+
+    Test timeout of 60000ms exceeded while running "beforeEach" hook.
+
+      102 | }
+      103 | test.describe('My Profile Tests - Remmi E2E', () => {
+    > 104 |   test.beforeEach(async ({ page }) => {
+          |        ^
+      105 |     login = new LoginActions(page);
+      106 |     profile = new MyProfileActions(page);
+      107 |
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileImagesTest.spec.ts:104:8
+
+    Error: page.goto: Test timeout of 60000ms exceeded.
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:19
+
+      17 |   /** Navigate to login page. Uses standard Playwright navigation. */
+      18 |   async gotoLogin() {
+    > 19 |     await this.page.goto('/login');
+         |                     ^
+      20 |     await this.page.waitForLoadState('networkidle');
+      21 |   }
+      22 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:19:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:80:16)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:119:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileImagesTest.spec.ts:112:17
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-MyProfileI-4f837-solution-image-is-too-small-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-MyProfileI-4f837-solution-image-is-too-small-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-MyProfile-MyProfileI-4f837-solution-image-is-too-small-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-MyProfileI-4f837-solution-image-is-too-small-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

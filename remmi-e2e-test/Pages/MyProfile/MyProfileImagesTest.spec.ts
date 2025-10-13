@@ -81,10 +81,25 @@ async function ChangeProfileImage(){
 
 async function VerifyProfileImagePersistsAfterReload(){
   await profile.navigateToProfilePage();
-  const imagePath = path.resolve(__dirname, ' Images/Profile.jpg');
+  const imagePath = path.resolve(__dirname, 'Images/High.jpg');
   await profile.VerifyProfileImagePersistsAfterReload(imagePath);
 }
 
+async function VerifyDefaultPlaceholder(){
+  await profile.navigateToProfilePage();
+  await profile.VerifyDefaultPlaceholder();
+}
+
+async function removeSelectedProfileImage(){
+  await profile.navigateToProfilePage();
+  await profile.removeSelectedProfileImage();
+}
+async function verifyAgentFaceAspectRatio(){
+  await profile.navigateToProfilePage();
+  const imagePath = path.resolve(__dirname, 'Images/High.jpg');
+  await profile.verifyAgentFaceAspectRatio(imagePath);
+
+}
 test.describe('My Profile Tests - Remmi E2E', () => {
   test.beforeEach(async ({ page }) => {
     login = new LoginActions(page);
@@ -120,7 +135,7 @@ test.describe('My Profile Tests - Remmi E2E', () => {
   test('Test 6: User can edit and delete low resolution and agent face thumbnails', async () => {
     await manageExistingThumbnails();
   });
-  test('Test 7: User can edit and delete low resolution and agent face thumbnails', async () => {
+  test('Test 7: Verify system shows a warning when low resolution image is too small', async () => {
     await validateImageResolutionWarning()
   });
   test('Test 8: Verify invalid image formats cannot be uploaded', async () => {
@@ -131,7 +146,17 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     await ChangeProfileImage()
   });
 
-  // test('Test 1o: Verified profile image persists after reload', async () => {
-  //   await VerifyProfileImagePersistsAfterReload();
-  // });
+  test('Test 1o: Verified profile image persists after reload', async () => {
+    await VerifyProfileImagePersistsAfterReload();
+  });
+  test('Test 11: Verify the default placeholder is visible when no image is uploaded', async () => {
+    await VerifyDefaultPlaceholder();
+  });
+  test('Test 12: Verify user can remove the selected profile image', async () => {
+    await removeSelectedProfileImage();
+  });
+  
+  test('Test 13: Verify correct aspect ratio is maintained for uploaded images', async () => {
+    await verifyAgentFaceAspectRatio();
+  });
 });
