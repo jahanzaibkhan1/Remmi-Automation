@@ -1,0 +1,6 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.964862000000004">
+<testsuite name="Pages\MyProfile\MyProfileImagesTest.spec.ts" timestamp="2025-10-14T10:07:10.434Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.444" errors="0">
+<testcase name="My Profile Tests - Remmi E2E › Test 14: Verify system does not allow uploading broken/corrupt image files" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="28.444">
+</testcase>
+</testsuite>
+</testsuites>
