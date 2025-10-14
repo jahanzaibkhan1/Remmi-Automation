@@ -1,0 +1,8 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="1" errors="0" time="48.84633700000122">
+<testsuite name="Pages\MyProfile\SocialSetting.spec.ts" timestamp="2025-10-14T12:34:11.545Z" hostname="chromium" tests="1" failures="0" skipped="1" time="40.189" errors="0">
+<testcase name="Social Settings Tests - Remmi E2E › Test 1: The user can successfully upload social media links and the page updates correctly" classname="Pages\MyProfile\SocialSetting.spec.ts" time="40.189">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

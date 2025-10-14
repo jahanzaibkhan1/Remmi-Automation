@@ -5,7 +5,7 @@ import { Page, Locator } from '@playwright/test';
  * Organized into clear sections for navigation, fields, buttons, PIN, and toast messages.
  */
 export class MyProfileLocators {
-  constructor(private page: Page) {}
+  constructor(private page: Page) { }
 
   // ---------------- Navigation ----------------
   /**
@@ -87,7 +87,7 @@ export class MyProfileLocators {
   pinPopupField(): Locator {
     return this.page.getByPlaceholder('PIN');
   }
- 
+
   // ---------------- Private Library ----------------
   libraryLink(): Locator {
     return this.page.locator("//li[@data-label='Library']");
@@ -126,7 +126,7 @@ export class MyProfileLocators {
   }
 
   // ---------------- Toasts / Messages ----------------
-  
+
   toast(): Locator {
     return this.page.locator('div[role="alert"]');
   }
@@ -160,7 +160,7 @@ export class MyProfileLocators {
   updateImages(): Locator {
     return this.page.locator('button:has-text("Update Images")');
   }
-  AddMoreImagesButton():Locator{
+  AddMoreImagesButton(): Locator {
     return this.page.locator("i[class='pi pi-plus f-12']");
   }
   uploadMoreImageButton(): Locator {
@@ -169,7 +169,47 @@ export class MyProfileLocators {
   defaultProfileCheckbox(): Locator {
     return this.page.locator('div:nth-child(4) > .d-flex.align-items-center.my-2 > .d-flex > .p-element > .p-checkbox > .p-checkbox-box');
   }
-  InvalidImageFormatsError(): Locator{
+  InvalidImageFormatsError(): Locator {
     return this.page.getByRole('alert', { name: 'Unsupported file format!' })
+  }
+  corruptedImageAlert(): Locator {
+    return this.page.locator('div[role="alert"][aria-label="Corrupted image file! Please upload a valid image"]');
+  }
+
+  /*
+   * -----------------------------------------Social Setting Locators------------------------------------*
+  */
+
+  SocialSettingTab(): Locator {
+    return this.page.getByRole('tab', { name: 'Social Setting' })
+  }
+  FaceBookUrl(): Locator {
+    return this.page.locator('input[formcontrolname="facebook"]');
+  }
+
+  XUrl(): Locator {
+    return this.page.locator('input[formcontrolname="twitter"]');
+  }
+
+  InstagramUrl(): Locator {
+    return this.page.locator('input[formcontrolname="instagram"]');
+  }
+
+  LinkedInUrl(): Locator {
+    return this.page.locator('input[formcontrolname="linkedin"]');
+  }
+
+  WebsiteUrl(): Locator {
+    return this.page.locator('input[formcontrolname="website"]');
+  }
+  MarketingEmail(): Locator {
+    return this.page.locator('input[formcontrolname="marketing_email"]');
+  }
+
+  BsoAdminInput(): Locator {
+    return this.page.locator('input[aria-autocomplete="list"]');
+  }
+  BsoAdminOptions(): Locator {
+    return this.page.locator('div.ng-option.ng-star-inserted');
   }
 }

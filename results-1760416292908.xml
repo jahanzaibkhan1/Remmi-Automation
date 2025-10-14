@@ -1,0 +1,55 @@
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="45.989332">
+<testsuite name="Pages\MyProfile\MyProfileImagesTest.spec.ts" timestamp="2025-10-14T04:31:34.163Z" hostname="chromium" tests="1" failures="1" skipped="0" time="39.508" errors="0">
+<testcase name="My Profile Tests - Remmi E2E › Test 12: Verify user can remove the selected profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="39.508">
+<failure message="MyProfileImagesTest.spec.ts:155:7 Test 12: Verify user can remove the selected profile image" type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\MyProfileImagesTest.spec.ts:155:7 › My Profile Tests - Remmi E2E › Test 12: Verify user can remove the selected profile image › Delete only the image currently set as default profile (checked) 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.p-checkbox.p-checkbox-checked').first()
+    Expected: visible
+    Timeout: 7000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 7000ms
+      - waiting for locator('.p-checkbox.p-checkbox-checked').first()
+
+
+       at Pages\MyProfile\MyProfileActions.ts:630
+
+      628 |     // Locate the checked (default) image checkbox
+      629 |     const checkedCheckbox = this.page.locator('.p-checkbox.p-checkbox-checked').first();
+    > 630 |     await expect(checkedCheckbox).toBeVisible({ timeout: 7000 });
+          |                                   ^
+      631 |     await checkedCheckbox.scrollIntoViewIfNeeded();
+      632 |
+      633 |     // Find the parent image card/container of the checkbox (should be the card for the default image)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:630:35
+        at MyProfileActions.removeSelectedProfileImage (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:625:3)
+        at removeSelectedProfileImage (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileImagesTest.spec.ts:95:3)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileImagesTest.spec.ts:156:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-MyProfileI-e0440--the-selected-profile-image-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-MyProfileI-e0440--the-selected-profile-image-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-MyProfileI-e0440--the-selected-profile-image-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-MyProfile-MyProfileI-e0440--the-selected-profile-image-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-MyProfileI-e0440--the-selected-profile-image-chromium\video.webm]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-MyProfileI-e0440--the-selected-profile-image-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

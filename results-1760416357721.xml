@@ -1,0 +1,10 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.072291">
+<testsuite name="Pages\MyProfile\MyProfileImagesTest.spec.ts" timestamp="2025-10-14T04:32:39.039Z" hostname="chromium" tests="1" failures="0" skipped="0" time="26.79" errors="0">
+<testcase name="My Profile Tests - Remmi E2E › Test 12: Verify user can remove the selected profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="26.79">
+<system-out>
+<![CDATA[ℹ️ No default images found to remove. Test will pass as there is nothing to remove.
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>
