@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { MyProfileActions } from './MyProfileActions';
 import { LoginActions } from '../Login/LoginAction';
 import { LoginUsers } from '../../fixture/test-data';
@@ -10,15 +10,31 @@ const manager = LoginUsers.manager;
 let login: LoginActions;
 let profile: MyProfileActions;
 
+const IMAGE_DIR = path.resolve(__dirname, 'Images');
+
+/** Helpers to ensure files/folders for tests */
+function ensureDirExists(dir: string) {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+}
+
+function ensureFileExists(filepath: string, content = 'This is not a valid image file') {
+  if (!fs.existsSync(filepath)) {
+    fs.writeFileSync(filepath, content);
+    console.log('⚠️ Created dummy image file at:', filepath);
+  }
+}
+
 async function uploadProfileImage() {
   await profile.navigateToProfilePage();
-  const imagePath = path.resolve(__dirname, 'Images/High.jpg');
+  const imagePath = path.join(IMAGE_DIR, 'High.jpg');
   await profile.UploadImageProfile(imagePath);
 }
 
 async function uploadMultipleImages() {
   await profile.navigateToProfilePage();
-  const imagePath = path.resolve(__dirname, 'Images/Profile.jpg');
+  const imagePath = path.join(IMAGE_DIR, 'Profile.jpg');
   await profile.uploadMultipleImages(imagePath);
 }
 
@@ -29,77 +45,92 @@ async function setImageAsDefaultProfile() {
 
 async function verifyThumbnailsAfterImageUpload() {
   await profile.navigateToProfilePage();
-  const imagePath = path.resolve(__dirname, 'Images/High.jpg');
+  const imagePath = path.join(IMAGE_DIR, 'High.jpg');
   await profile.verifyThumbnailsAfterImageUpload(imagePath);
 }
 
 async function verifyThumbnailsAreRemoved() {
   await profile.navigateToProfilePage();
-  const imagePath = path.resolve(__dirname, 'Images/High.jpg');
+  const imagePath = path.join(IMAGE_DIR, 'High.jpg');
   await profile.verifyThumbnailsAreRemoved(imagePath);
 }
 
 async function manageExistingThumbnails() {
   await profile.navigateToProfilePage();
-  const imagePath1 = path.resolve(__dirname, 'Images/High.jpg');
-  const imagePath2 = path.resolve(__dirname, 'Images/Profile.jpg');
+  const imagePath1 = path.join(IMAGE_DIR, 'High.jpg');
+  const imagePath2 = path.join(IMAGE_DIR, 'Profile.jpg');
   await profile.manageExistingThumbnails(imagePath1, imagePath2);
 }
 
 async function validateImageResolutionWarning() {
   await profile.navigateToProfilePage();
-  const imagePath = path.resolve(__dirname, 'Images/High.jpg');
+  const imagePath = path.join(IMAGE_DIR, 'High.jpg');
   await profile.validateImageResolutionWarning(imagePath);
 }
 
-async function VerifyInvalidImageFormats(){
+async function verifyInvalidImageFormats() {
   await profile.navigateToProfilePage();
-  const invalidImagePath = path.resolve(__dirname, 'Images/invalidImage.webp');
-
-  // 🛠 Ensure the "Images" folder exists
-  if (!fs.existsSync(path.dirname(invalidImagePath))) {
-    fs.mkdirSync(path.dirname(invalidImagePath), { recursive: true });
-  }
-
-  // 🧪 Create a dummy invalid file if it doesn't exist
-  if (!fs.existsSync(invalidImagePath)) {
-    fs.writeFileSync(invalidImagePath, 'This is not a valid image file');
-    console.log('⚠️ Created dummy invalid image file at:', invalidImagePath);
-  }
-  // Upload the invalid image
+  const invalidImagePath = path.join(IMAGE_DIR, 'invalidImage.webp');
+  ensureDirExists(IMAGE_DIR);
+  ensureFileExists(invalidImagePath);
   await profile.VerifyInvalidImageFormats(invalidImagePath);
 }
 
-async function ChangeProfileImage(){
+async function changeProfileImage() {
   await profile.navigateToProfilePage();
-  const imagePath = path.resolve(__dirname, 'Images/Profile.jpg');
-
+  const imagePath = path.join(IMAGE_DIR, 'Profile.jpg');
   await profile.ChangeProfileImage(imagePath);
-
-
 }
 
-async function VerifyProfileImagePersistsAfterReload(){
+async function verifyProfileImagePersistsAfterReload() {
   await profile.navigateToProfilePage();
-  const imagePath = path.resolve(__dirname, 'Images/High.jpg');
+  const imagePath = path.join(IMAGE_DIR, 'High.jpg');
   await profile.VerifyProfileImagePersistsAfterReload(imagePath);
 }
 
-async function VerifyDefaultPlaceholder(){
+async function verifyDefaultPlaceholder() {
   await profile.navigateToProfilePage();
   await profile.VerifyDefaultPlaceholder();
 }
 
-async function removeSelectedProfileImage(){
+async function removeSelectedProfileImage() {
   await profile.navigateToProfilePage();
   await profile.removeSelectedProfileImage();
 }
-async function verifyAgentFaceAspectRatio(){
-  await profile.navigateToProfilePage();
-  const imagePath = path.resolve(__dirname, 'Images/High.jpg');
-  await profile.verifyAgentFaceAspectRatio(imagePath);
 
+async function verifyAgentFaceAspectRatio() {
+  await profile.navigateToProfilePage();
+  const imagePath = path.join(IMAGE_DIR, 'High.jpg');
+  await profile.verifyAgentFaceAspectRatio(imagePath);
 }
+
+async function uploadBrokenImage() {
+  await profile.navigateToProfilePage();
+  const brokenImagePath = path.join(IMAGE_DIR, 'broken_image.jpg');
+  ensureDirExists(IMAGE_DIR);
+  ensureFileExists(brokenImagePath);
+  await profile.UploadBrokenImage(brokenImagePath);
+}
+
+async function verifyAllowedImageFileFormats() {
+  await profile.navigateToProfilePage();
+  const validPaths = [
+    path.join(IMAGE_DIR, 'Profile.jpg'),
+    path.join(IMAGE_DIR, 'High.png')
+  ];
+  const invalidPaths = [
+    path.join(IMAGE_DIR, 'invalidImage.webp'),
+    path.join(IMAGE_DIR, 'broken_image.jpg')
+  ];
+  await profile.verifyAllowedImageFileFormats(validPaths, invalidPaths);
+}
+
+async function verifyUploadFailureOnNetworkError(){
+  await profile.navigateToProfilePage();
+  const imagePath = path.join(IMAGE_DIR, 'Profile.jpg');
+  await profile.verifyUploadFailureOnNetworkError(imagePath);
+}
+
 test.describe('My Profile Tests - Remmi E2E', () => {
   test.beforeEach(async ({ page }) => {
     login = new LoginActions(page);
@@ -135,28 +166,44 @@ test.describe('My Profile Tests - Remmi E2E', () => {
   test('Test 6: User can edit and delete low resolution and agent face thumbnails', async () => {
     await manageExistingThumbnails();
   });
+
   test('Test 7: Verify system shows a warning when low resolution image is too small', async () => {
-    await validateImageResolutionWarning()
+    await validateImageResolutionWarning();
   });
+
   test('Test 8: Verify invalid image formats cannot be uploaded', async () => {
-    await VerifyInvalidImageFormats()
+    await verifyInvalidImageFormats();
   });
 
   test('Test 9: Verify system allows changing profile image', async () => {
-    await ChangeProfileImage()
+    await changeProfileImage();
   });
 
-  test('Test 1o: Verified profile image persists after reload', async () => {
-    await VerifyProfileImagePersistsAfterReload();
+  test('Test 10: Verified profile image persists after reload', async () => {
+    await verifyProfileImagePersistsAfterReload();
   });
+
   test('Test 11: Verify the default placeholder is visible when no image is uploaded', async () => {
-    await VerifyDefaultPlaceholder();
+    await verifyDefaultPlaceholder();
   });
+
   test('Test 12: Verify user can remove the selected profile image', async () => {
     await removeSelectedProfileImage();
   });
   
   test('Test 13: Verify correct aspect ratio is maintained for uploaded images', async () => {
     await verifyAgentFaceAspectRatio();
+  });
+
+  test('Test 14: Verify system does not allow uploading broken/corrupt image files', async () => {
+    await uploadBrokenImage();
+  });
+
+  test('Test 15: Verify system allows only specific file formats (e.g., JPG, PNG)', async () => {
+    await verifyAllowedImageFileFormats();
+  });
+
+  test('Test 16: Verify proper error message is shown when upload fails', async () => {
+    await verifyUploadFailureOnNetworkError();
   });
 });
