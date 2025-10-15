@@ -26,7 +26,7 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
     await login.login(manager.email!, manager.password!, manager.otpSecret!);
   });
 
-  test('Test 1: The user can successfully select a user from Access tab', async () => {
+  test('Test case 2: The user can successfully select a user from Access tab', async () => {
     await updateAccessTabSettings();
   });
 });
