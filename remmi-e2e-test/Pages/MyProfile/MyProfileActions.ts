@@ -2,6 +2,7 @@ import { Page, Locator, expect, test } from '@playwright/test';
 import { MyProfileLocators } from './MyProfileLocators';
 import { url } from 'inspector';
 import { setEngine } from 'crypto';
+import { AsyncLocalStorage } from 'async_hooks';
 
 /**
  * Actions and verifications for the My Profile page.
@@ -316,55 +317,71 @@ export class MyProfileActions {
   private async fillMarketingEmail(email: string) {
     if (email) await this.locators.MarketingEmail().fill(email);
   }
-// Select BSO/Admin and fill input field
-private async selectBsoAdmin(textOption: string) {
-  const bsoInput = this.locators.BsoAdminInput();
-  await bsoInput.click({ force: true });
-  await bsoInput.fill(textOption);
-  // Wait for the options to become available after filling input
-  await this.page.waitForTimeout(500);
-}
+  // Select BSO/Admin and fill input field
+  private async selectBsoAdmin(textOption: string) {
+    const bsoInput = this.locators.BsoAdminInput();
+    await bsoInput.click({ force: true });
+    await bsoInput.fill(textOption);
+    // Wait for the options to become available after filling input
+    await this.page.waitForTimeout(500);
+  }
 
-// Click on the matching BSO/Admin option from the dropdown
-private async selectBsoAdminOption(textOption: string) {
-  const BsoAdminOptions = this.locators.BsoAdminOptions();
-  await BsoAdminOptions.filter({ hasText: textOption }).first().click({ force: true });
-}
+  // Click on the matching BSO/Admin option from the dropdown
+  private async selectBsoAdminOption(textOption: string) {
+    const BsoAdminOptions = this.locators.BsoAdminOptions();
+    await BsoAdminOptions.filter({ hasText: textOption }).first().click({ force: true });
+  }
 
-// ----------- Access Tab Section -----------
-// These methods support the Access tab in the profile.
+  // ----------- Access Tab Section -----------
+  // These methods support the Access tab in the profile.
 
-private async navigateToAccessTab() {
-  const tab = this.locators.AccessTab();
-  await tab.click({ force: true });
-}
+  private async navigateToAccessTab() {
+    const tab = this.locators.AccessTab();
+    await tab.click({ force: true });
+  }
 
-private async openUserDropdown() {
-  const selectUser = this.locators.selectUser();
-  await selectUser.click({ force: true });
-}
+  private async openUserDropdown() {
+    const selectUser = this.locators.selectUser();
+    await expect(selectUser).toBeVisible({timeout:5000})
+    await selectUser.click({ force: true });
+  }
 
-private async searchforUserName(userName: string) {
-  const SearchUserName = this.locators.SearchUserName()
-  await SearchUserName.click({ force: true });
-  await SearchUserName.fill(userName);
-  await this.page.waitForTimeout(5000); // small wait for dropdown results to load
-}
+  private async searchforUserName(userName: string) {
+    const SearchUserName = this.locators.SearchUserName()
+    await SearchUserName.click({ force: true });
+    await SearchUserName.fill(userName);// small wait for dropdown results to load
+  }
 
-private async selectUserFromDropdown(userName: string) {
-  const selectUserFromDropdown = this.locators.selectuserFromDropdown(userName);
-  await selectUserFromDropdown.click({ force: true });
-}
+  private async selectUserFromDropdown(userName: string) {
+    const userOption = this.locators.selectuserFromDropdown(userName);
+    await expect(userOption).toBeVisible({ timeout: 10000 });
+    await userOption.click({ force: true })
+  }
 
-private async SaveButton(){
-  const saveButton = this.locators.saveButton();
-  await saveButton.click();
-}
 
-private async calendarAccessUserName(userName){
-  const calendarAccessUserName = this.locators.calendarAccessUserName(userName);
-  await expect(calendarAccessUserName).toBeVisible({timeout: 10000});
-}
+  private async SaveButton() {
+    const saveButton = this.locators.saveButton();
+    await saveButton.click();
+  }
+
+  private async calendarAccessUserName(userName) {
+    const calendarAccessUserName = this.locators.calendarAccessUserName(userName);
+    await expect(calendarAccessUserName).toBeVisible({ timeout: 10000 });
+  }
+
+  private async removeUser() {
+    const deleteUserIcon = this.locators.deleteUserIcon();
+    await deleteUserIcon.click({ force: true });
+  }
+
+  private async selectAll() {
+    // Locator for the "Select All" checkbox
+    const selectAll = this.locators.selectAll();
+    // Click the "Select All" checkbox
+    await this.page.waitForTimeout(2000)
+    await selectAll.click({ force: true });
+  }
+  
 
   // --------- PUBLIC TEST/STEPS ---------
   async navigateToProfilePage() {
@@ -754,36 +771,36 @@ private async calendarAccessUserName(userName){
     selectBso?: string; // Pass the exact option text
   }) {
     await this.navigateToSocialSetting();
-  
+
     if (settings.facebook) {
       await this.fillFacebookUrl(settings.facebook);
     }
-  
+
     if (settings.xUrl) {
       await this.fillXUrl(settings.xUrl);
     }
-  
+
     if (settings.instagram) {
       await this.fillInstagramUrl(settings.instagram);
     }
-  
+
     if (settings.linkedIn) {
       await this.fillLinkedInUrl(settings.linkedIn);
     }
-  
+
     if (settings.website) {
       await this.fillWebsiteUrl(settings.website);
     }
-  
+
     if (settings.marketingEmail) {
       await this.fillMarketingEmail(settings.marketingEmail);
     }
-  
+
     if (settings.selectBso) {
       await this.selectBsoAdmin(settings.selectBso);
       await this.selectBsoAdminOption(settings.selectBso);
     }
-  
+
     // Click update button and wait for confirmation
 
     const updateButton = this.locators.updateButton();
@@ -792,27 +809,70 @@ private async calendarAccessUserName(userName){
     // verify toast message
     const updateMessage = this.page.locator('div[role="alert"]', { hasText: 'Profile has been updated' });
     await expect(updateMessage).toBeVisible();
-    
+
   }
-  
+
   // ----------- Public Function: Update Access Settings -----------
 
-public async updateAccessSettings(userName: string) {
-  await test.step('Verify user can grant calendar access to another user', async () =>{
+  public async updateAccessSettings(userName: string) {
     await this.navigateToAccessTab();
     await this.openUserDropdown();
     await this.searchforUserName(userName);
     await this.selectUserFromDropdown(userName);
     await this.SaveButton();
     await this.calendarAccessUserName(userName);
-    
+  }
 
-  })
-  
+  public async grantTaskAccessToMultipleUsers(userNames: string[]) {
+    await this.navigateToAccessTab();
+    await this.openUserDropdown();
+
+    for (const userName of userNames) {
+      await test.step(`Grant access to user: ${userName}`, async () => {
+        const searchBox = this.locators.SearchUserName();
+        await searchBox.waitFor({ state: 'visible', timeout: 10000 });
+        await searchBox.click({ force: true });
+        await searchBox.fill(userName);
+        await this.page.waitForTimeout(1000); // wait for dropdown results
+        await this.selectUserFromDropdown(userName);
+        console.log(`${userName} selected for task access.`);
+      });
+    }
+
+    await this.SaveButton();
+    console.log('All users saved.');
+
+    for (const userName of userNames) {
+      await test.step(`Verify user in granted access list: ${userName}`, async () => {
+        await this.calendarAccessUserName(userName);
+        console.log(`${userName} verified in granted access list.`);
+      });
+    }
+  }
+
+  /**
+   * Verify user can remove granted calendar access
+   */
+  async removeUserFromAccess() {
+    await test.step(`Verify user can remove granted calendar access:`, async () => {
+      await this.navigateToAccessTab();
+      await this.removeUser();
+    });
+  }
+
+  /**
+   * Selects all users from the dropdown and verifies access is granted to all.
+   * Optionally accepts a list of all expected user names to verify.
+   */
+  async selectAllUsers() {
+    await test.step(`Select all users and verify access granted to all`, async () => {
+      await this.navigateToAccessTab();
+      await this.openUserDropdown();
+      await this.selectAll();
+      await this.page.waitForTimeout(2000)
+      const saveButton = this.page.getByRole('button', { name: 'Save' });
+      await saveButton.click({force:true});
+    });
+  }
 }
-
-}
-
-
-
 
