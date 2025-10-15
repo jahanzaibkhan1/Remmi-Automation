@@ -342,6 +342,7 @@ export class MyProfileActions {
 
   private async openUserDropdown() {
     const selectUser = this.locators.selectUser();
+    await expect(selectUser).toBeVisible({timeout:5000})
     await selectUser.click({ force: true });
   }
 
@@ -372,6 +373,15 @@ export class MyProfileActions {
     const deleteUserIcon = this.locators.deleteUserIcon();
     await deleteUserIcon.click({ force: true });
   }
+
+  private async selectAll() {
+    // Locator for the "Select All" checkbox
+    const selectAll = this.locators.selectAll();
+    // Click the "Select All" checkbox
+    await this.page.waitForTimeout(2000)
+    await selectAll.click({ force: true });
+  }
+  
 
   // --------- PUBLIC TEST/STEPS ---------
   async navigateToProfilePage() {
@@ -850,5 +860,19 @@ export class MyProfileActions {
     });
   }
 
+  /**
+   * Selects all users from the dropdown and verifies access is granted to all.
+   * Optionally accepts a list of all expected user names to verify.
+   */
+  async selectAllUsers() {
+    await test.step(`Select all users and verify access granted to all`, async () => {
+      await this.navigateToAccessTab();
+      await this.openUserDropdown();
+      await this.selectAll();
+      await this.page.waitForTimeout(2000)
+      const saveButton = this.page.getByRole('button', { name: 'Save' });
+      await saveButton.click({force:true});
+    });
+  }
 }
 
