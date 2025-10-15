@@ -19,6 +19,11 @@ async function grantTaskAccessToMultipleUsers() {
     await profile.navigateToProfilePage();
     await profile.grantTaskAccessToMultipleUsers(['Hina Agent', 'Hina Tahir']);
   }
+
+  async function removeUserFromAccess(){
+    await profile.navigateToProfilePage();
+    await profile.removeUserFromAccess();
+  }
   
 
 test.describe('Access Tab Tests - Remmi E2E', () => {
@@ -36,8 +41,13 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
   test('Test case 2: The user can successfully select a user from Access tab', async () => {
     await updateAccessTabSettings();
   });
-  test('Test 3: Verify multiple users can be granted calendar access', async () => {
+  test('Test 4: Verify multiple users can be granted calendar access', async () => {
     await grantTaskAccessToMultipleUsers()
+  });
+
+  test('Test 6: Verify multiple users can be granted calendar access', async () => {
+    await removeUserFromAccess()
   });
   
 });
+
