@@ -14,6 +14,13 @@ async function updateAccessTabSettings() {
   await profile.updateAccessSettings('Dawood Ahmad');
 }
 
+// 🔹 Helper function to update Access Tab settings for multiple users
+async function grantTaskAccessToMultipleUsers() {
+    await profile.navigateToProfilePage();
+    await profile.grantTaskAccessToMultipleUsers(['Hina Agent', 'Hina Tahir']);
+  }
+  
+
 test.describe('Access Tab Tests - Remmi E2E', () => {
   test.beforeEach(async ({ page }) => {
     login = new LoginActions(page);
@@ -29,4 +36,8 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
   test('Test case 2: The user can successfully select a user from Access tab', async () => {
     await updateAccessTabSettings();
   });
+  test('Test 3: Verify multiple users can be granted calendar access', async () => {
+    await grantTaskAccessToMultipleUsers()
+  });
+  
 });

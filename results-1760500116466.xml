@@ -1,6 +1,16 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.05220399999991">
-<testsuite name="Pages\MyProfile\profileAccess.spec.ts" timestamp="2025-10-15T06:05:04.794Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.338" errors="0">
-<testcase name="Access Tab Tests - Remmi E2E › Test 1: The user can successfully select a user from Access tab" classname="Pages\MyProfile\profileAccess.spec.ts" time="37.338">
+<testsuites id="" name="" tests="2" failures="0" skipped="0" errors="0" time="63.05271700000018">
+<testsuite name="Pages\MyProfile\profileAccess.spec.ts" timestamp="2025-10-15T10:55:51.681Z" hostname="chromium" tests="2" failures="0" skipped="0" time="56.465" errors="0">
+<testcase name="Access Tab Tests - Remmi E2E › Test case 2: The user can successfully select a user from Access tab" classname="Pages\MyProfile\profileAccess.spec.ts" time="31.606">
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 3: Verify multiple users can be granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="24.859">
+<system-out>
+<![CDATA[Hina Agent selected for task access.
+Hina Tahir selected for task access.
+All users saved.
+Hina Agent verified in granted access list.
+Hina Tahir verified in granted access list.
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>

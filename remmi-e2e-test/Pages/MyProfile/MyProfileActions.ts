@@ -347,14 +347,15 @@ private async openUserDropdown() {
 private async searchforUserName(userName: string) {
   const SearchUserName = this.locators.SearchUserName()
   await SearchUserName.click({ force: true });
-  await SearchUserName.fill(userName);
-  await this.page.waitForTimeout(5000); // small wait for dropdown results to load
+  await SearchUserName.fill(userName);// small wait for dropdown results to load
 }
 
-private async selectUserFromDropdown(userName: string) {
-  const selectUserFromDropdown = this.locators.selectuserFromDropdown(userName);
-  await selectUserFromDropdown.click({ force: true });
+private async selectUserFromDropdown(userName: string){
+  const userOption = this.locators.selectuserFromDropdown(userName);
+  await expect(userOption).toBeVisible({timeout: 10000});
+  await userOption.click({force: true})
 }
+
 
 private async SaveButton(){
   const saveButton = this.locators.saveButton();
@@ -797,22 +798,42 @@ private async calendarAccessUserName(userName){
   
   // ----------- Public Function: Update Access Settings -----------
 
-public async updateAccessSettings(userName: string) {
-  await test.step('Verify user can grant calendar access to another user', async () =>{
+  public async updateAccessSettings(userName: string) {
     await this.navigateToAccessTab();
     await this.openUserDropdown();
     await this.searchforUserName(userName);
     await this.selectUserFromDropdown(userName);
     await this.SaveButton();
     await this.calendarAccessUserName(userName);
-    
+  }
 
-  })
+  public async grantTaskAccessToMultipleUsers(userNames: string[]) {
+    await this.navigateToAccessTab();
+    await this.openUserDropdown();
   
-}
+    for (const userName of userNames) {
+      await test.step(`Grant access to user: ${userName}`, async () => {
+        const searchBox = this.locators.SearchUserName();
+        await searchBox.waitFor({ state: 'visible', timeout: 10000 });
+        await searchBox.click({ force: true });
+        await searchBox.fill(userName);
+        await this.page.waitForTimeout(1000); // wait for dropdown results
+        await this.selectUserFromDropdown(userName);
+        console.log(`${userName} selected for task access.`);
+      });
+    }
+  
+    await this.SaveButton();
+    console.log('All users saved.');
+  
+    for (const userName of userNames) {
+      await test.step(`Verify user in granted access list: ${userName}`, async () => {
+        await this.calendarAccessUserName(userName);
+        console.log(`${userName} verified in granted access list.`);
+      });
+    }
+  }
+  
 
 }
-
-
-
 
