@@ -207,7 +207,7 @@ export class MyProfileLocators {
   }
 
   BsoAdminInput(): Locator {
-    return this.page.locator('input[aria-autocomplete="list"]');
+    return this.page.locator('.ng-select-searchable.ng-select-clearable > .ng-select-container > .ng-value-container > .ng-input > input');
   }
   BsoAdminOptions(): Locator {
     return this.page.locator('div.ng-option.ng-star-inserted');

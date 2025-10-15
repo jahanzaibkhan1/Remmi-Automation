@@ -316,28 +316,22 @@ export class MyProfileActions {
   private async fillMarketingEmail(email: string) {
     if (email) await this.locators.MarketingEmail().fill(email);
   }
+// Select BSO/Admin and fill input field
+private async selectBsoAdmin(textOption: string) {
+  const bsoInput = this.locators.BsoAdminInput();
+  await bsoInput.click({ force: true });
+  await bsoInput.fill(textOption);
+  // Wait for the options to become available after filling input
+  await this.page.waitForTimeout(500);
+}
 
-  // Select BSO/Admin by typing and selecting the option
-  private async selectBsoAdmin(optionText?: string) {
-    // Use the actual input field, not the placeholder div
-    const bsoInput = this.locators.BsoAdminInput();
-    await bsoInput.click({ force: true });
+// Click on the matching BSO/Admin option from the dropdown
+private async selectBsoAdminOption(textOption: string) {
+  const BsoAdminOptions = this.locators.BsoAdminOptions();
+  await BsoAdminOptions.filter({ hasText: textOption }).first().click({ force: true });
+}
 
-    if (optionText) {
-      // Type the option text
-      await bsoInput.fill(optionText);
 
-      // Wait for the option with matching text and click it
-      const option = this.locators.BsoAdminOptions().filter({ hasText: optionText }).first();
-      await option.waitFor({ state: 'visible' });
-      await option.click({ force: true });
-    } else {
-      // Select the first available option if no text provided
-      const firstOption = this.locators.BsoAdminOptions().first();
-      await firstOption.waitFor({ state: 'visible' });
-      await firstOption.click({ force: true });
-    }
-  }
 
   // --------- PUBLIC TEST/STEPS ---------
   async navigateToProfilePage() {
@@ -717,7 +711,6 @@ export class MyProfileActions {
   }
 
 
-
   public async updateSocialSettings(settings: {
     facebook?: string;
     xUrl?: string;
@@ -727,18 +720,48 @@ export class MyProfileActions {
     marketingEmail?: string;
     selectBso?: string; // Pass the exact option text
   }) {
-    await test.step('Update social settings', async () => {
-      await this.navigateToSocialSetting();
-
-      await this.fillFacebookUrl(settings.facebook ?? '');
-      await this.fillXUrl(settings.xUrl ?? '');
-      await this.fillInstagramUrl(settings.instagram ?? '');
-      await this.fillLinkedInUrl(settings.linkedIn ?? '');
-      await this.fillWebsiteUrl(settings.website ?? '');
-      await this.fillMarketingEmail(settings.marketingEmail ?? '');
+    await this.navigateToSocialSetting();
+  
+    if (settings.facebook) {
+      await this.fillFacebookUrl(settings.facebook);
+    }
+  
+    if (settings.xUrl) {
+      await this.fillXUrl(settings.xUrl);
+    }
+  
+    if (settings.instagram) {
+      await this.fillInstagramUrl(settings.instagram);
+    }
+  
+    if (settings.linkedIn) {
+      await this.fillLinkedInUrl(settings.linkedIn);
+    }
+  
+    if (settings.website) {
+      await this.fillWebsiteUrl(settings.website);
+    }
+  
+    if (settings.marketingEmail) {
+      await this.fillMarketingEmail(settings.marketingEmail);
+    }
+  
+    if (settings.selectBso) {
       await this.selectBsoAdmin(settings.selectBso);
-    });
+      await this.selectBsoAdminOption(settings.selectBso);
+    }
+  
+    // Click update button and wait for confirmation
+
+    const updateButton = this.locators.updateButton();
+    await updateButton.click();
+
+    // verify toast message
+    const updateMessage = this.page.locator('div[role="alert"]', { hasText: 'Profile has been updated' });
+    await expect(updateMessage).toBeVisible();
+    
   }
+  
 
 }
 
