@@ -1,0 +1,46 @@
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="62.40566899999976">
+<testsuite name="Pages\MyProfile\SocialSetting.spec.ts" timestamp="2025-10-14T12:35:06.217Z" hostname="chromium" tests="1" failures="1" skipped="0" time="54.343" errors="0">
+<testcase name="Social Settings Tests - Remmi E2E › Test 1: The user can successfully upload social media links and the page updates correctly" classname="Pages\MyProfile\SocialSetting.spec.ts" time="54.343">
+<failure message="SocialSetting.spec.ts:23:7 Test 1: The user can successfully upload social media links and the page updates correctly" type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\SocialSetting.spec.ts:23:7 › Social Settings Tests - Remmi E2E › Test 1: The user can successfully upload social media links and the page updates correctly › Update social settings 
+
+    Error: locator.click: Error: strict mode violation: locator('input[aria-autocomplete="list"]') resolved to 3 elements:
+        1) <input type="text" autocorrect="off" autocapitalize="off" aria-autocomplete="list" autocomplete="a179f6b0d7ec"/> aka locator('ng-select').filter({ hasText: 'Select Office×QA Tester' }).getByRole('textbox')
+        2) <input type="text" autocorrect="off" autocapitalize="off" aria-autocomplete="list" autocomplete="a41adce44cdf"/> aka locator('.ng-select-searchable.ng-select-clearable > .ng-select-container > .ng-value-container > .ng-input > input')
+        3) <input type="text" autocorrect="off" autocapitalize="off" aria-autocomplete="list" autocomplete="a64614c07243"/> aka locator('.w300 > .ng-select-container > .ng-value-container > .ng-input > input')
+
+    Call log:
+      - waiting for locator('input[aria-autocomplete="list"]')
+
+
+       at Pages\MyProfile\MyProfileActions.ts:324
+
+      322 |     // Use the actual input field, not the placeholder div
+      323 |     const bsoInput = this.locators.BsoAdminInput();
+    > 324 |     await bsoInput.click({ force: true });
+          |                    ^
+      325 |
+      326 |     if (optionText) {
+      327 |       // Type the option text
+        at MyProfileActions.selectBsoAdmin (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:324:20)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:739:18
+        at MyProfileActions.updateSocialSettings (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:730:5)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\SocialSetting.spec.ts:25:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-SocialSett-fd050--the-page-updates-correctly-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-SocialSett-fd050--the-page-updates-correctly-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-MyProfile-SocialSett-fd050--the-page-updates-correctly-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-SocialSett-fd050--the-page-updates-correctly-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>
