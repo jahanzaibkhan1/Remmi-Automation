@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.52646600000001">
-<testsuite name="Pages\MyProfile\SocialSetting.spec.ts" timestamp="2025-10-15T04:42:19.619Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.723" errors="0">
-<testcase name="Social Settings Tests - Remmi E2E › Test 1: The user can successfully upload social media links and the page updates correctly" classname="Pages\MyProfile\SocialSetting.spec.ts" time="31.723">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.05220399999991">
+<testsuite name="Pages\MyProfile\profileAccess.spec.ts" timestamp="2025-10-15T06:05:04.794Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.338" errors="0">
+<testcase name="Access Tab Tests - Remmi E2E › Test 1: The user can successfully select a user from Access tab" classname="Pages\MyProfile\profileAccess.spec.ts" time="37.338">
 </testcase>
 </testsuite>
 </testsuites>
