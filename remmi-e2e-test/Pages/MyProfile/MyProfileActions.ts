@@ -805,6 +805,7 @@ public async updateAccessSettings(userName: string) {
     await this.selectUserFromDropdown(userName);
     await this.SaveButton();
     await this.calendarAccessUserName(userName);
+    
 
   })
   
