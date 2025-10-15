@@ -1,18 +1,6 @@
-<testsuites id="" name="" tests="3" failures="0" skipped="0" errors="0" time="117.35471799999848">
-<testsuite name="Pages\MyProfile\profileAccess.spec.ts" timestamp="2025-10-15T11:21:18.921Z" hostname="chromium" tests="3" failures="0" skipped="0" time="110.549" errors="0">
-<testcase name="Access Tab Tests - Remmi E2E › Test case 2: The user can successfully select a user from Access tab" classname="Pages\MyProfile\profileAccess.spec.ts" time="33.604">
-</testcase>
-<testcase name="Access Tab Tests - Remmi E2E › Test 4: Verify multiple users can be granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="49.402">
-<system-out>
-<![CDATA[Hina Agent selected for task access.
-Hina Tahir selected for task access.
-All users saved.
-Hina Agent verified in granted access list.
-Hina Tahir verified in granted access list.
-]]>
-</system-out>
-</testcase>
-<testcase name="Access Tab Tests - Remmi E2E › Test 6: Verify multiple users can be granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="27.543">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.74415599999949">
+<testsuite name="Pages\MyProfile\profileAccess.spec.ts" timestamp="2025-10-15T12:43:56.629Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.939" errors="0">
+<testcase name="Access Tab Tests - Remmi E2E › Test 7: Verify that selecting Select All grants access to all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="33.939">
 </testcase>
 </testsuite>
 </testsuites>

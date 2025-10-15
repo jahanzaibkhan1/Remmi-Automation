@@ -241,6 +241,9 @@ deleteUserIcon(): Locator {
   return this.page.locator('td:nth-child(2) > .d-flex > .cursor-pointer').first()
 }
 
+selectAll(): Locator {
+  return this.page.locator('.checkbox__checkmark').first()
+}
 
 }
 

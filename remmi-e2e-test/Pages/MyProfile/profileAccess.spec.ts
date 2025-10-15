@@ -16,15 +16,20 @@ async function updateAccessTabSettings() {
 
 // 🔹 Helper function to update Access Tab settings for multiple users
 async function grantTaskAccessToMultipleUsers() {
-    await profile.navigateToProfilePage();
-    await profile.grantTaskAccessToMultipleUsers(['Hina Agent', 'Hina Tahir']);
-  }
+  await profile.navigateToProfilePage();
+  await profile.grantTaskAccessToMultipleUsers(['Hina Agent', 'Hina Tahir']);
+}
 
-  async function removeUserFromAccess(){
-    await profile.navigateToProfilePage();
-    await profile.removeUserFromAccess();
-  }
-  
+async function removeUserFromAccess() {
+  await profile.navigateToProfilePage();
+  await profile.removeUserFromAccess();
+}
+
+async function selectAllUsers() {
+  // Navigates to Profile page and selects all users in Access tab.
+  await profile.navigateToProfilePage();
+  await profile.selectAllUsers();
+}
 
 test.describe('Access Tab Tests - Remmi E2E', () => {
   test.beforeEach(async ({ page }) => {
@@ -41,13 +46,16 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
   test('Test case 2: The user can successfully select a user from Access tab', async () => {
     await updateAccessTabSettings();
   });
+
   test('Test 4: Verify multiple users can be granted calendar access', async () => {
-    await grantTaskAccessToMultipleUsers()
+    await grantTaskAccessToMultipleUsers();
   });
 
-  test('Test 6: Verify multiple users can be granted calendar access', async () => {
-    await removeUserFromAccess()
+  test('Test 6: Verify user can remove granted calendar access', async () => {
+    await removeUserFromAccess();
   });
-  
+
+  test('Test 7: Verify that selecting Select All grants access to all users', async () => {
+    await selectAllUsers();
+  });
 });
-
