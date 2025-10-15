@@ -8,6 +8,20 @@ const manager = LoginUsers.manager;
 let login: LoginActions;
 let profile: MyProfileActions;
 
+// 🔹 Helper function to update social media settings
+async function updateSocialMediaSettings() {
+  await profile.navigateToProfilePage();
+  await profile.updateSocialSettings({
+    facebook: 'https://facebook.com/myprofile',
+    xUrl: 'https://x.com/myprofile',
+    instagram: 'https://instagram.com/myprofile',
+    linkedIn: 'https://linkedin.com/in/myprofile',
+    website: 'https://mywebsite.com',
+    marketingEmail: 'marketing@example.com',
+    selectBso: 'Jahanzaib Xenex',
+  });
+}
+
 test.describe('Social Settings Tests - Remmi E2E', () => {
   test.beforeEach(async ({ page }) => {
     login = new LoginActions(page);
@@ -21,16 +35,6 @@ test.describe('Social Settings Tests - Remmi E2E', () => {
   });
 
   test('Test 1: The user can successfully upload social media links and the page updates correctly', async () => {
-    await profile.navigateToProfilePage();
-    await profile.updateSocialSettings({
-      facebook: 'https://facebook.com/myprofile',
-      xUrl: 'https://x.com/myprofile',
-      instagram: 'https://instagram.com/myprofile',
-      linkedIn: 'https://linkedin.com/in/myprofile',
-      website: 'https://mywebsite.com',
-      marketingEmail: 'marketing@example.com',
-      selectBso: 'jahanzaib xenex', 
-    });
-    // Yahan optionally verify karo ke option select hui hai, ya koi confirmation/ toast aaye ho
+    await updateSocialMediaSettings();
   });
 });
