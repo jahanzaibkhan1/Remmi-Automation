@@ -331,7 +331,40 @@ private async selectBsoAdminOption(textOption: string) {
   await BsoAdminOptions.filter({ hasText: textOption }).first().click({ force: true });
 }
 
+// ----------- Access Tab Section -----------
+// These methods support the Access tab in the profile.
 
+private async navigateToAccessTab() {
+  const tab = this.locators.AccessTab();
+  await tab.click({ force: true });
+}
+
+private async openUserDropdown() {
+  const selectUser = this.locators.selectUser();
+  await selectUser.click({ force: true });
+}
+
+private async searchforUserName(userName: string) {
+  const SearchUserName = this.locators.SearchUserName()
+  await SearchUserName.click({ force: true });
+  await SearchUserName.fill(userName);
+  await this.page.waitForTimeout(5000); // small wait for dropdown results to load
+}
+
+private async selectUserFromDropdown(userName: string) {
+  const selectUserFromDropdown = this.locators.selectuserFromDropdown(userName);
+  await selectUserFromDropdown.click({ force: true });
+}
+
+private async SaveButton(){
+  const saveButton = this.locators.saveButton();
+  await saveButton.click();
+}
+
+private async calendarAccessUserName(userName){
+  const calendarAccessUserName = this.locators.calendarAccessUserName(userName);
+  await expect(calendarAccessUserName).toBeVisible({timeout: 10000});
+}
 
   // --------- PUBLIC TEST/STEPS ---------
   async navigateToProfilePage() {
@@ -762,6 +795,20 @@ private async selectBsoAdminOption(textOption: string) {
     
   }
   
+  // ----------- Public Function: Update Access Settings -----------
+
+public async updateAccessSettings(userName: string) {
+  await test.step('Verify user can grant calendar access to another user', async () =>{
+    await this.navigateToAccessTab();
+    await this.openUserDropdown();
+    await this.searchforUserName(userName);
+    await this.selectUserFromDropdown(userName);
+    await this.SaveButton();
+    await this.calendarAccessUserName(userName);
+
+  })
+  
+}
 
 }
 

@@ -212,4 +212,30 @@ export class MyProfileLocators {
   BsoAdminOptions(): Locator {
     return this.page.locator('div.ng-option.ng-star-inserted');
   }
+
+/*
+*---------------------------------------------Profile Access Tab Locators----------------------------------------------*
+*/
+AccessTab(): Locator{
+  return this.page.getByRole('tab', { name: 'Access' });
 }
+selectUser(): Locator{
+  return this.page.locator('div').filter({ hasText: /^Select$/ }).first()
+}
+SearchUserName(): Locator {
+  return this.page.getByRole('textbox', { name: 'Type to search' })
+}
+selectuserFromDropdown(userName: string): Locator {
+  return this.page.locator(`li:has-text("${userName}") div.checkbox__checkmark`);
+}
+
+SaveButton(): Locator{
+  return this.page.getByRole('button', { name: 'Save' });
+}
+
+calendarAccessUserName(userName: string): Locator {
+  return this.page.locator(`tr td:text-is("${userName}")`);
+}
+
+}
+
