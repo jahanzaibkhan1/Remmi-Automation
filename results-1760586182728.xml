@@ -1,0 +1,45 @@
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="69.19370199999959">
+<testsuite name="Pages\MyProfile\profileAccess.spec.ts" timestamp="2025-10-16T09:59:19.726Z" hostname="chromium" tests="1" failures="1" skipped="0" time="60.335" errors="0">
+<testcase name="Access Tab Tests - Remmi E2E › Test 7: Verify that selecting Select All grants access to all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="60.335">
+<failure message="profileAccess.spec.ts:66:7 Test 7: Verify that selecting Select All grants access to all users" type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\profileAccess.spec.ts:66:7 › Access Tab Tests - Remmi E2E › Test 7: Verify that selecting Select All grants access to all users › Select all users and verify access granted to all 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByRole('tab', { name: 'Access' })
+
+
+       at Pages\MyProfile\MyProfileActions.ts:340
+
+      338 |   private async navigateToAccessTab() {
+      339 |     const tab = this.locators.AccessTab();
+    > 340 |     await tab.click({ force: true });
+          |               ^
+      341 |   }
+      342 |
+      343 |   private async openUserDropdown() {
+        at MyProfileActions.navigateToAccessTab (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:340:15)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:884:18
+        at MyProfileActions.selectAllUsers (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:883:16)
+        at selectAllUsers (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\profileAccess.spec.ts:32:17)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\profileAccess.spec.ts:67:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-profileAcc-4ac98--grants-access-to-all-users-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-profileAcc-4ac98--grants-access-to-all-users-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-MyProfile-profileAcc-4ac98--grants-access-to-all-users-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-profileAcc-4ac98--grants-access-to-all-users-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

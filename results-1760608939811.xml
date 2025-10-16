@@ -1,0 +1,42 @@
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="21.771166999999995">
+<testsuite name="Pages\MyProfile\profileAccess.spec.ts" timestamp="2025-10-16T10:03:14.240Z" hostname="chromium" tests="1" failures="1" skipped="0" time="11.578" errors="0">
+<testcase name="Access Tab Tests - Remmi E2E › Test 7: Verify that selecting Select All grants access to all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="11.578">
+<failure message="profileAccess.spec.ts:66:7 Test 7: Verify that selecting Select All grants access to all users" type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\profileAccess.spec.ts:66:7 › Access Tab Tests - Remmi E2E › Test 7: Verify that selecting Select All grants access to all users 
+
+    Error: page.goto: net::ERR_NETWORK_CHANGED at https://portal-staging.remmi.com.au/login
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:19
+
+      17 |   /** Navigate to login page. Uses standard Playwright navigation. */
+      18 |   async gotoLogin() {
+    > 19 |     await this.page.goto('/login');
+         |                     ^
+      20 |     await this.page.waitForLoadState('networkidle');
+      21 |   }
+      22 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:19:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:80:16)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:119:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\profileAccess.spec.ts:51:17
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-profileAcc-4ac98--grants-access-to-all-users-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-profileAcc-4ac98--grants-access-to-all-users-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-MyProfile-profileAcc-4ac98--grants-access-to-all-users-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-profileAcc-4ac98--grants-access-to-all-users-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

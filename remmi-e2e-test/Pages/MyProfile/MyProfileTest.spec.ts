@@ -3,32 +3,24 @@ import { MyProfileActions } from './MyProfileActions';
 import { LoginActions } from '../Login/LoginAction';
 import { LoginUsers } from '../../fixture/test-data';
 
-const manager = LoginUsers.manager;
+const operationManager = LoginUsers.manager;
+const salesAgent = LoginUsers.sales;
+const admin = LoginUsers.admin;
 
 test.describe('My Profile Tests - Remmi E2E', () => {
-  let login: LoginActions;
-  let profile: MyProfileActions;
-
-  // ---------------------------
-  // Runs before each test
-  // ---------------------------
-  test.beforeEach(async ({ page }) => {
-    login = new LoginActions(page);
-    profile = new MyProfileActions(page);
-    // Skip if credentials are missing
-    await page.waitForLoadState('networkidle');
-    if (!manager.email || !manager.password || !manager.otpSecret) {
-      test.skip(true, 'Skipping profile tests: missing environment credentials');
-    }
-
-    // Login to the application
-    await login.login(manager.email!, manager.password!, manager.otpSecret!);
-  });
-
   // ---------------------------
   // TEST 1: Verify profile fields
   // ---------------------------
-  test('1. Profile fields show data & are non-editable', async () => {
+  test('1. Profile fields show data & are non-editable', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    await page.waitForLoadState('networkidle');
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping profile tests: missing environment credentials');
+    }
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+
     // Navigate to My Profile page
     await profile.navigateToProfilePage();
 
@@ -39,7 +31,16 @@ test.describe('My Profile Tests - Remmi E2E', () => {
   // ---------------------------
   // TEST 2: PIN input functionality
   // ---------------------------
-  test('2. PIN field allows input and updates profile', async () => {
+  test('2. PIN field allows input and updates profile', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    await page.waitForLoadState('networkidle');
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping profile tests: missing environment credentials');
+    }
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+
     await profile.navigateToProfilePage();
 
     // Enter a valid PIN and save profile
@@ -49,7 +50,16 @@ test.describe('My Profile Tests - Remmi E2E', () => {
   // ---------------------------
   // TEST 3: Correct PIN allows private download
   // ---------------------------
-  test('3. Correct PIN allows private download', async () => {
+  test('3. Correct PIN allows private download', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    await page.waitForLoadState('networkidle');
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping profile tests: missing environment credentials');
+    }
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+
     await profile.navigateToLibrary();
 
     // Verify downloading with correct PIN succeeds
@@ -59,7 +69,14 @@ test.describe('My Profile Tests - Remmi E2E', () => {
   // ---------------------------
   // Optional: Calendar color update test
   // ---------------------------
-  // test('4. Calendar color selection updates correctly', async () => {
+  // test('4. Calendar color selection updates correctly', async ({ page }) => {
+  //   const login = new LoginActions(page);
+  //   const profile = new MyProfileActions(page);
+  //   await page.waitForLoadState('networkidle');
+  //   if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+  //     test.skip(true, 'Skipping profile tests: missing environment credentials');
+  //   }
+  //   await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
   //   await profile.navigateToProfilePage();
   //   await profile.updateCalendarColor('#FF0000');
   // });
@@ -67,7 +84,16 @@ test.describe('My Profile Tests - Remmi E2E', () => {
   // ---------------------------
   // TEST 5: Non-editable fields remain enforced
   // ---------------------------
-  test('5. Fields remain non-editable if data missing', async () => {
+  test('5. Fields remain non-editable if data missing', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    await page.waitForLoadState('networkidle');
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping profile tests: missing environment credentials');
+    }
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+
     await profile.navigateToProfilePage();
     await profile.verifyAllProfileFields();
   });
@@ -75,7 +101,16 @@ test.describe('My Profile Tests - Remmi E2E', () => {
   // ---------------------------
   // TEST 6: PIN is required for private download
   // ---------------------------
-  test('6. PIN is required for private download', async () => {
+  test('6. PIN is required for private download', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    await page.waitForLoadState('networkidle');
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping profile tests: missing environment credentials');
+    }
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+
     await profile.navigateToLibrary();
 
     // Attempt download without entering a PIN
@@ -85,7 +120,16 @@ test.describe('My Profile Tests - Remmi E2E', () => {
   // ---------------------------
   // TEST 7: Verify PIN enforcement UI
   // ---------------------------
-  test('7. Verify PIN is required for private download', async () => {
+  test('7. Verify PIN is required for private download', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    await page.waitForLoadState('networkidle');
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping profile tests: missing environment credentials');
+    }
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+
     await profile.navigateToLibrary();
 
     // Check that PIN is explicitly required before download
@@ -95,7 +139,16 @@ test.describe('My Profile Tests - Remmi E2E', () => {
   // ---------------------------
   // TEST 8: Incorrect PIN prevents download
   // ---------------------------
-  test('8. Incorrect PIN prevents private download', async () => {
+  test('8. Incorrect PIN prevents private download', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    await page.waitForLoadState('networkidle');
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping profile tests: missing environment credentials');
+    }
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+
     await profile.navigateToLibrary();
 
     // Attempt download with wrong PIN and validate error
@@ -105,7 +158,14 @@ test.describe('My Profile Tests - Remmi E2E', () => {
   // ---------------------------
   // Optional: Invalid calendar color test
   // ---------------------------
-  // test('9. System does not allow invalid calendar color', async () => {
+  // test('9. System does not allow invalid calendar color', async ({ page }) => {
+  //   const login = new LoginActions(page);
+  //   const profile = new MyProfileActions(page);
+  //   await page.waitForLoadState('networkidle');
+  //   if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+  //     test.skip(true, 'Skipping profile tests: missing environment credentials');
+  //   }
+  //   await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
   //   await profile.navigateToProfilePage();
   //   await profile.tryInvalidCalendarColor('INVALID_COLOR');
   // });
