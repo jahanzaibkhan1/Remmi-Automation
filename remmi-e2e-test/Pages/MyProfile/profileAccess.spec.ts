@@ -3,7 +3,9 @@ import { MyProfileActions } from './MyProfileActions';
 import { LoginActions } from '../Login/LoginAction';
 import { LoginUsers } from '../../fixture/test-data';
 
-const manager = LoginUsers.manager;
+const operationManager = LoginUsers.manager;
+const salesAgent = LoginUsers.sales;
+const admin = LoginUsers.admin;
 
 let login: LoginActions;
 let profile: MyProfileActions;
@@ -26,36 +28,78 @@ async function removeUserFromAccess() {
 }
 
 async function selectAllUsers() {
-  // Navigates to Profile page and selects all users in Access tab.
   await profile.navigateToProfilePage();
-  await profile.selectAllUsers();
+  await profile.selectAllUsers([]);
+}
+
+async function DeselectAllUsers() {
+  await profile.navigateToProfilePage();
+  await profile.DeselectAllUsers([]);
 }
 
 test.describe('Access Tab Tests - Remmi E2E', () => {
-  test.beforeEach(async ({ page }) => {
+  test('Test case 2: The user can successfully select a user from Access tab', async ({ page }) => {
     login = new LoginActions(page);
     profile = new MyProfileActions(page);
 
-    if (!manager.email || !manager.password || !manager.otpSecret) {
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
       test.skip(true, 'Skipping login tests: missing environment credentials');
     }
 
-    await login.login(manager.email!, manager.password!, manager.otpSecret!);
-  });
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
 
-  test('Test case 2: The user can successfully select a user from Access tab', async () => {
     await updateAccessTabSettings();
   });
 
-  test('Test 4: Verify multiple users can be granted calendar access', async () => {
+  test('Test 4: Verify multiple users can be granted calendar access', async ({ page }) => {
+    login = new LoginActions(page);
+    profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+
     await grantTaskAccessToMultipleUsers();
   });
 
-  test('Test 6: Verify user can remove granted calendar access', async () => {
+  test('Test 6: Verify user can remove granted calendar access', async ({ page }) => {
+    login = new LoginActions(page);
+    profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+
     await removeUserFromAccess();
   });
 
-  test('Test 7: Verify that selecting Select All grants access to all users', async () => {
+  test('Test 7: Verify that selecting Select All grants access to all users', async ({ page }) => {
+    login = new LoginActions(page);
+    profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+
     await selectAllUsers();
+  });
+
+  test('Test 8: Verify that selecting Deselect All removes access from all users', async ({ page }) => {
+    login = new LoginActions(page);
+    profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+
+    await DeselectAllUsers();
   });
 });

@@ -3,7 +3,9 @@ import { MyProfileActions } from './MyProfileActions';
 import { LoginActions } from '../Login/LoginAction';
 import { LoginUsers } from '../../fixture/test-data';
 
-const manager = LoginUsers.manager;
+const operationManager = LoginUsers.manager;
+const salesAgent = LoginUsers.sales;
+const admin = LoginUsers.admin;
 
 let login: LoginActions;
 let profile: MyProfileActions;
@@ -23,18 +25,15 @@ async function updateSocialMediaSettings() {
 }
 
 test.describe('Social Settings Tests - Remmi E2E', () => {
-  test.beforeEach(async ({ page }) => {
+  test('Test 1: The user can successfully upload social media links and the page updates correctly', async ({ page }) => {
     login = new LoginActions(page);
     profile = new MyProfileActions(page);
 
-    if (!manager.email || !manager.password || !manager.otpSecret) {
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
       test.skip(true, 'Skipping login tests: missing environment credentials');
     }
 
-    await login.login(manager.email!, manager.password!, manager.otpSecret!);
-  });
-
-  test('Test 1: The user can successfully upload social media links and the page updates correctly', async () => {
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
     await updateSocialMediaSettings();
   });
 });

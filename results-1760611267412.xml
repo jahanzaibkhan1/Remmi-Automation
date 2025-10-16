@@ -1,0 +1,219 @@
+<testsuites id="" name="" tests="43" failures="2" skipped="24" errors="0" time="546.3407649999997">
+<testsuite name="Pages\Login\login.spec.ts" timestamp="2025-10-16T12:17:07.990Z" hostname="chromium" tests="14" failures="0" skipped="0" time="274.232" errors="0">
+<testcase name="Login Tests - Remmi E2E › Successful login with OTP" classname="Pages\Login\login.spec.ts" time="21.81">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Verify OTP during login" classname="Pages\Login\login.spec.ts" time="23.015">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Verify login placeholders" classname="Pages\Login\login.spec.ts" time="19.748">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Toggle password visibility" classname="Pages\Login\login.spec.ts" time="25.787">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Login without accepting terms" classname="Pages\Login\login.spec.ts" time="19.105">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Invalid email format" classname="Pages\Login\login.spec.ts" time="19.335">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Incorrect password" classname="Pages\Login\login.spec.ts" time="17.076">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Retry login after failed attempt" classname="Pages\Login\login.spec.ts" time="15">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Login with invalid OTP" classname="Pages\Login\login.spec.ts" time="18.562">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Forgot Password without entering OTP" classname="Pages\Login\login.spec.ts" time="20.557">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Empty email" classname="Pages\Login\login.spec.ts" time="16.528">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Empty password" classname="Pages\Login\login.spec.ts" time="16.319">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Both email and password empty" classname="Pages\Login\login.spec.ts" time="18.789">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › OTP shorter/longer than expected" classname="Pages\Login\login.spec.ts" time="22.601">
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\MyProfileImagesTest.spec.ts" timestamp="2025-10-16T12:17:07.990Z" hostname="chromium" tests="16" failures="2" skipped="11" time="256.492" errors="0">
+<testcase name="My Profile Tests - Remmi E2E › Test 1: User can upload a profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="32.286">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 2: User can open the upload multiple images flow" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="41.273">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 3: Verify selected image is set as the profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="40.748">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 4: Verify thumbnails appear after image upload" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="62.755">
+<failure message="MyProfileImagesTest.spec.ts:61:7 Test 4: Verify thumbnails appear after image upload" type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\MyProfileImagesTest.spec.ts:61:7 › My Profile Tests - Remmi E2E › Test 4: Verify thumbnails appear after image upload 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.goto: Test timeout of 60000ms exceeded.
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:19
+
+      17 |   /** Navigate to login page. Uses standard Playwright navigation. */
+      18 |   async gotoLogin() {
+    > 19 |     await this.page.goto('/login');
+         |                     ^
+      20 |     await this.page.waitForLoadState('networkidle');
+      21 |   }
+      22 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:19:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:80:16)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:119:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileImagesTest.spec.ts:65:17
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-MyProfileI-f34ec-s-appear-after-image-upload-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-MyProfileI-f34ec-s-appear-after-image-upload-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-MyProfile-MyProfileI-f34ec-s-appear-after-image-upload-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-MyProfileI-f34ec-s-appear-after-image-upload-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 5: Verify thumbnails are removed when clicking cross button" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="65.508">
+<failure message="MyProfileImagesTest.spec.ts:72:7 Test 5: Verify thumbnails are removed when clicking cross button" type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\MyProfileImagesTest.spec.ts:72:7 › My Profile Tests - Remmi E2E › Test 5: Verify thumbnails are removed when clicking cross button › Navigate to My Profile page 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Target page, context or browser has been closed
+
+       at Pages\MyProfile\MyProfileActions.ts:27
+
+      25 |     const myProfileBtn = this.locators.myProfileButton();
+      26 |     await expect(myProfileBtn).toBeVisible({ timeout: 20000 });
+    > 27 |     await myProfileBtn.click({ force: true });
+         |                        ^
+      28 |   }
+      29 |
+      30 |   private async verifyField(fieldName: string, getField: () => Locator) {
+        at MyProfileActions.clickMyProfileButton (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:27:24)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:402:7
+        at MyProfileActions.navigateToProfilePage (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:400:5)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileImagesTest.spec.ts:78:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-MyProfileI-2b081--when-clicking-cross-button-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-MyProfileI-2b081--when-clicking-cross-button-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-MyProfile-MyProfileI-2b081--when-clicking-cross-button-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-MyProfileI-2b081--when-clicking-cross-button-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 6: User can edit and delete low resolution and agent face thumbnails" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="13.922">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 7: Verify system shows a warning when low resolution image is too small" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 8: Verify invalid image formats cannot be uploaded" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 9: Verify system allows changing profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 10: Verified profile image persists after reload" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 11: Verify the default placeholder is visible when no image is uploaded" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 12: Verify user can remove the selected profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 13: Verify correct aspect ratio is maintained for uploaded images" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 14: Verify system does not allow uploading broken/corrupt image files" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 15: Verify system allows only specific file formats (e.g., JPG, PNG)" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 16: Verify proper error message is shown when upload fails" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\MyProfileTest.spec.ts" timestamp="2025-10-16T12:17:07.990Z" hostname="chromium" tests="7" failures="0" skipped="7" time="0" errors="0">
+<testcase name="My Profile Tests - Remmi E2E › 1. Profile fields show data &amp; are non-editable" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 2. PIN field allows input and updates profile" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 3. Correct PIN allows private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 5. Fields remain non-editable if data missing" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 6. PIN is required for private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 7. Verify PIN is required for private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 8. Incorrect PIN prevents private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\profileAccess.spec.ts" timestamp="2025-10-16T12:17:07.990Z" hostname="chromium" tests="5" failures="0" skipped="5" time="0" errors="0">
+<testcase name="Access Tab Tests - Remmi E2E › Test case 2: The user can successfully select a user from Access tab" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 4: Verify multiple users can be granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 6: Verify user can remove granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 7: Verify that selecting Select All grants access to all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 8: Verify that selecting Deselect All removes access from all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\SocialSetting.spec.ts" timestamp="2025-10-16T12:17:07.990Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Social Settings Tests - Remmi E2E › Test 1: The user can successfully upload social media links and the page updates correctly" classname="Pages\MyProfile\SocialSetting.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

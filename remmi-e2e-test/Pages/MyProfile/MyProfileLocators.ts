@@ -229,12 +229,16 @@ selectuserFromDropdown(userName: string): Locator {
   return this.page.locator(`li:has-text("${userName}") div.checkbox__checkmark`);
 }
 
-SaveButton(): Locator{
-  return this.page.getByRole('button', { name: 'Save' });
+SaveAccessButton(): Locator{
+  return this.page.locator('button[type="submit"]._primary-btn').first();
 }
 
 calendarAccessUserName(userName: string): Locator {
   return this.page.locator(`tr td:text-is("${userName}")`);
+}
+
+calendarUpdateMessage() {
+  return this.page.getByRole('alert', { name: 'Calendar access updated' });
 }
 
 deleteUserIcon(): Locator {
@@ -243,6 +247,9 @@ deleteUserIcon(): Locator {
 
 selectAll(): Locator {
   return this.page.locator('.checkbox__checkmark').first()
+}
+DeselectAll(): Locator {
+  return this.page.locator('label[data="Deselect All"] .checkbox__checkmark')
 }
 
 }
