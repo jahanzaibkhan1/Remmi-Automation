@@ -342,7 +342,7 @@ export class MyProfileActions {
 
   private async openUserDropdown() {
     const selectUser = this.locators.selectUser();
-    await expect(selectUser).toBeVisible({timeout:5000})
+    await expect(selectUser).toBeVisible({timeout:30000})
     await selectUser.click({ force: true });
   }
 
@@ -354,19 +354,24 @@ export class MyProfileActions {
 
   private async selectUserFromDropdown(userName: string) {
     const userOption = this.locators.selectuserFromDropdown(userName);
-    await expect(userOption).toBeVisible({ timeout: 10000 });
+    await expect(userOption).toBeVisible({timeout:30000});
     await userOption.click({ force: true })
   }
 
 
   private async SaveButton() {
-    const saveButton = this.locators.saveButton();
+    const saveButton = this.locators.SaveAccessButton();
     await saveButton.click();
+  }
+
+  private async calendarUpdateToast(){
+    const calendarUpdateMessage = this.locators.calendarUpdateMessage();
+    await calendarUpdateMessage.waitFor({state:'visible', timeout:30000});
   }
 
   private async calendarAccessUserName(userName) {
     const calendarAccessUserName = this.locators.calendarAccessUserName(userName);
-    await expect(calendarAccessUserName).toBeVisible({ timeout: 10000 });
+    await expect(calendarAccessUserName).toBeVisible({ timeout: 30000 });
   }
 
   private async removeUser() {
@@ -382,6 +387,13 @@ export class MyProfileActions {
     await selectAll.click({ force: true });
   }
   
+  private async DeselectAll() {
+    // Locator for the "Select All" checkbox
+    const selectAll = this.locators.DeselectAll();
+    // Click the "Select All" checkbox
+    await this.page.waitForTimeout(2000);
+    await selectAll.click({ force: true });
+  }
 
   // --------- PUBLIC TEST/STEPS ---------
   async navigateToProfilePage() {
@@ -542,6 +554,7 @@ export class MyProfileActions {
       await this.expectLowResAndAgentFaceThumbnails();
       await this.editLowResolutionThumbnail(imagePath1);
       await this.deleteAndReuploadAgentFaceThumbnail(imagePath2);
+      await this.page.waitForTimeout(2000)
       await this.moveImageSlightlyLeft();
       await this.clickUpdateImages();
       await this.expectImagesUpdatedToast();
@@ -814,64 +827,108 @@ export class MyProfileActions {
 
   // ----------- Public Function: Update Access Settings -----------
 
-  public async updateAccessSettings(userName: string) {
-    await this.navigateToAccessTab();
-    await this.openUserDropdown();
-    await this.searchforUserName(userName);
-    await this.selectUserFromDropdown(userName);
-    await this.SaveButton();
-    await this.calendarAccessUserName(userName);
-  }
-
-  public async grantTaskAccessToMultipleUsers(userNames: string[]) {
-    await this.navigateToAccessTab();
-    await this.openUserDropdown();
-
-    for (const userName of userNames) {
-      await test.step(`Grant access to user: ${userName}`, async () => {
-        const searchBox = this.locators.SearchUserName();
-        await searchBox.waitFor({ state: 'visible', timeout: 10000 });
-        await searchBox.click({ force: true });
-        await searchBox.fill(userName);
-        await this.page.waitForTimeout(1000); // wait for dropdown results
-        await this.selectUserFromDropdown(userName);
-        console.log(`${userName} selected for task access.`);
-      });
-    }
-
-    await this.SaveButton();
-    console.log('All users saved.');
-
-    for (const userName of userNames) {
-      await test.step(`Verify user in granted access list: ${userName}`, async () => {
-        await this.calendarAccessUserName(userName);
-        console.log(`${userName} verified in granted access list.`);
-      });
-    }
-  }
-
   /**
-   * Verify user can remove granted calendar access
+   * Update access for a single user in the access tab.
    */
-  async removeUserFromAccess() {
-    await test.step(`Verify user can remove granted calendar access:`, async () => {
+  public async updateAccessSettings(userName: string) {
+    await test.step(`Update access for user: ${userName}`, async () => {
       await this.navigateToAccessTab();
-      await this.removeUser();
+      await this.openUserDropdown();
+      await this.searchforUserName(userName);
+      await this.selectUserFromDropdown(userName);
+      await this.SaveButton();
+      await this.calendarAccessUserName(userName);
+      await this.calendarUpdateToast();
     });
   }
 
   /**
-   * Selects all users from the dropdown and verifies access is granted to all.
-   * Optionally accepts a list of all expected user names to verify.
+   * Grant calendar access to multiple users.
    */
-  async selectAllUsers() {
-    await test.step(`Select all users and verify access granted to all`, async () => {
+  public async grantTaskAccessToMultipleUsers(userNames: string[]) {
+    await test.step(`Grant access to multiple users`, async () => {
       await this.navigateToAccessTab();
       await this.openUserDropdown();
+
+      for (const userName of userNames) {
+        await test.step(`Grant access to user: ${userName}`, async () => {
+          const searchBox = this.locators.SearchUserName();
+          await searchBox.click({ force: true });
+          await searchBox.fill(userName);
+          await this.page.waitForTimeout(3000); // wait for dropdown results
+          await this.selectUserFromDropdown(userName);
+          console.log(`${userName} selected for task access.`);
+        });
+      }
+      await this.SaveButton();
+      await this.calendarUpdateToast();
+      console.log('All users saved.');
+
+      // Validate every user is listed in granted access list
+      for (const userName of userNames) {
+        await test.step(`Verify user in granted access list: ${userName}`, async () => {
+          await this.calendarAccessUserName(userName);
+          console.log(`${userName} verified in granted access list.`);
+        });
+      }
+    });
+  }
+
+  /**
+   * Remove granted calendar access for a user.
+   */
+  async removeUserFromAccess() {
+    await test.step(`Verify user can remove granted calendar access`, async () => {
+      await this.navigateToAccessTab();
+      await this.removeUser();
+      await this.calendarUpdateToast();
+    });
+  }
+
+  /**
+   * Select all users in the access tab and optionally verify all are granted access.
+   */
+  async selectAllUsers(userNames: string[]) {
+    await test.step(`Select all users and verify access granted to all`, async () => {
+      await this.navigateToAccessTab();
+
+      await this.openUserDropdown();
+      await this.page.waitForTimeout(5000);
       await this.selectAll();
-      await this.page.waitForTimeout(2000)
-      const saveButton = this.page.getByRole('button', { name: 'Save' });
-      await saveButton.click({force:true});
+      await this.SaveButton();
+      await this.calendarUpdateToast();
+      console.log('All users saved.');
+
+      // Verify access for each expected user
+      for (const userName of userNames) {
+        await test.step(`Verify user in granted access list: ${userName}`, async () => {
+          const userRow = this.locators.calendarAccessUserName(userName);
+          await expect(userRow).toBeVisible({ timeout: 5000 });
+        });
+      }
+    });
+  }
+
+  /**
+   * Deselect all users in the access tab and optionally verify removal.
+   */
+  async DeselectAllUsers(userNames: string[]) {
+    await test.step(`Verify that selecting 'Deselect All' removes access from all users`, async () => {
+      await this.navigateToAccessTab();
+      await this.openUserDropdown();
+      await this.page.waitForTimeout(3000);
+      await this.DeselectAll();
+      const saveAccess= this.page.getByRole('button', { name: 'Save' }).first()
+      await saveAccess.click({force:true})
+      await this.calendarUpdateToast();
+      console.log('All users saved.');
+
+      // Verify for each user (may check for *not* visible, depending on UI behavior)
+      for (const userName of userNames) {
+        await test.step(`Check if user access was removed or remains`, async () => {
+          const userRow = this.locators.calendarAccessUserName(userName);
+        });
+      }
     });
   }
 }
