@@ -251,6 +251,21 @@ selectAll(): Locator {
 DeselectAll(): Locator {
   return this.page.locator('label[data="Deselect All"] .checkbox__checkmark')
 }
-
+/**
+ * Locator for the Calendar menu in the side menu
+ */
+CalendarMenu(): Locator {
+  return this.page.locator('li[data-label="Calendar"]');
+}
+// Locator for the Notifications tab
+NotificationsTab(): Locator {
+  return this.page.locator('a#pills-notification-tab');
+}
+webNotificationToggle():Locator{
+  return this.page.locator('.p-inputswitch-slider').first();
+}
+emailNotificationToggle():Locator{
+  return this.page.locator('div:nth-child(2) > .SP-switch > .p-element > .p-inputswitch > .p-inputswitch-slider');
+}
 }
 
