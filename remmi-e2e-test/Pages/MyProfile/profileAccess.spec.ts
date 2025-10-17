@@ -10,13 +10,12 @@ const admin = LoginUsers.admin;
 let login: LoginActions;
 let profile: MyProfileActions;
 
-// 🔹 Helper function to update Access Tab settings
+// 🔹 Helper functions
 async function updateAccessTabSettings() {
   await profile.navigateToProfilePage();
   await profile.updateAccessSettings('Dawood Ahmad');
 }
 
-// 🔹 Helper function to update Access Tab settings for multiple users
 async function grantTaskAccessToMultipleUsers() {
   await profile.navigateToProfilePage();
   await profile.grantTaskAccessToMultipleUsers(['Hina Agent', 'Hina Tahir']);
@@ -29,13 +28,30 @@ async function removeUserFromAccess() {
 
 async function selectAllUsers() {
   await profile.navigateToProfilePage();
-  await profile.selectAllUsers([]);
+  await profile.selectAllUsers();
 }
 
 async function DeselectAllUsers() {
   await profile.navigateToProfilePage();
-  await profile.DeselectAllUsers([]);
+  await profile.DeselectAllUsers();
 }
+
+async function verifyUserInStaffCalendarAccess(userName: string) {
+  await profile.navigateToProfilePage();
+  await profile.verifyUserInStaffCalendarAccess(userName);
+}
+
+async function verifyCalendarAccessFunctional(userName: string) {
+  await profile.navigateToProfilePage();
+  await profile.verifyCalendarAccessFunctional(userName);
+}
+
+async function verifyNoCalendarAccess(userName: string) {
+  await profile.navigateToProfilePage();
+  await profile.verifyNoCalendarAccess(userName);
+}
+
+// ----------- Tests -----------
 
 test.describe('Access Tab Tests - Remmi E2E', () => {
   test('Test case 2: The user can successfully select a user from Access tab', async ({ page }) => {
@@ -102,4 +118,43 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
 
     await DeselectAllUsers();
   });
+
+  // ----------- New Tests -----------
+
+  test('Verify user appears under Staff Calendar Access when granted access', async ({ page }) => {
+    login = new LoginActions(page);
+    profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await verifyUserInStaffCalendarAccess('Dawood Ahmad');
+  });
+
+  test('Verify granted calendar access allows viewing calendar OFIs', async ({ page }) => {
+    login = new LoginActions(page);
+    profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await verifyCalendarAccessFunctional('Dawood Ahmad');
+  });
+
+  test('Verify user cannot see calendar OFIs without granted access', async ({ page }) => {
+    login = new LoginActions(page);
+    profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await verifyNoCalendarAccess('Unauthorized User'); // replace with a real user without access
+  });
+
 });
