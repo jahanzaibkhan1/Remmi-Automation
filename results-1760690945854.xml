@@ -1,0 +1,6 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="54.393107999999074">
+<testsuite name="Pages\MyProfile\Notifications.spec.ts" timestamp="2025-10-17T11:53:55.418Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.026" errors="0">
+<testcase name="Notifications Tab Tests - Remmi E2E › Test case 1: User click ON the button for notification  " classname="Pages\MyProfile\Notifications.spec.ts" time="41.026">
+</testcase>
+</testsuite>
+</testsuites>
