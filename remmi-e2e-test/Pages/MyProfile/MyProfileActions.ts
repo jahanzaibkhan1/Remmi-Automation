@@ -1132,5 +1132,17 @@ export class MyProfileActions {
       await expect(addButton).toBeEnabled();
     })
   }
+  async verifyAddButtonNotEnabledDueToDropdownLag(teamName: string){
+    await test.step('Verify Add button doesn’t enable due to dropdown lag.', async()=>{
+      await this.NavigateToTeamsTab()
+      await this.searchTeamName(teamName);
+      await this.selectTeamFromDropdown(teamName);
+      const addButton = this.page.getByRole('button', { name: ' Add' });
+      await expect(addButton).toBeEnabled();
+      const removeSelectTeam = this.page.locator('.pi.pi-times-circle')
+      await removeSelectTeam.click();
+      await expect(addButton).toBeDisabled();
+    })
+  }
 }
 

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.49785700000078">
-<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-20T10:47:39.138Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.383" errors="0">
-<testcase name="Teams Tab Tests - Remmi E2E › Test case 5: Verify selecting a team enables Add button." classname="Pages\MyProfile\teams.test.spec.ts" time="34.383">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.37720899999887">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-20T10:56:08.483Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.156" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 6Verify Add button doesn’t enable due to dropdown lag." classname="Pages\MyProfile\teams.test.spec.ts" time="28.156">
 </testcase>
 </testsuite>
 </testsuites>

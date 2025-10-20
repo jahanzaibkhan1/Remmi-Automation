@@ -36,6 +36,11 @@ async function verifySelectingTeamEnablesAddButton() {
   await profile.navigateToProfilePage();
   await profile.verifySelectingTeamEnablesAddButton('Hina Team');
 }
+
+async function verifyAddButtonNotEnabledDueToDropdownLag() {
+  await profile.navigateToProfilePage();
+  await profile.verifyAddButtonNotEnabledDueToDropdownLag('Hina Team');
+}
 // ----------- Tests -----------
 
 test.describe('Teams Tab Tests - Remmi E2E', () => {
@@ -102,5 +107,18 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
 
     await verifySelectingTeamEnablesAddButton();
+  });
+
+  test('Test case 6: Verify Add button doesn’t enable due to dropdown lag.', async ({ page }) => {
+    login = new LoginActions(page);
+    profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+
+    await verifyAddButtonNotEnabledDueToDropdownLag();
   });
 });
