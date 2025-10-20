@@ -1174,7 +1174,7 @@ export class MyProfileActions {
   }
 
   async verifyRemovingTagUpdatesList(teamName: string) {
-    await test.step('Verify selected team appears as a tag below the dropdown', async () => {
+    await test.step('Verify removing a tag updates the list', async () => {
       await this.NavigateToTeamsTab();
       await this.searchTeamName(teamName);
       await this.selectTeamFromDropdown(teamName);
@@ -1192,6 +1192,28 @@ export class MyProfileActions {
       console.log(`🟢 Tag for team "${teamName}" is visible below dropdown.`);
     });
   }
-  
+  async verifyUserCanSelectMultipleTeams(teamNames: string[]) {
+    await test.step('Verify user can select multiple teams from dropdown', async () => {
+      await this.NavigateToTeamsTab();
+
+      for (const name of teamNames) {
+        const searchBox = this.locators.SelectTeam(name);
+        await expect(searchBox).toBeVisible();
+        await searchBox.fill(name);
+
+        const option = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: name });
+        await expect(option).toBeVisible({ timeout: 5000 });
+        await option.click();
+      }
+
+      // Verify each selected team appears as a tag
+      for (const name of teamNames) {
+        const tag = this.page.locator('.ng-value-label', { hasText: name });
+        await expect(tag).toBeVisible({ timeout: 5000 });
+        await expect(tag).toHaveCount(1);
+      }
+    });
+  }
+
 }
 

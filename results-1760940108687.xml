@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="58.27580299999937">
-<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-20T12:08:19.058Z" hostname="chromium" tests="1" failures="0" skipped="0" time="50.096" errors="0">
-<testcase name="Teams Tab Tests - Remmi E2E › Test case 8: Verify removing a tag updates the list" classname="Pages\MyProfile\teams.test.spec.ts" time="50.096">
-<system-out>
-<![CDATA[🟢 Tag for team "Team 2" is visible below dropdown.
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.42928200000152">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-20T12:18:48.460Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.442" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 9: Verify user can select multiple teams from dropdown." classname="Pages\MyProfile\teams.test.spec.ts" time="28.442">
 </testcase>
 </testsuite>
 </testsuites>
