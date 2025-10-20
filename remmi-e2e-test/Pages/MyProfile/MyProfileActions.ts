@@ -1107,13 +1107,21 @@ export class MyProfileActions {
   }
 
   async verifyAddButtonDisabledWhenNoTeamSelected() {
-    await test.step('Verify search works for existing team names', async()=>{
+    await test.step('Verify Add button remains disabled when no team is selected.', async()=>{
       await this.NavigateToTeamsTab();
       const addButton = this.page.getByRole('button', { name: ' Add' });
       await expect(addButton).toBeDisabled();
     })
   }
 
+  async verifyAddButtonperformNoAction() {
+    await test.step('Verify clicking disabled Add button performs no action..', async()=>{
+      await this.NavigateToTeamsTab();
+      const addButton = this.page.getByRole('button', { name: ' Add' });
+      await expect(addButton).toBeDisabled();
+      await addButton.click({ force: true });
+    })
+  }
 
 
 }

@@ -27,6 +27,10 @@ async function verifyAddButtonDisabledWhenNoTeamSelected() {
   await profile.verifyAddButtonDisabledWhenNoTeamSelected();
 }
 
+async function verifyAddButtonperformNoAction() {
+  await profile.navigateToProfilePage();
+  await profile.verifyAddButtonperformNoAction();
+}
 // ----------- Tests -----------
 
 test.describe('Teams Tab Tests - Remmi E2E', () => {
@@ -69,4 +73,16 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     await verifyAddButtonDisabledWhenNoTeamSelected();
   });
 
+  test('Test case 4: Verify clicking disabled Add button performs no action.', async ({ page }) => {
+    login = new LoginActions(page);
+    profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+
+    await verifyAddButtonperformNoAction();
+  });
 });
