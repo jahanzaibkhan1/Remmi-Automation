@@ -51,6 +51,12 @@ async function verifyRemovingTagUpdatesList() {
   await profile.navigateToProfilePage();
   await profile.verifyRemovingTagUpdatesList('Team 2');
 }
+
+async function verifyUserCanSelectMultipleTeams() {
+  await profile.navigateToProfilePage();
+  await profile.verifyUserCanSelectMultipleTeams(['Team 4', 'Team dev', 'xenex media']);
+}
+
 // ----------- Tests -----------
 
 test.describe('Teams Tab Tests - Remmi E2E', () => {
@@ -156,5 +162,18 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
 
     await verifyRemovingTagUpdatesList();
   });
+  test('Test case 9: Verify user can select multiple teams from dropdown.', async ({ page }) => {
+    login = new LoginActions(page);
+    profile = new MyProfileActions(page);
+  
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+  
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+  
+    await verifyUserCanSelectMultipleTeams();
+  });
+  
   
 });
