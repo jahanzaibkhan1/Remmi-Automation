@@ -1,0 +1,6 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.35813000000082">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-20T10:06:02.917Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.521" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 1: Verify search works for existing team names" classname="Pages\MyProfile\teams.test.spec.ts" time="39.521">
+</testcase>
+</testsuite>
+</testsuites>
