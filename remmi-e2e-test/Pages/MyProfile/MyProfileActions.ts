@@ -1123,6 +1123,14 @@ export class MyProfileActions {
     })
   }
 
-
+  async verifySelectingTeamEnablesAddButton(teamName: string){
+    await test.step('Verify selecting a team enables Add button.', async()=>{
+      await this.NavigateToTeamsTab()
+      await this.searchTeamName(teamName);
+      await this.selectTeamFromDropdown(teamName);
+      const addButton = this.page.getByRole('button', { name: ' Add' });
+      await expect(addButton).toBeEnabled();
+    })
+  }
 }
 
