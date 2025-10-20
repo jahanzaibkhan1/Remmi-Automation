@@ -275,4 +275,26 @@ export class LoginActions {
     await expect(this.page.getByText(LoginMessages.emptyEmail, { exact: false })).toBeVisible();
     await expect(this.page.getByText(LoginMessages.emptyPassword, { exact: false })).toBeVisible();
   }
+  // Verify "Forgot Password" functionality with wrong (email input)
+
+  // Verify "Forgot Password" functionality without (email input)
+
+  // Verify OTP is sent after "Forgot Password", ab yeah google authenticator say verify kerni hy 
+
+  // Verify session timeout after OTP is sent
+
+  // Verify error on invalid email in "Forgot Password"
+
+  // Verify password visibility toggle on "Forgot Password" new password page
+
+  // Verify new password is accepted after entering valid OTP
+
+  // Verify redirection to login page after setting new password
+
+  // Verify OTP after entering new password in "Forgot Password" flow
+
+  // Verify login functionality after "Forgot Password" with valid OTP
+
+  // Verify validation triggers when "Sign In" button is clicked
+
 }

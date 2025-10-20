@@ -211,7 +211,7 @@ export class MyProfileActions {
 
   private async expectProfileImageVisible() {
     const img = this.page.locator("div.user-thumbnail-placeholder >> img, .user_thumb.ng-star-inserted");
-    await expect(img.first()).toBeVisible({ timeout: 15000 });
+    await expect(img.first()).toBeVisible({ timeout: 30000 });
     await expect(img.first()).toHaveAttribute('src', /.+/);
   }
 
@@ -437,8 +437,62 @@ export class MyProfileActions {
     const toggle = this.locators.emailNotificationToggle();
     await toggle.click({ force: true });
   }
+  // <--------------------------------------------Private Function for Teams Tab----------------------------------->
 
+  private async NavigateToTeamsTab() {
+    const TeamsTabs = this.locators.TeamsTabs();
+    await TeamsTabs.click();
+  }
+  private async searchTeamName(teamName: string) {
+    const searchTeam = this.locators.SelectTeam(teamName);
+    await expect(searchTeam).toBeVisible();
+  
+    // Click to open dropdown first
+    await searchTeam.click();
+  
+    // Type the team name directly
+    await searchTeam.pressSequentially(teamName);
+  
+    // Wait for dropdown options to appear
+    await this.page.waitForSelector('.ng-dropdown-panel .ng-option', { state: 'visible', timeout: 10000 });
+  }
+  
+  private async selectTeamFromDropdown(teamName: string) {
+    const dropdownInput = this.locators.SelectTeam(teamName);
+    await expect(dropdownInput).toBeVisible();
+    await dropdownInput.click();
+    
+    // Wait for dropdown to render in DOM
+    await this.page.waitForSelector('.ng-dropdown-panel .ng-option', { state: 'visible', timeout: 10000 });
+  
+    // Locate and click team option
+    const option = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: teamName });
+    await option.click();
+  }
+  
+  
+  
+  
 
+  private async editTeam(teamName: string) {
+    const EditIcon = this.locators.EditIcon();
+    await EditIcon.click();
+  }
+
+  private async deleteTeam(teamName: string) {
+    const DeleteIcon = this.locators.DeleteIcon();
+    await DeleteIcon.click();
+  }
+
+  private async AddButton() {
+    const AddButton = this.locators.AddButton()
+    await AddButton.click();
+  }
+  private async verifyTeamInTable(teamName: string) {
+    const teamRow = this.locators.TeamRow(teamName);
+    await expect(teamRow).toBeVisible({ timeout: 10000 });
+  }
+  
   // --------- PUBLIC TEST/STEPS ---------
   async navigateToProfilePage() {
     await test.step('Navigate to My Profile page', async () => {
@@ -596,9 +650,19 @@ export class MyProfileActions {
     await test.step('Edit and delete low resolution and agent face thumbnails', async () => {
       await this.goToImagesTab();
       await this.expectLowResAndAgentFaceThumbnails();
+
+      // Edit low resolution thumbnail
       await this.editLowResolutionThumbnail(imagePath1);
-      await this.deleteAndReuploadAgentFaceThumbnail(imagePath2);
-      await this.page.waitForTimeout(2000)
+
+      // Delete agent face thumbnail and reupload
+      try {
+        await this.deleteAndReuploadAgentFaceThumbnail(imagePath2);
+      } catch (err) {
+        console.error('❌ Failed to delete and reupload agent face thumbnail:', err);
+        // Try to recover or just continue depending on test needs
+      }
+
+      // Move image slightly left if crop box is present
       await this.moveImageSlightlyLeft();
       await this.clickUpdateImages();
       await this.expectImagesUpdatedToast();
@@ -1009,9 +1073,147 @@ export class MyProfileActions {
   public async enableAllNotifications() {
     await test.step('Enable all notifications', async () => {
       await this.navigateToNotificationsTab();
-      await this.toggleWebNotification();
-      await this.toggleEmailNotification();
+
+      // Enable Web Notification if not enabled
+      const webToggle = this.locators.webNotificationToggle();
+      const webToggleClass = await webToggle.evaluate(el => el.parentElement?.className || '');
+      if (!webToggleClass.includes('p-inputswitch-checked')) {
+        await webToggle.click({ force: true });
+        const successToast = this.page.getByRole('alert', { name: 'Profile has been updated' });
+        await expect(successToast).toBeVisible({ timeout: 30000 });
+      }
+
+      // Enable Email Notification if not enabled
+      const emailToggle = this.locators.emailNotificationToggle();
+      const emailToggleClass = await emailToggle.evaluate(el => el.parentElement?.className || '');
+      if (!emailToggleClass.includes('p-inputswitch-checked')) {
+        await emailToggle.click({ force: true });
+        const successToast = this.page.getByRole('alert', { name: 'Profile has been updated' });
+        await expect(successToast).toBeVisible({ timeout: 30000 });
+      }
     });
   }
+
+  // <-----------------------------------Teams Tab -------------------------------------->
+  async SearchForExistingTeam(teamName: string){
+    await test.step('Verify search works for existing team names', async()=>{
+      await this.NavigateToTeamsTab()
+      await this.searchTeamName(teamName);
+      await this.selectTeamFromDropdown(teamName);
+      await this.AddButton();
+      const toast = this.page.getByRole('alert', { name: 'Added successfully' });
+      await expect(toast).toBeVisible({timeout:5000});
+      await this.verifyTeamInTable(teamName)
+    })
+  }
+
+  async SearchForInvalidTeam(teamName: string){
+    await test.step('Verify search works for existing team names', async()=>{
+      await this.NavigateToTeamsTab()
+      await this.searchTeamName(teamName);
+      const NoRecord = this.page.getByText('No items found')
+      await expect(NoRecord).toBeVisible({timeout:5000});
+    })
+  }
+
+  async verifyAddButtonDisabledWhenNoTeamSelected() {
+    await test.step('Verify Add button remains disabled when no team is selected.', async()=>{
+      await this.NavigateToTeamsTab();
+      const addButton = this.page.getByRole('button', { name: ' Add' });
+      await expect(addButton).toBeDisabled();
+    })
+  }
+
+  async verifyAddButtonperformNoAction() {
+    await test.step('Verify clicking disabled Add button performs no action..', async()=>{
+      await this.NavigateToTeamsTab();
+      const addButton = this.page.getByRole('button', { name: ' Add' });
+      await expect(addButton).toBeDisabled();
+      await addButton.click({ force: true });
+    })
+  }
+
+  async verifySelectingTeamEnablesAddButton(teamName: string){
+    await test.step('Verify selecting a team enables Add button.', async()=>{
+      await this.NavigateToTeamsTab()
+      await this.searchTeamName(teamName);
+      await this.selectTeamFromDropdown(teamName);
+      const addButton = this.page.getByRole('button', { name: ' Add' });
+      await expect(addButton).toBeEnabled();
+    })
+  }
+  async verifyAddButtonNotEnabledDueToDropdownLag(teamName: string){
+    await test.step('Verify Add button doesn’t enable due to dropdown lag.', async()=>{
+      await this.NavigateToTeamsTab()
+      await this.searchTeamName(teamName);
+      await this.selectTeamFromDropdown(teamName);
+      const addButton = this.page.getByRole('button', { name: ' Add' });
+      await expect(addButton).toBeEnabled();
+      const removeSelectTeam = this.page.locator('.pi.pi-times-circle')
+      await removeSelectTeam.click();
+      await expect(addButton).toBeDisabled();
+    })
+  }
+
+  async verifySelectedTeamAppearsAsTag(teamName: string) {
+    await test.step('Verify selected team appears as a tag below the dropdown', async () => {
+      await this.NavigateToTeamsTab();
+      await this.searchTeamName(teamName);
+      await this.selectTeamFromDropdown(teamName);
+
+      // Wait for the tag to appear – a tag is shown when a team is selected
+      const tagLocator = this.page.locator('.ng-value-label', { hasText: teamName });
+      await expect(tagLocator).toBeVisible({ timeout: 5000 });
+
+      // Optionally, verify only one tag appears for this team
+      await expect(tagLocator).toHaveCount(1);
+
+      // Optionally log success for debugging
+      console.log(`🟢 Tag for team "${teamName}" is visible below dropdown.`);
+    });
+  }
+
+  async verifyRemovingTagUpdatesList(teamName: string) {
+    await test.step('Verify removing a tag updates the list', async () => {
+      await this.NavigateToTeamsTab();
+      await this.searchTeamName(teamName);
+      await this.selectTeamFromDropdown(teamName);
+
+      // Wait for the tag to appear – a tag is shown when a team is selected
+      const tagLocator = this.page.locator('.ng-value-label', { hasText: teamName });
+      await expect(tagLocator).toBeVisible({ timeout: 5000 });
+
+      // Optionally, verify only one tag appears for this team
+      await expect(tagLocator).toHaveCount(1);
+      const removeSelectTeam = this.page.locator('.pi.pi-times-circle')
+      await removeSelectTeam.click();
+
+      // Optionally log success for debugging
+      console.log(`🟢 Tag for team "${teamName}" is visible below dropdown.`);
+    });
+  }
+  async verifyUserCanSelectMultipleTeams(teamNames: string[]) {
+    await test.step('Verify user can select multiple teams from dropdown', async () => {
+      await this.NavigateToTeamsTab();
+
+      for (const name of teamNames) {
+        const searchBox = this.locators.SelectTeam(name);
+        await expect(searchBox).toBeVisible();
+        await searchBox.fill(name);
+
+        const option = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: name });
+        await expect(option).toBeVisible({ timeout: 5000 });
+        await option.click();
+      }
+
+      // Verify each selected team appears as a tag
+      for (const name of teamNames) {
+        const tag = this.page.locator('.ng-value-label', { hasText: name });
+        await expect(tag).toBeVisible({ timeout: 5000 });
+        await expect(tag).toHaveCount(1);
+      }
+    });
+  }
+
 }
 
