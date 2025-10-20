@@ -46,6 +46,11 @@ async function verifySelectedTeamAppearsAsTag() {
   await profile.navigateToProfilePage();
   await profile.verifySelectedTeamAppearsAsTag('Team 1');
 }
+
+async function verifyRemovingTagUpdatesList() {
+  await profile.navigateToProfilePage();
+  await profile.verifyRemovingTagUpdatesList('Team 2');
+}
 // ----------- Tests -----------
 
 test.describe('Teams Tab Tests - Remmi E2E', () => {
@@ -139,4 +144,17 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
 
     await verifySelectedTeamAppearsAsTag();
   });
+  test('Test case 8: Verify removing a tag updates the list', async ({ page }) => {
+    login = new LoginActions(page);
+    profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+
+    await verifyRemovingTagUpdatesList();
+  });
+  
 });
