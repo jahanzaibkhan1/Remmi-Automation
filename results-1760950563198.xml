@@ -1,0 +1,419 @@
+<testsuites id="" name="" tests="44" failures="3" skipped="35" errors="0" time="288.44679599999995">
+<testsuite name="Pages\Login\login.spec.ts" timestamp="2025-10-20T08:56:03.377Z" hostname="chromium" tests="14" failures="3" skipped="5" time="532.989" errors="0">
+<testcase name="Login Tests - Remmi E2E › Successful login with OTP" classname="Pages\Login\login.spec.ts" time="34.602">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Verify OTP during login" classname="Pages\Login\login.spec.ts" time="35.472">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Verify login placeholders" classname="Pages\Login\login.spec.ts" time="35.93">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Toggle password visibility" classname="Pages\Login\login.spec.ts" time="36.207">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Login without accepting terms" classname="Pages\Login\login.spec.ts" time="188.935">
+<failure message="login.spec.ts:35:7 Login without accepting terms" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Login\login.spec.ts:35:7 › Login Tests - Remmi E2E › Login without accepting terms 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.fill: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByRole('textbox', { name: /email/i })
+
+
+       at Pages\Login\LoginAction.ts:25
+
+      23 |   /** Fill email and password fields. Ensures compatibility by using role and text selectors. */
+      24 |   async fillCredentials(email: string, password: string) {
+    > 25 |     await this.locators.emailField().fill(email);
+         |                                      ^
+      26 |     await expect(this.locators.emailField()).toHaveValue(email);
+      27 |
+      28 |     await this.locators.passwordField().fill(password);
+        at LoginActions.fillCredentials (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:25:38)
+        at LoginActions.withoutCheckbox (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:139:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\login.spec.ts:37:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.goto: Test timeout of 60000ms exceeded.
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:19
+
+      17 |   /** Navigate to login page. Uses standard Playwright navigation. */
+      18 |   async gotoLogin() {
+    > 19 |     await this.page.goto('/login');
+         |                     ^
+      20 |     await this.page.waitForLoadState('networkidle');
+      21 |   }
+      22 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:19:21)
+        at LoginActions.withoutCheckbox (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:138:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\login.spec.ts:37:17
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.goto: Test timeout of 60000ms exceeded.
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:19
+
+      17 |   /** Navigate to login page. Uses standard Playwright navigation. */
+      18 |   async gotoLogin() {
+    > 19 |     await this.page.goto('/login');
+         |                     ^
+      20 |     await this.page.waitForLoadState('networkidle');
+      21 |   }
+      22 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:19:21)
+        at LoginActions.withoutCheckbox (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:138:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\login.spec.ts:37:17
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium-retry2\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium-retry2\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium-retry2\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium\video.webm]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium\error-context.md]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium-retry1\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium-retry1\video.webm]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium-retry1\error-context.md]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium-retry1\trace.zip]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium-retry2\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium-retry2\video.webm]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium-retry2\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Invalid email format" classname="Pages\Login\login.spec.ts" time="40.713">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Incorrect password" classname="Pages\Login\login.spec.ts" time="32.628">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Retry login after failed attempt" classname="Pages\Login\login.spec.ts" time="125.199">
+<failure message="login.spec.ts:53:7 Retry login after failed attempt" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Login\login.spec.ts:53:7 › Login Tests - Remmi E2E › Retry login after failed attempt 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.goto: Test timeout of 60000ms exceeded.
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:19
+
+      17 |   /** Navigate to login page. Uses standard Playwright navigation. */
+      18 |   async gotoLogin() {
+    > 19 |     await this.page.goto('/login');
+         |                     ^
+      20 |     await this.page.waitForLoadState('networkidle');
+      21 |   }
+      22 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:19:21)
+        at LoginActions.loginWithRetryWithoutOtp (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:175:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\login.spec.ts:55:17
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-bfc68--login-after-failed-attempt-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-bfc68--login-after-failed-attempt-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Login-login-Login-Te-bfc68--login-after-failed-attempt-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.waitForLoadState: Test timeout of 60000ms exceeded.
+
+       at Pages\Login\LoginAction.ts:20
+
+      18 |   async gotoLogin() {
+      19 |     await this.page.goto('/login');
+    > 20 |     await this.page.waitForLoadState('networkidle');
+         |                     ^
+      21 |   }
+      22 |
+      23 |   /** Fill email and password fields. Ensures compatibility by using role and text selectors. */
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:20:21)
+        at LoginActions.loginWithRetryWithoutOtp (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:175:5)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\login.spec.ts:55:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-bfc68--login-after-failed-attempt-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-bfc68--login-after-failed-attempt-chromium-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Login-login-Login-Te-bfc68--login-after-failed-attempt-chromium-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-bfc68--login-after-failed-attempt-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\Pages-Login-login-Login-Te-bfc68--login-after-failed-attempt-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-bfc68--login-after-failed-attempt-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-bfc68--login-after-failed-attempt-chromium\video.webm]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-bfc68--login-after-failed-attempt-chromium\error-context.md]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-bfc68--login-after-failed-attempt-chromium-retry1\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-bfc68--login-after-failed-attempt-chromium-retry1\video.webm]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-bfc68--login-after-failed-attempt-chromium-retry1\error-context.md]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-bfc68--login-after-failed-attempt-chromium-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Login with invalid OTP" classname="Pages\Login\login.spec.ts" time="3.303">
+<failure message="login.spec.ts:59:7 Login with invalid OTP" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Login\login.spec.ts:59:7 › Login Tests - Remmi E2E › Login with invalid OTP ───
+
+    Error: page.goto: Target page, context or browser has been closed
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:19
+
+      17 |   /** Navigate to login page. Uses standard Playwright navigation. */
+      18 |   async gotoLogin() {
+    > 19 |     await this.page.goto('/login');
+         |                     ^
+      20 |     await this.page.waitForLoadState('networkidle');
+      21 |   }
+      22 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:19:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:80:16)
+        at LoginActions.invalidOtp (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:197:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\login.spec.ts:61:17
+
+    Error: browserContext.close: Test ended.
+    Browser logs:
+
+    <launching> C:\Users\Muhammad Jahanzaib\AppData\Local\ms-playwright\chromium_headless_shell-1194\chrome-win\headless_shell.exe --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --disable-gpu --no-sandbox --disable-dev-shm-usage --user-data-dir=C:\Users\MUHAMM~1\AppData\Local\Temp\playwright_chromiumdev_profile-93jqdh --remote-debugging-pipe --no-startup-window
+    <launched> pid=18188
+    [pid=18188][err] [1020/140050.446:INFO:CONSOLE:1424] "Google Maps JavaScript API has been loaded directly without loading=async. This can result in suboptimal performance. For best-practice loading patterns please see https://goo.gle/js-api-loading", source: https://maps.googleapis.com/maps/api/js?key=AIzaSyDzQ56huj4Bbw7e2x9yG4yvOpyB6QV3Qko&libraries=places&language=en (1424)
+]]>
+</failure>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Forgot Password without entering OTP" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Empty email" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Empty password" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Both email and password empty" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › OTP shorter/longer than expected" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\MyProfileImagesTest.spec.ts" timestamp="2025-10-20T08:56:03.377Z" hostname="chromium" tests="16" failures="0" skipped="16" time="0" errors="0">
+<testcase name="My Profile Tests - Remmi E2E › Test 1: User can upload a profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 2: User can open the upload multiple images flow" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 3: Verify selected image is set as the profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 4: Verify thumbnails appear after image upload" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 5: Verify thumbnails are removed when clicking cross button" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 6: User can edit and delete low resolution and agent face thumbnails" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 7: Verify system shows a warning when low resolution image is too small" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 8: Verify invalid image formats cannot be uploaded" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 9: Verify system allows changing profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 10: Verified profile image persists after reload" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 11: Verify the default placeholder is visible when no image is uploaded" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 12: Verify user can remove the selected profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 13: Verify correct aspect ratio is maintained for uploaded images" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 14: Verify system does not allow uploading broken/corrupt image files" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 15: Verify system allows only specific file formats (e.g., JPG, PNG)" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 16: Verify proper error message is shown when upload fails" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\MyProfileTest.spec.ts" timestamp="2025-10-20T08:56:03.377Z" hostname="chromium" tests="7" failures="0" skipped="7" time="0" errors="0">
+<testcase name="My Profile Tests - Remmi E2E › 1. Profile fields show data &amp; are non-editable" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 2. PIN field allows input and updates profile" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 3. Correct PIN allows private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 5. Fields remain non-editable if data missing" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 6. PIN is required for private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 7. Verify PIN is required for private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 8. Incorrect PIN prevents private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\Notifications.spec.ts" timestamp="2025-10-20T08:56:03.377Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Notifications Tab Tests - Remmi E2E › Test case 1: User click ON the button for notification  " classname="Pages\MyProfile\Notifications.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\profileAccess.spec.ts" timestamp="2025-10-20T08:56:03.377Z" hostname="chromium" tests="5" failures="0" skipped="5" time="0" errors="0">
+<testcase name="Access Tab Tests - Remmi E2E › Test case 2: The user can successfully select a user from Access tab" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 4: Verify multiple users can be granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 6: Verify user can remove granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 7: Verify that selecting Select All grants access to all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 8: Verify that selecting Deselect All removes access from all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\SocialSetting.spec.ts" timestamp="2025-10-20T08:56:03.377Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Social Settings Tests - Remmi E2E › Test 1: The user can successfully upload social media links and the page updates correctly" classname="Pages\MyProfile\SocialSetting.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

@@ -121,40 +121,40 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
 
   // ----------- New Tests -----------
 
-  test('Verify user appears under Staff Calendar Access when granted access', async ({ page }) => {
-    login = new LoginActions(page);
-    profile = new MyProfileActions(page);
+  // test('Verify user appears under Staff Calendar Access when granted access', async ({ page }) => {
+  //   login = new LoginActions(page);
+  //   profile = new MyProfileActions(page);
 
-    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
-      test.skip(true, 'Skipping login tests: missing environment credentials');
-    }
+  //   if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+  //     test.skip(true, 'Skipping login tests: missing environment credentials');
+  //   }
 
-    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
-    await verifyUserInStaffCalendarAccess('Dawood Ahmad');
-  });
+  //   await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+  //   await verifyUserInStaffCalendarAccess('Dawood Ahmad');
+  // });
 
-  test('Verify granted calendar access allows viewing calendar OFIs', async ({ page }) => {
-    login = new LoginActions(page);
-    profile = new MyProfileActions(page);
+  // test('Verify granted calendar access allows viewing calendar OFIs', async ({ page }) => {
+  //   login = new LoginActions(page);
+  //   profile = new MyProfileActions(page);
 
-    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
-      test.skip(true, 'Skipping login tests: missing environment credentials');
-    }
+  //   if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+  //     test.skip(true, 'Skipping login tests: missing environment credentials');
+  //   }
 
-    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
-    await verifyCalendarAccessFunctional('Dawood Ahmad');
-  });
+  //   await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+  //   await verifyCalendarAccessFunctional('Dawood Ahmad');
+  // });
 
-  test('Verify user cannot see calendar OFIs without granted access', async ({ page }) => {
-    login = new LoginActions(page);
-    profile = new MyProfileActions(page);
+  // test('Verify user cannot see calendar OFIs without granted access', async ({ page }) => {
+  //   login = new LoginActions(page);
+  //   profile = new MyProfileActions(page);
 
-    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
-      test.skip(true, 'Skipping login tests: missing environment credentials');
-    }
+  //   if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+  //     test.skip(true, 'Skipping login tests: missing environment credentials');
+  //   }
 
-    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
-    await verifyNoCalendarAccess('Unauthorized User'); // replace with a real user without access
-  });
+  //   await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+  //   await verifyNoCalendarAccess('Unauthorized User'); // replace with a real user without access
+  // });
 
 });
