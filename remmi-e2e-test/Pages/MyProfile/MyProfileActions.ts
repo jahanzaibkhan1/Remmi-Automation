@@ -1156,13 +1156,40 @@ export class MyProfileActions {
   }
 
   async verifySelectedTeamAppearsAsTag(teamName: string) {
-    await test.step('Verify selected teams appear as tags below the dropdown', async () => {
+    await test.step('Verify selected team appears as a tag below the dropdown', async () => {
       await this.NavigateToTeamsTab();
       await this.searchTeamName(teamName);
       await this.selectTeamFromDropdown(teamName);
-  
-      const selectedTag = this.page.locator('.ng-value-label', { hasText: teamName });
-      await expect(selectedTag).toBeVisible();
+
+      // Wait for the tag to appear – a tag is shown when a team is selected
+      const tagLocator = this.page.locator('.ng-value-label', { hasText: teamName });
+      await expect(tagLocator).toBeVisible({ timeout: 5000 });
+
+      // Optionally, verify only one tag appears for this team
+      await expect(tagLocator).toHaveCount(1);
+
+      // Optionally log success for debugging
+      console.log(`🟢 Tag for team "${teamName}" is visible below dropdown.`);
+    });
+  }
+
+  async verifyRemovingTagUpdatesList(teamName: string) {
+    await test.step('Verify selected team appears as a tag below the dropdown', async () => {
+      await this.NavigateToTeamsTab();
+      await this.searchTeamName(teamName);
+      await this.selectTeamFromDropdown(teamName);
+
+      // Wait for the tag to appear – a tag is shown when a team is selected
+      const tagLocator = this.page.locator('.ng-value-label', { hasText: teamName });
+      await expect(tagLocator).toBeVisible({ timeout: 5000 });
+
+      // Optionally, verify only one tag appears for this team
+      await expect(tagLocator).toHaveCount(1);
+      const removeSelectTeam = this.page.locator('.pi.pi-times-circle')
+      await removeSelectTeam.click();
+
+      // Optionally log success for debugging
+      console.log(`🟢 Tag for team "${teamName}" is visible below dropdown.`);
     });
   }
   
