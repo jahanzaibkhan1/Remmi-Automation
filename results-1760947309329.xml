@@ -1,0 +1,401 @@
+<testsuites id="" name="" tests="44" failures="5" skipped="15" errors="0" time="655.260578">
+<testsuite name="Pages\Login\login.spec.ts" timestamp="2025-10-20T08:01:49.634Z" hostname="chromium" tests="14" failures="1" skipped="0" time="537.971" errors="0">
+<testcase name="Login Tests - Remmi E2E › Successful login with OTP" classname="Pages\Login\login.spec.ts" time="44.67">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Verify OTP during login" classname="Pages\Login\login.spec.ts" time="39.433">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Verify login placeholders" classname="Pages\Login\login.spec.ts" time="35.868">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Toggle password visibility" classname="Pages\Login\login.spec.ts" time="33.926">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Login without accepting terms" classname="Pages\Login\login.spec.ts" time="36.429">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Invalid email format" classname="Pages\Login\login.spec.ts" time="32.424">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Incorrect password" classname="Pages\Login\login.spec.ts" time="34.136">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Retry login after failed attempt" classname="Pages\Login\login.spec.ts" time="39.998">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Login with invalid OTP" classname="Pages\Login\login.spec.ts" time="37.315">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Forgot Password without entering OTP" classname="Pages\Login\login.spec.ts" time="55.543">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Empty email" classname="Pages\Login\login.spec.ts" time="27.259">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Empty password" classname="Pages\Login\login.spec.ts" time="18.889">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Both email and password empty" classname="Pages\Login\login.spec.ts" time="61.031">
+<failure message="login.spec.ts:83:7 Both email and password empty" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Login\login.spec.ts:83:7 › Login Tests - Remmi E2E › Both email and password empty 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.goto: Test timeout of 60000ms exceeded.
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:19
+
+      17 |   /** Navigate to login page. Uses standard Playwright navigation. */
+      18 |   async gotoLogin() {
+    > 19 |     await this.page.goto('/login');
+         |                     ^
+      20 |     await this.page.waitForLoadState('networkidle');
+      21 |   }
+      22 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:19:21)
+        at LoginActions.emptyEmailAndPassword (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:272:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\login.spec.ts:85:17
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-8e9f0-th-email-and-password-empty-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-8e9f0-th-email-and-password-empty-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Login-login-Login-Te-8e9f0-th-email-and-password-empty-chromium\error-context.md
+]]>
+</failure>
+<system-err>
+<![CDATA[
+Warning: attachment test-results\Pages-Login-login-Login-Te-8e9f0-th-email-and-password-empty-chromium\test-failed-1.png is missing
+Warning: attachment test-results\Pages-Login-login-Login-Te-8e9f0-th-email-and-password-empty-chromium\video.webm is missing
+Warning: attachment test-results\Pages-Login-login-Login-Te-8e9f0-th-email-and-password-empty-chromium\error-context.md is missing]]>
+</system-err>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › OTP shorter/longer than expected" classname="Pages\Login\login.spec.ts" time="41.05">
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\MyProfileImagesTest.spec.ts" timestamp="2025-10-20T08:01:49.634Z" hostname="chromium" tests="16" failures="4" skipped="1" time="688.382" errors="0">
+<testcase name="My Profile Tests - Remmi E2E › Test 1: User can upload a profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="46.237">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 2: User can open the upload multiple images flow" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="42.154">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 3: Verify selected image is set as the profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="48.883">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 4: Verify thumbnails appear after image upload" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="52.533">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 5: Verify thumbnails are removed when clicking cross button" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="49.912">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 6: User can edit and delete low resolution and agent face thumbnails" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="81.92">
+<failure message="MyProfileImagesTest.spec.ts:83:7 Test 6: User can edit and delete low resolution and agent face thumbnails" type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\MyProfileImagesTest.spec.ts:83:7 › My Profile Tests - Remmi E2E › Test 6: User can edit and delete low resolution and agent face thumbnails › Edit and delete low resolution and agent face thumbnails 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.boundingBox: Target page, context or browser has been closed
+
+       at Pages\MyProfile\MyProfileActions.ts:151
+
+      149 |     const cropBox = await this.page.locator('.ngx-ic-move');
+      150 |     if (!cropBox) return;
+    > 151 |     const box = await cropBox.boundingBox();
+          |                               ^
+      152 |     if (!box) return;
+      153 |     const startX = box.x + box.width / 2;
+      154 |     const startY = box.y + box.height / 2;
+        at MyProfileActions.moveImageSlightlyLeft (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:151:31)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:612:7
+        at MyProfileActions.manageExistingThumbnails (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:596:5)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileImagesTest.spec.ts:92:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-MyProfileI-1208b-n-and-agent-face-thumbnails-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-MyProfileI-1208b-n-and-agent-face-thumbnails-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-MyProfileI-1208b-n-and-agent-face-thumbnails-chromium\error-context.md
+]]>
+</failure>
+<system-err>
+<![CDATA[❌ Failed to delete and reupload agent face thumbnail: locator.boundingBox: Test timeout of 60000ms exceeded.
+Call log:
+[2m  - waiting for locator('.ngx-ic-move')[22m
+
+    at MyProfileActions.moveImageSlightlyLeft [90m(E:\remmi-qa-automation\[39mremmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:151:31[90m)[39m
+    at MyProfileActions.deleteAndReuploadAgentFaceThumbnail [90m(E:\remmi-qa-automation\[39mremmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:279:5[90m)[39m
+    at [90mE:\remmi-qa-automation\[39mremmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:605:9
+    at MyProfileActions.manageExistingThumbnails [90m(E:\remmi-qa-automation\[39mremmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:596:5[90m)[39m
+    at [90mE:\remmi-qa-automation\[39mremmi-e2e-test\Pages\MyProfile\MyProfileImagesTest.spec.ts:92:5 {
+  [[32mSymbol(step)[39m]: {
+    location: {
+      file: [32m'E:\\remmi-qa-automation\\remmi-e2e-test\\Pages\\MyProfile\\MyProfileActions.ts'[39m,
+      line: [33m151[39m,
+      column: [33m31[39m,
+      function: [32m'MyProfileActions.moveImageSlightlyLeft'[39m
+    },
+    category: [32m'pw:api'[39m,
+    title: [32m"Bounding box locator('.ngx-ic-move')"[39m,
+    apiName: [32m'locator.boundingBox'[39m,
+    params: {
+      selector: [32m'.ngx-ic-move'[39m,
+      strict: [33mtrue[39m,
+      state: [32m'attached'[39m,
+      timeout: [33m0[39m
+    },
+    group: [90mundefined[39m,
+    stepId: [32m'pw:api@65'[39m,
+    boxedStack: [90mundefined[39m,
+    steps: [],
+    attachmentIndices: [],
+    info: TestStepInfoImpl {
+      annotations: [],
+      _testInfo: [36m[TestInfoImpl][39m,
+      _stepId: [32m'pw:api@65'[39m,
+      _title: [32m"Bounding box locator('.ngx-ic-move')"[39m,
+      _parentStep: [36m[TestStepInfoImpl][39m,
+      skip: [36m[Function (anonymous)][39m
+    },
+    complete: [36m[Function: complete][39m,
+    endWallTime: [33m1760947783074[39m,
+    error: {
+      message: [32m'Error: locator.boundingBox: Test timeout of 60000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m"\x1B[2m  - waiting for locator('.ngx-ic-move')\x1B[22m\n"[39m,
+      stack: [32m'Error: locator.boundingBox: Test timeout of 60000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m"\x1B[2m  - waiting for locator('.ngx-ic-move')\x1B[22m\n"[39m +
+        [32m'\n'[39m +
+        [32m'    at MyProfileActions.moveImageSlightlyLeft (E:\\remmi-qa-automation\\remmi-e2e-test\\Pages\\MyProfile\\MyProfileActions.ts:151:31)\n'[39m +
+        [32m'    at MyProfileActions.deleteAndReuploadAgentFaceThumbnail (E:\\remmi-qa-automation\\remmi-e2e-test\\Pages\\MyProfile\\MyProfileActions.ts:279:5)\n'[39m +
+        [32m'    at E:\\remmi-qa-automation\\remmi-e2e-test\\Pages\\MyProfile\\MyProfileActions.ts:605:9\n'[39m +
+        [32m'    at MyProfileActions.manageExistingThumbnails (E:\\remmi-qa-automation\\remmi-e2e-test\\Pages\\MyProfile\\MyProfileActions.ts:596:5)\n'[39m +
+        [32m'    at E:\\remmi-qa-automation\\remmi-e2e-test\\Pages\\MyProfile\\MyProfileImagesTest.spec.ts:92:5'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
+
+Warning: attachment test-results\Pages-MyProfile-MyProfileI-1208b-n-and-agent-face-thumbnails-chromium\test-failed-1.png is missing
+Warning: attachment test-results\Pages-MyProfile-MyProfileI-1208b-n-and-agent-face-thumbnails-chromium\video.webm is missing
+Warning: attachment test-results\Pages-MyProfile-MyProfileI-1208b-n-and-agent-face-thumbnails-chromium\error-context.md is missing]]>
+</system-err>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 7: Verify system shows a warning when low resolution image is too small" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="30.046">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 8: Verify invalid image formats cannot be uploaded" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="56.848">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 9: Verify system allows changing profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="38.908">
+<system-out>
+<![CDATA[☑️ Last visible checkbox clicked successfully
+]]>
+</system-out>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 10: Verified profile image persists after reload" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="60.545">
+<failure message="MyProfileImagesTest.spec.ts:130:7 Test 10: Verified profile image persists after reload" type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\MyProfileImagesTest.spec.ts:130:7 › My Profile Tests - Remmi E2E › Test 10: Verified profile image persists after reload › Verify that the updated profile image persists after reload 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.reload: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for navigation until "load"
+        - navigated to "https://portal-staging.remmi.com.au/setting/profile/info"
+
+
+       at Pages\MyProfile\MyProfileActions.ts:676
+
+      674 |       await this.clickUpdateImages();
+      675 |       await this.expectImagesUpdatedToast();
+    > 676 |       await this.page.reload();
+          |                       ^
+      677 |       await this.expectProfileImageVisible();
+      678 |     });
+      679 |   }
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:676:23
+        at MyProfileActions.VerifyProfileImagePersistsAfterReload (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:660:5)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileImagesTest.spec.ts:138:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-MyProfileI-203d4-image-persists-after-reload-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-MyProfileI-203d4-image-persists-after-reload-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-MyProfileI-203d4-image-persists-after-reload-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[☑️ Last visible checkbox clicked successfully
+]]>
+</system-out>
+<system-err>
+<![CDATA[
+Warning: attachment test-results\Pages-MyProfile-MyProfileI-203d4-image-persists-after-reload-chromium\test-failed-1.png is missing
+Warning: attachment test-results\Pages-MyProfile-MyProfileI-203d4-image-persists-after-reload-chromium\video.webm is missing
+Warning: attachment test-results\Pages-MyProfile-MyProfileI-203d4-image-persists-after-reload-chromium\error-context.md is missing]]>
+</system-err>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 11: Verify the default placeholder is visible when no image is uploaded" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="48.439">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 12: Verify user can remove the selected profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="54.336">
+<system-out>
+<![CDATA[✅ Default profile image deleted successfully.
+]]>
+</system-out>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 13: Verify correct aspect ratio is maintained for uploaded images" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="44.08">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 14: Verify system does not allow uploading broken/corrupt image files" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="23.577">
+<failure message="MyProfileImagesTest.spec.ts:172:7 Test 14: Verify system does not allow uploading broken/corrupt image files" type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\MyProfileImagesTest.spec.ts:172:7 › My Profile Tests - Remmi E2E › Test 14: Verify system does not allow uploading broken/corrupt image files 
+
+    Error: page.goto: Target page, context or browser has been closed
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:19
+
+      17 |   /** Navigate to login page. Uses standard Playwright navigation. */
+      18 |   async gotoLogin() {
+    > 19 |     await this.page.goto('/login');
+         |                     ^
+      20 |     await this.page.waitForLoadState('networkidle');
+      21 |   }
+      22 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:19:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:80:16)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:119:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileImagesTest.spec.ts:176:17
+
+    Error: browserContext.close: Test ended.
+    Browser logs:
+
+    <launching> C:\Users\Muhammad Jahanzaib\AppData\Local\ms-playwright\chromium_headless_shell-1194\chrome-win\headless_shell.exe --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --disable-gpu --no-sandbox --disable-dev-shm-usage --user-data-dir=C:\Users\MUHAMM~1\AppData\Local\Temp\playwright_chromiumdev_profile-31Sarl --remote-debugging-pipe --no-startup-window
+    <launched> pid=7428
+    [pid=7428][err] [1020/131129.066:INFO:CONSOLE:1424] "Google Maps JavaScript API has been loaded directly without loading=async. This can result in suboptimal performance. For best-practice loading patterns please see https://goo.gle/js-api-loading", source: https://maps.googleapis.com/maps/api/js?key=AIzaSyDzQ56huj4Bbw7e2x9yG4yvOpyB6QV3Qko&libraries=places&language=en (1424)
+    [pid=7428][err] [1020/131129.664:INFO:CONSOLE:1] "Uncaught SyntaxError: Cannot use import statement outside a module", source: https://portal-staging.remmi.com.au/scripts.7c191996f03a5c1b.js (1)
+    [pid=7428][err] [1020/131158.644:INFO:CONSOLE:6] "%c connected to server via web socket color: #32CD32", source: https://portal-staging.remmi.com.au/main.93c409e829bbf3ed.js (6)
+    [pid=7428][err] [1020/131200.305:INFO:CONSOLE:1] "this.notice >>: [object Object],[object Object],[object Object],[object Object],[object Object]", source: https://portal-staging.remmi.com.au/773.16484867bb7c7983.js (1)
+    [pid=7428][err] [1020/131212.069:INFO:CONSOLE:1] "Error getting location: [object GeolocationPositionError]", source: https://portal-staging.remmi.com.au/773.16484867bb7c7983.js (1)
+    [pid=7428][err] [1020/131212.087:INFO:CONSOLE:1] "Error getting location: [object GeolocationPositionError]", source: https://portal-staging.remmi.com.au/773.16484867bb7c7983.js (1)
+    [pid=7428][err] [1020/131224.353:INFO:CONSOLE:1424] "Google Maps JavaScript API has been loaded directly without loading=async. This can result in suboptimal performance. For best-practice loading patterns please see https://goo.gle/js-api-loading", source: https://maps.googleapis.com/maps/api/js?key=AIzaSyDzQ56huj4Bbw7e2x9yG4yvOpyB6QV3Qko&libraries=places&language=en (1424)
+    [pid=7428][err] [1020/131226.114:INFO:CONSOLE:1] "Uncaught SyntaxError: Cannot use import statement outside a module", source: https://portal-staging.remmi.com.au/scripts.7c191996f03a5c1b.js (1)
+]]>
+</failure>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 15: Verify system allows only specific file formats (e.g., JPG, PNG)" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="9.964">
+<failure message="MyProfileImagesTest.spec.ts:185:7 Test 15: Verify system allows only specific file formats (e.g., JPG, PNG)" type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\MyProfileImagesTest.spec.ts:185:7 › My Profile Tests - Remmi E2E › Test 15: Verify system allows only specific file formats (e.g., JPG, PNG) 
+
+    Error: page.goto: Target page, context or browser has been closed
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:19
+
+      17 |   /** Navigate to login page. Uses standard Playwright navigation. */
+      18 |   async gotoLogin() {
+    > 19 |     await this.page.goto('/login');
+         |                     ^
+      20 |     await this.page.waitForLoadState('networkidle');
+      21 |   }
+      22 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:19:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:80:16)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:119:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileImagesTest.spec.ts:189:17
+
+    Error: browserContext.close: Test ended.
+    Browser logs:
+
+    <launching> C:\Users\Muhammad Jahanzaib\AppData\Local\ms-playwright\chromium_headless_shell-1194\chrome-win\headless_shell.exe --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --disable-gpu --no-sandbox --disable-dev-shm-usage --user-data-dir=C:\Users\MUHAMM~1\AppData\Local\Temp\playwright_chromiumdev_profile-A3sb8P --remote-debugging-pipe --no-startup-window
+    <launched> pid=13320
+    [pid=13320][err] [1020/131025.738:INFO:CONSOLE:1424] "Google Maps JavaScript API has been loaded directly without loading=async. This can result in suboptimal performance. For best-practice loading patterns please see https://goo.gle/js-api-loading", source: https://maps.googleapis.com/maps/api/js?key=AIzaSyDzQ56huj4Bbw7e2x9yG4yvOpyB6QV3Qko&libraries=places&language=en (1424)
+    [pid=13320][err] [1020/131028.289:INFO:CONSOLE:1] "Uncaught SyntaxError: Cannot use import statement outside a module", source: https://portal-staging.remmi.com.au/scripts.7c191996f03a5c1b.js (1)
+    [pid=13320][err] [1020/131054.660:INFO:CONSOLE:6] "%c connected to server via web socket color: #32CD32", source: https://portal-staging.remmi.com.au/main.93c409e829bbf3ed.js (6)
+    [pid=13320][err] [1020/131055.852:INFO:CONSOLE:1] "this.notice >>: [object Object],[object Object],[object Object],[object Object],[object Object]", source: https://portal-staging.remmi.com.au/773.16484867bb7c7983.js (1)
+    [pid=13320][err] [1020/131104.879:INFO:CONSOLE:1424] "Google Maps JavaScript API has been loaded directly without loading=async. This can result in suboptimal performance. For best-practice loading patterns please see https://goo.gle/js-api-loading", source: https://maps.googleapis.com/maps/api/js?key=AIzaSyDzQ56huj4Bbw7e2x9yG4yvOpyB6QV3Qko&libraries=places&language=en (1424)
+    [pid=13320][err] [1020/131121.787:INFO:CONSOLE:1] "Uncaught SyntaxError: Cannot use import statement outside a module", source: https://portal-staging.remmi.com.au/scripts.7c191996f03a5c1b.js (1)
+    [pid=13320][err] [1020/131134.678:INFO:CONSOLE:6] "%c connected to server via web socket color: #32CD32", source: https://portal-staging.remmi.com.au/main.93c409e829bbf3ed.js (6)
+    [pid=13320][err] [1020/131135.882:INFO:CONSOLE:1] "this.notice >>: [object Object],[object Object],[object Object],[object Object],[object Object]", source: https://portal-staging.remmi.com.au/773.16484867bb7c7983.js (1)
+    [pid=13320][err] [1020/131152.627:INFO:CONSOLE:1424] "Google Maps JavaScript API has been loaded directly without loading=async. This can result in suboptimal performance. For best-practice loading patterns please see https://goo.gle/js-api-loading", source: https://maps.googleapis.com/maps/api/js?key=AIzaSyDzQ56huj4Bbw7e2x9yG4yvOpyB6QV3Qko&libraries=places&language=en (1424)
+    [pid=13320][err] [1020/131152.875:INFO:CONSOLE:1] "Uncaught SyntaxError: Cannot use import statement outside a module", source: https://portal-staging.remmi.com.au/scripts.7c191996f03a5c1b.js (1)
+    [pid=13320][err] [1020/131222.434:INFO:CONSOLE:6] "%c connected to server via web socket color: #32CD32", source: https://portal-staging.remmi.com.au/main.93c409e829bbf3ed.js (6)
+    [pid=13320][err] [1020/131223.649:INFO:CONSOLE:1] "this.notice >>: [object Object],[object Object],[object Object],[object Object],[object Object]", source: https://portal-staging.remmi.com.au/773.16484867bb7c7983.js (1)
+    [pid=13320][err] [1020/131236.248:INFO:CONSOLE:1424] "Google Maps JavaScript API has been loaded directly without loading=async. This can result in suboptimal performance. For best-practice loading patterns please see https://goo.gle/js-api-loading", source: https://maps.googleapis.com/maps/api/js?key=AIzaSyDzQ56huj4Bbw7e2x9yG4yvOpyB6QV3Qko&libraries=places&language=en (1424)
+    [pid=13320][err] [1020/131237.012:INFO:CONSOLE:1] "Uncaught SyntaxError: Cannot use import statement outside a module", source: https://portal-staging.remmi.com.au/scripts.7c191996f03a5c1b.js (1)
+    [pid=13320] <gracefully close start>
+]]>
+</failure>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 16: Verify proper error message is shown when upload fails" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\MyProfileTest.spec.ts" timestamp="2025-10-20T08:01:49.634Z" hostname="chromium" tests="7" failures="0" skipped="7" time="0" errors="0">
+<testcase name="My Profile Tests - Remmi E2E › 1. Profile fields show data &amp; are non-editable" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 2. PIN field allows input and updates profile" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 3. Correct PIN allows private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 5. Fields remain non-editable if data missing" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 6. PIN is required for private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 7. Verify PIN is required for private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 8. Incorrect PIN prevents private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\Notifications.spec.ts" timestamp="2025-10-20T08:01:49.634Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Notifications Tab Tests - Remmi E2E › Test case 1: User click ON the button for notification  " classname="Pages\MyProfile\Notifications.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\profileAccess.spec.ts" timestamp="2025-10-20T08:01:49.634Z" hostname="chromium" tests="5" failures="0" skipped="5" time="0" errors="0">
+<testcase name="Access Tab Tests - Remmi E2E › Test case 2: The user can successfully select a user from Access tab" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 4: Verify multiple users can be granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 6: Verify user can remove granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 7: Verify that selecting Select All grants access to all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 8: Verify that selecting Deselect All removes access from all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\SocialSetting.spec.ts" timestamp="2025-10-20T08:01:49.634Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Social Settings Tests - Remmi E2E › Test 1: The user can successfully upload social media links and the page updates correctly" classname="Pages\MyProfile\SocialSetting.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

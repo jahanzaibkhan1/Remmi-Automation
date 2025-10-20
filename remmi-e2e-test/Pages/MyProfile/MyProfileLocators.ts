@@ -213,59 +213,121 @@ export class MyProfileLocators {
     return this.page.locator('div.ng-option.ng-star-inserted');
   }
 
-/*
-*---------------------------------------------Profile Access Tab Locators----------------------------------------------*
-*/
-AccessTab(): Locator{
-  return this.page.getByRole('tab', { name: 'Access' });
-}
-selectUser(): Locator{
-  return this.page.locator('div').filter({ hasText: /^Select$/ }).first()
-}
-SearchUserName(): Locator {
-  return this.page.getByRole('textbox', { name: 'Type to search' })
-}
-selectuserFromDropdown(userName: string): Locator {
-  return this.page.locator(`li:has-text("${userName}") div.checkbox__checkmark`);
-}
+  /*
+  *---------------------------------------------Profile Access Tab Locators----------------------------------------------*
+  */
+  AccessTab(): Locator {
+    return this.page.getByRole('tab', { name: 'Access' });
+  }
+  selectUser(): Locator {
+    return this.page.locator('div').filter({ hasText: /^Select$/ }).first()
+  }
+  SearchUserName(): Locator {
+    return this.page.getByRole('textbox', { name: 'Type to search' })
+  }
+  selectuserFromDropdown(userName: string): Locator {
+    return this.page.locator(`li:has-text("${userName}") div.checkbox__checkmark`);
+  }
 
-SaveAccessButton(): Locator{
-  return this.page.locator('button[type="submit"]._primary-btn').first();
-}
+  SaveAccessButton(): Locator {
+    return this.page.locator('button[type="submit"]._primary-btn').first();
+  }
 
-calendarAccessUserName(userName: string): Locator {
-  return this.page.locator(`tr td:text-is("${userName}")`);
-}
+  calendarAccessUserName(userName: string): Locator {
+    return this.page.locator(`tr td:text-is("${userName}")`);
+  }
 
-calendarUpdateMessage() {
-  return this.page.getByRole('alert', { name: 'Calendar access updated' });
-}
+  calendarUpdateMessage() {
+    return this.page.getByRole('alert', { name: 'Calendar access updated' });
+  }
 
-deleteUserIcon(): Locator {
-  return this.page.locator('td:nth-child(2) > .d-flex > .cursor-pointer').first()
-}
+  deleteUserIcon(): Locator {
+    return this.page.locator('td:nth-child(2) > .d-flex > .cursor-pointer').first()
+  }
 
-selectAll(): Locator {
-  return this.page.locator('.checkbox__checkmark').first()
-}
-DeselectAll(): Locator {
-  return this.page.locator('label[data="Deselect All"] .checkbox__checkmark')
-}
-/**
- * Locator for the Calendar menu in the side menu
- */
-CalendarMenu(): Locator {
-  return this.page.locator('li[data-label="Calendar"]');
-}
-// Locator for the Notifications tab
-NotificationsTab(): Locator {
-  return this.page.locator('a#pills-notification-tab');
-}
-webNotificationToggle():Locator{
-  return this.page.locator('.p-inputswitch-slider').first();
-}
-emailNotificationToggle():Locator{
-  return this.page.locator('div:nth-child(2) > .SP-switch > .p-element > .p-inputswitch > .p-inputswitch-slider');
-}
+  selectAll(): Locator {
+    return this.page.locator('.checkbox__checkmark').first()
+  }
+  DeselectAll(): Locator {
+    return this.page.locator('label[data="Deselect All"] .checkbox__checkmark')
+  }
+  /**
+   * Locator for the Calendar menu in the side menu
+   */
+  CalendarMenu(): Locator {
+    return this.page.locator('li[data-label="Calendar"]');
+  }
+  // Locator for the Notifications tab
+  NotificationsTab(): Locator {
+    return this.page.locator('a#pills-notification-tab');
+  }
+  webNotificationToggle(): Locator {
+    return this.page.locator('.p-inputswitch-slider').first();
+  }
+  emailNotificationToggle(): Locator {
+    return this.page.locator('div:nth-child(2) > .SP-switch > .p-element > .p-inputswitch > .p-inputswitch-slider');
+  }
+
+  // -------------------------------------------Locator For Teams Tab------------------------------------------//
+  TeamsTabs(): Locator {
+    return this.page.getByRole('tab', { name: 'Teams' });
+  }
+  SelectTeam(teamName: string): Locator {
+    // Locator for the team dropdown textbox (to open dropdown)
+    return this.page
+      .locator('ng-select')
+      .filter({ hasText: 'Select Team' })
+      .getByRole('textbox');
+  }
+
+  SelectTeamOption(teamName: string): Locator {
+    return this.page.locator('.ng-dropdown-panel .ng-option', { hasText: teamName });
+  }
+  
+  AddButton(): Locator {
+    return this.page.getByRole('button', { name: ' Add' });
+  }
+  TeamRow(teamName: string): Locator {
+    return this.page.locator('tr.compact-form', { hasText: teamName });
+  }  
+  EditIcon(): Locator {
+    return this.page.locator('.cursor-pointer.mr-2');
+  }
+  DeleteIcon(): Locator {
+    return this.page.getByRole('img', { name: 'delete' });
+  }
+  Searchkeyword(): Locator {
+    return this.page.getByRole('textbox', { name: 'Search keyword' })
+  }
+
+  // -------------------------------------------Locator for MFA tab------------------------------------------//
+  mfaTab(): Locator {
+    return this.page.getByRole('tab', { name: 'MFA' });
+  }
+
+  // Locator for replace (icon/button)
+  replaceButton(): Locator {
+    return this.page.getByRole('img', { name: 'replace' });
+  }
+
+  // Locator for Microsoft Authenticator option
+  microsoftAuthenticator(): Locator {
+    return this.page.getByText('Microsoft Authenticator');
+  }
+
+  // Locator for Authy Authenticator option
+  authyAuthenticator(): Locator {
+    return this.page.getByText('Authy Authenticator');
+  }
+
+  // Locator for MFA code textbox
+  mfaCodeTextbox(): Locator {
+    return this.page.getByRole('textbox', { name: 'MFA Code1' });
+  }
+
+  // Locator for Save button
+  saveMFAButton(): Locator {
+    return this.page.getByRole('button', { name: 'Save' });
+  }
 }
 
