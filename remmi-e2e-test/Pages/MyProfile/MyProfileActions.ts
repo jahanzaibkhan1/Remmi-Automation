@@ -446,22 +446,32 @@ export class MyProfileActions {
   private async searchTeamName(teamName: string) {
     const searchTeam = this.locators.SelectTeam(teamName);
     await expect(searchTeam).toBeVisible();
-    await searchTeam.fill(teamName);
+  
+    // Click to open dropdown first
+    await searchTeam.click();
+  
+    // Type the team name directly
+    await searchTeam.pressSequentially(teamName);
+  
+    // Wait for dropdown options to appear
+    await this.page.waitForSelector('.ng-dropdown-panel .ng-option', { state: 'visible', timeout: 10000 });
   }
   
   private async selectTeamFromDropdown(teamName: string) {
     const dropdownInput = this.locators.SelectTeam(teamName);
     await expect(dropdownInput).toBeVisible();
     await dropdownInput.click();
+    
+    // Wait for dropdown to render in DOM
+    await this.page.waitForSelector('.ng-dropdown-panel .ng-option', { state: 'visible', timeout: 10000 });
   
-    // Wait for dropdown options to appear
-    await this.page.waitForSelector('.ng-dropdown-panel', { state: 'visible' });
-  
-    // Select the team option
-    const option = this.locators.SelectTeamOption(teamName);
-    await expect(option).toBeVisible();
+    // Locate and click team option
+    const option = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: teamName });
     await option.click();
   }
+  
+  
+  
   
 
   private async editTeam(teamName: string) {
@@ -1144,5 +1154,17 @@ export class MyProfileActions {
       await expect(addButton).toBeDisabled();
     })
   }
+
+  async verifySelectedTeamAppearsAsTag(teamName: string) {
+    await test.step('Verify selected teams appear as tags below the dropdown', async () => {
+      await this.NavigateToTeamsTab();
+      await this.searchTeamName(teamName);
+      await this.selectTeamFromDropdown(teamName);
+  
+      const selectedTag = this.page.locator('.ng-value-label', { hasText: teamName });
+      await expect(selectedTag).toBeVisible();
+    });
+  }
+  
 }
 

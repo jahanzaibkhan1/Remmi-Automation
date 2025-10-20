@@ -41,6 +41,11 @@ async function verifyAddButtonNotEnabledDueToDropdownLag() {
   await profile.navigateToProfilePage();
   await profile.verifyAddButtonNotEnabledDueToDropdownLag('Hina Team');
 }
+
+async function verifySelectedTeamAppearsAsTag() {
+  await profile.navigateToProfilePage();
+  await profile.verifySelectedTeamAppearsAsTag('Team 1');
+}
 // ----------- Tests -----------
 
 test.describe('Teams Tab Tests - Remmi E2E', () => {
@@ -120,5 +125,18 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
 
     await verifyAddButtonNotEnabledDueToDropdownLag();
+  });
+
+  test('Test case 7: Verify selected teams appear as tags below the dropdown.', async ({ page }) => {
+    login = new LoginActions(page);
+    profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+
+    await verifySelectedTeamAppearsAsTag();
   });
 });
