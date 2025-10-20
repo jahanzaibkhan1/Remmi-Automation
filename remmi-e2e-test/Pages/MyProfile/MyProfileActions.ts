@@ -1097,5 +1097,22 @@ export class MyProfileActions {
     })
   }
 
+  async SearchForInvalidTeam(teamName: string){
+    await test.step('Verify search works for existing team names', async()=>{
+      await this.NavigateToTeamsTab()
+      await this.searchTeamName(teamName);
+      const NoRecord = this.page.getByText('No items found')
+      await expect(NoRecord).toBeVisible({timeout:5000});
+    })
+  }
+
+  async verifyAddButtonDisabledWhenNoTeamSelected() {
+    await test.step('Verify search works for existing team names', async()=>{
+      await this.NavigateToTeamsTab();
+      const addButton = this.page.getByRole('button', { name: ' Add' });
+      await expect(addButton).toBeDisabled();
+    })
+  }
+
 }
 
