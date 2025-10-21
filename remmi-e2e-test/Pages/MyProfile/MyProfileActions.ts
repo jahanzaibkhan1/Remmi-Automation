@@ -446,15 +446,10 @@ export class MyProfileActions {
   private async searchTeamName(teamName: string) {
     const searchTeam = this.locators.SelectTeam(teamName);
     await expect(searchTeam).toBeVisible();
-  
     // Click to open dropdown first
     await searchTeam.click();
-  
     // Type the team name directly
-    await searchTeam.pressSequentially(teamName);
-  
-    // Wait for dropdown options to appear
-    await this.page.waitForSelector('.ng-dropdown-panel .ng-option', { state: 'visible', timeout: 10000 });
+    await searchTeam.fill(teamName);
   }
   
   private async selectTeamFromDropdown(teamName: string) {
@@ -663,7 +658,6 @@ export class MyProfileActions {
       }
 
       // Move image slightly left if crop box is present
-      await this.moveImageSlightlyLeft();
       await this.clickUpdateImages();
       await this.expectImagesUpdatedToast();
     });
@@ -711,26 +705,44 @@ export class MyProfileActions {
   }
 
   async VerifyProfileImagePersistsAfterReload(imagePath: string) {
-    await test.step('Verify that the updated profile image persists after reload', async () => {
+    await test.step('Verify that the updated profile image persists after reload (FAST)', async () => {
       await this.goToImagesTab();
-      await this.clickAddMoreImagesButton();
-      await this.clickLastUploadImageButton();
+
+      // Parallelize add/click
+      await Promise.all([
+        this.clickAddMoreImagesButton(),
+        this.clickLastUploadImageButton(),
+      ]);
       await this.setLastFileInput(imagePath);
       await this.moveImageSlightlyLeft();
+
       const checkboxes = this.page.locator('.p-checkbox-box:visible:not(.p-disabled)');
-      await checkboxes.first().waitFor({ state: 'visible', timeout: 20000 });
+      // Only wait for the first visible checkbox, but continue as soon as possible
+      await checkboxes.first().waitFor({ state: 'visible', timeout: 7000 });
       const count = await checkboxes.count();
+
       if (count === 0) throw new Error('❌ No visible checkboxes found to click');
       const lastCheckbox = checkboxes.nth(count - 1);
-      await lastCheckbox.scrollIntoViewIfNeeded();
+      await Promise.all([
+        lastCheckbox.scrollIntoViewIfNeeded(),
+        checkboxes,
+      ]);
       await lastCheckbox.click({ force: true });
-      console.log('☑️ Last visible checkbox clicked successfully');
-      await this.clickUpdateImages();
-      await this.expectImagesUpdatedToast();
+      // Remove console log for speed
+
+      // Don't unnecessarily wait between update and toast
+      await Promise.all([
+        this.clickUpdateImages(),
+        (async () => {
+          await this.expectImagesUpdatedToast();
+        })()
+      ]);
+
       await this.page.reload();
       await this.expectProfileImageVisible();
     });
   }
+
 
   async VerifyDefaultPlaceholder() {
     await test.step('Verify the default placeholder is visible when no image is uploaded or in the first image slot', async () => {
@@ -1205,6 +1217,30 @@ export class MyProfileActions {
         await expect(option).toBeVisible({ timeout: 5000 });
         await option.click();
       }
+
+      // Verify each selected team appears as a tag
+      for (const name of teamNames) {
+        const tag = this.page.locator('.ng-value-label', { hasText: name });
+        await expect(tag).toBeVisible({ timeout: 5000 });
+        await expect(tag).toHaveCount(1);
+      }
+    });
+  }
+  async verifySelectMultipleTeams(teamNames: string[]) {
+    await test.step('Verify clicking Add adds selected teams to list.', async () => {
+      await this.NavigateToTeamsTab();
+
+      for (const name of teamNames) {
+        const searchBox = this.locators.SelectTeam(name);
+        await expect(searchBox).toBeVisible();
+        await searchBox.fill(name);
+
+        const option = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: name });
+        await expect(option).toBeVisible({ timeout: 5000 });
+        await option.click();
+      }
+
+      await this.AddButton();
 
       // Verify each selected team appears as a tag
       for (const name of teamNames) {

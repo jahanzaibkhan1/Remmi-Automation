@@ -273,15 +273,13 @@ export class MyProfileLocators {
     return this.page.getByRole('tab', { name: 'Teams' });
   }
   SelectTeam(teamName: string): Locator {
-    // Locator for the team dropdown textbox (to open dropdown)
-    return this.page
-      .locator('ng-select')
-      .filter({ hasText: 'Select Team' })
-      .getByRole('textbox');
+    // Keep same method name and param — no need to change in tests
+    return this.page.locator('ng-select[name="team"] input');
   }
-
+  
   SelectTeamOption(teamName: string): Locator {
-    return this.page.locator('.ng-dropdown-panel .ng-option', { hasText: teamName });
+    // Updated for better matching
+    return this.page.locator('.ng-dropdown-panel .ng-option span', { hasText: teamName });
   }
   
   AddButton(): Locator {

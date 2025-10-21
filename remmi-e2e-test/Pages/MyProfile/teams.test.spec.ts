@@ -56,6 +56,11 @@ async function verifyUserCanSelectMultipleTeams() {
   await profile.navigateToProfilePage();
   await profile.verifyUserCanSelectMultipleTeams(['Team 4', 'Team dev', 'xenex media']);
 }
+async function verifySelectMultipleTeams() {
+  await profile.navigateToProfilePage();
+  await profile.verifySelectMultipleTeams(['Team 4', 'Team dev', 'xenex media']);
+}
+
 
 // ----------- Tests -----------
 
@@ -175,5 +180,16 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     await verifyUserCanSelectMultipleTeams();
   });
   
+  test('Test case 10: Verify clicking Add adds selected teams to list.', async ({ page }) => {
+    login = new LoginActions(page);
+    profile = new MyProfileActions(page);
   
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+  
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+  
+    await verifySelectMultipleTeams();
+  });
 });
