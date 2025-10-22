@@ -322,7 +322,7 @@ export class MyProfileLocators {
   }
   
   SelectTeamMemberOption(): Locator {
-    return this.page.locator('re-multiselect[formcontrolname="members"] ul li');
+    return this.page.locator("//li[@class='p-element ng-star-inserted']");
   }
   
   SelectNoRecordFound(): Locator {
