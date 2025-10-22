@@ -1,0 +1,6 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.23031900000014">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-22T08:12:12.401Z" hostname="chromium" tests="1" failures="0" skipped="0" time="22.116" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 13: Verify JPG and PNG formats are accepted, and invalid image format is rejected for team upload." classname="Pages\MyProfile\teams.test.spec.ts" time="22.116">
+</testcase>
+</testsuite>
+</testsuites>
