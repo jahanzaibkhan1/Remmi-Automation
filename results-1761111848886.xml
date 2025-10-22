@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="27.886710999999195">
-<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-22T08:43:49.853Z" hostname="chromium" tests="1" failures="0" skipped="0" time="20.752" errors="0">
-<testcase name="Teams Tab Tests - Remmi E2E › Test case 13: Verify unsupported file formats show validation error." classname="Pages\MyProfile\teams.test.spec.ts" time="20.752">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.88182599999942">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-22T09:00:47.852Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.408" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 15: Verify required field validation for Team Name, Office, and Members." classname="Pages\MyProfile\teams.test.spec.ts" time="24.408">
 </testcase>
 </testsuite>
 </testsuites>

@@ -468,6 +468,11 @@ export class MyProfileActions {
     const fileInput = this.page.locator('input[type="file"]');
     await fileInput.setInputFiles(imagePath);
   }
+  private async CreateTeamButton(){
+    const CreateTeamButton = this.page.getByRole('button', { name: 'Create Team' });
+    await expect(CreateTeamButton).toBeVisible();
+    await CreateTeamButton.click();
+  }
   private async selectTeamFromDropdown(teamName: string) {
     const dropdownInput = this.locators.SelectTeam(teamName);
     await expect(dropdownInput).toBeVisible();
@@ -1326,6 +1331,29 @@ export class MyProfileActions {
         const errorMessage = this.page.locator('div').filter({ hasText: 'Unsupported file format!' }).nth(2);
         await expect(errorMessage).toBeVisible({ timeout: 5000 });
       }
+    });
+  }
+  // Verify required field validation for Team Name, Office, and Members.
+  async VerifyRequiredFiled() {
+    await test.step('Verify required field validation for Team Name, Office, and Members', async () => {
+      await this.NavigateToTeamsTab();
+      // Open Add Team popup
+      const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+      await selectTeamInput.click();
+      await this.createNewTeamButton();
+
+      const popup = this.page.getByText('Add TeamUpload profile');
+      await expect(popup).toBeVisible();
+      await this.CreateTeamButton();
+
+      // Assert required validation errors appear
+      const requiredTeamError = this.page.getByText(/Team Name is required/i);
+      const requiredOfficeError = this.page.getByText(/Office is required/i);
+      const requiredMembersError = this.page.getByText('Team Member(s) is required');
+
+      await expect(requiredTeamError).toBeVisible();
+      await expect(requiredOfficeError).toBeVisible();
+      await expect(requiredMembersError).toBeVisible();
     });
   }
 }
