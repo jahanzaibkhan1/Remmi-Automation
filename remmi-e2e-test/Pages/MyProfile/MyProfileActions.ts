@@ -2,7 +2,9 @@ import { Page, Locator, expect, test } from '@playwright/test';
 import { MyProfileLocators } from './MyProfileLocators';
 import { url } from 'inspector';
 import { setEngine } from 'crypto';
+import { faker } from '@faker-js/faker';
 import { AsyncLocalStorage } from 'async_hooks';
+import { time } from 'console';
 
 /**
  * Actions and verifications for the My Profile page.
@@ -511,6 +513,42 @@ export class MyProfileActions {
     await option.first().scrollIntoViewIfNeeded();
     await option.first().click({ force: true });
   }
+
+  private async SelectTeamLeader() {
+    const dropdown = this.locators.SelectTeamLeaderDropdown();
+    await expect(dropdown).toBeVisible({ timeout: 10000 });
+    await dropdown.click();
+  }
+  
+  private async SelectTeamLeaderSearchInput(leaderName: string) {
+    const input = this.locators.SelectTeamLeaderSearchInput();
+    await expect(input).toBeVisible({ timeout: 5000 });
+    await input.fill(leaderName);
+  
+    // Wait for dropdown to populate after typing
+    await this.page.waitForTimeout(1000);
+  }
+  
+  private async SelectTeamLeaderFromDropdown(leaderName: string) {
+    const option = this.locators.SelectTeamLeaderOption().filter({ hasText: leaderName });
+  
+    // Wait until at least one matching option appears
+    await expect(option.first()).toBeVisible({ timeout: 10000 });
+  
+    // Scroll & click safely
+    await option.first().scrollIntoViewIfNeeded();
+    await option.first().click({ force: true });
+  }
+
+  private async EnterTeamName() {
+    const teamNameInput = this.locators.TeamNameInput();
+    await teamNameInput.click();
+    // Generate a unique team name using faker
+    const teamName = `Team ${faker.word.sample()}`;
+    // Fill the input field
+    await teamNameInput.fill(teamName);
+  }
+  
   
   private async editTeam(teamName: string) {
     const EditIcon = this.locators.EditIcon();
@@ -1458,5 +1496,66 @@ async VerifyTeamLeaderDropdownActive(OfficeName: string, teamName: string) {
   });
 }
 
+async VerifyTeamCreationWithoutLeader(OfficeName: string, teamName: string) {
+  await test.step('Verify selecting members activates Team Leader dropdown', async () => {
+    await this.NavigateToTeamsTab();
 
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    // Select office
+    await this.SelectOffice(OfficeName);
+    await this.SelectOfficeOption();
+
+    // Select member
+    await this.SelectTeamMember();
+    await this.SelectTeamMemberSearchInput(teamName);
+    await this.page.waitForTimeout(1000);
+    await this.selectTeamFromDropdown(teamName);
+    await this.SelectTeamMember();
+    await this.CreateTeamButton()
+    const requiredLeaderError = this.page.getByText(/Team Leader is required/i);
+    await expect(requiredLeaderError).toBeVisible({ timeout: 5000 });
+  });
+}
+async VerifyTeamCreationWithValidDetails(OfficeName: string, memberName: string, leaderName: string) {
+  await test.step('Verify successful team creation with all valid details', async () => {
+    await this.NavigateToTeamsTab();
+
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    // Enter team name
+    await this.EnterTeamName()
+
+    // Select office
+    await this.SelectOffice(OfficeName);
+    await this.SelectOfficeOption();
+
+    // Select member
+    await this.SelectTeamMember();
+    await this.SelectTeamMemberSearchInput(memberName);
+    await this.page.waitForTimeout(1000);
+    await this.selectTeamFromDropdown(memberName);
+    await this.SelectTeamMember();
+
+    // Select team leader
+    await this.SelectTeamLeader();
+    await this.SelectTeamLeaderSearchInput(leaderName);
+    await this.SelectTeamLeaderFromDropdown(leaderName);
+
+    // Create team
+    await this.CreateTeamButton();
+
+    // Verify success toast message
+    const successToast = this.page.getByText(/Team created/i);
+    await expect(successToast).toBeVisible({ timeout: 10000 });
+
+
+  });
+}
 }
