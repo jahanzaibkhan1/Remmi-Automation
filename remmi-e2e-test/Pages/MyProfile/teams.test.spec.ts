@@ -174,5 +174,27 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     await profile.VerifyCrossPopUpButton();
   });
 
+  test('Test case 13: Verify JPG and PNG formats are accepted, and invalid image format is rejected for team upload.', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
 
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    ensureDirExists(IMAGE_DIR);
+    const jpgImagePath = path.join(IMAGE_DIR, 'High.jpg');
+    const pngImagePath = path.join(IMAGE_DIR, 'premium.png');
+    const invalidImagePath = path.join(IMAGE_DIR, 'invalidImage.webp');
+
+    ensureFileExists(jpgImagePath, 'Profile Image with jpg format');
+    ensureFileExists(pngImagePath, 'Profile Image with png format');
+    ensureFileExists(invalidImagePath, 'This is an invalid image format file.');
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+
+    // Upload jpg, then png, then an invalid file format
+    await profile.verifyImageFormats(jpgImagePath, pngImagePath, invalidImagePath);
+  });
 });
