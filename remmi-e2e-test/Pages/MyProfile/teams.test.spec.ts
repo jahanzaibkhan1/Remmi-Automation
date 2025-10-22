@@ -197,4 +197,24 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     // Upload jpg, then png, then an invalid file format
     await profile.verifyImageFormats(jpgImagePath, pngImagePath, invalidImagePath);
   });
+
+  test('Test case 13: Verify unsupported file formats show validation error.', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    ensureDirExists(IMAGE_DIR);
+    const invalidImagePath = path.join(IMAGE_DIR, 'invalidImage.webp');
+
+    ensureFileExists(invalidImagePath, 'This is an invalid image format file.');
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+
+    // Upload jpg, then png, then an invalid file format
+    await profile.verifyUnsupportedFiles(invalidImagePath);
+  });
 });
