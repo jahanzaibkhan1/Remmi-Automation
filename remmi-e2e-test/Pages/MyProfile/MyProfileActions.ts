@@ -1285,5 +1285,27 @@ export class MyProfileActions {
       await this.crossPopup();
       
     });
-}
+  }
+  async verifyImageFormats(jpgImagePath: string, pngImagePath: string, invalidImagePath?: string) {
+    await test.step('Verify JPG/PNG allowed and invalid images are rejected for team upload.', async () => {
+      await this.NavigateToTeamsTab();
+
+      // Open Add Team popup
+      const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+      await selectTeamInput.click();
+      await this.createNewTeamButton();
+      const popup = this.page.getByText('Add TeamUpload profile');
+      await expect(popup).toBeVisible();
+      await this.changeProfile(jpgImagePath);
+      await this.changeProfile(pngImagePath);
+
+      // Try invalid image format if provided
+      if (invalidImagePath) {
+        await this.changeProfile(invalidImagePath);
+        // Expect a validation message or error to show, not accept image
+        const errorMessage = this.page.locator('div').filter({ hasText: 'Unsupported file format!' }).nth(2);
+        await expect(errorMessage).toBeVisible({ timeout: 5000 });
+      }
+    });
+  }
 }
