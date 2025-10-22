@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.31261299999989">
-<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-22T09:30:41.837Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.125" errors="0">
-<testcase name="Teams Tab Tests - Remmi E2E › Test case 17: Verify selecting office filters available members." classname="Pages\MyProfile\teams.test.spec.ts" time="23.125">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="57.8053169999998">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-22T09:59:44.240Z" hostname="chromium" tests="1" failures="0" skipped="0" time="50.718" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 18: Verify no members shown when office not selected" classname="Pages\MyProfile\teams.test.spec.ts" time="50.718">
 </testcase>
 </testsuite>
 </testsuites>
