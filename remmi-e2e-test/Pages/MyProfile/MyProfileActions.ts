@@ -486,24 +486,32 @@ export class MyProfileActions {
     await officeOption.first().click();
   }
 
-  private async SelectTeamMemberDropdown(){
-    const TeamMemberDropdown = this.locators.SelectTeamMemberDropdown();
-    await expect(TeamMemberDropdown).toBeVisible();
-    await TeamMemberDropdown.click();
+  private async SelectTeamMember() {
+    const dropdown = this.locators.SelectTeamMemberDropdown();
+    await expect(dropdown).toBeVisible({ timeout: 10000 });
+    await dropdown.click();
   }
-  private async selectTeamFromDropdown(teamName: string) {
-    const dropdownInput = this.locators.SelectTeam(teamName);
-    await expect(dropdownInput).toBeVisible();
-    await dropdownInput.click();
-    
-    // Wait for dropdown to render in DOM
-    await this.page.waitForSelector('.ng-dropdown-panel .ng-option', { state: 'visible', timeout: 10000 });
   
-    // Locate and click team option
-    const option = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: teamName });
-    await option.click();
+  private async SelectTeamMemberSearchInput(memberName: string) {
+    const input = this.locators.SelectTeamMemberSearchInput();
+    await expect(input).toBeVisible({ timeout: 5000 });
+    await input.fill(memberName);
+  
+    // Wait for dropdown to populate after typing
+    await this.page.waitForTimeout(1000);
   }
-
+  
+  private async selectTeamFromDropdown(memberName: string) {
+    const option = this.locators.SelectTeamMemberOption().filter({ hasText: memberName });
+  
+    // Wait until at least one matching option appears
+    await expect(option.first()).toBeVisible({ timeout: 10000 });
+  
+    // Scroll & click safely
+    await option.first().scrollIntoViewIfNeeded();
+    await option.first().click({ force: true });
+  }
+  
   private async editTeam(teamName: string) {
     const EditIcon = this.locators.EditIcon();
     await EditIcon.click();
@@ -1417,10 +1425,38 @@ async VerifyNoMembersWithoutOffice() {
     const selectTeamInput = this.page.locator('ng-select[name="team"] input');
     await selectTeamInput.click();
     await this.createNewTeamButton();
-    await this.SelectTeamMemberDropdown()
+    await this.SelectTeamMember()
     const NoRecord = this.page.getByText('No Record Found')
     await expect(NoRecord).toBeVisible()
 
   });
 }
+async VerifyTeamLeaderDropdownActive(OfficeName: string, teamName: string) {
+  await test.step('Verify selecting members activates Team Leader dropdown', async () => {
+    await this.NavigateToTeamsTab();
+
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    // Select office
+    await this.SelectOffice(OfficeName);
+    await this.SelectOfficeOption();
+
+    // Select member
+    await this.SelectTeamMember();
+    await this.SelectTeamMemberSearchInput(teamName);
+    await this.page.waitForTimeout(1000);
+    await this.selectTeamFromDropdown(teamName);
+
+    await this.SelectTeamMember();
+
+    // ✅ Verify Team Leader dropdown becomes active (enabled)
+    const teamLeaderDropdown = this.page.locator('div').filter({ hasText: /^Team Leader \*Select Members$/ }).first();
+    await expect(teamLeaderDropdown).toBeVisible()
+  });
+}
+
+
 }
