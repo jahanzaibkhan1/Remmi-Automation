@@ -307,6 +307,13 @@ export class MyProfileLocators {
   changeProfile():Locator{
     return this.page.locator('.profile-changer');
   }
+  SelectOffice(OfficeName: string):Locator{
+    return this.page.locator("div[aria-expanded='true'] input[type='text']");
+  }
+  SelectOfficeOption():Locator{
+    return this.page.locator("span[class='p-element ng-star-inserted']")
+  }
+
   // -------------------------------------------Locator for MFA tab------------------------------------------//
   mfaTab(): Locator {
     return this.page.getByRole('tab', { name: 'MFA' });
