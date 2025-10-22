@@ -451,7 +451,23 @@ export class MyProfileActions {
     // Type the team name directly
     await searchTeam.fill(teamName);
   }
-  
+
+  private async createNewTeamButton(){
+    const createNewTeam = this.locators.createNewTeam();
+    await expect(createNewTeam).toBeVisible();
+    await createNewTeam.click();
+  }
+
+  private async crossPopup(){
+    const crossPopup = this.locators.crossPopup();
+    await expect(crossPopup).toBeVisible();
+    await crossPopup.click();
+  }
+  private async changeProfile(imagePath: string) {
+    const changeProfileButton = this.locators.changeProfile();
+    const fileInput = this.page.locator('input[type="file"]');
+    await fileInput.setInputFiles(imagePath);
+  }
   private async selectTeamFromDropdown(teamName: string) {
     const dropdownInput = this.locators.SelectTeam(teamName);
     await expect(dropdownInput).toBeVisible();
@@ -464,10 +480,6 @@ export class MyProfileActions {
     const option = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: teamName });
     await option.click();
   }
-  
-  
-  
-  
 
   private async editTeam(teamName: string) {
     const EditIcon = this.locators.EditIcon();
@@ -1251,5 +1263,49 @@ export class MyProfileActions {
     });
   }
 
-}
+  async VerifyCreateNewTeamPopUp() {
+    await test.step('Verify “Create New” opens Add Team popup.', async () => {
+      await this.NavigateToTeamsTab();
+      const SelectTeam = this.page.locator('ng-select[name="team"] input');
+      await SelectTeam.click();
+      await this.createNewTeamButton();
+      const verifyPopup = this.page.getByText('Add TeamUpload profile');
+      await expect(verifyPopup).toBeVisible();
+      
+    });
+  }
+  async VerifyCrossPopUpButton() {
+    await test.step('Verify popup close (X) closes Add Team popup.', async () => {
+      await this.NavigateToTeamsTab();
+      const SelectTeam = this.page.locator('ng-select[name="team"] input');
+      await SelectTeam.click();
+      await this.createNewTeamButton();
+      const verifyPopup = this.page.getByText('Add TeamUpload profile');
+      await expect(verifyPopup).toBeVisible();
+      await this.crossPopup();
+      
+    });
+  }
+  async verifyImageFormats(jpgImagePath: string, pngImagePath: string, invalidImagePath?: string) {
+    await test.step('Verify JPG/PNG allowed and invalid images are rejected for team upload.', async () => {
+      await this.NavigateToTeamsTab();
 
+      // Open Add Team popup
+      const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+      await selectTeamInput.click();
+      await this.createNewTeamButton();
+      const popup = this.page.getByText('Add TeamUpload profile');
+      await expect(popup).toBeVisible();
+      await this.changeProfile(jpgImagePath);
+      await this.changeProfile(pngImagePath);
+
+      // Try invalid image format if provided
+      if (invalidImagePath) {
+        await this.changeProfile(invalidImagePath);
+        // Expect a validation message or error to show, not accept image
+        const errorMessage = this.page.locator('div').filter({ hasText: 'Unsupported file format!' }).nth(2);
+        await expect(errorMessage).toBeVisible({ timeout: 5000 });
+      }
+    });
+  }
+}

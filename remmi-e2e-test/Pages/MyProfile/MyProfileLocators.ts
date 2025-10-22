@@ -298,6 +298,15 @@ export class MyProfileLocators {
     return this.page.getByRole('textbox', { name: 'Search keyword' })
   }
 
+  createNewTeam():Locator{
+    return this.page.getByRole('link', { name: '+ Create new' })
+  }
+  crossPopup():Locator{
+    return this.page.locator("//button[@class='popup-close']");
+  }
+  changeProfile():Locator{
+    return this.page.locator('.profile-changer');
+  }
   // -------------------------------------------Locator for MFA tab------------------------------------------//
   mfaTab(): Locator {
     return this.page.getByRole('tab', { name: 'MFA' });
