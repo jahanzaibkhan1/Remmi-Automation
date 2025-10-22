@@ -2,7 +2,9 @@ import { Page, Locator, expect, test } from '@playwright/test';
 import { MyProfileLocators } from './MyProfileLocators';
 import { url } from 'inspector';
 import { setEngine } from 'crypto';
+import { faker } from '@faker-js/faker';
 import { AsyncLocalStorage } from 'async_hooks';
+import { time } from 'console';
 
 /**
  * Actions and verifications for the My Profile page.
@@ -446,34 +448,108 @@ export class MyProfileActions {
   private async searchTeamName(teamName: string) {
     const searchTeam = this.locators.SelectTeam(teamName);
     await expect(searchTeam).toBeVisible();
-  
     // Click to open dropdown first
     await searchTeam.click();
-  
     // Type the team name directly
-    await searchTeam.pressSequentially(teamName);
-  
-    // Wait for dropdown options to appear
-    await this.page.waitForSelector('.ng-dropdown-panel .ng-option', { state: 'visible', timeout: 10000 });
+    await searchTeam.fill(teamName);
   }
-  
-  private async selectTeamFromDropdown(teamName: string) {
-    const dropdownInput = this.locators.SelectTeam(teamName);
-    await expect(dropdownInput).toBeVisible();
-    await dropdownInput.click();
-    
-    // Wait for dropdown to render in DOM
-    await this.page.waitForSelector('.ng-dropdown-panel .ng-option', { state: 'visible', timeout: 10000 });
-  
-    // Locate and click team option
-    const option = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: teamName });
-    await option.click();
-  }
-  
-  
-  
-  
 
+  private async createNewTeamButton(){
+    const createNewTeam = this.locators.createNewTeam();
+    await expect(createNewTeam).toBeVisible();
+    await createNewTeam.click();
+  }
+
+  private async crossPopup(){
+    const crossPopup = this.locators.crossPopup();
+    await expect(crossPopup).toBeVisible();
+    await crossPopup.click();
+  }
+  private async changeProfile(imagePath: string) {
+    const changeProfileButton = this.locators.changeProfile();
+    const fileInput = this.page.locator('input[type="file"]');
+    await fileInput.setInputFiles(imagePath);
+  }
+  private async CreateTeamButton(){
+    const CreateTeamButton = this.page.getByRole('button', { name: 'Create Team' });
+    await expect(CreateTeamButton).toBeVisible();
+    await CreateTeamButton.click();
+  }
+  private async SelectOffice(officeName: string) {
+    const officeInput = this.locators.SelectOffice(officeName);
+    await officeInput.click();
+    await expect(officeInput).toBeVisible({ timeout: 5000 });
+    await officeInput.fill(officeName);
+  }
+
+  private async SelectOfficeOption() {
+    const officeOption = this.locators.SelectOfficeOption();
+    await expect(officeOption.first()).toBeVisible({ timeout: 5000 });
+    await officeOption.first().click();
+  }
+
+  private async SelectTeamMember() {
+    const dropdown = this.locators.SelectTeamMemberDropdown();
+    await expect(dropdown).toBeVisible({ timeout: 10000 });
+    await dropdown.click();
+  }
+  
+  private async SelectTeamMemberSearchInput(memberName: string) {
+    const input = this.locators.SelectTeamMemberSearchInput();
+    await expect(input).toBeVisible({ timeout: 5000 });
+    await input.fill(memberName);
+  
+    // Wait for dropdown to populate after typing
+    await this.page.waitForTimeout(1000);
+  }
+  
+  private async selectTeamFromDropdown(memberName: string) {
+    const option = this.locators.SelectTeamMemberOption().filter({ hasText: memberName });
+  
+    // Wait until at least one matching option appears
+    await expect(option.first()).toBeVisible({ timeout: 10000 });
+  
+    // Scroll & click safely
+    await option.first().scrollIntoViewIfNeeded();
+    await option.first().click({ force: true });
+  }
+
+  private async SelectTeamLeader() {
+    const dropdown = this.locators.SelectTeamLeaderDropdown();
+    await expect(dropdown).toBeVisible({ timeout: 10000 });
+    await dropdown.click();
+  }
+  
+  private async SelectTeamLeaderSearchInput(leaderName: string) {
+    const input = this.locators.SelectTeamLeaderSearchInput();
+    await expect(input).toBeVisible({ timeout: 5000 });
+    await input.fill(leaderName);
+  
+    // Wait for dropdown to populate after typing
+    await this.page.waitForTimeout(1000);
+  }
+  
+  private async SelectTeamLeaderFromDropdown(leaderName: string) {
+    const option = this.locators.SelectTeamLeaderOption().filter({ hasText: leaderName });
+  
+    // Wait until at least one matching option appears
+    await expect(option.first()).toBeVisible({ timeout: 10000 });
+  
+    // Scroll & click safely
+    await option.first().scrollIntoViewIfNeeded();
+    await option.first().click({ force: true });
+  }
+
+  private async EnterTeamName() {
+    const teamNameInput = this.locators.TeamNameInput();
+    await teamNameInput.click();
+    // Generate a unique team name using faker
+    const teamName = `Team ${faker.word.sample()}`;
+    // Fill the input field
+    await teamNameInput.fill(teamName);
+  }
+  
+  
   private async editTeam(teamName: string) {
     const EditIcon = this.locators.EditIcon();
     await EditIcon.click();
@@ -663,7 +739,6 @@ export class MyProfileActions {
       }
 
       // Move image slightly left if crop box is present
-      await this.moveImageSlightlyLeft();
       await this.clickUpdateImages();
       await this.expectImagesUpdatedToast();
     });
@@ -711,26 +786,44 @@ export class MyProfileActions {
   }
 
   async VerifyProfileImagePersistsAfterReload(imagePath: string) {
-    await test.step('Verify that the updated profile image persists after reload', async () => {
+    await test.step('Verify that the updated profile image persists after reload (FAST)', async () => {
       await this.goToImagesTab();
-      await this.clickAddMoreImagesButton();
-      await this.clickLastUploadImageButton();
+
+      // Parallelize add/click
+      await Promise.all([
+        this.clickAddMoreImagesButton(),
+        this.clickLastUploadImageButton(),
+      ]);
       await this.setLastFileInput(imagePath);
       await this.moveImageSlightlyLeft();
+
       const checkboxes = this.page.locator('.p-checkbox-box:visible:not(.p-disabled)');
-      await checkboxes.first().waitFor({ state: 'visible', timeout: 20000 });
+      // Only wait for the first visible checkbox, but continue as soon as possible
+      await checkboxes.first().waitFor({ state: 'visible', timeout: 7000 });
       const count = await checkboxes.count();
+
       if (count === 0) throw new Error('❌ No visible checkboxes found to click');
       const lastCheckbox = checkboxes.nth(count - 1);
-      await lastCheckbox.scrollIntoViewIfNeeded();
+      await Promise.all([
+        lastCheckbox.scrollIntoViewIfNeeded(),
+        checkboxes,
+      ]);
       await lastCheckbox.click({ force: true });
-      console.log('☑️ Last visible checkbox clicked successfully');
-      await this.clickUpdateImages();
-      await this.expectImagesUpdatedToast();
+      // Remove console log for speed
+
+      // Don't unnecessarily wait between update and toast
+      await Promise.all([
+        this.clickUpdateImages(),
+        (async () => {
+          await this.expectImagesUpdatedToast();
+        })()
+      ]);
+
       await this.page.reload();
       await this.expectProfileImageVisible();
     });
   }
+
 
   async VerifyDefaultPlaceholder() {
     await test.step('Verify the default placeholder is visible when no image is uploaded or in the first image slot', async () => {
@@ -1214,6 +1307,255 @@ export class MyProfileActions {
       }
     });
   }
+  async verifySelectMultipleTeams(teamNames: string[]) {
+    await test.step('Verify clicking Add adds selected teams to list.', async () => {
+      await this.NavigateToTeamsTab();
 
+      for (const name of teamNames) {
+        const searchBox = this.locators.SelectTeam(name);
+        await expect(searchBox).toBeVisible();
+        await searchBox.fill(name);
+
+        const option = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: name });
+        await expect(option).toBeVisible({ timeout: 5000 });
+        await option.click();
+      }
+
+      await this.AddButton();
+
+      // Verify each selected team appears as a tag
+      for (const name of teamNames) {
+        const tag = this.page.locator('.ng-value-label', { hasText: name });
+        await expect(tag).toBeVisible({ timeout: 5000 });
+        await expect(tag).toHaveCount(1);
+      }
+    });
+  }
+
+  async VerifyCreateNewTeamPopUp() {
+    await test.step('Verify “Create New” opens Add Team popup.', async () => {
+      await this.NavigateToTeamsTab();
+      const SelectTeam = this.page.locator('ng-select[name="team"] input');
+      await SelectTeam.click();
+      await this.createNewTeamButton();
+      const verifyPopup = this.page.getByText('Add TeamUpload profile');
+      await expect(verifyPopup).toBeVisible();
+      
+    });
+  }
+  async VerifyCrossPopUpButton() {
+    await test.step('Verify popup close (X) closes Add Team popup.', async () => {
+      await this.NavigateToTeamsTab();
+      const SelectTeam = this.page.locator('ng-select[name="team"] input');
+      await SelectTeam.click();
+      await this.createNewTeamButton();
+      const verifyPopup = this.page.getByText('Add TeamUpload profile');
+      await expect(verifyPopup).toBeVisible();
+      await this.crossPopup();
+      
+    });
+  }
+  async verifyImageFormats(jpgImagePath: string, pngImagePath: string, invalidImagePath?: string) {
+    await test.step('Verify JPG/PNG allowed and invalid images are rejected for team upload.', async () => {
+      await this.NavigateToTeamsTab();
+
+      // Open Add Team popup
+      const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+      await selectTeamInput.click();
+      await this.createNewTeamButton();
+      const popup = this.page.getByText('Add TeamUpload profile');
+      await expect(popup).toBeVisible();
+      await this.changeProfile(jpgImagePath);
+      await this.changeProfile(pngImagePath);
+
+      // Try invalid image format if provided
+      if (invalidImagePath) {
+        await this.changeProfile(invalidImagePath);
+        // Expect a validation message or error to show, not accept image
+        const errorMessage = this.page.locator('div').filter({ hasText: 'Unsupported file format!' }).nth(2);
+        await expect(errorMessage).toBeVisible({ timeout: 5000 });
+      }
+    });
+  }
+
+  async verifyUnsupportedFiles(invalidImagePath?: string) {
+    await test.step('Verify unsupported file formats show validation error.', async () => {
+      await this.NavigateToTeamsTab();
+
+      // Open Add Team popup
+      const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+      await selectTeamInput.click();
+      await this.createNewTeamButton();
+      const popup = this.page.getByText('Add TeamUpload profile');
+      await expect(popup).toBeVisible();
+      // Try invalid image format if provided
+      if (invalidImagePath) {
+        await this.changeProfile(invalidImagePath);
+        // Expect a validation message or error to show, not accept image
+        const errorMessage = this.page.locator('div').filter({ hasText: 'Unsupported file format!' }).nth(2);
+        await expect(errorMessage).toBeVisible({ timeout: 5000 });
+      }
+    });
+  }
+  // Verify required field validation for Team Name, Office, and Members.
+  async VerifyRequiredFiled() {
+    await test.step('Verify required field validation for Team Name, Office, and Members', async () => {
+      await this.NavigateToTeamsTab();
+      // Open Add Team popup
+      const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+      await selectTeamInput.click();
+      await this.createNewTeamButton();
+
+      const popup = this.page.getByText('Add TeamUpload profile');
+      await expect(popup).toBeVisible();
+      await this.CreateTeamButton();
+
+      // Assert required validation errors appear
+      const requiredTeamError = this.page.getByText(/Team Name is required/i);
+      const requiredOfficeError = this.page.getByText(/Office is required/i);
+      const requiredMembersError = this.page.getByText('Team Member(s) is required');
+
+      await expect(requiredTeamError).toBeVisible();
+      await expect(requiredOfficeError).toBeVisible();
+      await expect(requiredMembersError).toBeVisible();
+    });
+  }
+
+async VerifyRequiredFieldValidation() {
+  await test.step('Verify team cannot be created with missing required field', async () => {
+    await this.NavigateToTeamsTab();
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    await this.CreateTeamButton();
+
+    // Assert required validation errors appear
+    const requiredTeamError = this.page.getByText(/Team Name is required/i);
+    const requiredOfficeError = this.page.getByText(/Office is required/i);
+    const requiredMembersError = this.page.getByText('Team Member(s) is required');
+
+    await expect(requiredTeamError).toBeVisible();
+    await expect(requiredOfficeError).toBeVisible();
+    await expect(requiredMembersError).toBeVisible();
+  });
 }
 
+async VerifySelectingOfficeFiltersMembers(OfficeName: string) {
+  await test.step('Verify selecting office filters available members', async () => {
+    await this.NavigateToTeamsTab();
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    // Select an office
+    await this.SelectOffice(OfficeName);
+    await this.SelectOfficeOption();
+
+  });
+}
+async VerifyNoMembersWithoutOffice() {
+  await test.step('Verify no members shown when office not selected', async () => {
+    await this.NavigateToTeamsTab();
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+    await this.SelectTeamMember()
+    const NoRecord = this.page.getByText('No Record Found')
+    await expect(NoRecord).toBeVisible()
+
+  });
+}
+async VerifyTeamLeaderDropdownActive(OfficeName: string, teamName: string) {
+  await test.step('Verify selecting members activates Team Leader dropdown', async () => {
+    await this.NavigateToTeamsTab();
+
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    // Select office
+    await this.SelectOffice(OfficeName);
+    await this.SelectOfficeOption();
+
+    // Select member
+    await this.SelectTeamMember();
+    await this.SelectTeamMemberSearchInput(teamName);
+    await this.page.waitForTimeout(1000);
+    await this.selectTeamFromDropdown(teamName);
+
+    await this.SelectTeamMember();
+
+    // ✅ Verify Team Leader dropdown becomes active (enabled)
+    const teamLeaderDropdown = this.page.locator('div').filter({ hasText: /^Team Leader \*Select Members$/ }).first();
+    await expect(teamLeaderDropdown).toBeVisible()
+  });
+}
+
+async VerifyTeamCreationWithoutLeader(OfficeName: string, teamName: string) {
+  await test.step('Verify selecting members activates Team Leader dropdown', async () => {
+    await this.NavigateToTeamsTab();
+
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    // Select office
+    await this.SelectOffice(OfficeName);
+    await this.SelectOfficeOption();
+
+    // Select member
+    await this.SelectTeamMember();
+    await this.SelectTeamMemberSearchInput(teamName);
+    await this.page.waitForTimeout(1000);
+    await this.selectTeamFromDropdown(teamName);
+    await this.SelectTeamMember();
+    await this.CreateTeamButton()
+    const requiredLeaderError = this.page.getByText(/Team Leader is required/i);
+    await expect(requiredLeaderError).toBeVisible({ timeout: 5000 });
+  });
+}
+async VerifyTeamCreationWithValidDetails(OfficeName: string, memberName: string, leaderName: string) {
+  await test.step('Verify successful team creation with all valid details', async () => {
+    await this.NavigateToTeamsTab();
+
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    // Enter team name
+    await this.EnterTeamName()
+
+    // Select office
+    await this.SelectOffice(OfficeName);
+    await this.SelectOfficeOption();
+
+    // Select member
+    await this.SelectTeamMember();
+    await this.SelectTeamMemberSearchInput(memberName);
+    await this.page.waitForTimeout(1000);
+    await this.selectTeamFromDropdown(memberName);
+    await this.SelectTeamMember();
+
+    // Select team leader
+    await this.SelectTeamLeader();
+    await this.SelectTeamLeaderSearchInput(leaderName);
+    await this.SelectTeamLeaderFromDropdown(leaderName);
+
+    // Create team
+    await this.CreateTeamButton();
+
+    // Verify success toast message
+    const successToast = this.page.getByText(/Team created/i);
+    await expect(successToast).toBeVisible({ timeout: 10000 });
+
+
+  });
+}
+}

@@ -273,15 +273,13 @@ export class MyProfileLocators {
     return this.page.getByRole('tab', { name: 'Teams' });
   }
   SelectTeam(teamName: string): Locator {
-    // Locator for the team dropdown textbox (to open dropdown)
-    return this.page
-      .locator('ng-select')
-      .filter({ hasText: 'Select Team' })
-      .getByRole('textbox');
+    // Keep same method name and param — no need to change in tests
+    return this.page.locator('ng-select[name="team"] input');
   }
-
+  
   SelectTeamOption(teamName: string): Locator {
-    return this.page.locator('.ng-dropdown-panel .ng-option', { hasText: teamName });
+    // Updated for better matching
+    return this.page.locator('.ng-dropdown-panel .ng-option span', { hasText: teamName });
   }
   
   AddButton(): Locator {
@@ -300,6 +298,55 @@ export class MyProfileLocators {
     return this.page.getByRole('textbox', { name: 'Search keyword' })
   }
 
+  createNewTeam():Locator{
+    return this.page.getByRole('link', { name: '+ Create new' })
+  }
+  crossPopup():Locator{
+    return this.page.locator("//button[@class='popup-close']");
+  }
+  changeProfile():Locator{
+    return this.page.locator('.profile-changer');
+  }
+  SelectOffice(OfficeName: string):Locator{
+    return this.page.locator('div.ng-value-container input[type="text"]').nth(3);
+  }
+  SelectOfficeOption():Locator{
+    return this.page.locator("span[class='p-element ng-star-inserted']")
+  }
+  SelectTeamMemberDropdown(): Locator {
+    return this.page.locator('re-multiselect[formcontrolname="members"] .tags');
+  }
+  
+  SelectTeamMemberSearchInput(): Locator {
+    return this.page.locator("input[placeholder='Type to search']");
+  }
+  
+  SelectTeamMemberOption(): Locator {
+    return this.page.locator("//li[@class='p-element ng-star-inserted']");
+  }
+
+  SelectTeamLeaderDropdown(): Locator {
+    return this.page.locator("ng-select[placeholder='Select Members'] div[class='ng-placeholder']");
+  }
+  
+  SelectTeamLeaderSearchInput(): Locator {
+    return this.page.locator("div[aria-expanded='true'] input[type='text']");
+  }
+  
+  SelectTeamLeaderOption(): Locator {
+    return this.page.locator(".ng-option span.p-element.ng-star-inserted");
+  }
+  
+  
+  TeamNameInput(): Locator {
+    return this.page.getByRole('textbox').nth(4);
+  }
+  
+  
+  SelectNoRecordFound(): Locator {
+    return this.page.locator('re-multiselect[formcontrolname="members"] ul li', { hasText: 'No Record Found' });
+  }
+  
   // -------------------------------------------Locator for MFA tab------------------------------------------//
   mfaTab(): Locator {
     return this.page.getByRole('tab', { name: 'MFA' });
