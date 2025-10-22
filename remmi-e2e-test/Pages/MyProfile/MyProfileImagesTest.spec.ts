@@ -88,7 +88,7 @@ test.describe('My Profile Tests - Remmi E2E', () => {
 
     await profile.navigateToProfilePage();
     const imagePath1 = path.join(IMAGE_DIR, 'High.jpg');
-    const imagePath2 = path.join(IMAGE_DIR, 'Profile.jpg');
+    const imagePath2 = path.join(IMAGE_DIR, 'High.jpg');
     await profile.manageExistingThumbnails(imagePath1, imagePath2);
   });
 

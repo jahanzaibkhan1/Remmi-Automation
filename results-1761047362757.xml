@@ -1,0 +1,440 @@
+<testsuites id="" name="" tests="53" failures="5" skipped="0" errors="0" time="1165.192162">
+<testsuite name="Pages\Login\login.spec.ts" timestamp="2025-10-21T11:49:23.715Z" hostname="chromium" tests="14" failures="1" skipped="0" time="619.285" errors="0">
+<testcase name="Login Tests - Remmi E2E › Successful login with OTP" classname="Pages\Login\login.spec.ts" time="48.596">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Verify OTP during login" classname="Pages\Login\login.spec.ts" time="46.664">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Verify login placeholders" classname="Pages\Login\login.spec.ts" time="35.641">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Toggle password visibility" classname="Pages\Login\login.spec.ts" time="30.419">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Login without accepting terms" classname="Pages\Login\login.spec.ts" time="61.835">
+<failure message="login.spec.ts:35:7 Login without accepting terms" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Login\login.spec.ts:35:7 › Login Tests - Remmi E2E › Login without accepting terms 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.fill: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByRole('textbox', { name: /email/i })
+
+
+       at Pages\Login\LoginAction.ts:25
+
+      23 |   /** Fill email and password fields. Ensures compatibility by using role and text selectors. */
+      24 |   async fillCredentials(email: string, password: string) {
+    > 25 |     await this.locators.emailField().fill(email);
+         |                                      ^
+      26 |     await expect(this.locators.emailField()).toHaveValue(email);
+      27 |
+      28 |     await this.locators.passwordField().fill(password);
+        at LoginActions.fillCredentials (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:25:38)
+        at LoginActions.withoutCheckbox (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:139:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\login.spec.ts:37:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium\error-context.md
+]]>
+</failure>
+<system-err>
+<![CDATA[
+Warning: attachment test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium\test-failed-1.png is missing
+Warning: attachment test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium\video.webm is missing
+Warning: attachment test-results\Pages-Login-login-Login-Te-c03cc-gin-without-accepting-terms-chromium\error-context.md is missing]]>
+</system-err>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Invalid email format" classname="Pages\Login\login.spec.ts" time="59.359">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Incorrect password" classname="Pages\Login\login.spec.ts" time="32.634">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Retry login after failed attempt" classname="Pages\Login\login.spec.ts" time="48.121">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Login with invalid OTP" classname="Pages\Login\login.spec.ts" time="57.081">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Forgot Password without entering OTP" classname="Pages\Login\login.spec.ts" time="42.506">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Empty email" classname="Pages\Login\login.spec.ts" time="38.098">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Empty password" classname="Pages\Login\login.spec.ts" time="42.774">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Both email and password empty" classname="Pages\Login\login.spec.ts" time="36.972">
+</testcase>
+<testcase name="Login Tests - Remmi E2E › OTP shorter/longer than expected" classname="Pages\Login\login.spec.ts" time="38.585">
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\MyProfileImagesTest.spec.ts" timestamp="2025-10-21T11:49:23.715Z" hostname="chromium" tests="16" failures="2" skipped="0" time="751.083" errors="0">
+<testcase name="My Profile Tests - Remmi E2E › Test 1: User can upload a profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="49.534">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 2: User can open the upload multiple images flow" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="46.889">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 3: Verify selected image is set as the profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="66.839">
+<failure message="MyProfileImagesTest.spec.ts:51:7 Test 3: Verify selected image is set as the profile image" type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\MyProfileImagesTest.spec.ts:51:7 › My Profile Tests - Remmi E2E › Test 3: Verify selected image is set as the profile image › Set uploaded image as default profile 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.scrollIntoViewIfNeeded: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for locator('div:nth-child(4) > .d-flex.align-items-center.my-2 > .d-flex > .p-element > .p-checkbox > .p-checkbox-box')
+
+
+       at Pages\MyProfile\MyProfileActions.ts:207
+
+      205 |   private async clickDefaultProfileCheckbox() {
+      206 |     const checkbox = this.locators.defaultProfileCheckbox();
+    > 207 |     await checkbox.scrollIntoViewIfNeeded();
+          |                    ^
+      208 |     await expect(checkbox).toBeVisible({ timeout: 10000 });
+      209 |     await checkbox.click({ force: true });
+      210 |   }
+        at MyProfileActions.clickDefaultProfileCheckbox (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:207:20)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:618:18
+        at MyProfileActions.setImageAsDefaultProfile (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:616:5)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileImagesTest.spec.ts:58:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-MyProfileI-ff29a-is-set-as-the-profile-image-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-MyProfileI-ff29a-is-set-as-the-profile-image-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-MyProfileI-ff29a-is-set-as-the-profile-image-chromium\error-context.md
+]]>
+</failure>
+<system-err>
+<![CDATA[
+Warning: attachment test-results\Pages-MyProfile-MyProfileI-ff29a-is-set-as-the-profile-image-chromium\test-failed-1.png is missing
+Warning: attachment test-results\Pages-MyProfile-MyProfileI-ff29a-is-set-as-the-profile-image-chromium\video.webm is missing
+Warning: attachment test-results\Pages-MyProfile-MyProfileI-ff29a-is-set-as-the-profile-image-chromium\error-context.md is missing]]>
+</system-err>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 4: Verify thumbnails appear after image upload" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="37.234">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 5: Verify thumbnails are removed when clicking cross button" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="48.544">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 6: User can edit and delete low resolution and agent face thumbnails" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="44.456">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 7: Verify system shows a warning when low resolution image is too small" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="55.875">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 8: Verify invalid image formats cannot be uploaded" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="48.847">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 9: Verify system allows changing profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="46.333">
+<system-out>
+<![CDATA[☑️ Last visible checkbox clicked successfully
+]]>
+</system-out>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 10: Verified profile image persists after reload" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="62.303">
+<failure message="MyProfileImagesTest.spec.ts:130:7 Test 10: Verified profile image persists after reload" type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\MyProfileImagesTest.spec.ts:130:7 › My Profile Tests - Remmi E2E › Test 10: Verified profile image persists after reload › Verify that the updated profile image persists after reload 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.reload: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for navigation until "load"
+        - navigated to "https://portal-staging.remmi.com.au/setting/profile/info"
+
+
+       at Pages\MyProfile\MyProfileActions.ts:725
+
+      723 |       await this.clickUpdateImages();
+      724 |       await this.expectImagesUpdatedToast();
+    > 725 |       await this.page.reload();
+          |                       ^
+      726 |       await this.expectProfileImageVisible();
+      727 |     });
+      728 |   }
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:725:23
+        at MyProfileActions.VerifyProfileImagePersistsAfterReload (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:709:5)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileImagesTest.spec.ts:138:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-MyProfileI-203d4-image-persists-after-reload-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-MyProfileI-203d4-image-persists-after-reload-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-MyProfileI-203d4-image-persists-after-reload-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[☑️ Last visible checkbox clicked successfully
+]]>
+</system-out>
+<system-err>
+<![CDATA[
+Warning: attachment test-results\Pages-MyProfile-MyProfileI-203d4-image-persists-after-reload-chromium\test-failed-1.png is missing
+Warning: attachment test-results\Pages-MyProfile-MyProfileI-203d4-image-persists-after-reload-chromium\video.webm is missing
+Warning: attachment test-results\Pages-MyProfile-MyProfileI-203d4-image-persists-after-reload-chromium\error-context.md is missing]]>
+</system-err>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 11: Verify the default placeholder is visible when no image is uploaded" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="40.177">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 12: Verify user can remove the selected profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="50.23">
+<system-out>
+<![CDATA[✅ Default profile image deleted successfully.
+]]>
+</system-out>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 13: Verify correct aspect ratio is maintained for uploaded images" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="49.981">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 14: Verify system does not allow uploading broken/corrupt image files" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="31.992">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 15: Verify system allows only specific file formats (e.g., JPG, PNG)" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="39.443">
+<system-out>
+<![CDATA[🟢 Uploading valid image: E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Images\Profile.jpg
+✅ Toast appeared with message:  images updated successfully 
+🟢 Uploading valid image: E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Images\High.png
+🔴 Uploading invalid or corrupted image: E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Images\invalidImage.webp
+✅ Invalid/Corrupted image correctly rejected with message: "Unsupported file format! Please upload a valid image"
+🔴 Uploading invalid or corrupted image: E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Images\broken_image.jpg
+✅ Invalid/Corrupted image correctly rejected with message: "Corrupted image file! Please upload a valid image"
+]]>
+</system-out>
+<system-err>
+<![CDATA[⚠️ File not found or inaccessible: E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Images\High.png
+]]>
+</system-err>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 16: Verify proper error message is shown when upload fails" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="32.406">
+<system-out>
+<![CDATA[✅ Upload failure due to network offline verified successfully.
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\MyProfileTest.spec.ts" timestamp="2025-10-21T11:49:23.715Z" hostname="chromium" tests="7" failures="0" skipped="0" time="239.136" errors="0">
+<testcase name="My Profile Tests - Remmi E2E › 1. Profile fields show data &amp; are non-editable" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="31.535">
+<system-out>
+<![CDATA[First Name value: "Jahanzaib"
+First Name non-editable? ✅ Yes
+Last Name value: "Xenex"
+Last Name non-editable? ✅ Yes
+Email value: "jahanzaib.xenex@gmail.com"
+Email non-editable? ✅ Yes
+Mobile Number value: "401235678"
+Mobile Number non-editable? ✅ Yes
+Telephone value: "Telephone"
+Telephone non-editable? ✅ Yes
+Job Title value: "EMPTY"
+Job Title non-editable? ✅ Yes
+Biography value: "EMPTY"
+Biography non-editable? ✅ Yes
+Role value: "Operations Manager"
+Role non-editable? ✅ Yes
+Group value: "QA"
+Group non-editable? ✅ Yes
+Office value: "QA Tester"
+Office non-editable? ✅ Yes
+]]>
+</system-out>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 2. PIN field allows input and updates profile" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="30.923">
+<system-out>
+<![CDATA[🟢 Clicked Update button
+]]>
+</system-out>
+<system-err>
+<![CDATA[⚠️ No toast visible — may auto-save or reload silently
+]]>
+</system-err>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 3. Correct PIN allows private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="28.685">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 5. Fields remain non-editable if data missing" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="42.425">
+<system-out>
+<![CDATA[First Name value: "EMPTY"
+First Name non-editable? ✅ Yes
+Last Name value: "EMPTY"
+Last Name non-editable? ✅ Yes
+Email value: "EMPTY"
+Email non-editable? ✅ Yes
+Mobile Number value: "401235678"
+Mobile Number non-editable? ✅ Yes
+Telephone value: "Telephone"
+Telephone non-editable? ✅ Yes
+Job Title value: "EMPTY"
+Job Title non-editable? ✅ Yes
+Biography value: "EMPTY"
+Biography non-editable? ✅ Yes
+Role value: "Operations Manager"
+Role non-editable? ✅ Yes
+Group value: "QA"
+Group non-editable? ✅ Yes
+Office value: "QA Tester"
+Office non-editable? ✅ Yes
+]]>
+</system-out>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 6. PIN is required for private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="36.571">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 7. Verify PIN is required for private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="36.539">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 8. Incorrect PIN prevents private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="32.458">
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\Notifications.spec.ts" timestamp="2025-10-21T11:49:23.715Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.818" errors="0">
+<testcase name="Notifications Tab Tests - Remmi E2E › Test case 1: User click ON the button for notification  " classname="Pages\MyProfile\Notifications.spec.ts" time="32.818">
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\profileAccess.spec.ts" timestamp="2025-10-21T11:49:23.715Z" hostname="chromium" tests="5" failures="1" skipped="0" time="193.633" errors="0">
+<testcase name="Access Tab Tests - Remmi E2E › Test case 2: The user can successfully select a user from Access tab" classname="Pages\MyProfile\profileAccess.spec.ts" time="37.684">
+<system-out>
+<![CDATA[🟢 Selected user: Dawood Ahmad
+Calendar access updated toast message appeared
+]]>
+</system-out>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 4: Verify multiple users can be granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="60.262">
+<failure message="profileAccess.spec.ts:70:7 Test 4: Verify multiple users can be granted calendar access" type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\profileAccess.spec.ts:70:7 › Access Tab Tests - Remmi E2E › Test 4: Verify multiple users can be granted calendar access 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('li:has-text("Hina Agent") div.checkbox__checkmark')
+    Expected: visible
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 30000ms
+      - waiting for locator('li:has-text("Hina Agent") div.checkbox__checkmark')
+
+
+       at Pages\MyProfile\MyProfileActions.ts:357
+
+      355 |   private async selectUserFromDropdown(userName: string) {
+      356 |     const userOption = this.locators.selectuserFromDropdown(userName);
+    > 357 |     await expect(userOption).toBeVisible({ timeout: 30000 });
+          |                              ^
+      358 |     await userOption.click({ force: true })
+      359 |   }
+      360 |
+        at MyProfileActions.selectUserFromDropdown (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:357:30)
+        at MyProfileActions.grantTaskAccessToMultipleUsers (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:971:18)
+        at grantTaskAccessToMultipleUsers (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\profileAccess.spec.ts:21:3)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\profileAccess.spec.ts:80:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-profileAcc-95cc4--be-granted-calendar-access-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-profileAcc-95cc4--be-granted-calendar-access-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-profileAcc-95cc4--be-granted-calendar-access-chromium\error-context.md
+]]>
+</failure>
+<system-err>
+<![CDATA[
+Warning: attachment test-results\Pages-MyProfile-profileAcc-95cc4--be-granted-calendar-access-chromium\test-failed-1.png is missing
+Warning: attachment test-results\Pages-MyProfile-profileAcc-95cc4--be-granted-calendar-access-chromium\video.webm is missing
+Warning: attachment test-results\Pages-MyProfile-profileAcc-95cc4--be-granted-calendar-access-chromium\error-context.md is missing]]>
+</system-err>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 6: Verify user can remove granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="30.439">
+<system-out>
+<![CDATA[Calendar access updated toast message appeared
+]]>
+</system-out>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 7: Verify that selecting Select All grants access to all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="26.307">
+<system-out>
+<![CDATA[Calendar access updated toast message appeared
+All users selected and saved.
+]]>
+</system-out>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 8: Verify that selecting Deselect All removes access from all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="38.941">
+<system-out>
+<![CDATA[Calendar access updated toast message appeared
+All users deselected and saved.
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\SocialSetting.spec.ts" timestamp="2025-10-21T11:49:23.715Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.158" errors="0">
+<testcase name="Social Settings Tests - Remmi E2E › Test 1: The user can successfully upload social media links and the page updates correctly" classname="Pages\MyProfile\SocialSetting.spec.ts" time="34.158">
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-21T11:49:23.715Z" hostname="chromium" tests="9" failures="1" skipped="0" time="343.447" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 1: Verify search works for existing team names" classname="Pages\MyProfile\teams.test.spec.ts" time="32.826">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 2: Verify no results message appears for invalid team name." classname="Pages\MyProfile\teams.test.spec.ts" time="28.116">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 3: Verify Add button remains disabled when no team is selected." classname="Pages\MyProfile\teams.test.spec.ts" time="35.478">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 4: Verify clicking disabled Add button performs no action." classname="Pages\MyProfile\teams.test.spec.ts" time="34.403">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 5: Verify selecting a team enables Add button." classname="Pages\MyProfile\teams.test.spec.ts" time="36.876">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 6: Verify Add button doesn’t enable due to dropdown lag." classname="Pages\MyProfile\teams.test.spec.ts" time="31.882">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 7: Verify selected teams appear as tags below the dropdown." classname="Pages\MyProfile\teams.test.spec.ts" time="61.694">
+<failure message="teams.test.spec.ts:141:7 Test case 7: Verify selected teams appear as tags below the dropdown." type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\teams.test.spec.ts:141:7 › Teams Tab Tests - Remmi E2E › Test case 7: Verify selected teams appear as tags below the dropdown. › Verify selected team appears as a tag below the dropdown 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByRole('tab', { name: 'Teams' })
+
+
+       at Pages\MyProfile\MyProfileActions.ts:444
+
+      442 |   private async NavigateToTeamsTab() {
+      443 |     const TeamsTabs = this.locators.TeamsTabs();
+    > 444 |     await TeamsTabs.click();
+          |                     ^
+      445 |   }
+      446 |   private async searchTeamName(teamName: string) {
+      447 |     const searchTeam = this.locators.SelectTeam(teamName);
+        at MyProfileActions.NavigateToTeamsTab (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:444:21)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:1155:18
+        at MyProfileActions.verifySelectedTeamAppearsAsTag (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MyProfileActions.ts:1154:16)
+        at verifySelectedTeamAppearsAsTag (E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\teams.test.spec.ts:47:17)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\teams.test.spec.ts:151:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-teams.test-e4c6c-as-tags-below-the-dropdown--chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-teams.test-e4c6c-as-tags-below-the-dropdown--chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-teams.test-e4c6c-as-tags-below-the-dropdown--chromium\error-context.md
+]]>
+</failure>
+<system-err>
+<![CDATA[
+Warning: attachment test-results\Pages-MyProfile-teams.test-e4c6c-as-tags-below-the-dropdown--chromium\test-failed-1.png is missing
+Warning: attachment test-results\Pages-MyProfile-teams.test-e4c6c-as-tags-below-the-dropdown--chromium\video.webm is missing
+Warning: attachment test-results\Pages-MyProfile-teams.test-e4c6c-as-tags-below-the-dropdown--chromium\error-context.md is missing]]>
+</system-err>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 8: Verify removing a tag updates the list" classname="Pages\MyProfile\teams.test.spec.ts" time="45.089">
+<system-out>
+<![CDATA[🟢 Tag for team "Team 2" is visible below dropdown.
+]]>
+</system-out>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 9: Verify user can select multiple teams from dropdown." classname="Pages\MyProfile\teams.test.spec.ts" time="37.083">
+</testcase>
+</testsuite>
+</testsuites>
