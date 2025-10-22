@@ -198,7 +198,7 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     await profile.verifyImageFormats(jpgImagePath, pngImagePath, invalidImagePath);
   });
 
-  test('Test case 13: Verify unsupported file formats show validation error.', async ({ page }) => {
+  test('Test case 14: Verify unsupported file formats show validation error.', async ({ page }) => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
@@ -217,4 +217,18 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     // Upload jpg, then png, then an invalid file format
     await profile.verifyUnsupportedFiles(invalidImagePath);
   });
+
+  test('Test case 15: Verify required field validation for Team Name, Office, and Members.', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+    await profile.VerifyRequiredFiled();
+  });
+
 });
