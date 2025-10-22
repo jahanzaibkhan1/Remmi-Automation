@@ -308,7 +308,7 @@ export class MyProfileLocators {
     return this.page.locator('.profile-changer');
   }
   SelectOffice(OfficeName: string):Locator{
-    return this.page.locator("div[aria-expanded='true'] input[type='text']");
+    return this.page.locator('div.ng-value-container input[type="text"]').nth(3);
   }
   SelectOfficeOption():Locator{
     return this.page.locator("span[class='p-element ng-star-inserted']")
