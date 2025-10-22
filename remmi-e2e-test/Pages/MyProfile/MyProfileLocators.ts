@@ -324,6 +324,24 @@ export class MyProfileLocators {
   SelectTeamMemberOption(): Locator {
     return this.page.locator("//li[@class='p-element ng-star-inserted']");
   }
+
+  SelectTeamLeaderDropdown(): Locator {
+    return this.page.locator("ng-select[placeholder='Select Members'] div[class='ng-placeholder']");
+  }
+  
+  SelectTeamLeaderSearchInput(): Locator {
+    return this.page.locator("div[aria-expanded='true'] input[type='text']");
+  }
+  
+  SelectTeamLeaderOption(): Locator {
+    return this.page.locator(".ng-option span.p-element.ng-star-inserted");
+  }
+  
+  
+  TeamNameInput(): Locator {
+    return this.page.getByRole('textbox').nth(4);
+  }
+  
   
   SelectNoRecordFound(): Locator {
     return this.page.locator('re-multiselect[formcontrolname="members"] ul li', { hasText: 'No Record Found' });
