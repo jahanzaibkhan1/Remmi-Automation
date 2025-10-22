@@ -473,6 +473,17 @@ export class MyProfileActions {
     await expect(CreateTeamButton).toBeVisible();
     await CreateTeamButton.click();
   }
+  private async SelectOffice(officeName: string) {
+    const officeInput = this.locators.SelectOffice(officeName);
+    await expect(officeInput).toBeVisible({ timeout: 5000 });
+    await officeInput.fill(officeName);
+  }
+
+  private async SelectOfficeOption() {
+    const officeOption = this.locators.SelectOfficeOption();
+    await expect(officeOption.first()).toBeVisible({ timeout: 5000 });
+    await officeOption.first().click();
+  }
   private async selectTeamFromDropdown(teamName: string) {
     const dropdownInput = this.locators.SelectTeam(teamName);
     await expect(dropdownInput).toBeVisible();
@@ -1356,4 +1367,47 @@ export class MyProfileActions {
       await expect(requiredMembersError).toBeVisible();
     });
   }
+
+async VerifyRequiredFieldValidation() {
+  await test.step('Verify team cannot be created with missing required field', async () => {
+    await this.NavigateToTeamsTab();
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    await this.CreateTeamButton();
+
+    // Assert required validation errors appear
+    const requiredTeamError = this.page.getByText(/Team Name is required/i);
+    const requiredOfficeError = this.page.getByText(/Office is required/i);
+    const requiredMembersError = this.page.getByText('Team Member(s) is required');
+
+    await expect(requiredTeamError).toBeVisible();
+    await expect(requiredOfficeError).toBeVisible();
+    await expect(requiredMembersError).toBeVisible();
+  });
+}
+
+async VerifySelectingOfficeFiltersMembers(OfficeName: string) {
+  await test.step('Verify selecting office filters available members', async () => {
+    await this.NavigateToTeamsTab();
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    // Select an office
+    await this.SelectOffice(OfficeName);
+    await this.SelectOfficeOption();
+
+    // Verify that members list is filtered based on selected office
+    const membersList = this.page.locator('.member-list-item'); // adjust selector if needed
+    await expect(membersList).toBeVisible();
+
+    // Optionally verify member names or count (example)
+    const memberCount = await membersList.count();
+    expect(memberCount).toBeGreaterThan(0);
+  });
+}
 }

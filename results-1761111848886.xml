@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.88182599999942">
-<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-22T09:00:47.852Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.408" errors="0">
-<testcase name="Teams Tab Tests - Remmi E2E › Test case 15: Verify required field validation for Team Name, Office, and Members." classname="Pages\MyProfile\teams.test.spec.ts" time="24.408">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.23640099999867">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-22T09:07:54.288Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.119" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 16: Verify team cannot be created with missing required field." classname="Pages\MyProfile\teams.test.spec.ts" time="25.119">
 </testcase>
 </testsuite>
 </testsuites>
