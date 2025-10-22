@@ -313,7 +313,22 @@ export class MyProfileLocators {
   SelectOfficeOption():Locator{
     return this.page.locator("span[class='p-element ng-star-inserted']")
   }
-
+  SelectTeamMemberDropdown(): Locator {
+    return this.page.locator('re-multiselect[formcontrolname="members"] .tags');
+  }
+  
+  SelectTeamMemberSearchInput(): Locator {
+    return this.page.locator("input[placeholder='Type to search']");
+  }
+  
+  SelectTeamMemberOption(): Locator {
+    return this.page.locator('re-multiselect[formcontrolname="members"] ul li');
+  }
+  
+  SelectNoRecordFound(): Locator {
+    return this.page.locator('re-multiselect[formcontrolname="members"] ul li', { hasText: 'No Record Found' });
+  }
+  
   // -------------------------------------------Locator for MFA tab------------------------------------------//
   mfaTab(): Locator {
     return this.page.getByRole('tab', { name: 'MFA' });

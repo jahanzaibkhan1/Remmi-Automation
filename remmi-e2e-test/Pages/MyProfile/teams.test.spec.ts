@@ -254,4 +254,17 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     await profile.navigateToProfilePage();
     await profile.VerifySelectingOfficeFiltersMembers('QA Tester');
   });
+
+  test('Test case 18: Verify no members shown when office not selected', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+    await profile.VerifyNoMembersWithoutOffice();
+  });
 });

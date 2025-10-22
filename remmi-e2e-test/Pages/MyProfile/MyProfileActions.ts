@@ -485,6 +485,12 @@ export class MyProfileActions {
     await expect(officeOption.first()).toBeVisible({ timeout: 5000 });
     await officeOption.first().click();
   }
+
+  private async SelectTeamMemberDropdown(){
+    const TeamMemberDropdown = this.locators.SelectTeamMemberDropdown();
+    await expect(TeamMemberDropdown).toBeVisible();
+    await TeamMemberDropdown.click();
+  }
   private async selectTeamFromDropdown(teamName: string) {
     const dropdownInput = this.locators.SelectTeam(teamName);
     await expect(dropdownInput).toBeVisible();
@@ -1401,6 +1407,19 @@ async VerifySelectingOfficeFiltersMembers(OfficeName: string) {
     // Select an office
     await this.SelectOffice(OfficeName);
     await this.SelectOfficeOption();
+
+  });
+}
+async VerifyNoMembersWithoutOffice() {
+  await test.step('Verify no members shown when office not selected', async () => {
+    await this.NavigateToTeamsTab();
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+    await this.SelectTeamMemberDropdown()
+    const NoRecord = this.page.getByText('No Record Found')
+    await expect(NoRecord).toBeVisible()
 
   });
 }
