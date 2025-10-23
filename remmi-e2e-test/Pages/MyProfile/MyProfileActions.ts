@@ -574,8 +574,9 @@ export class MyProfileActions {
     await removeTeamButton.click();
   }
 
-  private async editTeam(teamName: string) {
-    const EditIcon = this.locators.EditIcon();
+  private async editTeam() {
+    const EditIcon = this.locators.EditIcon().last();
+    await EditIcon.scrollIntoViewIfNeeded();
     await EditIcon.click();
   }
 
@@ -1825,6 +1826,15 @@ export class MyProfileActions {
       // --- Descending Check ---
       await sortIcon.click({ force: true });
       console.log('✅ Sort button clicked successfully on empty list - no crash detected.');
+    });
+  }
+
+  async verifyEditIconOpensTeamForUpdate() {
+    await test.step('Verify Edit icon opens team for update', async () => {
+      await this.NavigateToTeamsTab();
+      await this.editTeam();
+      const verifyEditWindowOpen = this.page.getByRole('heading', { name: 'Edit Team' });
+      await expect(verifyEditWindowOpen).toBeVisible();
     });
   }
   
