@@ -1,6 +1,11 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.22512700000033">
-<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-23T11:15:18.669Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.073" errors="0">
-<testcase name="Teams Tab Tests - Remmi E2E › Test case 25: Verify failed team creation doesn’t reflect in list." classname="Pages\MyProfile\teams.test.spec.ts" time="29.073">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.52561100000143">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-23T12:06:26.526Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.374" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 31: Verify confirming Delete removes team permanently." classname="Pages\MyProfile\teams.test.spec.ts" time="28.374">
+<system-out>
+<![CDATA[🟠 Name of the team to be deleted: Team 1
+🟢 The team was deleted and is no longer present in the list: "Team 1"
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
