@@ -1680,4 +1680,50 @@ async verifyUnsavedDataNotPersist(OfficeName: string, memberName: string, leader
     await expect(memberPlaceholder).toBeVisible();
   });
 }
+
+async verifyNewTeamAppearsInListAndDropdown(OfficeName: string, memberName: string, leaderName: string) {
+  await test.step('Verify successful team creation with all valid details', async () => {
+    await this.NavigateToTeamsTab();
+
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    // Enter team name
+    const teamName = `Team ${faker.word.sample()}`; // Generate a unique name
+    const teamNameInput = this.locators.TeamNameInput();
+    await teamNameInput.click();
+    await teamNameInput.fill(teamName);
+
+    // Select office
+    await this.SelectOffice(OfficeName);
+    await this.SelectOfficeOption();
+
+    // Select member
+    await this.SelectTeamMember();
+    await this.SelectTeamMemberSearchInput(memberName);
+    await this.page.waitForTimeout(1000);
+    await this.selectTeamFromDropdown(memberName);
+    await this.SelectTeamMember();
+
+    // Select team leader
+    await this.SelectTeamLeader();
+    await this.SelectTeamLeaderSearchInput(leaderName);
+    await this.SelectTeamLeaderFromDropdown(leaderName);
+
+    // Create team
+    await this.CreateTeamButton();
+
+    // Verify success toast message
+    const successToast = this.page.getByText(/Team created/i);
+    await expect(successToast).toBeVisible({ timeout: 10000 });
+
+    // Navigate to contacts team list & verify team is present in the list
+    await this.NavigateToContacts();
+    await this.contactTeamsList();
+    await this.verifyTeamInTable(teamName);
+    
+  });
+}
 }

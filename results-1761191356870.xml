@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="70.57340099999867">
-<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-23T07:48:40.099Z" hostname="chromium" tests="1" failures="0" skipped="0" time="59.022" errors="0">
-<testcase name="Teams Tab Tests - Remmi E2E › Test case 23: Verify unsaved data does not persist after closing popup" classname="Pages\MyProfile\teams.test.spec.ts" time="59.022">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.736254000000656">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-23T08:54:26.346Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.184" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 24: Verify newly created team appears in dropdown and team list." classname="Pages\MyProfile\teams.test.spec.ts" time="28.184">
 </testcase>
 </testsuite>
 </testsuites>
