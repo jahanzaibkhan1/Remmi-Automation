@@ -1632,4 +1632,52 @@ async verifyCancelClosesPopupWithoutSaving(OfficeName: string, memberName: strin
     await expect(teamRow).not.toBeVisible({ timeout: 5000 });
   });
 }
+
+async verifyUnsavedDataNotPersist(OfficeName: string, memberName: string, leaderName: string) {
+  await test.step('Verify unsaved data does not persist after closing Add Team popup', async () => {
+    await this.NavigateToTeamsTab();
+
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    // Fill in the popup fields
+    const teamName = `Team ${faker.word.sample()}`;
+    const teamNameInput = this.locators.TeamNameInput();
+    await teamNameInput.click();
+    await teamNameInput.fill(teamName);
+
+    await this.SelectOffice(OfficeName);
+    await this.SelectOfficeOption();
+
+    await this.SelectTeamMember();
+    await this.SelectTeamMemberSearchInput(memberName);
+    await this.page.waitForTimeout(1000);
+    await this.selectTeamFromDropdown(memberName);
+    await this.SelectTeamMember();
+
+    await this.SelectTeamLeader();
+    await this.SelectTeamLeaderSearchInput(leaderName);
+    await this.SelectTeamLeaderFromDropdown(leaderName);
+
+    // Close the popup with cancel
+    await this.CancelTeamButton();
+
+    // Reopen the Add Team popup
+    await this.page.locator('ng-select[name="team"] input').click();
+    await this.createNewTeamButton();
+
+    // Assert all the popup fields are empty/default
+    const reopenedTeamNameInput = this.locators.TeamNameInput();
+    await expect(reopenedTeamNameInput).toBeVisible();
+    await expect(reopenedTeamNameInput).toHaveValue("");
+
+    const officePlaceholder = this.page.getByText('Office *Select Office');
+    await expect(officePlaceholder).toBeVisible()
+
+    const memberPlaceholder = this.page.getByText('Team Member *Select Members');
+    await expect(memberPlaceholder).toBeVisible();
+  });
+}
 }
