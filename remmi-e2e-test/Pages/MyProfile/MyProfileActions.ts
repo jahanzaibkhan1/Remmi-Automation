@@ -580,8 +580,8 @@ export class MyProfileActions {
     await EditIcon.click();
   }
 
-  private async deleteTeam(teamName: string) {
-    const DeleteIcon = this.locators.DeleteIcon();
+  private async deleteTeam() {
+    const DeleteIcon = this.locators.DeleteIcon().last();
     await DeleteIcon.click();
   }
 
@@ -1837,5 +1837,24 @@ export class MyProfileActions {
       await expect(verifyEditWindowOpen).toBeVisible();
     });
   }
+
+  async verifyDeleteIconOpensConfirmationPopup() {
+    await test.step('Verify Delete icon opens confirmation popup', async () => {
+      await this.NavigateToTeamsTab();
+  
+      // Click the delete icon for any team
+      await this.deleteTeam()
+  
+      // Wait for confirmation popup to appear
+      const confirmationPopup = this.page.locator('p-dialog[header*="Confirm"], p-dialog:has-text("Are you sure")');
+      await expect(confirmationPopup).toBeVisible({ timeout: 5000 });
+  
+      // Verify that popup contains confirmation text and action buttons
+      await expect(this.page.getByRole('button', { name: /Yes/i })).toBeVisible();
+      await expect(this.page.getByRole('button', { name: /No|Cancel/i })).toBeVisible();
+    });
+  }
+  
+  
   
 }
