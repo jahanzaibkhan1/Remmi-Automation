@@ -290,8 +290,8 @@ export class MyProfileLocators {
   TeamRow(teamName: string): Locator {
     return this.page.locator('tbody.p-datatable-tbody > tr', { hasText: teamName });
 }
-  RemoveTeamButton(): Locator{
-    return this.page.locator("//button[normalize-space()='Cancel']")
+  CancelTeamButton(): Locator{
+    return this.page.getByRole('button', { name: 'Cancel' })
   }
   EditIcon(): Locator {
     return this.page.locator('.cursor-pointer.mr-2');

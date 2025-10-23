@@ -567,6 +567,12 @@ export class MyProfileActions {
     const contactTeams = this.locators.ContactTeams();
     await contactTeams.click();
   }
+
+  private async CancelTeamButton(){
+    const removeTeamButton = this.locators.CancelTeamButton();
+    await expect(removeTeamButton).toBeVisible();
+    await removeTeamButton.click();
+  }
   
   private async editTeam(teamName: string) {
     const EditIcon = this.locators.EditIcon();
@@ -1581,6 +1587,49 @@ async VerifyTeamCreationWithValidDetails(OfficeName: string, memberName: string,
     await this.NavigateToContacts();
     await this.contactTeamsList();
     await this.verifyTeamInTable(teamName);
+  });
+}
+
+async verifyCancelClosesPopupWithoutSaving(OfficeName: string, memberName: string, leaderName: string) {
+  await test.step('Verify Cancel button closes popup without saving', async () => {
+    await this.NavigateToTeamsTab();
+
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    // Enter team name
+    const teamName = `Team ${faker.word.sample()}`; // Generate a unique name
+    const teamNameInput = this.locators.TeamNameInput();
+    await teamNameInput.click();
+    await teamNameInput.fill(teamName);
+
+    // Select office
+    await this.SelectOffice(OfficeName);
+    await this.SelectOfficeOption();
+
+    // Select member
+    await this.SelectTeamMember();
+    await this.SelectTeamMemberSearchInput(memberName);
+    await this.page.waitForTimeout(1000);
+    await this.selectTeamFromDropdown(memberName);
+    await this.SelectTeamMember();
+
+    // Select team leader
+    await this.SelectTeamLeader();
+    await this.SelectTeamLeaderSearchInput(leaderName);
+    await this.SelectTeamLeaderFromDropdown(leaderName);
+    // Click Remove Button
+    await this.CancelTeamButton();
+
+    // Navigate to contacts team list & verify team is not present in the list
+    await this.NavigateToContacts();
+    await this.contactTeamsList();
+
+    // Verify the team is not present - expect locator to be hidden or not visible
+    const teamRow = this.locators.TeamRow(teamName);
+    await expect(teamRow).not.toBeVisible({ timeout: 5000 });
   });
 }
 }
