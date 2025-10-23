@@ -1,6 +1,6 @@
 import { Page, Locator, expect, test } from '@playwright/test';
 import { MyProfileLocators } from './MyProfileLocators';
-import { url } from 'inspector';
+import { url, waitForDebugger } from 'inspector';
 import { setEngine } from 'crypto';
 import { faker } from '@faker-js/faker';
 import { AsyncLocalStorage } from 'async_hooks';
@@ -581,7 +581,7 @@ export class MyProfileActions {
   }
 
   private async deleteTeam() {
-    const DeleteIcon = this.locators.DeleteIcon().last();
+    const DeleteIcon = this.locators.DeleteIcon().first();
     await DeleteIcon.click();
   }
 
@@ -1884,6 +1884,52 @@ export class MyProfileActions {
       await this.page.waitForTimeout(1000); // short wait for UI to settle
       const finalCount = await teamRows.count();
       expect(finalCount).toBe(initialCount);
+    });
+  }
+  
+  async verifyDeleteIconRemovesTeamPermanently() {
+    await test.step('Verify deleted team not shown in dropdown.', async () => {
+      await this.NavigateToTeamsTab();
+  
+      // Capture the first team's name before deleting
+      const firstTeamRow = this.page.locator('tbody tr').nth(1);
+      const teamName = (await firstTeamRow.locator('td').nth(1).textContent())?.trim();
+      if (!teamName) throw new Error('No teams found to delete.');
+      console.log('🟠 Name of the team to be deleted:', teamName);
+  
+      // Click the delete icon specifically for this team
+      await this.deleteTeam();
+  
+      // Wait for delete confirmation dialog box to appear
+      // const deleteDialog = this.page.locator('p-confirmdialog, [role="dialog"]');
+      // await expect(deleteDialog).toBeVisible({ timeout: 5000 });
+      // console.log('🟣 Delete confirmation dialog is visible.');
+  
+      // Click on "Yes" button to confirm delete (adjust button text if different)
+      // const confirmButton = deleteDialog.getByRole('button', { name: /Yes/i });
+      // await expect(confirmButton).toBeVisible();
+      // await confirmButton.click();
+      // console.log('🟢 Confirmed team deletion from dialog.');
+  
+      // Verify success message
+      const ToastMessage = this.page.getByRole('alert', { name: /Removed successfully/i });
+      await expect(ToastMessage).toBeVisible();
+  
+      // Wait for the toast and UI refresh
+      await ToastMessage.waitFor({ state: 'detached', timeout: 10000 });
+      await this.page.waitForTimeout(1500);
+  
+      // ✅ Verify that the deleted team name no longer exists in the table
+      const teamRow = this.page.locator('tbody tr', { hasText: teamName });
+      const rowCount = await teamRow.count();
+  
+      if (rowCount === 0) {
+        console.log(`🟢 The team was deleted and is no longer present in the list: "${teamName}"`);
+      } else {
+        console.warn(`🔴 The team "${teamName}" still appears in the list!`);
+      }
+  
+      await expect(teamRow).toHaveCount(0);
     });
   }
   
