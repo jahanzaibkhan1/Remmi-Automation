@@ -445,6 +445,7 @@ export class MyProfileActions {
     const TeamsTabs = this.locators.TeamsTabs();
     await TeamsTabs.click();
   }
+
   private async searchTeamName(teamName: string) {
     const searchTeam = this.locators.SelectTeam(teamName);
     await expect(searchTeam).toBeVisible();
@@ -452,6 +453,13 @@ export class MyProfileActions {
     await searchTeam.click();
     // Type the team name directly
     await searchTeam.fill(teamName);
+  }
+// AGAR Team 2 search ker rahay hain agra Team 232 bhi show ho raha hy dropdown me to exact ko kesay click krein
+  private async SelectTeamOption(teamName: string) {
+    const selectTeamOption = this.locators.SelectTeamOption(teamName);
+    await expect(selectTeamOption.first()).toHaveText(teamName);
+    await expect(selectTeamOption.first()).toBeVisible({ timeout: 5000 });
+    await selectTeamOption.first().click();
   }
 
   private async createNewTeamButton(){
@@ -504,6 +512,7 @@ export class MyProfileActions {
   }
   
   private async selectTeamFromDropdown(memberName: string) {
+    
     const option = this.locators.SelectTeamMemberOption().filter({ hasText: memberName });
   
     // Wait until at least one matching option appears
@@ -548,7 +557,16 @@ export class MyProfileActions {
     // Fill the input field
     await teamNameInput.fill(teamName);
   }
+
+  private async NavigateToContacts(){
+    const contactSideMenu = this.locators.contactSideMenu();
+    await contactSideMenu.click();
+  }
   
+  private async contactTeamsList() {
+    const contactTeams = this.locators.ContactTeams();
+    await contactTeams.click();
+  }
   
   private async editTeam(teamName: string) {
     const EditIcon = this.locators.EditIcon();
@@ -566,6 +584,7 @@ export class MyProfileActions {
   }
   private async verifyTeamInTable(teamName: string) {
     const teamRow = this.locators.TeamRow(teamName);
+    await teamRow.scrollIntoViewIfNeeded();
     await expect(teamRow).toBeVisible({ timeout: 10000 });
   }
   
@@ -1192,7 +1211,7 @@ export class MyProfileActions {
     await test.step('Verify search works for existing team names', async()=>{
       await this.NavigateToTeamsTab()
       await this.searchTeamName(teamName);
-      await this.selectTeamFromDropdown(teamName);
+      await this.SelectTeamOption(teamName);
       await this.AddButton();
       const toast = this.page.getByRole('alert', { name: 'Added successfully' });
       await expect(toast).toBeVisible({timeout:5000});
@@ -1230,7 +1249,7 @@ export class MyProfileActions {
     await test.step('Verify selecting a team enables Add button.', async()=>{
       await this.NavigateToTeamsTab()
       await this.searchTeamName(teamName);
-      await this.selectTeamFromDropdown(teamName);
+      await this.SelectTeamOption(teamName);
       const addButton = this.page.getByRole('button', { name: ' Add' });
       await expect(addButton).toBeEnabled();
     })
@@ -1239,7 +1258,7 @@ export class MyProfileActions {
     await test.step('Verify Add button doesn’t enable due to dropdown lag.', async()=>{
       await this.NavigateToTeamsTab()
       await this.searchTeamName(teamName);
-      await this.selectTeamFromDropdown(teamName);
+      await this.SelectTeamOption(teamName);
       const addButton = this.page.getByRole('button', { name: ' Add' });
       await expect(addButton).toBeEnabled();
       const removeSelectTeam = this.page.locator('.pi.pi-times-circle')
@@ -1252,7 +1271,7 @@ export class MyProfileActions {
     await test.step('Verify selected team appears as a tag below the dropdown', async () => {
       await this.NavigateToTeamsTab();
       await this.searchTeamName(teamName);
-      await this.selectTeamFromDropdown(teamName);
+      await this.SelectTeamOption(teamName);
 
       // Wait for the tag to appear – a tag is shown when a team is selected
       const tagLocator = this.page.locator('.ng-value-label', { hasText: teamName });
@@ -1270,7 +1289,7 @@ export class MyProfileActions {
     await test.step('Verify removing a tag updates the list', async () => {
       await this.NavigateToTeamsTab();
       await this.searchTeamName(teamName);
-      await this.selectTeamFromDropdown(teamName);
+      await this.SelectTeamOption(teamName);
 
       // Wait for the tag to appear – a tag is shown when a team is selected
       const tagLocator = this.page.locator('.ng-value-label', { hasText: teamName });
@@ -1530,7 +1549,10 @@ async VerifyTeamCreationWithValidDetails(OfficeName: string, memberName: string,
     await this.createNewTeamButton();
 
     // Enter team name
-    await this.EnterTeamName()
+    const teamName = `Team ${faker.word.sample()}`; // Generate a unique name
+    const teamNameInput = this.locators.TeamNameInput();
+    await teamNameInput.click();
+    await teamNameInput.fill(teamName);
 
     // Select office
     await this.SelectOffice(OfficeName);
@@ -1555,7 +1577,10 @@ async VerifyTeamCreationWithValidDetails(OfficeName: string, memberName: string,
     const successToast = this.page.getByText(/Team created/i);
     await expect(successToast).toBeVisible({ timeout: 10000 });
 
-
+    // Navigate to contacts team list & verify team is present in the list
+    await this.NavigateToContacts();
+    await this.contactTeamsList();
+    await this.verifyTeamInTable(teamName);
   });
 }
 }
