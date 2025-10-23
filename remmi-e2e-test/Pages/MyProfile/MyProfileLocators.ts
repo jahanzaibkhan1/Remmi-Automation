@@ -281,13 +281,18 @@ export class MyProfileLocators {
     // Updated for better matching
     return this.page.locator('.ng-dropdown-panel .ng-option span', { hasText: teamName });
   }
+
   
   AddButton(): Locator {
     return this.page.getByRole('button', { name: ' Add' });
   }
+
   TeamRow(teamName: string): Locator {
-    return this.page.locator('tr.compact-form', { hasText: teamName });
-  }  
+    return this.page.locator('tbody.p-datatable-tbody > tr', { hasText: teamName });
+}
+  RemoveTeamButton(): Locator{
+    return this.page.locator("//button[normalize-space()='Cancel']")
+  }
   EditIcon(): Locator {
     return this.page.locator('.cursor-pointer.mr-2');
   }
@@ -342,6 +347,12 @@ export class MyProfileLocators {
     return this.page.getByRole('textbox').nth(4);
   }
   
+  contactSideMenu():Locator{
+    return this.page.locator("//li[@data-label='Contacts']");
+  }
+  ContactTeams():Locator{
+    return this.page.locator("//a[contains(text(), 'Teams')]")
+  }
   
   SelectNoRecordFound(): Locator {
     return this.page.locator('re-multiselect[formcontrolname="members"] ul li', { hasText: 'No Record Found' });
