@@ -1773,6 +1773,7 @@ export class MyProfileActions {
       await this.NavigateToContacts();
       await this.contactTeamsList();
   
+  
       // ✅ Updated verification (do not remove anything else)
       const teamRows = this.page.locator('tbody.p-datatable-tbody > tr');
       const allTexts = await teamRows.allTextContents();
@@ -1782,5 +1783,31 @@ export class MyProfileActions {
       expect(hasInvalidTeam).toBeFalsy();
     });
   }  
+  async verifyTeamListSorting() {
+    await test.step('Verify sorting functionality for team list', async () => {
+      await this.NavigateToTeamsTab();
 
+      // Locate the sort icon using the header cell for "Name" (usually for ascending/descending sort switching)
+      const sortCell = this.page.getByRole('cell', { name: 'Name' });
+      const sortIcon = sortCell.locator('svg');
+      await this.page.waitForTimeout(1000);
+      await expect(sortIcon).toBeVisible();
+
+      // --- Ascending Check ---
+      // First click (ascending)
+      await sortIcon.click({ force: true });
+      const teamRowsAsc = this.page.locator('tbody.p-datatable-tbody > tr > td:first-child');
+      const teamNamesAsc = (await teamRowsAsc.allTextContents()).map(name => name.trim()).filter(name => !!name);
+      const sortedNamesAsc = [...teamNamesAsc].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+      expect(teamNamesAsc).toEqual(sortedNamesAsc);
+
+      // --- Descending Check ---
+      // Second click (descending)
+      await sortIcon.click({ force: true });
+      const teamRowsDesc = this.page.locator('tbody.p-datatable-tbody > tr > td:first-child');
+      const teamNamesDesc = (await teamRowsDesc.allTextContents()).map(name => name.trim()).filter(name => !!name);
+      const sortedNamesDesc = [...teamNamesDesc].sort((a, b) => b.localeCompare(a, undefined, { sensitivity: 'base' }));
+      expect(teamNamesDesc).toEqual(sortedNamesDesc);
+    });
+  }
 }

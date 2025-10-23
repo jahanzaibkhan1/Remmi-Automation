@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.96755600000173">
-<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-23T09:43:12.543Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.436" errors="0">
-<testcase name="Teams Tab Tests - Remmi E2E › Test case 25: Verify failed team creation doesn’t reflect in list." classname="Pages\MyProfile\teams.test.spec.ts" time="27.436">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="36.042275000002235">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-23T10:14:04.571Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.328" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 26: Verify failed team creation doesn’t reflect in list." classname="Pages\MyProfile\teams.test.spec.ts" time="23.328">
 </testcase>
 </testsuite>
 </testsuites>
