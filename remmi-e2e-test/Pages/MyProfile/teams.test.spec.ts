@@ -391,7 +391,7 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     await profile.navigateToProfilePage();
     await profile.verifyEditIconOpensTeamForUpdate();
   });
-  
+
   test('Test case 29: Verify Delete icon opens confirmation popup.', async ({ page }) => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
@@ -404,5 +404,19 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     await profile.navigateToProfilePage();
     await profile.verifyDeleteIconOpensConfirmationPopup();
   });
+
+  test('Test case 30: Verify clicking Cancel on Delete popup keeps team.', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+  
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+  
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+    await profile.verifyCancelOnDeleteKeepsTeam();
+  });
+  
   
 });

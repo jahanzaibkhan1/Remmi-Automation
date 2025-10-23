@@ -1855,6 +1855,37 @@ export class MyProfileActions {
     });
   }
   
+  async verifyCancelOnDeleteKeepsTeam() {
+    await test.step('Verify clicking Cancel on Delete popup keeps team', async () => {
+      await this.NavigateToTeamsTab();
+  
+      // Count number of teams before deletion
+      const teamRows = this.page.locator('table tbody tr');
+      const initialCount = await teamRows.count();
+  
+      // Click Delete icon for the first team
+      const deleteIcon = this.page.locator('button.p-button-danger i.pi.pi-trash').first();
+      await expect(deleteIcon).toBeVisible({ timeout: 5000 });
+      await deleteIcon.click();
+  
+      // Wait for confirmation popup
+      const confirmationPopup = this.page.locator('p-dialog[header*="Confirm"], p-dialog:has-text("Are you sure")');
+      await expect(confirmationPopup).toBeVisible({ timeout: 5000 });
+  
+      // Click Cancel or No button
+      const cancelButton = this.page.getByRole('button', { name: /No|Cancel/i });
+      await expect(cancelButton).toBeVisible();
+      await cancelButton.click();
+  
+      // Wait for popup to close
+      await expect(confirmationPopup).toBeHidden({ timeout: 5000 });
+  
+      // Verify the team list count remains unchanged
+      await this.page.waitForTimeout(1000); // short wait for UI to settle
+      const finalCount = await teamRows.count();
+      expect(finalCount).toBe(initialCount);
+    });
+  }
   
   
 }
