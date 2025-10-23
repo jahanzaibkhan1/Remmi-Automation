@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.736254000000656">
-<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-23T08:54:26.346Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.184" errors="0">
-<testcase name="Teams Tab Tests - Remmi E2E › Test case 24: Verify newly created team appears in dropdown and team list." classname="Pages\MyProfile\teams.test.spec.ts" time="28.184">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.96755600000173">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-23T09:43:12.543Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.436" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 25: Verify failed team creation doesn’t reflect in list." classname="Pages\MyProfile\teams.test.spec.ts" time="27.436">
 </testcase>
 </testsuite>
 </testsuites>
