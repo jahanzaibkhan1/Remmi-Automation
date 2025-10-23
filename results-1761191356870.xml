@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.35905999999866">
-<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-23T10:43:58.582Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.544" errors="0">
-<testcase name="Teams Tab Tests - Remmi E2E › Test case 28: Verify Edit icon opens existing team for update" classname="Pages\MyProfile\teams.test.spec.ts" time="34.544">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.22512700000033">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-23T11:15:18.669Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.073" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 25: Verify failed team creation doesn’t reflect in list." classname="Pages\MyProfile\teams.test.spec.ts" time="29.073">
 </testcase>
 </testsuite>
 </testsuites>
