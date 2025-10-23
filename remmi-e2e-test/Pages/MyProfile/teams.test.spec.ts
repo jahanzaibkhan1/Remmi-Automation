@@ -379,4 +379,17 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     await profile.verifySortButtonOnEmptyListDoesNotCrashUI();
   });
   
+  test('Test case 28: Verify Edit icon opens existing team for update', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+  
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+  
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+    await profile.verifyEditIconOpensTeamForUpdate();
+  });
+  
 });
