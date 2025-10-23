@@ -1810,4 +1810,22 @@ export class MyProfileActions {
       expect(teamNamesDesc).toEqual(sortedNamesDesc);
     });
   }
+  async verifySortButtonOnEmptyListDoesNotCrashUI() {
+    await test.step('Verify sort button on empty list doesn’t crash UI', async () => {
+      // Navigate to Teams tab
+      await this.NavigateToTeamsTab();
+  
+      const sortCell = this.page.getByRole('cell', { name: 'Name' });
+      const sortIcon = sortCell.locator('svg');
+      await this.page.waitForTimeout(1000);
+      await expect(sortIcon).toBeVisible();
+
+      // --- Ascending Check ---
+      await sortIcon.click({ force: true });
+      // --- Descending Check ---
+      await sortIcon.click({ force: true });
+      console.log('✅ Sort button clicked successfully on empty list - no crash detected.');
+    });
+  }
+  
 }

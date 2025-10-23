@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="36.042275000002235">
-<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-23T10:14:04.571Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.328" errors="0">
-<testcase name="Teams Tab Tests - Remmi E2E › Test case 26: Verify failed team creation doesn’t reflect in list." classname="Pages\MyProfile\teams.test.spec.ts" time="23.328">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="36.873528999999166">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-23T10:22:24.441Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.622" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 27: Verify sort button on empty list doesn’t crash UI." classname="Pages\MyProfile\teams.test.spec.ts" time="24.622">
+<system-out>
+<![CDATA[✅ Sort button clicked successfully on empty list - no crash detected.
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
