@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="52.88012399999984">
-<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-24T05:03:09.018Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.928" errors="0">
-<testcase name="Teams Tab Tests - Remmi E2E › Test case 35: Verify dropdown search with invalid keyword." classname="Pages\MyProfile\teams.test.spec.ts" time="40.928">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.86852400000021">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-24T05:08:21.923Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.889" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 36: Verify toast notification appears after team creation." classname="Pages\MyProfile\teams.test.spec.ts" time="46.889">
 </testcase>
 </testsuite>
 </testsuites>

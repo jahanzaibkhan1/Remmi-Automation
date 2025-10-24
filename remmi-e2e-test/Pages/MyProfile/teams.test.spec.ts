@@ -481,5 +481,16 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     await profile.navigateToProfilePage();
     await profile.verifyDropdownWithInvalidKeyword('keyword jjs');
   });
+  test('Test case 36: Verify toast notification appears after team creation.', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
 
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+    await profile.VerifyToastAfterTeamCreation('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
+  });
 });
