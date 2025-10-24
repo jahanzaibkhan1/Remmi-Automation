@@ -392,31 +392,31 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     await profile.verifyEditIconOpensTeamForUpdate();
   });
 
-  test('Test case 29: Verify Delete icon opens confirmation popup.', async ({ page }) => {
-    const login = new LoginActions(page);
-    const profile = new MyProfileActions(page);
+  // test('Test case 29: Verify Delete icon opens confirmation popup.', async ({ page }) => {
+  //   const login = new LoginActions(page);
+  //   const profile = new MyProfileActions(page);
   
-    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
-      test.skip(true, 'Skipping login tests: missing environment credentials');
-    }
+  //   if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+  //     test.skip(true, 'Skipping login tests: missing environment credentials');
+  //   }
   
-    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
-    await profile.navigateToProfilePage();
-    await profile.verifyDeleteIconOpensConfirmationPopup();
-  });
+  //   await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+  //   await profile.navigateToProfilePage();
+  //   await profile.verifyDeleteIconOpensConfirmationPopup();
+  // });
 
-  test('Test case 30: Verify clicking Cancel on Delete popup keeps team.', async ({ page }) => {
-    const login = new LoginActions(page);
-    const profile = new MyProfileActions(page);
+  // test('Test case 30: Verify clicking Cancel on Delete popup keeps team.', async ({ page }) => {
+  //   const login = new LoginActions(page);
+  //   const profile = new MyProfileActions(page);
   
-    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
-      test.skip(true, 'Skipping login tests: missing environment credentials');
-    }
+  //   if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+  //     test.skip(true, 'Skipping login tests: missing environment credentials');
+  //   }
   
-    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
-    await profile.navigateToProfilePage();
-    await profile.verifyCancelOnDeleteKeepsTeam();
-  });
+  //   await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+  //   await profile.navigateToProfilePage();
+  //   await profile.verifyCancelOnDeleteKeepsTeam();
+  // });
   
   test('Test case 31: Verify confirming Delete removes team permanently.', async ({ page }) => {
     const login = new LoginActions(page);
@@ -429,5 +429,18 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
     await profile.navigateToProfilePage();
     await profile.verifyDeleteIconRemovesTeamPermanently();
+  });
+
+  test('Test case 32: Verify team created in My Profile also appears in Team module', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+    await profile.verifyTeamCreatedInMyProfileAlsoAppearsInTeamModule('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
   });
 });

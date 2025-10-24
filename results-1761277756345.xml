@@ -1,0 +1,6 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="54.40105000000005">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-24T03:54:41.327Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.148" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 32: Verify successful team creation with all valid details." classname="Pages\MyProfile\teams.test.spec.ts" time="40.148">
+</testcase>
+</testsuite>
+</testsuites>
