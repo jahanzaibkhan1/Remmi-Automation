@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.86852400000021">
-<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-24T05:08:21.923Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.889" errors="0">
-<testcase name="Teams Tab Tests - Remmi E2E › Test case 36: Verify toast notification appears after team creation." classname="Pages\MyProfile\teams.test.spec.ts" time="46.889">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="73.40005899999943">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-24T05:53:51.577Z" hostname="chromium" tests="1" failures="0" skipped="0" time="59.53" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 37: Verify no duplicate toast shown for single event." classname="Pages\MyProfile\teams.test.spec.ts" time="59.53">
 </testcase>
 </testsuite>
 </testsuites>
