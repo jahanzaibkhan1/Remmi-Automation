@@ -519,4 +519,17 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     await profile.navigateToProfilePage();
     await profile.VerifyRequiredFieldErrorColor();
   });
+
+  test('Test case 39: Verify confirmation message color (green for success)', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+    await profile.VerifyConfirmationMessageColor('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
+  });
 });
