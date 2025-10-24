@@ -2106,5 +2106,42 @@ export class MyProfileActions {
       await expect(toasts).toHaveCount(1, { timeout: 10000 });
     });
   }
+// Verify required field validation for Team Name, Office, and Members with color check
+async VerifyRequiredFieldErrorColor() {
+  await test.step('Verify required field validation for Team Name, Office, and Members', async () => {
+    await this.NavigateToTeamsTab();
+
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    const popup = this.page.getByText('Add TeamUpload profile');
+    await expect(popup).toBeVisible();
+
+    // Click Create without filling fields
+    await this.CreateTeamButton();
+
+    // Assert required validation errors appear
+    const requiredTeamError = this.page.getByText(/Team Name is required/i);
+    const requiredOfficeError = this.page.getByText(/Office is required/i);
+    const requiredMembersError = this.page.getByText('Team Member(s) is required');
+
+    await expect(requiredTeamError).toBeVisible();
+    await expect(requiredOfficeError).toBeVisible();
+    await expect(requiredMembersError).toBeVisible();
+
+    // Verify color of validation messages
+    const expectedColor = 'rgb(205, 24, 24)';
+
+    const teamErrorColor = await requiredTeamError.evaluate(el => getComputedStyle(el).color);
+    const officeErrorColor = await requiredOfficeError.evaluate(el => getComputedStyle(el).color);
+    const membersErrorColor = await requiredMembersError.evaluate(el => getComputedStyle(el).color);
+
+    await expect(teamErrorColor).toBe(expectedColor);
+    await expect(officeErrorColor).toBe(expectedColor);
+    await expect(membersErrorColor).toBe(expectedColor);
+  });
+}
 
 }
