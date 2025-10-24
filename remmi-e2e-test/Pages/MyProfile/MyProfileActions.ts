@@ -1227,7 +1227,7 @@ export class MyProfileActions {
   }
 
   async SearchForInvalidTeam(teamName: string) {
-    await test.step('Verify search works for existing team names', async () => {
+    await test.step('Verify dropdown search with invalid keyword.', async () => {
       await this.NavigateToTeamsTab()
       await this.searchTeamName(teamName);
       const NoRecord = this.page.getByText('No items found')
@@ -2018,5 +2018,14 @@ export class MyProfileActions {
       await this.searchTeamName(teamName);
     });
   }
+  async verifyDropdownWithInvalidKeyword(teamName: string) {
+    await test.step('Verify dropdown search with invalid keyword.', async () => {
+      await this.NavigateToTeamsTab()
+      await this.searchTeamName(teamName);
+      const NoRecord = this.page.getByText('No items found')
+      await expect(NoRecord).toBeVisible({ timeout: 5000 });
+    })
+  }
+  
 
 }
