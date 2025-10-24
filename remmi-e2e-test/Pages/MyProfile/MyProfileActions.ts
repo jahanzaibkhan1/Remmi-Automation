@@ -2144,4 +2144,77 @@ async VerifyRequiredFieldErrorColor() {
   });
 }
 
+async VerifyConfirmationMessageColor(OfficeName: string, memberName: string, leaderName: string) {
+  await test.step('Verify confirmation message color (green for success).', async () => {
+    await this.NavigateToTeamsTab();
+
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    // Enter team name
+    const teamName = `Team ${faker.word.sample()}`;
+    const teamNameInput = this.locators.TeamNameInput();
+    await teamNameInput.click();
+    await teamNameInput.fill(teamName);
+
+    // Select office
+    await this.SelectOffice(OfficeName);
+    await this.SelectOfficeOption();
+
+    // Select member
+    await this.SelectTeamMember();
+    await this.SelectTeamMemberSearchInput(memberName);
+    await this.page.waitForTimeout(1000);
+    await this.selectTeamFromDropdown(memberName);
+    await this.SelectTeamMember();
+
+    // Select team leader
+    await this.SelectTeamLeader();
+    await this.SelectTeamLeaderSearchInput(leaderName);
+    await this.SelectTeamLeaderFromDropdown(leaderName);
+
+    // Create team
+    await this.CreateTeamButton();
+
+    // Verify success toast message and its background color
+    const successToast = this.page.getByText(/Team created/i);
+    await expect(successToast).toBeVisible({ timeout: 10000 });
+
+    // Wait briefly for the toast style to apply and render
+    await this.page.waitForTimeout(800);
+
+    // Collect the toast's background color from the element and its parents
+    type ToastColorInfo = { tag: string; class: string; color: string };
+    const bgColors: ToastColorInfo[] = await successToast.evaluate((el) => {
+      const styles: ToastColorInfo[] = [];
+      let current = el as HTMLElement | null;
+      while (current) {
+        const color = window.getComputedStyle(current).backgroundColor;
+        styles.push({ tag: current.tagName, class: (current.className || '').toString(), color });
+        current = current.parentElement as HTMLElement | null;
+      }
+      return styles;
+    });
+
+    console.log('Toast background chain:', bgColors);
+
+    // Find the first color that isn't fully transparent (rgba(0, 0, 0, 0))
+    const visibleColor = bgColors.find(c => c.color !== 'rgba(0, 0, 0, 0)' && c.color !== 'transparent')?.color;
+    console.log('Detected visible color:', visibleColor);
+
+    // Normalize color string if necessary (convert rgba to rgb for alpha=1)
+    let normalizedColor = visibleColor || '';
+    if (normalizedColor.startsWith('rgba(')) {
+      normalizedColor = normalizedColor.replace('rgba', 'rgb').replace(/, 1\)$/, ')');
+    }
+
+    const expectedColor = 'rgb(34, 146, 118)';
+    await expect(normalizedColor).toBe(expectedColor);
+  });
+}
+
+
+
 }

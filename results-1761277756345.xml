@@ -1,6 +1,34 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.19443000000157">
-<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-24T06:37:34.474Z" hostname="chromium" tests="1" failures="0" skipped="0" time="49.635" errors="0">
-<testcase name="Teams Tab Tests - Remmi E2E › Test case 38: Verify validation message color (red for errors)." classname="Pages\MyProfile\teams.test.spec.ts" time="49.635">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.87181799999997">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-24T07:34:57.568Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.964" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 39: Verify confirmation message color (green for success)" classname="Pages\MyProfile\teams.test.spec.ts" time="31.964">
+<system-out>
+<![CDATA[Toast background chain: [
+  {
+    tag: [32m'DIV'[39m,
+    class: [32m'ng-tns-c2308121496-4 toast-message ng-star-inserted'[39m,
+    color: [32m'rgba(0, 0, 0, 0)'[39m
+  },
+  {
+    tag: [32m'DIV'[39m,
+    class: [32m'ng-tns-c2308121496-4 ng-star-inserted ng-trigger ng-trigger-flyInOut ngx-toastr toast-success'[39m,
+    color: [32m'rgb(34, 146, 118)'[39m
+  },
+  {
+    tag: [32m'DIV'[39m,
+    class: [32m'toast-top-right toast-container'[39m,
+    color: [32m'rgba(0, 0, 0, 0)'[39m
+  },
+  { tag: [32m'DIV'[39m, class: [32m'overlay-container'[39m, color: [32m'rgba(0, 0, 0, 0)'[39m },
+  {
+    tag: [32m'BODY'[39m,
+    class: [32m'sidebar-toggled'[39m,
+    color: [32m'rgb(248, 248, 248)'[39m
+  },
+  { tag: [32m'HTML'[39m, class: [32m''[39m, color: [32m'rgba(0, 0, 0, 0)'[39m }
+]
+Detected visible color: rgb(34, 146, 118)
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
