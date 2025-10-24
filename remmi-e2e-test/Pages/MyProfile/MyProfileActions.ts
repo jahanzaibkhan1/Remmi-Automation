@@ -2065,5 +2065,46 @@ export class MyProfileActions {
       await expect(successToast).toBeVisible({ timeout: 10000 });
     });
   }
+  async VerifySingleToastOnMultipleClicks(OfficeName: string, memberName: string, leaderName: string) {
+    await test.step('Verify no duplicate toast shown for single event.', async () => {
+      await this.NavigateToTeamsTab();
+  
+      // Open Add Team popup
+      const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+      await selectTeamInput.click();
+      await this.createNewTeamButton();
+  
+      // Enter team name
+      const teamName = `Team ${faker.word.sample()}`;
+      const teamNameInput = this.locators.TeamNameInput();
+      await teamNameInput.click();
+      await teamNameInput.fill(teamName);
+  
+      // Select office
+      await this.SelectOffice(OfficeName);
+      await this.SelectOfficeOption();
+  
+      // Select member
+      await this.SelectTeamMember();
+      await this.SelectTeamMemberSearchInput(memberName);
+      await this.page.waitForTimeout(1000);
+      await this.selectTeamFromDropdown(memberName);
+      await this.SelectTeamMember();
+  
+      // Select team leader
+      await this.SelectTeamLeader();
+      await this.SelectTeamLeaderSearchInput(leaderName);
+      await this.SelectTeamLeaderFromDropdown(leaderName);
+  
+      // Locate Create Team button
+      const createButton = this.page.locator('button:has-text("Create Team")');
+
+      await createButton.dblclick({force:true})
+  
+      // Verify only one toast appears
+      const toasts = this.page.getByText(/Team created/i);
+      await expect(toasts).toHaveCount(1, { timeout: 10000 });
+    });
+  }
 
 }
