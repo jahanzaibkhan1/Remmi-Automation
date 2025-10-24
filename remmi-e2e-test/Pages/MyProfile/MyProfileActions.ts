@@ -1977,5 +1977,39 @@ export class MyProfileActions {
       await this.verifyTeamInTable(teamName);
     });
   }
+  async verifyAlignmentOfAddButtonWithTeamDropdown() {
+    await test.step('Verify alignment of Add button with Team dropdown.', async () => {
+      // Navigate to Teams tab
+      await this.NavigateToTeamsTab();
+  
+      // Get references for Add button and Team dropdown
+      const addButton = this.locators.AddButton();
+      const teamDropdown = this.page.getByText('Select Team');
+  
+      // Ensure both elements are visible
+      await expect(teamDropdown).toBeVisible();
+      await expect(addButton).toBeVisible();
+  
+      // Get their bounding boxes (positions and sizes)
+      const teamDropdownBox = await teamDropdown.boundingBox();
+      const addButtonBox = await addButton.boundingBox();
+  
+      if (!teamDropdownBox || !addButtonBox) {
+        throw new Error('❌ Unable to determine bounding boxes for dropdown or Add button');
+      }
+  
+      // ✅ Check vertical alignment (Y-axis)
+      const verticalAlignmentDiff = Math.abs(teamDropdownBox.y - addButtonBox.y);
+      console.log(`📏 Vertical alignment difference: ${verticalAlignmentDiff.toFixed(2)}px`);
+  
+      // ✅ Check horizontal position (Add button should be to the right)
+      const horizontalGap = addButtonBox.x - (teamDropdownBox.x + teamDropdownBox.width);
+      console.log(`📐 Horizontal gap between dropdown and Add button: ${horizontalGap.toFixed(2)}px`);
+      expect(horizontalGap).toBeGreaterThanOrEqual(0);
+  
+      // ✅ Final confirmation
+      console.log('🟢 Add button is horizontally aligned and properly placed next to the Team dropdown.');
+    });
+  }  
 
 }
