@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="73.40005899999943">
-<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-24T05:53:51.577Z" hostname="chromium" tests="1" failures="0" skipped="0" time="59.53" errors="0">
-<testcase name="Teams Tab Tests - Remmi E2E › Test case 37: Verify no duplicate toast shown for single event." classname="Pages\MyProfile\teams.test.spec.ts" time="59.53">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.19443000000157">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-24T06:37:34.474Z" hostname="chromium" tests="1" failures="0" skipped="0" time="49.635" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 38: Verify validation message color (red for errors)." classname="Pages\MyProfile\teams.test.spec.ts" time="49.635">
 </testcase>
 </testsuite>
 </testsuites>
