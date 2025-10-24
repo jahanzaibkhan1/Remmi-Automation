@@ -2215,6 +2215,62 @@ async VerifyConfirmationMessageColor(OfficeName: string, memberName: string, lea
   });
 }
 
+async VerifyTeamDataPersistenceAfterRefresh(OfficeName: string, memberName: string, leaderName: string) {
+  await test.step('Verify team data remains after page refresh', async () => {
+    await this.NavigateToTeamsTab();
 
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    // Enter team name
+    const teamName = `Team ${faker.word.sample()}`; // Generate a unique name
+    const teamNameInput = this.locators.TeamNameInput();
+    await teamNameInput.click();
+    await teamNameInput.fill(teamName);
+
+    // Select office
+    await this.SelectOffice(OfficeName);
+    await this.SelectOfficeOption();
+
+    // Select member
+    await this.SelectTeamMember();
+    await this.SelectTeamMemberSearchInput(memberName);
+    await this.page.waitForTimeout(1000);
+    await this.selectTeamFromDropdown(memberName);
+    await this.SelectTeamMember();
+
+    // Select team leader
+    await this.SelectTeamLeader();
+    await this.SelectTeamLeaderSearchInput(leaderName);
+    await this.SelectTeamLeaderFromDropdown(leaderName);
+
+    // Create team
+    await this.CreateTeamButton();
+
+    // Verify success toast message
+    const successToast = this.page.getByText(/Team created/i);
+    await expect(successToast).toBeVisible({ timeout: 10000 });
+
+    // ✅ Verify team appears in the contacts list
+    await this.NavigateToContacts();
+    await this.contactTeamsList();
+    await this.verifyTeamInTable(teamName);
+
+    // ✅ Refresh the page and verify data persistence
+    await this.page.reload();
+    await this.page.waitForLoadState('networkidle'); // Wait until fully loaded
+
+    // Wait for the table to appear again
+    const teamTable = this.page.locator('table'); // Adjust locator if necessary
+    await expect(teamTable).toBeVisible({ timeout: 10000 });
+
+    // Re-check the same team name exists after refresh
+    await this.verifyTeamInTable(teamName);
+
+    console.log(`✅ Verified: Team "${teamName}" remains visible after page refresh.`);
+  });
+}
 
 }
