@@ -1,12 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="68.7960120000001">
-<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-24T04:36:44.139Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.211" errors="0">
-<testcase name="Teams Tab Tests - Remmi E2E › Test case 33: Verify alignment of Add button with Team dropdown." classname="Pages\MyProfile\teams.test.spec.ts" time="55.211">
-<system-out>
-<![CDATA[📏 Vertical alignment difference: 12.00px
-📐 Horizontal gap between dropdown and Add button: 233.41px
-🟢 Add button is horizontally aligned and properly placed next to the Team dropdown.
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.913438000000085">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-24T04:47:51.065Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.238" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 34: Verify dropdown supports search for large team lists." classname="Pages\MyProfile\teams.test.spec.ts" time="51.238">
 </testcase>
 </testsuite>
 </testsuites>
