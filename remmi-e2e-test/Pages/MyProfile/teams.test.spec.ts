@@ -443,4 +443,18 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     await profile.navigateToProfilePage();
     await profile.verifyTeamCreatedInMyProfileAlsoAppearsInTeamModule('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
   });
+
+  test('Test case 33: Verify alignment of Add button with Team dropdown.', async ({ page }) => {
+     const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+    await profile.verifyAlignmentOfAddButtonWithTeamDropdown();
+  });
+  
 });
