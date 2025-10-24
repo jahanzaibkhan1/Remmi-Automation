@@ -2011,5 +2011,12 @@ export class MyProfileActions {
       console.log('🟢 Add button is horizontally aligned and properly placed next to the Team dropdown.');
     });
   }  
+  // Verify dropdown supports search for large team lists
+  async verifyDropdownSupportsSearchForLargeTeamLists(teamName: string) {
+    await test.step('Verify dropdown supports search for large team lists', async () => {
+      await this.NavigateToTeamsTab();
+      await this.searchTeamName(teamName);
+    });
+  }
 
 }
