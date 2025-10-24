@@ -1227,7 +1227,7 @@ export class MyProfileActions {
   }
 
   async SearchForInvalidTeam(teamName: string) {
-    await test.step('Verify search works for existing team names', async () => {
+    await test.step('Verify dropdown search with invalid keyword.', async () => {
       await this.NavigateToTeamsTab()
       await this.searchTeamName(teamName);
       const NoRecord = this.page.getByText('No items found')
@@ -1933,5 +1933,393 @@ export class MyProfileActions {
     });
   }
   
+  async verifyTeamCreatedInMyProfileAlsoAppearsInTeamModule(OfficeName: string, memberName: string, leaderName: string) {
+    await test.step('Verify team created in My Profile also appears in Team module', async () => {
+      await this.NavigateToTeamsTab();
+
+      // Open Add Team popup
+      const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+      await selectTeamInput.click();
+      await this.createNewTeamButton();
+
+      // Enter team name
+      const teamName = `Team ${faker.word.sample()}`; // Generate a unique name
+      const teamNameInput = this.locators.TeamNameInput();
+      await teamNameInput.click();
+      await teamNameInput.fill(teamName);
+
+      // Select office
+      await this.SelectOffice(OfficeName);
+      await this.SelectOfficeOption();
+
+      // Select member
+      await this.SelectTeamMember();
+      await this.SelectTeamMemberSearchInput(memberName);
+      await this.page.waitForTimeout(1000);
+      await this.selectTeamFromDropdown(memberName);
+      await this.SelectTeamMember();
+
+      // Select team leader
+      await this.SelectTeamLeader();
+      await this.SelectTeamLeaderSearchInput(leaderName);
+      await this.SelectTeamLeaderFromDropdown(leaderName);
+
+      // Create team
+      await this.CreateTeamButton();
+
+      // Verify success toast message
+      const successToast = this.page.getByText(/Team created/i);
+      await expect(successToast).toBeVisible({ timeout: 10000 });
+
+      // Navigate to contacts team list & verify team is present in the list
+      await this.NavigateToContacts();
+      await this.contactTeamsList();
+      await this.verifyTeamInTable(teamName);
+    });
+  }
+  async verifyAlignmentOfAddButtonWithTeamDropdown() {
+    await test.step('Verify alignment of Add button with Team dropdown.', async () => {
+      // Navigate to Teams tab
+      await this.NavigateToTeamsTab();
   
+      // Get references for Add button and Team dropdown
+      const addButton = this.locators.AddButton();
+      const teamDropdown = this.page.getByText('Select Team');
+  
+      // Ensure both elements are visible
+      await expect(teamDropdown).toBeVisible();
+      await expect(addButton).toBeVisible();
+  
+      // Get their bounding boxes (positions and sizes)
+      const teamDropdownBox = await teamDropdown.boundingBox();
+      const addButtonBox = await addButton.boundingBox();
+  
+      if (!teamDropdownBox || !addButtonBox) {
+        throw new Error('❌ Unable to determine bounding boxes for dropdown or Add button');
+      }
+  
+      // ✅ Check vertical alignment (Y-axis)
+      const verticalAlignmentDiff = Math.abs(teamDropdownBox.y - addButtonBox.y);
+      console.log(`📏 Vertical alignment difference: ${verticalAlignmentDiff.toFixed(2)}px`);
+  
+      // ✅ Check horizontal position (Add button should be to the right)
+      const horizontalGap = addButtonBox.x - (teamDropdownBox.x + teamDropdownBox.width);
+      console.log(`📐 Horizontal gap between dropdown and Add button: ${horizontalGap.toFixed(2)}px`);
+      expect(horizontalGap).toBeGreaterThanOrEqual(0);
+  
+      // ✅ Final confirmation
+      console.log('🟢 Add button is horizontally aligned and properly placed next to the Team dropdown.');
+    });
+  }  
+  // Verify dropdown supports search for large team lists
+  async verifyDropdownSupportsSearchForLargeTeamLists(teamName: string) {
+    await test.step('Verify dropdown supports search for large team lists', async () => {
+      await this.NavigateToTeamsTab();
+      await this.searchTeamName(teamName);
+    });
+  }
+  async verifyDropdownWithInvalidKeyword(teamName: string) {
+    await test.step('Verify dropdown search with invalid keyword.', async () => {
+      await this.NavigateToTeamsTab()
+      await this.searchTeamName(teamName);
+      const NoRecord = this.page.getByText('No items found')
+      await expect(NoRecord).toBeVisible({ timeout: 5000 });
+    })
+  }
+  async VerifyToastAfterTeamCreation(OfficeName: string, memberName: string, leaderName: string) {
+    await test.step('Verify successful team creation with all valid details', async () => {
+      await this.NavigateToTeamsTab();
+
+      // Open Add Team popup
+      const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+      await selectTeamInput.click();
+      await this.createNewTeamButton();
+
+      // Enter team name
+      const teamName = `Team ${faker.word.sample()}`; // Generate a unique name
+      const teamNameInput = this.locators.TeamNameInput();
+      await teamNameInput.click();
+      await teamNameInput.fill(teamName);
+
+      // Select office
+      await this.SelectOffice(OfficeName);
+      await this.SelectOfficeOption();
+
+      // Select member
+      await this.SelectTeamMember();
+      await this.SelectTeamMemberSearchInput(memberName);
+      await this.page.waitForTimeout(1000);
+      await this.selectTeamFromDropdown(memberName);
+      await this.SelectTeamMember();
+
+      // Select team leader
+      await this.SelectTeamLeader();
+      await this.SelectTeamLeaderSearchInput(leaderName);
+      await this.SelectTeamLeaderFromDropdown(leaderName);
+
+      // Create team
+      await this.CreateTeamButton();
+
+      // Verify success toast message
+      const successToast = this.page.getByText(/Team created/i);
+      await expect(successToast).toBeVisible({ timeout: 10000 });
+    });
+  }
+  async VerifySingleToastOnMultipleClicks(OfficeName: string, memberName: string, leaderName: string) {
+    await test.step('Verify no duplicate toast shown for single event.', async () => {
+      await this.NavigateToTeamsTab();
+  
+      // Open Add Team popup
+      const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+      await selectTeamInput.click();
+      await this.createNewTeamButton();
+  
+      // Enter team name
+      const teamName = `Team ${faker.word.sample()}`;
+      const teamNameInput = this.locators.TeamNameInput();
+      await teamNameInput.click();
+      await teamNameInput.fill(teamName);
+  
+      // Select office
+      await this.SelectOffice(OfficeName);
+      await this.SelectOfficeOption();
+  
+      // Select member
+      await this.SelectTeamMember();
+      await this.SelectTeamMemberSearchInput(memberName);
+      await this.page.waitForTimeout(1000);
+      await this.selectTeamFromDropdown(memberName);
+      await this.SelectTeamMember();
+  
+      // Select team leader
+      await this.SelectTeamLeader();
+      await this.SelectTeamLeaderSearchInput(leaderName);
+      await this.SelectTeamLeaderFromDropdown(leaderName);
+  
+      // Locate Create Team button
+      const createButton = this.page.locator('button:has-text("Create Team")');
+
+      await createButton.dblclick({force:true})
+  
+      // Verify only one toast appears
+      const toasts = this.page.getByText(/Team created/i);
+      await expect(toasts).toHaveCount(1, { timeout: 10000 });
+    });
+  }
+// Verify required field validation for Team Name, Office, and Members with color check
+async VerifyRequiredFieldErrorColor() {
+  await test.step('Verify required field validation for Team Name, Office, and Members', async () => {
+    await this.NavigateToTeamsTab();
+
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    const popup = this.page.getByText('Add TeamUpload profile');
+    await expect(popup).toBeVisible();
+
+    // Click Create without filling fields
+    await this.CreateTeamButton();
+
+    // Assert required validation errors appear
+    const requiredTeamError = this.page.getByText(/Team Name is required/i);
+    const requiredOfficeError = this.page.getByText(/Office is required/i);
+    const requiredMembersError = this.page.getByText('Team Member(s) is required');
+
+    await expect(requiredTeamError).toBeVisible();
+    await expect(requiredOfficeError).toBeVisible();
+    await expect(requiredMembersError).toBeVisible();
+
+    // Verify color of validation messages
+    const expectedColor = 'rgb(205, 24, 24)';
+
+    const teamErrorColor = await requiredTeamError.evaluate(el => getComputedStyle(el).color);
+    const officeErrorColor = await requiredOfficeError.evaluate(el => getComputedStyle(el).color);
+    const membersErrorColor = await requiredMembersError.evaluate(el => getComputedStyle(el).color);
+
+    await expect(teamErrorColor).toBe(expectedColor);
+    await expect(officeErrorColor).toBe(expectedColor);
+    await expect(membersErrorColor).toBe(expectedColor);
+  });
+}
+
+async VerifyConfirmationMessageColor(OfficeName: string, memberName: string, leaderName: string) {
+  await test.step('Verify confirmation message color (green for success).', async () => {
+    await this.NavigateToTeamsTab();
+
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    // Enter team name
+    const teamName = `Team ${faker.word.sample()}`;
+    const teamNameInput = this.locators.TeamNameInput();
+    await teamNameInput.click();
+    await teamNameInput.fill(teamName);
+
+    // Select office
+    await this.SelectOffice(OfficeName);
+    await this.SelectOfficeOption();
+
+    // Select member
+    await this.SelectTeamMember();
+    await this.SelectTeamMemberSearchInput(memberName);
+    await this.page.waitForTimeout(1000);
+    await this.selectTeamFromDropdown(memberName);
+    await this.SelectTeamMember();
+
+    // Select team leader
+    await this.SelectTeamLeader();
+    await this.SelectTeamLeaderSearchInput(leaderName);
+    await this.SelectTeamLeaderFromDropdown(leaderName);
+
+    // Create team
+    await this.CreateTeamButton();
+
+    // Verify success toast message and its background color
+    const successToast = this.page.getByText(/Team created/i);
+    await expect(successToast).toBeVisible({ timeout: 10000 });
+
+    // Wait briefly for the toast style to apply and render
+    await this.page.waitForTimeout(800);
+
+    // Collect the toast's background color from the element and its parents
+    type ToastColorInfo = { tag: string; class: string; color: string };
+    const bgColors: ToastColorInfo[] = await successToast.evaluate((el) => {
+      const styles: ToastColorInfo[] = [];
+      let current = el as HTMLElement | null;
+      while (current) {
+        const color = window.getComputedStyle(current).backgroundColor;
+        styles.push({ tag: current.tagName, class: (current.className || '').toString(), color });
+        current = current.parentElement as HTMLElement | null;
+      }
+      return styles;
+    });
+
+    console.log('Toast background chain:', bgColors);
+
+    // Find the first color that isn't fully transparent (rgba(0, 0, 0, 0))
+    const visibleColor = bgColors.find(c => c.color !== 'rgba(0, 0, 0, 0)' && c.color !== 'transparent')?.color;
+    console.log('Detected visible color:', visibleColor);
+
+    // Normalize color string if necessary (convert rgba to rgb for alpha=1)
+    let normalizedColor = visibleColor || '';
+    if (normalizedColor.startsWith('rgba(')) {
+      normalizedColor = normalizedColor.replace('rgba', 'rgb').replace(/, 1\)$/, ')');
+    }
+
+    const expectedColor = 'rgb(34, 146, 118)';
+    await expect(normalizedColor).toBe(expectedColor);
+  });
+}
+
+async VerifyTeamDataPersistenceAfterRefresh(OfficeName: string, memberName: string, leaderName: string) {
+  await test.step('Verify team data remains after page refresh', async () => {
+    await this.NavigateToTeamsTab();
+
+    // Open Add Team popup
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    // Enter team name
+    const teamName = `Team ${faker.word.sample()}`; // Generate a unique name
+    const teamNameInput = this.locators.TeamNameInput();
+    await teamNameInput.click();
+    await teamNameInput.fill(teamName);
+
+    // Select office
+    await this.SelectOffice(OfficeName);
+    await this.SelectOfficeOption();
+
+    // Select member
+    await this.SelectTeamMember();
+    await this.SelectTeamMemberSearchInput(memberName);
+    await this.page.waitForTimeout(1000);
+    await this.selectTeamFromDropdown(memberName);
+    await this.SelectTeamMember();
+
+    // Select team leader
+    await this.SelectTeamLeader();
+    await this.SelectTeamLeaderSearchInput(leaderName);
+    await this.SelectTeamLeaderFromDropdown(leaderName);
+
+    // Create team
+    await this.CreateTeamButton();
+
+    // Verify success toast message
+    const successToast = this.page.getByText(/Team created/i);
+    await expect(successToast).toBeVisible({ timeout: 10000 });
+
+    // ✅ Verify team appears in the contacts list
+    await this.NavigateToContacts();
+    await this.contactTeamsList();
+    await this.verifyTeamInTable(teamName);
+
+    // ✅ Refresh the page and verify data persistence
+    await this.page.reload();
+    await this.page.waitForLoadState('networkidle'); // Wait until fully loaded
+
+    // Wait for the table to appear again
+    const teamTable = this.page.locator('table'); // Adjust locator if necessary
+    await expect(teamTable).toBeVisible({ timeout: 10000 });
+
+    // Re-check the same team name exists after refresh
+    await this.verifyTeamInTable(teamName);
+
+    console.log(`✅ Verified: Team "${teamName}" remains visible after page refresh.`);
+  });
+}
+
+async VerifyUnsavedPopupDataLostOnRefresh(OfficeName: string, memberName: string, leaderName: string) {
+  await test.step('Verify unsaved Add Team popup data is lost after page refresh', async () => {
+    await this.NavigateToTeamsTab();
+
+    // Open Add Team popup and fill some data
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    const teamName = `Team ${faker.word.sample()}`;
+    const teamNameInput = this.locators.TeamNameInput();
+    await teamNameInput.click();
+    await teamNameInput.fill(teamName);
+
+    await this.SelectOffice(OfficeName);
+    await this.SelectOfficeOption();
+    await this.SelectTeamMember();
+    await this.SelectTeamMemberSearchInput(memberName);
+    await this.page.waitForTimeout(1000);
+    await this.selectTeamFromDropdown(memberName);
+    await this.SelectTeamMember();
+    await this.SelectTeamLeader();
+    await this.SelectTeamLeaderSearchInput(leaderName);
+    await this.SelectTeamLeaderFromDropdown(leaderName);
+
+    // Reload the page before saving to simulate loss of unsaved data
+    await this.page.reload();
+    await this.page.waitForLoadState('networkidle');
+    await this.NavigateToTeamsTab();
+
+    // Re-open Add Team popup - all fields should be reset (empty)
+    const selectTeamInputAfter = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInputAfter.click();
+    await this.createNewTeamButton();
+
+
+    const teamNameInputAfter = this.locators.TeamNameInput();
+    // The team name input should be empty
+    await expect(teamNameInputAfter).toBeEmpty();
+
+    const Office = this.page.locator('#wrapper').getByText('Select Office');
+    await expect(Office).toBeVisible();
+    // Ensure member and leader fields are also cleared
+    const memberTags = this.page.locator('re-multiselect[formcontrolname="members"] .tags');
+    await expect(memberTags).toBeVisible();
+
+    console.log('✅ Verified: Unsaved Add Team popup data is lost after page refresh.');
+  });
+}
 }

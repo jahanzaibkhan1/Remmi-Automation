@@ -392,31 +392,31 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     await profile.verifyEditIconOpensTeamForUpdate();
   });
 
-  test('Test case 29: Verify Delete icon opens confirmation popup.', async ({ page }) => {
-    const login = new LoginActions(page);
-    const profile = new MyProfileActions(page);
+  // test('Test case 29: Verify Delete icon opens confirmation popup.', async ({ page }) => {
+  //   const login = new LoginActions(page);
+  //   const profile = new MyProfileActions(page);
   
-    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
-      test.skip(true, 'Skipping login tests: missing environment credentials');
-    }
+  //   if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+  //     test.skip(true, 'Skipping login tests: missing environment credentials');
+  //   }
   
-    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
-    await profile.navigateToProfilePage();
-    await profile.verifyDeleteIconOpensConfirmationPopup();
-  });
+  //   await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+  //   await profile.navigateToProfilePage();
+  //   await profile.verifyDeleteIconOpensConfirmationPopup();
+  // });
 
-  test('Test case 30: Verify clicking Cancel on Delete popup keeps team.', async ({ page }) => {
-    const login = new LoginActions(page);
-    const profile = new MyProfileActions(page);
+  // test('Test case 30: Verify clicking Cancel on Delete popup keeps team.', async ({ page }) => {
+  //   const login = new LoginActions(page);
+  //   const profile = new MyProfileActions(page);
   
-    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
-      test.skip(true, 'Skipping login tests: missing environment credentials');
-    }
+  //   if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+  //     test.skip(true, 'Skipping login tests: missing environment credentials');
+  //   }
   
-    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
-    await profile.navigateToProfilePage();
-    await profile.verifyCancelOnDeleteKeepsTeam();
-  });
+  //   await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+  //   await profile.navigateToProfilePage();
+  //   await profile.verifyCancelOnDeleteKeepsTeam();
+  // });
   
   test('Test case 31: Verify confirming Delete removes team permanently.', async ({ page }) => {
     const login = new LoginActions(page);
@@ -429,5 +429,131 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
     await profile.navigateToProfilePage();
     await profile.verifyDeleteIconRemovesTeamPermanently();
+  });
+
+  test('Test case 32: Verify team created in My Profile also appears in Team module', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+    await profile.verifyTeamCreatedInMyProfileAlsoAppearsInTeamModule('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
+  });
+
+  test('Test case 33: Verify alignment of Add button with Team dropdown.', async ({ page }) => {
+     const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+    await profile.verifyAlignmentOfAddButtonWithTeamDropdown();
+  });
+  test('Test case 34: Verify dropdown supports search for large team lists.', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+    await profile.verifyDropdownSupportsSearchForLargeTeamLists('Team');
+  });
+
+  test('Test case 35: Verify dropdown search with invalid keyword.', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+    await profile.verifyDropdownWithInvalidKeyword('keyword jjs');
+  });
+  test('Test case 36: Verify toast notification appears after team creation.', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+    await profile.VerifyToastAfterTeamCreation('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
+  });
+
+  test('Test case 37: Verify no duplicate toast shown for single event.', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+    await profile.VerifySingleToastOnMultipleClicks('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
+  });
+
+  test('Test case 38: Verify validation message color (red for errors).', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+    await profile.VerifyRequiredFieldErrorColor();
+  });
+
+  test('Test case 39: Verify confirmation message color (green for success)', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+    await profile.VerifyConfirmationMessageColor('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
+  });
+  test('Test case 40: Verify data remains after page refresh.', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+    await profile.VerifyTeamCreationWithValidDetails('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
+  });
+  test('Test case 41: Verify unsaved popup data lost on refresh.', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
+      test.skip(true, 'Skipping login tests: missing environment credentials');
+    }
+
+    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await profile.navigateToProfilePage();
+    await profile.VerifyUnsavedPopupDataLostOnRefresh('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
   });
 });

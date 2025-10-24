@@ -1,0 +1,10 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="67.04734499999881">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-10-24T08:35:53.943Z" hostname="chromium" tests="1" failures="0" skipped="0" time="53.171" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 41: Verify unsaved popup data lost on refresh." classname="Pages\MyProfile\teams.test.spec.ts" time="53.171">
+<system-out>
+<![CDATA[✅ Verified: Unsaved Add Team popup data is lost after page refresh.
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>
