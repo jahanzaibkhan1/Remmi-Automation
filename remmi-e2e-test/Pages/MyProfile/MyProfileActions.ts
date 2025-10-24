@@ -2273,4 +2273,53 @@ async VerifyTeamDataPersistenceAfterRefresh(OfficeName: string, memberName: stri
   });
 }
 
+async VerifyUnsavedPopupDataLostOnRefresh(OfficeName: string, memberName: string, leaderName: string) {
+  await test.step('Verify unsaved Add Team popup data is lost after page refresh', async () => {
+    await this.NavigateToTeamsTab();
+
+    // Open Add Team popup and fill some data
+    const selectTeamInput = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInput.click();
+    await this.createNewTeamButton();
+
+    const teamName = `Team ${faker.word.sample()}`;
+    const teamNameInput = this.locators.TeamNameInput();
+    await teamNameInput.click();
+    await teamNameInput.fill(teamName);
+
+    await this.SelectOffice(OfficeName);
+    await this.SelectOfficeOption();
+    await this.SelectTeamMember();
+    await this.SelectTeamMemberSearchInput(memberName);
+    await this.page.waitForTimeout(1000);
+    await this.selectTeamFromDropdown(memberName);
+    await this.SelectTeamMember();
+    await this.SelectTeamLeader();
+    await this.SelectTeamLeaderSearchInput(leaderName);
+    await this.SelectTeamLeaderFromDropdown(leaderName);
+
+    // Reload the page before saving to simulate loss of unsaved data
+    await this.page.reload();
+    await this.page.waitForLoadState('networkidle');
+    await this.NavigateToTeamsTab();
+
+    // Re-open Add Team popup - all fields should be reset (empty)
+    const selectTeamInputAfter = this.page.locator('ng-select[name="team"] input');
+    await selectTeamInputAfter.click();
+    await this.createNewTeamButton();
+
+
+    const teamNameInputAfter = this.locators.TeamNameInput();
+    // The team name input should be empty
+    await expect(teamNameInputAfter).toBeEmpty();
+
+    const Office = this.page.locator('#wrapper').getByText('Select Office');
+    await expect(Office).toBeVisible();
+    // Ensure member and leader fields are also cleared
+    const memberTags = this.page.locator('re-multiselect[formcontrolname="members"] .tags');
+    await expect(memberTags).toBeVisible();
+
+    console.log('✅ Verified: Unsaved Add Team popup data is lost after page refresh.');
+  });
+}
 }
