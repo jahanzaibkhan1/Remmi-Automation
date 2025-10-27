@@ -1,6 +1,0 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.27882499999925">
-<testsuite name="Pages\MyProfile\profileAccess.spec.ts" timestamp="2025-10-15T12:45:20.309Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.348" errors="0">
-<testcase name="Access Tab Tests - Remmi E2E › Test 7: Verify that selecting Select All grants access to all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="37.348">
-</testcase>
-</testsuite>
-</testsuites>
