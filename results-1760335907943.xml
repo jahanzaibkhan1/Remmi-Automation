@@ -1,6 +1,0 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.81465999999642">
-<testsuite name="Pages\MyProfile\MyProfileImagesTest.spec.ts" timestamp="2025-10-13T12:44:18.577Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.446" errors="0">
-<testcase name="My Profile Tests - Remmi E2E › Test 1: User can upload a profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="46.446">
-</testcase>
-</testsuite>
-</testsuites>

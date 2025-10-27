@@ -50,7 +50,7 @@ export class LoginActions {
 
   /** Click continue button (after OTP), robust for cross-browser. */
   async clickContinue() {
-    await this.locators.continueButton().click();
+    await this.locators.continueButton().dblclick({force: true});
   }
 
   /**
@@ -78,11 +78,11 @@ export class LoginActions {
     expectUrl?: string;
   }) {
     await this.gotoLogin();
-
+  
     await test.step('Enter credentials', async () => {
       await this.fillCredentials(email, password);
     });
-
+  
     if (!skipTerms) {
       await test.step('Accept terms and click Sign In', async () => {
         await this.acceptTerms();
@@ -91,29 +91,33 @@ export class LoginActions {
     } else {
       await this.clickSignIn();
     }
-
+  
     if (!skipOtp) {
       await test.step('Enter OTP', async () => {
         const otp = customOtp ?? (otpSecret ? generateOtp(otpSecret) : '');
-        if (otp) {
-          await this.fillOtp(otp);
-        }
+        if (otp) await this.fillOtp(otp);
         await this.clickContinue();
       });
     }
-
-    // Always verify dashboard url after successful login (base URL),
-    // unless explicitly set to not expect success (expectSuccess === false)
+  
     if (expectSuccess) {
-      // Wait for navigation away from login page before checking URL
-      await this.page.waitForURL((url) => !url.pathname.endsWith('/login'), { timeout: 10000 });
-
-      // Use Playwright's baseURL for verification ("/" dashboard)
-      const baseUrl = (this.page.context() as any)._options.baseURL || '/';
-      await expect(this.page).toHaveURL(expectUrl ?? baseUrl);
+      const dashboardUrl = expectUrl ?? (this.page.context() as any)._options.baseURL ?? '/';
+  
+      // Wait longer for WebKit, 30s timeout
+      await this.page.waitForURL(
+        (url) => !url.pathname.endsWith('/login'),
+        { timeout: 30000 }
+      );
+  
+      // Wait for a dashboard-specific element to be visible
+      const dashboardElement = this.page.locator("//img[@src='assets/img/dashboadIcon/home.svg']"); 
+      await dashboardElement.waitFor({ timeout: 30000 });
+      
+      // Finally verify URL (give extra timeout for WebKit)
+      await expect(this.page).toHaveURL(dashboardUrl, { timeout: 30000 });
     }
   }
-
+  
   /** Successful login with OTP */
   async login(email: string, password: string, otpSecret: string) {
     await this.loginFlow({ email, password, otpSecret });

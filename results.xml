@@ -1,0 +1,6 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.359195">
+<testsuite name="Pages\Login\login.spec.ts" timestamp="2025-10-27T09:51:41.017Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.445" errors="0">
+<testcase name="Login Tests - Remmi E2E › Successful login with OTP" classname="Pages\Login\login.spec.ts" time="23.445">
+</testcase>
+</testsuite>
+</testsuites>
