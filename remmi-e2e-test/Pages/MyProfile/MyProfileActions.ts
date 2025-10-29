@@ -2531,5 +2531,15 @@ async enableAuthyAuthenticatorMfa() {
     await expect(this.page).toHaveURL(/\/login$/i);
   });
 }
+async loginWithoutEnablingMfa() {
+  await test.step('Login without enabling MFA', async () => {
+    const dashboardElement = this.page.locator("//img[@src='assets/img/dashboadIcon/home.svg']");
+    await dashboardElement.click();
 
+    // Wait for "No MFA Assigned" message to appear (with generous timeout for slow dashboards)
+    const noMfaMessage = this.page.getByText(/No MFA Assigned/i);
+    await expect(noMfaMessage).toBeVisible({ timeout: 30000 });
+  });
+}
+//write test
 }
