@@ -29,7 +29,7 @@ export default defineConfig({
   reporter: [
     ['list'],
     ['html', { open: 'never', outputFolder: 'playwright-report' }],
-    ['junit', { outputFile: `results-${Date.now()}.xml` }],
+    ['junit', { outputFile: `results.xml` }],
   ],
 
   use: {
@@ -69,7 +69,7 @@ export default defineConfig({
     // {
     //   name: 'webkit',
     //   use: { ...devices['Desktop Safari'],
-    //     viewport: { width: 1320, height: 620 },
+    //     // viewport: { width: 1320, height: 620 },
     //    },
     // },
 
