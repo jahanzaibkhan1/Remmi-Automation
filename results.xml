@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.68362800000049">
-<testsuite name="Pages\MyProfile\MFA.spec.ts" timestamp="2025-10-29T11:33:11.693Z" hostname="chromium" tests="1" failures="0" skipped="0" time="17.646" errors="0">
-<testcase name="MFA Tab Tests - Remmi E2E › MFA Warning after 7 days" classname="Pages\MyProfile\MFA.spec.ts" time="17.646">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.783793">
+<testsuite name="Pages\MyProfile\MFA.spec.ts" timestamp="2025-10-29T11:54:14.747Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.225" errors="0">
+<testcase name="MFA Tab Tests - Remmi E2E › Enter incorrect Google Authenticator MFA code" classname="Pages\MyProfile\MFA.spec.ts" time="33.225">
 </testcase>
 </testsuite>
 </testsuites>

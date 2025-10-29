@@ -84,8 +84,20 @@ test.describe('MFA Tab Tests - Remmi E2E', () => {
     const noMfaMessage = page.getByText(/You have 7 days to complete/i);
     await expect(noMfaMessage).toBeVisible({ timeout: 30000 });
   });
+
+  test('Enter incorrect Google Authenticator MFA code', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    // Ensure we are not skipping this test
+    await login.login(
+      operationManager.email!,
+      operationManager.password!,
+      operationManager.otpSecret!
+    );
+    await profile.navigateToProfilePage();
+    await profile.enterInvalidOtpGoogleAuthenticatorMfa();
+
+  });
 });
 
-
-
-// what does it mean
