@@ -15,11 +15,17 @@ export class MyProfileLocators {
    */
   profileIcon(): Locator {
     // Try the default selector first
-    const defaultIcon = this.page.locator('.user_thumb.ng-star-inserted');
-    // After image upload, the class may change (e.g., to .user_thumb.has-image or similar)
-    const uploadedIcon = this.page.locator("div.user-thumbnail-placeholder >> img");
-    // Return whichever is visible, fallback to default
-    return this.page.locator("div.user-thumbnail-placeholder >> img, .user_thumb.ng-star-inserted");
+    const possibleIcons = [
+      this.page.locator("div.user-thumbnail-placeholder >> img"),
+      this.page.locator(".user_thumb.ng-star-inserted"),
+      this.page.locator(".pi.pi-angle-down.pl-2"),
+    ];
+    // Return a locator that matches any of the selectors
+    return this.page.locator([
+      "div.user-thumbnail-placeholder >> img",
+      ".user_thumb.ng-star-inserted",
+      ".pi.pi-angle-down.pl-2"
+    ].join(', '));
   }
 
   myProfileButton(): Locator {
@@ -367,7 +373,9 @@ export class MyProfileLocators {
   replaceButton(): Locator {
     return this.page.getByRole('img', { name: 'replace' });
   }
-
+  googleAuthenticator(): Locator {
+    return this.page.getByText('Google Authenticator');
+  }
   // Locator for Microsoft Authenticator option
   microsoftAuthenticator(): Locator {
     return this.page.getByText('Microsoft Authenticator');

@@ -1,0 +1,48 @@
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="70.70400599999994">
+<testsuite name="Pages\MyProfile\MFA.spec.ts" timestamp="2025-10-29T12:02:29.271Z" hostname="chromium" tests="1" failures="1" skipped="0" time="62.694" errors="0">
+<testcase name="MFA Tab Tests - Remmi E2E › Enter incorrect Microsoft Authenticator MFA code" classname="Pages\MyProfile\MFA.spec.ts" time="62.694">
+<failure message="MFA.spec.ts:103:7 Enter incorrect Microsoft Authenticator MFA code" type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\MFA.spec.ts:103:7 › MFA Tab Tests - Remmi E2E › Enter incorrect Microsoft Authenticator MFA code › Accept terms and click Sign In 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: /sign in/i })
+        - locator resolved to <button type="submit" class="_primary-btn" _ngcontent-serverapp-c3693129083="">Sign in</button>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+
+
+       at Pages\Login\LoginAction.ts:40
+
+      38 |   /** Click sign in button using accessible role. */
+      39 |   async clickSignIn() {
+    > 40 |     await this.locators.signInButton().click();
+         |                                        ^
+      41 |   }
+      42 |
+      43 |   /** Fill OTP fields (input[type='*']). */
+        at LoginActions.clickSignIn (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:40:40)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:89:20
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:87:7)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:123:5)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\MFA.spec.ts:108:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-MFA-MFA-Ta-c1c12-soft-Authenticator-MFA-code-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-MFA-MFA-Ta-c1c12-soft-Authenticator-MFA-code-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-MyProfile-MFA-MFA-Ta-c1c12-soft-Authenticator-MFA-code-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-MFA-MFA-Ta-c1c12-soft-Authenticator-MFA-code-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>
