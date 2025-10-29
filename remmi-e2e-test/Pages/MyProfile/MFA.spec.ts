@@ -35,6 +35,20 @@ test.describe('MFA Tab Tests - Remmi E2E', () => {
     await profile.enableMicrosoftAuthenticatorMfa();
   });
 
+  test('Enable Authy Authenticator MFA for a user', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    // Ensure we are not skipping this test
+    await login.login(
+      operationManager.email!,
+      operationManager.password!,
+      operationManager.otpSecret!
+    );
+    await profile.navigateToProfilePage();
+    await profile.enableAuthyAuthenticatorMfa();
+
+  });
 });
 
 
