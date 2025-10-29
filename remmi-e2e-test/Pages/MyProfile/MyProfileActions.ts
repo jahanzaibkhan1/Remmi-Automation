@@ -2478,58 +2478,5 @@ async enableMicrosoftAuthenticatorMfa() {
   });
 }
 
-/**
- * Enable Authy Authenticator MFA for the user.
- */
-async enableAuthyAuthenticatorMfa() {
-  await test.step('Enable Authy Authenticator MFA', async () => {
-    await this.navigateToMfaTab();
-    await this.page.waitForTimeout(1000);
-    await this.clickReplaceButton();
-    await this.selectAuthyAuthenticator();
-
-    // Click the Authy Authenticator radio button
-    const authyRadioButton = this.page.locator('div:nth-child(3) > .p-element > .p-radiobutton > .p-radiobutton-box');
-    await authyRadioButton.click();
-
-    // Try to find "already enabled" message - if not found, it is NOT already enabled
-    const alreadyEnabled = this.page.getByRole('alert', { name: 'This MFA already enabled' });
-    let isAlreadyEnabled = false;
-    try {
-      isAlreadyEnabled = await alreadyEnabled.isVisible({ timeout: 3000 });
-    } catch (e) {
-      // do nothing - means not already enabled
-      isAlreadyEnabled = false;
-    }
-
-    if (isAlreadyEnabled) {
-      console.log('✅ Authy MFA already enabled, test passes.');
-      return;
-    }
-    await this.page.waitForTimeout(2000);
-
-    // If not already enabled: continue flow
-    const qrImage = this.page.locator("//div[@class='rqcode']//img");
-    const qrVisible = await qrImage.isVisible({ timeout: 5000 }).catch(() => false);
-    if (!qrVisible) throw new Error('QR code for Authy MFA not visible.');
-
-    const qrSrc = await qrImage.getAttribute('src');
-    if (!qrSrc) throw new Error('Unable to find QR code src for Authy MFA');
-
-    const qrExtract = await extractSecretFromQr(qrSrc);
-    if (!qrExtract?.secret) throw new Error('Failed to extract Authy MFA secret');
-
-    const otp = generateOtp(qrExtract.secret);
-    await this.enterMicrosoftAuthOtp(otp);
-
-    const saveButton = this.page.getByRole('button', { name: 'Save' });
-    await saveButton.click({ force: true });
-
-    const mfaEnabledToast = this.page.getByRole('alert', { name: /MFA enabled successfully/i });
-    expect(mfaEnabledToast);
-    updateEnvVariable('E2E_MANAGER_OTP_SECRET', qrExtract.secret);
-    await expect(this.page).toHaveURL(/\/login$/i);
-  });
-}
 
 }
