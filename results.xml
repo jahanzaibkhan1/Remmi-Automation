@@ -1,6 +1,61 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.359195">
-<testsuite name="Pages\Login\login.spec.ts" timestamp="2025-10-27T09:51:41.017Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.445" errors="0">
-<testcase name="Login Tests - Remmi E2E › Successful login with OTP" classname="Pages\Login\login.spec.ts" time="23.445">
+<testsuites id="" name="" tests="3" failures="1" skipped="2" errors="0" time="85.18517499999993">
+<testsuite name="Pages\MyProfile\enableAuthyAuthenticatorMfa.spec.ts" timestamp="2025-10-29T09:49:13.816Z" hostname="chromium" tests="3" failures="1" skipped="2" time="65.745" errors="0">
+<testcase name="MFA Tab Tests - Remmi E2E › Enable Google Authenticator MFA for a user" classname="Pages\MyProfile\enableAuthyAuthenticatorMfa.spec.ts" time="60.194">
+<failure message="enableAuthyAuthenticatorMfa.spec.ts:25:7 Enable Google Authenticator MFA for a user" type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\enableAuthyAuthenticatorMfa.spec.ts:25:7 › MFA Tab Tests - Remmi E2E › Enable Google Authenticator MFA for a user 
+
+    Test timeout of 60000ms exceeded while running "beforeEach" hook.
+
+      11 |   let profile: MyProfileActions;
+      12 |
+    > 13 |   test.beforeEach(async ({ page }) => {
+         |        ^
+      14 |     login = new LoginActions(page);
+      15 |     profile = new MyProfileActions(page);
+      16 |
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\enableAuthyAuthenticatorMfa.spec.ts:13:8
+
+    Error: page.goto: Test timeout of 60000ms exceeded.
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:19
+
+      17 |   /** Navigate to login page. Uses standard Playwright navigation. */
+      18 |   async gotoLogin() {
+    > 19 |     await this.page.goto('/login');
+         |                     ^
+      20 |     await this.page.waitForLoadState('networkidle');
+      21 |   }
+      22 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:19:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:80:16)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:123:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\enableAuthyAuthenticatorMfa.spec.ts:17:17
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-enableAuth-14a7b-uthenticator-MFA-for-a-user-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-enableAuth-14a7b-uthenticator-MFA-for-a-user-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-MyProfile-enableAuth-14a7b-uthenticator-MFA-for-a-user-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-enableAuth-14a7b-uthenticator-MFA-for-a-user-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="MFA Tab Tests - Remmi E2E › Enable Microsoft Authenticator MFA for a user" classname="Pages\MyProfile\enableAuthyAuthenticatorMfa.spec.ts" time="5.551">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="MFA Tab Tests - Remmi E2E › Enable Authy Authenticator MFA for a user" classname="Pages\MyProfile\enableAuthyAuthenticatorMfa.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
 </testsuites>

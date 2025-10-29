@@ -191,7 +191,7 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     await profile.navigateToProfilePage();
     const validPaths = [
       path.join(IMAGE_DIR, 'Profile.jpg'),
-      path.join(IMAGE_DIR, 'High.png')
+      path.join(IMAGE_DIR, 'premium.png')
     ];
     const invalidPaths = [
       path.join(IMAGE_DIR, 'invalidImage.webp'),

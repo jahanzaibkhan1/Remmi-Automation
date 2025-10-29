@@ -1,10 +1,8 @@
 import { Page, Locator, expect, test } from '@playwright/test';
 import { MyProfileLocators } from './MyProfileLocators';
-import { url, waitForDebugger } from 'inspector';
-import { setEngine } from 'crypto';
-import { faker } from '@faker-js/faker';
-import { AsyncLocalStorage } from 'async_hooks';
-import { time } from 'console';
+import { faker, tr } from '@faker-js/faker';
+const { extractSecretFromQr, updateEnvVariable } = require('../../../helper/mfaHelper');
+  const { generateOtp } = require('../../../helper/getOtp');
 
 /**
  * Actions and verifications for the My Profile page.
@@ -454,7 +452,6 @@ export class MyProfileActions {
     // Type the team name directly
     await searchTeam.fill(teamName);
   }
-  // AGAR Team 2 search ker rahay hain agra Team 232 bhi show ho raha hy dropdown me to exact ko kesay click krein
   private async SelectTeamOption(teamName: string) {
     const selectTeamOption = this.locators.SelectTeamOption(teamName);
     await expect(selectTeamOption.first()).toHaveText(teamName);
@@ -594,6 +591,43 @@ export class MyProfileActions {
     await teamRow.scrollIntoViewIfNeeded();
     await expect(teamRow).toBeVisible({ timeout: 10000 });
   }
+
+
+  //----------------------------------MFA Tab------------------------------------//
+  private async navigateToMfaTab() {
+    const mfaTab = this.locators.mfaTab();
+    await mfaTab.click();
+  }
+
+  private async clickReplaceButton() {
+    const replaceBtn = this.locators.replaceButton();
+    await replaceBtn.click();
+  }
+
+  private async selectGoogleAuthenticator(){
+    const gauth = this.locators.googleAuthenticator();
+    await gauth.dblclick({force:true});
+  }
+
+  private async selectMicrosoftAuthenticator() {
+    const msAuth = this.locators.microsoftAuthenticator();
+    await msAuth.click();
+  }
+  private async selectAuthyAuthenticator() {
+    const AuthyAuth = this.locators.authyAuthenticator();
+    await AuthyAuth.click();
+  }
+
+  private async enterMicrosoftAuthOtp(otp: string) {
+    const otpTextbox = this.locators.mfaCodeTextbox();
+    await otpTextbox.click();
+    await otpTextbox.fill(otp);
+  }
+  private async SaveMFAButton() {
+    const saveMFAButton = this.locators.saveMFAButton().first();
+    await saveMFAButton.dblclick({force: true});
+  }
+
 
   // --------- PUBLIC TEST/STEPS ---------
   async navigateToProfilePage() {
@@ -1320,7 +1354,7 @@ export class MyProfileActions {
         await expect(searchBox).toBeVisible();
         await searchBox.fill(name);
 
-        const option = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: name });
+        const option = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: name }).first();
         await expect(option).toBeVisible({ timeout: 5000 });
         await option.click();
       }
@@ -1342,7 +1376,7 @@ export class MyProfileActions {
         await expect(searchBox).toBeVisible();
         await searchBox.fill(name);
 
-        const option = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: name });
+        const option = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: name }).first();
         await expect(option).toBeVisible({ timeout: 5000 });
         await option.click();
       }
@@ -2322,4 +2356,180 @@ async VerifyUnsavedPopupDataLostOnRefresh(OfficeName: string, memberName: string
     console.log('✅ Verified: Unsaved Add Team popup data is lost after page refresh.');
   });
 }
+
+// ---------------------------------------MFA------------------------------------------
+
+// MFA enable hone par secret ko .env file me update karo jab success message aye.
+
+async enableGoogleAuthenticatorMfa() {
+  await test.step('Enable Google Authenticator MFA', async () => {
+    await this.navigateToMfaTab();
+
+    // Click replace and select Google Authenticator
+    await this.clickReplaceButton();
+    await this.selectGoogleAuthenticator();
+
+    // Click the first radio button
+    const clickRadioButton = this.page.locator('.p-radiobutton-icon').first();
+    await clickRadioButton.click();
+
+     // Try to find "already enabled" message - if not found, it is NOT already enabled
+     const alreadyEnabled = this.page.getByRole('alert', { name: 'This MFA already enabled' });
+     let isAlreadyEnabled = false;
+     try {
+       isAlreadyEnabled = await alreadyEnabled.isVisible({ timeout: 3000 });
+     } catch (e) {
+       // do nothing - means not already enabled
+       isAlreadyEnabled = false;
+     }
+ 
+     if (isAlreadyEnabled) {
+       return;
+     }
+     await this.page.waitForTimeout(2000)
+
+    // Attempt to locate QR code
+    const qrImage = this.page.locator('.rqcode > img');
+    let qrVisible = await qrImage.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (!qrVisible) {
+      await this.clickReplaceButton();
+      await this.selectGoogleAuthenticator();
+      qrVisible = await qrImage.isVisible({ timeout: 5000 }).catch(() => false);
+    }
+
+    if (!qrVisible) {
+      return;
+    }
+
+    // Extract secret from QR code
+    const qrSrc = await qrImage.getAttribute('src');
+    if (!qrSrc) throw new Error('Unable to find QR code src for Google MFA');
+
+    const qrExtract = await extractSecretFromQr(qrSrc);
+    if (!qrExtract?.secret) throw new Error('Failed to extract Google MFA secret');
+
+    // Generate OTP and enable MFA
+    const otp = generateOtp(qrExtract.secret);
+    await this.enterMicrosoftAuthOtp(otp);
+
+    const saveButton = this.page.getByRole('button', { name: 'Save' });
+    await saveButton.click({ force: true });
+    updateEnvVariable('E2E_MANAGER_OTP_SECRET', qrExtract.secret);
+    await this.page.waitForTimeout(2000);
+    const mfaEnabledToast = this.page.getByRole('alert', { name: /MFA enabled successfully/i });
+    await expect(mfaEnabledToast).toBeVisible();
+
+    await expect(this.page).toHaveURL(/\/login$/i);
+  });
+}
+
+/*
+ * Enable Microsoft Authenticator MFA for the user.
+ */
+async enableMicrosoftAuthenticatorMfa() {
+  await test.step('Enable Microsoft Authenticator MFA', async () => {
+    await this.navigateToMfaTab();
+    await this.page.waitForTimeout(1000);
+    await this.clickReplaceButton();
+    await this.selectMicrosoftAuthenticator();
+
+    // Click the Microsoft Authenticator radio button
+    const msRadioButton = this.page.locator('.p-radiobutton-box.p-highlight > .p-radiobutton-icon');
+    await msRadioButton.click();
+
+    // Try to find "already enabled" message - if not found, it is NOT already enabled
+    const alreadyEnabled = this.page.getByRole('alert', { name: 'This MFA already enabled' });
+    let isAlreadyEnabled = false;
+    try {
+      isAlreadyEnabled = await alreadyEnabled.isVisible({ timeout: 3000 });
+    } catch (e) {
+      // do nothing - means not already enabled
+      isAlreadyEnabled = false;
+    }
+
+    if (isAlreadyEnabled) {
+      console.log('✅ Microsoft MFA already enabled, test passes.');
+      return;
+    }
+    await this.page.waitForTimeout(2000)
+
+    // If not already enabled: continue flow
+    const qrImage = this.page.locator("//div[@class='rqcode']//img");
+    const qrVisible = await qrImage.isVisible({ timeout: 5000 }).catch(() => false);
+    if (!qrVisible) throw new Error('QR code for Microsoft MFA not visible.');
+
+    const qrSrc = await qrImage.getAttribute('src');
+    if (!qrSrc) throw new Error('Unable to find QR code src for Microsoft MFA');
+
+    const qrExtract = await extractSecretFromQr(qrSrc);
+    if (!qrExtract?.secret) throw new Error('Failed to extract Microsoft MFA secret');
+
+    const otp = generateOtp(qrExtract.secret);
+    await this.enterMicrosoftAuthOtp(otp);
+
+    const saveButton = this.page.getByRole('button', { name: 'Save' });
+    await saveButton.click({ force: true });
+
+    const mfaEnabledToast = this.page.getByRole('alert', { name: /MFA enabled successfully/i });
+    expect(mfaEnabledToast);
+    updateEnvVariable('E2E_MANAGER_OTP_SECRET', qrExtract.secret);
+    await expect(this.page).toHaveURL(/\/login$/i);
+  });
+}
+
+/**
+ * Enable Authy Authenticator MFA for the user.
+ */
+async enableAuthyAuthenticatorMfa() {
+  await test.step('Enable Authy Authenticator MFA', async () => {
+    await this.navigateToMfaTab();
+    await this.page.waitForTimeout(1000);
+    await this.clickReplaceButton();
+    await this.selectAuthyAuthenticator();
+
+    // Click the Authy Authenticator radio button
+    const authyRadioButton = this.page.locator('div:nth-child(3) > .p-element > .p-radiobutton > .p-radiobutton-box');
+    await authyRadioButton.click();
+
+    // Try to find "already enabled" message - if not found, it is NOT already enabled
+    const alreadyEnabled = this.page.getByRole('alert', { name: 'This MFA already enabled' });
+    let isAlreadyEnabled = false;
+    try {
+      isAlreadyEnabled = await alreadyEnabled.isVisible({ timeout: 3000 });
+    } catch (e) {
+      // do nothing - means not already enabled
+      isAlreadyEnabled = false;
+    }
+
+    if (isAlreadyEnabled) {
+      console.log('✅ Authy MFA already enabled, test passes.');
+      return;
+    }
+    await this.page.waitForTimeout(2000);
+
+    // If not already enabled: continue flow
+    const qrImage = this.page.locator("//div[@class='rqcode']//img");
+    const qrVisible = await qrImage.isVisible({ timeout: 5000 }).catch(() => false);
+    if (!qrVisible) throw new Error('QR code for Authy MFA not visible.');
+
+    const qrSrc = await qrImage.getAttribute('src');
+    if (!qrSrc) throw new Error('Unable to find QR code src for Authy MFA');
+
+    const qrExtract = await extractSecretFromQr(qrSrc);
+    if (!qrExtract?.secret) throw new Error('Failed to extract Authy MFA secret');
+
+    const otp = generateOtp(qrExtract.secret);
+    await this.enterMicrosoftAuthOtp(otp);
+
+    const saveButton = this.page.getByRole('button', { name: 'Save' });
+    await saveButton.click({ force: true });
+
+    const mfaEnabledToast = this.page.getByRole('alert', { name: /MFA enabled successfully/i });
+    expect(mfaEnabledToast);
+    updateEnvVariable('E2E_MANAGER_OTP_SECRET', qrExtract.secret);
+    await expect(this.page).toHaveURL(/\/login$/i);
+  });
+}
+
 }

@@ -367,7 +367,9 @@ export class MyProfileLocators {
   replaceButton(): Locator {
     return this.page.getByRole('img', { name: 'replace' });
   }
-
+  googleAuthenticator(): Locator {
+    return this.page.getByText('Google Authenticator');
+  }
   // Locator for Microsoft Authenticator option
   microsoftAuthenticator(): Locator {
     return this.page.getByText('Microsoft Authenticator');
