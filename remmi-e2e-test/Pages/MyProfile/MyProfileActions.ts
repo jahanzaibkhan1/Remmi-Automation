@@ -2531,15 +2531,42 @@ async enableAuthyAuthenticatorMfa() {
     await expect(this.page).toHaveURL(/\/login$/i);
   });
 }
-async loginWithoutEnablingMfa() {
-  await test.step('Login without enabling MFA', async () => {
-    const dashboardElement = this.page.locator("//img[@src='assets/img/dashboadIcon/home.svg']");
-    await dashboardElement.click();
+// Enter incorrect Google Authenticator MFA code
+async enterInvalidOtpGoogleAuthenticatorMfa() {
+  await test.step('Enter incorrect Google Authenticator MFA code', async () => {
+    await this.navigateToMfaTab();
 
-    // Wait for "No MFA Assigned" message to appear (with generous timeout for slow dashboards)
-    const noMfaMessage = this.page.getByText(/No MFA Assigned/i);
-    await expect(noMfaMessage).toBeVisible({ timeout: 30000 });
+    // Click replace and select Google Authenticator
+    await this.clickReplaceButton();
+    await this.selectGoogleAuthenticator();
+
+    // Click the radio button for Google Authenticator
+    const googleRadioButton = this.page.locator('.p-radiobutton-icon').first();
+    await googleRadioButton.click();
+
+    // Check if "already enabled" alert is visible
+    const alreadyEnabled = this.page.getByRole('alert', { name: 'This MFA already enabled' });
+    let isAlreadyEnabled = false;
+    try {
+      isAlreadyEnabled = await alreadyEnabled.isVisible({ timeout: 3000 });
+    } catch {
+      isAlreadyEnabled = false;
+    }
+
+    if (isAlreadyEnabled) {
+      console.log('Google Authenticator MFA is already enabled. Skipping invalid OTP entry.');
+      return;
+    }
+
+    await this.page.waitForTimeout(2000);
+
+    // Enter an invalid OTP code and attempt to save
+    const otpTextbox = this.page.getByRole('textbox', { name: 'MFA Code1' });
+    await otpTextbox.click();
+    await otpTextbox.fill('123456');
+    const saveButton = this.page.getByRole('button', { name: 'Save' });
+    await saveButton.click({ force: true });
+
   });
 }
-//write test
 }
