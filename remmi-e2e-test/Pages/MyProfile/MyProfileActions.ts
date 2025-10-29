@@ -2569,4 +2569,42 @@ async enterInvalidOtpGoogleAuthenticatorMfa() {
 
   });
 }
+// Enter incorrect Google Authenticator MFA code
+async enterInvalidOtpMsleAuthenticatorMfa() {
+  await test.step('Enter incorrect Microsoft Authenticator MFA code', async () => {
+    await this.navigateToMfaTab();
+
+    // Click replace and select Google Authenticator
+    await this.clickReplaceButton();
+    await this.selectMicrosoftAuthenticator();
+
+    // Click the radio button for Google Authenticator
+    const msRadioButton = this.page.locator('.p-radiobutton-box.p-highlight > .p-radiobutton-icon');
+    await msRadioButton.click();
+
+    // Check if "already enabled" alert is visible
+    const alreadyEnabled = this.page.getByRole('alert', { name: 'This MFA already enabled' });
+    let isAlreadyEnabled = false;
+    try {
+      isAlreadyEnabled = await alreadyEnabled.isVisible({ timeout: 3000 });
+    } catch {
+      isAlreadyEnabled = false;
+    }
+
+    if (isAlreadyEnabled) {
+      console.log('Google Authenticator MFA is already enabled. Skipping invalid OTP entry.');
+      return;
+    }
+
+    await this.page.waitForTimeout(2000);
+
+    // Enter an invalid OTP code and attempt to save
+    const otpTextbox = this.page.getByRole('textbox', { name: 'MFA Code1' });
+    await otpTextbox.click();
+    await otpTextbox.fill('123456');
+    const saveButton = this.page.getByRole('button', { name: 'Save' });
+    await saveButton.click({ force: true });
+
+  });
+}
 }
