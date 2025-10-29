@@ -114,5 +114,20 @@ test.describe('MFA Tab Tests - Remmi E2E', () => {
     await profile.enterInvalidOtpMsleAuthenticatorMfa();
 
   });
+
+  test('Enter incorrect Authy Authenticator MFA code', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    // Ensure we are not skipping this test
+    await login.login(
+      operationManager.email!,
+      operationManager.password!,
+      operationManager.otpSecret!
+    );
+    await profile.navigateToProfilePage();
+    await profile.enterInvalidOtpAuthyleAuthenticatorMfa();
+
+  });
 });
 
