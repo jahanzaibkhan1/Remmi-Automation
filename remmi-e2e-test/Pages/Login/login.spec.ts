@@ -63,7 +63,10 @@ test.describe('Login Tests - Remmi E2E', () => {
     await login.forgetPasswordWithIncorrectEmail();
   });
 
-
+  test('Test case 12: Verify "Forgot Password" functionality without (email input)', async ({ page }) => {
+    const login = new LoginActions(page);
+    await login.forgetPasswordWithoutEmail();
+  });
 
   test('Test case 22: Verify proper placeholder text is shown in each input field', async ({ page }) => {
     const login = new LoginActions(page);
