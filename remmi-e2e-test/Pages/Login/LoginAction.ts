@@ -37,7 +37,7 @@ export class LoginActions {
 
   /** Click sign in button using accessible role. */
   async clickSignIn() {
-    await this.locators.signInButton().click();
+    await this.locators.signInButton().click({force:true});
   }
 
   /** Fill OTP fields (input[type='*']). */
@@ -196,6 +196,11 @@ export class LoginActions {
     await this.loginFlow({ email, password, otpSecret, expectSuccess: false });
   }
 
+   /** OTP page verification step. */
+   async verifyValidOtp(email: string, password: string, otpSecret: string) {
+    await this.loginFlow({ email, password, otpSecret, expectSuccess: false });
+  }
+
   /** Use invalid OTP and check for error. */
   async invalidOtp(email: string, password: string, invalidOtp: string) {
     await this.loginFlow({
@@ -279,10 +284,26 @@ export class LoginActions {
     await expect(this.page.getByText(LoginMessages.emptyEmail, { exact: false })).toBeVisible();
     await expect(this.page.getByText(LoginMessages.emptyPassword, { exact: false })).toBeVisible();
   }
-  // Verify "Forgot Password" functionality with wrong (email input)
+  /**
+   * Verify "Forgot Password" functionality when providing an email
+   */
+  async forgetPasswordWithIncorrectEmail() {
+    await this.gotoLogin();
+    await this.locators.forgetPasswordLink().click();
+    await this.locators.resetEmailField().fill('invalid email');
 
+    await this.locators.continueResetButton().click();
+    await this.locators.continueOtpButton().click();
+    await expect(this.page.getByText('This email address is not registered', { exact: false })).toBeVisible();
+  }
   // Verify "Forgot Password" functionality without (email input)
-
+  async forgetPasswordWithoutEmail() {
+    await this.gotoLogin();
+    await this.locators.forgetPasswordLink().click();
+    await this.locators.continueResetButton().click();
+    await this.locators.continueOtpButton().click();
+    await expect(this.page.getByText('Email is required', { exact: false })).toBeVisible();
+  }
   // Verify OTP is sent after "Forgot Password", ab yeah google authenticator say verify kerni hy 
 
   // Verify session timeout after OTP is sent
