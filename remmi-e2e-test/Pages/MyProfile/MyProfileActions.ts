@@ -3,7 +3,7 @@ import { MyProfileLocators } from './MyProfileLocators';
 import { faker, tr } from '@faker-js/faker';
 const { extractSecretFromQr, updateEnvVariable } = require('../../../helper/mfaHelper');
   const { generateOtp } = require('../../../helper/getOtp');
-
+  import * as dotenv from 'dotenv';
 /**
  * Actions and verifications for the My Profile page.
  */
@@ -2360,7 +2360,6 @@ async VerifyUnsavedPopupDataLostOnRefresh(OfficeName: string, memberName: string
 // ---------------------------------------MFA------------------------------------------
 
 // MFA enable hone par secret ko .env file me update karo jab success message aye.
-
 async enableGoogleAuthenticatorMfa() {
   await test.step('Enable Google Authenticator MFA', async () => {
     await this.navigateToMfaTab();
@@ -2369,64 +2368,77 @@ async enableGoogleAuthenticatorMfa() {
     await this.clickReplaceButton();
     await this.selectGoogleAuthenticator();
 
-    // Click the first radio button
-    const clickRadioButton = this.page.locator('.p-radiobutton-icon').first();
-    await clickRadioButton.click();
+    // Click the first radio button for Google Authenticator
+    const googleRadioButton = this.page.locator('.p-radiobutton-icon').first();
+    await googleRadioButton.click();
 
-     // Try to find "already enabled" message - if not found, it is NOT already enabled
-     const alreadyEnabled = this.page.getByRole('alert', { name: 'This MFA already enabled' });
-     let isAlreadyEnabled = false;
-     try {
-       isAlreadyEnabled = await alreadyEnabled.isVisible({ timeout: 3000 });
-     } catch (e) {
-       // do nothing - means not already enabled
-       isAlreadyEnabled = false;
-     }
- 
-     if (isAlreadyEnabled) {
-       return;
-     }
-     await this.page.waitForTimeout(2000)
+    // Check if already enabled
+    const alreadyEnabled = this.page.getByRole('alert', { name: 'This MFA already enabled' });
+    let isAlreadyEnabled = false;
+    try {
+      isAlreadyEnabled = await alreadyEnabled.isVisible({ timeout: 3000 });
+    } catch {
+      isAlreadyEnabled = false;
+    }
+    if (isAlreadyEnabled) {
+      console.log("ℹ️ Google Authenticator MFA is already enabled, secret key not updated.");
+      return;
+    }
 
-    // Attempt to locate QR code
-    const qrImage = this.page.locator('.rqcode > img');
+    await this.page.waitForTimeout(2000);
+
+    // Try to locate QR image (relative selector for consistency with other methods)
+    const qrImage = this.page.locator("//div[@class='rqcode']//img");
     let qrVisible = await qrImage.isVisible({ timeout: 5000 }).catch(() => false);
 
+    // Retry if QR not visible first time
     if (!qrVisible) {
       await this.clickReplaceButton();
       await this.selectGoogleAuthenticator();
       qrVisible = await qrImage.isVisible({ timeout: 5000 }).catch(() => false);
     }
-
     if (!qrVisible) {
+      console.log("❌ Google Authenticator QR code not found, cannot update secret key.");
       return;
     }
 
-    // Extract secret from QR code
+    // Extract secret key from QR code
     const qrSrc = await qrImage.getAttribute('src');
     if (!qrSrc) throw new Error('Unable to find QR code src for Google MFA');
-
     const qrExtract = await extractSecretFromQr(qrSrc);
     if (!qrExtract?.secret) throw new Error('Failed to extract Google MFA secret');
 
-    // Generate OTP and enable MFA
+    // Generate OTP and debug output
     const otp = generateOtp(qrExtract.secret);
-    await this.enterMicrosoftAuthOtp(otp);
+    console.log(`🔐 New MFA Secret: ${qrExtract.secret}`);
+    console.log(`📲 Generated OTP: ${otp}`);
+    await this.page.pause();
 
+    // Enter OTP and save
+    await this.enterMicrosoftAuthOtp(otp);
     const saveButton = this.page.getByRole('button', { name: 'Save' });
     await saveButton.click({ force: true });
-    updateEnvVariable('E2E_MANAGER_OTP_SECRET', qrExtract.secret);
-    await this.page.waitForTimeout(2000);
-    const mfaEnabledToast = this.page.getByRole('alert', { name: /MFA enabled successfully/i });
-    await expect(mfaEnabledToast).toBeVisible();
 
+    // Wait for "MFA enabled successfully" notification
+    const mfaEnabledToast = this.page.getByRole('alert', { name: /MFA enabled successfully/i });
+    const appearTime = Date.now();
+    await expect(mfaEnabledToast).toBeVisible({ timeout: 8000 });
+    await mfaEnabledToast.waitFor({ state: 'hidden', timeout: 70000 });
+    const disappearTime = Date.now();
+    const shownDurationMs = disappearTime - appearTime;
+    console.log(`ℹ️ 'MFA enabled successfully' notification visible for ${(shownDurationMs / 1000).toFixed(1)}s`);
+
+    // Update .env and reload
+    updateEnvVariable('E2E_MANAGER_OTP_SECRET', qrExtract.secret);
+    process.env.E2E_MANAGER_OTP_SECRET = qrExtract.secret;
+    dotenv.config();
+    console.log(`✅ MFA secret updated & reloaded: ${qrExtract.secret}`);
+
+    // Verify redirect to login page
     await expect(this.page).toHaveURL(/\/login$/i);
   });
 }
 
-/*
- * Enable Microsoft Authenticator MFA for the user.
- */
 async enableMicrosoftAuthenticatorMfa() {
   await test.step('Enable Microsoft Authenticator MFA', async () => {
     await this.navigateToMfaTab();
@@ -2438,49 +2450,53 @@ async enableMicrosoftAuthenticatorMfa() {
     const msRadioButton = this.page.locator('.p-radiobutton-box.p-highlight > .p-radiobutton-icon');
     await msRadioButton.click();
 
-    // Try to find "already enabled" message - if not found, it is NOT already enabled
+    // Check if already enabled
     const alreadyEnabled = this.page.getByRole('alert', { name: 'This MFA already enabled' });
     let isAlreadyEnabled = false;
     try {
       isAlreadyEnabled = await alreadyEnabled.isVisible({ timeout: 3000 });
-    } catch (e) {
-      // do nothing - means not already enabled
+    } catch {
       isAlreadyEnabled = false;
     }
-
     if (isAlreadyEnabled) {
       console.log('✅ Microsoft MFA already enabled, test passes.');
       return;
     }
-    await this.page.waitForTimeout(2000)
+    await this.page.waitForTimeout(2000);
 
-    // If not already enabled: continue flow
+    // Locate QR image
     const qrImage = this.page.locator("//div[@class='rqcode']//img");
     const qrVisible = await qrImage.isVisible({ timeout: 5000 }).catch(() => false);
     if (!qrVisible) throw new Error('QR code for Microsoft MFA not visible.');
 
+    // Extract secret and generate OTP
     const qrSrc = await qrImage.getAttribute('src');
     if (!qrSrc) throw new Error('Unable to find QR code src for Microsoft MFA');
-
     const qrExtract = await extractSecretFromQr(qrSrc);
     if (!qrExtract?.secret) throw new Error('Failed to extract Microsoft MFA secret');
-
     const otp = generateOtp(qrExtract.secret);
+
     await this.enterMicrosoftAuthOtp(otp);
 
     const saveButton = this.page.getByRole('button', { name: 'Save' });
     await saveButton.click({ force: true });
 
+    // Wait for notification
     const mfaEnabledToast = this.page.getByRole('alert', { name: /MFA enabled successfully/i });
-    expect(mfaEnabledToast);
+    const appearTime = Date.now();
+    await expect(mfaEnabledToast).toBeVisible({ timeout: 6000 });
+    await mfaEnabledToast.waitFor({ state: 'hidden', timeout: 70000 });
+    const disappearTime = Date.now();
+    const shownDurationMs = disappearTime - appearTime;
+    console.log(`ℹ️ 'MFA enabled successfully' notification was visible for ~${(shownDurationMs / 1000).toFixed(1)} seconds`);
+
     updateEnvVariable('E2E_MANAGER_OTP_SECRET', qrExtract.secret);
+    process.env.E2E_MANAGER_OTP_SECRET = qrExtract.secret;
+    dotenv.config();
     await expect(this.page).toHaveURL(/\/login$/i);
   });
 }
 
-/**
- * Enable Authy Authenticator MFA for the user.
- */
 async enableAuthyAuthenticatorMfa() {
   await test.step('Enable Authy Authenticator MFA', async () => {
     await this.navigateToMfaTab();
@@ -2492,42 +2508,49 @@ async enableAuthyAuthenticatorMfa() {
     const authyRadioButton = this.page.locator('div:nth-child(3) > .p-element > .p-radiobutton > .p-radiobutton-box');
     await authyRadioButton.click();
 
-    // Try to find "already enabled" message - if not found, it is NOT already enabled
+    // Check if already enabled
     const alreadyEnabled = this.page.getByRole('alert', { name: 'This MFA already enabled' });
     let isAlreadyEnabled = false;
     try {
       isAlreadyEnabled = await alreadyEnabled.isVisible({ timeout: 3000 });
-    } catch (e) {
-      // do nothing - means not already enabled
+    } catch {
       isAlreadyEnabled = false;
     }
-
     if (isAlreadyEnabled) {
       console.log('✅ Authy MFA already enabled, test passes.');
       return;
     }
     await this.page.waitForTimeout(2000);
 
-    // If not already enabled: continue flow
+    // Locate QR image
     const qrImage = this.page.locator("//div[@class='rqcode']//img");
     const qrVisible = await qrImage.isVisible({ timeout: 5000 }).catch(() => false);
     if (!qrVisible) throw new Error('QR code for Authy MFA not visible.');
 
+    // Extract secret and generate OTP
     const qrSrc = await qrImage.getAttribute('src');
     if (!qrSrc) throw new Error('Unable to find QR code src for Authy MFA');
-
     const qrExtract = await extractSecretFromQr(qrSrc);
     if (!qrExtract?.secret) throw new Error('Failed to extract Authy MFA secret');
-
     const otp = generateOtp(qrExtract.secret);
+
     await this.enterMicrosoftAuthOtp(otp);
 
     const saveButton = this.page.getByRole('button', { name: 'Save' });
     await saveButton.click({ force: true });
 
+    // Wait for notification
     const mfaEnabledToast = this.page.getByRole('alert', { name: /MFA enabled successfully/i });
-    expect(mfaEnabledToast);
+    const appearTime = Date.now();
+    await expect(mfaEnabledToast).toBeVisible({ timeout: 6000 });
+    await mfaEnabledToast.waitFor({ state: 'hidden', timeout: 70000 });
+    const disappearTime = Date.now();
+    const shownDurationMs = disappearTime - appearTime;
+    console.log(`ℹ️ 'MFA enabled successfully' notification was visible for ~${(shownDurationMs / 1000).toFixed(1)} seconds`);
+
     updateEnvVariable('E2E_MANAGER_OTP_SECRET', qrExtract.secret);
+    process.env.E2E_MANAGER_OTP_SECRET = qrExtract.secret;
+    dotenv.config();
     await expect(this.page).toHaveURL(/\/login$/i);
   });
 }

@@ -8,84 +8,86 @@ const admin= LoginUsers.admin;
 
 test.describe('Login Tests - Remmi E2E', () => {
   // test 1
-  test('Successful login with OTP', async ({ page }) => {
+  test('Test case 1: Verify sign in with valid email and password', async ({ page }) => {
     const login = new LoginActions(page);
     await login.login(manager.email!, manager.password!, manager.otpSecret!);
   });
 
-  // test 2
-  test('Verify OTP during login', async ({ page }) => {
-    const login = new LoginActions(page);
-    await login.verifyOtp(manager.email!, manager.password!, manager.otpSecret!);
-  });
-
-  // test 3
-  test('Verify login placeholders', async ({ page }) => {
-    const login = new LoginActions(page);
-    await login.verifyLoginPlaceholder();
-  });
-
-  // test 4
-  test('Toggle password visibility', async ({ page }) => {
+  test('Test case 2: Verify password visibility toggle', async ({ page }) => {
     const login = new LoginActions(page);
     await login.togglePasswordVisibility(manager.email!, manager.password!);
   });
 
-  // test 5
-  test('Login without accepting terms', async ({ page }) => {
+  test('Test case 3: Verify error message if checkbox is not selected', async ({ page }) => {
     const login = new LoginActions(page);
     await login.withoutCheckbox(manager.email!, manager.password!);
   });
 
-  // test 6
-  test('Invalid email format', async ({ page }) => {
+  test('Test case 4: Verify error on invalid email ', async ({ page }) => {
     const login = new LoginActions(page);
     await login.invalidEmail('invalid-email', manager.password!);
   });
 
-  // test 7
-  test('Incorrect password', async ({ page }) => {
+  test('Test case 5: Verify error message on incorrect password', async ({ page }) => {
     const login = new LoginActions(page);
     await login.incorrectPassword(manager.email!, 'WrongPass123!');
   });
 
-  // test 8
-  test('Retry login after failed attempt', async ({ page }) => {
+  test('Test case 6: Verify login after correcting incorrect email or password', async ({ page }) => {
     const login = new LoginActions(page);
     await login.loginWithRetryWithoutOtp('wrong@example.com', 'WrongPass123!', manager.email!, manager.password!);
   });
 
-  // test 9
-  test('Login with invalid OTP', async ({ page }) => {
+  test('Test case 7: Verify OTP is sent after successful login attempt', async ({ page }) => {
+    const login = new LoginActions(page);
+    await login.verifyOtp(manager.email!, manager.password!, manager.otpSecret!);
+  });
+
+  test('Test case 8: Verify OTP functionality on valid OTP input', async ({ page }) => {
+    const login = new LoginActions(page);
+    await login.verifyValidOtp(manager.email!, manager.password!, manager.otpSecret!);
+  });
+
+  test('Test case 9: Verify OTP error on invalid OTP input', async ({ page }) => {
     const login = new LoginActions(page);
     await login.invalidOtp(manager.email!, manager.password!, '123456');
   });
 
-  // test 10
-  test('Forgot Password without entering OTP', async ({ page }) => {
+  test('Test case 10: Verify "Forgot Password" functionality (email input)', async ({ page }) => {
     const login = new LoginActions(page);
     await login.forgetPasswordWithoutOtp(manager.email!);
   });
 
-  // test 11
+ test('Test case 11: Verify "Forgot Password" functionality with wrong (email input)', async ({ page }) => {
+    const login = new LoginActions(page);
+    await login.forgetPasswordWithIncorrectEmail();
+  });
+
+  test('Test case 12: Verify "Forgot Password" functionality without (email input)', async ({ page }) => {
+    const login = new LoginActions(page);
+    await login.forgetPasswordWithoutEmail();
+  });
+
+  test('Test case 22: Verify proper placeholder text is shown in each input field', async ({ page }) => {
+    const login = new LoginActions(page);
+    await login.verifyLoginPlaceholder();
+  });
+
   test('Empty email', async ({ page }) => {
     const login = new LoginActions(page);
     await login.emptyEmail(manager.password!);
   });
 
-  // test 12
   test('Empty password', async ({ page }) => {
     const login = new LoginActions(page);
     await login.emptyPassword(manager.email!);
   });
 
-  // test 13
-  test('Both email and password empty', async ({ page }) => {
+  test('Test case 21: Verify validation triggers when "Sign In" button is clicked', async ({ page }) => {
     const login = new LoginActions(page);
     await login.emptyEmailAndPassword();
   });
 
-  // test 14
   test('OTP shorter/longer than expected', async ({ page }) => {
     const login = new LoginActions(page);
     await login.invalidOtpLength(manager.email!, manager.password!, '12'); // Short OTP example
