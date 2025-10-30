@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="26.14104799999995">
-<testsuite name="Pages\Login\login.spec.ts" timestamp="2025-10-30T11:37:24.579Z" hostname="chromium" tests="1" failures="0" skipped="0" time="15.806" errors="0">
-<testcase name="Login Tests - Remmi E2E › Test case 8: Verify OTP functionality on valid OTP input" classname="Pages\Login\login.spec.ts" time="15.806">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.67794499999983">
+<testsuite name="Pages\Login\login.spec.ts" timestamp="2025-10-30T11:42:51.979Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.99" errors="0">
+<testcase name="Login Tests - Remmi E2E › Test case 12: Verify &quot;Forgot Password&quot; functionality without (email input)" classname="Pages\Login\login.spec.ts" time="25.99">
 </testcase>
 </testsuite>
 </testsuites>

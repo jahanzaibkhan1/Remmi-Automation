@@ -304,7 +304,35 @@ export class LoginActions {
     await this.locators.continueOtpButton().click();
     await expect(this.page.getByText('Email is required', { exact: false })).toBeVisible();
   }
-  // Verify OTP is sent after "Forgot Password", ab yeah google authenticator say verify kerni hy 
+  /**
+   * Verify OTP is sent after "Forgot Password" to mailtrap
+   */
+  // async verifyOtpSentAfterForgotPassword(email: string) {
+  //   await this.gotoLogin();
+  //   await this.locators.forgetPasswordLink().click();
+  //   await this.locators.resetEmailField().fill(email);
+  //   await this.locators.continueResetButton().click();
+
+  //   // Wait for OTP input fields to be visible
+  //   await expect(this.locators.otpField().first()).toBeVisible();
+
+    // --- OTP mailtrap per aye gi, wahan say dekh k enter kerni hy ---
+    // [Pseudo code / Implement accordingly]
+    // 1. Fetch OTP from Mailtrap API or mock helper
+    // 2. Wait/poll until Mailtrap email is received (with timeout)
+    // 3. Extract the OTP code from email body
+    // 4. Fill the OTP in the input fields and continue
+
+    // Example structure (you need to fill in fetchMailtrapOtp logic):
+    /*
+    const otp = await fetchMailtrapOtp(email); // Implement this utility to get the OTP from Mailtrap
+    await this.fillOtp(otp);
+    await this.clickContinue();
+    */
+
+    // Placeholder in case Mailtrap integration is not set up yet:
+    // throw new Error("Mailtrap OTP fetching logic is not implemented. Manually check Mailtrap and enter OTP here.");
+  // }
 
   // Verify session timeout after OTP is sent
 
