@@ -49,4 +49,16 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         await profile.navigateToProfilePage();
         await profile.verifyAddProjectDropdownOpensSuccessfully()
       });
+
+      test('Test 5: Verify the search option inside Add Project dropdown', async ({ page }) => {
+        const login = new LoginActions(page);
+        const profile = new MyProfileActions(page);
+    
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    
+        await profile.navigateToProfilePage();
+        await profile.verifySearchOptionInAddProjectDropdown("Hina's Project")
+      });
+      
+      
 })
