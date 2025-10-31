@@ -29,4 +29,14 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         await profile.navigateToProfilePage();
         await profile.verifyAssociationTabSearchFunctionality("Hina's Project")
       });
+
+      test('Test 3: Verify search with no matching project', async ({ page }) => {
+        const login = new LoginActions(page);
+        const profile = new MyProfileActions(page);
+    
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    
+        await profile.navigateToProfilePage();
+        await profile.verifyAssociationTabSearchNoResults("asdfg")
+      });
 })
