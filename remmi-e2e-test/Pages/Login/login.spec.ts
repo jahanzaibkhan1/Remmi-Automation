@@ -77,6 +77,10 @@ test.describe('Login Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     await login.forgetPasswordWithInvalidEmail();
   });
+  // test('Test case 16: Verify password visibility toggle on "Forgot Password" new password page', async ({ page }) => {
+  //   const login = new LoginActions(page);
+  //   await login.togglePasswordVisibilityOnNewPasswordPage(manager.email!, 'Jahanzaib@123');
+  // });
   test('Test case 22: Verify proper placeholder text is shown in each input field', async ({ page }) => {
     const login = new LoginActions(page);
     await login.verifyLoginPlaceholder();

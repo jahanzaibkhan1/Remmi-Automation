@@ -2,6 +2,10 @@ import { Page, expect, test, Locator } from '@playwright/test';
 import { LocatorLogin } from './LoginLocators';
 import { generateOtp } from '../../../helper/getOtp';
 import { LoginMessages } from './LoginMessages';
+import * as dotenv from 'dotenv';
+import imaps from 'imap-simple';
+
+dotenv.config();
 
 /**
  * LoginActions class for handling login operations and validation steps.
@@ -13,6 +17,41 @@ export class LoginActions {
     this.locators = new LocatorLogin(this.page);
   }
 
+  /**
+   * Fetch OTP code from Mailtrap inbox via IMAP
+   */
+  private async getOtpFromMailtrap(): Promise<string> {
+    const config = {
+      imap: {
+        user: process.env.MAILTRAP_USER,
+        password: process.env.MAILTRAP_PASS,
+        host: 'imap.mailtrap.io',
+        port: 993,
+        tls: true,
+        authTimeout: 10000,
+      },
+    };
+
+    const connection = await imaps.connect(config);
+    await connection.openBox('INBOX');
+
+    const searchCriteria = ['UNSEEN'];
+    const fetchOptions = {
+      bodies: ['HEADER.FIELDS (FROM TO SUBJECT DATE)', 'TEXT'],
+      markSeen: true,
+    };
+
+    const results = await connection.search(searchCriteria, fetchOptions);
+    connection.end();
+
+    if (!results.length) throw new Error('No new emails found in Mailtrap inbox.');
+
+    const body = results[0].parts.find((p: any) => p.which === 'TEXT')?.body || '';
+    const otpMatch = body.match(/\b\d{6}\b/);
+    if (!otpMatch) throw new Error('No OTP found in Mailtrap email body.');
+
+    return otpMatch[0];
+  }
   async gotoLogin() {
     await this.page.goto('/login');
     await this.page.waitForLoadState('networkidle');
@@ -53,7 +92,7 @@ export class LoginActions {
   }
   
   async clickContinue() {
-    await this.locators.continueButton().dblclick({ force: true });
+    await this.locators.continueButton().click({ force: true });
   }
 
   /**
@@ -115,11 +154,64 @@ export class LoginActions {
       await expect(this.page).toHaveURL(dashboardUrl, { timeout: 30000 });
     }
   }
+  async loginFlowwithoutOTP({
+    email,
+    password,
+    otpSecret,
+    expectSuccess = true,
+    skipTerms = false,
+    skipOtp = false,
+    customOtp,
+    expectUrl,
+  }: {
+    email: string;
+    password: string;
+    otpSecret?: string;
+    expectSuccess?: boolean;
+    skipTerms?: boolean;
+    skipOtp?: boolean;
+    customOtp?: string;
+    expectUrl?: string;
+  }) {
+    await this.gotoLogin();
+
+    await test.step('Enter credentials', async () => {
+      await this.fillCredentials(email, password);
+    });
+
+    if (!skipTerms) {
+      await test.step('Accept terms and click Sign In', async () => {
+        await this.acceptTerms();
+        await this.clickSignIn();
+      });
+    } else {
+      await this.clickSignIn();
+    }
+
+
+    if (expectSuccess) {
+      const dashboardUrl = expectUrl ?? (this.page.context() as any)._options.baseURL ?? '/';
+
+      await this.page.waitForURL(
+        url => !url.pathname.endsWith('/login'),
+        { timeout: 30000 }
+      );
+
+      const dashboardElement = this.page.locator("//img[@src='assets/img/dashboadIcon/home.svg']");
+      await dashboardElement.waitFor({ timeout: 30000 });
+
+      await expect(this.page).toHaveURL(dashboardUrl, { timeout: 30000 });
+    }
+  }
+
 
   async login(email: string, password: string, otpSecret: string) {
     await this.loginFlow({ email, password, otpSecret });
   }
 
+  async loginwithoutOTp(email: string, password: string) {
+    await this.loginFlowwithoutOTP({ email, password});
+  }
   async togglePasswordVisibility(email: string, password: string) {
     await this.gotoLogin();
     await this.fillCredentials(email, password);
@@ -292,6 +384,48 @@ export class LoginActions {
 
   // Verify password visibility toggle on "Forgot Password" new password page
 
+  /**
+   * This method initiates the forgot password flow,
+   * fetches the OTP from Mailtrap for the given email,
+   * fills the OTP, and tests password visibility toggle.
+   */
+  async togglePasswordVisibilityOnNewPasswordPage(email: string, newPassword: string) {
+    await this.gotoLogin();
+
+    // Click "Forgot Password"
+    await this.locators.forgetPasswordLink().click();
+
+    // Fill email
+    await this.locators.resetEmailField().fill(email);
+    await this.locators.continueResetButton().click();
+
+    // Wait for OTP email and fetch OTP
+    const otp = await this.getOtpFromMailtrap();
+
+    // Fill OTP digits using the correct locator (otpField)
+    const otpInputs = this.locators.otpField();
+    for (let i = 0; i < otp.length; i++) {
+      await otpInputs.nth(i).fill(otp[i]);
+    }
+
+    // Continue to new password page
+    await this.locators.continueResetButton().click();
+
+    // Wait for new password field
+    await expect(this.locators.newPasswordField()).toBeVisible({ timeout: 15000 });
+
+    // Fill and test visibility toggle
+    await this.locators.newPasswordField().fill(newPassword);
+
+    // Eye icon toggle ON
+    await this.locators.eyeIcon().click();
+    await expect(this.locators.passwordField()).toHaveAttribute('type', 'text');
+
+    // Eye icon toggle OFF
+    await this.locators.eyeIcon().click();
+    await expect(this.locators.passwordField()).toHaveAttribute('type', 'password');
+  }
+ 
   // Verify new password is accepted after entering valid OTP
 
   // Verify redirection to login page after setting new password
@@ -303,3 +437,4 @@ export class LoginActions {
   // Verify validation triggers when "Sign In" button is clicked
 
 }
+

@@ -50,6 +50,14 @@ test.describe(' MFA Tab Tests - Remmi E2E', () => {
     // Re-check secret after enabling MFA
     reloadEnv();
     logCurrentSecret();
+
+    await expect(page).toHaveURL(/\/login/, { timeout: 10000 });
+    await page.reload();
+    await login.login(
+      operationManager.email!,
+      operationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
   });
 
   test(' Enable Microsoft Authenticator MFA for a user', async ({ page }) => {
@@ -64,8 +72,21 @@ test.describe(' MFA Tab Tests - Remmi E2E', () => {
 
     await profile.navigateToProfilePage();
     await profile.enableMicrosoftAuthenticatorMfa();
-
     reloadEnv();
+    await expect(page).toHaveURL(/\/login/, { timeout: 10000 });
+    await page.reload();
+
+    // Wait for login page inputs to be visible before interacting
+    const emailField = page.getByRole('textbox', { name: /email/i });
+    const passwordField = page.getByRole('textbox', { name: /password/i });
+    const termsCheckbox = page.getByText(/I agree to all the statements/i, { exact: false });
+    const signInButton = page.getByRole('button', { name: /sign in/i });
+
+    await emailField.fill(operationManager.email!);
+    await passwordField.fill(operationManager.password!);
+    await termsCheckbox.click();
+    await signInButton.click();
+    await page.waitForTimeout(2000);
   });
 
   test(' Enable Authy Authenticator MFA for a user', async ({ page }) => {
@@ -85,39 +106,17 @@ test.describe(' MFA Tab Tests - Remmi E2E', () => {
   });
 
   test(' Login without enabling MFA', async ({ page }) => {
-    await page.goto('/login');
-
-    const emailField = page.getByRole('textbox', { name: /email/i });
-    const passwordField = page.getByRole('textbox', { name: /password/i });
-    const termsCheckbox = page.getByText(/I agree to all the statements/i, { exact: false });
-    const signInButton = page.getByRole('button', { name: /sign in/i });
-
-    await emailField.fill(salesAgent.email!);
-    await passwordField.fill(salesAgent.password!);
-    await termsCheckbox.click();
-    await signInButton.click();
-    await page.waitForTimeout(2000)
-    // Verify "No MFA Assigned" message appears
+    const login = new LoginActions(page);
+    await login.loginwithoutOTp(salesAgent.email!, salesAgent.password!);
     const noMfaMessage = page.getByText(/No MFA Assigned/i);
     await expect(noMfaMessage).toBeVisible();
   });
 
   test(' MFA Warning after 7 days', async ({ page }) => {
-    await page.goto('/login');
-
-    const emailField = page.getByRole('textbox', { name: /email/i });
-    const passwordField = page.getByRole('textbox', { name: /password/i });
-    const termsCheckbox = page.getByText(/I agree to all the statements/i, { exact: false });
-    const signInButton = page.getByRole('button', { name: /sign in/i });
-
-    await emailField.fill(salesAgent.email!);
-    await passwordField.fill(salesAgent.password!);
-    await termsCheckbox.click();
-    await signInButton.click();
-    await page.waitForTimeout(2000)
-    // Verify warning message appears
-    const warningMessage = page.locator('div').filter({ hasText: 'No MFA AssignedTo enhance' }).nth(2);
-    await expect(warningMessage).toBeVisible();
+      const login = new LoginActions(page);
+      await login.loginwithoutOTp(salesAgent.email!, salesAgent.password!);
+      const warningMessage = page.locator('div').filter({ hasText: 'No MFA AssignedTo enhance' }).nth(2);
+      await expect(warningMessage).toBeVisible();
   });
 
   test(' Enter incorrect Google Authenticator MFA code', async ({ page }) => {
