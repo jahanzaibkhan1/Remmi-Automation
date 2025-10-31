@@ -2731,5 +2731,16 @@ async verifyAssociationTabSearchFunctionality(searchName: string) {
     await expect(option).toBeVisible({ timeout: 5000 })
   });
 }
+// Verify search with no matching project
+async verifyAssociationTabSearchNoResults(nonExistentProject: string) {
+  await test.step('Verify search with no matching project', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+    await this.fillSearchProjectInput(nonExistentProject);
+    // Assert that no project options are visible
+    const option = this.locators.searchProjectOption;
+    await expect(option).not.toBeVisible({ timeout: 3000 });
+  });
+}
 
 }
