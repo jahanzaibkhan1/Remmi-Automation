@@ -2751,4 +2751,16 @@ async verifyAddProjectDropdownOpensSuccessfully() {
     await expect(option).toBeVisible({ timeout: 5000 });
   });
 }
+// Verify the search option inside Add Project dropdown
+async verifySearchOptionInAddProjectDropdown(searchTerm: string) {
+  await test.step('Verify the search option inside Add Project dropdown', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+    await this.fillSearchProjectInput(searchTerm);
+    const option = this.locators.searchProjectOption;
+    await expect(option).toContainText(searchTerm, { timeout: 5000 });
+  });
+}
+
+
 }

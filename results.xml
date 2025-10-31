@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.19591000000015">
-<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-10-31T09:29:40.610Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.797" errors="0">
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 4: Verify that Add Project dropdown opens successfully" classname="Pages\MyProfile\Association.spec.ts" time="54.797">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="67.80957299999986">
+<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-10-31T09:35:20.987Z" hostname="chromium" tests="1" failures="0" skipped="0" time="59.718" errors="0">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 5: Verify the search option inside Add Project dropdown" classname="Pages\MyProfile\Association.spec.ts" time="59.718">
 </testcase>
 </testsuite>
 </testsuites>
