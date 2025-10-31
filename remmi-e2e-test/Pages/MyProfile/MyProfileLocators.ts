@@ -395,5 +395,31 @@ export class MyProfileLocators {
   saveMFAButton(): Locator {
     return this.page.getByRole('button', { name: 'Save' });
   }
+  //-------------------------------------- Associations Tab Locators -------------------------
+  get associationTab() {
+    return this.page.getByRole('tab', { name: /association(s)?/i });
+  }
+  get addProjectBtn() {
+    return this.page.locator("div:has-text('Add project')").nth(1);
+  }
+  get searchProjectInput() {
+    return this.page.locator("input[placeholder='Type to search']");
+  }
+  get searchProjectOption() {
+    // More general for future-proofing
+    return this.page.locator("li.p-element.ng-star-inserted");
+  }
+  get addBtn() {
+    return this.page.locator("//button[contains(@class,'custom-button')]//span[normalize-space()='Add']");
+  }
+  get selectAllCheckbox() {
+    return this.page.locator('.checkbox__checkmark').first();
+  }
+  get deselectAllCheckbox() {
+    return this.page.locator(".checkbox.select_all.style-d .checkbox__checkmark");
+  }
+  get removeSelected() {
+    return this.page.locator('.pi.pi-times-circle');
+  }
 }
 
