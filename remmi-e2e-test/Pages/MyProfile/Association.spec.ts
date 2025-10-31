@@ -39,4 +39,14 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         await profile.navigateToProfilePage();
         await profile.verifyAssociationTabSearchNoResults("asdfg")
       });
+
+      test('Test 4: Verify that Add Project dropdown opens successfully', async ({ page }) => {
+        const login = new LoginActions(page);
+        const profile = new MyProfileActions(page);
+    
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    
+        await profile.navigateToProfilePage();
+        await profile.verifyAddProjectDropdownOpensSuccessfully()
+      });
 })
