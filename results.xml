@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.413375">
-<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-10-31T09:04:27.166Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.116" errors="0">
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 1: Verify that the Association tab opens successfully" classname="Pages\MyProfile\Association.spec.ts" time="29.116">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.54241899999976">
+<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-10-31T09:15:35.877Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.93" errors="0">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 2: Verify the search functionality in the Association tab" classname="Pages\MyProfile\Association.spec.ts" time="21.93">
 </testcase>
 </testsuite>
 </testsuites>

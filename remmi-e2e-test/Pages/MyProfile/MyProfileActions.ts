@@ -2721,4 +2721,15 @@ async verifyAssociationTabOpensSuccessfully() {
   });
 }
 
+// Verify the search functionality in the Association tab
+async verifyAssociationTabSearchFunctionality(searchName: string) {
+  await test.step(`Verify the search functionality in the Association tab`, async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+    await this.fillSearchProjectInput(searchName);
+    const option = this.locators.searchProjectOption;
+    await expect(option).toBeVisible({ timeout: 5000 })
+  });
+}
+
 }

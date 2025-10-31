@@ -400,7 +400,7 @@ export class MyProfileLocators {
     return this.page.getByRole('tab', { name: /association(s)?/i });
   }
   get addProjectBtn() {
-    return this.page.locator("div:has-text('Add project')").nth(1);
+    return this.page.getByText('Add project');
   }
   get searchProjectInput() {
     return this.page.locator("input[placeholder='Type to search']");
