@@ -68,6 +68,11 @@ test.describe('Login Tests - Remmi E2E', () => {
     await login.forgetPasswordWithoutEmail();
   });
 
+  test('Test case 13: Verify OTP is sent after "Forgot Password"', async ({ page }) => {
+    const login = new LoginActions(page);
+    await login.verifyOtpSentAfterForgotPassword(manager.email!, manager.otpSecret!);
+  });
+  
   test('Test case 22: Verify proper placeholder text is shown in each input field', async ({ page }) => {
     const login = new LoginActions(page);
     await login.verifyLoginPlaceholder();
