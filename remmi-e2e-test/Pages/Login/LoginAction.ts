@@ -282,9 +282,13 @@ export class LoginActions {
     await this.fillForgotPasswordOtp(otp);
   }
 
-  // Verify session timeout after OTP is sent
-
-  // Verify error on invalid email in "Forgot Password"
+  async forgetPasswordWithInvalidEmail() {
+    await this.gotoLogin();
+    await this.locators.forgetPasswordLink().click();
+    await this.locators.resetEmailField().fill('invalid-email @');
+    await this.locators.continueResetButton().click();
+    await expect(this.page.getByText('This email address is not registered', { exact: false })).toBeVisible();
+  }
 
   // Verify password visibility toggle on "Forgot Password" new password page
 
