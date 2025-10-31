@@ -410,7 +410,7 @@ export class MyProfileLocators {
     return this.page.locator("li.p-element.ng-star-inserted");
   }
   get addBtn() {
-    return this.page.locator("//button[contains(@class,'custom-button')]//span[normalize-space()='Add']");
+    return this.page.getByRole('button', { name: ' Add' });
   }
   get selectAllCheckbox() {
     return this.page.locator('.checkbox__checkmark').first();
