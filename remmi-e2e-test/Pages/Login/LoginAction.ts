@@ -79,18 +79,18 @@ export class LoginActions {
       await otpInputs.nth(i).fill(otp[i]);
     }
   }
-  
+
   async fillForgotPasswordOtp(otp: string) {
     const otpInput = this.locators.otpField();
     console.log('Total OTP fields:', await otpInput.count());
     console.log('OTP:', otp);
-  
+
     for (let i = 0; i < otp.length; i++) {
       console.log(`Filling index ${i} with ${otp[i]}`);
       await otpInput.nth(i).fill(otp[i]);
     }
   }
-  
+
   async clickContinue() {
     await this.locators.continueButton().click({ force: true });
   }
@@ -154,6 +154,7 @@ export class LoginActions {
       await expect(this.page).toHaveURL(dashboardUrl, { timeout: 30000 });
     }
   }
+  
   async loginFlowwithoutOTP({
     email,
     password,
@@ -210,8 +211,9 @@ export class LoginActions {
   }
 
   async loginwithoutOTp(email: string, password: string) {
-    await this.loginFlowwithoutOTP({ email, password});
+    await this.loginFlowwithoutOTP({ email, password });
   }
+
   async togglePasswordVisibility(email: string, password: string) {
     await this.gotoLogin();
     await this.fillCredentials(email, password);
@@ -425,7 +427,7 @@ export class LoginActions {
     await this.locators.eyeIcon().click();
     await expect(this.locators.passwordField()).toHaveAttribute('type', 'password');
   }
- 
+
   // Verify new password is accepted after entering valid OTP
 
   // Verify redirection to login page after setting new password
