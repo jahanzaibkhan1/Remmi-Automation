@@ -2742,5 +2742,13 @@ async verifyAssociationTabSearchNoResults(nonExistentProject: string) {
     await expect(option).not.toBeVisible({ timeout: 3000 });
   });
 }
-
+// Verify that Add Project dropdown opens successfully
+async verifyAddProjectDropdownOpensSuccessfully() {
+  await test.step('Verify that the Add Project dropdown opens successfully', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+    const option = this.page.locator('.drop_box');
+    await expect(option).toBeVisible({ timeout: 5000 });
+  });
+}
 }
