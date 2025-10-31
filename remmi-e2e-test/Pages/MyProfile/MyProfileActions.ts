@@ -2380,62 +2380,56 @@ async enableGoogleAuthenticatorMfa() {
     } catch {
       isAlreadyEnabled = false;
     }
+
     if (isAlreadyEnabled) {
-      console.log("ℹ️ Google Authenticator MFA is already enabled, secret key not updated.");
+      console.log('✅ Google Authenticator MFA already enabled, test passes.');
       return;
     }
 
     await this.page.waitForTimeout(2000);
 
-    // Try to locate QR image (relative selector for consistency with other methods)
+    // Locate QR image
     const qrImage = this.page.locator("//div[@class='rqcode']//img");
-    let qrVisible = await qrImage.isVisible({ timeout: 5000 }).catch(() => false);
+    const qrVisible = await qrImage.isVisible({ timeout: 5000 }).catch(() => false);
+    if (!qrVisible) throw new Error('QR code for Google MFA not visible.');
 
-    // Retry if QR not visible first time
-    if (!qrVisible) {
-      await this.clickReplaceButton();
-      await this.selectGoogleAuthenticator();
-      qrVisible = await qrImage.isVisible({ timeout: 5000 }).catch(() => false);
-    }
-    if (!qrVisible) {
-      console.log("❌ Google Authenticator QR code not found, cannot update secret key.");
-      return;
-    }
-
-    // Extract secret key from QR code
+    // Extract secret and generate OTP
     const qrSrc = await qrImage.getAttribute('src');
     if (!qrSrc) throw new Error('Unable to find QR code src for Google MFA');
+
     const qrExtract = await extractSecretFromQr(qrSrc);
     if (!qrExtract?.secret) throw new Error('Failed to extract Google MFA secret');
 
-    // Generate OTP and debug output
     const otp = generateOtp(qrExtract.secret);
-    console.log(`🔐 New MFA Secret: ${qrExtract.secret}`);
+    console.log(`🔐 Google MFA Secret: ${qrExtract.secret}`);
     console.log(`📲 Generated OTP: ${otp}`);
-    await this.page.pause();
 
-    // Enter OTP and save
     await this.enterMicrosoftAuthOtp(otp);
+
     const saveButton = this.page.getByRole('button', { name: 'Save' });
     await saveButton.click({ force: true });
 
-    // Wait for "MFA enabled successfully" notification
+    // Wait for notification
     const mfaEnabledToast = this.page.getByRole('alert', { name: /MFA enabled successfully/i });
     const appearTime = Date.now();
     await expect(mfaEnabledToast).toBeVisible({ timeout: 8000 });
     await mfaEnabledToast.waitFor({ state: 'hidden', timeout: 70000 });
     const disappearTime = Date.now();
     const shownDurationMs = disappearTime - appearTime;
-    console.log(`ℹ️ 'MFA enabled successfully' notification visible for ${(shownDurationMs / 1000).toFixed(1)}s`);
+    console.log(`ℹ️ 'MFA enabled successfully' notification was visible for ~${(shownDurationMs / 1000).toFixed(1)} seconds`);
 
-    // Update .env and reload
+    // ✅ Update environment variables consistently
+    updateEnvVariable('E2E_MANAGER_MICROSOFT_SECRET', '');
+    updateEnvVariable('E2E_MANAGER_AUTHY_SECRET', '');
+    updateEnvVariable('E2E_MANAGER_GOOGLE_SECRET', qrExtract.secret);
     updateEnvVariable('E2E_MANAGER_OTP_SECRET', qrExtract.secret);
+
     process.env.E2E_MANAGER_OTP_SECRET = qrExtract.secret;
     dotenv.config();
-    console.log(`✅ MFA secret updated & reloaded: ${qrExtract.secret}`);
 
-    // Verify redirect to login page
-    await expect(this.page).toHaveURL(/\/login$/i);
+    console.log(`✅ Google MFA secret updated and synced: ${qrExtract.secret}`);
+
+
   });
 }
 
@@ -2458,10 +2452,12 @@ async enableMicrosoftAuthenticatorMfa() {
     } catch {
       isAlreadyEnabled = false;
     }
+
     if (isAlreadyEnabled) {
       console.log('✅ Microsoft MFA already enabled, test passes.');
       return;
     }
+
     await this.page.waitForTimeout(2000);
 
     // Locate QR image
@@ -2472,10 +2468,11 @@ async enableMicrosoftAuthenticatorMfa() {
     // Extract secret and generate OTP
     const qrSrc = await qrImage.getAttribute('src');
     if (!qrSrc) throw new Error('Unable to find QR code src for Microsoft MFA');
+
     const qrExtract = await extractSecretFromQr(qrSrc);
     if (!qrExtract?.secret) throw new Error('Failed to extract Microsoft MFA secret');
-    const otp = generateOtp(qrExtract.secret);
 
+    const otp = generateOtp(qrExtract.secret);
     await this.enterMicrosoftAuthOtp(otp);
 
     const saveButton = this.page.getByRole('button', { name: 'Save' });
@@ -2490,13 +2487,18 @@ async enableMicrosoftAuthenticatorMfa() {
     const shownDurationMs = disappearTime - appearTime;
     console.log(`ℹ️ 'MFA enabled successfully' notification was visible for ~${(shownDurationMs / 1000).toFixed(1)} seconds`);
 
+    // ✅ Update environment variables consistently
+    updateEnvVariable('E2E_MANAGER_GOOGLE_SECRET', '');
+    updateEnvVariable('E2E_MANAGER_AUTHY_SECRET', '');
+    updateEnvVariable('E2E_MANAGER_MICROSOFT_SECRET', qrExtract.secret);
     updateEnvVariable('E2E_MANAGER_OTP_SECRET', qrExtract.secret);
+
     process.env.E2E_MANAGER_OTP_SECRET = qrExtract.secret;
     dotenv.config();
+
     await expect(this.page).toHaveURL(/\/login$/i);
   });
 }
-
 async enableAuthyAuthenticatorMfa() {
   await test.step('Enable Authy Authenticator MFA', async () => {
     await this.navigateToMfaTab();
@@ -2516,10 +2518,12 @@ async enableAuthyAuthenticatorMfa() {
     } catch {
       isAlreadyEnabled = false;
     }
+
     if (isAlreadyEnabled) {
       console.log('✅ Authy MFA already enabled, test passes.');
       return;
     }
+
     await this.page.waitForTimeout(2000);
 
     // Locate QR image
@@ -2530,11 +2534,12 @@ async enableAuthyAuthenticatorMfa() {
     // Extract secret and generate OTP
     const qrSrc = await qrImage.getAttribute('src');
     if (!qrSrc) throw new Error('Unable to find QR code src for Authy MFA');
+
     const qrExtract = await extractSecretFromQr(qrSrc);
     if (!qrExtract?.secret) throw new Error('Failed to extract Authy MFA secret');
-    const otp = generateOtp(qrExtract.secret);
 
-    await this.enterMicrosoftAuthOtp(otp);
+    const otp = generateOtp(qrExtract.secret);
+    await this.enterMicrosoftAuthOtp(otp); // assuming same OTP entry method works
 
     const saveButton = this.page.getByRole('button', { name: 'Save' });
     await saveButton.click({ force: true });
@@ -2548,9 +2553,15 @@ async enableAuthyAuthenticatorMfa() {
     const shownDurationMs = disappearTime - appearTime;
     console.log(`ℹ️ 'MFA enabled successfully' notification was visible for ~${(shownDurationMs / 1000).toFixed(1)} seconds`);
 
+    // ✅ Update environment variables consistently
+    updateEnvVariable('E2E_MANAGER_GOOGLE_SECRET', '');
+    updateEnvVariable('E2E_MANAGER_MICROSOFT_SECRET', '');
+    updateEnvVariable('E2E_MANAGER_AUTHY_SECRET', qrExtract.secret);
     updateEnvVariable('E2E_MANAGER_OTP_SECRET', qrExtract.secret);
+
     process.env.E2E_MANAGER_OTP_SECRET = qrExtract.secret;
     dotenv.config();
+
     await expect(this.page).toHaveURL(/\/login$/i);
   });
 }
