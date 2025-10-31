@@ -60,5 +60,63 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         await profile.verifySearchOptionInAddProjectDropdown("Hina's Project")
       });
       
-      
+      test('Test 6: Verify single project selection from dropdown', async ({ page }) => {
+        const login = new LoginActions(page);
+        const profile = new MyProfileActions(page);
+    
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    
+        await profile.navigateToProfilePage();
+        await profile.verifySingleProjectSelectionFromDropdown("Hina's Project")
+      });
+
+      test('Test 7: Verify multiple project selection from dropdown', async ({ page }) => {
+        const login = new LoginActions(page);
+        const profile = new MyProfileActions(page);
+
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+
+        await profile.navigateToProfilePage();
+        await profile.verifyMultipleProjectSelectionFromDropdown(["Hina's Project", "askari center"]);
+      });
+
+      test('Test 8: Verify the “Select All” functionality', async ({ page }) => {
+        const login = new LoginActions(page);
+        const profile = new MyProfileActions(page);
+
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+
+        await profile.navigateToProfilePage();
+        await profile.verifySelectAllFunctionality();
+      });
+
+      test('Test 9: Verify the “Deselect All” functionality', async ({ page }) => {
+        const login = new LoginActions(page);
+        const profile = new MyProfileActions(page);
+
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+
+        await profile.navigateToProfilePage();
+        await profile.verifyDeselectAllFunctionality();
+      });
+
+      test('Test 10: Verify removing a project tag before adding', async ({ page }) => {
+        const login = new LoginActions(page);
+        const profile = new MyProfileActions(page);
+
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+
+        await profile.navigateToProfilePage();
+        await profile.verifyRemoveProjectTagBeforeAdding("Hina's Project");
+      });
+
+      test('Test 11: Verify adding multiple projects at once', async ({ page }) => {
+        const login = new LoginActions(page);
+        const profile = new MyProfileActions(page);
+
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+
+        await profile.navigateToProfilePage();
+        await profile.verifyMultipleProjectSelection(["Hina's Project", "askari center"]);
+      });
 })

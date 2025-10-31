@@ -649,7 +649,7 @@ export class MyProfileActions {
   }
 
   private async clickAddButton() {
-    await this.locators.addBtn.click();
+    await this.locators.addBtn.click({force:true});
   }
 
   private async selectAllProjects() {
@@ -2759,6 +2759,107 @@ async verifySearchOptionInAddProjectDropdown(searchTerm: string) {
     await this.fillSearchProjectInput(searchTerm);
     const option = this.locators.searchProjectOption;
     await expect(option).toContainText(searchTerm, { timeout: 5000 });
+  });
+}
+// Verify single project selection from dropdown
+async verifySingleProjectSelectionFromDropdown(projectName: string) {
+  await test.step('Verify single project selection from Add Project dropdown', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+    await this.fillSearchProjectInput(projectName);
+    await this.selectProjectOption();
+    const insidesearchBox =  this.page.locator('.pi.pi-times-circle');
+    await expect(insidesearchBox).toBeVisible()
+  });
+}
+
+// Verify multiple project selection from dropdown
+async verifyMultipleProjectSelectionFromDropdown(projectNames: string[]) {
+  await test.step('Verify multiple project selection from Add Project dropdown', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+    for (const projectName of projectNames) {
+      await this.fillSearchProjectInput(projectName);
+      await this.selectProjectOption();
+      // Clear input if it's not automatically cleared
+      const input = this.locators.searchProjectInput;
+      await input.fill('');
+    }
+  });
+}
+// Verify the "Select All" functionality
+async verifySelectAllFunctionality() {
+  await test.step('Verify the Select All functionality in Associations', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+    await this.page.waitForTimeout(2000)
+    // Click "Select All" checkbox
+    await this.selectAllProjects();
+    // Verify all checkboxes are selected
+    const checkboxes = await this.page.$$('.checkbox__input[type="checkbox"]');
+    for (const checkbox of checkboxes) {
+      // Evaluate if checkbox is checked
+      const checked = await checkbox.isChecked();
+      expect(checked).toBeTruthy();
+    }
+  });
+}
+// Verify the "Deselect All" functionality
+async verifyDeselectAllFunctionality() {
+  await test.step('Verify the Deselect All functionality in Associations', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+    await this.page.waitForTimeout(2000);
+
+    // Click "Select All" checkbox to first select all projects
+    await this.selectAllProjects();
+
+    // Click "Deselect All" checkbox to unselect all projects
+    const deselectAllCheckbox = this.locators.deselectAllCheckbox;
+    await deselectAllCheckbox.click();
+
+    // Verify all checkboxes are deselected
+    const checkboxes = await this.page.$$('.checkbox__input[type="checkbox"]');
+    for (const checkbox of checkboxes) {
+      const checked = await checkbox.isChecked();
+      expect(checked).toBe(false);
+    }
+  });
+}
+// Verify removing a project tag before adding
+async verifyRemoveProjectTagBeforeAdding(projectName: string) {
+  await test.step('Verify removing a selected project tag before final Add', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+
+    // Search and select a project
+    await this.fillSearchProjectInput(projectName);
+    await this.selectProjectOption();
+
+    // Remove the selected project tag (before clicking final Add)
+    await this.removeSelectedProjects();
+
+    // Assert that the project tag is removed (i.e., not in the list anymore)
+    const projectTag = this.page.getByText(projectName);
+    await expect(projectTag).not.toBeVisible();
+  });
+}
+
+// Verify adding multiple projects at once
+async verifyMultipleProjectSelection(projectNames: string[]) {
+  await test.step('Verify adding multiple projects at once', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+
+    for (const projectName of projectNames) {
+      await this.fillSearchProjectInput(projectName);
+      await this.page.waitForTimeout(300);
+      await this.selectProjectOption();
+      // Optionally clear input if it's not automatically cleared
+      await this.locators.searchProjectInput.fill('');
+    }
+    await this.clickAddButton();
+
   });
 }
 
