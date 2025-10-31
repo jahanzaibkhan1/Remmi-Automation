@@ -1,17 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="24.0172629999998">
-<testsuite name="Pages\Login\login.spec.ts" timestamp="2025-10-31T04:31:52.616Z" hostname="chromium" tests="1" failures="0" skipped="0" time="15.499" errors="0">
-<testcase name="Login Tests - Remmi E2E › Test case 13: Verify OTP is sent after &quot;Forgot Password&quot;" classname="Pages\Login\login.spec.ts" time="15.499">
-<system-out>
-<![CDATA[Total OTP fields: [33m6[39m
-OTP: 296118
-Filling index 0 with 2
-Filling index 1 with 9
-Filling index 2 with 6
-Filling index 3 with 1
-Filling index 4 with 1
-Filling index 5 with 8
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="29.873367999999783">
+<testsuite name="Pages\Login\login.spec.ts" timestamp="2025-10-31T04:44:08.261Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.235" errors="0">
+<testcase name="Login Tests - Remmi E2E › Test case 15: Verify error on invalid email in &quot;Forgot Password&quot;" classname="Pages\Login\login.spec.ts" time="21.235">
 </testcase>
 </testsuite>
 </testsuites>
