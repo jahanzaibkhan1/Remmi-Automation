@@ -628,6 +628,42 @@ export class MyProfileActions {
     await saveMFAButton.dblclick({force: true});
   }
 
+  //--------------------------------------------Associations Functions----------------------------------
+  private async AssociationsTab() {
+    await this.locators.associationTab.click();
+  }
+
+  private async clickAddProjectButton() {
+    await this.locators.addProjectBtn.click();
+  }
+
+  private async fillSearchProjectInput(projectName: string) {
+    const input = this.locators.searchProjectInput;
+    await input.fill(projectName);
+  }
+
+  private async selectProjectOption() {
+    const option = this.locators.searchProjectOption;
+    await expect(option).toBeVisible();
+    await option.click();
+  }
+
+  private async clickAddButton() {
+    await this.locators.addBtn.click();
+  }
+
+  private async selectAllProjects() {
+    await this.locators.selectAllCheckbox.click();
+  }
+
+  private async deselectAllProjects() {
+    await this.locators.deselectAllCheckbox.click();
+  }
+
+  private async removeSelectedProjects() {
+    await this.locators.removeSelected.click();
+  }
+
 
   // --------- PUBLIC TEST/STEPS ---------
   async navigateToProfilePage() {
@@ -2678,4 +2714,11 @@ async enterInvalidOtpAuthyleAuthenticatorMfa() {
 
   });
 }
+//------------------------------ Associations Tab -------------------------------------//
+async verifyAssociationTabOpensSuccessfully() {
+  await test.step('Verify that the Association tab opens successfully', async () => {
+    await this.AssociationsTab();
+  });
+}
+
 }

@@ -1,0 +1,23 @@
+import { test } from '@playwright/test';
+import { MyProfileActions } from './MyProfileActions';
+import { LoginActions } from '../Login/LoginAction';
+import { LoginUsers } from '../../fixture/test-data';
+
+const OprationManager = LoginUsers.manager;
+const salesAgent = LoginUsers.sales;
+const admin = LoginUsers.admin;
+
+
+test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
+
+    test('Test 1: Verify that the Association tab opens successfully', async ({ page }) => {
+      const login = new LoginActions(page);
+      const profile = new MyProfileActions(page);
+  
+      await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+  
+      await profile.navigateToProfilePage();
+      await profile.verifyAssociationTabOpensSuccessfully()
+    });
+
+})

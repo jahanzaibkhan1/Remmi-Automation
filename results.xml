@@ -1,11 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="28.22423300000001">
-<testsuite name="Pages\MyProfile\MFA.spec.ts" timestamp="2025-10-31T08:17:05.977Z" hostname="chromium" tests="1" failures="0" skipped="0" time="18.21" errors="0">
-<testcase name=" MFA Tab Tests - Remmi E2E ›  Login without enabling MFA" classname="Pages\MyProfile\MFA.spec.ts" time="18.21">
-<system-out>
-<![CDATA[[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
-♻️ Environment reloaded. Current OTP Secret: KQ4UGLRFEVFGOVB4KFCE43TJPUUXQR2UJ5LGOZB2LVXVK4LGHZXA
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.413375">
+<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-10-31T09:04:27.166Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.116" errors="0">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 1: Verify that the Association tab opens successfully" classname="Pages\MyProfile\Association.spec.ts" time="29.116">
 </testcase>
 </testsuite>
 </testsuites>
