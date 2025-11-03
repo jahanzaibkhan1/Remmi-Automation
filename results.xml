@@ -1,8 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.889139000000434">
-<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-03T09:49:41.982Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.11" errors="0">
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 15: Verify delete icon under Action column" classname="Pages\MyProfile\Association.spec.ts" time="31.11">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.608439999999476">
+<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-03T09:55:42.384Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.443" errors="0">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 16: Verify project delete funcationality" classname="Pages\MyProfile\Association.spec.ts" time="33.443">
 <system-out>
-<![CDATA[✅ Verified project "askari center" not present after deletion.
+<![CDATA[✅ Verified project "Hina's Project" not present after deletion.
 ]]>
 </system-out>
 </testcase>
