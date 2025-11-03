@@ -208,4 +208,24 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         await profile.navigateToProfilePage();
         await profile.verifyBulkDeleteFunctionality();
       });
+
+      test('Test 21: Verify UI update after deletion', async ({ page }) => {
+        const login = new LoginActions(page);
+        const profile = new MyProfileActions(page);
+
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+
+        await profile.navigateToProfilePage();
+        await profile.verifyUIUpdateAfterDeletion();
+      });
+
+      test('Test 22: Verify that deleted projects can be re-added', async ({ page }) => {
+        const login = new LoginActions(page);
+        const profile = new MyProfileActions(page);
+    
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    
+        await profile.navigateToProfilePage();
+        await profile.verifyDeletedProjectsCanBeReadded("New Staging Project")
+      });
 })
