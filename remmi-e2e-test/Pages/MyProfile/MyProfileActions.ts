@@ -2879,5 +2879,61 @@ async verifyMultipleProjectSelection(projectNames: string[]) {
 }
 
 // Verify that previously added projects are not duplicated
+async verifyPreviouslyAddedProjectsAreNotDuplicated(expectedProjectNames: string[]) {
+  await test.step('Verify that previously added projects are not duplicated', async () => {
+    await this.AssociationsTab();
+    await this.page.waitForTimeout(1000);
+
+    // Helper: Collect current associated project names (from 2nd <td> of each row)
+    const getProjectNames = async () => {
+      const rows = this.page.locator('//table//tr//td[2]');
+      const names = (await rows.allInnerTexts())
+        .map(text => text.trim())
+        .filter(text => text && text.toLowerCase() !== 'no records found');
+      return names;
+    };
+
+    // Step 1: Capture table project's names before adding
+    const namesBefore = await getProjectNames();
+    console.log(`Associated projects: ${namesBefore.join(', ')}`);
+
+    // Step 2: Try adding the expected projects individually via Add Project dialog (no Select All)
+    await this.clickAddProjectButton();
+    for (const projectName of expectedProjectNames) {
+      await this.fillSearchProjectInput(projectName);
+      await this.page.waitForTimeout(300);
+      await this.selectProjectOption();
+      await this.locators.searchProjectInput.fill('');
+    }
+    await this.clickAddButton();
+    await this.page.waitForTimeout(2000);
+
+    // Step 3: Capture project names after adding
+    const namesAfter = await getProjectNames();
+    console.log(`All projects: ${namesAfter.join(', ')}`);
+
+    // Step 4: Check for duplicates in the updated project list
+    const nameCounts = namesAfter.reduce((acc, name) => {
+      acc[name] = (acc[name] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    const duplicates = Object.entries(nameCounts)
+      .filter(([name, count]) => count > 1)
+      .map(([name]) => name);
+
+    if (duplicates.length) {
+      console.error(`Duplicate projects found: [${duplicates.join(", ")}]`);
+    } else {
+      console.log('No duplicate projects found');
+    }
+
+    expect(duplicates.length, 'No duplicate project names expected').toBe(0);
+
+    // Additionally, ensure all expected projects are included
+    for (const expected of expectedProjectNames) {
+      expect(namesAfter).toContain(expected);
+    }
+  });
+}
 
 }
