@@ -127,8 +127,9 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
 
         await profile.navigateToProfilePage();
-        await profile.verifyPreviouslyAddedProjectsAreNotDuplicated(["Hina's Project", "askari center"]);
+        await profile.verifyPreviouslyAddedProjectsAreNotDuplicated();
       });
+
       test('Test 13: Verify adding when list is initially empty', async ({ page }) => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
@@ -136,8 +137,9 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
 
         await profile.navigateToProfilePage();
-        await profile.verifyInitialProjectSelection(["Hina's Project", "askari center", "New Staging Project", "lahore centre"]);
+        await profile.verifyInitialProjectSelection();
       });
+
       test('Test 14: Verify the sort functionality', async ({ page }) => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
@@ -227,5 +229,21 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
     
         await profile.navigateToProfilePage();
         await profile.verifyDeletedProjectsCanBeReadded("New Staging Project")
+      });
+
+      test('Test 23: Verify empty list message', async ({ page }) => {
+        const login = new LoginActions(page);
+        const profile = new MyProfileActions(page);
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await profile.navigateToProfilePage();
+        await profile.verifyEmptyListMessage("New Staging Project")
+      });
+
+      test('Test 24: Try adding project without selecting any', async ({ page }) => {
+        const login = new LoginActions(page);
+        const profile = new MyProfileActions(page);
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await profile.navigateToProfilePage();
+        await profile.verifyAddProjectwithoutDropdownOption()
       });
 })
