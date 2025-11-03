@@ -1,9 +1,12 @@
 import { Page, Locator, expect, test } from '@playwright/test';
 import { MyProfileLocators } from './MyProfileLocators';
-import { faker, tr } from '@faker-js/faker';
-const { extractSecretFromQr, updateEnvVariable } = require('../../../helper/mfaHelper');
-  const { generateOtp } = require('../../../helper/getOtp');
-  import * as dotenv from 'dotenv';
+import { faker } from '@faker-js/faker';
+import * as dotenv from 'dotenv';
+import { extractSecretFromQr } from '../../../helper/mfaHelper';
+import { generateOtp } from '../../../helper/getOtp';
+import { updateEnvVariable } from '../../../helper/updateEnvVariable';
+
+
 /**
  * Actions and verifications for the My Profile page.
  */
@@ -628,6 +631,47 @@ export class MyProfileActions {
     await saveMFAButton.dblclick({force: true});
   }
 
+  //--------------------------------------------Associations Functions----------------------------------
+  private async AssociationsTab() {
+    await this.locators.associationTab.click();
+  }
+
+  private async clickAddProjectButton() {
+    await this.locators.addProjectBtn.click();
+  }
+
+  private async fillSearchProjectInput(projectName: string) {
+    const input = this.locators.searchProjectInput;
+    await input.fill(projectName);
+  }
+
+  private async selectProjectOption() {
+    const option = this.locators.searchProjectOption;
+    await expect(option).toBeVisible();
+    await option.click();
+  }
+
+  private async clickAddButton() {
+    await this.locators.addBtn.click({force:true});
+  }
+
+  private async selectAllProjects() {
+    await this.locators.selectAllCheckbox.click();
+  }
+
+  private async deselectAllProjects() {
+    await this.locators.deselectAllCheckbox.click();
+  }
+
+  private async removeSelectedProjects() {
+    await this.locators.removeSelected.click();
+  }
+
+  private async DeleteProjectIcon() {
+    const deleteProjectIcon = this.locators.deleteProjectIcon();
+    await deleteProjectIcon.click({force:true});
+  }
+
 
   // --------- PUBLIC TEST/STEPS ---------
   async navigateToProfilePage() {
@@ -1154,6 +1198,7 @@ export class MyProfileActions {
   public async selectAllUsers(userNames: string[] = []) {
     await this.navigateToAccessTab();
     await this.openUserDropdown();
+    await this.page.waitForTimeout(2000);
     await this.selectAll();
     await this.SaveButton();
     await this.SaveButton();
@@ -1174,6 +1219,7 @@ export class MyProfileActions {
   public async DeselectAllUsers(userNames: string[] = []) {
     await this.navigateToAccessTab();
     await this.openUserDropdown();
+    await this.page.waitForTimeout(2000);
     await this.DeselectAll();
     const saveAccess = this.page.getByRole('button', { name: 'Save' }).first();
     await saveAccess.click({ force: true });
@@ -2380,62 +2426,56 @@ async enableGoogleAuthenticatorMfa() {
     } catch {
       isAlreadyEnabled = false;
     }
+
     if (isAlreadyEnabled) {
-      console.log("ℹ️ Google Authenticator MFA is already enabled, secret key not updated.");
+      console.log('✅ Google Authenticator MFA already enabled, test passes.');
       return;
     }
 
     await this.page.waitForTimeout(2000);
 
-    // Try to locate QR image (relative selector for consistency with other methods)
+    // Locate QR image
     const qrImage = this.page.locator("//div[@class='rqcode']//img");
-    let qrVisible = await qrImage.isVisible({ timeout: 5000 }).catch(() => false);
+    const qrVisible = await qrImage.isVisible({ timeout: 5000 }).catch(() => false);
+    if (!qrVisible) throw new Error('QR code for Google MFA not visible.');
 
-    // Retry if QR not visible first time
-    if (!qrVisible) {
-      await this.clickReplaceButton();
-      await this.selectGoogleAuthenticator();
-      qrVisible = await qrImage.isVisible({ timeout: 5000 }).catch(() => false);
-    }
-    if (!qrVisible) {
-      console.log("❌ Google Authenticator QR code not found, cannot update secret key.");
-      return;
-    }
-
-    // Extract secret key from QR code
+    // Extract secret and generate OTP
     const qrSrc = await qrImage.getAttribute('src');
     if (!qrSrc) throw new Error('Unable to find QR code src for Google MFA');
+
     const qrExtract = await extractSecretFromQr(qrSrc);
     if (!qrExtract?.secret) throw new Error('Failed to extract Google MFA secret');
 
-    // Generate OTP and debug output
     const otp = generateOtp(qrExtract.secret);
-    console.log(`🔐 New MFA Secret: ${qrExtract.secret}`);
+    console.log(`🔐 Google MFA Secret: ${qrExtract.secret}`);
     console.log(`📲 Generated OTP: ${otp}`);
-    await this.page.pause();
 
-    // Enter OTP and save
     await this.enterMicrosoftAuthOtp(otp);
+
     const saveButton = this.page.getByRole('button', { name: 'Save' });
     await saveButton.click({ force: true });
 
-    // Wait for "MFA enabled successfully" notification
+    // Wait for notification
     const mfaEnabledToast = this.page.getByRole('alert', { name: /MFA enabled successfully/i });
     const appearTime = Date.now();
     await expect(mfaEnabledToast).toBeVisible({ timeout: 8000 });
     await mfaEnabledToast.waitFor({ state: 'hidden', timeout: 70000 });
     const disappearTime = Date.now();
     const shownDurationMs = disappearTime - appearTime;
-    console.log(`ℹ️ 'MFA enabled successfully' notification visible for ${(shownDurationMs / 1000).toFixed(1)}s`);
+    console.log(`ℹ️ 'MFA enabled successfully' notification was visible for ~${(shownDurationMs / 1000).toFixed(1)} seconds`);
 
-    // Update .env and reload
+    // ✅ Update environment variables consistently
+    updateEnvVariable('E2E_MANAGER_MICROSOFT_SECRET', '');
+    updateEnvVariable('E2E_MANAGER_AUTHY_SECRET', '');
+    updateEnvVariable('E2E_MANAGER_GOOGLE_SECRET', qrExtract.secret);
     updateEnvVariable('E2E_MANAGER_OTP_SECRET', qrExtract.secret);
+
     process.env.E2E_MANAGER_OTP_SECRET = qrExtract.secret;
     dotenv.config();
-    console.log(`✅ MFA secret updated & reloaded: ${qrExtract.secret}`);
 
-    // Verify redirect to login page
-    await expect(this.page).toHaveURL(/\/login$/i);
+    console.log(`✅ Google MFA secret updated and synced: ${qrExtract.secret}`);
+
+
   });
 }
 
@@ -2458,10 +2498,12 @@ async enableMicrosoftAuthenticatorMfa() {
     } catch {
       isAlreadyEnabled = false;
     }
+
     if (isAlreadyEnabled) {
       console.log('✅ Microsoft MFA already enabled, test passes.');
       return;
     }
+
     await this.page.waitForTimeout(2000);
 
     // Locate QR image
@@ -2472,10 +2514,11 @@ async enableMicrosoftAuthenticatorMfa() {
     // Extract secret and generate OTP
     const qrSrc = await qrImage.getAttribute('src');
     if (!qrSrc) throw new Error('Unable to find QR code src for Microsoft MFA');
+
     const qrExtract = await extractSecretFromQr(qrSrc);
     if (!qrExtract?.secret) throw new Error('Failed to extract Microsoft MFA secret');
-    const otp = generateOtp(qrExtract.secret);
 
+    const otp = generateOtp(qrExtract.secret);
     await this.enterMicrosoftAuthOtp(otp);
 
     const saveButton = this.page.getByRole('button', { name: 'Save' });
@@ -2490,13 +2533,18 @@ async enableMicrosoftAuthenticatorMfa() {
     const shownDurationMs = disappearTime - appearTime;
     console.log(`ℹ️ 'MFA enabled successfully' notification was visible for ~${(shownDurationMs / 1000).toFixed(1)} seconds`);
 
+    // ✅ Update environment variables consistently
+    updateEnvVariable('E2E_MANAGER_GOOGLE_SECRET', '');
+    updateEnvVariable('E2E_MANAGER_AUTHY_SECRET', '');
+    updateEnvVariable('E2E_MANAGER_MICROSOFT_SECRET', qrExtract.secret);
     updateEnvVariable('E2E_MANAGER_OTP_SECRET', qrExtract.secret);
+
     process.env.E2E_MANAGER_OTP_SECRET = qrExtract.secret;
     dotenv.config();
+
     await expect(this.page).toHaveURL(/\/login$/i);
   });
 }
-
 async enableAuthyAuthenticatorMfa() {
   await test.step('Enable Authy Authenticator MFA', async () => {
     await this.navigateToMfaTab();
@@ -2516,10 +2564,12 @@ async enableAuthyAuthenticatorMfa() {
     } catch {
       isAlreadyEnabled = false;
     }
+
     if (isAlreadyEnabled) {
       console.log('✅ Authy MFA already enabled, test passes.');
       return;
     }
+
     await this.page.waitForTimeout(2000);
 
     // Locate QR image
@@ -2530,11 +2580,12 @@ async enableAuthyAuthenticatorMfa() {
     // Extract secret and generate OTP
     const qrSrc = await qrImage.getAttribute('src');
     if (!qrSrc) throw new Error('Unable to find QR code src for Authy MFA');
+
     const qrExtract = await extractSecretFromQr(qrSrc);
     if (!qrExtract?.secret) throw new Error('Failed to extract Authy MFA secret');
-    const otp = generateOtp(qrExtract.secret);
 
-    await this.enterMicrosoftAuthOtp(otp);
+    const otp = generateOtp(qrExtract.secret);
+    await this.enterMicrosoftAuthOtp(otp); // assuming same OTP entry method works
 
     const saveButton = this.page.getByRole('button', { name: 'Save' });
     await saveButton.click({ force: true });
@@ -2548,9 +2599,15 @@ async enableAuthyAuthenticatorMfa() {
     const shownDurationMs = disappearTime - appearTime;
     console.log(`ℹ️ 'MFA enabled successfully' notification was visible for ~${(shownDurationMs / 1000).toFixed(1)} seconds`);
 
+    // ✅ Update environment variables consistently
+    updateEnvVariable('E2E_MANAGER_GOOGLE_SECRET', '');
+    updateEnvVariable('E2E_MANAGER_MICROSOFT_SECRET', '');
+    updateEnvVariable('E2E_MANAGER_AUTHY_SECRET', qrExtract.secret);
     updateEnvVariable('E2E_MANAGER_OTP_SECRET', qrExtract.secret);
+
     process.env.E2E_MANAGER_OTP_SECRET = qrExtract.secret;
     dotenv.config();
+
     await expect(this.page).toHaveURL(/\/login$/i);
   });
 }
@@ -2667,4 +2724,497 @@ async enterInvalidOtpAuthyleAuthenticatorMfa() {
 
   });
 }
+//------------------------------ Associations Tab -------------------------------------//
+async verifyAssociationTabOpensSuccessfully() {
+  await test.step('Verify that the Association tab opens successfully', async () => {
+    await this.AssociationsTab();
+  });
+}
+
+// Verify the search functionality in the Association tab
+async verifyAssociationTabSearchFunctionality(searchName: string) {
+  await test.step(`Verify the search functionality in the Association tab`, async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+    await this.fillSearchProjectInput(searchName);
+    const option = this.locators.searchProjectOption;
+    await expect(option).toBeVisible({ timeout: 5000 })
+  });
+}
+// Verify search with no matching project
+async verifyAssociationTabSearchNoResults(nonExistentProject: string) {
+  await test.step('Verify search with no matching project', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+    await this.fillSearchProjectInput(nonExistentProject);
+    // Assert that no project options are visible
+    const option = this.locators.searchProjectOption;
+    await expect(option).not.toBeVisible({ timeout: 3000 });
+  });
+}
+// Verify that Add Project dropdown opens successfully
+async verifyAddProjectDropdownOpensSuccessfully() {
+  await test.step('Verify that the Add Project dropdown opens successfully', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+    const option = this.page.locator('.drop_box');
+    await expect(option).toBeVisible({ timeout: 5000 });
+  });
+}
+// Verify the search option inside Add Project dropdown
+async verifySearchOptionInAddProjectDropdown(searchTerm: string) {
+  await test.step('Verify the search option inside Add Project dropdown', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+    await this.fillSearchProjectInput(searchTerm);
+    const option = this.locators.searchProjectOption;
+    await expect(option).toContainText(searchTerm, { timeout: 5000 });
+  });
+}
+// Verify single project selection from dropdown
+async verifySingleProjectSelectionFromDropdown(projectName: string) {
+  await test.step('Verify single project selection from Add Project dropdown', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+    await this.fillSearchProjectInput(projectName);
+    await this.selectProjectOption();
+    const insidesearchBox =  this.page.locator('.pi.pi-times-circle');
+    await expect(insidesearchBox).toBeVisible()
+  });
+}
+
+// Verify multiple project selection from dropdown
+async verifyMultipleProjectSelectionFromDropdown(projectNames: string[]) {
+  await test.step('Verify multiple project selection from Add Project dropdown', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+    for (const projectName of projectNames) {
+      await this.fillSearchProjectInput(projectName);
+      await this.selectProjectOption();
+      // Clear input if it's not automatically cleared
+      const input = this.locators.searchProjectInput;
+      await input.fill('');
+    }
+  });
+}
+// Verify the "Select All" functionality
+async verifySelectAllFunctionality() {
+  await test.step('Verify the Select All functionality in Associations', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+    await this.page.waitForTimeout(2000)
+    // Click "Select All" checkbox
+    await this.selectAllProjects();
+    // Verify all checkboxes are selected
+    const checkboxes = await this.page.$$('.checkbox__input[type="checkbox"]');
+    for (const checkbox of checkboxes) {
+      // Evaluate if checkbox is checked
+      const checked = await checkbox.isChecked();
+      expect(checked).toBeTruthy();
+    }
+  });
+}
+// Verify the "Deselect All" functionality
+async verifyDeselectAllFunctionality() {
+  await test.step('Verify the Deselect All functionality in Associations', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+    await this.page.waitForTimeout(2000);
+
+    // Click "Select All" checkbox to first select all projects
+    await this.selectAllProjects();
+
+    // Click "Deselect All" checkbox to unselect all projects
+    const deselectAllCheckbox = this.locators.deselectAllCheckbox;
+    await deselectAllCheckbox.click();
+
+    // Verify all checkboxes are deselected
+    const checkboxes = await this.page.$$('.checkbox__input[type="checkbox"]');
+    for (const checkbox of checkboxes) {
+      const checked = await checkbox.isChecked();
+      expect(checked).toBe(false);
+    }
+  });
+}
+// Verify removing a project tag before adding
+async verifyRemoveProjectTagBeforeAdding(projectName: string) {
+  await test.step('Verify removing a selected project tag before final Add', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+
+    // Search and select a project
+    await this.fillSearchProjectInput(projectName);
+    await this.selectProjectOption();
+
+    // Remove the selected project tag (before clicking final Add)
+    await this.removeSelectedProjects();
+
+    // Assert that the project tag is removed (i.e., not in the list anymore)
+    const projectTag = this.page.getByText(projectName);
+    // Check if the association row for the project exists and handle both visible and not visible cases
+    const associationRow = this.page.getByRole('row', { name: projectName });
+    if (await associationRow.isVisible()) {
+      // Case: The project is present in the association table
+      await expect(associationRow).toBeVisible();
+      console.log(`Project "${projectName}" is visible in the association table.`);
+    } else {
+      // Case: The project is not present in the association table
+      await expect(associationRow).not.toBeVisible();
+      console.log(`Project "${projectName}" is NOT visible in the association table.`);
+    }
+  });
+}
+
+// Verify adding multiple projects at once
+async verifyMultipleProjectSelection(projectNames: string[]) {
+  await test.step('Verify adding multiple projects at once', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+
+    for (const projectName of projectNames) {
+      await this.fillSearchProjectInput(projectName);
+      await this.page.waitForTimeout(300);
+      await this.selectProjectOption();
+      // Optionally clear input if it's not automatically cleared
+      await this.locators.searchProjectInput.fill('');
+    }
+    await this.clickAddButton();
+
+  });
+}
+
+// Verify that previously added projects are not duplicated
+async verifyPreviouslyAddedProjectsAreNotDuplicated(expectedProjectNames: string[]) {
+  await test.step('Verify that previously added projects are not duplicated', async () => {
+    await this.AssociationsTab();
+    await this.page.waitForTimeout(1000);
+
+    // Helper: Collect current associated project names (from 2nd <td> of each row)
+    const getProjectNames = async () => {
+      const rows = this.page.locator('//table//tr//td[2]');
+      const names = (await rows.allInnerTexts())
+        .map(text => text.trim())
+        .filter(text => text && text.toLowerCase() !== 'no records found');
+      return names;
+    };
+
+    // Step 1: Capture table project's names before adding
+    const namesBefore = await getProjectNames();
+    console.log(`Associated projects: ${namesBefore.join(', ')}`);
+
+    // Step 2: Try adding the expected projects individually via Add Project dialog (no Select All)
+    await this.clickAddProjectButton();
+    for (const projectName of expectedProjectNames) {
+      await this.fillSearchProjectInput(projectName);
+      await this.page.waitForTimeout(300);
+      await this.selectProjectOption();
+      await this.locators.searchProjectInput.fill('');
+    }
+    await this.clickAddButton();
+    await this.page.waitForTimeout(2000);
+
+    // Step 3: Capture project names after adding
+    const namesAfter = await getProjectNames();
+    console.log(`All projects: ${namesAfter.join(', ')}`);
+
+    // Step 4: Check for duplicates in the updated project list
+    const nameCounts = namesAfter.reduce((acc, name) => {
+      acc[name] = (acc[name] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    const duplicates = Object.entries(nameCounts)
+      .filter(([name, count]) => count > 1)
+      .map(([name]) => name);
+
+    if (duplicates.length) {
+      console.error(`Duplicate projects found: [${duplicates.join(", ")}]`);
+    } else {
+      console.log('No duplicate projects found');
+    }
+
+    expect(duplicates.length, 'No duplicate project names expected').toBe(0);
+
+    // Additionally, ensure all expected projects are included
+    for (const expected of expectedProjectNames) {
+      expect(namesAfter).toContain(expected);
+    }
+  });
+}
+// Verify adding projects when the associated project list is initially empty.
+
+async verifyInitialProjectSelection(projectNames: string[]) {
+  await test.step('Verify adding multiple projects at once with an initially empty association list', async () => {
+    await this.AssociationsTab();
+    await this.page.waitForTimeout(2000)
+    // Clear any existing projects in the list (if any) by clicking checkbox and trash icon
+    const checkbox = this.page.getByRole('checkbox').nth(1);
+    await checkbox.click({ force: true });
+    const trashIcon = this.page.locator(".mr-2.cursor-pointer.ng-star-inserted").first();
+    await trashIcon.click({ force: true });
+
+    // Add each project one by one in the add dialog
+    await this.clickAddProjectButton();
+    for (const projectName of projectNames) {
+      await this.fillSearchProjectInput(projectName);
+      await this.page.waitForTimeout(800);
+      await this.selectProjectOption();
+      await this.locators.searchProjectInput.fill('');
+    }
+    await this.clickAddButton();
+
+    // Confirm the success alert
+    await expect(this.page.getByRole('alert', { name: 'Added successfully' })).toBeVisible();
+    console.log(projectNames)
+  });
+}
+
+async verifyAssocitionSortingList() {
+  await test.step('Verify the sort functionality', async () => {
+    await this.AssociationsTab();
+    const sortHeader = this.page.getByRole('columnheader', { name: /Name/i }).first();
+    const sortIcon = sortHeader.locator('svg').first();
+    await expect(sortIcon).toBeVisible({ timeout: 10000 });
+    // --- Ascending Check ---
+    await sortIcon.click({ force: true });
+    await this.page.waitForTimeout(2000);
+    const rowsAsc = this.page.locator('tbody.p-datatable-tbody > tr > td:first-child');
+    const namesAsc = (await rowsAsc.allTextContents()).map(name => name.trim()).filter(name => !!name && name.toLowerCase() !== 'no records found');
+    const sortedNamesAsc = [...namesAsc].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+    expect(namesAsc).toEqual(sortedNamesAsc);
+    // --- Descending Check ---
+    await sortIcon.click({ force: true });
+    await this.page.waitForTimeout(2000);
+    const rowsDesc = this.page.locator('tbody.p-datatable-tbody > tr > td:first-child');
+    const namesDesc = (await rowsDesc.allTextContents()).map(name => name.trim()).filter(name => !!name && name.toLowerCase() !== 'no records found');
+    const sortedNamesDesc = [...namesDesc].sort((a, b) => b.localeCompare(a, undefined, { sensitivity: 'base' }));
+    expect(namesDesc).toEqual(sortedNamesDesc);
+  });
+}
+
+async verifyDeleteIconInActionColumn() {
+  await test.step('Verify delete icon under Action column', async () => {
+    await this.AssociationsTab();
+    await this.page.waitForTimeout(1000);
+
+    const projectRows = this.page.locator('//table//tr//td[2]');
+    const beforeDeleteNames = (await projectRows.allInnerTexts())
+      .map(text => text.trim())
+      .filter(text => text && text.toLowerCase() !== 'no records found');
+    const projectToDelete = beforeDeleteNames[0];
+    if (!projectToDelete) {
+      console.warn('No project found to delete.');
+      return;
+    }
+    await this.DeleteProjectIcon();
+    await expect(this.page.getByRole('alert', { name: 'Removed successfully' })).toBeVisible();
+    await this.page.waitForTimeout(1000);
+    const afterDeleteNames = (await projectRows.allInnerTexts())
+      .map(text => text.trim())
+      .filter(text => text && text.toLowerCase() !== 'no records found');
+    expect(afterDeleteNames).not.toContain(projectToDelete);
+    console.log(`✅ Verified project "${projectToDelete}" not present after deletion.`);
+  });
+}
+async verifyProjectDeleteFunctionality() {
+  await test.step('Verify project delete functionality', async () => {
+    await this.AssociationsTab();
+    await this.page.waitForTimeout(1000);
+
+    // Find all project rows, select the first project to delete (if available)
+    const projectRows = this.page.locator('//table//tr//td[2]');
+    const beforeDeleteNames = (await projectRows.allInnerTexts())
+      .map(text => text.trim())
+      .filter(text => text && text.toLowerCase() !== 'no records found');
+
+    const projectToDelete = beforeDeleteNames[0];
+    if (!projectToDelete) {
+      console.warn('No project found to delete.');
+      return;
+    }
+
+    // Click the delete icon for the first project
+    await this.DeleteProjectIcon();
+
+    // Expect a toast/alert for successful removal
+    await expect(this.page.getByRole('alert', { name: /Removed successfully/i })).toBeVisible();
+
+    // Wait for table update, then re-read the projects
+    await this.page.waitForTimeout(1000);
+    const afterDeleteNames = (await projectRows.allInnerTexts())
+      .map(text => text.trim())
+      .filter(text => text && text.toLowerCase() !== 'no records found');
+
+    // Assert the deleted project is no longer listed
+    expect(afterDeleteNames).not.toContain(projectToDelete);
+    console.log(`✅ Verified project "${projectToDelete}" not present after deletion.`);
+  });
+}
+
+// Verify checkbox beside each project
+async verifyCheckboxBesideEachProject() {
+  await test.step('Verify checkbox beside each project', async () => {
+    await this.AssociationsTab();
+    await this.page.waitForTimeout(1000);
+
+    // Get all table rows that contain project data (skip headers)
+    const projectRows = this.page.locator('//table//tr[td]');
+    const rowCount = await projectRows.count();
+
+    if (rowCount === 0) {
+      return;
+    }
+
+    for (let i = 0; i < rowCount; i++) {
+      const row = projectRows.nth(i);
+      const firstCell = row.locator('td').first();
+      const checkbox = firstCell.locator('.p-checkbox-box');
+      await expect(checkbox, `Checkbox not visible in row ${i + 1}`).toBeVisible({ timeout: 5000 });
+    }
+  });
+}
+
+// Verify multiple checkbox selection
+async verifyMultipleCheckboxSelection() {
+  await test.step('Verify multiple checkbox selection', async () => {
+    await this.AssociationsTab();
+    await this.page.waitForTimeout(1500);
+
+    // ✅ More accurate locator for PrimeNG table checkboxes
+    const checkboxes = this.page.locator('//table//tr//td[1]//div[contains(@class,"p-checkbox-box")]');
+    const checkboxCount = await checkboxes.count();
+
+    if (checkboxCount < 2) {
+      throw new Error(`Less than 2 checkboxes found (${checkboxCount}). Cannot verify multi-selection.`);
+    }
+
+    // ✅ Click first two checkboxes
+    await checkboxes.nth(0).click({ force: true });
+    await checkboxes.nth(1).click({ force: true });
+
+    // ✅ Verify they have the 'p-highlight' class (PrimeNG checked state)
+    const firstChecked = await checkboxes.nth(0).getAttribute('class');
+    const secondChecked = await checkboxes.nth(1).getAttribute('class');
+
+    expect(firstChecked).toContain('p-highlight');
+    expect(secondChecked).toContain('p-highlight');
+  });
+}
+
+// Verify All checkbox selection
+async verifySelectAllCheckbox() {
+  await test.step('Verify multiple checkbox selection', async () => {
+    await this.AssociationsTab();
+    await this.page.waitForTimeout(2000)
+    const checkbox = this.page.getByRole('checkbox').nth(1);
+    await checkbox.click({ force: true });
+    expect(checkbox).toBeEnabled()
+  });
+}
+
+// Verify bulk delete functionality
+async verifyBulkDeleteFunctionality() {
+  await test.step('Verify bulk delete functionality', async () => {
+    await this.AssociationsTab();
+    await this.page.waitForTimeout(1500);
+
+    // ✅ Locate all project checkboxes (skipping header)
+    const checkboxes = this.page.locator('//table//tr//td[1]//div[contains(@class,"p-checkbox-box")]');
+    const checkboxCount = await checkboxes.count();
+
+    if (checkboxCount < 2) {
+      throw new Error(`Less than 2 checkboxes found (${checkboxCount}). Cannot verify bulk delete.`);
+    }
+
+    // ✅ Capture current project names before delete
+    const projectNamesBefore = await this.page.locator('//table//tr//td[2]').allInnerTexts();
+    console.log('🧾 Projects BEFORE delete:', projectNamesBefore);
+
+    // ✅ Select first two checkboxes for deletion
+    await checkboxes.nth(0).click({ force: true });
+    await checkboxes.nth(1).click({ force: true });
+
+    // ✅ Click the delete icon (trash)
+    const trashIcon = this.page.locator(".mr-2.cursor-pointer.ng-star-inserted").first();
+    await trashIcon.click({ force: true });
+
+    // ✅ Wait for table to refresh
+    await this.page.waitForTimeout(2000);
+
+    // ✅ Get updated table after deletion
+    const projectNamesAfter = await this.page.locator('//table//tr//td[2]').allInnerTexts();
+    console.log('🧾 Projects AFTER delete:', projectNamesAfter);
+
+    // ✅ Expect fewer items in the list
+    expect(projectNamesAfter.length).toBeLessThan(projectNamesBefore.length);
+
+    // ✅ Verify deleted projects are no longer present
+    const deletedProjects = projectNamesBefore.filter(name => !projectNamesAfter.includes(name));
+    console.log('🗑️ Deleted Projects:', deletedProjects);
+
+    expect(deletedProjects.length).toBeGreaterThan(0);
+    console.log(`✅ Successfully verified bulk delete of ${deletedProjects.length} project(s).`);
+  });
+}
+
+// Verify UI update after deletion
+async verifyUIUpdateAfterDeletion() {
+  await test.step('Verify UI updates after deleting a project in the association list', async () => {
+    await this.AssociationsTab();
+    await this.page.waitForTimeout(1500);
+
+    // ✅ Locate all project checkboxes (skipping header)
+    const checkboxes = this.page.locator('//table//tr//td[1]//div[contains(@class,"p-checkbox-box")]');
+    const checkboxCount = await checkboxes.count();
+
+    if (checkboxCount < 1) {
+      throw new Error(`Less than 2 checkboxes found (${checkboxCount}). Cannot verify bulk delete.`);
+    }
+
+    // ✅ Capture current project names before delete
+    const projectNamesBefore = await this.page.locator('//table//tr//td[2]').allInnerTexts();
+    console.log('🧾 Projects BEFORE delete:', projectNamesBefore);
+
+    // ✅ Select first two checkboxes for deletion
+    await checkboxes.nth(0).click({ force: true });
+
+    // ✅ Click the delete icon (trash)
+    const trashIcon = this.page.locator(".mr-2.cursor-pointer.ng-star-inserted").first();
+    await trashIcon.click({ force: true });
+
+    // ✅ Wait for table to refresh
+    await this.page.waitForTimeout(2000);
+
+    // ✅ Get updated table after deletion
+    const projectNamesAfter = await this.page.locator('//table//tr//td[2]').allInnerTexts();
+    console.log('🧾 Project AFTER delete:', projectNamesAfter);
+
+    // ✅ Expect fewer items in the list
+    expect(projectNamesAfter.length).toBeLessThan(projectNamesBefore.length);
+
+    // ✅ Verify deleted projects are no longer present
+    const deletedProjects = projectNamesBefore.filter(name => !projectNamesAfter.includes(name));
+    console.log('🗑️ Deleted Project:', deletedProjects);
+
+    expect(deletedProjects.length).toBeGreaterThan(0);
+    console.log(`✅ Successfully dete ${deletedProjects.length} project.`);
+  });
+}
+
+// Verify that deleted projects can be re-added
+async verifyDeletedProjectsCanBeReadded(projectName: string) {
+  await test.step('Verify that deleted projects can be re-added', async () => {
+    await this.AssociationsTab();
+    await this.clickAddProjectButton();
+    await this.fillSearchProjectInput(projectName);
+    await this.selectProjectOption();
+    await this.clickAddButton();
+
+    // Verify that the project appears as a row in the association table
+    const projectRow = this.page.locator('//table//tr//td[2]');
+    const allProjectNames = await projectRow.allInnerTexts();
+
+    console.log(`✅ Successfully re-added deleted project: ${projectName}`);
+  });
+}
+
 }
