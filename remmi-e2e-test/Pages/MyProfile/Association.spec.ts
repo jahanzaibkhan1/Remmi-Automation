@@ -167,4 +167,14 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         await profile.navigateToProfilePage();
         await profile.verifyProjectDeleteFunctionality();
       });
+
+      test('Test 17: Verify checkbox beside each project', async ({ page }) => {
+        const login = new LoginActions(page);
+        const profile = new MyProfileActions(page);
+
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+
+        await profile.navigateToProfilePage();
+        await profile.verifyCheckboxBesideEachProject();
+      });
 })
