@@ -20,10 +20,10 @@ if (!BASE_URL) throw new Error('BASE_URL is missing in .env or GitHub secrets!')
 export default defineConfig({
   testDir: './remmi-e2e-test',
 
-  fullyParallel: true,
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  retries: 3,
+  workers: 1,
   timeout: 60000, // 60s
 
   reporter: [

@@ -64,7 +64,6 @@ test.describe(' MFA Tab Tests - Remmi E2E', () => {
 
     await profile.navigateToProfilePage();
     await profile.enableMicrosoftAuthenticatorMfa();
-
     reloadEnv();
   });
 
@@ -85,39 +84,17 @@ test.describe(' MFA Tab Tests - Remmi E2E', () => {
   });
 
   test(' Login without enabling MFA', async ({ page }) => {
-    await page.goto('/login');
-
-    const emailField = page.getByRole('textbox', { name: /email/i });
-    const passwordField = page.getByRole('textbox', { name: /password/i });
-    const termsCheckbox = page.getByText(/I agree to all the statements/i, { exact: false });
-    const signInButton = page.getByRole('button', { name: /sign in/i });
-
-    await emailField.fill(salesAgent.email!);
-    await passwordField.fill(salesAgent.password!);
-    await termsCheckbox.click();
-    await signInButton.click();
-    await page.waitForTimeout(2000)
-    // Verify "No MFA Assigned" message appears
+    const login = new LoginActions(page);
+    await login.loginwithoutOTp(salesAgent.email!, salesAgent.password!);
     const noMfaMessage = page.getByText(/No MFA Assigned/i);
     await expect(noMfaMessage).toBeVisible();
   });
 
   test(' MFA Warning after 7 days', async ({ page }) => {
-    await page.goto('/login');
-
-    const emailField = page.getByRole('textbox', { name: /email/i });
-    const passwordField = page.getByRole('textbox', { name: /password/i });
-    const termsCheckbox = page.getByText(/I agree to all the statements/i, { exact: false });
-    const signInButton = page.getByRole('button', { name: /sign in/i });
-
-    await emailField.fill(salesAgent.email!);
-    await passwordField.fill(salesAgent.password!);
-    await termsCheckbox.click();
-    await signInButton.click();
-    await page.waitForTimeout(2000)
-    // Verify warning message appears
-    const warningMessage = page.locator('div').filter({ hasText: 'No MFA AssignedTo enhance' }).nth(2);
-    await expect(warningMessage).toBeVisible();
+      const login = new LoginActions(page);
+      await login.loginwithoutOTp(salesAgent.email!, salesAgent.password!);
+      const warningMessage = page.locator('div').filter({ hasText: 'No MFA AssignedTo enhance' }).nth(2);
+      await expect(warningMessage).toBeVisible();
   });
 
   test(' Enter incorrect Google Authenticator MFA code', async ({ page }) => {
