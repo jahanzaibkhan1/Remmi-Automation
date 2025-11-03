@@ -1,8 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.490776">
-<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-03T06:46:38.140Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.981" errors="0">
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 10: Verify removing a project tag before adding" classname="Pages\MyProfile\Association.spec.ts" time="34.981">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.49875799999945">
+<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-03T08:20:11.966Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.757" errors="0">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 12: Verify that previously added projects are not duplicated" classname="Pages\MyProfile\Association.spec.ts" time="23.757">
 <system-out>
-<![CDATA[Project "Hina's Project" is NOT visible in the association table.
+<![CDATA[Associated projects: askari center, Hina's Project
+All projects: askari center, Hina's Project
+No duplicate projects found
 ]]>
 </system-out>
 </testcase>
