@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.793539000000806">
-<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-03T09:14:21.098Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.473" errors="0">
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 14: Verify the sort functionality" classname="Pages\MyProfile\Association.spec.ts" time="48.473">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.889139000000434">
+<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-03T09:49:41.982Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.11" errors="0">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 15: Verify delete icon under Action column" classname="Pages\MyProfile\Association.spec.ts" time="31.11">
+<system-out>
+<![CDATA[✅ Verified project "askari center" not present after deletion.
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>

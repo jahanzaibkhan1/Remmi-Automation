@@ -667,6 +667,11 @@ export class MyProfileActions {
     await this.locators.removeSelected.click();
   }
 
+  private async DeleteProjectIcon() {
+    const deleteProjectIcon = this.locators.deleteProjectIcon();
+    await deleteProjectIcon.click({force:true});
+  }
+
 
   // --------- PUBLIC TEST/STEPS ---------
   async navigateToProfilePage() {
@@ -2997,6 +3002,31 @@ async verifyAssocitionSortingList() {
     const namesDesc = (await rowsDesc.allTextContents()).map(name => name.trim()).filter(name => !!name && name.toLowerCase() !== 'no records found');
     const sortedNamesDesc = [...namesDesc].sort((a, b) => b.localeCompare(a, undefined, { sensitivity: 'base' }));
     expect(namesDesc).toEqual(sortedNamesDesc);
+  });
+}
+
+async verifyDeleteIconInActionColumn() {
+  await test.step('Verify delete icon under Action column', async () => {
+    await this.AssociationsTab();
+    await this.page.waitForTimeout(1000);
+
+    const projectRows = this.page.locator('//table//tr//td[2]');
+    const beforeDeleteNames = (await projectRows.allInnerTexts())
+      .map(text => text.trim())
+      .filter(text => text && text.toLowerCase() !== 'no records found');
+    const projectToDelete = beforeDeleteNames[0];
+    if (!projectToDelete) {
+      console.warn('No project found to delete.');
+      return;
+    }
+    await this.DeleteProjectIcon();
+    await expect(this.page.getByRole('alert', { name: 'Removed successfully' })).toBeVisible();
+    await this.page.waitForTimeout(1000);
+    const afterDeleteNames = (await projectRows.allInnerTexts())
+      .map(text => text.trim())
+      .filter(text => text && text.toLowerCase() !== 'no records found');
+    expect(afterDeleteNames).not.toContain(projectToDelete);
+    console.log(`✅ Verified project "${projectToDelete}" not present after deletion.`);
   });
 }
 
