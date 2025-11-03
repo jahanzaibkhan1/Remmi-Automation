@@ -3100,4 +3100,15 @@ async verifyMultipleCheckboxSelection() {
   });
 }
 
+// Verify All checkbox selection
+async verifySelectAllCheckbox() {
+  await test.step('Verify multiple checkbox selection', async () => {
+    await this.AssociationsTab();
+    await this.page.waitForTimeout(2000)
+    const checkbox = this.page.getByRole('checkbox').nth(1);
+    await checkbox.click({ force: true });
+    expect(checkbox).toBeEnabled()
+  });
+}
+
 }
