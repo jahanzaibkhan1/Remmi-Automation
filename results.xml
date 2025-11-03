@@ -1,6 +1,18 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.949693999998274">
-<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-03T11:06:15.763Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.268" errors="0">
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 19: Verify Select All checkbox selection" classname="Pages\MyProfile\Association.spec.ts" time="51.268">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.71629699999839">
+<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-03T11:38:06.042Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.303" errors="0">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 20: Verify bulk delete functionality" classname="Pages\MyProfile\Association.spec.ts" time="42.303">
+<system-out>
+<![CDATA[🧾 Projects BEFORE delete: [
+  [32m'askari center'[39m,
+  [32m'lahore centre'[39m,
+  [32m'New Staging Project'[39m,
+  [32m"Hina's Project"[39m
+]
+🧾 Projects AFTER delete: [ [32m'New Staging Project'[39m, [32m"Hina's Project"[39m ]
+🗑️ Deleted Projects: [ [32m'askari center'[39m, [32m'lahore centre'[39m ]
+✅ Successfully verified bulk delete of 2 project(s).
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
