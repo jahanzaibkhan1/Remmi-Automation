@@ -1,8 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="1" errors="0" time="19.712242999998853">
-<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-10-31T11:58:31.756Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0.001" errors="0">
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 11: Verify adding multiple projects at once" classname="Pages\MyProfile\Association.spec.ts" time="0.001">
-<skipped>
-</skipped>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.490776">
+<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-03T06:46:38.140Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.981" errors="0">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 10: Verify removing a project tag before adding" classname="Pages\MyProfile\Association.spec.ts" time="34.981">
+<system-out>
+<![CDATA[Project "Hina's Project" is NOT visible in the association table.
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
