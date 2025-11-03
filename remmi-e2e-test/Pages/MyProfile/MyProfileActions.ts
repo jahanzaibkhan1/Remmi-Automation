@@ -2977,5 +2977,27 @@ async verifyInitialProjectSelection(projectNames: string[]) {
   });
 }
 
+async verifyAssocitionSortingList() {
+  await test.step('Verify the sort functionality', async () => {
+    await this.AssociationsTab();
+    const sortHeader = this.page.getByRole('columnheader', { name: /Name/i }).first();
+    const sortIcon = sortHeader.locator('svg').first();
+    await expect(sortIcon).toBeVisible({ timeout: 10000 });
+    // --- Ascending Check ---
+    await sortIcon.click({ force: true });
+    await this.page.waitForTimeout(2000);
+    const rowsAsc = this.page.locator('tbody.p-datatable-tbody > tr > td:first-child');
+    const namesAsc = (await rowsAsc.allTextContents()).map(name => name.trim()).filter(name => !!name && name.toLowerCase() !== 'no records found');
+    const sortedNamesAsc = [...namesAsc].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+    expect(namesAsc).toEqual(sortedNamesAsc);
+    // --- Descending Check ---
+    await sortIcon.click({ force: true });
+    await this.page.waitForTimeout(2000);
+    const rowsDesc = this.page.locator('tbody.p-datatable-tbody > tr > td:first-child');
+    const namesDesc = (await rowsDesc.allTextContents()).map(name => name.trim()).filter(name => !!name && name.toLowerCase() !== 'no records found');
+    const sortedNamesDesc = [...namesDesc].sort((a, b) => b.localeCompare(a, undefined, { sensitivity: 'base' }));
+    expect(namesDesc).toEqual(sortedNamesDesc);
+  });
+}
 
 }
