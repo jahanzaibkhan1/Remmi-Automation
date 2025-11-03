@@ -187,4 +187,14 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         await profile.navigateToProfilePage();
         await profile.verifyMultipleCheckboxSelection();
       });
+
+      test('Test 19: Verify Select All checkbox selection', async ({ page }) => {
+        const login = new LoginActions(page);
+        const profile = new MyProfileActions(page);
+
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+
+        await profile.navigateToProfilePage();
+        await profile.verifySelectAllCheckbox();
+      });
 })
