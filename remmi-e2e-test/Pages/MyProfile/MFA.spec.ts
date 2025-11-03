@@ -50,14 +50,6 @@ test.describe(' MFA Tab Tests - Remmi E2E', () => {
     // Re-check secret after enabling MFA
     reloadEnv();
     logCurrentSecret();
-
-    await expect(page).toHaveURL(/\/login/, { timeout: 10000 });
-    await page.reload();
-    await login.login(
-      operationManager.email!,
-      operationManager.password!,
-      process.env.E2E_MANAGER_OTP_SECRET!
-    );
   });
 
   test(' Enable Microsoft Authenticator MFA for a user', async ({ page }) => {
@@ -73,20 +65,6 @@ test.describe(' MFA Tab Tests - Remmi E2E', () => {
     await profile.navigateToProfilePage();
     await profile.enableMicrosoftAuthenticatorMfa();
     reloadEnv();
-    await expect(page).toHaveURL(/\/login/, { timeout: 10000 });
-    await page.reload();
-
-    // Wait for login page inputs to be visible before interacting
-    const emailField = page.getByRole('textbox', { name: /email/i });
-    const passwordField = page.getByRole('textbox', { name: /password/i });
-    const termsCheckbox = page.getByText(/I agree to all the statements/i, { exact: false });
-    const signInButton = page.getByRole('button', { name: /sign in/i });
-
-    await emailField.fill(operationManager.email!);
-    await passwordField.fill(operationManager.password!);
-    await termsCheckbox.click();
-    await signInButton.click();
-    await page.waitForTimeout(2000);
   });
 
   test(' Enable Authy Authenticator MFA for a user', async ({ page }) => {

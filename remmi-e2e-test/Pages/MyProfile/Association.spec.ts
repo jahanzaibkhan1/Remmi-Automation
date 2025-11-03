@@ -119,4 +119,5 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         await profile.navigateToProfilePage();
         await profile.verifyMultipleProjectSelection(["Hina's Project", "askari center"]);
       });
+      
 })
