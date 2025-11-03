@@ -3029,5 +3029,39 @@ async verifyDeleteIconInActionColumn() {
     console.log(`✅ Verified project "${projectToDelete}" not present after deletion.`);
   });
 }
+async verifyProjectDeleteFunctionality() {
+  await test.step('Verify project delete functionality', async () => {
+    await this.AssociationsTab();
+    await this.page.waitForTimeout(1000);
+
+    // Find all project rows, select the first project to delete (if available)
+    const projectRows = this.page.locator('//table//tr//td[2]');
+    const beforeDeleteNames = (await projectRows.allInnerTexts())
+      .map(text => text.trim())
+      .filter(text => text && text.toLowerCase() !== 'no records found');
+
+    const projectToDelete = beforeDeleteNames[0];
+    if (!projectToDelete) {
+      console.warn('No project found to delete.');
+      return;
+    }
+
+    // Click the delete icon for the first project
+    await this.DeleteProjectIcon();
+
+    // Expect a toast/alert for successful removal
+    await expect(this.page.getByRole('alert', { name: /Removed successfully/i })).toBeVisible();
+
+    // Wait for table update, then re-read the projects
+    await this.page.waitForTimeout(1000);
+    const afterDeleteNames = (await projectRows.allInnerTexts())
+      .map(text => text.trim())
+      .filter(text => text && text.toLowerCase() !== 'no records found');
+
+    // Assert the deleted project is no longer listed
+    expect(afterDeleteNames).not.toContain(projectToDelete);
+    console.log(`✅ Verified project "${projectToDelete}" not present after deletion.`);
+  });
+}
 
 }
