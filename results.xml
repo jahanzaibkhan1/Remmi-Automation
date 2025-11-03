@@ -1,10 +1,252 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.0453040000014">
-<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-03T12:04:26.636Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.95" errors="0">
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 22: Verify that deleted projects can be re-added" classname="Pages\MyProfile\Association.spec.ts" time="48.95">
+<testsuites id="" name="" tests="22" failures="1" skipped="21" errors="0" time="231.32972499999997">
+<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-03T12:13:36.940Z" hostname="chromium" tests="22" failures="1" skipped="21" time="215.687" errors="0">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 1: Verify that the Association tab opens successfully" classname="Pages\MyProfile\Association.spec.ts" time="215.687">
+<failure message="Association.spec.ts:13:9 Test 1: Verify that the Association tab opens successfully" type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\Association.spec.ts:13:9 › My Profile Associations Tab Tests - Remmi E2E › Test 1: Verify that the Association tab opens successfully 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.goto: Test timeout of 60000ms exceeded.
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:56
+
+      54 |   }
+      55 |   async gotoLogin() {
+    > 56 |     await this.page.goto('/login');
+         |                     ^
+      57 |     await this.page.waitForLoadState('networkidle');
+      58 |   }
+      59 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:56:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:120:16)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:210:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Association.spec.ts:17:19
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.goto: Test timeout of 60000ms exceeded.
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:56
+
+      54 |   }
+      55 |   async gotoLogin() {
+    > 56 |     await this.page.goto('/login');
+         |                     ^
+      57 |     await this.page.waitForLoadState('networkidle');
+      58 |   }
+      59 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:56:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:120:16)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:210:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Association.spec.ts:17:19
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.goto: Test timeout of 60000ms exceeded.
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:56
+
+      54 |   }
+      55 |   async gotoLogin() {
+    > 56 |     await this.page.goto('/login');
+         |                     ^
+      57 |     await this.page.waitForLoadState('networkidle');
+      58 |   }
+      59 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:56:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:120:16)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:210:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Association.spec.ts:17:19
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium-retry2\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium-retry2\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium-retry2\error-context.md
+
+    Retry #3 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Test was interrupted.
+
+    Error: page.goto: Target page, context or browser has been closed
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:56
+
+      54 |   }
+      55 |   async gotoLogin() {
+    > 56 |     await this.page.goto('/login');
+         |                     ^
+      57 |     await this.page.waitForLoadState('networkidle');
+      58 |   }
+      59 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:56:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:120:16)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:210:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Association.spec.ts:17:19
+
+    Error: browserContext.close: Test ended.
+    Browser logs:
+
+    <launching> C:\Users\Muhammad Jahanzaib\AppData\Local\ms-playwright\chromium_headless_shell-1194\chrome-win\headless_shell.exe --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --disable-gpu --no-sandbox --disable-dev-shm-usage --user-data-dir=C:\Users\MUHAMM~1\AppData\Local\Temp\playwright_chromiumdev_profile-FdRbei --remote-debugging-pipe --no-startup-window
+    <launched> pid=23144
+    [pid=23144][err] [1103/171700.910:INFO:CONSOLE:1347] "Google Maps JavaScript API has been loaded directly without loading=async. This can result in suboptimal performance. For best-practice loading patterns please see https://goo.gle/js-api-loading", source: https://maps.googleapis.com/maps/api/js?key=AIzaSyDzQ56huj4Bbw7e2x9yG4yvOpyB6QV3Qko&libraries=places&language=en (1347)
+]]>
+</failure>
 <system-out>
-<![CDATA[✅ Successfully re-added deleted project: New Staging Project
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium\video.webm]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium\error-context.md]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium-retry1\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium-retry1\video.webm]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium-retry1\error-context.md]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium-retry1\trace.zip]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium-retry2\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium-retry2\video.webm]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-Associatio-2814f-tion-tab-opens-successfully-chromium-retry2\error-context.md]]
 ]]>
 </system-out>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 2: Verify the search functionality in the Association tab" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 3: Verify search with no matching project" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 4: Verify that Add Project dropdown opens successfully" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 5: Verify the search option inside Add Project dropdown" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 6: Verify single project selection from dropdown" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 7: Verify multiple project selection from dropdown" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 8: Verify the “Select All” functionality" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 9: Verify the “Deselect All” functionality" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 10: Verify removing a project tag before adding" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 11: Verify adding multiple projects at once" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 12: Verify that previously added projects are not duplicated" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 13: Verify adding when list is initially empty" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 14: Verify the sort functionality" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 15: Verify delete icon under Action column" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 16: Verify project delete funcationality" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 17: Verify checkbox beside each project" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 18: Verify multiple checkbox selection" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 19: Verify Select All checkbox selection" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 20: Verify bulk delete functionality" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 21: Verify UI update after deletion" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 22: Verify that deleted projects can be re-added" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
 </testsuites>
