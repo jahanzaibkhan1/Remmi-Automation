@@ -421,5 +421,8 @@ export class MyProfileLocators {
   get removeSelected() {
     return this.page.locator('.pi.pi-times-circle');
   }
+ deleteProjectIcon(){
+    return this.page.locator('.mr-2.cursor-pointer').first()
+  }
 }
 
