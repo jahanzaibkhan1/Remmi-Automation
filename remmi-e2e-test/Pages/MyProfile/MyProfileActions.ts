@@ -3111,4 +3111,50 @@ async verifySelectAllCheckbox() {
   });
 }
 
+// Verify bulk delete functionality
+async verifyBulkDeleteFunctionality() {
+  await test.step('Verify bulk delete functionality', async () => {
+    await this.AssociationsTab();
+    await this.page.waitForTimeout(1500);
+
+    // ✅ Locate all project checkboxes (skipping header)
+    const checkboxes = this.page.locator('//table//tr//td[1]//div[contains(@class,"p-checkbox-box")]');
+    const checkboxCount = await checkboxes.count();
+
+    if (checkboxCount < 2) {
+      throw new Error(`Less than 2 checkboxes found (${checkboxCount}). Cannot verify bulk delete.`);
+    }
+
+    // ✅ Capture current project names before delete
+    const projectNamesBefore = await this.page.locator('//table//tr//td[2]').allInnerTexts();
+    console.log('🧾 Projects BEFORE delete:', projectNamesBefore);
+
+    // ✅ Select first two checkboxes for deletion
+    await checkboxes.nth(0).click({ force: true });
+    await checkboxes.nth(1).click({ force: true });
+
+    // ✅ Click the delete icon (trash)
+    const trashIcon = this.page.locator(".mr-2.cursor-pointer.ng-star-inserted").first();
+    await trashIcon.click({ force: true });
+
+    // ✅ Wait for table to refresh
+    await this.page.waitForTimeout(2000);
+
+    // ✅ Get updated table after deletion
+    const projectNamesAfter = await this.page.locator('//table//tr//td[2]').allInnerTexts();
+    console.log('🧾 Projects AFTER delete:', projectNamesAfter);
+
+    // ✅ Expect fewer items in the list
+    expect(projectNamesAfter.length).toBeLessThan(projectNamesBefore.length);
+
+    // ✅ Verify deleted projects are no longer present
+    const deletedProjects = projectNamesBefore.filter(name => !projectNamesAfter.includes(name));
+    console.log('🗑️ Deleted Projects:', deletedProjects);
+
+    expect(deletedProjects.length).toBeGreaterThan(0);
+    console.log(`✅ Successfully verified bulk delete of ${deletedProjects.length} project(s).`);
+  });
+}
+
+
 }
