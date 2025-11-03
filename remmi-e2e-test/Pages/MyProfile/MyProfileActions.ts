@@ -2935,5 +2935,47 @@ async verifyPreviouslyAddedProjectsAreNotDuplicated(expectedProjectNames: string
     }
   });
 }
+// Verify adding projects when the associated project list is initially empty.
+
+async verifyInitialProjectSelection(projectNames: string[]) {
+  await test.step('Verify adding multiple projects at once with an initially empty association list', async () => {
+    await this.AssociationsTab();
+
+    // Clear any existing projects in the list (if any) by clicking checkbox and trash icon
+    const checkbox = this.page.getByRole('checkbox').nth(1);
+    await checkbox.click({ force: true });
+    const trashIcon = this.page.locator('.mr-2.cursor-pointer').first();
+    await trashIcon.click({ force: true });
+
+    // Add each project one by one in the add dialog
+    await this.clickAddProjectButton();
+    for (const projectName of projectNames) {
+      await this.fillSearchProjectInput(projectName);
+      await this.page.waitForTimeout(300);
+      await this.selectProjectOption();
+      await this.locators.searchProjectInput.fill('');
+    }
+    await this.clickAddButton();
+
+    // Confirm the success alert
+    await expect(this.page.getByRole('alert', { name: 'Added successfully' })).toBeVisible();
+
+    // Verify the projects have been added to the association table
+    const getTableProjectNames = async () => {
+      const rows = this.page.locator('//table//tr//td[2]');
+      return (await rows.allInnerTexts())
+        .map(text => text.trim())
+        .filter(text => text && text.toLowerCase() !== 'no records found');
+    };
+
+    const addedNames = await getTableProjectNames();
+
+    for (const projectName of projectNames) {
+      expect(addedNames).toContain(projectName);
+      console.log(projectName);
+    }
+  });
+}
+
 
 }
