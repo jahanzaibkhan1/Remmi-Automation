@@ -138,4 +138,13 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         await profile.navigateToProfilePage();
         await profile.verifyInitialProjectSelection(["Hina's Project", "askari center"]);
       });
+      test('Test 14: Verify the sort functionality', async ({ page }) => {
+        const login = new LoginActions(page);
+        const profile = new MyProfileActions(page);
+
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+
+        await profile.navigateToProfilePage();
+        await profile.verifyAssocitionSortingList();
+      });
 })

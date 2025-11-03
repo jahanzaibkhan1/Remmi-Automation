@@ -1,11 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.75524699999951">
-<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-03T08:48:27.450Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.109" errors="0">
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 13: Verify adding when list is initially empty" classname="Pages\MyProfile\Association.spec.ts" time="36.109">
-<system-out>
-<![CDATA[Hina's Project
-askari center
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.793539000000806">
+<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-03T09:14:21.098Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.473" errors="0">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 14: Verify the sort functionality" classname="Pages\MyProfile\Association.spec.ts" time="48.473">
 </testcase>
 </testsuite>
 </testsuites>
