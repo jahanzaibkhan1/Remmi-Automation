@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.617826999999586">
-<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-03T10:49:13.706Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.075" errors="0">
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 17: Verify checkbox beside each project" classname="Pages\MyProfile\Association.spec.ts" time="30.075">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.680280999999496">
+<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-03T10:53:45.868Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.577" errors="0">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 18: Verify multiple checkbox selection" classname="Pages\MyProfile\Association.spec.ts" time="39.577">
 </testcase>
 </testsuite>
 </testsuites>
