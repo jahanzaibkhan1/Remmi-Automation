@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.608439999999476">
-<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-03T09:55:42.384Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.443" errors="0">
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 16: Verify project delete funcationality" classname="Pages\MyProfile\Association.spec.ts" time="33.443">
-<system-out>
-<![CDATA[✅ Verified project "Hina's Project" not present after deletion.
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.617826999999586">
+<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-03T10:49:13.706Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.075" errors="0">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 17: Verify checkbox beside each project" classname="Pages\MyProfile\Association.spec.ts" time="30.075">
 </testcase>
 </testsuite>
 </testsuites>
