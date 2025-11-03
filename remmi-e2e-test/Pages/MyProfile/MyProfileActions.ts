@@ -3073,5 +3073,31 @@ async verifyCheckboxBesideEachProject() {
   });
 }
 
+// Verify multiple checkbox selection
+async verifyMultipleCheckboxSelection() {
+  await test.step('Verify multiple checkbox selection', async () => {
+    await this.AssociationsTab();
+    await this.page.waitForTimeout(1500);
+
+    // ✅ More accurate locator for PrimeNG table checkboxes
+    const checkboxes = this.page.locator('//table//tr//td[1]//div[contains(@class,"p-checkbox-box")]');
+    const checkboxCount = await checkboxes.count();
+
+    if (checkboxCount < 2) {
+      throw new Error(`Less than 2 checkboxes found (${checkboxCount}). Cannot verify multi-selection.`);
+    }
+
+    // ✅ Click first two checkboxes
+    await checkboxes.nth(0).click({ force: true });
+    await checkboxes.nth(1).click({ force: true });
+
+    // ✅ Verify they have the 'p-highlight' class (PrimeNG checked state)
+    const firstChecked = await checkboxes.nth(0).getAttribute('class');
+    const secondChecked = await checkboxes.nth(1).getAttribute('class');
+
+    expect(firstChecked).toContain('p-highlight');
+    expect(secondChecked).toContain('p-highlight');
+  });
+}
 
 }
