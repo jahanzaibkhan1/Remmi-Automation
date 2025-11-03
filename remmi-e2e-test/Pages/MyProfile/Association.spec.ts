@@ -129,4 +129,13 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         await profile.navigateToProfilePage();
         await profile.verifyPreviouslyAddedProjectsAreNotDuplicated(["Hina's Project", "askari center"]);
       });
+      test('Test 13: Verify adding when list is initially empty', async ({ page }) => {
+        const login = new LoginActions(page);
+        const profile = new MyProfileActions(page);
+
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+
+        await profile.navigateToProfilePage();
+        await profile.verifyInitialProjectSelection(["Hina's Project", "askari center"]);
+      });
 })
