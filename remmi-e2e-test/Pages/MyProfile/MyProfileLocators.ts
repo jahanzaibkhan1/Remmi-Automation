@@ -113,9 +113,10 @@ export class MyProfileLocators {
 
   // ---------------- Calendar ----------------
   calendarColor(): Locator {
-    return this.page.locator(
-      'input.p-colorpicker-preview.p-inputtext[data-pc-section="input"]'
-    );
+    return this.page.locator('.colorbox')
+  }
+  calendarcolorInput(){
+    return this.page.locator('.hex-text > div > input')
   }
 
   // ---------------- Buttons ----------------
