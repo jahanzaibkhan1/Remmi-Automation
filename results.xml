@@ -1,6 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.4309450000003">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-04T11:39:44.341Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.933" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 2: Searching for a non existing listing" classname="Pages\Contacts\contact.spec.ts" time="23.933">
+<testsuites id="" name="" tests="1" failures="0" skipped="1" errors="0" time="52.07083999999985">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-04T11:46:44.675Z" hostname="chromium" tests="1" failures="0" skipped="1" time="43.765" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 3: Searching using partial listing name" classname="Pages\Contacts\contact.spec.ts" time="43.765">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
 </testsuites>

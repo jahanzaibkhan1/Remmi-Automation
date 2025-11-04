@@ -27,4 +27,13 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
         await contact.NavigateToContacts();
         await contact.searchNonExistingContact('fghjkkkk')
       });
+      
+      test('Test 3: Searching using partial listing name', async ({ page }) => {
+        const login = new LoginActions(page);
+        const contact = new ContactActions(page);
+    
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await contact.NavigateToContacts();
+        await contact.searchByPartialName('BA')
+      });
 });
