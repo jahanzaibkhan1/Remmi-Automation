@@ -27,5 +27,11 @@ export class ContactActions {
         await this.searchForContact(contactName);
         await this.page.locator(`text=${contactName}`).first().waitFor({ state: 'visible', timeout: 5000 });
     }
- 
+    
+    public async searchNonExistingContact(contactName: string): Promise<void> {
+        await this.page.waitForTimeout(1000);
+        await this.searchForContact(contactName);
+        const noResults = this.page.getByRole('cell', { name: 'No contacts available' })
+        await noResults.waitFor({ state: 'visible', timeout: 5000 });
+    }
 }

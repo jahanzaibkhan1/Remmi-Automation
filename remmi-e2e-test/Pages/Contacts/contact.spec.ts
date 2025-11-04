@@ -18,4 +18,13 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
         await contact.NavigateToContacts();
         await contact.searchExistingContact('Hina Test')
       });
+
+      test('Test 2: Searching for a non existing listing', async ({ page }) => {
+        const login = new LoginActions(page);
+        const contact = new ContactActions(page);
+    
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await contact.NavigateToContacts();
+        await contact.searchNonExistingContact('fghjkkkk')
+      });
 });
