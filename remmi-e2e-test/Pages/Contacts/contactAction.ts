@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 import { ContactLocators } from './contactLocator';
 
 export class ContactActions {
@@ -27,11 +27,18 @@ export class ContactActions {
         await this.searchForContact(contactName);
         await this.page.locator(`text=${contactName}`).first().waitFor({ state: 'visible', timeout: 5000 });
     }
-    
+
     public async searchNonExistingContact(contactName: string): Promise<void> {
         await this.page.waitForTimeout(1000);
         await this.searchForContact(contactName);
         const noResults = this.page.getByRole('cell', { name: 'No contacts available' })
         await noResults.waitFor({ state: 'visible', timeout: 5000 });
+    }
+    
+    public async searchByPartialName(partialName: string): Promise<void> {
+        await this.page.waitForTimeout(1000);
+        await this.searchForContact(partialName);
+        const result = this.page.locator(`td`, { hasText: partialName });
+        await expect(result).toBeVisible();
     }
 }
