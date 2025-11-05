@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.75579000000004">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-05T05:18:55.533Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.911" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 5: Verify &quot;Deselect All&quot; functionality in contact type dropdown" classname="Pages\Contacts\contact.spec.ts" time="25.911">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="27.48798600000143">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-05T06:07:12.225Z" hostname="chromium" tests="1" failures="0" skipped="0" time="22.166" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 6: Verify search within contact type dropdown" classname="Pages\Contacts\contact.spec.ts" time="22.166">
+<system-out>
+<![CDATA[Agent
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>

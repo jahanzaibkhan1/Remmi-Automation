@@ -25,7 +25,6 @@ export class ContactActions {
     }
     private async ContactTypeDropdown() {
         const contactTypeDropdown = this.locators.ContactTypeDropdown();
-        await contactTypeDropdown.waitFor({ state: 'attached', timeout: 10000 });
         await contactTypeDropdown.click();
     }
 
@@ -37,10 +36,11 @@ export class ContactActions {
         const value = await searchContactType.inputValue();
         expect(value).toBe(name);
     }
-    private async SelectOption() {
+    private async SelectOption(name:string) {
         const option = this.locators.SelectOption();
         await option.waitFor({ state: 'visible', timeout: 10000 });
         await option.click();
+        console.log(name);
     }
 
     private async SelectAllTypes(): Promise<void> {
@@ -55,6 +55,33 @@ export class ContactActions {
         await deselectAll.waitFor({ state: 'visible', timeout: 5000 });
         await deselectAll.click({force: true})
     }
+
+    private async CompanyTypeDropdown() {
+        const companyTypeDropdown = this.locators.CompanyType();
+        await companyTypeDropdown.waitFor({ state: 'attached', timeout: 10000 });
+        await companyTypeDropdown.click();
+    }
+
+    private async SearchCompanyType(typeName: string) {
+        const searchCompanyType = this.locators.SearchCompanyType();
+        await searchCompanyType.waitFor({ state: 'visible', timeout: 10000 });
+        await searchCompanyType.click({ force: true });
+        await searchCompanyType.fill(typeName);
+        const value = await searchCompanyType.inputValue();
+        expect(value).toBe(typeName);
+    }
+
+    private async SelectCompanyOption(typeName: string) {
+        const option = this.locators.SelectCompanyOption();
+        await option.waitFor({ state: 'visible', timeout: 10000 });
+        await option.click();
+        console.log(typeName);
+    }
+
+
+
+    //---------------------------------------Public Actions--------------------------------------------//
+
     public async verifySearchFuntionality(contactName: string): Promise<void> {
         await this.searchForContact(contactName);
         await this.page.locator(`text=${contactName}`).first().waitFor({ state: 'visible', timeout: 5000 });
@@ -71,7 +98,7 @@ export class ContactActions {
         await this.page.waitForTimeout(2000);
         await this.ContactTypeDropdown();
         await this.SearchContactType(name);
-        await this.SelectOption();
+        await this.SelectOption(name);
         await this.ContactTypeDropdown();
         
         // Wait for filter to be applied (table rows update)
@@ -98,6 +125,7 @@ export class ContactActions {
         for (let i = 0; i < rowCount; i++) {
             const row = rows.nth(i);
             const cell = row.locator('td').nth(contactTypeColIdx);
+            await cell.scrollIntoViewIfNeeded();
             // Sanitize and check
             const cellText = (await cell.textContent())?.trim();
             expect(cellText).toBe(name);
@@ -121,4 +149,14 @@ export class ContactActions {
         await this.page.waitForTimeout(1000)
         await this.DeselectAllTypes()
     }
+    
+    public async verifymatchingTypeDisplayed(name: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2000);
+        await this.ContactTypeDropdown();
+        await this.SearchContactType(name);
+        await this.SelectOption(name);
+        await this.ContactTypeDropdown();
+    }
+
 }

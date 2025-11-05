@@ -53,4 +53,13 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
         await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
         await contact.deselectAllContactType();
       });
+
+      test('Test 6: Verify search within contact type dropdown', async ({ page }) => {
+        const login = new LoginActions(page);
+        const contact = new ContactActions(page);
+    
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await contact.verifymatchingTypeDisplayed('Agent');
+      });
+
 });
