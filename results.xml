@@ -1,6 +1,11 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="29.153610000000334">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-05T08:42:19.235Z" hostname="chromium" tests="1" failures="0" skipped="0" time="22.836" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 13: Verify delete button is disabled when no contact is selected" classname="Pages\Contacts\contact.spec.ts" time="22.836">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.26555200000003">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-05T10:56:22.700Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.624" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 14: Verify the delete button removes the selected contact" classname="Pages\Contacts\contact.spec.ts" time="37.624">
+<system-out>
+<![CDATA[Name displayed:  11 22
+Successfully Deleted : 11 22
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>

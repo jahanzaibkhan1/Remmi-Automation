@@ -42,4 +42,17 @@ export class ContactLocators {
   CheckBox():Locator{
     return this.page.getByRole('checkbox');
   }
+  Settings(): Locator{
+    return this.page.locator('li[data-label="Settings"]')
+  }
+  DeletedContacts(): Locator{
+    return this.page.getByRole('link', { name: 'Deleted Contacts' });
+  }
+  SearchForDeletedContact():Locator{
+    return this.page.locator('#keywordInput');
+  }
+  restoreContactIcon():Locator{
+    return this.page.locator('img[ptooltip="Restore Contact"][src*="undo_solid.svg"]')
+  }
+  
 }

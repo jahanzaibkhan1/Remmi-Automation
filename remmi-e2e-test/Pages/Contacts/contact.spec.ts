@@ -15,7 +15,6 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(page);
 
     await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
-    await contact.NavigateToContacts();
     await contact.verifySearchFuntionality('Hina Test')
   });
 
@@ -24,7 +23,6 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(page);
 
     await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
-    await contact.NavigateToContacts();
     await contact.searchNonExistingContact('fghjkkkk')
   });
 
@@ -41,8 +39,6 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(page);
 
     await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
-    await contact.NavigateToContacts();
-    await page.waitForTimeout(2000);
     await contact.selectAllContactType();
   });
 
@@ -75,8 +71,6 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(page);
 
     await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
-    await contact.NavigateToContacts();
-    await page.waitForTimeout(2000);
     await contact.selectAllCompanyTypes();
   });
 
@@ -118,5 +112,15 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
 
     await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
     await contact.verifyDeleteButtonDisabledWhenNoContactSelected();
+  });
+  
+  test('Test 14: Verify the delete button removes the selected contact', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    const contactName = '11 22'; 
+    
+    await contact.verifyDeleteButtonRemovesSelectedContact(contactName);
   });
 });
