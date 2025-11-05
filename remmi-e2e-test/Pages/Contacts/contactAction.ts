@@ -83,6 +83,14 @@ export class ContactActions {
         await resetButton.dblclick()
     }
 
+    private async DeleteIcon() {
+        return this.locators.DeleteIcon().click()
+    }
+
+    private CheckBox() {
+        return this.locators.CheckBox().nth(3).click();
+    }
+
 
     //---------------------------------------Public Actions--------------------------------------------//
 
@@ -312,4 +320,14 @@ export class ContactActions {
        
     }
     
+    // Verify delete button is enabled after selecting a contact
+    public async verifyDeleteButtonEnabledAfterSelectingContact(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+        await this.CheckBox();
+        const deleteButton = this.locators.DeleteIcon();
+        await deleteButton.waitFor({ state: 'visible', timeout: 3000 });
+        expect(await deleteButton.isEnabled()).toBe(true);
+    }
+
 }
