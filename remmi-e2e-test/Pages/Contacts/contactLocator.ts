@@ -24,4 +24,13 @@ export class ContactLocators {
   DeSelectAllTypes(): Locator {
     return this.page.locator("//label[@class='checkbox select_all style-d']")
   }
+  CompanyType():Locator{
+    return this.page.locator("//span[normalize-space()='Company Type']")
+  }
+  SearchCompanyType(): Locator{
+    return this.page.getByRole('textbox', { name: 'Type to search' })
+  }
+  SelectCompanyOption(): Locator{
+    return this.page.locator("//li[@class='p-element ng-star-inserted']").first();
+  }
 }
