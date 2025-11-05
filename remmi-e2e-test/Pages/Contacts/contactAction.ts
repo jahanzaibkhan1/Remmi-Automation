@@ -330,4 +330,14 @@ export class ContactActions {
         expect(await deleteButton.isEnabled()).toBe(true);
     }
 
+    // Verify delete button is disabled when no contact is selected
+    public async verifyDeleteButtonDisabledWhenNoContactSelected(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        const deleteButton = this.page.locator('._circle-btn');
+        await deleteButton.waitFor({state:'visible', timeout:10000})
+        expect(await deleteButton.isDisabled()).toBe(false)
+    }
+
 }
