@@ -1,6 +1,7 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { ContactLocators } from './contactLocator';
 import { setEngine } from 'crypto';
+import { waitForDebugger } from 'inspector';
 
 export class ContactActions {
     private locators: ContactLocators;
@@ -400,6 +401,19 @@ public async verifyDeleteButtonRemovesSelectedContact(contactName: string): Prom
     await expect(this.page.locator('table tbody tr', { hasText: contactName })).toHaveCount(0);
     console.log('Successfully Deleted :', contactName)
 }
-
+async RestoreDeletedContact(contactName: string){
+    await this.NavigateToSettings();
+    await this.ClickDeletedContact();
+    await this.page.waitForTimeout(2000)
+    await this.SearchDeletedContact(contactName);
+    await this.page.waitForTimeout(1500);
+    await this.ClickRestoreIcon();
+    await this.NavigateToContacts();
+    await this.page.waitForTimeout(4000)
+    await this.searchForContact(contactName);
+    await this.page.waitForTimeout(1500)
+    await expect(this.page.locator('table tbody tr', { hasText: contactName })).toHaveCount(1);
+    console.log(contactName);
+}
 
 }

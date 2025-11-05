@@ -123,4 +123,14 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     
     await contact.verifyDeleteButtonRemovesSelectedContact(contactName);
   });
+  
+  test('Test 15: Restore a deleted contact from setting and verify in Contacts', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    const contactName = '11 22';
+    await contact.RestoreDeletedContact(contactName);
+  });
+
 });
