@@ -36,4 +36,10 @@ export class ContactLocators {
   ResetButton(): Locator{
     return this.page.getByRole('button', { name: 'Reset' });
   }
+  DeleteIcon (): Locator{
+    return this.page.locator('div:nth-child(8) > .cursor-pointer');
+  }
+  CheckBox():Locator{
+    return this.page.getByRole('checkbox');
+  }
 }

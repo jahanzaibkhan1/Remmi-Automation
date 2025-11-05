@@ -1,11 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="29.755577999999748">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-05T08:03:13.229Z" hostname="chromium" tests="1" failures="0" skipped="0" time="22.964" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 11: Verify reset button removes applied filters" classname="Pages\Contacts\contact.spec.ts" time="22.964">
-<system-out>
-<![CDATA[agent
-Agency
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="28.601931000000796">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-05T08:32:41.439Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.77" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 12: Verify delete button is enabled after selecting a contact" classname="Pages\Contacts\contact.spec.ts" time="21.77">
 </testcase>
 </testsuite>
 </testsuites>
