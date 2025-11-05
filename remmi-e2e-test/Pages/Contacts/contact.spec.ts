@@ -44,6 +44,13 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
         await contact.NavigateToContacts();
         await page.waitForTimeout(2000);
         await contact.selectAllContactType();
-        
+      });
+
+      test('Test 5: Verify "Deselect All" functionality in contact type dropdown', async ({ page }) => {
+        const login = new LoginActions(page);
+        const contact = new ContactActions(page);
+    
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await contact.deselectAllContactType();
       });
 });

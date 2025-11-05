@@ -50,6 +50,11 @@ export class ContactActions {
             await selectAllTypes.click({ force: true });
         }
     }
+    private async DeselectAllTypes(): Promise<void> {
+        const deselectAll = this.locators.DeSelectAllTypes();
+        await deselectAll.waitFor({ state: 'visible', timeout: 5000 });
+        await deselectAll.click({force: true})
+    }
     public async verifySearchFuntionality(contactName: string): Promise<void> {
         await this.searchForContact(contactName);
         await this.page.locator(`text=${contactName}`).first().waitFor({ state: 'visible', timeout: 5000 });
@@ -106,5 +111,14 @@ export class ContactActions {
         const deselectAll = this.page.locator("//label[@class='checkbox select_all style-d']");
         await deselectAll.waitFor({state:'visible', timeout:1000});
         expect(deselectAll).toBeVisible();
+    }
+    async deselectAllContactType(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2000);
+        await this.ContactTypeDropdown();
+        await this.page.waitForTimeout(1000)
+        await this.SelectAllTypes();
+        await this.page.waitForTimeout(1000)
+        await this.DeselectAllTypes()
     }
 }
