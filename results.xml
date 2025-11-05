@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.0453040000014">
-<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-03T12:04:26.636Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.95" errors="0">
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 22: Verify that deleted projects can be re-added" classname="Pages\MyProfile\Association.spec.ts" time="48.95">
-<system-out>
-<![CDATA[✅ Successfully re-added deleted project: New Staging Project
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.257740999999456">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-05T04:49:34.181Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.119" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 4: Verify &quot;Select All&quot; functionality in contact type dropdown" classname="Pages\Contacts\contact.spec.ts" time="25.119">
 </testcase>
 </testsuite>
 </testsuites>

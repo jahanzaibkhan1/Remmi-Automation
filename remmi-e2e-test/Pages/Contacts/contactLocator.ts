@@ -9,6 +9,16 @@ export class ContactLocators {
   SearchBox(): Locator{
     return this.page.locator('#keywordInput');
   }
-
- 
+  ContactTypeDropdown():Locator{
+    return this.page.locator("//re-multiselect[@placeholder='Contact Type']//div[@class='tags']");
+  }
+  SearchContactType(): Locator{
+    return this.page.getByRole('textbox', { name: 'Type to search' })
+  }
+  SelectOption(): Locator{
+    return this.page.locator("//li[@class='p-element ng-star-inserted']").first();
+  }
+  SelectAllTypes(): Locator{
+    return this.page.locator("//label[@class='checkbox select_all style-d']")
+  }
 }
