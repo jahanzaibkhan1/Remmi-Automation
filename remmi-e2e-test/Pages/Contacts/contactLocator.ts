@@ -21,4 +21,7 @@ export class ContactLocators {
   SelectAllTypes(): Locator{
     return this.page.locator("//label[@class='checkbox select_all style-d']")
   }
+  DeSelectAllTypes(): Locator {
+    return this.page.locator("//label[@class='checkbox select_all style-d']")
+  }
 }
