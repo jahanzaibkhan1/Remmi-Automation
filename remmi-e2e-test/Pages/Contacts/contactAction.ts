@@ -10,6 +10,7 @@ export class ContactActions {
 
     async NavigateToContacts() {
         const contact = this.locators.Contacts();
+        await contact.waitFor({ state: 'visible', timeout: 10000 })
         await contact.click();
     }
 
@@ -18,27 +19,92 @@ export class ContactActions {
         await searchBox.waitFor({ state: 'visible', timeout: 10000 });
         await searchBox.click({ force: true });
         await searchBox.fill(contactName);
-        // Optionally verify value
+        // Verify the value entered matches the contactName
         const value = await searchBox.inputValue();
+        expect(value).toBe(contactName);
+    }
+    private async ContactTypeDropdown() {
+        const contactTypeDropdown = this.locators.ContactTypeDropdown();
+        await contactTypeDropdown.waitFor({ state: 'attached', timeout: 10000 });
+        await contactTypeDropdown.click();
     }
 
-    public async searchExistingContact(contactName: string): Promise<void> {
-        await this.page.waitForTimeout(1000)
+    private async SearchContactType(name: string) {
+        const searchContactType = this.locators.SearchContactType();
+        await searchContactType.waitFor({ state: 'visible', timeout: 10000 });
+        await searchContactType.click({ force: true });
+        await searchContactType.fill(name);
+        const value = await searchContactType.inputValue();
+        expect(value).toBe(name);
+    }
+    private async SelectOption() {
+        const option = this.locators.SelectOption();
+        await option.waitFor({ state: 'visible', timeout: 10000 });
+        await option.click();
+    }
+
+    private async SelectAllTypes(): Promise<void> {
+        const selectAllTypes = this.locators.SelectAllTypes();
+        await selectAllTypes.waitFor({ state: 'visible', timeout: 5000 });
+        if (!(await selectAllTypes.isChecked())) {
+            await selectAllTypes.click({ force: true });
+        }
+    }
+    public async verifySearchFuntionality(contactName: string): Promise<void> {
         await this.searchForContact(contactName);
         await this.page.locator(`text=${contactName}`).first().waitFor({ state: 'visible', timeout: 5000 });
     }
 
     public async searchNonExistingContact(contactName: string): Promise<void> {
-        await this.page.waitForTimeout(1000);
         await this.searchForContact(contactName);
         const noResults = this.page.getByRole('cell', { name: 'No contacts available' })
         await noResults.waitFor({ state: 'visible', timeout: 5000 });
     }
-    
-    public async searchByPartialName(partialName: string): Promise<void> {
+
+    public async verifyContactDropdownFilter(name: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2000);
+        await this.ContactTypeDropdown();
+        await this.SearchContactType(name);
+        await this.SelectOption();
+        await this.ContactTypeDropdown();
+        
+        // Wait for filter to be applied (table rows update)
         await this.page.waitForTimeout(1000);
-        await this.searchForContact(partialName);
-        const result = this.page.locator(`td`, { hasText: partialName });
-        await expect(result).toBeVisible();
+        
+        // Get all rows in the table after filtering
+        const rows = await this.page.locator('table tbody tr');
+        const rowCount = await rows.count();
+
+        // Find the column index for "Contact Type" based on header text
+        const headerCells = await this.page.locator('table thead tr th');
+        const headerCount = await headerCells.count();
+        let contactTypeColIdx = -1;
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headerCells.nth(i).textContent())?.trim();
+            if (headerText?.toLowerCase() === 'contact type') {
+                contactTypeColIdx = i;
+                break;
+            }
+        }
+        expect(contactTypeColIdx).not.toBe(-1);
+
+        // Now verify every displayed Contact Type is the filter value
+        for (let i = 0; i < rowCount; i++) {
+            const row = rows.nth(i);
+            const cell = row.locator('td').nth(contactTypeColIdx);
+            // Sanitize and check
+            const cellText = (await cell.textContent())?.trim();
+            expect(cellText).toBe(name);
+        }
+    }
+
+    async selectAllContactType(): Promise<void>{
+
+        await this.ContactTypeDropdown();
+        await this.SelectAllTypes();
+        const deselectAll = this.page.locator("//label[@class='checkbox select_all style-d']");
+        await deselectAll.waitFor({state:'visible', timeout:1000});
+        expect(deselectAll).toBeVisible();
     }
 }

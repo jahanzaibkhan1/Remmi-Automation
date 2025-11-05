@@ -10,16 +10,16 @@ const admin = LoginUsers.admin;
 
 test.describe('Contacts side Menu Tests - Remmi E2E', () => {
 
-    test('Test 1: Searching for an existing listing', async ({ page }) => {
+    test('Test 1: Verify contact search functionality', async ({ page }) => {
         const login = new LoginActions(page);
         const contact = new ContactActions(page);
     
         await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
         await contact.NavigateToContacts();
-        await contact.searchExistingContact('Hina Test')
+        await contact.verifySearchFuntionality('Hina Test')
       });
 
-      test('Test 2: Searching for a non existing listing', async ({ page }) => {
+      test('Test 2: Verify search with an invalid contact name', async ({ page }) => {
         const login = new LoginActions(page);
         const contact = new ContactActions(page);
     
@@ -28,12 +28,22 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
         await contact.searchNonExistingContact('fghjkkkk')
       });
       
-      test('Test 3: Searching using partial listing name', async ({ page }) => {
+      test('Test 3: Verify contact type dropdown filters contacts correctly', async ({ page }) => {
+        const login = new LoginActions(page);
+        const contact = new ContactActions(page);
+    
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await contact.verifyContactDropdownFilter('Agent');
+      });
+
+      test('Test 4: Verify "Select All" functionality in contact type dropdown', async ({ page }) => {
         const login = new LoginActions(page);
         const contact = new ContactActions(page);
     
         await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
         await contact.NavigateToContacts();
-        await contact.searchByPartialName('BA')
+        await page.waitForTimeout(2000);
+        await contact.selectAllContactType();
+        
       });
 });
