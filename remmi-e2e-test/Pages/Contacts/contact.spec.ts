@@ -62,4 +62,11 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
         await contact.verifymatchingTypeDisplayed('Agent');
       });
 
+      test('Test 7: Verify company type dropdown filters companies correctly', async ({ page }) => {
+        const login = new LoginActions(page);
+        const contact = new ContactActions(page);
+    
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await contact.verifyCompanyTypeDropdownFilter('Agency');
+      });
 });

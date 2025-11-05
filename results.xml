@@ -1,8 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="27.48798600000143">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-05T06:07:12.225Z" hostname="chromium" tests="1" failures="0" skipped="0" time="22.166" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 6: Verify search within contact type dropdown" classname="Pages\Contacts\contact.spec.ts" time="22.166">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.014900000000374">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-05T06:08:39.150Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.801" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 7: Verify company type dropdown filters companies correctly" classname="Pages\Contacts\contact.spec.ts" time="25.801">
 <system-out>
-<![CDATA[Agent
+<![CDATA[Agency
 ]]>
 </system-out>
 </testcase>
