@@ -199,4 +199,13 @@ export class ContactActions {
         }
     }
 
+    // Verify "Select All" functionality in company type dropdown
+    public async selectAllCompanyTypes(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2000);
+        await this.CompanyTypeDropdown();
+        await this.page.waitForTimeout(1000)
+        await this.SelectAllTypes();
+    }
+
 }
