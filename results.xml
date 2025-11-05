@@ -1,9 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.26555200000003">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-05T10:56:22.700Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.624" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 14: Verify the delete button removes the selected contact" classname="Pages\Contacts\contact.spec.ts" time="37.624">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.372966000000016">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-05T11:11:49.228Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.382" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 15: Restore a deleted contact from setting and verify in Contacts" classname="Pages\Contacts\contact.spec.ts" time="24.382">
 <system-out>
-<![CDATA[Name displayed:  11 22
-Successfully Deleted : 11 22
+<![CDATA[11 22
 ]]>
 </system-out>
 </testcase>
