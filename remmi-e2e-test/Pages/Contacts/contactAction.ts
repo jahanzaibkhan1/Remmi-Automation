@@ -1,5 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { ContactLocators } from './contactLocator';
+import { setEngine } from 'crypto';
 
 export class ContactActions {
     private locators: ContactLocators;
@@ -91,15 +92,40 @@ export class ContactActions {
         return this.locators.CheckBox().nth(3).click();
     }
 
+    private async NavigateToSettings(){
+        const Settings = this.locators.Settings();
+        await Settings.click({force:true})
+    }
+
+    private async ClickDeletedContact(){
+        const deletedContacts = this.locators.DeletedContacts();
+        await deletedContacts.click();
+    }
+
+    private async SearchDeletedContact(contactName: string): Promise<void> {
+        const searchForDeletedContact = this.locators.SearchForDeletedContact();
+        await searchForDeletedContact.click();
+        await searchForDeletedContact.fill(contactName);
+    }
+
+    private async ClickRestoreIcon(){
+        const RestoreIcon = this.locators.restoreContactIcon()
+        await RestoreIcon.click({force:true});
+    }
+
 
     //---------------------------------------Public Actions--------------------------------------------//
 
     public async verifySearchFuntionality(contactName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
         await this.searchForContact(contactName);
         await this.page.locator(`text=${contactName}`).first().waitFor({ state: 'visible', timeout: 5000 });
     }
 
     public async searchNonExistingContact(contactName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
         await this.searchForContact(contactName);
         const noResults = this.page.getByRole('cell', { name: 'No contacts available' })
         await noResults.waitFor({ state: 'visible', timeout: 5000 });
@@ -107,14 +133,14 @@ export class ContactActions {
 
     public async verifyContactDropdownFilter(name: string): Promise<void> {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(2000);
+        await this.page.waitForTimeout(4000);
         await this.ContactTypeDropdown();
         await this.SearchContactType(name);
         await this.SelectOption(name);
         await this.ContactTypeDropdown();
         
         // Wait for filter to be applied (table rows update)
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(3000);
         
         // Get all rows in the table after filtering
         const rows = await this.page.locator('table tbody tr');
@@ -145,7 +171,8 @@ export class ContactActions {
     }
 
     async selectAllContactType(): Promise<void>{
-
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
         await this.ContactTypeDropdown();
         await this.SelectAllTypes();
         const deselectAll = this.page.locator("//label[@class='checkbox select_all style-d']");
@@ -154,7 +181,7 @@ export class ContactActions {
     }
     async deselectAllContactType(): Promise<void> {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(2000);
+        await this.page.waitForTimeout(4000);
         await this.ContactTypeDropdown();
         await this.page.waitForTimeout(1000)
         await this.SelectAllTypes();
@@ -164,7 +191,7 @@ export class ContactActions {
     
     public async verifymatchingTypeDisplayed(name: string): Promise<void> {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(2000);
+        await this.page.waitForTimeout(4000);
         await this.ContactTypeDropdown();
         await this.SearchContactType(name);
         await this.SelectOption(name);
@@ -204,7 +231,7 @@ export class ContactActions {
     // Verify company type dropdown filters companies correctly
     public async verifyCompanyTypeDropdownFilter(type: string): Promise<void> {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(2000);
+        await this.page.waitForTimeout(4000);
         await this.CompanyTypeDropdown();
         await this.SearchCompanyType(type);
         await this.SelectCompanyOption(type);
@@ -244,7 +271,7 @@ export class ContactActions {
     // Verify "Select All" functionality in company type dropdown
     public async selectAllCompanyTypes(): Promise<void> {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(2000);
+        await this.page.waitForTimeout(4000);
         await this.CompanyTypeDropdown();
         await this.page.waitForTimeout(1000)
         await this.SelectAllTypes();
@@ -252,7 +279,7 @@ export class ContactActions {
 
     async deselectAllCompanyType(): Promise<void> {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(2000);
+        await this.page.waitForTimeout(4000);
         await this.CompanyTypeDropdown();
         await this.page.waitForTimeout(1000)
         await this.SelectAllTypes();
@@ -263,7 +290,7 @@ export class ContactActions {
     // Verify search within company type dropdown
     public async verifyCompanyTypeDropdownSearch(typeName: string): Promise<void> {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000)
+        await this.page.waitForTimeout(4000)
         await this.CompanyTypeDropdown();
         await this.page.waitForTimeout(1000);
         await this.SearchCompanyType(typeName);
@@ -304,7 +331,7 @@ export class ContactActions {
     // Verify reset button removes applied filters
     public async VerifyResetButton(contactType: string, companyType: string): Promise<void> {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
+        await this.page.waitForTimeout(4000);
 
         // Apply contact type filter
         await this.ContactTypeDropdown();
@@ -323,7 +350,7 @@ export class ContactActions {
     // Verify delete button is enabled after selecting a contact
     public async verifyDeleteButtonEnabledAfterSelectingContact(): Promise<void> {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
+        await this.page.waitForTimeout(4000);
         await this.CheckBox();
         const deleteButton = this.locators.DeleteIcon();
         await deleteButton.waitFor({ state: 'visible', timeout: 3000 });
@@ -333,11 +360,46 @@ export class ContactActions {
     // Verify delete button is disabled when no contact is selected
     public async verifyDeleteButtonDisabledWhenNoContactSelected(): Promise<void> {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
+        await this.page.waitForTimeout(4000);
 
         const deleteButton = this.page.locator('._circle-btn');
         await deleteButton.waitFor({state:'visible', timeout:10000})
         expect(await deleteButton.isDisabled()).toBe(false)
     }
+
+    // ✅ Verify the delete button removes the selected contact and the row disappears from the table
+public async verifyDeleteButtonRemovesSelectedContact(contactName: string): Promise<void> {
+    await this.NavigateToContacts();
+    await this.page.waitForTimeout(4000);
+
+    // Search for the contact to ensure it exists in the table
+    await this.searchForContact(contactName);
+
+    await this.page.waitForTimeout(1500);
+    // Get the table row for the contact before deletion and verify it exists
+    const contactRow = this.page.locator('table tbody tr', { hasText: contactName });
+    await expect(contactRow).toHaveCount(1);
+    console.log('Name displayed: ', contactName)
+
+    // Select the contact's checkbox
+    const checkbox = this.page.getByRole('checkbox').last();
+    await checkbox.click()
+
+    // Click the delete icon/button
+    await this.DeleteIcon();
+
+    // Optionally, handle confirmation if required (uncomment if needed):
+    
+    const confirmButton = this.page.getByRole('button', { name: /Yes/i });
+    await confirmButton.click();
+
+    const toastMessage = this.page.getByRole('alert', { name: 'Contact deleted successfully' })
+    expect(toastMessage).toBeVisible()
+
+    // Wait for the row to disappear after deletion
+    await expect(this.page.locator('table tbody tr', { hasText: contactName })).toHaveCount(0);
+    console.log('Successfully Deleted :', contactName)
+}
+
 
 }
