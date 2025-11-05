@@ -33,4 +33,7 @@ export class ContactLocators {
   SelectCompanyOption(): Locator{
     return this.page.locator("//li[@class='p-element ng-star-inserted']").first();
   }
+  ResetButton(): Locator{
+    return this.page.getByRole('button', { name: 'Reset' });
+  }
 }

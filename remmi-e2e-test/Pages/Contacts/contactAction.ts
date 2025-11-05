@@ -78,6 +78,10 @@ export class ContactActions {
         console.log(typeName);
     }
 
+    private async ResetButton(){
+        const resetButton = this.locators.ResetButton();
+        await resetButton.dblclick()
+    }
 
 
     //---------------------------------------Public Actions--------------------------------------------//
@@ -289,4 +293,23 @@ export class ContactActions {
         }
     }
 
+    // Verify reset button removes applied filters
+    public async VerifyResetButton(contactType: string, companyType: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Apply contact type filter
+        await this.ContactTypeDropdown();
+        await this.SearchContactType(contactType);
+        await this.SelectOption(contactType);
+
+        // Apply company type filter
+        await this.CompanyTypeDropdown();
+        await this.SearchCompanyType(companyType);
+        await this.SelectCompanyOption(companyType);
+        await this.page.waitForTimeout(1500)
+        await this.ResetButton();
+       
+    }
+    
 }
