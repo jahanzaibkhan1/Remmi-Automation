@@ -69,4 +69,14 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
         await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
         await contact.verifyCompanyTypeDropdownFilter('Agency');
       });
+
+      test('Test 8: Verify "Select All" functionality in company type dropdown', async ({ page }) => {
+        const login = new LoginActions(page);
+        const contact = new ContactActions(page);
+    
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await contact.NavigateToContacts();
+        await page.waitForTimeout(2000);
+        await contact.selectAllCompanyTypes();
+      });
 });
