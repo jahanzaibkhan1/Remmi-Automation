@@ -159,4 +159,44 @@ export class ContactActions {
         await this.ContactTypeDropdown();
     }
 
+    // Verify company type dropdown filters companies correctly
+    public async verifyCompanyTypeDropdownFilter(type: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2000);
+        await this.CompanyTypeDropdown();
+        await this.SearchCompanyType(type);
+        await this.SelectCompanyOption(type);
+
+        // Wait for table refresh
+        await this.page.waitForTimeout(1000);
+
+        // Get all header cells in the table's header row
+        const headerCells = await this.page.locator('table thead tr th');
+        const headerCount = await headerCells.count();
+        let companyTypeColIdx = -1;
+
+        // Find the "Company Type" column index
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headerCells.nth(i).textContent())?.trim();
+            if (headerText?.toLowerCase() === 'company type') {
+                companyTypeColIdx = i;
+                break;
+            }
+        }
+        expect(companyTypeColIdx).not.toBe(-1);
+
+        // Get all visible table rows
+        const rows = this.page.locator('table tbody tr');
+        const rowCount = await rows.count();
+
+        // For each row, verify the "Company Type" cell matches the filter value
+        for (let i = 0; i < rowCount; i++) {
+            const row = rows.nth(i);
+            const cell = row.locator('td').nth(companyTypeColIdx);
+            await cell.scrollIntoViewIfNeeded();
+            const cellText = (await cell.textContent())?.trim();
+            expect(cellText).toBe(type);
+        }
+    }
+
 }
