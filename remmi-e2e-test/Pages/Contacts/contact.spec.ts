@@ -95,4 +95,12 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
         await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
         await contact.verifyCompanyTypeDropdownSearch('Agency')
       });
+
+      test('Test 11: Verify reset button removes applied filters', async ({ page }) => {
+        const login = new LoginActions(page);
+        const contact = new ContactActions(page);
+
+        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await contact.VerifyResetButton('agent', "Agency");
+      });
 });

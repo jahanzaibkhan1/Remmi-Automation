@@ -1,8 +1,9 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.274180000001564">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-05T06:58:44.036Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.299" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 10: Verify search within company type dropdown" classname="Pages\Contacts\contact.spec.ts" time="33.299">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="29.755577999999748">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-05T08:03:13.229Z" hostname="chromium" tests="1" failures="0" skipped="0" time="22.964" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 11: Verify reset button removes applied filters" classname="Pages\Contacts\contact.spec.ts" time="22.964">
 <system-out>
-<![CDATA[Agency
+<![CDATA[agent
+Agency
 ]]>
 </system-out>
 </testcase>
