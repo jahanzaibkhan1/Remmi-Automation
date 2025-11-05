@@ -208,4 +208,14 @@ export class ContactActions {
         await this.SelectAllTypes();
     }
 
+    async deselectAllCompanyType(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2000);
+        await this.CompanyTypeDropdown();
+        await this.page.waitForTimeout(1000)
+        await this.SelectAllTypes();
+        await this.page.waitForTimeout(1000)
+        await this.DeselectAllTypes()
+    }
+
 }

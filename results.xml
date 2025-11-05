@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.90313399999961">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-05T06:12:26.851Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.215" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 8: Verify &quot;Select All&quot; functionality in company type dropdown" classname="Pages\Contacts\contact.spec.ts" time="32.215">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.075444000000132">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-05T06:17:53.511Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.962" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 9: Verify &quot;Deselect All&quot; functionality in company type dropdown" classname="Pages\Contacts\contact.spec.ts" time="23.962">
 </testcase>
 </testsuite>
 </testsuites>
