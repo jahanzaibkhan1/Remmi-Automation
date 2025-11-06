@@ -207,17 +207,17 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyDeleteCancelKeepsContact(contactName);
   });
 
-  // test('Test 17: Verify contact creation form is displayed after clicking the plus button', async ({ page }) => {
-  //   const login = new LoginActions(page);
-  //   const contact = new ContactActions(page);
+  test('Test 17: Verify contact creation form is displayed after clicking the plus button', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  //   await login.login(
-  //     OprationManager.email!,
-  //     OprationManager.password!,
-  //     process.env.E2E_MANAGER_OTP_SECRET!
-  //   );
-  //   await contact.verifyContactCreationByPlusButton();
-  // });
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyContactCreationByPlusButton();
+  });
   
   // test('Test 18: Verify that initials placeholder is shown when profile image is missing', async ({ page }) => {
   //   const login = new LoginActions(page);
