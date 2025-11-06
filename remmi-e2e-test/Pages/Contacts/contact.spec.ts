@@ -14,7 +14,11 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
     await contact.verifySearchFuntionality('Hina Test')
   });
 
@@ -22,7 +26,11 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
     await contact.searchNonExistingContact('fghjkkkk')
   });
 
@@ -30,7 +38,11 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
     await contact.verifyContactDropdownFilter('Agent');
   });
 
@@ -38,7 +50,11 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
     await contact.selectAllContactType();
   });
 
@@ -46,7 +62,11 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
     await contact.deselectAllContactType();
   });
 
@@ -54,7 +74,11 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
     await contact.verifymatchingTypeDisplayed('Agent');
   });
 
@@ -62,7 +86,11 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
     await contact.verifyCompanyTypeDropdownFilter('Agency');
   });
 
@@ -70,7 +98,11 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
     await contact.selectAllCompanyTypes();
   });
 
@@ -78,7 +110,11 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
     await contact.deselectAllCompanyType();
   });
 
@@ -86,7 +122,11 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
     await contact.verifyCompanyTypeDropdownSearch('Agency')
   });
 
@@ -94,7 +134,11 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
     await contact.VerifyResetButton('agent', "Agency");
   });
 
@@ -102,7 +146,11 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
     await contact.verifyDeleteButtonEnabledAfterSelectingContact();
   });
 
@@ -110,7 +158,11 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
     await contact.verifyDeleteButtonDisabledWhenNoContactSelected();
   });
   
@@ -118,7 +170,11 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
     const contactName = '11 22'; 
     
     await contact.verifyDeleteButtonRemovesSelectedContact(contactName);
@@ -128,9 +184,53 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
     const contactName = '11 22';
     await contact.RestoreDeletedContact(contactName);
+  });
+
+  test('Test 16: Verify canceling deletion keeps the contact in the list', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    const contactName = '11 22';
+
+    await contact.verifyDeleteCancelKeepsContact(contactName);
+  });
+
+  test('Test 17: Verify contact creation form is displayed after clicking the plus button', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyContactCreationByPlusButton();
+  });
+  
+  test('Test 18: Verify that initials placeholder is shown when profile image is missing', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    const contactName = '11 22'; // Replace with a contact known to have no profile image if needed
+
+    await contact.verifyInitialsPlaceholderWhenNoProfileImage(contactName);
   });
 
 });

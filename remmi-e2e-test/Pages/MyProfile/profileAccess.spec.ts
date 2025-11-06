@@ -58,11 +58,11 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
     login = new LoginActions(page);
     profile = new MyProfileActions(page);
 
-    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
-      test.skip(true, 'Skipping login tests: missing environment credentials');
-    }
-
-    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await login.login(
+        operationManager.email!,
+        operationManager.password!,
+        process.env.E2E_MANAGER_OTP_SECRET!
+      );
 
     await updateAccessTabSettings();
   });
@@ -71,11 +71,11 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
     login = new LoginActions(page);
     profile = new MyProfileActions(page);
 
-    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
-      test.skip(true, 'Skipping login tests: missing environment credentials');
-    }
-
-    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await login.login(
+        operationManager.email!,
+        operationManager.password!,
+        process.env.E2E_MANAGER_OTP_SECRET!
+      );
 
     await grantTaskAccessToMultipleUsers();
   });
@@ -84,11 +84,11 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
     login = new LoginActions(page);
     profile = new MyProfileActions(page);
 
-    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
-      test.skip(true, 'Skipping login tests: missing environment credentials');
-    }
-
-    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await login.login(
+        operationManager.email!,
+        operationManager.password!,
+        process.env.E2E_MANAGER_OTP_SECRET!
+      );
 
     await removeUserFromAccess();
   });
@@ -97,11 +97,11 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
     login = new LoginActions(page);
     profile = new MyProfileActions(page);
 
-    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
-      test.skip(true, 'Skipping login tests: missing environment credentials');
-    }
-
-    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await login.login(
+        operationManager.email!,
+        operationManager.password!,
+        process.env.E2E_MANAGER_OTP_SECRET!
+      );
 
     await selectAllUsers();
   });
@@ -110,11 +110,11 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
     login = new LoginActions(page);
     profile = new MyProfileActions(page);
 
-    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
-      test.skip(true, 'Skipping login tests: missing environment credentials');
-    }
-
-    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await login.login(
+        operationManager.email!,
+        operationManager.password!,
+        process.env.E2E_MANAGER_OTP_SECRET!
+      );
 
     await DeselectAllUsers();
   });

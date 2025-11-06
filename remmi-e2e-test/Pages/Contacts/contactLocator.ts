@@ -54,5 +54,11 @@ export class ContactLocators {
   restoreContactIcon():Locator{
     return this.page.locator('img[ptooltip="Restore Contact"][src*="undo_solid.svg"]')
   }
+  PlusButton():Locator{
+    return this.page.locator('i.pi.pi-plus');
+  }
+  ContactCreationForm():Locator{
+    return this.page.locator('section')
+  }
   
 }

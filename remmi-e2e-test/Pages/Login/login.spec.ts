@@ -10,7 +10,11 @@ test.describe('Login Tests - Remmi E2E', () => {
   // test 1
   test('Test case 1: Verify sign in with valid email and password', async ({ page }) => {
     const login = new LoginActions(page);
-    await login.login(manager.email!, manager.password!, manager.otpSecret!);
+    await login.login(
+      manager.email!,
+      manager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    )
   });
 
   test('Test case 2: Verify password visibility toggle', async ({ page }) => {

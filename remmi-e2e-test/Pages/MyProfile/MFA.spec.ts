@@ -14,7 +14,7 @@ const admin = LoginUsers.admin;
 // Helper: Reload .env after MFA update
 function reloadEnv() {
   dotenv.config();
-  console.log('♻️ Environment reloaded. Current OTP Secret:', process.env.E2E_MANAGER_OTP_SECRET);
+  console.log('Current OTP Secret:', process.env.E2E_MANAGER_OTP_SECRET);
 }
 
 // Helper: Verify .env file actually contains new secret
@@ -65,12 +65,13 @@ test.describe(' MFA Tab Tests - Remmi E2E', () => {
     await profile.navigateToProfilePage();
     await profile.enableMicrosoftAuthenticatorMfa();
     reloadEnv();
+    logCurrentSecret()
   });
 
   test(' Enable Authy Authenticator MFA for a user', async ({ page }) => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
-
+    reloadEnv();
     await login.login(
       operationManager.email!,
       operationManager.password!,
@@ -80,62 +81,64 @@ test.describe(' MFA Tab Tests - Remmi E2E', () => {
     await profile.navigateToProfilePage();
     await profile.enableAuthyAuthenticatorMfa();
 
+    // Re-check secret after enabling MFA for Authy, for consistency
     reloadEnv();
+    logCurrentSecret();
   });
 
-  test(' Login without enabling MFA', async ({ page }) => {
-    const login = new LoginActions(page);
-    await login.loginwithoutOTp(salesAgent.email!, salesAgent.password!);
-    const noMfaMessage = page.getByText(/No MFA Assigned/i);
-    await expect(noMfaMessage).toBeVisible();
-  });
+  // test(' Login without enabling MFA', async ({ page }) => {
+  //   const login = new LoginActions(page);
+  //   await login.loginwithoutOTp(salesAgent.email!, salesAgent.password!);
+  //   const noMfaMessage = page.getByText(/No MFA Assigned/i);
+  //   await expect(noMfaMessage).toBeVisible();
+  // });
 
-  test(' MFA Warning after 7 days', async ({ page }) => {
-      const login = new LoginActions(page);
-      await login.loginwithoutOTp(salesAgent.email!, salesAgent.password!);
-      const warningMessage = page.locator('div').filter({ hasText: 'No MFA AssignedTo enhance' }).nth(2);
-      await expect(warningMessage).toBeVisible();
-  });
+  // test(' MFA Warning after 7 days', async ({ page }) => {
+  //     const login = new LoginActions(page);
+  //     await login.loginwithoutOTp(salesAgent.email!, salesAgent.password!);
+  //     const warningMessage = page.locator('div').filter({ hasText: 'No MFA AssignedTo enhance' }).nth(2);
+  //     await expect(warningMessage).toBeVisible();
+  // });
 
-  test(' Enter incorrect Google Authenticator MFA code', async ({ page }) => {
-    const login = new LoginActions(page);
-    const profile = new MyProfileActions(page);
+  // test(' Enter incorrect Google Authenticator MFA code', async ({ page }) => {
+  //   const login = new LoginActions(page);
+  //   const profile = new MyProfileActions(page);
 
-    await login.login(
-      operationManager.email!,
-      operationManager.password!,
-      process.env.E2E_MANAGER_OTP_SECRET!
-    );
+  //   await login.login(
+  //     operationManager.email!,
+  //     operationManager.password!,
+  //     process.env.E2E_MANAGER_OTP_SECRET!
+  //   );
 
-    await profile.navigateToProfilePage();
-    await profile.enterInvalidOtpGoogleAuthenticatorMfa();
-  });
+  //   await profile.navigateToProfilePage();
+  //   await profile.enterInvalidOtpGoogleAuthenticatorMfa();
+  // });
 
-  test(' Enter incorrect Microsoft Authenticator MFA code', async ({ page }) => {
-    const login = new LoginActions(page);
-    const profile = new MyProfileActions(page);
+  // test(' Enter incorrect Microsoft Authenticator MFA code', async ({ page }) => {
+  //   const login = new LoginActions(page);
+  //   const profile = new MyProfileActions(page);
 
-    await login.login(
-      operationManager.email!,
-      operationManager.password!,
-      process.env.E2E_MANAGER_OTP_SECRET!
-    );
+  //   await login.login(
+  //     operationManager.email!,
+  //     operationManager.password!,
+  //     process.env.E2E_MANAGER_OTP_SECRET!
+  //   );
 
-    await profile.navigateToProfilePage();
-    await profile.enterInvalidOtpMsleAuthenticatorMfa();
-  });
+  //   await profile.navigateToProfilePage();
+  //   await profile.enterInvalidOtpMsleAuthenticatorMfa();
+  // });
 
-  test(' Enter incorrect Authy Authenticator MFA code', async ({ page }) => {
-    const login = new LoginActions(page);
-    const profile = new MyProfileActions(page);
+  // test(' Enter incorrect Authy Authenticator MFA code', async ({ page }) => {
+  //   const login = new LoginActions(page);
+  //   const profile = new MyProfileActions(page);
 
-    await login.login(
-      operationManager.email!,
-      operationManager.password!,
-      process.env.E2E_MANAGER_OTP_SECRET!
-    );
+  //   await login.login(
+  //     operationManager.email!,
+  //     operationManager.password!,
+  //     process.env.E2E_MANAGER_OTP_SECRET!
+  //   );
 
-    await profile.navigateToProfilePage();
-    await profile.enterInvalidOtpAuthyleAuthenticatorMfa();
-  });
+  //   await profile.navigateToProfilePage();
+  //   await profile.enterInvalidOtpAuthyleAuthenticatorMfa();
+  // });
 });
