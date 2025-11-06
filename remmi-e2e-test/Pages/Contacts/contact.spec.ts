@@ -219,18 +219,18 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyContactCreationByPlusButton();
   });
   
-  // test('Test 18: Verify that initials placeholder is shown when profile image is missing', async ({ page }) => {
-  //   const login = new LoginActions(page);
-  //   const contact = new ContactActions(page);
+  test('Test 18: Verify that initials placeholder is shown when profile image is missing', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  //   await login.login(
-  //     OprationManager.email!,
-  //     OprationManager.password!,
-  //     process.env.E2E_MANAGER_OTP_SECRET!
-  //   );
-  //   const contactName = '11 22'; // Replace with a contact known to have no profile image if needed
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    const contactName = '11 22'; // Replace with a contact known to have no profile image if needed
 
-  //   await contact.verifyInitialsPlaceholderWhenNoProfileImage(contactName);
-  // });
+    await contact.verifyInitialsPlaceholderWhenNoProfileImage(contactName);
+  });
 
 });
