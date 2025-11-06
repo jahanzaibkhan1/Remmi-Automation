@@ -14,7 +14,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
       const login = new LoginActions(page);
       const profile = new MyProfileActions(page);
   
-      await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+      await login.login(
+        OprationManager.email!,
+        OprationManager.password!,
+        process.env.E2E_MANAGER_OTP_SECRET!
+      );
   
       await profile.navigateToProfilePage();
       await profile.verifyAssociationTabOpensSuccessfully()
@@ -24,7 +28,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
     
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
     
         await profile.navigateToProfilePage();
         await profile.verifyAssociationTabSearchFunctionality("Hina's Project")
@@ -34,7 +42,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
     
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
     
         await profile.navigateToProfilePage();
         await profile.verifyAssociationTabSearchNoResults("asdfg")
@@ -44,7 +56,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
     
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
     
         await profile.navigateToProfilePage();
         await profile.verifyAddProjectDropdownOpensSuccessfully()
@@ -54,7 +70,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
     
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
     
         await profile.navigateToProfilePage();
         await profile.verifySearchOptionInAddProjectDropdown("Hina's Project")
@@ -64,7 +84,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
     
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
     
         await profile.navigateToProfilePage();
         await profile.verifySingleProjectSelectionFromDropdown("Hina's Project")
@@ -74,7 +98,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
 
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
 
         await profile.navigateToProfilePage();
         await profile.verifyMultipleProjectSelectionFromDropdown(["Hina's Project", "askari center"]);
@@ -84,7 +112,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
 
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
 
         await profile.navigateToProfilePage();
         await profile.verifySelectAllFunctionality();
@@ -94,7 +126,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
 
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
 
         await profile.navigateToProfilePage();
         await profile.verifyDeselectAllFunctionality();
@@ -104,7 +140,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
 
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
 
         await profile.navigateToProfilePage();
         await profile.verifyRemoveProjectTagBeforeAdding("Hina's Project");
@@ -114,7 +154,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
 
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
 
         await profile.navigateToProfilePage();
         await profile.verifyMultipleProjectSelection(["Hina's Project", "askari center"]);
@@ -124,7 +168,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
 
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
 
         await profile.navigateToProfilePage();
         await profile.verifyPreviouslyAddedProjectsAreNotDuplicated();
@@ -134,7 +182,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
 
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
 
         await profile.navigateToProfilePage();
         await profile.verifyInitialProjectSelection();
@@ -144,7 +196,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
 
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
 
         await profile.navigateToProfilePage();
         await profile.verifyAssocitionSortingList();
@@ -154,7 +210,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
 
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
 
         await profile.navigateToProfilePage();
         await profile.verifyDeleteIconInActionColumn();
@@ -164,7 +224,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
 
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
 
         await profile.navigateToProfilePage();
         await profile.verifyProjectDeleteFunctionality();
@@ -174,7 +238,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
 
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
 
         await profile.navigateToProfilePage();
         await profile.verifyCheckboxBesideEachProject();
@@ -184,7 +252,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
 
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
 
         await profile.navigateToProfilePage();
         await profile.verifyMultipleCheckboxSelection();
@@ -194,7 +266,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
 
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
 
         await profile.navigateToProfilePage();
         await profile.verifySelectAllCheckbox();
@@ -205,7 +281,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
 
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
 
         await profile.navigateToProfilePage();
         await profile.verifyBulkDeleteFunctionality();
@@ -215,7 +295,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
 
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
 
         await profile.navigateToProfilePage();
         await profile.verifyUIUpdateAfterDeletion();
@@ -225,7 +309,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
     
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
     
         await profile.navigateToProfilePage();
         await profile.verifyDeletedProjectsCanBeReadded("New Staging Project")
@@ -234,7 +322,11 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
       test('Test 23: Verify empty list message', async ({ page }) => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+            OprationManager.email!,
+            OprationManager.password!,
+            process.env.E2E_MANAGER_OTP_SECRET!
+          );
         await profile.navigateToProfilePage();
         await profile.verifyEmptyListMessage("New Staging Project")
       });
@@ -242,7 +334,12 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
       test('Test 24: Try adding project without selecting any', async ({ page }) => {
         const login = new LoginActions(page);
         const profile = new MyProfileActions(page);
-        await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+        await login.login(
+          OprationManager.email!,
+          OprationManager.password!,
+          process.env.E2E_MANAGER_OTP_SECRET!
+        );
+      
         await profile.navigateToProfilePage();
         await profile.verifyAddProjectwithoutDropdownOption()
       });
