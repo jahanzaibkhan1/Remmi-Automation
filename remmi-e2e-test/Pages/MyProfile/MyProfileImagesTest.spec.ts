@@ -30,7 +30,12 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+
 
     await profile.navigateToProfilePage();
     const imagePath = path.join(IMAGE_DIR, 'High.jpg');
@@ -41,7 +46,11 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
     await profile.navigateToProfilePage();
     const imagePath = path.join(IMAGE_DIR, 'Profile.jpg');
@@ -52,7 +61,11 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
     await profile.navigateToProfilePage();
     await profile.setImageAsDefaultProfile();
@@ -62,7 +75,11 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
     await profile.navigateToProfilePage();
     const imagePath = path.join(IMAGE_DIR, 'High.jpg');
@@ -73,7 +90,11 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
     await profile.navigateToProfilePage();
     const imagePath = path.join(IMAGE_DIR, 'High.jpg');
@@ -84,7 +105,11 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
     await profile.navigateToProfilePage();
     const imagePath1 = path.join(IMAGE_DIR, 'High.jpg');
@@ -96,7 +121,11 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
     await profile.navigateToProfilePage();
     const imagePath = path.join(IMAGE_DIR, 'High.jpg');
@@ -107,7 +136,11 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
     await profile.navigateToProfilePage();
     const invalidImagePath = path.join(IMAGE_DIR, 'invalidImage.webp');
@@ -120,7 +153,11 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
     await profile.navigateToProfilePage();
     const imagePath = path.join(IMAGE_DIR, 'Profile.jpg');
@@ -131,7 +168,11 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
     await profile.navigateToProfilePage();
     const imagePath = path.join(IMAGE_DIR, 'High.jpg');
@@ -142,7 +183,11 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
     await profile.navigateToProfilePage();
     await profile.VerifyDefaultPlaceholder();
@@ -152,7 +197,11 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
     await profile.navigateToProfilePage();
     await profile.removeSelectedProfileImage();
@@ -162,7 +211,11 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
     await profile.navigateToProfilePage();
     const imagePath = path.join(IMAGE_DIR, 'High.jpg');
@@ -173,7 +226,11 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
     await profile.navigateToProfilePage();
     const brokenImagePath = path.join(IMAGE_DIR, 'broken_image.jpg');
@@ -186,7 +243,11 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
     await profile.navigateToProfilePage();
     const validPaths = [
@@ -204,7 +265,11 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
-    await login.login(OprationManager.email!, OprationManager.password!, OprationManager.otpSecret!);
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
     await profile.navigateToProfilePage();
     const imagePath = path.join(IMAGE_DIR, 'Profile.jpg');

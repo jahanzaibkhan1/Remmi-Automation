@@ -29,11 +29,12 @@ test.describe('Social Settings Tests - Remmi E2E', () => {
     login = new LoginActions(page);
     profile = new MyProfileActions(page);
 
-    if (!operationManager.email || !operationManager.password || !operationManager.otpSecret) {
-      test.skip(true, 'Skipping login tests: missing environment credentials');
-    }
-
-    await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
+    await login.login(
+        operationManager.email!,
+        operationManager.password!,
+        process.env.E2E_MANAGER_OTP_SECRET!
+      );
+      
     await updateSocialMediaSettings();
   });
 });
