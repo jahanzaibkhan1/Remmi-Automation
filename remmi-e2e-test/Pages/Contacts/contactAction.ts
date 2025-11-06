@@ -453,18 +453,18 @@ export class ContactActions {
         console.log('Contact deletion canceled, contact is still present:', contactName);
     }
 
-//     // Verify contact creation by clicking the plus button
-//     public async verifyContactCreationByPlusButton(): Promise<void> {
-//         await this.NavigateToContacts();
-//         await this.page.waitForTimeout(2000);
-//         const plus = this.page.getByRole('button', { name: '' });
-//         await plus.click();
-//         await this.verifyContactFormOpen();
-//         await expect(this.page.getByText('First Name*')).toBeVisible();
-//         await expect(this.page.getByText('Last Name')).toBeVisible();
+    // Verify contact creation by clicking the plus button
+    public async verifyContactCreationByPlusButton(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2000);
+        const plus = this.page.getByRole('button', { name: '' });
+        await plus.click();
+        await this.verifyContactFormOpen();
+        await expect(this.page.getByText('First Name*')).toBeVisible();
+        await expect(this.page.getByText('Last Name')).toBeVisible();
 
-//         console.log('Contact creation form is visible after clicking plus button.');
-//     }
+        console.log('Contact creation form is visible after clicking plus button.');
+    }
 // /*
 //  * Verify that initials placeholder is shown when profile image is missing
 //  */
