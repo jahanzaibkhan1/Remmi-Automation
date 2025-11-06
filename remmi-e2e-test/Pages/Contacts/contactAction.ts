@@ -468,42 +468,42 @@ export class ContactActions {
 // /*
 //  * Verify that initials placeholder is shown when profile image is missing
 //  */
-// public async verifyInitialsPlaceholderWhenNoProfileImage(contactName: string): Promise<void> {
-//     await this.NavigateToContacts();
-//     await this.page.waitForTimeout(2000);
-//     await this.searchForContact(contactName);
+public async verifyInitialsPlaceholderWhenNoProfileImage(contactName: string): Promise<void> {
+    await this.NavigateToContacts();
+    await this.page.waitForTimeout(2000);
+    await this.searchForContact(contactName);
 
-//     // Wait for table rows to load
-//     await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
+    // Wait for table rows to load
+    await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
 
-//     const row = this.page.locator('table tbody tr', { hasText: contactName }).first();
-//     await expect(row).toBeVisible({ timeout: 10000 });
+    const row = this.page.locator('table tbody tr', { hasText: contactName }).first();
+    await expect(row).toBeVisible({ timeout: 10000 });
 
-//     // Locate p-avatar anywhere inside the row
-//     const pAvatar = row.locator('p-avatar');
-//     await expect(pAvatar).toBeVisible({ timeout: 10000 });
+    // Locate p-avatar anywhere inside the row
+    const pAvatar = row.locator('p-avatar');
+    await expect(pAvatar).toBeVisible({ timeout: 10000 });
 
-//     // Check if profile image exists
-//     const avatarImg = pAvatar.locator('img');
-//     const hasImage = await avatarImg.isVisible().catch(() => false);
+    // Check if profile image exists
+    const avatarImg = pAvatar.locator('img');
+    const hasImage = await avatarImg.isVisible().catch(() => false);
 
-//     if (!hasImage) {
-//         const initialsPlaceholder = pAvatar.locator('div').filter({ hasText: /^12$/ });
-//         await expect(initialsPlaceholder).toBeVisible();
+    if (!hasImage) {
+        const initialsPlaceholder = pAvatar.locator('div').filter({ hasText: /^12$/ });
+        await expect(initialsPlaceholder).toBeVisible();
 
-//         const nameParts = contactName.trim().split(' ');
-//         let initials = '';
-//         if (nameParts.length === 1) initials = nameParts[0][0]?.toUpperCase() ?? '';
-//         else if (nameParts.length >= 2) initials = (nameParts[0][0] + nameParts[1][0])?.toUpperCase();
-//         if (!initials && contactName.length >= 2) initials = contactName.substring(0, 2).toUpperCase();
+        const nameParts = contactName.trim().split(' ');
+        let initials = '';
+        if (nameParts.length === 1) initials = nameParts[0][0]?.toUpperCase() ?? '';
+        else if (nameParts.length >= 2) initials = (nameParts[0][0] + nameParts[1][0])?.toUpperCase();
+        if (!initials && contactName.length >= 2) initials = contactName.substring(0, 2).toUpperCase();
 
-//         const initialsText = (await initialsPlaceholder.textContent())?.replace(/\s/g, '').toUpperCase() || '';
-//         expect(initialsText).toContain(initials);
+        const initialsText = (await initialsPlaceholder.textContent())?.replace(/\s/g, '').toUpperCase() || '';
+        expect(initialsText).toContain(initials);
 
-//         console.log(`✅ Verified initials "${initials}" for contact "${contactName}"`);
-//     } else {
-//         throw new Error(`Profile image is present for contact "${contactName}", cannot verify initials placeholder.`);
-//     }
-// }
+        console.log(`✅ Verified initials "${initials}" for contact "${contactName}"`);
+    } else {
+        throw new Error(`Profile image is present for contact "${contactName}", cannot verify initials placeholder.`);
+    }
+}
 
 }
