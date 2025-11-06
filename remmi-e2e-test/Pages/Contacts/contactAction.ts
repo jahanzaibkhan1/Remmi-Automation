@@ -425,33 +425,33 @@ export class ContactActions {
         console.log(contactName);
     }
 
-//     //  Verify canceling deletion keeps the contact in the list
-//     public async verifyDeleteCancelKeepsContact(contactName: string): Promise<void> {
-//         await this.NavigateToContacts();
-//         await this.page.waitForTimeout(4000);
+    //  Verify canceling deletion keeps the contact in the list
+    public async verifyDeleteCancelKeepsContact(contactName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
 
-//         // Search for the contact to ensure it exists in the table
-//         await this.searchForContact(contactName);
-//         await this.page.waitForTimeout(1500);
+        // Search for the contact to ensure it exists in the table
+        await this.searchForContact(contactName);
+        await this.page.waitForTimeout(1500);
 
-//         const contactRow = this.page.locator('table tbody tr', { hasText: contactName });
-//         await expect(contactRow).toHaveCount(1);
-//         console.log('Name displayed before delete attempt:', contactName);
+        const contactRow = this.page.locator('table tbody tr', { hasText: contactName });
+        await expect(contactRow).toHaveCount(1);
+        console.log('Name displayed before delete attempt:', contactName);
 
-//         // Select the contact's checkbox
-//         const checkbox = this.page.getByRole('checkbox').last();
-//         await checkbox.click();
+        // Select the contact's checkbox
+        const checkbox = this.page.getByRole('checkbox').last();
+        await checkbox.click();
 
-//         // Click the delete icon/button
-//         await this.DeleteIcon();
+        // Click the delete icon/button
+        await this.DeleteIcon();
 
-//         const cancelButton = this.page.getByRole('button', { name: /No/i }).first();
-//         await cancelButton.click();
+        const cancelButton = this.page.getByRole('button', { name: /No/i }).first();
+        await cancelButton.click();
 
-//         // Verify that the contact still exists in the table after canceling
-//         await expect(this.page.locator('table tbody tr', { hasText: contactName })).toHaveCount(1);
-//         console.log('Contact deletion canceled, contact is still present:', contactName);
-//     }
+        // Verify that the contact still exists in the table after canceling
+        await expect(this.page.locator('table tbody tr', { hasText: contactName })).toHaveCount(1);
+        console.log('Contact deletion canceled, contact is still present:', contactName);
+    }
 
 //     // Verify contact creation by clicking the plus button
 //     public async verifyContactCreationByPlusButton(): Promise<void> {

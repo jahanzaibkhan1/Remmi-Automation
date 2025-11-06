@@ -193,19 +193,19 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.RestoreDeletedContact(contactName);
   });
 
-  // test('Test 16: Verify canceling deletion keeps the contact in the list', async ({ page }) => {
-  //   const login = new LoginActions(page);
-  //   const contact = new ContactActions(page);
+  test('Test 16: Verify canceling deletion keeps the contact in the list', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  //   await login.login(
-  //     OprationManager.email!,
-  //     OprationManager.password!,
-  //     process.env.E2E_MANAGER_OTP_SECRET!
-  //   );
-  //   const contactName = '11 22';
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    const contactName = '11 22';
 
-  //   await contact.verifyDeleteCancelKeepsContact(contactName);
-  // });
+    await contact.verifyDeleteCancelKeepsContact(contactName);
+  });
 
   // test('Test 17: Verify contact creation form is displayed after clicking the plus button', async ({ page }) => {
   //   const login = new LoginActions(page);
