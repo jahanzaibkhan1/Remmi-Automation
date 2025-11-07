@@ -313,4 +313,18 @@ test('Test 24: Verify clear button closes the filter popup', async ({ page }) =>
   await contact.verifyClearButtonClosesFilter();
 });
 
+test('Test 25: Verify filtering contacts with invalid condition', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifyFilteringContactsWithInvalidCondition();
+});
+
+
 });

@@ -713,5 +713,39 @@ public async verifyClearButtonClosesFilter(): Promise<void> {
     console.log('✅ Verified: Option selected and Clear button closes the filter popup.');
 }
 
+// Verify filtering contacts with invalid (empty) condition
+public async verifyFilteringContactsWithInvalidCondition(): Promise<void> {
+    await this.NavigateToContacts();
+    await this.page.waitForTimeout(3000);
+
+    // Open the status filter (assuming second column is filterable)
+    const filterButton = this.page.locator("//th[2]//div[1]//div[1]//img[1]");
+    await filterButton.dblclick({ force: true });
+
+    // Check that filter popup is visible
+    const filterPopup = this.page.locator('div').filter({ hasText: 'Filter BySelectClearApply' }).nth(1);
+    await expect(filterPopup).toBeVisible();
+
+    // Select a condition in filter (e.g., open 'Select', pick 'Equals')
+    const selectField = this.page.getByText('Select', { exact: true });
+    await selectField.click();
+    await this.page.getByRole('option', { name: /equals/i }).click();
+
+    // Do NOT enter any value in the filter value field (leave it empty)
+
+    // Click "Apply" to activate the filter
+    const applyBtn = this.page.getByRole('button', { name: /apply/i });
+    await applyBtn.click();
+    await this.page.waitForTimeout(1500);
+
+    // You might want to check if either all data is returned or a validation/error is shown,
+    // depending on product behavior. For demonstration, let's just check that the popup closes.
+    await expect(filterPopup).not.toBeVisible();
+    const noResults = this.page.getByRole('cell', { name: 'No contacts available' });
+    await expect(noResults).toBeVisible()
+
+    console.log('✅ Verified: Filter applied with empty condition (invalid data field).');
+}
+
 
 }
