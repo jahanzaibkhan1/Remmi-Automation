@@ -379,4 +379,17 @@ test('Test 29: Verify filtering contacts by Mobile in the contact list', async (
   await contact.verifyFilteringContactsByMobile('0409235412');
 });
 
+test('Test 30: Verify filtering contacts by Email in the contact list', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifyEmailFilterWorks('hina.test@remmi.com.au');
+});
+
 });
