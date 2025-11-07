@@ -921,5 +921,59 @@ export class ContactActions {
         }
     }
 
+   
+    async verifyEmailFilterWorks(email: string) {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+
+        // Enter email in search field and trigger the search
+        await this.searchForContact(email);
+        await this.page.waitForTimeout(1500);
+
+        const rows = this.page.locator('table tbody tr');
+
+        await Promise.race([
+            rows.first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => {}),
+            this.page.getByRole('cell', { name: /no contacts available/i }).waitFor({ state: 'visible', timeout: 5000 }).catch(() => {})
+        ]);
+
+        const rowCount = await rows.count();
+
+        if (rowCount === 0) {
+            throw new Error(`❌ No rows found for "${email}"`);
+        }
+
+        // Find the Email column index
+        const headerCells = await this.page.locator('table thead tr th');
+        const headerCount = await headerCells.count();
+        let emailColIdx = -1;
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headerCells.nth(i).textContent())?.trim().toLowerCase();
+            if (headerText === 'email' || headerText === 'email address') {
+                emailColIdx = i;
+                break;
+            }
+        }
+        if (emailColIdx === -1) {
+            throw new Error('Could not find "Email" column in the contacts table.');
+        }
+
+        for (let i = 0; i < rowCount; i++) {
+            const row = rows.nth(i);
+            const cell = row.locator('td').nth(emailColIdx);
+            const cellTextRaw = await cell.textContent() || "";
+            const cellText = cellTextRaw.trim().toLowerCase();
+
+            // Compare emails, case-insensitive
+            const target = email.trim().toLowerCase();
+
+            console.log("Email cell text:", cellText);
+
+            if (!cellText.includes(target)) {
+                throw new Error(`❌ Row ${i + 1}: Email does not match "${email}". Found: "${cellText}"`);
+            }
+        }
+    }
+
 
 }
