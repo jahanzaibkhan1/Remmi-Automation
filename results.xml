@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.47188399999962">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T10:53:03.642Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.258" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 31: Verify type filter works correctly" classname="Pages\Contacts\contact.spec.ts" time="58.258">
-<system-out>
-<![CDATA[Agent
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.50440399999916">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T11:31:06.064Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.202" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 31: Verify type filter works correctly" classname="Pages\Contacts\contact.spec.ts" time="34.202">
 </testcase>
 </testsuite>
 </testsuites>

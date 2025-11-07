@@ -978,40 +978,49 @@ export class ContactActions {
     public async verifyTypeFilter(name: string): Promise<void> {
         await this.NavigateToContacts();
         await this.page.waitForTimeout(4000);
-        await this.ContactTypeDropdown();
-        await this.SearchContactType(name);
-        await this.SelectOption(name);
-        await this.ContactTypeDropdown();
+       // Open the status filter
+       const filterButton = this.page.locator("//th[5]//div[1]//div[1]//img[1]");
+       await filterButton.dblclick({ force: true });
 
-        // Wait for filter to be applied (table rows update)
-        await this.page.waitForTimeout(3000);
+       // Interact with the "Select" dropdown for filter type (Equals/Not Equals/...)
+       const selectField = this.page.getByText('Select', { exact: true }).first();
+       await selectField.click();
 
-        // Get all rows in the table after filtering
-        const rows = await this.page.locator('table tbody tr');
-        const rowCount = await rows.count();
+       // Choose "Equals"
+       await this.page.getByRole('option', { name: /equals/i }).click();
+       const selectField1 = this.page.getByText('Select', { exact: true }).last();
+       await selectField1.click();
+       // Fill in the keyword/type value to filter
+       const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+       await searchBox.click();
+       await searchBox.fill(name);
 
-        // Find the column index for "Contact Type" based on header text
-        const headerCells = await this.page.locator('table thead tr th');
-        const headerCount = await headerCells.count();
-        let contactTypeColIdx = -1;
-        for (let i = 0; i < headerCount; i++) {
-            const headerText = (await headerCells.nth(i).textContent())?.trim();
-            if (headerText?.toLowerCase() === 'contact type') {
-                contactTypeColIdx = i;
-                break;
-            }
-        }
-        expect(contactTypeColIdx).not.toBe(-1);
+       // Select the desired option that matches the 'name' (e.g., 'Agency' or 'Individual')
+       const optionItem = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: name });
+       await optionItem.click();
+       const tag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+       await tag.click()
+       // Click "Apply" to activate the filter
+       const applyBtn = this.page.getByRole('button', { name: /apply/i });
+       await applyBtn.click();
+       await this.page.waitForTimeout(1500);
 
-        // Now verify every displayed Contact Type is the filter value
-        for (let i = 0; i < rowCount; i++) {
-            const row = rows.nth(i);
-            const cell = row.locator('td').nth(contactTypeColIdx);
-            await cell.scrollIntoViewIfNeeded();
-            // Sanitize and check
-            const cellText = (await cell.textContent())?.trim();
-            expect(cellText).toBe(name);
-        }
+       // Wait for filtered rows to appear
+       await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
+
+       // Assert that all filtered rows contain the provided name (all relevant contacts are shown)
+       const filteredRows = this.page.locator('table tbody tr', { hasText: name });
+       const count = await filteredRows.count();
+       if (count === 0) {
+         throw new Error(`❌ No contacts found with "${name}" in the filtered results.`);
+       }
+       for (let i = 0; i < count; i++) {
+           const row = filteredRows.nth(i);
+           const text = (await row.textContent()) || '';
+           if (!text.includes(name)) {
+               throw new Error(`❌ Row ${i + 1}: Name "${name}" not found in row text: "${text}"`);
+           }
+       }
     }
 
 

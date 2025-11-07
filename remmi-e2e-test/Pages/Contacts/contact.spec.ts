@@ -401,7 +401,7 @@ test('Test 31: Verify type filter works correctly', async ({ page }) => {
     OprationManager.password!,
     process.env.E2E_MANAGER_OTP_SECRET!
   );
-  await contact.verifyTypeFilter('Agent');
+  await contact.verifyTypeFilter('Individual');
 });
 
 });
