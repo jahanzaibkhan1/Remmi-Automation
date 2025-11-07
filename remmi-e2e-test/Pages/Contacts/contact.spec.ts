@@ -404,4 +404,16 @@ test('Test 31: Verify type filter works correctly', async ({ page }) => {
   await contact.verifyTypeFilter('Individual');
 });
 
+test('Test 32: Verify Type filter (e.g., Company, Individuals) works correctly', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifyTypeFilterForCompany('Company');
+});
+
 });

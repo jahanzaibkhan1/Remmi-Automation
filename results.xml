@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.50440399999916">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T11:31:06.064Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.202" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 31: Verify type filter works correctly" classname="Pages\Contacts\contact.spec.ts" time="34.202">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.75997599999979">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T11:41:12.652Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.521" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 32: Verify Type filter (e.g., Company, Individuals) works correctly" classname="Pages\Contacts\contact.spec.ts" time="25.521">
 </testcase>
 </testsuite>
 </testsuites>
