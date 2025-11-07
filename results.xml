@@ -1,8 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="52.65202400000021">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T08:00:36.794Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.177" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 24: Verify clear button closes the filter popup" classname="Pages\Contacts\contact.spec.ts" time="44.177">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.72761900000088">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T08:10:27.374Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.919" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 25: Verify filtering contacts with invalid condition" classname="Pages\Contacts\contact.spec.ts" time="25.919">
 <system-out>
-<![CDATA[✅ Verified: Option selected and Clear button closes the filter popup.
+<![CDATA[✅ Verified: Filter applied with empty condition (invalid data field).
 ]]>
 </system-out>
 </testcase>
