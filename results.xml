@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.561816000000576">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T06:18:13.068Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.104" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 19: Verify contact list status alignment" classname="Pages\Contacts\contact.spec.ts" time="27.104">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.069434000000356">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T06:33:12.294Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.286" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 20: Verify &quot;Select All&quot; functionality in contact list" classname="Pages\Contacts\contact.spec.ts" time="55.286">
 </testcase>
 </testsuite>
 </testsuites>

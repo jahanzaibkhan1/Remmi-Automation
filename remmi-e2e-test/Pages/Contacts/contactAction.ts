@@ -563,5 +563,36 @@ public async verifyContactListStatusAlignment(): Promise<void> {
     expect(maxX - minX).toBeLessThanOrEqual(2);
 }
 
+// Verify "Select All" functionality
+public async verifySelectAllFunctionality(): Promise<void> {
+    await this.NavigateToContacts();
+    await this.page.waitForTimeout(2000);
+
+    // Wait for table and rows
+    await this.page.waitForSelector('table thead tr');
+    await this.page.waitForSelector('table tbody tr');
+
+    // Find the "select all" checkbox (typically first checkbox in thead)
+    const selectAllCheckbox = this.page.getByRole('checkbox').nth(1)
+
+    // Click the select all checkbox
+    await selectAllCheckbox.click();
+
+    // Get all row checkboxes
+    const rowCheckboxes = this.page.locator('table tbody input[type="checkbox"]');
+
+    // There should be at least one row
+    const rowCount = await rowCheckboxes.count();
+    if (rowCount === 0) {
+        throw new Error("No rows present to select.");
+    }
+
+    // Verify that all checkboxes are checked
+    for (let i = 0; i < rowCount; i++) {
+        const checkbox = rowCheckboxes.nth(i);
+        await expect(checkbox).toBeChecked();
+    }
+
+}
 
 }

@@ -245,4 +245,17 @@ test('Test 19: Verify contact list status alignment', async ({ page }) => {
 
   await contact.verifyContactListStatusAlignment();
 });
+
+test('Test 20: Verify "Select All" functionality in contact list', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifySelectAllFunctionality();
+});
 });
