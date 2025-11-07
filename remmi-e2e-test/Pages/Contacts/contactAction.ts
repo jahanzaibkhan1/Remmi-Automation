@@ -678,5 +678,40 @@ public async verifyFilteringContactsByStatus(name: string): Promise<void> {
     const filteredRow = this.page.locator('table tbody tr', { hasText: name });
     await expect(filteredRow).toHaveCount(1);
 }
+// Verify clear button closes the filter popup after selecting an option
+public async verifyClearButtonClosesFilter(): Promise<void> {
+    await this.NavigateToContacts();
+    await this.page.waitForTimeout(3000);
+
+    // Open the status filter
+    const filterButton = this.page.locator("//th[2]//div[1]//div[1]//img[1]");
+    await filterButton.dblclick({ force: true });
+
+    // Check that filter popup is visible
+    const filterPopup = this.page.locator('div').filter({ hasText: 'Filter BySelectClearApply' }).nth(1)
+    await expect(filterPopup).toBeVisible();
+
+    // Select a value in filter (e.g., open 'Select', pick 'Equals')
+    const selectField = this.page.getByText('Select', { exact: true });
+    await selectField.click();
+    await this.page.getByRole('option', { name: /equals/i }).click();
+
+    // Optionally, fill something in the filter value (optional step – for demonstration)
+    const searchBoxPresent = await this.page.getByRole('textbox', { name: /search by keyword/i }).isVisible().catch(() => false);
+    if (searchBoxPresent) {
+        const searchBox = this.page.getByRole('textbox', { name: /search by keyword/i });
+        await searchBox.fill('Test');
+    }
+
+    // Click the Clear button to close/reset the popup
+    const clearBtn = this.page.getByRole('button', { name: /clear/i });
+    await clearBtn.click();
+
+    // Assert that filter popup is no longer visible
+    await expect(filterPopup).not.toBeVisible();
+
+    console.log('✅ Verified: Option selected and Clear button closes the filter popup.');
+}
+
 
 }
