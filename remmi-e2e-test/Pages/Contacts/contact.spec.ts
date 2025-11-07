@@ -258,4 +258,19 @@ test('Test 20: Verify "Select All" functionality in contact list', async ({ page
 
   await contact.verifySelectAllFunctionality();
 });
+
+test('Test 21: Verify deselecting "Select All" unselects all contacts', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifyDeselectSelectAllUnselectsAll();
+});
+
+
 });

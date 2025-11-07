@@ -595,4 +595,40 @@ public async verifySelectAllFunctionality(): Promise<void> {
 
 }
 
+// Verify deselecting "Select All" unselects all contacts
+public async verifyDeselectSelectAllUnselectsAll(): Promise<void> {
+    await this.NavigateToContacts();
+    await this.page.waitForTimeout(2000);
+
+    // Wait for table and rows
+    await this.page.waitForSelector('table thead tr');
+    await this.page.waitForSelector('table tbody tr');
+
+    // Find the "select all" checkbox (typically first checkbox in thead)
+    const selectAllCheckbox = this.page.getByRole('checkbox').nth(1);
+
+    // Click the select all checkbox to select all
+    await selectAllCheckbox.click();
+
+    // Check that all row checkboxes are checked
+    const rowCheckboxes = this.page.locator('table tbody input[type="checkbox"]');
+    const rowCount = await rowCheckboxes.count();
+    if (rowCount === 0) {
+        throw new Error("No rows present to select.");
+    }
+    for (let i = 0; i < rowCount; i++) {
+        const checkbox = rowCheckboxes.nth(i);
+        await expect(checkbox).toBeChecked();
+    }
+
+    // Click the select all checkbox again to deselect all
+    await selectAllCheckbox.click();
+
+    // Verify that all row checkboxes are now unchecked
+    for (let i = 0; i < rowCount; i++) {
+        const checkbox = rowCheckboxes.nth(i);
+        await expect(checkbox).not.toBeChecked();
+    }
+}
+
 }
