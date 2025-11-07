@@ -645,4 +645,38 @@ public async verifySelectingIndividualContacts(): Promise<void> {
     await rowCheckboxes.click()
 }
 
+// Verify filtering contacts using status filter
+public async verifyFilteringContactsByStatus(name: string): Promise<void> {
+    await this.NavigateToContacts();
+    await this.page.waitForTimeout(3000);
+
+    // Open the status filter
+    const filterButton = this.page.locator("//th[2]//div[1]//div[1]//img[1]");
+    await filterButton.dblclick({ force: true });
+
+    // Interact with the "Select" dropdown for filter type (Equals/Not Equals/...)
+    const selectField = this.page.getByText('Select', { exact: true });
+    await selectField.click();
+
+    // Choose "Equals"
+    await this.page.getByRole('option', { name: /equals/i }).click();
+
+    // Fill in the keyword/status value to filter
+    const searchBox = this.page.getByRole('textbox', { name: 'Search by keyword' });
+    await searchBox.click();
+    await searchBox.fill(name);
+
+    // Click "Apply" to activate the filter
+    const applyBtn = this.page.getByRole('button', { name: /apply/i });
+    await applyBtn.click();
+    await this.page.waitForTimeout(1500);
+
+    // Wait for filtered rows to appear
+    await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
+
+    // Assert that the contact with the provided name is visible in the filtered results
+    const filteredRow = this.page.locator('table tbody tr', { hasText: name });
+    await expect(filteredRow).toHaveCount(1);
+}
+
 }

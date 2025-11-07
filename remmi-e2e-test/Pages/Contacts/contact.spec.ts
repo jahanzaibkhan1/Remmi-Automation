@@ -285,6 +285,20 @@ test('Test 22: Verify selecting individual contacts', async ({ page }) => {
   await contact.verifySelectingIndividualContacts();
 });
 
+test('Test 23: Verify filtering contacts by "Active" status', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  const name = "Ayesha umer";
+
+  await contact.verifyFilteringContactsByStatus(name);
+});
 
 
 });
