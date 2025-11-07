@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.13667799999937">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T10:13:06.000Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.792" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 27: Verify that data is displayed in the list for key contact columns" classname="Pages\Contacts\contact.spec.ts" time="28.792">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.5772509999983">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T10:38:35.316Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.386" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 28: Verify filtering contacts by Full Name in the contact list" classname="Pages\Contacts\contact.spec.ts" time="36.386">
+<system-out>
+<![CDATA[Full Name cell text: HT Hina Test
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
