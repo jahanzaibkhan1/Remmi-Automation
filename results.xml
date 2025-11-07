@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.77308399999887">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T06:39:36.716Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.767" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 21: Verify deselecting &quot;Select All&quot; unselects all contacts" classname="Pages\Contacts\contact.spec.ts" time="40.767">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.478569999998435">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T07:00:11.629Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.241" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 22: Verify selecting individual contacts" classname="Pages\Contacts\contact.spec.ts" time="24.241">
 </testcase>
 </testsuite>
 </testsuites>

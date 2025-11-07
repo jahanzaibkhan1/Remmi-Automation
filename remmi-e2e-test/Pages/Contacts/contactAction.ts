@@ -456,7 +456,7 @@ export class ContactActions {
     // Verify contact creation by clicking the plus button
     public async verifyContactCreationByPlusButton(): Promise<void> {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(2000);
+        await this.page.waitForTimeout(4000);
         const plus = this.page.getByRole('button', { name: '' });
         await plus.click();
         await this.verifyContactFormOpen();
@@ -470,7 +470,7 @@ export class ContactActions {
 //  */
 public async verifyInitialsPlaceholderWhenNoProfileImage(contactName: string): Promise<void> {
     await this.NavigateToContacts();
-    await this.page.waitForTimeout(2000);
+    await this.page.waitForTimeout(4000);
     await this.searchForContact(contactName);
 
     // Wait for table rows to load
@@ -508,7 +508,7 @@ public async verifyInitialsPlaceholderWhenNoProfileImage(contactName: string): P
 
 public async verifyContactListStatusAlignment(): Promise<void> {
     await this.NavigateToContacts();
-    await this.page.waitForTimeout(2000);
+    await this.page.waitForTimeout(4000);
 
     await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
 
@@ -566,7 +566,7 @@ public async verifyContactListStatusAlignment(): Promise<void> {
 // Verify "Select All" functionality
 public async verifySelectAllFunctionality(): Promise<void> {
     await this.NavigateToContacts();
-    await this.page.waitForTimeout(2000);
+    await this.page.waitForTimeout(4000);
 
     // Wait for table and rows
     await this.page.waitForSelector('table thead tr');
@@ -598,7 +598,7 @@ public async verifySelectAllFunctionality(): Promise<void> {
 // Verify deselecting "Select All" unselects all contacts
 public async verifyDeselectSelectAllUnselectsAll(): Promise<void> {
     await this.NavigateToContacts();
-    await this.page.waitForTimeout(2000);
+    await this.page.waitForTimeout(4000);
 
     // Wait for table and rows
     await this.page.waitForSelector('table thead tr');
@@ -629,6 +629,20 @@ public async verifyDeselectSelectAllUnselectsAll(): Promise<void> {
         const checkbox = rowCheckboxes.nth(i);
         await expect(checkbox).not.toBeChecked();
     }
+}
+
+// Verify clicking on a single contact checkbox
+public async verifySelectingIndividualContacts(): Promise<void> {
+    await this.NavigateToContacts();
+    await this.page.waitForTimeout(4000);
+
+    // Wait for contacts table to load
+    await this.page.waitForSelector('table thead tr');
+    await this.page.waitForSelector('table tbody tr');
+
+    // Get all row checkboxes in the contacts table body
+    const rowCheckboxes = this.page.getByRole('checkbox').nth(3);
+    await rowCheckboxes.click()
 }
 
 }
