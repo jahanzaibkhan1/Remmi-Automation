@@ -233,4 +233,187 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyInitialsPlaceholderWhenNoProfileImage(contactName);
   });
 
+test('Test 19: Verify contact list status alignment', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifyContactListStatusAlignment();
+});
+
+test('Test 20: Verify "Select All" functionality in contact list', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifySelectAllFunctionality();
+});
+
+test('Test 21: Verify deselecting "Select All" unselects all contacts', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifyDeselectSelectAllUnselectsAll();
+});
+
+test('Test 22: Verify selecting individual contacts', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifySelectingIndividualContacts();
+});
+
+test('Test 23: Verify filtering contacts by "Active" status', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  const name = "Ayesha umer";
+
+  await contact.verifyFilteringContactsByStatus(name);
+});
+
+test('Test 24: Verify clear button closes the filter popup', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifyClearButtonClosesFilter();
+});
+
+test('Test 25: Verify filtering contacts with invalid condition', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifyFilteringContactsWithInvalidCondition();
+});
+
+test('Test 26: Verify that data aligns properly with the check circle while applying filters', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifyTableAlignmentWithSelectionColumnWithFilter();
+});
+
+test('Test 27: Verify that data is displayed in the list for key contact columns', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifyContactsTableEssentialColumnsHaveData();
+});
+
+test('Test 28: Verify filtering contacts by Full Name in the contact list', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  // Replace 'Hina Test' with an actual contact name you want to filter by if needed
+  await contact.verifyFilteringContactsByFullName('Hina Test');
+});
+
+test('Test 29: Verify filtering contacts by Mobile in the contact list', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifyFilteringContactsByMobile('0409235412');
+});
+
+test('Test 30: Verify filtering contacts by Email in the contact list', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifyEmailFilterWorks('hina.test@remmi.com.au');
+});
+
+test('Test 31: Verify type filter works correctly', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifyTypeFilter('Individual');
+});
+
+test('Test 32: Verify Type filter (e.g., Company, Individuals) works correctly', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifyTypeFilterForCompany('Company');
+});
+
 });

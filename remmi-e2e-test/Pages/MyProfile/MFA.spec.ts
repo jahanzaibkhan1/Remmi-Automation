@@ -86,59 +86,59 @@ test.describe(' MFA Tab Tests - Remmi E2E', () => {
     logCurrentSecret();
   });
 
-  // test(' Login without enabling MFA', async ({ page }) => {
-  //   const login = new LoginActions(page);
-  //   await login.loginwithoutOTp(salesAgent.email!, salesAgent.password!);
-  //   const noMfaMessage = page.getByText(/No MFA Assigned/i);
-  //   await expect(noMfaMessage).toBeVisible();
-  // });
+  test(' Login without enabling MFA', async ({ page }) => {
+    const login = new LoginActions(page);
+    await login.loginwithoutOTp(salesAgent.email!, salesAgent.password!);
+    const noMfaMessage = page.getByText(/No MFA Assigned/i);
+    await expect(noMfaMessage).toBeVisible();
+  });
 
-  // test(' MFA Warning after 7 days', async ({ page }) => {
-  //     const login = new LoginActions(page);
-  //     await login.loginwithoutOTp(salesAgent.email!, salesAgent.password!);
-  //     const warningMessage = page.locator('div').filter({ hasText: 'No MFA AssignedTo enhance' }).nth(2);
-  //     await expect(warningMessage).toBeVisible();
-  // });
+  test(' MFA Warning after 7 days', async ({ page }) => {
+      const login = new LoginActions(page);
+      await login.loginwithoutOTp(salesAgent.email!, salesAgent.password!);
+      const warningMessage = page.locator('div').filter({ hasText: 'No MFA AssignedTo enhance' }).nth(2);
+      await expect(warningMessage).toBeVisible();
+  });
 
-  // test(' Enter incorrect Google Authenticator MFA code', async ({ page }) => {
-  //   const login = new LoginActions(page);
-  //   const profile = new MyProfileActions(page);
+  test(' Enter incorrect Google Authenticator MFA code', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
 
-  //   await login.login(
-  //     operationManager.email!,
-  //     operationManager.password!,
-  //     process.env.E2E_MANAGER_OTP_SECRET!
-  //   );
+    await login.login(
+      operationManager.email!,
+      operationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-  //   await profile.navigateToProfilePage();
-  //   await profile.enterInvalidOtpGoogleAuthenticatorMfa();
-  // });
+    await profile.navigateToProfilePage();
+    await profile.enterInvalidOtpGoogleAuthenticatorMfa();
+  });
 
-  // test(' Enter incorrect Microsoft Authenticator MFA code', async ({ page }) => {
-  //   const login = new LoginActions(page);
-  //   const profile = new MyProfileActions(page);
+  test(' Enter incorrect Microsoft Authenticator MFA code', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
 
-  //   await login.login(
-  //     operationManager.email!,
-  //     operationManager.password!,
-  //     process.env.E2E_MANAGER_OTP_SECRET!
-  //   );
+    await login.login(
+      operationManager.email!,
+      operationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-  //   await profile.navigateToProfilePage();
-  //   await profile.enterInvalidOtpMsleAuthenticatorMfa();
-  // });
+    await profile.navigateToProfilePage();
+    await profile.enterInvalidOtpMsleAuthenticatorMfa();
+  });
 
-  // test(' Enter incorrect Authy Authenticator MFA code', async ({ page }) => {
-  //   const login = new LoginActions(page);
-  //   const profile = new MyProfileActions(page);
+  test(' Enter incorrect Authy Authenticator MFA code', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
 
-  //   await login.login(
-  //     operationManager.email!,
-  //     operationManager.password!,
-  //     process.env.E2E_MANAGER_OTP_SECRET!
-  //   );
+    await login.login(
+      operationManager.email!,
+      operationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-  //   await profile.navigateToProfilePage();
-  //   await profile.enterInvalidOtpAuthyleAuthenticatorMfa();
-  // });
+    await profile.navigateToProfilePage();
+    await profile.enterInvalidOtpAuthyleAuthenticatorMfa();
+  });
 });

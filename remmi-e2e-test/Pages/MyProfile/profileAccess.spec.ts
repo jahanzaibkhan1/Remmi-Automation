@@ -10,47 +10,6 @@ const admin = LoginUsers.admin;
 let login: LoginActions;
 let profile: MyProfileActions;
 
-// 🔹 Helper functions
-async function updateAccessTabSettings() {
-  await profile.navigateToProfilePage();
-  await profile.updateAccessSettings('Dawood Ahmad');
-}
-
-async function grantTaskAccessToMultipleUsers() {
-  await profile.navigateToProfilePage();
-  await profile.grantTaskAccessToMultipleUsers(['Hina Agent', 'Hina Tahir']);
-}
-
-async function removeUserFromAccess() {
-  await profile.navigateToProfilePage();
-  await profile.removeUserFromAccess();
-}
-
-async function selectAllUsers() {
-  await profile.navigateToProfilePage();
-  await profile.selectAllUsers();
-}
-
-async function DeselectAllUsers() {
-  await profile.navigateToProfilePage();
-  await profile.DeselectAllUsers();
-}
-
-async function verifyUserInStaffCalendarAccess(userName: string) {
-  await profile.navigateToProfilePage();
-  await profile.verifyUserInStaffCalendarAccess(userName);
-}
-
-async function verifyCalendarAccessFunctional(userName: string) {
-  await profile.navigateToProfilePage();
-  await profile.verifyCalendarAccessFunctional(userName);
-}
-
-async function verifyNoCalendarAccess(userName: string) {
-  await profile.navigateToProfilePage();
-  await profile.verifyNoCalendarAccess(userName);
-}
-
 // ----------- Tests -----------
 
 test.describe('Access Tab Tests - Remmi E2E', () => {
@@ -59,12 +18,13 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
     profile = new MyProfileActions(page);
 
     await login.login(
-        operationManager.email!,
-        operationManager.password!,
-        process.env.E2E_MANAGER_OTP_SECRET!
-      );
+      operationManager.email!,
+      operationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-    await updateAccessTabSettings();
+    await profile.navigateToProfilePage();
+    await profile.updateAccessSettings('Dawood Ahmad');
   });
 
   test('Test 4: Verify multiple users can be granted calendar access', async ({ page }) => {
@@ -72,12 +32,13 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
     profile = new MyProfileActions(page);
 
     await login.login(
-        operationManager.email!,
-        operationManager.password!,
-        process.env.E2E_MANAGER_OTP_SECRET!
-      );
+      operationManager.email!,
+      operationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-    await grantTaskAccessToMultipleUsers();
+    await profile.navigateToProfilePage();
+    await profile.grantTaskAccessToMultipleUsers(['Hina Agent', 'Hina Tahir']);
   });
 
   test('Test 6: Verify user can remove granted calendar access', async ({ page }) => {
@@ -85,12 +46,13 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
     profile = new MyProfileActions(page);
 
     await login.login(
-        operationManager.email!,
-        operationManager.password!,
-        process.env.E2E_MANAGER_OTP_SECRET!
-      );
+      operationManager.email!,
+      operationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-    await removeUserFromAccess();
+    await profile.navigateToProfilePage();
+    await profile.removeUserFromAccess();
   });
 
   test('Test 7: Verify that selecting Select All grants access to all users', async ({ page }) => {
@@ -98,12 +60,13 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
     profile = new MyProfileActions(page);
 
     await login.login(
-        operationManager.email!,
-        operationManager.password!,
-        process.env.E2E_MANAGER_OTP_SECRET!
-      );
+      operationManager.email!,
+      operationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-    await selectAllUsers();
+    await profile.navigateToProfilePage();
+    await profile.selectAllUsers();
   });
 
   test('Test 8: Verify that selecting Deselect All removes access from all users', async ({ page }) => {
@@ -111,12 +74,13 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
     profile = new MyProfileActions(page);
 
     await login.login(
-        operationManager.email!,
-        operationManager.password!,
-        process.env.E2E_MANAGER_OTP_SECRET!
-      );
+      operationManager.email!,
+      operationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-    await DeselectAllUsers();
+    await profile.navigateToProfilePage();
+    await profile.DeselectAllUsers();
   });
 
   // ----------- New Tests -----------
@@ -130,7 +94,8 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
   //   }
 
   //   await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
-  //   await verifyUserInStaffCalendarAccess('Dawood Ahmad');
+  //   await profile.navigateToProfilePage();
+  //   await profile.verifyUserInStaffCalendarAccess('Dawood Ahmad');
   // });
 
   // test('Verify granted calendar access allows viewing calendar OFIs', async ({ page }) => {
@@ -142,7 +107,8 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
   //   }
 
   //   await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
-  //   await verifyCalendarAccessFunctional('Dawood Ahmad');
+  //   await profile.navigateToProfilePage();
+  //   await profile.verifyCalendarAccessFunctional('Dawood Ahmad');
   // });
 
   // test('Verify user cannot see calendar OFIs without granted access', async ({ page }) => {
@@ -154,7 +120,8 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
   //   }
 
   //   await login.login(operationManager.email!, operationManager.password!, operationManager.otpSecret!);
-  //   await verifyNoCalendarAccess('Unauthorized User'); // replace with a real user without access
+  //   await profile.navigateToProfilePage();
+  //   await profile.verifyNoCalendarAccess('Unauthorized User'); // replace with a real user without access
   // });
 
 });

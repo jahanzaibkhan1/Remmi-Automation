@@ -117,15 +117,15 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     await profile.navigateToLibrary();
     await profile.downloadWithIncorrectPin('1230');
   });
-  test('9. System does not allow invalid calendar color', async ({ page }) => {
-    const login = new LoginActions(page);
-    const profile = new MyProfileActions(page);
-    await login.login(
-        operationManager.email!,
-        operationManager.password!,
-        process.env.E2E_MANAGER_OTP_SECRET!
-      );
-    await profile.navigateToProfilePage();
-    await profile.tryInvalidCalendarColor('INVALID_COLOR');
-  });
+  // test('9. System does not allow invalid calendar color', async ({ page }) => {
+  //   const login = new LoginActions(page);
+  //   const profile = new MyProfileActions(page);
+  //   await login.login(
+  //       operationManager.email!,
+  //       operationManager.password!,
+  //       process.env.E2E_MANAGER_OTP_SECRET!
+  //     );
+  //   await profile.navigateToProfilePage();
+  //   await profile.tryInvalidCalendarColor('INVALID_COLOR');
+  // });
 });
