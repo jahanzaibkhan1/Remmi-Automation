@@ -233,4 +233,16 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyInitialsPlaceholderWhenNoProfileImage(contactName);
   });
 
+test('Test 19: Verify contact list status alignment', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifyContactListStatusAlignment();
+});
 });
