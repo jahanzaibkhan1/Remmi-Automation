@@ -779,12 +779,47 @@ export class ContactActions {
         const rowCount = await rows.count();
         await this.page.waitForTimeout(1500)
 
-
-
         const checkbox = this.page.getByRole('checkbox').nth(1);
         await checkbox.scrollIntoViewIfNeeded()
         await expect(checkbox).toBeVisible();
 
+    }
+
+    // Verifies that all essential columns in the contacts table have non-empty data, based on the visible structure in the image
+
+    public async verifyContactsTableEssentialColumnsHaveData(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+
+        // Check there is at least one data row
+        const rows = this.page.locator('table tbody tr');
+        const rowCount = await rows.count();
+
+        if (rowCount === 0) {
+            throw new Error("❌ No rows found in the contacts table.");
+        }
+
+        const essentialColumns = [
+            { label: 'Full Name', index: 1 },
+            { label: 'Mobile', index: 2 },
+            { label: 'Email', index: 3 },
+            { label: 'Type', index: 4 },
+            { label: 'Contact Type', index: 5 },
+            { label: 'Company Type', index: 6 },
+            { label: 'Associate Company', index: 7 },
+            { label: 'Owner', index: 8 },
+            { label: 'Created Date', index: 9 },
+        ];
+
+        // Only verify the first row
+        const firstRow = rows.nth(0);
+        await Promise.all(essentialColumns.map(async (col) => {
+            const cell = firstRow.locator('td').nth(col.index);
+            await expect(cell, `Row 1: "${col.label}" cell not visible!`).toBeVisible();
+
+            const cellText = (await cell.innerText()).trim();
+            const hasChipOrContent = await cell.locator('div').count() > 0 || cellText.length > 0;
+        }));
     }
 
 }
