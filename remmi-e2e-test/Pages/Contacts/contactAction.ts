@@ -868,5 +868,58 @@ export class ContactActions {
             }
         }
     }
+    
+    // Verify Mobile filter works correctly in the contact list
+    public async verifyFilteringContactsByMobile(mobileNumber: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+
+        await this.searchForContact(mobileNumber);
+        await this.page.waitForTimeout(1500);
+
+        const rows = this.page.locator('table tbody tr');
+        await Promise.race([
+            rows.first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => {}),
+            this.page.getByRole('cell', { name: /no contacts available/i }).waitFor({ state: 'visible', timeout: 5000 }).catch(() => {})
+        ]);
+
+        const rowCount = await rows.count();
+
+        if (rowCount === 0) {
+            throw new Error(`❌ No rows found for "${mobileNumber}"`);
+        }
+
+        // Find the Mobile column index
+        const headerCells = await this.page.locator('table thead tr th');
+        const headerCount = await headerCells.count();
+        let mobileColIdx = -1;
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headerCells.nth(i).textContent())?.trim().toLowerCase();
+            if (headerText === 'mobile' || headerText === 'mobile number') {
+                mobileColIdx = i;
+                break;
+            }
+        }
+        if (mobileColIdx === -1) {
+            throw new Error('Could not find "Mobile" column in the contacts table.');
+        }
+
+        for (let i = 0; i < rowCount; i++) {
+            const row = rows.nth(i);
+            const cell = row.locator('td').nth(mobileColIdx);
+            const cellTextRaw = await cell.textContent() || "";
+            const cellText = cellTextRaw.replace(/\s+/g, '').trim(); // remove spaces, as mobile may be formatted
+
+            // Remove spaces and dashes from input and cell for comparison
+            const target = mobileNumber.replace(/\s+|-/g, '');
+
+            console.log("Mobile cell text:", cellText);
+
+            if (!cellText.includes(target)) {
+                throw new Error(`❌ Row ${i + 1}: Mobile does not match "${mobileNumber}". Found: "${cellText}"`);
+            }
+        }
+    }
+
 
 }
