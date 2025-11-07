@@ -352,5 +352,19 @@ test('Test 27: Verify that data is displayed in the list for key contact columns
   await contact.verifyContactsTableEssentialColumnsHaveData();
 });
 
+test('Test 28: Verify filtering contacts by Full Name in the contact list', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  // Replace 'Hina Test' with an actual contact name you want to filter by if needed
+  await contact.verifyFilteringContactsByFullName('Hina Test');
+});
+
 
 });

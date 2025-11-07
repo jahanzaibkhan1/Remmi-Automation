@@ -811,7 +811,6 @@ export class ContactActions {
             { label: 'Created Date', index: 9 },
         ];
 
-        // Only verify the first row
         const firstRow = rows.nth(0);
         await Promise.all(essentialColumns.map(async (col) => {
             const cell = firstRow.locator('td').nth(col.index);
@@ -820,6 +819,54 @@ export class ContactActions {
             const cellText = (await cell.innerText()).trim();
             const hasChipOrContent = await cell.locator('div').count() > 0 || cellText.length > 0;
         }));
+    }
+
+    public async verifyFilteringContactsByFullName(contactName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+        await this.searchForContact(contactName);
+        await this.page.waitForTimeout(1500);
+
+        // Find all rows (possible matches)
+        const rows = this.page.locator('table tbody tr');
+
+        // Wait for either a data row or "no contacts available" cell
+        await Promise.race([
+            rows.first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => {}),
+            this.page.getByRole('cell', { name: /no contacts available/i }).waitFor({ state: 'visible', timeout: 5000 }).catch(() => {})
+        ]);
+
+        const rowCount = await rows.count();
+
+        if (rowCount === 0) {
+            throw new Error(`❌ No rows found for "${contactName}"`);
+        }
+
+        for (let i = 0; i < rowCount; i++) {
+            const row = rows.nth(i);
+            const cell = row.locator('td').nth(1);
+            const cellTextRaw = await cell.textContent() || "";
+            const cellText = cellTextRaw.trim();
+
+            console.log("Full Name cell text:", cellText);
+
+            const initials = contactName.split(" ").map(w => w[0] || "").join("").toUpperCase();
+            const valid =
+                cellText === contactName ||
+                cellText.endsWith(` ${contactName}`) ||
+                cellText === `${initials} ${contactName}` ||
+                cellText === initials + contactName.replace(" ", ""); // fallback, rare
+
+            if (!valid) {
+                throw new Error(`❌ Row ${i + 1}: Full Name does not match "${contactName}" or expected variant. Found: "${cellText}"`);
+            }
+
+            // Assert there is NO <img> inside the Full Name cell (HT should be text, not avatar)
+            const avatarImgCount = await cell.locator('img').count();
+            if (avatarImgCount > 0) {
+                throw new Error(`❌ Row ${i + 1}: Avatar (image) should NOT be present in Full Name column, but was found.`);
+            }
+        }
     }
 
 }
