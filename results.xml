@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.478569999998435">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T07:00:11.629Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.241" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 22: Verify selecting individual contacts" classname="Pages\Contacts\contact.spec.ts" time="24.241">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="68.5997460000012">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T07:51:57.357Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.799" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 23: Verify filtering contacts by &quot;Active&quot; status" classname="Pages\Contacts\contact.spec.ts" time="58.799">
 </testcase>
 </testsuite>
 </testsuites>
