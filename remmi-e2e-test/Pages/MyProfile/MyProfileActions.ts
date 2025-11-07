@@ -1159,6 +1159,7 @@ export class MyProfileActions {
     */
   public async updateAccessSettings(userName: string = 'Dawood Ahmad') {
     await this.navigateToAccessTab();
+    await this.page.waitForTimeout(2000)
 
     // Check if user is already selected
     const alreadySelected = this.page.getByRole('cell', { name: 'Dawood Ahmad' });
@@ -1186,7 +1187,7 @@ export class MyProfileActions {
    */
   public async grantTaskAccessToMultipleUsers(userNames: string[]) {
     await this.navigateToAccessTab();
-
+    await this.page.waitForTimeout(2000)
     await this.openUserDropdown();
     for (const userName of userNames) {
       const searchBox = this.locators.SearchUserName();
@@ -1211,6 +1212,7 @@ export class MyProfileActions {
    */
   public async removeUserFromAccess() {
     await this.navigateToAccessTab();
+    await this.page.waitForTimeout(2000)
     await this.removeUser();
     await this.calendarUpdateToast();
   }
@@ -1263,6 +1265,7 @@ export class MyProfileActions {
    */
   public async verifyUserInStaffCalendarAccess(userName: string) {
     await this.navigateToCalendar();
+    await this.page.waitForTimeout(2000)
     const accessUser = this.locators.calendarAccessUserName(userName);
     await expect(accessUser).toBeVisible({ timeout: 8000 });
     console.log(`✅ User "${userName}" appears under 'Staff Calendar Access'`);
@@ -1273,6 +1276,7 @@ export class MyProfileActions {
    */
   public async verifyCalendarAccessFunctional(userName: string) {
     await this.navigateToCalendar();
+    await this.page.waitForTimeout(2000)
     const calendarItem = this.page.locator('.calendar-item'); // adjust selector
     await expect(calendarItem).toBeVisible();
     console.log(`✅ User "${userName}" can view calendar OFIs`);

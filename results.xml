@@ -1,10 +1,659 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.372966000000016">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-05T11:11:49.228Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.382" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 15: Restore a deleted contact from setting and verify in Contacts" classname="Pages\Contacts\contact.spec.ts" time="24.382">
+<testsuites id="" name="" tests="140" failures="1" skipped="139" errors="0" time="79.584064">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T05:53:39.431Z" hostname="chromium" tests="19" failures="1" skipped="18" time="74.064" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 1: Verify contact search functionality" classname="Pages\Contacts\contact.spec.ts" time="74.064">
+<failure message="contact.spec.ts:13:7 Test 1: Verify contact search functionality" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Contacts\contact.spec.ts:13:7 › Contacts side Menu Tests - Remmi E2E › Test 1: Verify contact search functionality 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.goto: Test timeout of 60000ms exceeded.
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:56
+
+      54 |   }
+      55 |   async gotoLogin() {
+    > 56 |     await this.page.goto('/login');
+         |                     ^
+      57 |     await this.page.waitForLoadState('networkidle');
+      58 |   }
+      59 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:56:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:120:16)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:210:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Contacts\contact.spec.ts:17:17
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Contacts-contact-Con-33cd7-ontact-search-functionality-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\Pages-Contacts-contact-Con-33cd7-ontact-search-functionality-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Contacts-contact-Con-33cd7-ontact-search-functionality-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Test was interrupted.
+
+    Error: page.goto: Target page, context or browser has been closed
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:56
+
+      54 |   }
+      55 |   async gotoLogin() {
+    > 56 |     await this.page.goto('/login');
+         |                     ^
+      57 |     await this.page.waitForLoadState('networkidle');
+      58 |   }
+      59 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:56:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:120:16)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:210:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Contacts\contact.spec.ts:17:17
+
+    Error: browserContext.close: Target page, context or browser has been closed
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\Pages-Contacts-contact-Con-33cd7-ontact-search-functionality-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\Pages-Contacts-contact-Con-33cd7-ontact-search-functionality-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
 <system-out>
-<![CDATA[11 22
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Contacts-contact-Con-33cd7-ontact-search-functionality-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Contacts-contact-Con-33cd7-ontact-search-functionality-chromium\video.webm]]
+
+[[ATTACHMENT|test-results\Pages-Contacts-contact-Con-33cd7-ontact-search-functionality-chromium\error-context.md]]
+
+[[ATTACHMENT|test-results\Pages-Contacts-contact-Con-33cd7-ontact-search-functionality-chromium-retry1\trace.zip]]
 ]]>
 </system-out>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 2: Verify search with an invalid contact name" classname="Pages\Contacts\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 3: Verify contact type dropdown filters contacts correctly" classname="Pages\Contacts\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 4: Verify &quot;Select All&quot; functionality in contact type dropdown" classname="Pages\Contacts\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 5: Verify &quot;Deselect All&quot; functionality in contact type dropdown" classname="Pages\Contacts\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 6: Verify search within contact type dropdown" classname="Pages\Contacts\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 7: Verify company type dropdown filters companies correctly" classname="Pages\Contacts\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 8: Verify &quot;Select All&quot; functionality in company type dropdown" classname="Pages\Contacts\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 9: Verify &quot;Deselect All&quot; functionality in company type dropdown" classname="Pages\Contacts\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 10: Verify search within company type dropdown" classname="Pages\Contacts\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 11: Verify reset button removes applied filters" classname="Pages\Contacts\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 12: Verify delete button is enabled after selecting a contact" classname="Pages\Contacts\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 13: Verify delete button is disabled when no contact is selected" classname="Pages\Contacts\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 14: Verify the delete button removes the selected contact" classname="Pages\Contacts\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 15: Restore a deleted contact from setting and verify in Contacts" classname="Pages\Contacts\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 16: Verify canceling deletion keeps the contact in the list" classname="Pages\Contacts\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 17: Verify contact creation form is displayed after clicking the plus button" classname="Pages\Contacts\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 18: Verify that initials placeholder is shown when profile image is missing" classname="Pages\Contacts\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 19: Verify contact list status alignment" classname="Pages\Contacts\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\Login\login.spec.ts" timestamp="2025-11-07T05:53:39.431Z" hostname="chromium" tests="19" failures="0" skipped="19" time="0" errors="0">
+<testcase name="Login Tests - Remmi E2E › Test case 1: Verify sign in with valid email and password" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 2: Verify password visibility toggle" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 3: Verify error message if checkbox is not selected" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 4: Verify error on invalid email " classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 5: Verify error message on incorrect password" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 6: Verify login after correcting incorrect email or password" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 7: Verify OTP is sent after successful login attempt" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 8: Verify OTP functionality on valid OTP input" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 9: Verify OTP error on invalid OTP input" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 10: Verify &quot;Forgot Password&quot; functionality (email input)" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 11: Verify &quot;Forgot Password&quot; functionality with wrong (email input)" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 12: Verify &quot;Forgot Password&quot; functionality without (email input)" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 13: Verify OTP is sent after &quot;Forgot Password&quot;" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 15: Verify error on invalid email in &quot;Forgot Password&quot;" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 22: Verify proper placeholder text is shown in each input field" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Empty email" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Empty password" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 21: Verify validation triggers when &quot;Sign In&quot; button is clicked" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › OTP shorter/longer than expected" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2025-11-07T05:53:39.431Z" hostname="chromium" tests="24" failures="0" skipped="24" time="0" errors="0">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 1: Verify that the Association tab opens successfully" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 2: Verify the search functionality in the Association tab" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 3: Verify search with no matching project" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 4: Verify that Add Project dropdown opens successfully" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 5: Verify the search option inside Add Project dropdown" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 6: Verify single project selection from dropdown" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 7: Verify multiple project selection from dropdown" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 8: Verify the “Select All” functionality" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 9: Verify the “Deselect All” functionality" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 10: Verify removing a project tag before adding" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 11: Verify adding multiple projects at once" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 12: Verify that previously added projects are not duplicated" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 13: Verify adding when list is initially empty" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 14: Verify the sort functionality" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 15: Verify delete icon under Action column" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 16: Verify project delete funcationality" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 17: Verify checkbox beside each project" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 18: Verify multiple checkbox selection" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 19: Verify Select All checkbox selection" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 20: Verify bulk delete functionality" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 21: Verify UI update after deletion" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 22: Verify that deleted projects can be re-added" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 23: Verify empty list message" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 24: Try adding project without selecting any" classname="Pages\MyProfile\Association.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\MFA.spec.ts" timestamp="2025-11-07T05:53:39.431Z" hostname="chromium" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name=" MFA Tab Tests - Remmi E2E ›  Enable Google Authenticator MFA for a user" classname="Pages\MyProfile\MFA.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name=" MFA Tab Tests - Remmi E2E ›  Enable Microsoft Authenticator MFA for a user" classname="Pages\MyProfile\MFA.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name=" MFA Tab Tests - Remmi E2E ›  Enable Authy Authenticator MFA for a user" classname="Pages\MyProfile\MFA.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name=" MFA Tab Tests - Remmi E2E ›  Login without enabling MFA" classname="Pages\MyProfile\MFA.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name=" MFA Tab Tests - Remmi E2E ›  MFA Warning after 7 days" classname="Pages\MyProfile\MFA.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name=" MFA Tab Tests - Remmi E2E ›  Enter incorrect Google Authenticator MFA code" classname="Pages\MyProfile\MFA.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name=" MFA Tab Tests - Remmi E2E ›  Enter incorrect Microsoft Authenticator MFA code" classname="Pages\MyProfile\MFA.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name=" MFA Tab Tests - Remmi E2E ›  Enter incorrect Authy Authenticator MFA code" classname="Pages\MyProfile\MFA.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\MyProfileImagesTest.spec.ts" timestamp="2025-11-07T05:53:39.431Z" hostname="chromium" tests="16" failures="0" skipped="16" time="0" errors="0">
+<testcase name="My Profile Tests - Remmi E2E › Test 1: User can upload a profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 2: User can open the upload multiple images flow" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 3: Verify selected image is set as the profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 4: Verify thumbnails appear after image upload" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 5: Verify thumbnails are removed when clicking cross button" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 6: User can edit and delete low resolution and agent face thumbnails" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 7: Verify system shows a warning when low resolution image is too small" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 8: Verify invalid image formats cannot be uploaded" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 9: Verify system allows changing profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 10: Verified profile image persists after reload" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 11: Verify the default placeholder is visible when no image is uploaded" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 12: Verify user can remove the selected profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 13: Verify correct aspect ratio is maintained for uploaded images" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 14: Verify system does not allow uploading broken/corrupt image files" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 15: Verify system allows only specific file formats (e.g., JPG, PNG)" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › Test 16: Verify proper error message is shown when upload fails" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\MyProfileTest.spec.ts" timestamp="2025-11-07T05:53:39.431Z" hostname="chromium" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="My Profile Tests - Remmi E2E › 1. Profile fields show data &amp; are non-editable" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 2. PIN field allows input and updates profile" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 3. Correct PIN allows private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 4. Fields remain non-editable if data missing" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 5. PIN is required for private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 6. Verify PIN is required for private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 7. Calendar color selection updates correctly" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 8. Incorrect PIN prevents private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\Notifications.spec.ts" timestamp="2025-11-07T05:53:39.431Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Notifications Tab Tests - Remmi E2E › Test case 1: User click ON the button for notification  " classname="Pages\MyProfile\Notifications.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\profileAccess.spec.ts" timestamp="2025-11-07T05:53:39.431Z" hostname="chromium" tests="5" failures="0" skipped="5" time="0" errors="0">
+<testcase name="Access Tab Tests - Remmi E2E › Test case 2: The user can successfully select a user from Access tab" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 4: Verify multiple users can be granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 6: Verify user can remove granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 7: Verify that selecting Select All grants access to all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 8: Verify that selecting Deselect All removes access from all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\SocialSetting.spec.ts" timestamp="2025-11-07T05:53:39.431Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Social Settings Tests - Remmi E2E › Test 1: The user can successfully upload social media links and the page updates correctly" classname="Pages\MyProfile\SocialSetting.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-11-07T05:53:39.431Z" hostname="chromium" tests="39" failures="0" skipped="39" time="0" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 1: Verify search works for existing team names" classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 2: Verify no results message appears for invalid team name." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 3: Verify Add button remains disabled when no team is selected." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 4: Verify clicking disabled Add button performs no action." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 5: Verify selecting a team enables Add button." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 6: Verify Add button doesn’t enable due to dropdown lag." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 7: Verify selected teams appear as tags below the dropdown." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 8: Verify removing a tag updates the list" classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 9: Verify user can select multiple teams from dropdown." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 10: Verify clicking Add adds selected teams to list." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 11: Verify “Create New” opens Add Team popup." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 12: Verify popup close (X) closes Add Team popup." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 13: Verify JPG and PNG formats are accepted, and invalid image format is rejected for team upload." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 14: Verify unsupported file formats show validation error." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 15: Verify required field validation for Team Name, Office, and Members." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 16: Verify team cannot be created with missing required field." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 17: Verify selecting office filters available members." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 18: Verify no members shown when office not selected" classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 19: Verify selecting members activates Team Leader dropdown." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 20: Verify team creation fails if no Team Leader is selected." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 21: Verify successful team creation with all valid details." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 22: Verify Cancel button closes popup without saving." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 23: Verify unsaved data does not persist after closing popup" classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 24: Verify newly created team appears in dropdown and team list." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 25: Verify failed team creation doesn’t reflect in list." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 26: Verify failed team creation doesn’t reflect in list." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 27: Verify sort button on empty list doesn’t crash UI." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 28: Verify Edit icon opens existing team for update" classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 31: Verify confirming Delete removes team permanently." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 32: Verify team created in My Profile also appears in Team module" classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 33: Verify alignment of Add button with Team dropdown." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 34: Verify dropdown supports search for large team lists." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 35: Verify dropdown search with invalid keyword." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 36: Verify toast notification appears after team creation." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 37: Verify no duplicate toast shown for single event." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 38: Verify validation message color (red for errors)." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 39: Verify confirmation message color (green for success)" classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 40: Verify data remains after page refresh." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 41: Verify unsaved popup data lost on refresh." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
 </testsuites>
