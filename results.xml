@@ -1,8 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.21418200000003">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T10:48:20.069Z" hostname="chromium" tests="1" failures="0" skipped="0" time="22.983" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 30: Verify filtering contacts by Email in the contact list" classname="Pages\Contacts\contact.spec.ts" time="22.983">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.47188399999962">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T10:53:03.642Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.258" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 31: Verify type filter works correctly" classname="Pages\Contacts\contact.spec.ts" time="58.258">
 <system-out>
-<![CDATA[Email cell text: hina.test@remmi.com.au
+<![CDATA[Agent
 ]]>
 </system-out>
 </testcase>

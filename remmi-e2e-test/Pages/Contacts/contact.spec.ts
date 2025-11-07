@@ -392,4 +392,16 @@ test('Test 30: Verify filtering contacts by Email in the contact list', async ({
   await contact.verifyEmailFilterWorks('hina.test@remmi.com.au');
 });
 
+test('Test 31: Verify type filter works correctly', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifyTypeFilter('Agent');
+});
+
 });
