@@ -326,5 +326,18 @@ test('Test 25: Verify filtering contacts with invalid condition', async ({ page 
   await contact.verifyFilteringContactsWithInvalidCondition();
 });
 
+test('Test 26: Verify that data aligns properly with the check circle while applying filters', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifyTableAlignmentWithSelectionColumnWithFilter();
+});
+
 
 });

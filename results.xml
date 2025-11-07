@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.72761900000088">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T08:10:27.374Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.919" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 25: Verify filtering contacts with invalid condition" classname="Pages\Contacts\contact.spec.ts" time="25.919">
-<system-out>
-<![CDATA[✅ Verified: Filter applied with empty condition (invalid data field).
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="28.250102000001817">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-07T09:07:34.108Z" hostname="chromium" tests="1" failures="0" skipped="0" time="20.87" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 26: Verify that data aligns properly with the check circle while applying filters" classname="Pages\Contacts\contact.spec.ts" time="20.87">
 </testcase>
 </testsuite>
 </testsuites>
