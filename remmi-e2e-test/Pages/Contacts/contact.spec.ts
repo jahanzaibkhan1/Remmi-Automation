@@ -339,5 +339,18 @@ test('Test 26: Verify that data aligns properly with the check circle while appl
   await contact.verifyTableAlignmentWithSelectionColumnWithFilter();
 });
 
+test('Test 27: Verify that data is displayed in the list for key contact columns', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifyContactsTableEssentialColumnsHaveData();
+});
+
 
 });
