@@ -366,5 +366,17 @@ test('Test 28: Verify filtering contacts by Full Name in the contact list', asyn
   await contact.verifyFilteringContactsByFullName('Hina Test');
 });
 
+test('Test 29: Verify filtering contacts by Mobile in the contact list', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifyFilteringContactsByMobile('0409235412');
+});
 
 });
