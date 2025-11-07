@@ -506,4 +506,62 @@ public async verifyInitialsPlaceholderWhenNoProfileImage(contactName: string): P
     }
 }
 
+public async verifyContactListStatusAlignment(): Promise<void> {
+    await this.NavigateToContacts();
+    await this.page.waitForTimeout(2000);
+
+    await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
+
+    const headers = await this.page.locator('table thead tr th').allTextContents();
+    let statusColIdx = headers.findIndex(
+        h => h.trim().toLowerCase() === 'status' || h.trim().toLowerCase().includes('status')
+    );
+
+    if (statusColIdx === -1) {
+        statusColIdx = headers.findIndex(h => h.trim().toLowerCase() === 'state' || h.trim().toLowerCase().includes('state'));
+    }
+    if (statusColIdx === -1 && headers.length > 0) {
+        statusColIdx = headers.length - 1;
+    }
+
+    if (statusColIdx === -1) {
+        console.error('❌ Could not find status column. Headers:', headers);
+        throw new Error('Could not find status column in contacts table. Headers: ' + JSON.stringify(headers));
+    }
+
+    const rows = await this.page.locator('table tbody tr').all();
+
+    if (rows.length === 0) {
+        console.error('❌ No rows found in contact list table for status alignment check.');
+        throw new Error('No rows found in contact list table.');
+    }
+
+    const statusCellRects: ({ x: number, y: number, width: number, height: number } | null)[] = [];
+    for (const [i, row] of rows.entries()) {
+        const statusCell = row.locator('td').nth(statusColIdx);
+        const cellCount = await row.locator('td').count();
+        if (statusColIdx >= cellCount) {
+            console.warn(`⚠️ Row ${i} does not have enough columns. statusColIdx=${statusColIdx}, actual td count=${cellCount}. Skipping row.`);
+            continue;
+        }
+        await expect(statusCell).toBeVisible();
+        const box = await statusCell.boundingBox();
+        statusCellRects.push(box);
+    }
+
+    const validXPositions = statusCellRects
+        .filter(rect => rect && typeof rect.x === 'number')
+        .map(rect => (rect as { x: number }).x);
+
+    if (validXPositions.length === 0) {
+        throw new Error('No valid bounding boxes found for status column cells.');
+    }
+
+    const minX = Math.min(...validXPositions);
+    const maxX = Math.max(...validXPositions);
+
+    expect(maxX - minX).toBeLessThanOrEqual(2);
+}
+
+
 }
