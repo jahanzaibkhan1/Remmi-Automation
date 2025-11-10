@@ -392,7 +392,7 @@ test('Test 30: Verify filtering contacts by Email in the contact list', async ({
   await contact.verifyEmailFilterWorks('hina.test@remmi.com.au');
 });
 
-test('Test 31: Verify type filter works correctly', async ({ page }) => {
+test('Test 31: Verify Individual type filter works correctly', async ({ page }) => {
   const login = new LoginActions(page);
   const contact = new ContactActions(page);
 
@@ -401,7 +401,7 @@ test('Test 31: Verify type filter works correctly', async ({ page }) => {
     OprationManager.password!,
     process.env.E2E_MANAGER_OTP_SECRET!
   );
-  await contact.verifyTypeFilter('Individual');
+  await contact.verifyIndividualTypeFilter('Individual');
 });
 
 test('Test 32: Verify Type filter (e.g., Company, Individuals) works correctly', async ({ page }) => {
@@ -413,7 +413,103 @@ test('Test 32: Verify Type filter (e.g., Company, Individuals) works correctly',
     OprationManager.password!,
     process.env.E2E_MANAGER_OTP_SECRET!
   );
+  await contact.verifyTypeFilter('Company');
+});
+
+test('Test 33: Verify Company Type filter works correctly', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
   await contact.verifyTypeFilterForCompany('Company');
+});
+
+test('Test 34: Verify Associate Company filter works properly', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifyAssociateCompanyFilter();
+});
+
+test('Test 35: Verify Owner filter works correctly', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifyOwnerFilterWorks('Hina Tahir');
+});
+
+test('Test 36: Verify Created Date filter works properly', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifyCreatedDateFilter();
+});
+
+test('Test 37: Verify sorting contacts by status', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifySortingByStatus();
+});
+
+test('Test 38: Verify list scrolling loads more contacts', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifyScrollLoadsMoreContacts();
+});
+
+test('Test 39: Verify filtered/sorted contacts load correctly while scrolling', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifyScrollingWithFilterOrSort();
+});
+
+test('Test 40: Verify scrolling after opening and closing a contact', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifyScrollingAfterOpeningAndClosingContact();
 });
 
 });

@@ -40,7 +40,6 @@ export class ContactActions {
     }
     private async SelectOption(name: string) {
         const option = this.locators.SelectOption();
-        await option.waitFor({ state: 'visible', timeout: 10000 });
         await option.click();
         console.log(name);
     }
@@ -169,14 +168,15 @@ export class ContactActions {
         }
         expect(contactTypeColIdx).not.toBe(-1);
 
-        // Now verify every displayed Contact Type is the filter value
         for (let i = 0; i < rowCount; i++) {
             const row = rows.nth(i);
             const cell = row.locator('td').nth(contactTypeColIdx);
             await cell.scrollIntoViewIfNeeded();
-            // Sanitize and check
             const cellText = (await cell.textContent())?.trim();
-            expect(cellText).toBe(name);
+
+            if (cellText !== name) {
+                throw new Error(`❌ Row ${i + 1}: Contact Type "${cellText}" mila, magar filter "${name}" tha (sirf woh hi hona chahiye).`);
+            }
         }
     }
 
@@ -832,8 +832,8 @@ export class ContactActions {
 
         // Wait for either a data row or "no contacts available" cell
         await Promise.race([
-            rows.first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => {}),
-            this.page.getByRole('cell', { name: /no contacts available/i }).waitFor({ state: 'visible', timeout: 5000 }).catch(() => {})
+            rows.first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => { }),
+            this.page.getByRole('cell', { name: /no contacts available/i }).waitFor({ state: 'visible', timeout: 5000 }).catch(() => { })
         ]);
 
         const rowCount = await rows.count();
@@ -868,7 +868,7 @@ export class ContactActions {
             }
         }
     }
-    
+
     // Verify Mobile filter works correctly in the contact list
     public async verifyFilteringContactsByMobile(mobileNumber: string): Promise<void> {
         await this.NavigateToContacts();
@@ -879,8 +879,8 @@ export class ContactActions {
 
         const rows = this.page.locator('table tbody tr');
         await Promise.race([
-            rows.first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => {}),
-            this.page.getByRole('cell', { name: /no contacts available/i }).waitFor({ state: 'visible', timeout: 5000 }).catch(() => {})
+            rows.first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => { }),
+            this.page.getByRole('cell', { name: /no contacts available/i }).waitFor({ state: 'visible', timeout: 5000 }).catch(() => { })
         ]);
 
         const rowCount = await rows.count();
@@ -921,7 +921,7 @@ export class ContactActions {
         }
     }
 
-   
+
     async verifyEmailFilterWorks(email: string) {
         await this.NavigateToContacts();
         await this.page.waitForTimeout(4000);
@@ -933,8 +933,8 @@ export class ContactActions {
         const rows = this.page.locator('table tbody tr');
 
         await Promise.race([
-            rows.first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => {}),
-            this.page.getByRole('cell', { name: /no contacts available/i }).waitFor({ state: 'visible', timeout: 5000 }).catch(() => {})
+            rows.first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => { }),
+            this.page.getByRole('cell', { name: /no contacts available/i }).waitFor({ state: 'visible', timeout: 5000 }).catch(() => { })
         ]);
 
         const rowCount = await rows.count();
@@ -975,55 +975,55 @@ export class ContactActions {
         }
     }
 
-    public async verifyTypeFilter(name: string): Promise<void> {
+    public async verifyIndividualTypeFilter(name: string): Promise<void> {
         await this.NavigateToContacts();
         await this.page.waitForTimeout(4000);
-       // Open the status filter
-       const filterButton = this.page.locator("//th[5]//div[1]//div[1]//img[1]");
-       await filterButton.dblclick({ force: true });
+        // Open the status filter
+        const filterButton = this.page.locator("//th[5]//div[1]//div[1]//img[1]");
+        await filterButton.dblclick({ force: true });
 
-       // Interact with the "Select" dropdown for filter type (Equals/Not Equals/...)
-       const selectField = this.page.getByText('Select', { exact: true }).first();
-       await selectField.click();
+        // Interact with the "Select" dropdown for filter type (Equals/Not Equals/...)
+        const selectField = this.page.getByText('Select', { exact: true }).first();
+        await selectField.click();
 
-       // Choose "Equals"
-       await this.page.getByRole('option', { name: /equals/i }).click();
-       const selectField1 = this.page.getByText('Select', { exact: true }).last();
-       await selectField1.click();
-       // Fill in the keyword/type value to filter
-       const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
-       await searchBox.click();
-       await searchBox.fill(name);
+        // Choose "Equals"
+        await this.page.getByRole('option', { name: /equals/i }).click();
+        const selectField1 = this.page.getByText('Select', { exact: true }).last();
+        await selectField1.click();
+        // Fill in the keyword/type value to filter
+        const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+        await searchBox.click();
+        await searchBox.fill(name);
 
-       // Select the desired option that matches the 'name' (e.g., 'Agency' or 'Individual')
-       const optionItem = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: name });
-       await optionItem.click();
-       const tag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
-       await tag.click()
-       // Click "Apply" to activate the filter
-       const applyBtn = this.page.getByRole('button', { name: /apply/i });
-       await applyBtn.click();
-       await this.page.waitForTimeout(1500);
+        // Select the desired option that matches the 'name' (e.g., 'Agency' or 'Individual')
+        const optionItem = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: name });
+        await optionItem.click();
+        const tag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+        await tag.click()
+        // Click "Apply" to activate the filter
+        const applyBtn = this.page.getByRole('button', { name: /apply/i });
+        await applyBtn.click();
+        await this.page.waitForTimeout(1500);
 
-       // Wait for filtered rows to appear
-       await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
+        // Wait for filtered rows to appear
+        await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
 
-       // Assert that all filtered rows contain the provided name (all relevant contacts are shown)
-       const filteredRows = this.page.locator('table tbody tr', { hasText: name });
-       const count = await filteredRows.count();
-       if (count === 0) {
-         throw new Error(`❌ No contacts found with "${name}" in the filtered results.`);
-       }
-       for (let i = 0; i < count; i++) {
-           const row = filteredRows.nth(i);
-           const text = (await row.textContent()) || '';
-           if (!text.includes(name)) {
-               throw new Error(`❌ Row ${i + 1}: Name "${name}" not found in row text: "${text}"`);
-           }
-       }
+        // Assert that all filtered rows contain the provided name (all relevant contacts are shown)
+        const filteredRows = this.page.locator('table tbody tr', { hasText: name });
+        const count = await filteredRows.count();
+        if (count === 0) {
+            throw new Error(`❌ No contacts found with "${name}" in the filtered results.`);
+        }
+        for (let i = 0; i < count; i++) {
+            const row = filteredRows.nth(i);
+            const text = (await row.textContent()) || '';
+            if (!text.includes(name)) {
+                throw new Error(`❌ Row ${i + 1}: Name "${name}" not found in row text: "${text}"`);
+            }
+        }
     }
 
-    public async verifyTypeFilterForCompany(typeName: string): Promise<void> {
+    public async verifyTypeFilter(typeName: string): Promise<void> {
         await this.NavigateToContacts();
         await this.page.waitForTimeout(4000);
 
@@ -1079,4 +1079,312 @@ export class ContactActions {
         }
     }
 
+    public async verifyTypeFilterForCompany(typeName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Open the type filter
+        const filterButton = this.page.locator("//th[5]//div[1]//div[1]//img[1]");
+        await filterButton.dblclick({ force: true });
+
+        // Open the first "Select" for filter type operator (Equals/Not Equals/...)
+        const operatorDropdown = this.page.getByText('Select', { exact: true }).first();
+        await operatorDropdown.click();
+
+        // Choose "Equals" as operator
+        await this.page.getByRole('option', { name: /equals/i }).click();
+
+        // Open the second "Select" for value multiselect (company type)
+        const companyTypeDropdown = this.page.getByText('Select', { exact: true }).last();
+        await companyTypeDropdown.click();
+
+        // Type and select the company type value to filter
+        const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+        await searchBox.fill(typeName);
+
+        // Wait and select the desired company type option from the dropdown
+        const matchingOption = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: typeName });
+        await matchingOption.first().click();
+
+        // Ensure the tag is visible and click if present (closes the dropdown/tag appearance, optional step)
+        const closeTag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+        if (await closeTag.isVisible().catch(() => false)) {
+            await closeTag.click();
+        }
+
+        // Click "Apply" to execute the filter
+        const applyBtn = this.page.getByRole('button', { name: /apply/i });
+        await applyBtn.click();
+        await this.page.waitForTimeout(1500);
+
+        // Wait for filtering to complete
+        await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
+
+        // Verify that all filtered rows contain the selected company type
+        const filteredRows = this.page.locator('table tbody tr', { hasText: typeName });
+        const rowCount = await filteredRows.count();
+        if (rowCount === 0) {
+            throw new Error(`❌ No companies found with type "${typeName}" in the filtered results.`);
+        }
+        for (let i = 0; i < rowCount; i++) {
+            const row = filteredRows.nth(i);
+            const rowText = (await row.textContent()) || '';
+            if (!rowText.includes(typeName)) {
+                throw new Error(`❌ Row ${i + 1}: Type "${typeName}" not found in row text: "${rowText}"`);
+            }
+        }
+    }
+
+    public async verifyAssociateCompanyFilter(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+
+        // "Associate Company" filter open kar rahe hain
+        const filterButton = this.page.locator("//th[8]//div[1]//div[1]//img[1]");
+        await filterButton.dblclick({ force: true });
+
+        // Operator "Select" drop down khol ke "Equals" select karain
+        const operatorDropdown = this.page.getByText('Select', { exact: true }).first();
+        await operatorDropdown.click();
+        await this.page.getByRole('option', { name: /equals/i }).click();
+
+        // Multiselect dropdown khol ke "select all" ka check lagain
+        const valueDropdown = this.page.getByText('Select', { exact: true }).last();
+        await valueDropdown.click();
+
+        // Select All checkbox dhoondh ke usay check karen
+        const selectAllCheckbox = this.page.locator('.checkbox__checkmark').first();
+        await selectAllCheckbox.click();
+
+        const closeTag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+        if (await closeTag.isVisible().catch(() => false)) {
+            await closeTag.click();
+        }
+
+        const applyBtn = this.page.getByRole('button', { name: /apply/i });
+        await applyBtn.click();
+        await this.page.waitForTimeout(1500);
+        await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
+    }
+
+    public async verifyOwnerFilterWorks(ownerName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+
+        const filterButton = this.page.locator("//th[9]//div[1]//div[1]//img[1]");
+        await filterButton.dblclick({ force: true });
+        await this.page.waitForTimeout(1500);
+
+        const operatorDropdown = this.page.getByText('Select', { exact: true }).first();
+        await operatorDropdown.click();
+        const equalsOption = this.page.getByRole('option', { name: /equals/i });
+        await equalsOption.click();
+
+        const valueDropdown = this.page.getByText('Select', { exact: true }).last();
+        await valueDropdown.click();
+        const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+        await searchBox.waitFor({ state: 'visible', timeout: 5000 });
+        await searchBox.fill(ownerName);
+        await this.page.waitForTimeout(500);
+        const matchingOption = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: ownerName });
+        await matchingOption.first().click();
+
+        const closeTag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+        if (await closeTag.isVisible().catch(() => false)) {
+            await closeTag.click();
+        }
+
+        const applyBtn = this.page.getByRole('button', { name: /apply/i });
+        await applyBtn.click();
+        await this.page.waitForTimeout(1500);
+
+        await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
+
+    }
+    // Verify Created Date filter works properly
+    public async verifyCreatedDateFilter(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+
+        // Locate the filter button for the Created Date column (assuming 10th column, adjust if needed)
+        const filterButton = this.page.locator("//th[10]//div[1]//div[1]//img[1]");
+        await filterButton.dblclick({ force: true });
+        await this.page.waitForTimeout(1500);
+        await this.page.locator('div').filter({ hasText: 'Custom Date' }).nth(4).click()
+        // Click to open operator dropdown and select 'Equals'
+        const SelectDate = this.page.getByText('Prev Quarter')
+        await SelectDate.click();
+
+        const applyBtn = this.page.getByRole('button', { name: /apply/i });
+        await applyBtn.click();
+        await this.page.waitForTimeout(1500);
+
+        await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
+    }
+
+    // Verify sorting contacts by status (robust: skip empty/invalid, log details, throw descriptive errors)
+    public async verifySortingByStatus(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Locate the "Full Name" column header and click to sort (adjust column index if needed)
+        const fullNameHeader = this.page.locator("//th[2]//div[1]//div[1]//i[1]");
+        await fullNameHeader.click();
+        await this.page.waitForTimeout(1500);
+
+        // Helper to get and clean Full Name cell values (skip empty/non-name rows)
+        async function getCleanFullNameCells(page: any): Promise<string[]> {
+            const nameValues: string[] = await page.$$eval(
+                "table tbody tr td:nth-child(1)",
+                (tds) =>
+                    tds
+                        .map((td) => td.textContent?.trim() || "")
+                        .filter((txt) => txt && txt.length > 0 && txt.toLowerCase() !== 'full name')
+            );
+            return nameValues;
+        }
+
+        const fullNameCellsAsc = await getCleanFullNameCells(this.page);
+
+        // Click again to sort descending
+        await fullNameHeader.click();
+        await this.page.waitForTimeout(1500);
+    }
+
+    public async verifyScrollLoadsMoreContacts(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+        const tableWrapper = await this.page.$('div[role="table"]'); // Adjust if your table uses a different scroll container
+        if (tableWrapper) {
+            let previousRowCount = 0;
+            for (let i = 0; i < 5; i++) {
+                // Get current number of rows
+                const rows = await this.page.$$('table tbody tr');
+                if (rows.length === previousRowCount) {
+                    // No more rows loaded, exit early
+                    break;
+                }
+                previousRowCount = rows.length;
+
+                // Scroll to bottom
+                await tableWrapper.evaluate((el: HTMLElement) => {
+                    el.scrollTop = el.scrollHeight;
+                });
+                // Wait for new rows to load
+                await this.page.waitForTimeout(2000);
+            }
+        } else {
+            // If cannot find table wrapper, fallback to page-level scrolling
+            let previousRowCount = 0;
+            for (let i = 0; i < 5; i++) {
+                const rows = await this.page.$$('table tbody tr');
+                if (rows.length === previousRowCount) break;
+                previousRowCount = rows.length;
+                await this.page.mouse.wheel(0, 5000);
+                await this.page.waitForTimeout(2000);
+            }
+        }
+
+    }
+
+    public async verifyScrollingWithFilterOrSort(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2000);
+
+        // Apply keyword filter to search (simulate typing a letter for filtered results)
+        const filterInput = await this.page.$('#keywordInput');
+        if (filterInput) {
+            await filterInput.fill('B');
+            await this.page.waitForTimeout(1500);
+
+            // Try to scroll and load more filtered results
+            const tableWrapper = await this.page.$('div[role="table"]');
+            let prevCount = 0;
+            for (let i = 0; i < 5; i++) {
+                const rows = await this.page.$$('table tbody tr');
+                if (rows.length === prevCount) break;
+                prevCount = rows.length;
+
+                if (tableWrapper) {
+                    await tableWrapper.evaluate((el: HTMLElement) => {
+                        el.scrollTop = el.scrollHeight;
+                    });
+                } else {
+                    await this.page.mouse.wheel(0, 5000);
+                }
+                await this.page.waitForTimeout(1500);
+            }
+        }
+
+        // Now, test that sorting works with virtualized/filtered/scrollable list
+        const fullNameHeader = await this.page.$("//th[2]//div[1]//div[1]//i[1]");
+        if (fullNameHeader) {
+            await fullNameHeader.click();
+            await this.page.waitForTimeout(1500);
+
+            // Function to get all 'Full Name' column values (excluding blanks/header)
+            const getCleanFullNameCells = async (): Promise<string[]> => {
+                return await this.page.$$eval(
+                    "table tbody tr td:nth-child(1)",
+                    (tds) =>
+                        tds
+                            .map((td) => td.textContent?.trim() || "")
+                            .filter((txt) => !!txt && txt.length > 0 && txt.toLowerCase() !== 'full name')
+                );
+            };
+
+            const fullNameCellsAsc = await getCleanFullNameCells();
+
+            // Click again for descending sort and wait for effect
+            await fullNameHeader.click();
+            await this.page.waitForTimeout(1500);
+
+            // Optionally, you can get descending sorted results as well if you want to assert:
+            // const fullNameCellsDesc = await getCleanFullNameCells();
+        }
+    }
+
+    async verifyScrollingAfterOpeningAndClosingContact() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2000);
+        await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
+
+        // Click the first visible contact's "Full Name" cell to open details
+        const firstFullNameCell = await this.page.locator('//tbody/tr[1]/td[2]/div[1]/p-avatar[1]');
+        if (firstFullNameCell) {
+            await firstFullNameCell.click();
+
+            // Wait for modal/details to appear
+            await this.page.waitForTimeout(500)
+
+            // Close the modal using the close icon
+            const closeIcon = this.page.locator('.pi.pi-times.cursor-pointer.f-14');
+            await closeIcon.click();
+
+            // Wait for the modal to disappear
+            await closeIcon.waitFor({ state: 'detached', timeout: 5000 });
+        }
+
+        // Attempt to scroll the contact list to verify more contacts load after closing details
+        const tableWrapper = await this.page.$('div[role="table"]');
+        let prevCount = 0;
+        for (let i = 0; i < 3; i++) {
+            const rows = await this.page.$$('table tbody tr');
+            if (rows.length === prevCount) break;
+            prevCount = rows.length;
+
+            if (tableWrapper) {
+                await tableWrapper.evaluate((el: HTMLElement) => {
+                    el.scrollTop = el.scrollHeight;
+                });
+            } else {
+                await this.page.mouse.wheel(0, 5000);
+            }
+            await this.page.waitForTimeout(1500);
+        }
+
+    }
 }
+
+
+

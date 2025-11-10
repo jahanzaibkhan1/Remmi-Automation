@@ -89,6 +89,7 @@ test.describe(' MFA Tab Tests - Remmi E2E', () => {
   test(' Login without enabling MFA', async ({ page }) => {
     const login = new LoginActions(page);
     await login.loginwithoutOTp(salesAgent.email!, salesAgent.password!);
+    await page.waitForTimeout(2000);
     const noMfaMessage = page.getByText(/No MFA Assigned/i);
     await expect(noMfaMessage).toBeVisible();
   });
@@ -96,11 +97,13 @@ test.describe(' MFA Tab Tests - Remmi E2E', () => {
   test(' MFA Warning after 7 days', async ({ page }) => {
       const login = new LoginActions(page);
       await login.loginwithoutOTp(salesAgent.email!, salesAgent.password!);
+      await page.waitForTimeout(2000);
       const warningMessage = page.locator('div').filter({ hasText: 'No MFA AssignedTo enhance' }).nth(2);
       await expect(warningMessage).toBeVisible();
   });
 
   test(' Enter incorrect Google Authenticator MFA code', async ({ page }) => {
+    reloadEnv(); // Reload environment variables to ensure fresh values
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
@@ -115,6 +118,7 @@ test.describe(' MFA Tab Tests - Remmi E2E', () => {
   });
 
   test(' Enter incorrect Microsoft Authenticator MFA code', async ({ page }) => {
+    reloadEnv(); // Reload environment variables to ensure fresh values
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
@@ -129,6 +133,7 @@ test.describe(' MFA Tab Tests - Remmi E2E', () => {
   });
 
   test(' Enter incorrect Authy Authenticator MFA code', async ({ page }) => {
+    reloadEnv(); // Reload environment variables to ensure fresh values
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
 
