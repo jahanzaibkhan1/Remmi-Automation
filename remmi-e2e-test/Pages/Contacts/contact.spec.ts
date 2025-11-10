@@ -487,4 +487,17 @@ test('Test 38: Verify list scrolling loads more contacts', async ({ page }) => {
   );
   await contact.verifyScrollLoadsMoreContacts();
 });
+
+test('Test 39: Verify filtered/sorted contacts load correctly while scrolling', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifyScrollingWithFilterOrSort();
+});
+
 });
