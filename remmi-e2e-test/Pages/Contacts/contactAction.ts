@@ -1167,4 +1167,39 @@ export class ContactActions {
         await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
     }
 
+    public async verifyOwnerFilterWorks(ownerName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+
+        const filterButton = this.page.locator("//th[9]//div[1]//div[1]//img[1]");
+        await filterButton.dblclick({ force: true });
+        await this.page.waitForTimeout(1500);
+
+        const operatorDropdown = this.page.getByText('Select', { exact: true }).first();
+        await operatorDropdown.click();
+        const equalsOption = this.page.getByRole('option', { name: /equals/i });
+        await equalsOption.click();
+
+        const valueDropdown = this.page.getByText('Select', { exact: true }).last();
+        await valueDropdown.click();
+        const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+        await searchBox.waitFor({ state: 'visible', timeout: 5000 });
+        await searchBox.fill(ownerName);
+        await this.page.waitForTimeout(500);
+        const matchingOption = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: ownerName });
+        await matchingOption.first().click();
+
+        const closeTag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+        if (await closeTag.isVisible().catch(() => false)) {
+            await closeTag.click();
+        }
+
+        const applyBtn = this.page.getByRole('button', { name: /apply/i });
+        await applyBtn.click();
+        await this.page.waitForTimeout(1500);
+
+        await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
+       
+    }
+
 }
