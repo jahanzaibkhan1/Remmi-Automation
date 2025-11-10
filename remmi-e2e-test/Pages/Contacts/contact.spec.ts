@@ -392,7 +392,7 @@ test('Test 30: Verify filtering contacts by Email in the contact list', async ({
   await contact.verifyEmailFilterWorks('hina.test@remmi.com.au');
 });
 
-test('Test 31: Verify type filter works correctly', async ({ page }) => {
+test('Test 31: Verify Individual type filter works correctly', async ({ page }) => {
   const login = new LoginActions(page);
   const contact = new ContactActions(page);
 
@@ -401,7 +401,7 @@ test('Test 31: Verify type filter works correctly', async ({ page }) => {
     OprationManager.password!,
     process.env.E2E_MANAGER_OTP_SECRET!
   );
-  await contact.verifyTypeFilter('Individual');
+  await contact.verifyIndividualTypeFilter('Individual');
 });
 
 test('Test 32: Verify Type filter (e.g., Company, Individuals) works correctly', async ({ page }) => {
@@ -413,7 +413,8 @@ test('Test 32: Verify Type filter (e.g., Company, Individuals) works correctly',
     OprationManager.password!,
     process.env.E2E_MANAGER_OTP_SECRET!
   );
-  await contact.verifyTypeFilterForCompany('Company');
+  await contact.verifyTypeFilter('Company');
 });
+
 
 });

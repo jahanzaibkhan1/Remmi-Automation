@@ -40,7 +40,6 @@ export class ContactActions {
     }
     private async SelectOption(name: string) {
         const option = this.locators.SelectOption();
-        await option.waitFor({ state: 'visible', timeout: 10000 });
         await option.click();
         console.log(name);
     }
@@ -169,14 +168,15 @@ export class ContactActions {
         }
         expect(contactTypeColIdx).not.toBe(-1);
 
-        // Now verify every displayed Contact Type is the filter value
         for (let i = 0; i < rowCount; i++) {
             const row = rows.nth(i);
             const cell = row.locator('td').nth(contactTypeColIdx);
             await cell.scrollIntoViewIfNeeded();
-            // Sanitize and check
             const cellText = (await cell.textContent())?.trim();
-            expect(cellText).toBe(name);
+
+            if (cellText !== name) {
+                throw new Error(`❌ Row ${i + 1}: Contact Type "${cellText}" mila, magar filter "${name}" tha (sirf woh hi hona chahiye).`);
+            }
         }
     }
 
@@ -975,7 +975,7 @@ export class ContactActions {
         }
     }
 
-    public async verifyTypeFilter(name: string): Promise<void> {
+    public async verifyIndividualTypeFilter(name: string): Promise<void> {
         await this.NavigateToContacts();
         await this.page.waitForTimeout(4000);
        // Open the status filter
@@ -1023,7 +1023,7 @@ export class ContactActions {
        }
     }
 
-    public async verifyTypeFilterForCompany(typeName: string): Promise<void> {
+    public async verifyTypeFilter(typeName: string): Promise<void> {
         await this.NavigateToContacts();
         await this.page.waitForTimeout(4000);
 
@@ -1078,5 +1078,8 @@ export class ContactActions {
             }
         }
     }
+
+   
+
 
 }
