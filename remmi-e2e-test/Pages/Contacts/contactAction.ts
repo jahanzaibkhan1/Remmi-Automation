@@ -1078,8 +1078,61 @@ export class ContactActions {
             }
         }
     }
-
    
+    public async verifyTypeFilterForCompany(typeName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
 
+         // Open the type filter
+         const filterButton = this.page.locator("//th[5]//div[1]//div[1]//img[1]");
+         await filterButton.dblclick({ force: true });
+ 
+         // Open the first "Select" for filter type operator (Equals/Not Equals/...)
+         const operatorDropdown = this.page.getByText('Select', { exact: true }).first();
+         await operatorDropdown.click();
+ 
+         // Choose "Equals" as operator
+         await this.page.getByRole('option', { name: /equals/i }).click();
+ 
+         // Open the second "Select" for value multiselect (company type)
+         const companyTypeDropdown = this.page.getByText('Select', { exact: true }).last();
+         await companyTypeDropdown.click();
+ 
+         // Type and select the company type value to filter
+         const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+         await searchBox.fill(typeName);
+ 
+         // Wait and select the desired company type option from the dropdown
+         const matchingOption = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: typeName });
+         await matchingOption.first().click();
+ 
+         // Ensure the tag is visible and click if present (closes the dropdown/tag appearance, optional step)
+         const closeTag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+         if (await closeTag.isVisible().catch(() => false)) {
+             await closeTag.click();
+         }
+ 
+         // Click "Apply" to execute the filter
+         const applyBtn = this.page.getByRole('button', { name: /apply/i });
+         await applyBtn.click();
+         await this.page.waitForTimeout(1500);
+ 
+         // Wait for filtering to complete
+         await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
+ 
+         // Verify that all filtered rows contain the selected company type
+         const filteredRows = this.page.locator('table tbody tr', { hasText: typeName });
+         const rowCount = await filteredRows.count();
+         if (rowCount === 0) {
+             throw new Error(`❌ No companies found with type "${typeName}" in the filtered results.`);
+         }
+         for (let i = 0; i < rowCount; i++) {
+             const row = filteredRows.nth(i);
+             const rowText = (await row.textContent()) || '';
+             if (!rowText.includes(typeName)) {
+                 throw new Error(`❌ Row ${i + 1}: Type "${typeName}" not found in row text: "${rowText}"`);
+             }
+         }
+    }
 
 }
