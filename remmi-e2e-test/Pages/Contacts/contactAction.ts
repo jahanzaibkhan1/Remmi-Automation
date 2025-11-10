@@ -1201,5 +1201,25 @@ export class ContactActions {
         await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
        
     }
+    // Verify Created Date filter works properly
+    public async verifyCreatedDateFilter(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+
+        // Locate the filter button for the Created Date column (assuming 10th column, adjust if needed)
+        const filterButton = this.page.locator("//th[10]//div[1]//div[1]//img[1]");
+        await filterButton.dblclick({ force: true });
+        await this.page.waitForTimeout(1500);
+        await this.page.locator('div').filter({ hasText: 'Custom Date' }).nth(4).click()
+        // Click to open operator dropdown and select 'Equals'
+        const SelectDate = this.page.getByText('Prev Quarter')
+        await SelectDate.click();
+
+        const applyBtn = this.page.getByRole('button', { name: /apply/i });
+        await applyBtn.click();
+        await this.page.waitForTimeout(1500);
+
+        await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
+    }
 
 }

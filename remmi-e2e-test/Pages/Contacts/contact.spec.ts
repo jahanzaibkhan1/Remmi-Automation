@@ -452,4 +452,16 @@ test('Test 35: Verify Owner filter works correctly', async ({ page }) => {
   await contact.verifyOwnerFilterWorks('Hina Tahir');
 });
 
+test('Test 36: Verify Created Date filter works properly', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifyCreatedDateFilter();
+});
+
 });
