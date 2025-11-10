@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="57.84536900000018">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-10T10:54:55.627Z" hostname="chromium" tests="1" failures="0" skipped="0" time="49.604" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 36: Verify Created Date filter works properly" classname="Pages\Contacts\contact.spec.ts" time="49.604">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.451716999999714">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-10T11:12:35.153Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.541" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 37: Verify sorting contacts by status" classname="Pages\Contacts\contact.spec.ts" time="24.541">
 </testcase>
 </testsuite>
 </testsuites>

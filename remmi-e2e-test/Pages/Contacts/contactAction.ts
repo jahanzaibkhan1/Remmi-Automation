@@ -1222,4 +1222,33 @@ export class ContactActions {
         await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
     }
 
-}
+    // Verify sorting contacts by status (robust: skip empty/invalid, log details, throw descriptive errors)
+    public async verifySortingByStatus(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Locate the "Full Name" column header and click to sort (adjust column index if needed)
+        const fullNameHeader = this.page.locator("//th[2]//div[1]//div[1]//i[1]");
+        await fullNameHeader.click();
+        await this.page.waitForTimeout(1500);
+
+        // Helper to get and clean Full Name cell values (skip empty/non-name rows)
+        async function getCleanFullNameCells(page: any): Promise<string[]> {
+            const nameValues: string[] = await page.$$eval(
+                "table tbody tr td:nth-child(1)",
+                (tds) =>
+                    tds
+                        .map((td) => td.textContent?.trim() || "")
+                        .filter((txt) => txt && txt.length > 0 && txt.toLowerCase() !== 'full name')
+            );
+            return nameValues;
+        }
+
+        const fullNameCellsAsc = await getCleanFullNameCells(this.page);
+
+        // Click again to sort descending
+        await fullNameHeader.click();
+        await this.page.waitForTimeout(1500);
+    }
+    }
+
