@@ -1135,4 +1135,36 @@ export class ContactActions {
          }
     }
 
+    public async verifyAssociateCompanyFilter(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+
+        // "Associate Company" filter open kar rahe hain
+        const filterButton = this.page.locator("//th[8]//div[1]//div[1]//img[1]");
+        await filterButton.dblclick({ force: true });
+
+        // Operator "Select" drop down khol ke "Equals" select karain
+        const operatorDropdown = this.page.getByText('Select', { exact: true }).first();
+        await operatorDropdown.click();
+        await this.page.getByRole('option', { name: /equals/i }).click();
+
+        // Multiselect dropdown khol ke "select all" ka check lagain
+        const valueDropdown = this.page.getByText('Select', { exact: true }).last();
+        await valueDropdown.click();
+
+        // Select All checkbox dhoondh ke usay check karen
+        const selectAllCheckbox = this.page.locator('.checkbox__checkmark').first();
+        await selectAllCheckbox.click();
+
+        const closeTag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+        if (await closeTag.isVisible().catch(() => false)) {
+            await closeTag.click();
+        }
+
+        const applyBtn = this.page.getByRole('button', { name: /apply/i });
+        await applyBtn.click();
+        await this.page.waitForTimeout(1500);
+        await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
+    }
+
 }
