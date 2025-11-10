@@ -440,4 +440,16 @@ test('Test 34: Verify Associate Company filter works properly', async ({ page })
   await contact.verifyAssociateCompanyFilter();
 });
 
+test('Test 35: Verify Owner filter works correctly', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifyOwnerFilterWorks('Hina Tahir');
+});
+
 });

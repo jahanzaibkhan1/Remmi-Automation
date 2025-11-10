@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.20534700000007">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-10T10:15:12.762Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.449" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 34: Verify Associate Company filter works properly" classname="Pages\Contacts\contact.spec.ts" time="30.449">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.044565000000006">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-10T10:37:22.577Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.03" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 35: Verify Owner filter works correctly" classname="Pages\Contacts\contact.spec.ts" time="25.03">
 </testcase>
 </testsuite>
 </testsuites>
