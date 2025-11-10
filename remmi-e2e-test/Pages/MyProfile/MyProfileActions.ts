@@ -388,7 +388,7 @@ export class MyProfileActions {
     }
   }
 
-  private async calendarAccessUserName(userName) {
+  private async calendarAccessUserName(userName: string) {
     const calendarAccessUserName = this.locators.calendarAccessUserName(userName);
     await expect(calendarAccessUserName).toBeVisible({ timeout: 30000 });
   }
@@ -3065,7 +3065,7 @@ async verifyProjectDeleteFunctionality() {
 async verifyCheckboxBesideEachProject() {
   await test.step('Verify checkbox beside each project', async () => {
     await this.AssociationsTab();
-    await this.page.waitForTimeout(1000);
+    await this.page.waitForTimeout(3000);
 
     // Find the "main" (Select All) checkbox for project selection
     const selectAllCheckbox = this.page.getByRole('checkbox').nth(1);
