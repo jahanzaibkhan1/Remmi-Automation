@@ -464,4 +464,16 @@ test('Test 36: Verify Created Date filter works properly', async ({ page }) => {
   await contact.verifyCreatedDateFilter();
 });
 
+test('Test 37: Verify sorting contacts by status', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifySortingByStatus();
+});
+
 });
