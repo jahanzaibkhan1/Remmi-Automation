@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.451716999999714">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-10T11:12:35.153Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.541" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 37: Verify sorting contacts by status" classname="Pages\Contacts\contact.spec.ts" time="24.541">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="62.85585999999987">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-10T11:37:02.178Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.199" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 38: Verify list scrolling loads more contacts" classname="Pages\Contacts\contact.spec.ts" time="44.199">
 </testcase>
 </testsuite>
 </testsuites>
