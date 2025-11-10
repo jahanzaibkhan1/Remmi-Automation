@@ -500,4 +500,16 @@ test('Test 39: Verify filtered/sorted contacts load correctly while scrolling', 
   await contact.verifyScrollingWithFilterOrSort();
 });
 
+test('Test 40: Verify scrolling after opening and closing a contact', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifyScrollingAfterOpeningAndClosingContact();
+});
+
 });

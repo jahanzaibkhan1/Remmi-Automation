@@ -1343,7 +1343,48 @@ export class ContactActions {
             // const fullNameCellsDesc = await getCleanFullNameCells();
         }
     }
+
+    async verifyScrollingAfterOpeningAndClosingContact() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2000);
+        await this.page.waitForSelector('table tbody tr', { timeout: 10000 });
+
+        // Click the first visible contact's "Full Name" cell to open details
+        const firstFullNameCell = await this.page.locator('//tbody/tr[1]/td[2]/div[1]/p-avatar[1]');
+        if (firstFullNameCell) {
+            await firstFullNameCell.click();
+
+            // Wait for modal/details to appear
+            await this.page.waitForTimeout(500)
+
+            // Close the modal using the close icon
+            const closeIcon = this.page.locator('.pi.pi-times.cursor-pointer.f-14');
+            await closeIcon.click();
+
+            // Wait for the modal to disappear
+            await closeIcon.waitFor({ state: 'detached', timeout: 5000 });
+        }
+
+        // Attempt to scroll the contact list to verify more contacts load after closing details
+        const tableWrapper = await this.page.$('div[role="table"]');
+        let prevCount = 0;
+        for (let i = 0; i < 3; i++) {
+            const rows = await this.page.$$('table tbody tr');
+            if (rows.length === prevCount) break;
+            prevCount = rows.length;
+
+            if (tableWrapper) {
+                await tableWrapper.evaluate((el: HTMLElement) => {
+                    el.scrollTop = el.scrollHeight;
+                });
+            } else {
+                await this.page.mouse.wheel(0, 5000);
+            }
+            await this.page.waitForTimeout(1500);
+        }
+
     }
+}
 
 
 
