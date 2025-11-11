@@ -165,7 +165,7 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     );
     await contact.verifyDeleteButtonDisabledWhenNoContactSelected();
   });
-  
+
   test('Test 14: Verify the delete button removes the selected contact', async ({ page }) => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
@@ -175,11 +175,11 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
       OprationManager.password!,
       process.env.E2E_MANAGER_OTP_SECRET!
     );
-    const contactName = '11 22'; 
-    
+    const contactName = '11 22';
+
     await contact.verifyDeleteButtonRemovesSelectedContact(contactName);
   });
-  
+
   test('Test 15: Restore a deleted contact from setting and verify in Contacts', async ({ page }) => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
@@ -218,7 +218,7 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     );
     await contact.verifyContactCreationByPlusButton();
   });
-  
+
   test('Test 18: Verify that initials placeholder is shown when profile image is missing', async ({ page }) => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
@@ -233,283 +233,296 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyInitialsPlaceholderWhenNoProfileImage(contactName);
   });
 
-test('Test 19: Verify contact list status alignment', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 19: Verify contact list status alignment', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-  await contact.verifyContactListStatusAlignment();
-});
+    await contact.verifyContactListStatusAlignment();
+  });
 
-test('Test 20: Verify "Select All" functionality in contact list', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 20: Verify "Select All" functionality in contact list', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-  await contact.verifySelectAllFunctionality();
-});
+    await contact.verifySelectAllFunctionality();
+  });
 
-test('Test 21: Verify deselecting "Select All" unselects all contacts', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 21: Verify deselecting "Select All" unselects all contacts', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-  await contact.verifyDeselectSelectAllUnselectsAll();
-});
+    await contact.verifyDeselectSelectAllUnselectsAll();
+  });
 
-test('Test 22: Verify selecting individual contacts', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 22: Verify selecting individual contacts', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-  await contact.verifySelectingIndividualContacts();
-});
+    await contact.verifySelectingIndividualContacts();
+  });
 
-test('Test 23: Verify filtering contacts by "Active" status', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 23: Verify filtering contacts by "Active" status', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-  const name = "Ayesha umer";
+    const name = "Ayesha umer";
 
-  await contact.verifyFilteringContactsByStatus(name);
-});
+    await contact.verifyFilteringContactsByStatus(name);
+  });
 
-test('Test 24: Verify clear button closes the filter popup', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 24: Verify clear button closes the filter popup', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-  await contact.verifyClearButtonClosesFilter();
-});
+    await contact.verifyClearButtonClosesFilter();
+  });
 
-test('Test 25: Verify filtering contacts with invalid condition', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 25: Verify filtering contacts with invalid condition', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-  await contact.verifyFilteringContactsWithInvalidCondition();
-});
+    await contact.verifyFilteringContactsWithInvalidCondition();
+  });
 
-test('Test 26: Verify that data aligns properly with the check circle while applying filters', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 26: Verify that data aligns properly with the check circle while applying filters', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-  await contact.verifyTableAlignmentWithSelectionColumnWithFilter();
-});
+    await contact.verifyTableAlignmentWithSelectionColumnWithFilter();
+  });
 
-test('Test 27: Verify that data is displayed in the list for key contact columns', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 27: Verify that data is displayed in the list for key contact columns', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-  await contact.verifyContactsTableEssentialColumnsHaveData();
-});
+    await contact.verifyContactsTableEssentialColumnsHaveData();
+  });
 
-test('Test 28: Verify filtering contacts by Full Name in the contact list', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 28: Verify filtering contacts by Full Name in the contact list', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-  // Replace 'Hina Test' with an actual contact name you want to filter by if needed
-  await contact.verifyFilteringContactsByFullName('Hina Test');
-});
+    // Replace 'Hina Test' with an actual contact name you want to filter by if needed
+    await contact.verifyFilteringContactsByFullName('Hina Test');
+  });
 
-test('Test 29: Verify filtering contacts by Mobile in the contact list', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 29: Verify filtering contacts by Mobile in the contact list', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-  await contact.verifyFilteringContactsByMobile('0409235412');
-});
+    await contact.verifyFilteringContactsByMobile('0409235412');
+  });
 
-test('Test 30: Verify filtering contacts by Email in the contact list', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 30: Verify filtering contacts by Email in the contact list', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
 
-  await contact.verifyEmailFilterWorks('hina.test@remmi.com.au');
-});
+    await contact.verifyEmailFilterWorks('hina.test@remmi.com.au');
+  });
 
-test('Test 31: Verify Individual type filter works correctly', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 31: Verify Individual type filter works correctly', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
-  await contact.verifyIndividualTypeFilter('Individual');
-});
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyIndividualTypeFilter('Individual');
+  });
 
-test('Test 32: Verify Type filter (e.g., Company, Individuals) works correctly', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 32: Verify Type filter (e.g., Company, Individuals) works correctly', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
-  await contact.verifyTypeFilter('Company');
-});
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyTypeFilter('Company');
+  });
 
-test('Test 33: Verify Company Type filter works correctly', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 33: Verify Company Type filter works correctly', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
-  await contact.verifyTypeFilterForCompany('Company');
-});
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyTypeFilterForCompany('Company');
+  });
 
-test('Test 34: Verify Associate Company filter works properly', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 34: Verify Associate Company filter works properly', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
-  await contact.verifyAssociateCompanyFilter();
-});
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyAssociateCompanyFilter();
+  });
 
-test('Test 35: Verify Owner filter works correctly', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 35: Verify Owner filter works correctly', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
-  await contact.verifyOwnerFilterWorks('Hina Tahir');
-});
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyOwnerFilterWorks('Hina Tahir');
+  });
 
-test('Test 36: Verify Created Date filter works properly', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 36: Verify Created Date filter works properly', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
-  await contact.verifyCreatedDateFilter();
-});
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyCreatedDateFilter();
+  });
 
-test('Test 37: Verify sorting contacts by status', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 37: Verify sorting contacts by status', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
-  await contact.verifySortingByStatus();
-});
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifySortingByStatus();
+  });
 
-test('Test 38: Verify list scrolling loads more contacts', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 38: Verify list scrolling loads more contacts', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
-  await contact.verifyScrollLoadsMoreContacts();
-});
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyScrollLoadsMoreContacts();
+  });
 
-test('Test 39: Verify filtered/sorted contacts load correctly while scrolling', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 39: Verify filtered/sorted contacts load correctly while scrolling', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
-  await contact.verifyScrollingWithFilterOrSort();
-});
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyScrollingWithFilterOrSort();
+  });
 
-test('Test 40: Verify scrolling after opening and closing a contact', async ({ page }) => {
-  const login = new LoginActions(page);
-  const contact = new ContactActions(page);
+  test('Test 40: Verify scrolling after opening and closing a contact', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
-  await login.login(
-    OprationManager.email!,
-    OprationManager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET!
-  );
-  await contact.verifyScrollingAfterOpeningAndClosingContact();
-});
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyScrollingAfterOpeningAndClosingContact();
+  });
+
+  test('Test 41: Verify that the position of check circles on the contact list is correct', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.NavigateToContacts();
+    await contact.navigateToContactsThenOfficesAndCheckCheckboxes()
+  });
 
 });

@@ -1384,6 +1384,30 @@ export class ContactActions {
         }
 
     }
+
+    async navigateToContactsThenOfficesAndCheckCheckboxes() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2000);
+        
+        const officesLink = this.page.getByRole('link', { name: 'Offices' });
+        await officesLink.click();
+        await this.page.waitForTimeout(2000);
+        const checkboxes = this.page.locator('[role="checkbox"]:visible');
+        const count = await checkboxes.count();
+        
+        for (let i = 0; i < count; i++) {
+          const checkbox = checkboxes.nth(i);
+          const isDisabled = await checkbox.isDisabled();
+          if (isDisabled) continue;
+        
+          const isChecked = await checkbox.isChecked();
+          if (!isChecked) {
+            await checkbox.scrollIntoViewIfNeeded(); 
+            await checkbox.click({ timeout: 10000 });
+          }
+        }
+        
+    }
 }
 
 
