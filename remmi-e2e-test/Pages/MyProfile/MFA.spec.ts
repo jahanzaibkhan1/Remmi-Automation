@@ -103,6 +103,7 @@ test.describe(' MFA Tab Tests - Remmi E2E', () => {
   });
 
   test(' Enter incorrect Google Authenticator MFA code', async ({ page }) => {
+    await page.reload(); // Explicit reload before test logic
     reloadEnv(); // Reload environment variables to ensure fresh values
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
@@ -118,6 +119,7 @@ test.describe(' MFA Tab Tests - Remmi E2E', () => {
   });
 
   test(' Enter incorrect Microsoft Authenticator MFA code', async ({ page }) => {
+    await page.reload(); // Explicit reload before test logic
     reloadEnv(); // Reload environment variables to ensure fresh values
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
@@ -133,6 +135,7 @@ test.describe(' MFA Tab Tests - Remmi E2E', () => {
   });
 
   test(' Enter incorrect Authy Authenticator MFA code', async ({ page }) => {
+    await page.reload(); // Explicit reload before test logic
     reloadEnv(); // Reload environment variables to ensure fresh values
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
@@ -146,4 +149,5 @@ test.describe(' MFA Tab Tests - Remmi E2E', () => {
     await profile.navigateToProfilePage();
     await profile.enterInvalidOtpAuthyleAuthenticatorMfa();
   });
+
 });
