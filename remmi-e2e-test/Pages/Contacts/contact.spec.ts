@@ -550,4 +550,16 @@ test('Test 43: Verify selecting a tag in dropdown filters contacts correctly', a
   await contact.verifyTagDropdownFilter('Agent');
 });
 
+test('Test 44: Verify filtering by tag and scrolling loads relevant contacts', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifyTagDropdownFilterWithScroll('Agent');
+});
+
 });
