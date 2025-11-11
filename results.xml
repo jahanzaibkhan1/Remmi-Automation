@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.52400199999986">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-11T04:33:23.073Z" hostname="chromium" tests="1" failures="0" skipped="0" time="19.636" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 42: Verify searching and scrolling loads relevant contacts" classname="Pages\Contacts\contact.spec.ts" time="19.636">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.340527000000236">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-11T04:39:57.970Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.231" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 43: Verify selecting a tag in dropdown filters contacts correctly" classname="Pages\Contacts\contact.spec.ts" time="23.231">
+<system-out>
+<![CDATA[Agent
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>

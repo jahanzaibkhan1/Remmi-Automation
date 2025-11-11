@@ -1444,6 +1444,46 @@ export class ContactActions {
         }
 
     }
+ 
+    public async verifyTagDropdownFilter(tagName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+        await this.ContactTypeDropdown();
+        await this.SearchContactType(tagName);
+        await this.SelectOption(tagName);
+        await this.ContactTypeDropdown();
+
+        // Wait for filter to be applied (table rows update)
+        await this.page.waitForTimeout(3000);
+
+        // Get all rows in the table after filtering
+        const rows = await this.page.locator('table tbody tr');
+        const rowCount = await rows.count();
+
+        // Find the column index for "Contact Type" based on header text
+        const headerCells = await this.page.locator('table thead tr th');
+        const headerCount = await headerCells.count();
+        let contactTypeColIdx = -1;
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headerCells.nth(i).textContent())?.trim();
+            if (headerText?.toLowerCase() === 'contact type') {
+                contactTypeColIdx = i;
+                break;
+            }
+        }
+        expect(contactTypeColIdx).not.toBe(-1);
+
+        for (let i = 0; i < rowCount; i++) {
+            const row = rows.nth(i);
+            const cell = row.locator('td').nth(contactTypeColIdx);
+            await cell.scrollIntoViewIfNeeded();
+            const cellText = (await cell.textContent())?.trim();
+
+            if (cellText !== tagName) {
+                throw new Error(`❌ Row ${i + 1}: Contact Type "${cellText}" mila, magar filter "${name}" tha (sirf woh hi hona chahiye).`);
+            }
+        }
+    }
 }
 
 
