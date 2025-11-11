@@ -1613,7 +1613,70 @@ public async verifyOpenFilteredContact(filterName: string): Promise<void> {
         expect(errorsCount).toBeGreaterThan(0);
     }
 }
-    
+
+public async verifyOpenAndCloseMultipleContactsSequentially(count: number = 3): Promise<void> {
+    await this.NavigateToContacts();
+    await this.page.waitForTimeout(4000);
+
+    const rowsLocator = this.page.locator('table tbody tr');
+    const numberOfContacts = await rowsLocator.count();
+    const maxContacts = Math.min(count, numberOfContacts);
+
+    for (let i = 0; i < maxContacts; i++) {
+        const contactRow = rowsLocator.nth(i);
+        await contactRow.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Get name before opening, for validation
+        const nameCell = contactRow.locator('td').nth(0);
+        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+
+        // Open contact detail
+        await contactRow.click();
+
+        // Wait for contact details
+        const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
+        let detailOpened = true;
+        try {
+            await detailPanel.waitFor({ state: 'visible', timeout: 10000 });
+        } catch (error) {
+            detailOpened = false;
+        }
+
+        if (detailOpened) {
+            expect(detailPanel).toBeVisible();
+
+            let detailName: string | null = null;
+            try {
+                detailName = (await detailPanel.textContent())?.trim() ?? "";
+            } catch {}
+            if (detailName) {
+                expect(detailName).toContain(tableContactName);
+            }
+        } else {
+            const errorIndicator = this.page.locator('.contact-detail-error, .error-message, .retry-btn');
+            await this.page.waitForTimeout(1000);
+            const errorsCount = await errorIndicator.count();
+            expect(errorsCount).toBeGreaterThan(0);
+        }
+
+        // Wait a bit before closing, to simulate user's observation
+        await this.page.waitForTimeout(800);
+
+        // Now close the contact that was opened
+        const closeBtn = this.page.locator('.panel-close-btn, .mat-dialog-close, .contact-detail-close').first();
+        if (await closeBtn.isVisible()) {
+            await closeBtn.click();
+            await detailPanel.waitFor({ state: 'hidden', timeout: 5000 });
+        } else {
+            await this.page.keyboard.press('Escape');
+            await detailPanel.waitFor({ state: 'hidden', timeout: 5000 });
+        }
+
+        // Small wait after closing
+        await this.page.waitForTimeout(500);
+    }
+}
+
 }
 
 

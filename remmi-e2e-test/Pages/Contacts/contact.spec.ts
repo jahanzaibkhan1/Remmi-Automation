@@ -586,4 +586,17 @@ test('Test 46: Verify clicking on a contact after applying filters opens correct
   await contact.verifyOpenFilteredContact('11 22');
 });
 
+test('Test 47: Verify opening and closing multiple contacts sequentially', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  // Open and close first 3 contacts (or total number if less)
+  await contact.verifyOpenAndCloseMultipleContactsSequentially(3);
+});
+
 });
