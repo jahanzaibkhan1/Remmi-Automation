@@ -1388,7 +1388,7 @@ export class ContactActions {
     async navigateToContactsThenOfficesAndCheckCheckboxes() {
         await this.NavigateToContacts();
         await this.page.waitForTimeout(2000);
-        
+
         const officesLink = this.page.getByRole('link', { name: 'Offices' });
         await officesLink.click();
         await this.page.waitForTimeout(2000);
@@ -1407,6 +1407,42 @@ export class ContactActions {
           }
         }
         
+    }
+
+    public async verifySearchingAndLoadingMoreContacts(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+        const tableWrapper = await this.page.$('div[role="table"]'); // Adjust if your table uses a different scroll container
+        if (tableWrapper) {
+            let previousRowCount = 0;
+            for (let i = 0; i < 5; i++) {
+                // Get current number of rows
+                const rows = await this.page.$$('table tbody tr');
+                if (rows.length === previousRowCount) {
+                    // No more rows loaded, exit early
+                    break;
+                }
+                previousRowCount = rows.length;
+
+                // Scroll to bottom
+                await tableWrapper.evaluate((el: HTMLElement) => {
+                    el.scrollTop = el.scrollHeight;
+                });
+                // Wait for new rows to load
+                await this.page.waitForTimeout(2000);
+            }
+        } else {
+            // If cannot find table wrapper, fallback to page-level scrolling
+            let previousRowCount = 0;
+            for (let i = 0; i < 5; i++) {
+                const rows = await this.page.$$('table tbody tr');
+                if (rows.length === previousRowCount) break;
+                previousRowCount = rows.length;
+                await this.page.mouse.wheel(0, 5000);
+                await this.page.waitForTimeout(2000);
+            }
+        }
+
     }
 }
 

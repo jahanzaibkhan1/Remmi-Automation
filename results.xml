@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="26.34605799999973">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-11T04:29:28.101Z" hostname="chromium" tests="1" failures="0" skipped="0" time="20.308" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 41: Verify that the position of check circles on the contact list is correct" classname="Pages\Contacts\contact.spec.ts" time="20.308">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.52400199999986">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-11T04:33:23.073Z" hostname="chromium" tests="1" failures="0" skipped="0" time="19.636" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 42: Verify searching and scrolling loads relevant contacts" classname="Pages\Contacts\contact.spec.ts" time="19.636">
 </testcase>
 </testsuite>
 </testsuites>

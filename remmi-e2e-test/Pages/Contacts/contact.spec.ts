@@ -525,4 +525,17 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.navigateToContactsThenOfficesAndCheckCheckboxes()
   });
 
+  
+  test('Test 42: Verify searching and scrolling loads relevant contacts', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifySearchingAndLoadingMoreContacts();
+  });
+
 });
