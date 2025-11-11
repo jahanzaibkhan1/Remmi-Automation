@@ -573,4 +573,17 @@ test('Test 45: Verify opening a contact from the list displays details', async (
   );
   await contact.verifyOpenContactFromList();
 });
+
+test('Test 46: Verify clicking on a contact after applying filters opens correct contact', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifyOpenFilteredContact('11 22');
+});
+
 });
