@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.89161700000055">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-11T05:05:59.005Z" hostname="chromium" tests="1" failures="0" skipped="0" time="17.666" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 45: Verify opening a contact from the list displays details" classname="Pages\Contacts\contact.spec.ts" time="17.666">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.73936400000006">
+<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-11T05:59:46.555Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.613" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 46: Verify clicking on a contact after applying filters opens correct contact" classname="Pages\Contacts\contact.spec.ts" time="21.613">
 </testcase>
 </testsuite>
 </testsuites>

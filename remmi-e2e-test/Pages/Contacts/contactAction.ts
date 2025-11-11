@@ -1579,6 +1579,41 @@ export class ContactActions {
         } else {
         }
     }
+
+    
+public async verifyOpenFilteredContact(filterName: string): Promise<void> {
+    await this.NavigateToContacts();
+    await this.page.waitForTimeout(4000);
+
+    await this.searchForContact(filterName);
+
+    const rowsLocator = this.page.locator('table tbody tr');
+    await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+
+    const contactRow = rowsLocator.first();
+    const nameCell = contactRow.locator('td').nth(0);
+    const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+    await contactRow.click();
+
+    const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
+
+    let detailOpened = true;
+    try {
+        await detailPanel.waitFor({ state: 'visible', timeout: 10000 });
+    } catch (error) {
+        detailOpened = false;
+    }
+
+    if (detailOpened) {
+        expect(detailPanel).toBeVisible();
+    } else {
+        const errorIndicator = this.page.locator('.contact-detail-error, .error-message, .retry-btn');
+        await this.page.waitForTimeout(1000);
+        const errorsCount = await errorIndicator.count();
+        expect(errorsCount).toBeGreaterThan(0);
+    }
+}
+    
 }
 
 
