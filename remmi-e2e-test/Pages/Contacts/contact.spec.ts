@@ -562,4 +562,15 @@ test('Test 44: Verify filtering by tag and scrolling loads relevant contacts', a
   await contact.verifyTagDropdownFilterWithScroll('Agent');
 });
 
+test('Test 45: Verify opening a contact from the list displays details', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+  await contact.verifyOpenContactFromList();
+});
 });
