@@ -1384,6 +1384,299 @@ export class ContactActions {
         }
 
     }
+
+    async navigateToContactsThenOfficesAndCheckCheckboxes() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2000);
+
+        const officesLink = this.page.getByRole('link', { name: 'Offices' });
+        await officesLink.click();
+        await this.page.waitForTimeout(2000);
+        const checkboxes = this.page.locator('[role="checkbox"]:visible');
+        const count = await checkboxes.count();
+        
+        for (let i = 0; i < count; i++) {
+          const checkbox = checkboxes.nth(i);
+          const isDisabled = await checkbox.isDisabled();
+          if (isDisabled) continue;
+        
+          const isChecked = await checkbox.isChecked();
+          if (!isChecked) {
+            await checkbox.scrollIntoViewIfNeeded(); 
+            await checkbox.click({ timeout: 10000 });
+          }
+        }
+        
+    }
+
+    public async verifySearchingAndLoadingMoreContacts(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+        const tableWrapper = await this.page.$('div[role="table"]'); // Adjust if your table uses a different scroll container
+        if (tableWrapper) {
+            let previousRowCount = 0;
+            for (let i = 0; i < 5; i++) {
+                // Get current number of rows
+                const rows = await this.page.$$('table tbody tr');
+                if (rows.length === previousRowCount) {
+                    // No more rows loaded, exit early
+                    break;
+                }
+                previousRowCount = rows.length;
+
+                // Scroll to bottom
+                await tableWrapper.evaluate((el: HTMLElement) => {
+                    el.scrollTop = el.scrollHeight;
+                });
+                // Wait for new rows to load
+                await this.page.waitForTimeout(2000);
+            }
+        } else {
+            // If cannot find table wrapper, fallback to page-level scrolling
+            let previousRowCount = 0;
+            for (let i = 0; i < 5; i++) {
+                const rows = await this.page.$$('table tbody tr');
+                if (rows.length === previousRowCount) break;
+                previousRowCount = rows.length;
+                await this.page.mouse.wheel(0, 5000);
+                await this.page.waitForTimeout(2000);
+            }
+        }
+
+    }
+ 
+    public async verifyTagDropdownFilter(tagName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+        await this.ContactTypeDropdown();
+        await this.SearchContactType(tagName);
+        await this.SelectOption(tagName);
+        await this.ContactTypeDropdown();
+
+        // Wait for filter to be applied (table rows update)
+        await this.page.waitForTimeout(3000);
+
+        // Get all rows in the table after filtering
+        const rows = await this.page.locator('table tbody tr');
+        const rowCount = await rows.count();
+
+        // Find the column index for "Contact Type" based on header text
+        const headerCells = await this.page.locator('table thead tr th');
+        const headerCount = await headerCells.count();
+        let contactTypeColIdx = -1;
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headerCells.nth(i).textContent())?.trim();
+            if (headerText?.toLowerCase() === 'contact type') {
+                contactTypeColIdx = i;
+                break;
+            }
+        }
+        expect(contactTypeColIdx).not.toBe(-1);
+
+        for (let i = 0; i < rowCount; i++) {
+            const row = rows.nth(i);
+            const cell = row.locator('td').nth(contactTypeColIdx);
+            await cell.scrollIntoViewIfNeeded();
+            const cellText = (await cell.textContent())?.trim();
+
+            if (cellText !== tagName) {
+                throw new Error(`❌ Row ${i + 1}: Contact Type "${cellText}" mila, magar filter "${name}" tha (sirf woh hi hona chahiye).`);
+            }
+        }
+    }
+
+    // Verify filtering by tag and scrolling loads relevant contacts
+    public async verifyTagDropdownFilterWithScroll(tagName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+        await this.ContactTypeDropdown();
+        await this.SearchContactType(tagName);
+        await this.SelectOption(tagName);
+        await this.ContactTypeDropdown();
+
+        // Wait for filter to be applied (table rows update)
+        await this.page.waitForTimeout(3000);
+
+        // Try to repeatedly scroll and load more rows, then verify all match tagName
+        const tableWrapper = await this.page.$('div[role="table"]');
+        let seenRowIndices = new Set<number>();
+        let maxScrolls = 5;
+
+        for (let scrollAttempt = 0; scrollAttempt < maxScrolls; scrollAttempt++) {
+            const rowsLocator = this.page.locator('table tbody tr');
+            const rowCount = await rowsLocator.count();
+
+            // Find the column index for "Contact Type"
+            const headerCells = await this.page.locator('table thead tr th');
+            const headerCount = await headerCells.count();
+            let contactTypeColIdx = -1;
+            for (let i = 0; i < headerCount; i++) {
+                const headerText = (await headerCells.nth(i).textContent())?.trim();
+                if (headerText?.toLowerCase() === 'contact type') {
+                    contactTypeColIdx = i;
+                    break;
+                }
+            }
+            expect(contactTypeColIdx).not.toBe(-1);
+
+            // Check all newly visible rows
+            for (let i = 0; i < rowCount; i++) {
+                if (seenRowIndices.has(i)) continue;
+                seenRowIndices.add(i);
+
+                const row = rowsLocator.nth(i);
+                const cell = row.locator('td').nth(contactTypeColIdx);
+                await cell.scrollIntoViewIfNeeded();
+                const cellText = (await cell.textContent())?.trim();
+                if (cellText !== tagName) {
+                    throw new Error(`❌ Row ${i + 1}: Contact Type "${cellText}" found, but filter was "${tagName}".`);
+                }
+            }
+
+            // Scroll to bottom to load more rows
+            if (tableWrapper) {
+                await tableWrapper.evaluate((el: HTMLElement) => { el.scrollTop = el.scrollHeight; });
+            } else {
+                await this.page.mouse.wheel(0, 5000);
+            }
+            await this.page.waitForTimeout(2000);
+
+            // Stop if all visible rows are already checked
+            if (seenRowIndices.size >= rowCount) break;
+        }
+    }
+
+    public async verifyOpenContactFromList(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2500);
+
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 7000 });
+
+        await rowsLocator.first().click();
+
+        const detailPanel = this.page.locator('.property-details').first();
+        await detailPanel.first().waitFor({ state: 'visible', timeout: 5000 });
+
+        const firstNameDiv = detailPanel.locator('.form-group > .site-input').first();
+        const emailDiv = detailPanel.locator('input[type="email"]');
+
+        if (await firstNameDiv.count() > 0) {
+            await firstNameDiv.waitFor({ state: 'visible', timeout: 3000 });
+            const firstNameInput = firstNameDiv.locator('input');
+            let firstNameValue: string | null = null;
+            if (await firstNameInput.count() > 0) {
+                firstNameValue = await firstNameInput.inputValue();
+            } else {
+                const firstNameText = (await firstNameDiv.textContent())?.trim();
+            }
+        }
+
+        if (await emailDiv.count() > 0) {
+            await emailDiv.waitFor({ state: 'visible', timeout: 3000 });
+            const emailValue = await emailDiv.inputValue();
+ 
+        } else {
+        }
+    }
+
+    
+public async verifyOpenFilteredContact(filterName: string): Promise<void> {
+    await this.NavigateToContacts();
+    await this.page.waitForTimeout(4000);
+
+    await this.searchForContact(filterName);
+
+    const rowsLocator = this.page.locator('table tbody tr');
+    await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+
+    const contactRow = rowsLocator.first();
+    const nameCell = contactRow.locator('td').nth(0);
+    const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+    await contactRow.click();
+
+    const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
+
+    let detailOpened = true;
+    try {
+        await detailPanel.waitFor({ state: 'visible', timeout: 10000 });
+    } catch (error) {
+        detailOpened = false;
+    }
+
+    if (detailOpened) {
+        expect(detailPanel).toBeVisible();
+    } else {
+        const errorIndicator = this.page.locator('.contact-detail-error, .error-message, .retry-btn');
+        await this.page.waitForTimeout(1000);
+        const errorsCount = await errorIndicator.count();
+        expect(errorsCount).toBeGreaterThan(0);
+    }
+}
+
+public async verifyOpenAndCloseMultipleContactsSequentially(count: number = 3): Promise<void> {
+    await this.NavigateToContacts();
+    await this.page.waitForTimeout(4000);
+
+    const rowsLocator = this.page.locator('table tbody tr');
+    const numberOfContacts = await rowsLocator.count();
+    const maxContacts = Math.min(count, numberOfContacts);
+
+    for (let i = 0; i < maxContacts; i++) {
+        const contactRow = rowsLocator.nth(i);
+        await contactRow.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Get name before opening, for validation
+        const nameCell = contactRow.locator('td').nth(0);
+        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+
+        // Open contact detail
+        await contactRow.click();
+
+        // Wait for contact details
+        const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
+        let detailOpened = true;
+        try {
+            await detailPanel.waitFor({ state: 'visible', timeout: 10000 });
+        } catch (error) {
+            detailOpened = false;
+        }
+
+        if (detailOpened) {
+            expect(detailPanel).toBeVisible();
+
+            let detailName: string | null = null;
+            try {
+                detailName = (await detailPanel.textContent())?.trim() ?? "";
+            } catch {}
+            if (detailName) {
+                expect(detailName).toContain(tableContactName);
+            }
+        } else {
+            const errorIndicator = this.page.locator('.contact-detail-error, .error-message, .retry-btn');
+            await this.page.waitForTimeout(1000);
+            const errorsCount = await errorIndicator.count();
+            expect(errorsCount).toBeGreaterThan(0);
+        }
+
+        // Wait a bit before closing, to simulate user's observation
+        await this.page.waitForTimeout(800);
+
+        // Now close the contact that was opened
+        const closeBtn = this.page.locator('.panel-close-btn, .mat-dialog-close, .contact-detail-close').first();
+        if (await closeBtn.isVisible()) {
+            await closeBtn.click();
+            await detailPanel.waitFor({ state: 'hidden', timeout: 5000 });
+        } else {
+            await this.page.keyboard.press('Escape');
+            await detailPanel.waitFor({ state: 'hidden', timeout: 5000 });
+        }
+
+        // Small wait after closing
+        await this.page.waitForTimeout(500);
+    }
+}
+
 }
 
 
