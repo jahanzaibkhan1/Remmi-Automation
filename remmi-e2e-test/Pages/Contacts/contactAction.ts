@@ -1484,6 +1484,67 @@ export class ContactActions {
             }
         }
     }
+
+    // Verify filtering by tag and scrolling loads relevant contacts
+    public async verifyTagDropdownFilterWithScroll(tagName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+        await this.ContactTypeDropdown();
+        await this.SearchContactType(tagName);
+        await this.SelectOption(tagName);
+        await this.ContactTypeDropdown();
+
+        // Wait for filter to be applied (table rows update)
+        await this.page.waitForTimeout(3000);
+
+        // Try to repeatedly scroll and load more rows, then verify all match tagName
+        const tableWrapper = await this.page.$('div[role="table"]');
+        let seenRowIndices = new Set<number>();
+        let maxScrolls = 5;
+
+        for (let scrollAttempt = 0; scrollAttempt < maxScrolls; scrollAttempt++) {
+            const rowsLocator = this.page.locator('table tbody tr');
+            const rowCount = await rowsLocator.count();
+
+            // Find the column index for "Contact Type"
+            const headerCells = await this.page.locator('table thead tr th');
+            const headerCount = await headerCells.count();
+            let contactTypeColIdx = -1;
+            for (let i = 0; i < headerCount; i++) {
+                const headerText = (await headerCells.nth(i).textContent())?.trim();
+                if (headerText?.toLowerCase() === 'contact type') {
+                    contactTypeColIdx = i;
+                    break;
+                }
+            }
+            expect(contactTypeColIdx).not.toBe(-1);
+
+            // Check all newly visible rows
+            for (let i = 0; i < rowCount; i++) {
+                if (seenRowIndices.has(i)) continue;
+                seenRowIndices.add(i);
+
+                const row = rowsLocator.nth(i);
+                const cell = row.locator('td').nth(contactTypeColIdx);
+                await cell.scrollIntoViewIfNeeded();
+                const cellText = (await cell.textContent())?.trim();
+                if (cellText !== tagName) {
+                    throw new Error(`❌ Row ${i + 1}: Contact Type "${cellText}" found, but filter was "${tagName}".`);
+                }
+            }
+
+            // Scroll to bottom to load more rows
+            if (tableWrapper) {
+                await tableWrapper.evaluate((el: HTMLElement) => { el.scrollTop = el.scrollHeight; });
+            } else {
+                await this.page.mouse.wheel(0, 5000);
+            }
+            await this.page.waitForTimeout(2000);
+
+            // Stop if all visible rows are already checked
+            if (seenRowIndices.size >= rowCount) break;
+        }
+    }
 }
 
 
