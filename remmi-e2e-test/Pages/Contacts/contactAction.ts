@@ -1545,6 +1545,40 @@ export class ContactActions {
             if (seenRowIndices.size >= rowCount) break;
         }
     }
+
+    public async verifyOpenContactFromList(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2500);
+
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 7000 });
+
+        await rowsLocator.first().click();
+
+        const detailPanel = this.page.locator('.property-details').first();
+        await detailPanel.first().waitFor({ state: 'visible', timeout: 5000 });
+
+        const firstNameDiv = detailPanel.locator('.form-group > .site-input').first();
+        const emailDiv = detailPanel.locator('input[type="email"]');
+
+        if (await firstNameDiv.count() > 0) {
+            await firstNameDiv.waitFor({ state: 'visible', timeout: 3000 });
+            const firstNameInput = firstNameDiv.locator('input');
+            let firstNameValue: string | null = null;
+            if (await firstNameInput.count() > 0) {
+                firstNameValue = await firstNameInput.inputValue();
+            } else {
+                const firstNameText = (await firstNameDiv.textContent())?.trim();
+            }
+        }
+
+        if (await emailDiv.count() > 0) {
+            await emailDiv.waitFor({ state: 'visible', timeout: 3000 });
+            const emailValue = await emailDiv.inputValue();
+ 
+        } else {
+        }
+    }
 }
 
 
