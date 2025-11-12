@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.4120169999972">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T08:50:13.365Z" hostname="chromium" tests="1" failures="0" skipped="0" time="26.02" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 16: Verify that clicking the correct (✔) button sets an email as the primary email" classname="Pages\Contacts\contactForm.spec.ts" time="26.02">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="75.64905200000003">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T12:03:35.001Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.331" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 16: Verify that clicking the correct (✔) button sets an email as the primary email" classname="Pages\Contacts\contactForm.spec.ts" time="48.331">
 </testcase>
 </testsuite>
 </testsuites>
