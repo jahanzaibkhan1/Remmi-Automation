@@ -170,6 +170,16 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyAddEmailField();
   });
 
-  
+  test('Test 14: Verify that clicking the "+" icon adds a new phone field', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyAddPhoneField();
+  });
 });
   

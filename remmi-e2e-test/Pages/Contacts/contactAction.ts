@@ -2036,6 +2036,28 @@ export class ContactActions {
 
         expect(countAfter).toBe(countBefore + 1);
     }
+
+    // Verify that clicking the "+" icon adds a new phone field
+    public async verifyAddPhoneField() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+    
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+    
+        const phoneInputs = this.page.locator('input[formcontrolname="mobile_no"]');
+        const countBefore = await phoneInputs.count();
+    
+        const addPhoneIcon = this.page.getByRole('button', { name: '' }).nth(2);
+        await addPhoneIcon.click();
+        
+        await expect(this.page.getByRole('textbox', { name: 'Other Phone' })).toBeVisible();
+    
+        const countAfter = await phoneInputs.count();
+    
+        expect(countAfter).toBe(countBefore + 1);
+    }
 }
 
 
