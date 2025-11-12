@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.193748999999837">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T06:19:35.881Z" hostname="chromium" tests="1" failures="0" skipped="0" time="18.819" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 8: Verify required fields validation for Individual contact type" classname="Pages\Contacts\contactForm.spec.ts" time="18.819">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.92467400000058">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T06:38:28.873Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.536" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 9: Verify that clicking &quot;Save&quot; button saves the contact form" classname="Pages\Contacts\contactForm.spec.ts" time="36.536">
 </testcase>
 </testsuite>
 </testsuites>
