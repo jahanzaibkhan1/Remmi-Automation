@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.999462999999523">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T05:48:19.329Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.79" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 5: Verify that selecting a contact type updates the type dropdown" classname="Pages\Contacts\contactForm.spec.ts" time="21.79">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.07104900000058">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T06:09:22.729Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.445" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 6: Verify required fields validation for Company contact type" classname="Pages\Contacts\contactForm.spec.ts" time="23.445">
 </testcase>
 </testsuite>
 </testsuites>
