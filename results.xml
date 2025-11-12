@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.19951300000027">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T05:16:35.900Z" hostname="chromium" tests="1" failures="0" skipped="0" time="17.507" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 4: Verify that the contact initials placeholder is displayed" classname="Pages\Contacts\contactForm.spec.ts" time="17.507">
-<system-out>
-<![CDATA[✅ Verified initials: VB
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.999462999999523">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T05:48:19.329Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.79" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 5: Verify that selecting a contact type updates the type dropdown" classname="Pages\Contacts\contactForm.spec.ts" time="21.79">
 </testcase>
 </testsuite>
 </testsuites>

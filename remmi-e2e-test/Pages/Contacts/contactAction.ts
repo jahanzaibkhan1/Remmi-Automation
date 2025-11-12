@@ -1776,6 +1776,30 @@ export class ContactActions {
     }
 
 
+    public async verifySelectContactTypeUpdatesDropdown() {
+        await this.NavigateToContacts();
+
+        await this.page.waitForTimeout(3000);
+
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const contactTypeDropdown = this.page.locator('span').filter({ hasText: 'Individual' });
+        await contactTypeDropdown.waitFor({ state: 'visible' });
+
+        await contactTypeDropdown.click();
+
+        await this.page.waitForTimeout(500);
+
+        const dropdownoption = this.page.locator('div').filter({ hasText: /^Company$/ }).nth(1);
+        await expect(dropdownoption).toBeVisible()
+        await dropdownoption.click()
+
+        await expect(this.page.locator('span').filter({ hasText: /^Company$/ })).toBeVisible()
+        await expect(this.page.locator('div').filter({ hasText: /^Company Name \*$/ }).nth(1)).toBeVisible()
+        await expect(this.page.locator('div').filter({ hasText: /^Preferred Contact MethodSelect Contact Method$/ }).first()).toBeVisible()
+    }
 
 }
 
