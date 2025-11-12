@@ -1801,6 +1801,35 @@ export class ContactActions {
         await expect(this.page.locator('div').filter({ hasText: /^Preferred Contact MethodSelect Contact Method$/ }).first()).toBeVisible()
     }
 
+    public async verifyRequiredFieldsValidationForCompany() {
+        await this.NavigateToContacts();
+
+        await this.page.waitForTimeout(3000);
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const contactTypeDropdown = this.page.locator('span').filter({ hasText: 'Individual' });
+        await contactTypeDropdown.waitFor({ state: 'visible' });
+        await contactTypeDropdown.click();
+        await this.page.waitForTimeout(500);
+
+        const companyOption = this.page.locator('div').filter({ hasText: /^Company$/ }).nth(1);
+        await companyOption.waitFor({ state: 'visible' });
+        await companyOption.click();
+
+        // Attempt to save without filling any fields to trigger validation
+        const savecontactButton = this.page.getByRole('button', { name: 'Save' }).first();
+        await savecontactButton.click({force:true});
+
+        // Only verify that required validation errors are shown
+        const companyNameError = this.page.getByText('Company name is required', { exact: false });
+        await expect(companyNameError).toBeVisible();
+
+        const emailError = this.page.getByText('Email is required', { exact: false });
+        await expect(emailError).toBeVisible();
+    }
+
 }
 
 
