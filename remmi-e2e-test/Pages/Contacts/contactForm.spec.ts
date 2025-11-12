@@ -85,5 +85,17 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     );
     await contact.verifyRequiredFieldsValidationForCompany();
   });
+
+  test('Test 7: Verify that the first word of each error message starts with a capital letter', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyRequiredFieldsCapitalizedValidationForCompany();
+  });
 });
   
