@@ -133,5 +133,17 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     );
     await contact.verifySaveAndCloseButtonSavesAndClosesForm();
   });
+
+  test('Test 11: Verify that "Select All" changes to "Deselect All" after selecting all check circles', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifySelectAllChangesToDeselectAllInPreferredContactMethod()
+  });
 });
   

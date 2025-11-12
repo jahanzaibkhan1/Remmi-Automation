@@ -1967,6 +1967,30 @@ export class ContactActions {
         await expect(successToast).toBeVisible();
         await expect(this.page.getByRole('button', { name: 'Save' }).first()).toBeHidden();
     }
+
+    public async verifySelectAllChangesToDeselectAllInPreferredContactMethod() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Open Add Contact
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        // Open 'Preferred Contact Method' dropdown
+        const preferredContactDropdown = this.page.locator('div').filter({ hasText: /^Select Contact Method$/ }).nth(1);
+        await preferredContactDropdown.click();
+
+        // Click "Select All" checkbox
+        const selectAllCheckbox = this.page.locator('label.select_all');
+        await selectAllCheckbox.click();
+
+        // Assert that the "Select All" label changed to "Deselect All"
+        const deselectAllLabel = this.page.locator('label.select_all[data="Deselect All"]');
+        await expect(deselectAllLabel).toBeVisible();
+
+        
+    }
 }
 
 
