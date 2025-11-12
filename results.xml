@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.07104900000058">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T06:09:22.729Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.445" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 6: Verify required fields validation for Company contact type" classname="Pages\Contacts\contactForm.spec.ts" time="23.445">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.23092699999921">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T06:15:28.711Z" hostname="chromium" tests="1" failures="0" skipped="0" time="19.046" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 7: Verify that the first word of each required field error message starts with a capital letter (Company contact)" classname="Pages\Contacts\contactForm.spec.ts" time="19.046">
 </testcase>
 </testsuite>
 </testsuites>

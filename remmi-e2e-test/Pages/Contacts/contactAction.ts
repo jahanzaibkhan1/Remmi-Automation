@@ -1830,6 +1830,53 @@ export class ContactActions {
         await expect(emailError).toBeVisible();
     }
 
+    public async verifyRequiredFieldsCapitalizedValidationForCompany() {
+        await this.NavigateToContacts();
+
+        await this.page.waitForTimeout(3000);
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const contactTypeDropdown = this.page.locator('span').filter({ hasText: 'Individual' });
+        await contactTypeDropdown.waitFor({ state: 'visible' });
+        await contactTypeDropdown.click();
+        await this.page.waitForTimeout(500);
+
+        const companyOption = this.page.locator('div').filter({ hasText: /^Company$/ }).nth(1);
+        await companyOption.waitFor({ state: 'visible' });
+        await companyOption.click();
+
+        // Attempt to save without filling any fields to trigger validation
+        const savecontactButton = this.page.getByRole('button', { name: 'Save' }).first();
+        await savecontactButton.click({force:true});
+
+        // Check validation error messages: the first word must start with a capital letter
+        const companyNameError = this.page.getByText(/Company name is required/i, { exact: false });
+        const emailError = this.page.getByText(/Email is required/i, { exact: false });
+
+        await expect(companyNameError).toBeVisible();
+        await expect(emailError).toBeVisible();
+
+        // Extra validation: check first word is capitalized for each error message
+        const companyNameErrorText = await companyNameError.textContent();
+        const emailErrorText = await emailError.textContent();
+
+        if (companyNameErrorText) {
+            const firstWord = companyNameErrorText.split(' ')[0];
+            expect(firstWord.charAt(0)).toMatch(/[A-Z]/);
+        } else {
+            throw new Error('Company name error text not found');
+        }
+
+        if (emailErrorText) {
+            const firstWord = emailErrorText.split(' ')[0];
+            expect(firstWord.charAt(0)).toMatch(/[A-Z]/);
+        } else {
+            throw new Error('Email error text not found');
+        }
+    }
+
 }
 
 
