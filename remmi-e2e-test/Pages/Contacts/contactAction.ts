@@ -1991,6 +1991,30 @@ export class ContactActions {
 
         
     }
+
+    public async verifyInvalidEmailFormatErrorMessage() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Open Add Contact
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        // Enter invalid email format
+        const invalidEmail = "invalid-email-format@";
+        const emailInput = this.page.locator('input[formcontrolname="email"]');
+        await emailInput.waitFor({ state: 'visible' });
+        await emailInput.fill(invalidEmail);
+
+        // Click Save button
+        const saveButton = this.page.getByRole('button', { name: 'Save' }).first();
+        await saveButton.click({ force: true });
+
+        // Verify error message for email field
+        const emailError = this.page.getByText('Invalid email format');
+        await expect(emailError).toBeVisible();
+    }
 }
 
 
