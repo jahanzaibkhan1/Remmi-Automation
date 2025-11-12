@@ -21,5 +21,17 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     );
     await contact.verifyContactFormOpensSuccessfully()
   });
+
+  test('Test 2: Verify that the contact form can be closed with the X icon', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyContactFormCloseWithXIcon();
+  });
 });
    

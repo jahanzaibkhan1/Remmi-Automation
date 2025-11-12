@@ -1394,19 +1394,19 @@ export class ContactActions {
         await this.page.waitForTimeout(2000);
         const checkboxes = this.page.locator('[role="checkbox"]:visible');
         const count = await checkboxes.count();
-        
+
         for (let i = 0; i < count; i++) {
-          const checkbox = checkboxes.nth(i);
-          const isDisabled = await checkbox.isDisabled();
-          if (isDisabled) continue;
-        
-          const isChecked = await checkbox.isChecked();
-          if (!isChecked) {
-            await checkbox.scrollIntoViewIfNeeded(); 
-            await checkbox.click({ timeout: 10000 });
-          }
+            const checkbox = checkboxes.nth(i);
+            const isDisabled = await checkbox.isDisabled();
+            if (isDisabled) continue;
+
+            const isChecked = await checkbox.isChecked();
+            if (!isChecked) {
+                await checkbox.scrollIntoViewIfNeeded();
+                await checkbox.click({ timeout: 10000 });
+            }
         }
-        
+
     }
 
     public async verifySearchingAndLoadingMoreContacts(): Promise<void> {
@@ -1444,7 +1444,7 @@ export class ContactActions {
         }
 
     }
- 
+
     public async verifyTagDropdownFilter(tagName: string): Promise<void> {
         await this.NavigateToContacts();
         await this.page.waitForTimeout(4000);
@@ -1575,66 +1575,28 @@ export class ContactActions {
         if (await emailDiv.count() > 0) {
             await emailDiv.waitFor({ state: 'visible', timeout: 3000 });
             const emailValue = await emailDiv.inputValue();
- 
+
         } else {
         }
     }
 
-    
-public async verifyOpenFilteredContact(filterName: string): Promise<void> {
-    await this.NavigateToContacts();
-    await this.page.waitForTimeout(4000);
 
-    await this.searchForContact(filterName);
+    public async verifyOpenFilteredContact(filterName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
 
-    const rowsLocator = this.page.locator('table tbody tr');
-    await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+        await this.searchForContact(filterName);
 
-    const contactRow = rowsLocator.first();
-    const nameCell = contactRow.locator('td').nth(0);
-    const tableContactName = (await nameCell.textContent())?.trim() ?? "";
-    await contactRow.click();
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
 
-    const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
-
-    let detailOpened = true;
-    try {
-        await detailPanel.waitFor({ state: 'visible', timeout: 10000 });
-    } catch (error) {
-        detailOpened = false;
-    }
-
-    if (detailOpened) {
-        expect(detailPanel).toBeVisible();
-    } else {
-        const errorIndicator = this.page.locator('.contact-detail-error, .error-message, .retry-btn');
-        await this.page.waitForTimeout(1000);
-        const errorsCount = await errorIndicator.count();
-        expect(errorsCount).toBeGreaterThan(0);
-    }
-}
-
-public async verifyOpenAndCloseMultipleContactsSequentially(count: number = 3): Promise<void> {
-    await this.NavigateToContacts();
-    await this.page.waitForTimeout(4000);
-
-    const rowsLocator = this.page.locator('table tbody tr');
-    const numberOfContacts = await rowsLocator.count();
-    const maxContacts = Math.min(count, numberOfContacts);
-
-    for (let i = 0; i < maxContacts; i++) {
-        const contactRow = rowsLocator.nth(i);
-        await contactRow.waitFor({ state: 'visible', timeout: 10000 });
-
-        // Get name before opening, for validation
+        const contactRow = rowsLocator.first();
         const nameCell = contactRow.locator('td').nth(0);
         const tableContactName = (await nameCell.textContent())?.trim() ?? "";
-
-        // Open contact detail
         await contactRow.click();
 
-        // Wait for contact details
         const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
+
         let detailOpened = true;
         try {
             await detailPanel.waitFor({ state: 'visible', timeout: 10000 });
@@ -1644,52 +1606,107 @@ public async verifyOpenAndCloseMultipleContactsSequentially(count: number = 3): 
 
         if (detailOpened) {
             expect(detailPanel).toBeVisible();
-
-            let detailName: string | null = null;
-            try {
-                detailName = (await detailPanel.textContent())?.trim() ?? "";
-            } catch {}
-            if (detailName) {
-                expect(detailName).toContain(tableContactName);
-            }
         } else {
             const errorIndicator = this.page.locator('.contact-detail-error, .error-message, .retry-btn');
             await this.page.waitForTimeout(1000);
             const errorsCount = await errorIndicator.count();
             expect(errorsCount).toBeGreaterThan(0);
         }
-
-        // Wait a bit before closing, to simulate user's observation
-        await this.page.waitForTimeout(800);
-
-        // Now close the contact that was opened
-        const closeBtn = this.page.locator('.panel-close-btn, .mat-dialog-close, .contact-detail-close').first();
-        if (await closeBtn.isVisible()) {
-            await closeBtn.click();
-            await detailPanel.waitFor({ state: 'hidden', timeout: 5000 });
-        } else {
-            await this.page.keyboard.press('Escape');
-            await detailPanel.waitFor({ state: 'hidden', timeout: 5000 });
-        }
-
-        // Small wait after closing
-        await this.page.waitForTimeout(500);
     }
-}
 
-/*********************************************************Contact Form Public Action******************************************** */
-public async verifyContactFormOpensSuccessfully() {
-    await this.NavigateToContacts();
-    await this.page.waitForTimeout(2000);
+    public async verifyOpenAndCloseMultipleContactsSequentially(count: number = 3): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
 
-    const AddContactButton = this.page.getByRole('button', { name: '' });
-    await AddContactButton.click({force:true});
+        const rowsLocator = this.page.locator('table tbody tr');
+        const numberOfContacts = await rowsLocator.count();
+        const maxContacts = Math.min(count, numberOfContacts);
 
-    const contactForm = this.page.locator('section');
-    await contactForm.waitFor({ state: 'visible', timeout: 10000 });
-    expect(contactForm).toBeVisible();
-    console.log("Contact Form open successfully")
-}
+        for (let i = 0; i < maxContacts; i++) {
+            const contactRow = rowsLocator.nth(i);
+            await contactRow.waitFor({ state: 'visible', timeout: 10000 });
+
+            // Get name before opening, for validation
+            const nameCell = contactRow.locator('td').nth(0);
+            const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+
+            // Open contact detail
+            await contactRow.click();
+
+            // Wait for contact details
+            const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
+            let detailOpened = true;
+            try {
+                await detailPanel.waitFor({ state: 'visible', timeout: 10000 });
+            } catch (error) {
+                detailOpened = false;
+            }
+
+            if (detailOpened) {
+                expect(detailPanel).toBeVisible();
+
+                let detailName: string | null = null;
+                try {
+                    detailName = (await detailPanel.textContent())?.trim() ?? "";
+                } catch { }
+                if (detailName) {
+                    expect(detailName).toContain(tableContactName);
+                }
+            } else {
+                const errorIndicator = this.page.locator('.contact-detail-error, .error-message, .retry-btn');
+                await this.page.waitForTimeout(1000);
+                const errorsCount = await errorIndicator.count();
+                expect(errorsCount).toBeGreaterThan(0);
+            }
+
+            // Wait a bit before closing, to simulate user's observation
+            await this.page.waitForTimeout(800);
+
+            // Now close the contact that was opened
+            const closeBtn = this.page.locator('.panel-close-btn, .mat-dialog-close, .contact-detail-close').first();
+            if (await closeBtn.isVisible()) {
+                await closeBtn.click();
+                await detailPanel.waitFor({ state: 'hidden', timeout: 5000 });
+            } else {
+                await this.page.keyboard.press('Escape');
+                await detailPanel.waitFor({ state: 'hidden', timeout: 5000 });
+            }
+
+            // Small wait after closing
+            await this.page.waitForTimeout(500);
+        }
+    }
+
+    /*********************************************************Contact Form Public Action******************************************** */
+    public async verifyContactFormOpensSuccessfully() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2000);
+
+        const AddContactButton = this.page.getByRole('button', { name: '' });
+        await AddContactButton.click({ force: true });
+
+        const contactForm = this.page.locator('section');
+        await contactForm.waitFor({ state: 'visible', timeout: 10000 });
+        expect(contactForm).toBeVisible();
+        console.log("Contact Form open successfully")
+    }
+
+    public async verifyContactFormCloseWithXIcon() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2000);
+        const AddContactButton = this.page.getByRole('button', { name: '' });
+        await AddContactButton.click({ force: true });
+
+        const contactForm = this.page.locator('section');
+        await contactForm.waitFor({ state: 'visible', timeout: 10000 });
+        expect(contactForm).toBeVisible();
+        const closeIcon = this.page.locator('.pi.pi-times.cursor-pointer.f-14').first();
+        await closeIcon.waitFor({ state: 'visible', timeout: 5000 });
+        await closeIcon.click();
+        await contactForm.waitFor({ state: 'hidden', timeout: 5000 });
+        expect(await contactForm.isVisible()).toBeFalsy();
+        console.log("Contact form was closed using the X icon successfully")
+    }
 
 }
 
