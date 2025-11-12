@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.06395500000007">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-11T07:26:06.382Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.093" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 47: Verify opening and closing multiple contacts sequentially" classname="Pages\Contacts\contact.spec.ts" time="27.093">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.96853499999992">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T04:15:10.755Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.222" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 1: Verify that the contact form opens successfully" classname="Pages\Contacts\contactForm.spec.ts" time="29.222">
+<system-out>
+<![CDATA[Contact Form open successfully
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
