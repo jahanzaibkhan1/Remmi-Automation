@@ -97,5 +97,17 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     );
     await contact.verifyRequiredFieldsCapitalizedValidationForCompany();
   });
+
+  test('Test 8: Verify required fields validation for Individual contact type', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyRequiredFieldsValidationForIndividual();
+  });
 });
   

@@ -1877,6 +1877,30 @@ export class ContactActions {
         }
     }
 
+    // Verify required fields validation for "Individual" contact type
+    public async verifyRequiredFieldsValidationForIndividual() {
+        await this.NavigateToContacts();
+
+        await this.page.waitForTimeout(3000);
+        
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const contactTypeDropdown = this.page.locator('span').filter({ hasText: 'Individual' });
+        await contactTypeDropdown.waitFor({ state: 'visible' });
+        await this.page.waitForTimeout(500);
+
+        const saveContactButton = this.page.getByRole('button', { name: 'Save' }).first();
+        await saveContactButton.click({ force: true });
+
+        const firstNameError = this.page.getByText(/First name is required/i, { exact: false });
+        const emailError = this.page.getByText(/Email is required/i, { exact: false });
+
+        await expect(firstNameError).toBeVisible();
+        await expect(emailError).toBeVisible();
+    }
+
 }
 
 
