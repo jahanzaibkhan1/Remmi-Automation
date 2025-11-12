@@ -1677,6 +1677,20 @@ public async verifyOpenAndCloseMultipleContactsSequentially(count: number = 3): 
     }
 }
 
+/*********************************************************Contact Form Public Action******************************************** */
+public async verifyContactFormOpensSuccessfully() {
+    await this.NavigateToContacts();
+    await this.page.waitForTimeout(2000);
+
+    const AddContactButton = this.page.getByRole('button', { name: '' });
+    await AddContactButton.click({force:true});
+
+    const contactForm = this.page.locator('section');
+    await contactForm.waitFor({ state: 'visible', timeout: 10000 });
+    expect(contactForm).toBeVisible();
+    console.log("Contact Form open successfully")
+}
+
 }
 
 
