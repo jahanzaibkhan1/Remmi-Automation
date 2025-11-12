@@ -1708,6 +1708,35 @@ export class ContactActions {
         console.log("Contact form was closed using the X icon successfully")
     }
 
+    public async verifyImageUploadFunctionalityNotDisplayed() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2000);
+
+        const AddContactButton = this.page.getByRole('button', { name: '' });
+        await AddContactButton.click({ force: true });
+
+        const contactForm = this.page.locator('section');
+        await contactForm.waitFor({ state: 'visible', timeout: 10000 });
+        expect(contactForm).toBeVisible();
+
+        const imageUploadSelectors = [
+            'input[type="file"]', // file input
+            'img[alt*="avatar"]',
+            'img[alt*="profile"]',
+            'button:has-text("Upload Image")',
+            '[class*="upload"]',
+            '.profile-upload',
+            'label:has-text("Upload")'
+        ];
+
+        for (const selector of imageUploadSelectors) {
+            const el = this.page.locator(selector);
+            expect(await el.count()).toBe(0);
+        }
+
+        console.log("Verified: Image upload functionality is not displayed on the contact form.");
+    }
+
 }
 
 
