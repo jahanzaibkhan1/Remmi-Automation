@@ -33,5 +33,17 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     );
     await contact.verifyContactFormCloseWithXIcon();
   });
+
+  test('Test 3: Verify image upload functionality is removed from the contact form', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyImageUploadFunctionalityNotDisplayed()
+  });
 });
    

@@ -1,8 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.01565500000003">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T04:19:11.953Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.844" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 2: Verify that the contact form can be closed with the X icon" classname="Pages\Contacts\contactForm.spec.ts" time="31.844">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.514972000000064">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T04:27:26.069Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.456" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 3: Verify image upload functionality is removed from the contact form" classname="Pages\Contacts\contactForm.spec.ts" time="30.456">
 <system-out>
-<![CDATA[Contact form was closed using the X icon successfully
+<![CDATA[Verified: Image upload functionality is not displayed on the contact form.
 ]]>
 </system-out>
 </testcase>
