@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.33608100000024">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T07:40:28.945Z" hostname="chromium" tests="1" failures="0" skipped="0" time="52.911" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 11: Verify that &quot;Select All&quot; changes to &quot;Deselect All&quot; after selecting all check circles" classname="Pages\Contacts\contactForm.spec.ts" time="52.911">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.699223999999464">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T07:47:18.310Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.723" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 12: Verify validation for invalid email format in contact form" classname="Pages\Contacts\contactForm.spec.ts" time="23.723">
 </testcase>
 </testsuite>
 </testsuites>
