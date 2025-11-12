@@ -61,5 +61,18 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const lastName = faker.person.lastName();
     await contact.verifyContactInitialsPlaceholderDisplays(firstName, lastName);
   });
+
+  test('Test 5: Verify that selecting a contact type updates the type dropdown', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifySelectContactTypeUpdatesDropdown();
+  });
+
 });
-   
+  
