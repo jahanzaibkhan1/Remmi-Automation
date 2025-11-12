@@ -1931,6 +1931,42 @@ export class ContactActions {
         const successToast = this.page.getByText(/Contact has been created|Contact has been updated/i);
         await expect(successToast).toBeVisible();
     }
+
+    // Verify that clicking "Save & Close" saves and closes the form
+    public async verifySaveAndCloseButtonSavesAndClosesForm() {
+        await this.NavigateToContacts();
+
+        await this.page.waitForTimeout(3000);
+
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const firstName = faker.person.firstName();
+        const lastName = faker.person.lastName();
+        const email = faker.internet.email({ firstName, lastName });
+
+        const firstNameInput = this.page.locator('input[formcontrolname="first_name"]');
+        await firstNameInput.waitFor({ state: 'visible' });
+        await firstNameInput.fill(firstName);
+
+        const lastNameInput = this.page.locator('input[formcontrolname="last_name"]');
+        await lastNameInput.waitFor({ state: 'visible' });
+        await lastNameInput.fill(lastName);
+
+        const emailInput = this.page.locator('input[formcontrolname="email"]');
+        await emailInput.waitFor({ state: 'visible' });
+        await emailInput.fill(email);
+
+        await this.page.waitForTimeout(500)
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.click({ force: true });
+
+        const successToast = this.page.getByText(/Contact has been created|Contact has been updated/i);
+        await expect(successToast).toBeVisible();
+        await expect(this.page.getByRole('button', { name: 'Save' }).first()).toBeHidden();
+    }
 }
 
 

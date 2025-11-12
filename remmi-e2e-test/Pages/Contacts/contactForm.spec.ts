@@ -121,5 +121,17 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     );
     await contact.verifySaveButtonSavesForm();
   });
+
+  test('Test 10: Verify that clicking "Save & Close" saves and closes the contact form', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifySaveAndCloseButtonSavesAndClosesForm();
+  });
 });
   
