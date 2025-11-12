@@ -150,7 +150,7 @@ export class ContactActions {
         await this.ContactTypeDropdown();
 
         // Wait for filter to be applied (table rows update)
-        await this.page.waitForTimeout(3000);
+        await this.page.waitForTimeout(2000);
 
         // Get all rows in the table after filtering
         const rows = await this.page.locator('table tbody tr');
@@ -1209,6 +1209,7 @@ export class ContactActions {
 
         // Locate the filter button for the Created Date column (assuming 10th column, adjust if needed)
         const filterButton = this.page.locator("//th[10]//div[1]//div[1]//img[1]");
+        await this.page.waitForTimeout(500)
         await filterButton.dblclick({ force: true });
         await this.page.waitForTimeout(1500);
         await this.page.locator('div').filter({ hasText: 'Custom Date' }).nth(4).click()
@@ -1361,9 +1362,6 @@ export class ContactActions {
             // Close the modal using the close icon
             const closeIcon = this.page.locator('.pi.pi-times.cursor-pointer.f-14');
             await closeIcon.click();
-
-            // Wait for the modal to disappear
-            await closeIcon.waitFor({ state: 'detached', timeout: 5000 });
         }
 
         // Attempt to scroll the contact list to verify more contacts load after closing details
