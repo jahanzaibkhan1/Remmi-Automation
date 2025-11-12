@@ -2051,12 +2051,40 @@ export class ContactActions {
     
         const addPhoneIcon = this.page.getByRole('button', { name: '' }).nth(2);
         await addPhoneIcon.click();
-        
+
         await expect(this.page.getByRole('textbox', { name: 'Other Phone' })).toBeVisible();
     
         const countAfter = await phoneInputs.count();
     
         expect(countAfter).toBe(countBefore + 1);
+    }
+
+    public async verifyDeleteEmailOrPhoneField() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        // Add an extra email field
+        const addEmailIcon = this.page.getByRole('button', { name: '' }).nth(1);
+        await addEmailIcon.click();
+
+        const emailInputs = this.page.locator('input[formcontrolname="email"]');
+        const deleteEmailButton = this.page.getByRole('button', { name: 'delete' }).first();
+        await deleteEmailButton.click();
+        await this.page.waitForTimeout(1000);
+        await expect(emailInputs.nth(1)).not.toBeVisible();
+
+        const addPhoneIcon = this.page.getByRole('button', { name: '' }).nth(2);
+        await addPhoneIcon.click();
+
+        const phoneInputs = this.page.locator('input[formcontrolname="mobile_no"]');
+        const deletePhoneButton = this.page.getByRole('button', { name: 'delete' }).last();
+        await deletePhoneButton.click();
+        await this.page.waitForTimeout(1000);
+        await expect(phoneInputs.nth(1)).not.toBeVisible();
     }
 }
 

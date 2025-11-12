@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.22261100000143">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T07:58:28.676Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.552" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 14: Verify that clicking the &quot;+&quot; icon adds a new phone field" classname="Pages\Contacts\contactForm.spec.ts" time="28.552">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.00719700000062">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T08:09:49.300Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.995" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 15: Verify that an email or phone field can be deleted" classname="Pages\Contacts\contactForm.spec.ts" time="24.995">
 </testcase>
 </testsuite>
 </testsuites>
