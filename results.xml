@@ -1,8 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.514972000000064">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T04:27:26.069Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.456" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 3: Verify image upload functionality is removed from the contact form" classname="Pages\Contacts\contactForm.spec.ts" time="30.456">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.19951300000027">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T05:16:35.900Z" hostname="chromium" tests="1" failures="0" skipped="0" time="17.507" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 4: Verify that the contact initials placeholder is displayed" classname="Pages\Contacts\contactForm.spec.ts" time="17.507">
 <system-out>
-<![CDATA[Verified: Image upload functionality is not displayed on the contact form.
+<![CDATA[✅ Verified initials: VB
 ]]>
 </system-out>
 </testcase>

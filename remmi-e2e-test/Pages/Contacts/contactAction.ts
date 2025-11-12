@@ -1,5 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { ContactLocators } from './contactLocator';
+import { faker } from '@faker-js/faker';
 import { setEngine } from 'crypto';
 import { waitForDebugger } from 'inspector';
 
@@ -1736,6 +1737,45 @@ export class ContactActions {
 
         console.log("Verified: Image upload functionality is not displayed on the contact form.");
     }
+
+
+
+    public async verifyContactInitialsPlaceholderDisplays(firstName?: string, lastName?: string) {
+        await this.NavigateToContacts();
+
+        await this.page.waitForTimeout(2500)
+
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        await this.page.waitForSelector('input[formcontrolname="first_name"]', { state: 'visible' });
+
+        const imagePlaceHolder = this.page.getByText('D1', { exact: true });
+        await expect(imagePlaceHolder).toBeVisible();
+
+        // Use faker if names not provided from test
+        const generatedFirstName = firstName ?? faker.person.firstName();
+        const generatedLastName = lastName ?? faker.person.lastName();
+
+        const firstNameInput = this.page.locator('input[formcontrolname="first_name"]');
+        await firstNameInput.fill(generatedFirstName);
+
+        const lastNameInput = this.page.locator('input[formcontrolname="last_name"]');
+        await lastNameInput.fill(generatedLastName);
+
+        await this.page.waitForSelector('.user-thumbnail-placeholder .text-uppercase', { state: 'visible' });
+
+        const initialsPlaceholder = this.page.locator('.user-thumbnail-placeholder .text-uppercase').first();
+        await expect(initialsPlaceholder).toBeVisible();
+
+        const expectedInitials = (generatedFirstName[0] + generatedLastName[0]).toUpperCase();
+        await expect(initialsPlaceholder).toContainText(expectedInitials);
+
+        console.log(`✅ Verified initials: ${expectedInitials}`);
+    }
+
+
 
 }
 
