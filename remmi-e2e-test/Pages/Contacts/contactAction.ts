@@ -1882,7 +1882,6 @@ export class ContactActions {
         await this.NavigateToContacts();
 
         await this.page.waitForTimeout(3000);
-        
         const addContactButton = this.page.getByRole('button', { name: '' });
         await addContactButton.waitFor({ state: 'visible' });
         await addContactButton.click();
@@ -1901,6 +1900,37 @@ export class ContactActions {
         await expect(emailError).toBeVisible();
     }
 
+    public async verifySaveButtonSavesForm() {
+        await this.NavigateToContacts();
+
+        await this.page.waitForTimeout(3000);
+
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const firstName = faker.person.firstName();
+        const lastName = faker.person.lastName();
+        const email = faker.internet.email({ firstName, lastName });
+
+        const firstNameInput = this.page.locator('input[formcontrolname="first_name"]');
+        await firstNameInput.waitFor({ state: 'visible' });
+        await firstNameInput.fill(firstName);
+
+        const lastNameInput = this.page.locator('input[formcontrolname="last_name"]');
+        await lastNameInput.waitFor({ state: 'visible' });
+        await lastNameInput.fill(lastName);
+
+        const emailInput = this.page.locator('input[formcontrolname="email"]');
+        await emailInput.waitFor({ state: 'visible' });
+        await emailInput.fill(email);
+
+        const saveButton = this.page.getByRole('button', { name: 'Save' }).first();
+        await saveButton.click({ force: true });
+
+        const successToast = this.page.getByText(/Contact has been created|Contact has been updated/i);
+        await expect(successToast).toBeVisible();
+    }
 }
 
 
