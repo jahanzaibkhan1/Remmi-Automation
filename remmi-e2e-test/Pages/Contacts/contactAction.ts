@@ -1,6 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { ContactLocators } from './contactLocator';
-import { faker } from '@faker-js/faker';
+import { faker, tr } from '@faker-js/faker';
 import { setEngine } from 'crypto';
 import { waitForDebugger } from 'inspector';
 
@@ -1820,7 +1820,7 @@ export class ContactActions {
 
         // Attempt to save without filling any fields to trigger validation
         const savecontactButton = this.page.getByRole('button', { name: 'Save' }).first();
-        await savecontactButton.click({force:true});
+        await savecontactButton.click({ force: true });
 
         // Only verify that required validation errors are shown
         const companyNameError = this.page.getByText('Company name is required', { exact: false });
@@ -1849,7 +1849,7 @@ export class ContactActions {
 
         // Attempt to save without filling any fields to trigger validation
         const savecontactButton = this.page.getByRole('button', { name: 'Save' }).first();
-        await savecontactButton.click({force:true});
+        await savecontactButton.click({ force: true });
 
         // Check validation error messages: the first word must start with a capital letter
         const companyNameError = this.page.getByText(/Company name is required/i, { exact: false });
@@ -1989,7 +1989,7 @@ export class ContactActions {
         const deselectAllLabel = this.page.locator('label.select_all[data="Deselect All"]');
         await expect(deselectAllLabel).toBeVisible();
 
-        
+
     }
 
     public async verifyInvalidEmailFormatErrorMessage() {
@@ -2041,21 +2041,21 @@ export class ContactActions {
     public async verifyAddPhoneField() {
         await this.NavigateToContacts();
         await this.page.waitForTimeout(3000);
-    
+
         const addContactButton = this.page.getByRole('button', { name: '' });
         await addContactButton.waitFor({ state: 'visible' });
         await addContactButton.click();
-    
+
         const phoneInputs = this.page.locator('input[formcontrolname="mobile_no"]');
         const countBefore = await phoneInputs.count();
-    
+
         const addPhoneIcon = this.page.getByRole('button', { name: '' }).nth(2);
         await addPhoneIcon.click();
 
         await expect(this.page.getByRole('textbox', { name: 'Other Phone' })).toBeVisible();
-    
+
         const countAfter = await phoneInputs.count();
-    
+
         expect(countAfter).toBe(countBefore + 1);
     }
 
@@ -2085,6 +2085,34 @@ export class ContactActions {
         await deletePhoneButton.click();
         await this.page.waitForTimeout(1000);
         await expect(phoneInputs.nth(1)).not.toBeVisible();
+    }
+
+    // Verify that clicking the correct (✔) button sets an email as the primary email
+
+    public async verifySetPrimaryEmail() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const mainEmailInput = this.page.locator('input[formcontrolname="email"]').first();
+        const firstEmail = 'user1@example.com';
+        await mainEmailInput.fill(firstEmail);
+
+        const addEmailIcon = this.page.getByRole('button', { name: '' }).nth(1);
+        await addEmailIcon.click();
+
+        const otherEmailInput = this.page.locator('input[placeholder="Other Email"]');
+        const secondEmail = 'user2@example.com';
+        await otherEmailInput.fill(secondEmail);
+
+        // Set "Other Email" as primary
+        const setPrimaryBtn  = this.page.getByRole('button', { name: '' }).first();
+        await setPrimaryBtn .click({ force: true });
+
+        await expect(mainEmailInput).toHaveValue(secondEmail);
     }
 }
 
