@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.699223999999464">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T07:47:18.310Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.723" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 12: Verify validation for invalid email format in contact form" classname="Pages\Contacts\contactForm.spec.ts" time="23.723">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="26.08812999999896">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-12T07:52:42.365Z" hostname="chromium" tests="1" failures="0" skipped="0" time="18.371" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 13: Verify that clicking the &quot;+&quot; icon adds a new email field" classname="Pages\Contacts\contactForm.spec.ts" time="18.371">
 </testcase>
 </testsuite>
 </testsuites>

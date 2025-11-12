@@ -2015,6 +2015,27 @@ export class ContactActions {
         const emailError = this.page.getByText('Invalid email format');
         await expect(emailError).toBeVisible();
     }
+
+    public async verifyAddEmailField() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const emailInputs = this.page.locator('input[formcontrolname="email"]');
+        const countBefore = await emailInputs.count();
+
+        const addEmailIcon = this.page.getByRole('button', { name: '' }).nth(1);
+        await addEmailIcon.click();
+
+        await expect(this.page.getByRole('textbox', { name: 'Other Email' })).toBeVisible()
+
+        const countAfter = await emailInputs.count();
+
+        expect(countAfter).toBe(countBefore + 1);
+    }
 }
 
 
