@@ -2402,13 +2402,50 @@ export class ContactActions {
         expect(
             Object.values(fieldValues).some(val => val && val.trim().length > 0)
         ).toBeTruthy();
-    
-        // ✅ Optional: You can strengthen checks like below if you know what should be filled:
-        // expect(country).toContain('Australia');
-        // expect(postCode).not.toBe('');
+
     }
     
-    
+    // Verify that all address fields are displayed correctly
+    async verifyAllAddressFieldsDisplayed() {
+
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Click into first contact to open detail view
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+
+        const contactRow = rowsLocator.first();
+        const nameCell = contactRow.locator('td').nth(0);
+        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+        await contactRow.click();
+
+        // Open overlay/panel if required
+        const editOverlayButton = this.page.locator('#toggle-overlay');
+        if (await editOverlayButton.isVisible({ timeout: 2000 })) {
+            await editOverlayButton.click();
+        }
+
+        // Define the locators for each address field
+        const buildingName = this.page.locator('input[formcontrolname="building_name"]');
+        const unitNo = this.page.locator('input[formcontrolname="unit_no"]');
+        const streetNo = this.page.locator('input[formcontrolname="street_no"]');
+        const streetName = this.page.locator('input[formcontrolname="street_name"]');
+        const suburb = this.page.locator('p-autocomplete[formcontrolname="suburb"] input.p-autocomplete-input');
+        const state = this.page.locator('input[formcontrolname="state"]');
+        const postCode = this.page.locator('input[formcontrolname="post_code"]');
+        const country = this.page.locator('input[formcontrolname="country"]');
+
+        // Wait for all the fields to be visible
+        await expect(buildingName).toBeVisible();
+        await expect(unitNo).toBeVisible();
+        await expect(streetNo).toBeVisible();
+        await expect(streetName).toBeVisible();
+        await expect(suburb).toBeVisible();
+        await expect(state).toBeVisible();
+        await expect(postCode).toBeVisible();
+        await expect(country).toBeVisible();
+    }
 
 }
 
