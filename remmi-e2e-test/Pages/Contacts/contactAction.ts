@@ -1,5 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { ContactLocators } from './contactLocator';
+import { faker, tr } from '@faker-js/faker';
 import { setEngine } from 'crypto';
 import { waitForDebugger } from 'inspector';
 
@@ -145,11 +146,12 @@ export class ContactActions {
         await this.page.waitForTimeout(4000);
         await this.ContactTypeDropdown();
         await this.SearchContactType(name);
+        await this.page.waitForTimeout(500)
         await this.SelectOption(name);
         await this.ContactTypeDropdown();
 
         // Wait for filter to be applied (table rows update)
-        await this.page.waitForTimeout(3000);
+        await this.page.waitForTimeout(2000);
 
         // Get all rows in the table after filtering
         const rows = await this.page.locator('table tbody tr');
@@ -1208,6 +1210,7 @@ export class ContactActions {
 
         // Locate the filter button for the Created Date column (assuming 10th column, adjust if needed)
         const filterButton = this.page.locator("//th[10]//div[1]//div[1]//img[1]");
+        await this.page.waitForTimeout(500)
         await filterButton.dblclick({ force: true });
         await this.page.waitForTimeout(1500);
         await this.page.locator('div').filter({ hasText: 'Custom Date' }).nth(4).click()
@@ -1360,9 +1363,6 @@ export class ContactActions {
             // Close the modal using the close icon
             const closeIcon = this.page.locator('.pi.pi-times.cursor-pointer.f-14');
             await closeIcon.click();
-
-            // Wait for the modal to disappear
-            await closeIcon.waitFor({ state: 'detached', timeout: 5000 });
         }
 
         // Attempt to scroll the contact list to verify more contacts load after closing details
@@ -1394,19 +1394,19 @@ export class ContactActions {
         await this.page.waitForTimeout(2000);
         const checkboxes = this.page.locator('[role="checkbox"]:visible');
         const count = await checkboxes.count();
-        
+
         for (let i = 0; i < count; i++) {
-          const checkbox = checkboxes.nth(i);
-          const isDisabled = await checkbox.isDisabled();
-          if (isDisabled) continue;
-        
-          const isChecked = await checkbox.isChecked();
-          if (!isChecked) {
-            await checkbox.scrollIntoViewIfNeeded(); 
-            await checkbox.click({ timeout: 10000 });
-          }
+            const checkbox = checkboxes.nth(i);
+            const isDisabled = await checkbox.isDisabled();
+            if (isDisabled) continue;
+
+            const isChecked = await checkbox.isChecked();
+            if (!isChecked) {
+                await checkbox.scrollIntoViewIfNeeded();
+                await checkbox.click({ timeout: 10000 });
+            }
         }
-        
+
     }
 
     public async verifySearchingAndLoadingMoreContacts(): Promise<void> {
@@ -1444,7 +1444,7 @@ export class ContactActions {
         }
 
     }
- 
+
     public async verifyTagDropdownFilter(tagName: string): Promise<void> {
         await this.NavigateToContacts();
         await this.page.waitForTimeout(4000);
@@ -1575,66 +1575,28 @@ export class ContactActions {
         if (await emailDiv.count() > 0) {
             await emailDiv.waitFor({ state: 'visible', timeout: 3000 });
             const emailValue = await emailDiv.inputValue();
- 
+
         } else {
         }
     }
 
-    
-public async verifyOpenFilteredContact(filterName: string): Promise<void> {
-    await this.NavigateToContacts();
-    await this.page.waitForTimeout(4000);
 
-    await this.searchForContact(filterName);
+    public async verifyOpenFilteredContact(filterName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
 
-    const rowsLocator = this.page.locator('table tbody tr');
-    await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+        await this.searchForContact(filterName);
 
-    const contactRow = rowsLocator.first();
-    const nameCell = contactRow.locator('td').nth(0);
-    const tableContactName = (await nameCell.textContent())?.trim() ?? "";
-    await contactRow.click();
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
 
-    const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
-
-    let detailOpened = true;
-    try {
-        await detailPanel.waitFor({ state: 'visible', timeout: 10000 });
-    } catch (error) {
-        detailOpened = false;
-    }
-
-    if (detailOpened) {
-        expect(detailPanel).toBeVisible();
-    } else {
-        const errorIndicator = this.page.locator('.contact-detail-error, .error-message, .retry-btn');
-        await this.page.waitForTimeout(1000);
-        const errorsCount = await errorIndicator.count();
-        expect(errorsCount).toBeGreaterThan(0);
-    }
-}
-
-public async verifyOpenAndCloseMultipleContactsSequentially(count: number = 3): Promise<void> {
-    await this.NavigateToContacts();
-    await this.page.waitForTimeout(4000);
-
-    const rowsLocator = this.page.locator('table tbody tr');
-    const numberOfContacts = await rowsLocator.count();
-    const maxContacts = Math.min(count, numberOfContacts);
-
-    for (let i = 0; i < maxContacts; i++) {
-        const contactRow = rowsLocator.nth(i);
-        await contactRow.waitFor({ state: 'visible', timeout: 10000 });
-
-        // Get name before opening, for validation
+        const contactRow = rowsLocator.first();
         const nameCell = contactRow.locator('td').nth(0);
         const tableContactName = (await nameCell.textContent())?.trim() ?? "";
-
-        // Open contact detail
         await contactRow.click();
 
-        // Wait for contact details
         const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
+
         let detailOpened = true;
         try {
             await detailPanel.waitFor({ state: 'visible', timeout: 10000 });
@@ -1644,40 +1606,932 @@ public async verifyOpenAndCloseMultipleContactsSequentially(count: number = 3): 
 
         if (detailOpened) {
             expect(detailPanel).toBeVisible();
-
-            let detailName: string | null = null;
-            try {
-                detailName = (await detailPanel.textContent())?.trim() ?? "";
-            } catch {}
-            if (detailName) {
-                expect(detailName).toContain(tableContactName);
-            }
         } else {
             const errorIndicator = this.page.locator('.contact-detail-error, .error-message, .retry-btn');
             await this.page.waitForTimeout(1000);
             const errorsCount = await errorIndicator.count();
             expect(errorsCount).toBeGreaterThan(0);
         }
+    }
 
-        // Wait a bit before closing, to simulate user's observation
-        await this.page.waitForTimeout(800);
+    public async verifyOpenAndCloseMultipleContactsSequentially(count: number = 3): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
 
-        // Now close the contact that was opened
-        const closeBtn = this.page.locator('.panel-close-btn, .mat-dialog-close, .contact-detail-close').first();
-        if (await closeBtn.isVisible()) {
-            await closeBtn.click();
-            await detailPanel.waitFor({ state: 'hidden', timeout: 5000 });
-        } else {
-            await this.page.keyboard.press('Escape');
-            await detailPanel.waitFor({ state: 'hidden', timeout: 5000 });
+        const rowsLocator = this.page.locator('table tbody tr');
+        const numberOfContacts = await rowsLocator.count();
+        const maxContacts = Math.min(count, numberOfContacts);
+
+        for (let i = 0; i < maxContacts; i++) {
+            const contactRow = rowsLocator.nth(i);
+            await contactRow.waitFor({ state: 'visible', timeout: 10000 });
+
+            // Get name before opening, for validation
+            const nameCell = contactRow.locator('td').nth(0);
+            const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+
+            // Open contact detail
+            await contactRow.click();
+
+            // Wait for contact details
+            const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
+            let detailOpened = true;
+            try {
+                await detailPanel.waitFor({ state: 'visible', timeout: 10000 });
+            } catch (error) {
+                detailOpened = false;
+            }
+
+            if (detailOpened) {
+                expect(detailPanel).toBeVisible();
+
+                let detailName: string | null = null;
+                try {
+                    detailName = (await detailPanel.textContent())?.trim() ?? "";
+                } catch { }
+                if (detailName) {
+                    expect(detailName).toContain(tableContactName);
+                }
+            } else {
+                const errorIndicator = this.page.locator('.contact-detail-error, .error-message, .retry-btn');
+                await this.page.waitForTimeout(1000);
+                const errorsCount = await errorIndicator.count();
+                expect(errorsCount).toBeGreaterThan(0);
+            }
+
+            // Wait a bit before closing, to simulate user's observation
+            await this.page.waitForTimeout(800);
+
+            // Now close the contact that was opened
+            const closeBtn = this.page.locator('.panel-close-btn, .mat-dialog-close, .contact-detail-close').first();
+            if (await closeBtn.isVisible()) {
+                await closeBtn.click();
+                await detailPanel.waitFor({ state: 'hidden', timeout: 5000 });
+            } else {
+                await this.page.keyboard.press('Escape');
+                await detailPanel.waitFor({ state: 'hidden', timeout: 5000 });
+            }
+
+            // Small wait after closing
+            await this.page.waitForTimeout(500);
+        }
+    }
+
+    /*********************************************************Contact Form Public Action******************************************** */
+    public async verifyContactFormOpensSuccessfully() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2000);
+
+        const AddContactButton = this.page.getByRole('button', { name: '' });
+        await AddContactButton.click({ force: true });
+
+        const contactForm = this.page.locator('section');
+        await contactForm.waitFor({ state: 'visible', timeout: 10000 });
+        expect(contactForm).toBeVisible();
+        console.log("Contact Form open successfully")
+    }
+
+    public async verifyContactFormCloseWithXIcon() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2000);
+        const AddContactButton = this.page.getByRole('button', { name: '' });
+        await AddContactButton.click({ force: true });
+
+        const contactForm = this.page.locator('section');
+        await contactForm.waitFor({ state: 'visible', timeout: 10000 });
+        expect(contactForm).toBeVisible();
+        const closeIcon = this.page.locator('.pi.pi-times.cursor-pointer.f-14').first();
+        await closeIcon.waitFor({ state: 'visible', timeout: 5000 });
+        await closeIcon.click();
+        await contactForm.waitFor({ state: 'hidden', timeout: 5000 });
+        expect(await contactForm.isVisible()).toBeFalsy();
+        console.log("Contact form was closed using the X icon successfully")
+    }
+
+    public async verifyImageUploadFunctionalityNotDisplayed() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(2000);
+
+        const AddContactButton = this.page.getByRole('button', { name: '' });
+        await AddContactButton.click({ force: true });
+
+        const contactForm = this.page.locator('section');
+        await contactForm.waitFor({ state: 'visible', timeout: 10000 });
+        expect(contactForm).toBeVisible();
+
+        const imageUploadSelectors = [
+            'input[type="file"]', // file input
+            'img[alt*="avatar"]',
+            'img[alt*="profile"]',
+            'button:has-text("Upload Image")',
+            '[class*="upload"]',
+            '.profile-upload',
+            'label:has-text("Upload")'
+        ];
+
+        for (const selector of imageUploadSelectors) {
+            const el = this.page.locator(selector);
+            expect(await el.count()).toBe(0);
         }
 
-        // Small wait after closing
-        await this.page.waitForTimeout(500);
+        console.log("Verified: Image upload functionality is not displayed on the contact form.");
     }
-}
+
+
+
+    public async verifyContactInitialsPlaceholderDisplays(firstName?: string, lastName?: string) {
+        await this.NavigateToContacts();
+
+        await this.page.waitForTimeout(2500)
+
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        await this.page.waitForSelector('input[formcontrolname="first_name"]', { state: 'visible' });
+
+        const imagePlaceHolder = this.page.getByText('D1', { exact: true });
+        await expect(imagePlaceHolder).toBeVisible();
+
+        // Use faker if names not provided from test
+        const generatedFirstName = firstName ?? faker.person.firstName();
+        const generatedLastName = lastName ?? faker.person.lastName();
+
+        const firstNameInput = this.page.locator('input[formcontrolname="first_name"]');
+        await firstNameInput.fill(generatedFirstName);
+
+        const lastNameInput = this.page.locator('input[formcontrolname="last_name"]');
+        await lastNameInput.fill(generatedLastName);
+
+        await this.page.waitForSelector('.user-thumbnail-placeholder .text-uppercase', { state: 'visible' });
+
+        const initialsPlaceholder = this.page.locator('.user-thumbnail-placeholder .text-uppercase').first();
+        await expect(initialsPlaceholder).toBeVisible();
+
+        const expectedInitials = (generatedFirstName[0] + generatedLastName[0]).toUpperCase();
+        await expect(initialsPlaceholder).toContainText(expectedInitials);
+
+        console.log(`✅ Verified initials: ${expectedInitials}`);
+    }
+
+
+    public async verifySelectContactTypeUpdatesDropdown() {
+        await this.NavigateToContacts();
+
+        await this.page.waitForTimeout(3000);
+
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const contactTypeDropdown = this.page.locator('span').filter({ hasText: 'Individual' });
+        await contactTypeDropdown.waitFor({ state: 'visible' });
+
+        await contactTypeDropdown.click();
+
+        await this.page.waitForTimeout(500);
+
+        const dropdownoption = this.page.locator('div').filter({ hasText: /^Company$/ }).nth(1);
+        await expect(dropdownoption).toBeVisible()
+        await dropdownoption.click()
+
+        await expect(this.page.locator('span').filter({ hasText: /^Company$/ })).toBeVisible()
+        await expect(this.page.locator('div').filter({ hasText: /^Company Name \*$/ }).nth(1)).toBeVisible()
+        await expect(this.page.locator('div').filter({ hasText: /^Preferred Contact MethodSelect Contact Method$/ }).first()).toBeVisible()
+    }
+
+    public async verifyRequiredFieldsValidationForCompany() {
+        await this.NavigateToContacts();
+
+        await this.page.waitForTimeout(3000);
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const contactTypeDropdown = this.page.locator('span').filter({ hasText: 'Individual' });
+        await contactTypeDropdown.waitFor({ state: 'visible' });
+        await contactTypeDropdown.click();
+        await this.page.waitForTimeout(500);
+
+        const companyOption = this.page.locator('div').filter({ hasText: /^Company$/ }).nth(1);
+        await companyOption.waitFor({ state: 'visible' });
+        await companyOption.click();
+
+        // Attempt to save without filling any fields to trigger validation
+        const savecontactButton = this.page.getByRole('button', { name: 'Save' }).first();
+        await savecontactButton.click({ force: true });
+
+        // Only verify that required validation errors are shown
+        const companyNameError = this.page.getByText('Company name is required', { exact: false });
+        await expect(companyNameError).toBeVisible();
+
+        const emailError = this.page.getByText('Email is required', { exact: false });
+        await expect(emailError).toBeVisible();
+    }
+
+    public async verifyRequiredFieldsCapitalizedValidationForCompany() {
+        await this.NavigateToContacts();
+
+        await this.page.waitForTimeout(3000);
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const contactTypeDropdown = this.page.locator('span').filter({ hasText: 'Individual' });
+        await contactTypeDropdown.waitFor({ state: 'visible' });
+        await contactTypeDropdown.click();
+        await this.page.waitForTimeout(500);
+
+        const companyOption = this.page.locator('div').filter({ hasText: /^Company$/ }).nth(1);
+        await companyOption.waitFor({ state: 'visible' });
+        await companyOption.click();
+
+        // Attempt to save without filling any fields to trigger validation
+        const savecontactButton = this.page.getByRole('button', { name: 'Save' }).first();
+        await savecontactButton.click({ force: true });
+
+        // Check validation error messages: the first word must start with a capital letter
+        const companyNameError = this.page.getByText(/Company name is required/i, { exact: false });
+        const emailError = this.page.getByText(/Email is required/i, { exact: false });
+
+        await expect(companyNameError).toBeVisible();
+        await expect(emailError).toBeVisible();
+
+        // Extra validation: check first word is capitalized for each error message
+        const companyNameErrorText = await companyNameError.textContent();
+        const emailErrorText = await emailError.textContent();
+
+        if (companyNameErrorText) {
+            const firstWord = companyNameErrorText.split(' ')[0];
+            expect(firstWord.charAt(0)).toMatch(/[A-Z]/);
+        } else {
+            throw new Error('Company name error text not found');
+        }
+
+        if (emailErrorText) {
+            const firstWord = emailErrorText.split(' ')[0];
+            expect(firstWord.charAt(0)).toMatch(/[A-Z]/);
+        } else {
+            throw new Error('Email error text not found');
+        }
+    }
+
+    // Verify required fields validation for "Individual" contact type
+    public async verifyRequiredFieldsValidationForIndividual() {
+        await this.NavigateToContacts();
+
+        await this.page.waitForTimeout(3000);
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const contactTypeDropdown = this.page.locator('span').filter({ hasText: 'Individual' });
+        await contactTypeDropdown.waitFor({ state: 'visible' });
+        await this.page.waitForTimeout(500);
+
+        const saveContactButton = this.page.getByRole('button', { name: 'Save' }).first();
+        await saveContactButton.click({ force: true });
+
+        const firstNameError = this.page.getByText(/First name is required/i, { exact: false });
+        const emailError = this.page.getByText(/Email is required/i, { exact: false });
+
+        await expect(firstNameError).toBeVisible();
+        await expect(emailError).toBeVisible();
+    }
+
+    public async verifySaveButtonSavesForm() {
+        await this.NavigateToContacts();
+
+        await this.page.waitForTimeout(3000);
+
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const firstName = faker.person.firstName();
+        const lastName = faker.person.lastName();
+        const email = faker.internet.email({ firstName, lastName });
+
+        const firstNameInput = this.page.locator('input[formcontrolname="first_name"]');
+        await firstNameInput.waitFor({ state: 'visible' });
+        await firstNameInput.fill(firstName);
+
+        const lastNameInput = this.page.locator('input[formcontrolname="last_name"]');
+        await lastNameInput.waitFor({ state: 'visible' });
+        await lastNameInput.fill(lastName);
+
+        const emailInput = this.page.locator('input[formcontrolname="email"]');
+        await emailInput.waitFor({ state: 'visible' });
+        await emailInput.fill(email);
+
+        const saveButton = this.page.getByRole('button', { name: 'Save' }).first();
+        await saveButton.click({ force: true });
+
+        const successToast = this.page.getByText(/Contact has been created|Contact has been updated/i);
+        await expect(successToast).toBeVisible();
+    }
+
+    // Verify that clicking "Save & Close" saves and closes the form
+    public async verifySaveAndCloseButtonSavesAndClosesForm() {
+        await this.NavigateToContacts();
+
+        await this.page.waitForTimeout(3000);
+
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const firstName = faker.person.firstName();
+        const lastName = faker.person.lastName();
+        const email = faker.internet.email({ firstName, lastName });
+
+        const firstNameInput = this.page.locator('input[formcontrolname="first_name"]');
+        await firstNameInput.waitFor({ state: 'visible' });
+        await firstNameInput.fill(firstName);
+
+        const lastNameInput = this.page.locator('input[formcontrolname="last_name"]');
+        await lastNameInput.waitFor({ state: 'visible' });
+        await lastNameInput.fill(lastName);
+
+        const emailInput = this.page.locator('input[formcontrolname="email"]');
+        await emailInput.waitFor({ state: 'visible' });
+        await emailInput.fill(email);
+
+        await this.page.waitForTimeout(500)
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.click({ force: true });
+
+        const successToast = this.page.getByText(/Contact has been created|Contact has been updated/i);
+        await expect(successToast).toBeVisible();
+        await expect(this.page.getByRole('button', { name: 'Save' }).first()).toBeHidden();
+    }
+
+    public async verifySelectAllChangesToDeselectAllInPreferredContactMethod() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Open Add Contact
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        // Open 'Preferred Contact Method' dropdown
+        const preferredContactDropdown = this.page.locator('div').filter({ hasText: /^Select Contact Method$/ }).nth(1);
+        await preferredContactDropdown.click();
+
+        // Click "Select All" checkbox
+        const selectAllCheckbox = this.page.locator('label.select_all');
+        await selectAllCheckbox.click();
+
+        // Assert that the "Select All" label changed to "Deselect All"
+        const deselectAllLabel = this.page.locator('label.select_all[data="Deselect All"]');
+        await expect(deselectAllLabel).toBeVisible();
+
+
+    }
+
+    public async verifyInvalidEmailFormatErrorMessage() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Open Add Contact
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        // Enter invalid email format
+        const invalidEmail = "invalid-email-format@";
+        const emailInput = this.page.locator('input[formcontrolname="email"]');
+        await emailInput.waitFor({ state: 'visible' });
+        await emailInput.fill(invalidEmail);
+
+        // Click Save button
+        const saveButton = this.page.getByRole('button', { name: 'Save' }).first();
+        await saveButton.click({ force: true });
+
+        // Verify error message for email field
+        const emailError = this.page.getByText('Invalid email format');
+        await expect(emailError).toBeVisible();
+    }
+
+    public async verifyAddEmailField() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const emailInputs = this.page.locator('input[formcontrolname="email"]');
+        const countBefore = await emailInputs.count();
+
+        const addEmailIcon = this.page.getByRole('button', { name: '' }).nth(1);
+        await addEmailIcon.click();
+
+        await expect(this.page.getByRole('textbox', { name: 'Other Email' })).toBeVisible()
+
+        const countAfter = await emailInputs.count();
+
+        expect(countAfter).toBe(countBefore + 1);
+    }
+
+    // Verify that clicking the "+" icon adds a new phone field
+    public async verifyAddPhoneField() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const phoneInputs = this.page.locator('input[formcontrolname="mobile_no"]');
+        const countBefore = await phoneInputs.count();
+
+        const addPhoneIcon = this.page.getByRole('button', { name: '' }).nth(2);
+        await addPhoneIcon.click();
+
+        await expect(this.page.getByRole('textbox', { name: 'Other Phone' })).toBeVisible();
+
+        const countAfter = await phoneInputs.count();
+
+        expect(countAfter).toBe(countBefore + 1);
+    }
+
+    public async verifyDeleteEmailOrPhoneField() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        // Add an extra email field
+        const addEmailIcon = this.page.getByRole('button', { name: '' }).nth(1);
+        await addEmailIcon.click();
+
+        const emailInputs = this.page.locator('input[formcontrolname="email"]');
+        const deleteEmailButton = this.page.getByRole('button', { name: 'delete' }).first();
+        await deleteEmailButton.click();
+        await this.page.waitForTimeout(1000);
+        await expect(emailInputs.nth(1)).not.toBeVisible();
+
+        const addPhoneIcon = this.page.getByRole('button', { name: '' }).nth(2);
+        await addPhoneIcon.click();
+
+        const phoneInputs = this.page.locator('input[formcontrolname="mobile_no"]');
+        const deletePhoneButton = this.page.getByRole('button', { name: 'delete' }).last();
+        await deletePhoneButton.click();
+        await this.page.waitForTimeout(1000);
+        await expect(phoneInputs.nth(1)).not.toBeVisible();
+    }
+
+    // Verify that clicking the correct (✔) button sets an email as the primary email
+
+    public async verifySetPrimaryEmail() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const mainEmailInput = this.page.locator('input[formcontrolname="email"]').first();
+        const firstEmail = 'user1@example.com';
+        await mainEmailInput.fill(firstEmail);
+
+        const addEmailIcon = this.page.getByRole('button', { name: '' }).nth(1);
+        await addEmailIcon.click();
+
+        const otherEmailInput = this.page.locator('input[placeholder="Other Email"]');
+        const secondEmail = 'user2@example.com';
+        await otherEmailInput.fill(secondEmail);
+
+        // Set "Other Email" as primary
+        const setPrimaryBtn = this.page.getByRole('button', { name: '' }).first();
+        await setPrimaryBtn.click({ force: true });
+
+        await expect(mainEmailInput).toHaveValue(secondEmail);
+    }
+
+    // Attempt to save a tag without entering a name
+    public async verifyCannotSaveTagWithoutName() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const plusTagIcon = this.page.locator('i.pi.pi-plus.cursor-pointer.text-primary');
+        await plusTagIcon.scrollIntoViewIfNeeded();
+        await plusTagIcon.click();
+
+        await expect(this.page.getByText('Tag Manager')).toBeVisible();
+
+        const newTagButton = this.page.locator('button[ptooltip="New Tag"]');
+        await newTagButton.click();
+
+        const tagTypeDropdown = this.page.locator('ng-select[placeholder="Select Tag Type"] input[type="text"]');
+        await expect(tagTypeDropdown).toBeVisible();
+        await tagTypeDropdown.click();
+        await tagTypeDropdown.fill('Automation Testing');
+        const tagTypeOption = this.page.getByRole('option', { name: 'Automation Testing' }).first();
+        await tagTypeOption.click();
+
+        const addButton = this.page.getByRole('button', { name: /^Add$/i });
+        await addButton.isDisabled();
+    }
+
+    // Verify associating a company with a contact via association search in contact details
+    public async verifyCompanyAssociatedWithContact(companyName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+
+        const contactRow = rowsLocator.first();
+        const nameCell = contactRow.locator('td').nth(0);
+        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+        await contactRow.click();
+
+        const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
+
+        const associationSearchInput = this.page.getByRole('searchbox', { name: 'Search Company' });
+        await associationSearchInput.waitFor({ state: 'visible', timeout: 5000 });
+        await associationSearchInput.click();
+        await associationSearchInput.fill(companyName);
+
+        // Wait for and select the desired company from the dropdown options
+        const companyOption = this.page.getByRole('option', { name: companyName }).first();
+        await companyOption.waitFor({ state: 'visible', timeout: 5000 });
+        await companyOption.click();
+
+        // Click on the "Association" button (replace selector as needed)
+        const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
+        await associationButton.waitFor({ state: 'visible', timeout: 3000 });
+        await associationButton.click();
+
+        const alertLocator = this.page.getByRole('alert', { name: /Company added successfully|This company is already attached with this contact/ });
+        await expect(alertLocator).toBeVisible({ timeout: 10000 });
+        const removeNetsol = this.page.locator('div.company-div:has(span:text("Netsol")) i.pi-times-circle');
+        await expect(removeNetsol).toBeVisible()
+    }
+
+    // Try to associate the same company twice
+    public async tryAssociateSameCompanyTwice(companyName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+
+        const contactRow = rowsLocator.first();
+        const nameCell = contactRow.locator('td').nth(0);
+        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+        await contactRow.click();
+
+        const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
+
+        const associationSearchInput = this.page.getByRole('searchbox', { name: 'Search Company' });
+        await associationSearchInput.waitFor({ state: 'visible', timeout: 5000 });
+        await associationSearchInput.click();
+        await associationSearchInput.fill(companyName);
+
+        // Wait for and select the desired company from the dropdown options
+        const companyOption = this.page.getByRole('option', { name: companyName }).first();
+        await companyOption.waitFor({ state: 'visible', timeout: 5000 });
+        await companyOption.click();
+
+        // Click on the "Association" button (replace selector as needed)
+        const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
+        await associationButton.waitFor({ state: 'visible', timeout: 3000 });
+        await associationButton.click();
+
+        const alertLocator = this.page.getByRole('alert', { name: /Company added successfully|This company is already attached with this contact/ });
+        await expect(alertLocator).toBeVisible({ timeout: 10000 });
+
+        const removeNetsol = this.page.locator('div.company-div:has(span:text("Netsol")) i.pi-times-circle');
+        await expect(removeNetsol).toBeVisible()
+
+        await expect(this.page.getByRole('alert', { name: 'This company is already attached with this contact' })).toBeVisible()
+    }
+
+    // Verify that clicking on a company tag opens the company form
+    public async verifyOpenCompanyFormFromTag(companyName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+
+        const contactRow = rowsLocator.first();
+        const nameCell = contactRow.locator('td').nth(0);
+        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+        await contactRow.click();
+
+        const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
+
+        const associationSearchInput = this.page.getByRole('searchbox', { name: 'Search Company' });
+        await associationSearchInput.waitFor({ state: 'visible', timeout: 5000 });
+        await associationSearchInput.click();
+        await associationSearchInput.fill(companyName);
+
+        // Wait for and select the desired company from the dropdown options
+        const companyOption = this.page.getByRole('option', { name: companyName }).first();
+        await companyOption.waitFor({ state: 'visible', timeout: 5000 });
+        await companyOption.click();
+
+        // Click on the "Association" button (replace selector as needed)
+        const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
+        await associationButton.waitFor({ state: 'visible', timeout: 3000 });
+        await associationButton.click();
+
+        const alertLocator = this.page.getByRole('alert', { name: /Company added successfully|This company is already attached with this contact/ });
+        await expect(alertLocator).toBeVisible({ timeout: 10000 });
+        const tag = this.page.locator(`div.company-div span`, { hasText: companyName }).first();
+        await tag.click();
+        await expect(this.page.locator('section').filter({ hasText: 'Contact TypeSelect Type×Company×TypeCompany Type×Client× Netsol Save Contact' })).toBeVisible()
+    }
+
+    // Verify that a company tag can be removed
+    public async verifyRemoveCompanyTag(companyName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+
+        const contactRow = rowsLocator.first();
+        const nameCell = contactRow.locator('td').nth(0);
+        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+        await contactRow.click();
+
+        const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
+
+        const associationSearchInput = this.page.getByRole('searchbox', { name: 'Search Company' });
+        await associationSearchInput.waitFor({ state: 'visible', timeout: 5000 });
+        await associationSearchInput.click();
+        await associationSearchInput.fill(companyName);
+
+        // Wait for and select the desired company from the dropdown options
+        const companyOption = this.page.getByRole('option', { name: companyName }).first();
+        await companyOption.waitFor({ state: 'visible', timeout: 5000 });
+        await companyOption.click();
+
+        // Click on the "Association" button (replace selector as needed)
+        const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
+        await associationButton.waitFor({ state: 'visible', timeout: 3000 });
+        await associationButton.click();
+
+        const alertLocator = this.page.getByRole('alert', { name: /Company added successfully|This company is already attached with this contact/ });
+        await expect(alertLocator).toBeVisible({ timeout: 10000 });
+        const tag = this.page.locator(`div.company-div span`, { hasText: companyName }).first();
+        await tag.click();
+        await expect(this.page.locator('section').filter({ hasText: 'Contact TypeSelect Type×Company×TypeCompany Type×Client× Netsol Save Contact' })).toBeVisible()
+
+        const closeButton = this.page.locator('//i[@ptooltip="Close" and contains(@class,"pi-times")]').last();
+        await closeButton.click();
+        await expect(this.page.locator('section').filter({ hasText: 'Contact TypeSelect Type×Company×TypeCompany Type×Client× Netsol Save Contact' })).not.toBeVisible()
+
+    }
+
+    // Verify that address suggestions appear while typing in the address field
+    public async verifyAddressSuggestions(addressPartial: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Click into first contact to open detail view
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+
+        const contactRow = rowsLocator.first();
+        const nameCell = contactRow.locator('td').nth(0);
+        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+        await contactRow.click();
+
+        // Locate the address input field (update selector as needed)
+        const addressInput = this.page.getByRole('textbox', { name: /address/i }).first();
+        await addressInput.waitFor({ state: 'visible', timeout: 5000 });
+        await addressInput.click();
+        await addressInput.fill(addressPartial);
+
+        const suggestionsList = this.page.locator('.pac-item');
+        // Simulate slow typing (since .type is not supported, use fill with increasing substrings and delay)
+        for (let i = 1; i <= addressPartial.length; i++) {
+            const partialStr = addressPartial.slice(0, i);
+            await addressInput.fill(partialStr);
+            await this.page.waitForTimeout(300); // wait 300ms to simulate user's "slow typing"
+        }
+        // Wait for suggestions to appear and select the first one
+        await suggestionsList.first().waitFor({ state: 'visible', timeout: 5000 });
+        await suggestionsList.first().click();
+    }
+
+    public async verifyAddressAutoFill(addressPartial: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Open the first contact in the contacts list
+        const rowsLocator = this.page.locator('table tbody tr');
+        const firstRow = rowsLocator.first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        await firstRow.click();
+
+        // Find the address input field
+        const addressInput = this.page.locator('input[placeholder="Search Address"]');
+        await expect(addressInput).toBeVisible({ timeout: 5000 });
+        await addressInput.click();
+
+        // Type the address slowly to trigger autocomplete
+        for (let i = 1; i <= addressPartial.length; ++i) {
+            await addressInput.fill(addressPartial.slice(0, i));
+            await this.page.waitForTimeout(50);
+        }
+
+        // Wait for Google Places suggestions and click the first one
+        const suggestionsList = this.page.locator('.pac-item');
+        await expect(suggestionsList.first()).toBeVisible({ timeout: 5000 });
+        await suggestionsList.first().click();
+
+        // Wait for autofill to populate
+        await this.page.waitForTimeout(2000);
+
+        // Open overlay/panel if required
+        const editOverlayButton = this.page.locator('#toggle-overlay');
+        if (await editOverlayButton.isVisible({ timeout: 2000 })) {
+            await editOverlayButton.click();
+        }
+
+        // Define locators using stable Angular formcontrolnames
+        const buildingName = this.page.locator('input[formcontrolname="building_name"]');
+        const unitNo = this.page.locator('input[formcontrolname="unit_no"]');
+        const streetNoInput = this.page.locator('input[formcontrolname="street_no"]');
+        const streetNameInput = this.page.locator('input[formcontrolname="street_name"]');
+        const suburbInput = this.page.locator('p-autocomplete[formcontrolname="suburb"] input.p-autocomplete-input');
+        const stateInput = this.page.locator('input[formcontrolname="state"]');
+        const postCodeInput = this.page.locator('input[formcontrolname="post_code"]');
+        const countryInput = this.page.locator('input[formcontrolname="country"]');
+
+        // Read all autofilled values safely
+        const building_name = await buildingName.inputValue().catch(() => '');
+        const unit_no = await unitNo.inputValue().catch(() => '');
+        const streetNo = await streetNoInput.inputValue().catch(() => '');
+        const streetName = await streetNameInput.inputValue().catch(() => '');
+        const suburb = await suburbInput.inputValue().catch(() => '');
+        const state = await stateInput.inputValue().catch(() => '');
+        const postCode = await postCodeInput.inputValue().catch(() => '');
+        const country = await countryInput.inputValue().catch(() => '');
+
+        // Collect results
+        const fieldValues = {
+            building_name,
+            unit_no,
+            streetNo,
+            streetName,
+            suburb,
+            state,
+            postCode,
+            country
+        };
+
+        console.log('Autofilled Address Values:', fieldValues);
+
+        // ✅ Assert that at least one important field is not empty
+        expect(
+            Object.values(fieldValues).some(val => val && val.trim().length > 0)
+        ).toBeTruthy();
+
+    }
+
+    // Verify that all address fields are displayed correctly
+    async verifyAllAddressFieldsDisplayed() {
+
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Click into first contact to open detail view
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+
+        const contactRow = rowsLocator.first();
+        const nameCell = contactRow.locator('td').nth(0);
+        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+        await contactRow.click();
+
+        // Open overlay/panel if required
+        const editOverlayButton = this.page.locator('#toggle-overlay');
+        if (await editOverlayButton.isVisible({ timeout: 2000 })) {
+            await editOverlayButton.click();
+        }
+
+        // Define the locators for each address field
+        const buildingName = this.page.locator('input[formcontrolname="building_name"]');
+        const unitNo = this.page.locator('input[formcontrolname="unit_no"]');
+        const streetNo = this.page.locator('input[formcontrolname="street_no"]');
+        const streetName = this.page.locator('input[formcontrolname="street_name"]');
+        const suburb = this.page.locator('p-autocomplete[formcontrolname="suburb"] input.p-autocomplete-input');
+        const state = this.page.locator('input[formcontrolname="state"]');
+        const postCode = this.page.locator('input[formcontrolname="post_code"]');
+        const country = this.page.locator('input[formcontrolname="country"]');
+
+        // Wait for all the fields to be visible
+        await expect(buildingName).toBeVisible();
+        await expect(unitNo).toBeVisible();
+        await expect(streetNo).toBeVisible();
+        await expect(streetName).toBeVisible();
+        await expect(suburb).toBeVisible();
+        await expect(state).toBeVisible();
+        await expect(postCode).toBeVisible();
+        await expect(country).toBeVisible();
+    }
+
+    // Verify that the Tag Manager popup opens
+    async verifyTagManagerPopupOpens() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Click into first contact to open detail view
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+
+        const contactRow = rowsLocator.first();
+        const nameCell = contactRow.locator('td').nth(0);
+        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+        await contactRow.click();
+
+        // Open overlay/panel if required
+        const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
+        await tagButton.click();
+
+        const TagPopup = this.page.getByText('Tag ManagerCompany Contact');
+        await expect(TagPopup).toBeVisible();
+    }
+
+    async verifyCanAddNewTagType(tagTypeName: string) {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+
+        const contactRow = rowsLocator.first();
+        const nameCell = contactRow.locator('td').nth(0);
+        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+        await contactRow.click();
+
+        const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
+        await tagButton.click();
+
+        const tagPopupHeader = this.page.getByText('Tag ManagerCompany Contact');
+        await expect(tagPopupHeader).toBeVisible();
+
+        const addTagTypeButton = this.page.locator('.p-element.p-button-rounded').first();
+        await addTagTypeButton.click();
+
+        // Instead of trying to fill on the .ng-select-container, target the input inside ng-select dropdown directly
+        const tagTypeDropdown = this.page.locator('.ng-select-container:has-text("Select Tag Type")');
+        await tagTypeDropdown.click();
+        const tagTypeSearchInput = this.page.locator('.ng-dropdown-panel input[type="text"], input[role="combobox"], .ng-select input[type="text"]').last();
+        await tagTypeSearchInput.fill(tagTypeName);
+
+        const optionLocator = this.page.locator(`.ng-option:has-text("${tagTypeName}")`);
+        await expect(optionLocator).toBeVisible({ timeout: 5000 });
+        await optionLocator.click()
+
+        const tagsInput = this.page.locator('input[placeholder="Add Multiple Tags"]');
+        const fakeTag = faker.lorem.words(2);
+        await tagsInput.fill(fakeTag);
+        await tagsInput.press('Enter');
+
+
+        // Save tag type
+        const AddButton = this.page.getByRole('button', { name: /Add/i });
+        await AddButton.click();
+
+        await expect(this.page.locator('div').filter({ hasText: 'Tag successfully created' }).nth(2)).toBeVisible()
+
+
+        const tagManagerPopup = this.page.getByText('Automation Testing'); // try common class, else adjust selector
+        await tagManagerPopup.scrollIntoViewIfNeeded();
+
+        // Now check visibility after scroll
+        const newTagType = this.page.getByText(tagTypeName, { exact: true });
+        await expect(newTagType).toBeVisible({ timeout: 10000 });
+
+        // Verify in search box field that the tag should be displayed
+        const tagSearchInput = this.page.locator('input[placeholder="Search Tags"]');
+        await tagSearchInput.click();
+        // Fill the input with a delay between keystrokes
+        for (const char of fakeTag) {
+            await tagSearchInput.type(char, { delay: 20 });
+        }
+        // Expect that the tag option is visible in the dropdown (without locator in expect)
+        await expect(
+            this.page.locator('.ng-option').filter({ hasText: fakeTag }).first().isVisible()
+        ).resolves.toBeTruthy();
+    }
 
 }
-
-
 

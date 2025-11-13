@@ -1,6 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.06395500000007">
-<testsuite name="Pages\Contacts\contact.spec.ts" timestamp="2025-11-11T07:26:06.382Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.093" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 47: Verify opening and closing multiple contacts sequentially" classname="Pages\Contacts\contact.spec.ts" time="27.093">
+<testsuites id="" name="" tests="1" failures="0" skipped="1" errors="0" time="9.317122999999672">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-13T12:32:58.329Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0.001" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 27: Verify that a new tag type can be added" classname="Pages\Contacts\contactForm.spec.ts" time="0.001">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
 </testsuites>
