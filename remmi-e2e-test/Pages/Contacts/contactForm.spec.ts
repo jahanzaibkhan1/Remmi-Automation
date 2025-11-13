@@ -254,7 +254,18 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyOpenCompanyFormFromTag('Netsol');
   });
 
-  
+  test('Test 21: Verify that a company tag can be removed', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyRemoveCompanyTag('Netsol');
+  });
+
 
 });
   

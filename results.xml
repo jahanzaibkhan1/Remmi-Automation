@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.532826000001283">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-13T06:59:02.060Z" hostname="chromium" tests="1" failures="0" skipped="0" time="22.757" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 20: Verify that clicking on a company tag opens the company form" classname="Pages\Contacts\contactForm.spec.ts" time="22.757">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.58053800000064">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-13T07:27:28.872Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.242" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 21: Verify that a company tag can be removed" classname="Pages\Contacts\contactForm.spec.ts" time="23.242">
 </testcase>
 </testsuite>
 </testsuites>
