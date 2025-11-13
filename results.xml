@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.58053800000064">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-13T07:27:28.872Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.242" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 21: Verify that a company tag can be removed" classname="Pages\Contacts\contactForm.spec.ts" time="23.242">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="80.39726799999923">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-13T08:09:59.325Z" hostname="chromium" tests="1" failures="0" skipped="0" time="53.029" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 22: Verify that address suggestions appear while typing in the address field" classname="Pages\Contacts\contactForm.spec.ts" time="53.029">
 </testcase>
 </testsuite>
 </testsuites>
