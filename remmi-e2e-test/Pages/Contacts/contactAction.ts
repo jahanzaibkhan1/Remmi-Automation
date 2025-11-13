@@ -2176,7 +2176,42 @@ export class ContactActions {
         const removeNetsol = this.page.locator('div.company-div:has(span:text("Netsol")) i.pi-times-circle');
         await expect(removeNetsol).toBeVisible()
     }
+
+    // Try to associate the same company twice
+    public async tryAssociateSameCompanyTwice(companyName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+
+        const contactRow = rowsLocator.first();
+        const nameCell = contactRow.locator('td').nth(0);
+        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+        await contactRow.click();
+
+        const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
+
+        const associationSearchInput = this.page.getByRole('searchbox', { name: 'Search Company' });
+        await associationSearchInput.waitFor({ state: 'visible', timeout: 5000 });
+        await associationSearchInput.click();
+        await associationSearchInput.fill(companyName);
+
+        // Wait for and select the desired company from the dropdown options
+        const companyOption = this.page.getByRole('option', { name: companyName }).first();
+        await companyOption.waitFor({ state: 'visible', timeout: 5000 });
+        await companyOption.click();
+
+        // Click on the "Association" button (replace selector as needed)
+        const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
+        await associationButton.waitFor({ state: 'visible', timeout: 3000 });
+        await associationButton.click();
+
+        const removeNetsol = this.page.locator('div.company-div:has(span:text("Netsol")) i.pi-times-circle');
+        await expect(removeNetsol).toBeVisible()
+
+        await expect(this.page.getByRole('alert', { name: 'This company is already attached with this contact' })).toBeVisible()
 }
 
-
+}
 
