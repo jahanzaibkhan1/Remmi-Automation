@@ -1,8 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="1" errors="0" time="9.317122999999672">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-13T12:32:58.329Z" hostname="chromium" tests="1" failures="0" skipped="1" time="0.001" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 27: Verify that a new tag type can be added" classname="Pages\Contacts\contactForm.spec.ts" time="0.001">
-<skipped>
-</skipped>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.85292799999937">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-13T12:38:50.762Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.644" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 27: Verify that a new tag type can be added" classname="Pages\Contacts\contactForm.spec.ts" time="24.644">
 </testcase>
 </testsuite>
 </testsuites>
