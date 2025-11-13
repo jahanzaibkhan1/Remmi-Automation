@@ -278,6 +278,17 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyAddressSuggestions('123 Main');
   });
 
+  test('Test 23: Verify that entering an address auto-fills the relevant fields', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyAddressAutoFill('1600 Amphitheatre');
+  });
 
 });
   

@@ -2329,5 +2329,86 @@ export class ContactActions {
         await suggestionsList.first().click();
     }
 
+    public async verifyAddressAutoFill(addressPartial: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+    
+        // Open the first contact in the contacts list
+        const rowsLocator = this.page.locator('table tbody tr');
+        const firstRow = rowsLocator.first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        await firstRow.click();
+    
+        // Find the address input field
+        const addressInput = this.page.locator('input[placeholder="Search Address"]');
+        await expect(addressInput).toBeVisible({ timeout: 5000 });
+        await addressInput.click();
+    
+        // Type the address slowly to trigger autocomplete
+        for (let i = 1; i <= addressPartial.length; ++i) {
+            await addressInput.fill(addressPartial.slice(0, i));
+            await this.page.waitForTimeout(50);
+        }
+    
+        // Wait for Google Places suggestions and click the first one
+        const suggestionsList = this.page.locator('.pac-item');
+        await expect(suggestionsList.first()).toBeVisible({ timeout: 5000 });
+        await suggestionsList.first().click();
+    
+        // Wait for autofill to populate
+        await this.page.waitForTimeout(2000);
+    
+        // Open overlay/panel if required
+        const editOverlayButton = this.page.locator('#toggle-overlay');
+        if (await editOverlayButton.isVisible({ timeout: 2000 })) {
+            await editOverlayButton.click();
+        }
+    
+        // Define locators using stable Angular formcontrolnames
+        const buildingName = this.page.locator('input[formcontrolname="building_name"]');
+        const unitNo = this.page.locator('input[formcontrolname="unit_no"]');
+        const streetNoInput = this.page.locator('input[formcontrolname="street_no"]');
+        const streetNameInput = this.page.locator('input[formcontrolname="street_name"]');
+        const suburbInput = this.page.locator('p-autocomplete[formcontrolname="suburb"] input.p-autocomplete-input');
+        const stateInput = this.page.locator('input[formcontrolname="state"]');
+        const postCodeInput = this.page.locator('input[formcontrolname="post_code"]');
+        const countryInput = this.page.locator('input[formcontrolname="country"]');
+    
+        // Read all autofilled values safely
+        const building_name = await buildingName.inputValue().catch(() => '');
+        const unit_no = await unitNo.inputValue().catch(() => '');
+        const streetNo = await streetNoInput.inputValue().catch(() => '');
+        const streetName = await streetNameInput.inputValue().catch(() => '');
+        const suburb = await suburbInput.inputValue().catch(() => '');
+        const state = await stateInput.inputValue().catch(() => '');
+        const postCode = await postCodeInput.inputValue().catch(() => '');
+        const country = await countryInput.inputValue().catch(() => '');
+    
+        // Collect results
+        const fieldValues = {
+            building_name,
+            unit_no,
+            streetNo,
+            streetName,
+            suburb,
+            state,
+            postCode,
+            country
+        };
+    
+        console.log('Autofilled Address Values:', fieldValues);
+    
+        // ✅ Assert that at least one important field is not empty
+        expect(
+            Object.values(fieldValues).some(val => val && val.trim().length > 0)
+        ).toBeTruthy();
+    
+        // ✅ Optional: You can strengthen checks like below if you know what should be filled:
+        // expect(country).toContain('Australia');
+        // expect(postCode).not.toBe('');
+    }
+    
+    
+
 }
 
