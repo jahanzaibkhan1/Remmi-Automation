@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.952126999999862">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-13T04:51:43.074Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.331" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 17: Attempt to save a tag without entering a name" classname="Pages\Contacts\contactForm.spec.ts" time="21.331">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.46173500000034">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-13T05:38:58.330Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.983" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 18: Verify that a company is successfully associated with the contact" classname="Pages\Contacts\contactForm.spec.ts" time="30.983">
 </testcase>
 </testsuite>
 </testsuites>

@@ -217,6 +217,18 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     );
     await contact.verifyCannotSaveTagWithoutName()
   });
-  
+
+  test('Test 18: Verify that a company is successfully associated with the contact', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.verifyCompanyAssociatedWithContact('Netsol');
+  });
+
 });
   
