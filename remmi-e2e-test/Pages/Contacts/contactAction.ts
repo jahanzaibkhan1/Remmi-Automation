@@ -2332,38 +2332,38 @@ export class ContactActions {
     public async verifyAddressAutoFill(addressPartial: string): Promise<void> {
         await this.NavigateToContacts();
         await this.page.waitForTimeout(3000);
-    
+
         // Open the first contact in the contacts list
         const rowsLocator = this.page.locator('table tbody tr');
         const firstRow = rowsLocator.first();
         await expect(firstRow).toBeVisible({ timeout: 10000 });
         await firstRow.click();
-    
+
         // Find the address input field
         const addressInput = this.page.locator('input[placeholder="Search Address"]');
         await expect(addressInput).toBeVisible({ timeout: 5000 });
         await addressInput.click();
-    
+
         // Type the address slowly to trigger autocomplete
         for (let i = 1; i <= addressPartial.length; ++i) {
             await addressInput.fill(addressPartial.slice(0, i));
             await this.page.waitForTimeout(50);
         }
-    
+
         // Wait for Google Places suggestions and click the first one
         const suggestionsList = this.page.locator('.pac-item');
         await expect(suggestionsList.first()).toBeVisible({ timeout: 5000 });
         await suggestionsList.first().click();
-    
+
         // Wait for autofill to populate
         await this.page.waitForTimeout(2000);
-    
+
         // Open overlay/panel if required
         const editOverlayButton = this.page.locator('#toggle-overlay');
         if (await editOverlayButton.isVisible({ timeout: 2000 })) {
             await editOverlayButton.click();
         }
-    
+
         // Define locators using stable Angular formcontrolnames
         const buildingName = this.page.locator('input[formcontrolname="building_name"]');
         const unitNo = this.page.locator('input[formcontrolname="unit_no"]');
@@ -2373,7 +2373,7 @@ export class ContactActions {
         const stateInput = this.page.locator('input[formcontrolname="state"]');
         const postCodeInput = this.page.locator('input[formcontrolname="post_code"]');
         const countryInput = this.page.locator('input[formcontrolname="country"]');
-    
+
         // Read all autofilled values safely
         const building_name = await buildingName.inputValue().catch(() => '');
         const unit_no = await unitNo.inputValue().catch(() => '');
@@ -2383,7 +2383,7 @@ export class ContactActions {
         const state = await stateInput.inputValue().catch(() => '');
         const postCode = await postCodeInput.inputValue().catch(() => '');
         const country = await countryInput.inputValue().catch(() => '');
-    
+
         // Collect results
         const fieldValues = {
             building_name,
@@ -2395,16 +2395,16 @@ export class ContactActions {
             postCode,
             country
         };
-    
+
         console.log('Autofilled Address Values:', fieldValues);
-    
+
         // ✅ Assert that at least one important field is not empty
         expect(
             Object.values(fieldValues).some(val => val && val.trim().length > 0)
         ).toBeTruthy();
 
     }
-    
+
     // Verify that all address fields are displayed correctly
     async verifyAllAddressFieldsDisplayed() {
 
@@ -2467,6 +2467,70 @@ export class ContactActions {
 
         const TagPopup = this.page.getByText('Tag ManagerCompany Contact');
         await expect(TagPopup).toBeVisible();
+    }
+
+    async verifyCanAddNewTagType(tagTypeName: string) {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+
+        const contactRow = rowsLocator.first();
+        const nameCell = contactRow.locator('td').nth(0);
+        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+        await contactRow.click();
+
+        const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
+        await tagButton.click();
+
+        const tagPopupHeader = this.page.getByText('Tag ManagerCompany Contact');
+        await expect(tagPopupHeader).toBeVisible();
+
+        const addTagTypeButton = this.page.locator('.p-element.p-button-rounded').first();
+        await addTagTypeButton.click();
+
+        // Instead of trying to fill on the .ng-select-container, target the input inside ng-select dropdown directly
+        const tagTypeDropdown = this.page.locator('.ng-select-container:has-text("Select Tag Type")');
+        await tagTypeDropdown.click();
+        const tagTypeSearchInput = this.page.locator('.ng-dropdown-panel input[type="text"], input[role="combobox"], .ng-select input[type="text"]').last();
+        await tagTypeSearchInput.fill(tagTypeName);
+
+        const optionLocator = this.page.locator(`.ng-option:has-text("${tagTypeName}")`);
+        await expect(optionLocator).toBeVisible({ timeout: 5000 });
+        await optionLocator.click()
+
+        const tagsInput = this.page.locator('input[placeholder="Add Multiple Tags"]');
+        const fakeTag = faker.lorem.words(2);
+        await tagsInput.fill(fakeTag);
+        await tagsInput.press('Enter');
+
+
+        // Save tag type
+        const AddButton = this.page.getByRole('button', { name: /Add/i });
+        await AddButton.click();
+
+        await expect(this.page.locator('div').filter({ hasText: 'Tag successfully created' }).nth(2)).toBeVisible()
+
+
+        const tagManagerPopup = this.page.getByText('Automation Testing'); // try common class, else adjust selector
+        await tagManagerPopup.scrollIntoViewIfNeeded();
+
+        // Now check visibility after scroll
+        const newTagType = this.page.getByText(tagTypeName, { exact: true });
+        await expect(newTagType).toBeVisible({ timeout: 10000 });
+
+        // Verify in search box field that the tag should be displayed
+        const tagSearchInput = this.page.locator('input[placeholder="Search Tags"]');
+        await tagSearchInput.click();
+        // Fill the input with a delay between keystrokes
+        for (const char of fakeTag) {
+            await tagSearchInput.type(char, { delay: 20 });
+        }
+        // Expect that the tag option is visible in the dropdown (without locator in expect)
+        await expect(
+            this.page.locator('.ng-option').filter({ hasText: fakeTag }).first().isVisible()
+        ).resolves.toBeTruthy();
     }
 
 }
