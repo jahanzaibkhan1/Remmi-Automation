@@ -2297,5 +2297,37 @@ export class ContactActions {
 
     }
 
+    // Verify that address suggestions appear while typing in the address field
+    public async verifyAddressSuggestions(addressPartial: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Click into first contact to open detail view
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+
+        const contactRow = rowsLocator.first();
+        const nameCell = contactRow.locator('td').nth(0);
+        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+        await contactRow.click();
+
+        // Locate the address input field (update selector as needed)
+        const addressInput = this.page.getByRole('textbox', { name: /address/i }).first();
+        await addressInput.waitFor({ state: 'visible', timeout: 5000 });
+        await addressInput.click();
+        await addressInput.fill(addressPartial);
+
+        const suggestionsList = this.page.locator('.pac-item');
+        // Simulate slow typing (since .type is not supported, use fill with increasing substrings and delay)
+        for (let i = 1; i <= addressPartial.length; i++) {
+            const partialStr = addressPartial.slice(0, i);
+            await addressInput.fill(partialStr);
+            await this.page.waitForTimeout(300); // wait 300ms to simulate user's "slow typing"
+        }
+        // Wait for suggestions to appear and select the first one
+        await suggestionsList.first().waitFor({ state: 'visible', timeout: 5000 });
+        await suggestionsList.first().click();
+    }
+
 }
 
