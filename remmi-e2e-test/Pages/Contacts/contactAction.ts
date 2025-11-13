@@ -146,6 +146,7 @@ export class ContactActions {
         await this.page.waitForTimeout(4000);
         await this.ContactTypeDropdown();
         await this.SearchContactType(name);
+        await this.page.waitForTimeout(500)
         await this.SelectOption(name);
         await this.ContactTypeDropdown();
 
@@ -2111,6 +2112,35 @@ export class ContactActions {
         await setPrimaryBtn .click({ force: true });
 
         await expect(mainEmailInput).toHaveValue(secondEmail);
+    }
+
+    // Attempt to save a tag without entering a name
+    public async verifyCannotSaveTagWithoutName() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        const addContactButton = this.page.getByRole('button', { name: '' });
+        await addContactButton.waitFor({ state: 'visible' });
+        await addContactButton.click();
+
+        const plusTagIcon = this.page.locator('i.pi.pi-plus.cursor-pointer.text-primary');
+        await plusTagIcon.scrollIntoViewIfNeeded();
+        await plusTagIcon.click();
+
+        await expect(this.page.getByText('Tag Manager')).toBeVisible();
+
+        const newTagButton = this.page.locator('button[ptooltip="New Tag"]');
+        await newTagButton.click();
+
+        const tagTypeDropdown = this.page.locator('ng-select[placeholder="Select Tag Type"] input[type="text"]');
+        await expect(tagTypeDropdown).toBeVisible();
+        await tagTypeDropdown.click();
+        await tagTypeDropdown.fill('Automation Testing');
+        const tagTypeOption = this.page.getByRole('option', { name: 'Automation Testing' }).first();
+        await tagTypeOption.click();
+
+        const addButton = this.page.getByRole('button', { name: /^Add$/i });
+        await addButton.isDisabled();
     }
 }
 
