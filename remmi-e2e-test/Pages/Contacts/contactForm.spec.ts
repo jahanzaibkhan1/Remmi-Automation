@@ -230,5 +230,17 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyCompanyAssociatedWithContact('Netsol');
   });
 
+  test('Test 19: Try to associate the same company twice', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.tryAssociateSameCompanyTwice('Netsol');
+  });
+
 });
   
