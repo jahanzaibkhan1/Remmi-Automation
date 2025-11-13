@@ -314,5 +314,19 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyTagManagerPopupOpens()
   });
 
+  test('Test 27: Verify that a new tag type can be added', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+
+    await contact.verifyCanAddNewTagType('Automation Testing');
+  });
+
+
 });
   
