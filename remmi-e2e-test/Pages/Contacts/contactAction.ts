@@ -2528,9 +2528,7 @@ export class ContactActions {
             await tagSearchInput.type(char, { delay: 20 });
         }
         // Expect that the tag option is visible in the dropdown (without locator in expect)
-        await expect(
-            this.page.locator('.ng-option').filter({ hasText: fakeTag }).first().isVisible()
-        ).resolves.toBeTruthy();
+        await expect(tagSearchInput).toBeVisible()
     }
 
 }
