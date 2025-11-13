@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.426405999999496">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-13T10:46:21.428Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.216" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 25: Verify that all address fields are displayed correctly" classname="Pages\Contacts\contactForm.spec.ts" time="27.216">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.40375699999929">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-13T11:04:36.562Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.904" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 26: Verify that the Tag Manager popup opens" classname="Pages\Contacts\contactForm.spec.ts" time="35.904">
 </testcase>
 </testsuite>
 </testsuites>
