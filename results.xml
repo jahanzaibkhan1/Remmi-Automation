@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.8798479999993">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-13T05:49:00.658Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.656" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 19: Try to associate the same company twice" classname="Pages\Contacts\contactForm.spec.ts" time="21.656">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.532826000001283">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-13T06:59:02.060Z" hostname="chromium" tests="1" failures="0" skipped="0" time="22.757" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 20: Verify that clicking on a company tag opens the company form" classname="Pages\Contacts\contactForm.spec.ts" time="22.757">
 </testcase>
 </testsuite>
 </testsuites>

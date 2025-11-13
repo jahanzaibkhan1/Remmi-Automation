@@ -2108,8 +2108,8 @@ export class ContactActions {
         await otherEmailInput.fill(secondEmail);
 
         // Set "Other Email" as primary
-        const setPrimaryBtn  = this.page.getByRole('button', { name: '' }).first();
-        await setPrimaryBtn .click({ force: true });
+        const setPrimaryBtn = this.page.getByRole('button', { name: '' }).first();
+        await setPrimaryBtn.click({ force: true });
 
         await expect(mainEmailInput).toHaveValue(secondEmail);
     }
@@ -2173,6 +2173,8 @@ export class ContactActions {
         await associationButton.waitFor({ state: 'visible', timeout: 3000 });
         await associationButton.click();
 
+        const alertLocator = this.page.getByRole('alert', { name: /Company added successfully|This company is already attached with this contact/ });
+        await expect(alertLocator).toBeVisible({ timeout: 10000 });
         const removeNetsol = this.page.locator('div.company-div:has(span:text("Netsol")) i.pi-times-circle');
         await expect(removeNetsol).toBeVisible()
     }
@@ -2211,7 +2213,42 @@ export class ContactActions {
         await expect(removeNetsol).toBeVisible()
 
         await expect(this.page.getByRole('alert', { name: 'This company is already attached with this contact' })).toBeVisible()
-}
+    }
+
+    // Verify that clicking on a company tag opens the company form
+    public async verifyOpenCompanyFormFromTag(companyName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+
+        const contactRow = rowsLocator.first();
+        const nameCell = contactRow.locator('td').nth(0);
+        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+        await contactRow.click();
+
+        const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
+
+        const associationSearchInput = this.page.getByRole('searchbox', { name: 'Search Company' });
+        await associationSearchInput.waitFor({ state: 'visible', timeout: 5000 });
+        await associationSearchInput.click();
+        await associationSearchInput.fill(companyName);
+
+        // Wait for and select the desired company from the dropdown options
+        const companyOption = this.page.getByRole('option', { name: companyName }).first();
+        await companyOption.waitFor({ state: 'visible', timeout: 5000 });
+        await companyOption.click();
+
+        // Click on the "Association" button (replace selector as needed)
+        const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
+        await associationButton.waitFor({ state: 'visible', timeout: 3000 });
+        await associationButton.click();
+
+        const tag = this.page.locator(`div.company-div span`, { hasText: companyName }).first();
+        await tag.click();
+        await expect(this.page.locator('section').filter({ hasText: 'Contact TypeSelect Type×Company×TypeCompany Type×Client× Netsol Save Contact' })).toBeVisible()
+    }
 
 }
 
