@@ -1,6 +1,19 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="80.39726799999923">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-13T08:09:59.325Z" hostname="chromium" tests="1" failures="0" skipped="0" time="53.029" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 22: Verify that address suggestions appear while typing in the address field" classname="Pages\Contacts\contactForm.spec.ts" time="53.029">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="65.66479399999976">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-13T10:20:05.303Z" hostname="chromium" tests="1" failures="0" skipped="0" time="53.233" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 23: Verify that entering an address auto-fills the relevant fields" classname="Pages\Contacts\contactForm.spec.ts" time="53.233">
+<system-out>
+<![CDATA[Autofilled Address Values: {
+  building_name: [32m''[39m,
+  unit_no: [32m''[39m,
+  streetNo: [32m'1600'[39m,
+  streetName: [32m'Amphitheatre Road'[39m,
+  suburb: [32m''[39m,
+  state: [32m'VIC'[39m,
+  postCode: [32m'3468'[39m,
+  country: [32m'Australia'[39m
+}
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
