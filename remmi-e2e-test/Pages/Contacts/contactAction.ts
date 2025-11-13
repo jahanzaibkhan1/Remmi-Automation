@@ -2447,5 +2447,27 @@ export class ContactActions {
         await expect(country).toBeVisible();
     }
 
+    // Verify that the Tag Manager popup opens
+    async verifyTagManagerPopupOpens() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Click into first contact to open detail view
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+
+        const contactRow = rowsLocator.first();
+        const nameCell = contactRow.locator('td').nth(0);
+        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+        await contactRow.click();
+
+        // Open overlay/panel if required
+        const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
+        await tagButton.click();
+
+        const TagPopup = this.page.getByText('Tag ManagerCompany Contact');
+        await expect(TagPopup).toBeVisible();
+    }
+
 }
 
