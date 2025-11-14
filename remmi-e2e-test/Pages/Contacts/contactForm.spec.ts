@@ -290,6 +290,19 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyAddressAutoFill('1600 Amphitheatre');
   });
 
+  test('Test 24: Verify that entering data in address fields updates the main address field', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+
+    await contact.verifyMainAddressUpdatesWithAllFields();
+  });
+
   test('Test 25: Verify that all address fields are displayed correctly', async ({ page }) => {
     const login = new LoginActions(page);
     const contact = new ContactActions(page);
@@ -327,6 +340,79 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyCanAddNewTagType('Automation Testing');
   });
 
+  test('Test 28: Search for a non-existent tag in Tag Manager', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
 
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    await contact.searchForNonExistentTag('NonExistentTag123');
+  });
+
+  test('Test 29: Verify that entering a valid tag and pressing "Enter" creates a tag', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+
+    const tagTypeName = 'Automation Testing';
+    const tagValue = faker.lorem.words(1);
+    await contact.verifyCreateTagByEnter(tagTypeName, tagValue);
+  });
+
+  test('Test 30: Verify that removing a tag updates the tag list', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    const tagValue = faker.lorem.words(1);
+
+
+    // Now remove the tag and verify it updates the tag list
+    await contact.verifyRemoveTagUpdatesTagList(tagValue);
+  });
+
+  test('Test 31: Verify that a tag remains in the list after form save', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+
+    const tagTypeName = 'Automation Testing';
+    const tagValue = faker.lorem.words(1);
+
+    await contact.verifyTagPersistsAfterFormSave(tagTypeName, tagValue);
+  });
+
+  test('Test 32: Verify that double clicking a tag adds it to the tag field', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+
+    const tagTypeName = 'Automation Testing';
+    const tagValue = faker.lorem.words(1);
+
+    await contact.verifyDoubleClickTagAddsToField(tagTypeName, tagValue);
+  });
 });
   

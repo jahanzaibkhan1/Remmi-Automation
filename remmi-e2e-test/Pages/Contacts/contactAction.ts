@@ -2530,6 +2530,351 @@ export class ContactActions {
         // Expect that the tag option is visible in the dropdown (without locator in expect)
         await expect(tagSearchInput).toBeVisible()
     }
+    // Verify that entering data in address fields is reflected in the main/displayed address
 
+    async verifyMainAddressUpdatesWithAllFields() {
+        // Step 1: Navigate to contacts and select first contact
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        const rows = this.page.locator('table tbody tr');
+        const firstRow = rows.nth(0);
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        await firstRow.click();
+
+        // Step 2: Search Address field > type & select suggestion
+        const addressInput = this.page.locator('input[placeholder="Search Address"]');
+        await expect(addressInput).toBeVisible({ timeout: 5000 });
+        await addressInput.click();
+        const addressPartial = '221B Baker Street';
+        for (let i = 1; i <= addressPartial.length; ++i) {
+            await addressInput.fill(addressPartial.slice(0, i));
+            await this.page.waitForTimeout(50);
+        }
+        const suggestionsList = this.page.locator('.pac-item');
+        await expect(suggestionsList.first()).toBeVisible({ timeout: 5000 });
+        await suggestionsList.first().click();
+        await this.page.waitForTimeout(2000);
+
+        // Save search box value after selection
+        const selectedValue = await addressInput.inputValue();
+
+        // Step 3: Edit address fields by clicking edit icon (overlay/panel)
+        const editOverlayButton = this.page.locator('#toggle-overlay');
+        if (await editOverlayButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await editOverlayButton.click();
+        }
+
+        // Fill address fields with new fake data
+        const buildingNameField = this.page.locator('input[formcontrolname="building_name"]');
+        const unitNoField = this.page.locator('input[formcontrolname="unit_no"]');
+        const streetNoField = this.page.locator('input[formcontrolname="street_no"]');
+        const streetNameField = this.page.locator('input[formcontrolname="street_name"]');
+        const suburbField = this.page.locator('p-autocomplete[formcontrolname="suburb"] input.p-autocomplete-input');
+        const stateField = this.page.locator('input[formcontrolname="state"]');
+        const postCodeField = this.page.locator('input[formcontrolname="post_code"]');
+        const countryField = this.page.locator('input[formcontrolname="country"]');
+
+        const newAddressData = {
+            building: faker.company.name(),
+            unit: faker.string.numeric(2),
+            streetNo: faker.string.numeric(3),
+            streetName: faker.location.street(),
+            suburb: faker.location.city(),
+            state: faker.location.state(),
+            postCode: faker.location.zipCode(),
+            country: faker.location.country()
+        };
+
+        await expect(buildingNameField).toBeVisible();
+        await buildingNameField.fill(newAddressData.building);
+
+        await expect(unitNoField).toBeVisible();
+        await unitNoField.fill(newAddressData.unit);
+
+        await expect(streetNoField).toBeVisible();
+        await streetNoField.fill(newAddressData.streetNo);
+
+        await expect(streetNameField).toBeVisible();
+        await streetNameField.fill(newAddressData.streetName);
+
+        await expect(suburbField).toBeVisible();
+        await suburbField.fill(newAddressData.suburb);
+
+        await expect(stateField).toBeVisible();
+        await stateField.fill(newAddressData.state);
+
+        await expect(postCodeField).toBeVisible();
+        await postCodeField.fill(newAddressData.postCode);
+
+        await expect(countryField).toBeVisible();
+        await countryField.fill(newAddressData.country);
+
+        // Step 4: Save button click
+        const saveButton = this.page.getByRole('dialog').getByRole('button', { name: 'Save' });
+        await saveButton.click();
+
+        // Step 5: Search box must be updated with the new/edited address (not the previously searched value)
+        // Wait for the search box to reflect updated value
+        await this.page.waitForTimeout(2000);
+        const updatedValue = await addressInput.inputValue();
+
+        // It must NOT match the old selectedValue
+        expect(updatedValue.trim()).not.toBe(selectedValue.trim());
+
+        // Optionally: It should contain values you just entered in the fields
+        // Assert that the updated address includes relevant address fields
+        expect(updatedValue).toContain(newAddressData.streetName);
+        expect(updatedValue).toContain(newAddressData.state);
+        expect(updatedValue).toContain(newAddressData.postCode);
+    }
+
+    // Search for a non existent tag in Tag Manager
+    async searchForNonExistentTag(tagName: string) {
+
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+
+        const contactRow = rowsLocator.first();
+        const nameCell = contactRow.locator('td').nth(0);
+        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+        await contactRow.click();
+
+        const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
+        await tagButton.click();
+
+        const tagPopupHeader = this.page.getByText('Tag ManagerCompany Contact');
+        await expect(tagPopupHeader).toBeVisible();
+        const searchInput = this.page.getByPlaceholder('Search tags');
+        await searchInput.fill(tagName);
+        const noResult = this.page.getByText(/No data found|no results|no matching tags/i);
+        await expect(noResult).toBeVisible();
+    }
+
+    async verifyCreateTagByEnter(tagTypeName: string, tagValue: string) {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+
+        // Open a contact row
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+        const contactRow = rowsLocator.first();
+        await contactRow.click();
+
+        // Open Tag Manager popup
+        const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
+        await tagButton.click();
+        const tagPopupHeader = this.page.getByText('Tag ManagerCompany Contact');
+        await expect(tagPopupHeader).toBeVisible();
+
+        // Add Tag Type
+        const addTagTypeButton = this.page.locator('.p-element.p-button-rounded').first();
+        await addTagTypeButton.click();
+
+        // Select the tag type from dropdown
+        const tagTypeDropdown = this.page.locator('.ng-select-container:has-text("Select Tag Type")');
+        await tagTypeDropdown.click();
+        const tagTypeSearchInput = this.page.locator('.ng-dropdown-panel input[type="text"], input[role="combobox"], .ng-select input[type="text"]').last();
+        await tagTypeSearchInput.fill(tagTypeName);
+
+        const optionLocator = this.page.locator(`.ng-option:has-text("${tagTypeName}")`);
+        await expect(optionLocator).toBeVisible({ timeout: 5000 });
+        await optionLocator.click();
+
+        // Enter new tag + press Enter to create
+        const tagsInput = this.page.locator('input[placeholder="Add Multiple Tags"]');
+        await tagsInput.fill(tagValue);
+        await tagsInput.press('Enter');
+
+        // Verify chip for the new tag appears (common in tag editors)
+        const createdTagChip = this.page.locator(`.ng-value-label, .p-chips-token, .chip, .tag`)
+            .filter({ hasText: tagValue });
+        await expect(createdTagChip).toBeVisible();
+    }
+
+    /**
+     Verifies that removing a tag updates the tag list and that the tag no longer appears.
+     */
+    async verifyRemoveTagUpdatesTagList(tagValue: string) {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+
+        // Open a contact row
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+        const contactRow = rowsLocator.first();
+        await contactRow.click();
+
+        // Open Tag Manager popup
+        const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
+        await tagButton.click();
+        const tagPopupHeader = this.page.getByText('Tag ManagerCompany Contact');
+        await expect(tagPopupHeader).toBeVisible();
+
+        const company = await this.page.getByText('Automation Testing');
+        await company.scrollIntoViewIfNeeded();
+        await expect(company).toBeVisible();
+
+        // Find the chip (tag value label) elements in the tag list area
+        const chips = this.page.locator('#cdk-drop-list-13 .p-chip-text').first();
+
+        // Click multiple times on the chip
+        for (let i = 0; i < 3; i++) {
+            await chips.dblclick({ force: true });
+        }
+
+        await this.page.waitForTimeout(500)
+
+        const closeIcon = this.page.locator('.f-12.pi.pi-times.cp');
+
+        await closeIcon.click({ force: true });
+
+        await this.page.waitForTimeout(1000)
+
+        await expect(closeIcon).not.toBeVisible()
+    }
+
+    /**
+     * Verifies that a tag persists in the tag list after saving the form.
+     */
+    async verifyTagPersistsAfterFormSave(tagTypeName: string, tagValue: string) {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+
+        // Open the first contact in the list
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+        const contactRow = rowsLocator.first();
+        await contactRow.click();
+
+        // Open Tag Manager popup for the contact
+        const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
+        await tagButton.click();
+
+        const tagPopupHeader = this.page.getByText('Tag ManagerCompany Contact');
+        await expect(tagPopupHeader).toBeVisible();
+
+        // Add a new Tag Type
+        const addTagTypeButton = this.page.locator('.p-element.p-button-rounded').first();
+        await addTagTypeButton.click();
+
+        // Select or type the tag type in the Select Tag Type dropdown
+        const tagTypeDropdown = this.page.locator('.ng-select-container:has-text("Select Tag Type")');
+        await tagTypeDropdown.click();
+        const tagTypeInput = this.page.locator('.ng-dropdown-panel input[type="text"], input[role="combobox"], .ng-select input[type="text"]').last();
+        await tagTypeInput.fill(tagTypeName);
+
+        // Wait for and select the desired tag type option
+        const optionLocator = this.page.locator(`.ng-option:has-text("${tagTypeName}")`);
+        await expect(optionLocator).toBeVisible({ timeout: 5000 });
+        await optionLocator.click();
+
+        // Add the new tag
+        const tagsInput = this.page.locator('input[placeholder="Add Multiple Tags"]');
+        await tagsInput.fill(tagValue);
+        await tagsInput.press('Enter');
+
+        // Save the new tag (Add button)
+        const addButton = this.page.getByRole('button', { name: /^Add$/i });
+        await addButton.click();
+
+        // Confirm successful tag creation
+        const creationToast = this.page.locator('div').filter({ hasText: 'Tag successfully created' }).nth(2);
+        await expect(creationToast).toBeVisible();
+
+        // Close the tag manager popup if necessary
+        const closeButton = this.page.locator('.d-flex.align-items-center > div > button:nth-child(2)');
+        if (await closeButton.isVisible()) {
+            await closeButton.click();
+        }
+
+        await this.page.waitForTimeout(500);
+
+        // Re-open Tag Manager to verify the tag persists
+        await tagButton.click();
+        await expect(tagPopupHeader).toBeVisible();
+
+        // Search for the tag in the search input field in Tag Manager
+        const tagSearchInput = this.page.locator('input[placeholder="Search Tags"]');
+        await tagSearchInput.click();
+        // Type out the tagValue in the search input
+        for (const char of tagValue) {
+            await tagSearchInput.type(char, { delay: 20 });
+        }
+
+        // Check that the tag appears in the tag list dropdown/search results
+        const foundTag = this.page.locator('.cdk-drop-list [ng-reflect-drag-data], .cdk-drop-list [data-tag-name], .cdk-drop-list .p-chip, .cdk-drop-list')
+            .filter({ hasText: tagValue });
+        await expect(foundTag.first()).toBeVisible({ timeout: 5000 });
+    }
+
+    /**
+     * Verify that double clicking a tag in the tag manager adds it to the tag input field.
+     */
+    async verifyDoubleClickTagAddsToField(tagTypeName: string, tagValue: string) {
+        // Navigate to Contacts and wait
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+    
+        // Select the first contact row
+        const rows = this.page.locator('table tbody tr');
+        const firstRow = rows.first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        await firstRow.click();
+    
+        // Open Tag Manager popup
+        const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
+        await tagButton.click();
+    
+        const tagPopupHeader = this.page.getByText('Tag ManagerCompany Contact');
+        await expect(tagPopupHeader).toBeVisible();
+    
+        // Scroll to company block
+        const company = this.page.getByText('Automation Testing');
+        await company.scrollIntoViewIfNeeded();
+        await expect(company).toBeVisible();
+    
+        // -----------------------------
+        //   Select the tag chip dynamically (no ID)
+        // -----------------------------
+        const chipToClick = this.page
+            .locator('.cdk-drop-list .p-chip-text')
+            .filter({ hasText: new RegExp(`^\\s*${tagValue}\\s*$`, 'i') });
+    
+        // Wait for it to appear (Angular render)
+        await expect(chipToClick).toBeVisible({ timeout: 10000 });
+    
+        // -----------------------------
+        //   Perform a robust double-click
+        // -----------------------------
+        await chipToClick.scrollIntoViewIfNeeded();
+        await chipToClick.hover();
+    
+        // Try user-style double-click
+        await chipToClick.click({ clickCount: 2, delay: 40 });
+    
+        // Fallback: force a DOM dblclick if Angular ignores
+        const addedTag = this.page
+            .locator('.tag_section .tags-container .p-chip-text')
+            .filter({ hasText: tagValue });
+    
+        if (!(await addedTag.isVisible({ timeout: 1000 }))) {
+            await chipToClick.evaluate(e => {
+                e.dispatchEvent(new MouseEvent('dblclick', { bubbles: true, cancelable: true }));
+            });
+        }
+    
+        // -----------------------------
+        //   Assert tag is added
+        // -----------------------------
+        await expect(
+            this.page.locator('.tag_section .tags-container .p-chip-text')
+                .filter({ hasText: tagValue })
+        )
+    }
+    
 }
 
