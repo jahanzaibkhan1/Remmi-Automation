@@ -367,6 +367,22 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyCreateTagByEnter(tagTypeName, tagValue);
   });
 
+  test('Test 30: Verify that removing a tag updates the tag list', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+    const tagValue = faker.lorem.words(1);
+
+
+    // Now remove the tag and verify it updates the tag list
+    await contact.verifyRemoveTagUpdatesTagList(tagValue);
+  });
+
 
 });
   
