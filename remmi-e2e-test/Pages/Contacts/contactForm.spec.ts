@@ -383,6 +383,21 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyRemoveTagUpdatesTagList(tagValue);
   });
 
+  test('Test 31: Verify that a tag remains in the list after form save', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+
+    const tagTypeName = 'Automation Testing';
+    const tagValue = faker.lorem.words(1);
+
+    await contact.verifyTagPersistsAfterFormSave(tagTypeName, tagValue);
+  });
 
 });
   
