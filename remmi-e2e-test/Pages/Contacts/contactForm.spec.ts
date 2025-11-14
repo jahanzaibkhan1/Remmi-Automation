@@ -399,5 +399,20 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyTagPersistsAfterFormSave(tagTypeName, tagValue);
   });
 
+  test('Test 32: Verify that double clicking a tag adds it to the tag field', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+
+    const tagTypeName = 'Automation Testing';
+    const tagValue = faker.lorem.words(1);
+
+    await contact.verifyDoubleClickTagAddsToField(tagTypeName, tagValue);
+  });
 });
   

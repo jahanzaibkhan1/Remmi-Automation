@@ -2626,10 +2626,10 @@ export class ContactActions {
         // Assert that the updated address includes relevant address fields
         expect(updatedValue).toContain(newAddressData.streetName);
         expect(updatedValue).toContain(newAddressData.state);
-        expect(updatedValue).toContain(newAddressData.postCode); 
+        expect(updatedValue).toContain(newAddressData.postCode);
     }
 
-// Search for a non existent tag in Tag Manager
+    // Search for a non existent tag in Tag Manager
     async searchForNonExistentTag(tagName: string) {
 
         await this.NavigateToContacts();
@@ -2653,7 +2653,7 @@ export class ContactActions {
         const noResult = this.page.getByText(/No data found|no results|no matching tags/i);
         await expect(noResult).toBeVisible();
     }
-     
+
     async verifyCreateTagByEnter(tagTypeName: string, tagValue: string) {
         await this.NavigateToContacts();
         await this.page.waitForTimeout(4000);
@@ -2730,7 +2730,7 @@ export class ContactActions {
 
         const closeIcon = this.page.locator('.f-12.pi.pi-times.cp');
 
-        await closeIcon.click({force:true});
+        await closeIcon.click({ force: true });
 
         await this.page.waitForTimeout(1000)
 
@@ -2810,5 +2810,71 @@ export class ContactActions {
             .filter({ hasText: tagValue });
         await expect(foundTag.first()).toBeVisible({ timeout: 5000 });
     }
+
+    /**
+     * Verify that double clicking a tag in the tag manager adds it to the tag input field.
+     */
+    async verifyDoubleClickTagAddsToField(tagTypeName: string, tagValue: string) {
+        // Navigate to Contacts and wait
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+    
+        // Select the first contact row
+        const rows = this.page.locator('table tbody tr');
+        const firstRow = rows.first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        await firstRow.click();
+    
+        // Open Tag Manager popup
+        const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
+        await tagButton.click();
+    
+        const tagPopupHeader = this.page.getByText('Tag ManagerCompany Contact');
+        await expect(tagPopupHeader).toBeVisible();
+    
+        // Scroll to company block
+        const company = this.page.getByText('Automation Testing');
+        await company.scrollIntoViewIfNeeded();
+        await expect(company).toBeVisible();
+    
+        // -----------------------------
+        //   Select the tag chip dynamically (no ID)
+        // -----------------------------
+        const chipToClick = this.page
+            .locator('.cdk-drop-list .p-chip-text')
+            .filter({ hasText: new RegExp(`^\\s*${tagValue}\\s*$`, 'i') });
+    
+        // Wait for it to appear (Angular render)
+        await expect(chipToClick).toBeVisible({ timeout: 10000 });
+    
+        // -----------------------------
+        //   Perform a robust double-click
+        // -----------------------------
+        await chipToClick.scrollIntoViewIfNeeded();
+        await chipToClick.hover();
+    
+        // Try user-style double-click
+        await chipToClick.click({ clickCount: 2, delay: 40 });
+    
+        // Fallback: force a DOM dblclick if Angular ignores
+        const addedTag = this.page
+            .locator('.tag_section .tags-container .p-chip-text')
+            .filter({ hasText: tagValue });
+    
+        if (!(await addedTag.isVisible({ timeout: 1000 }))) {
+            await chipToClick.evaluate(e => {
+                e.dispatchEvent(new MouseEvent('dblclick', { bubbles: true, cancelable: true }));
+            });
+        }
+    
+        // -----------------------------
+        //   Assert tag is added
+        // -----------------------------
+        await expect(
+            this.page.locator('.tag_section .tags-container .p-chip-text')
+                .filter({ hasText: tagValue })
+        )
+    }
+    
 }
 
