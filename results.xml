@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.560732999999075">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-14T07:30:56.401Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.969" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 30: Verify that removing a tag updates the tag list" classname="Pages\Contacts\contactForm.spec.ts" time="42.969">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="54.45372699999996">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-14T08:46:53.386Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.658" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 31: Verify that a tag persists in the list after saving the form" classname="Pages\Contacts\contactForm.spec.ts" time="45.658">
 </testcase>
 </testsuite>
 </testsuites>
