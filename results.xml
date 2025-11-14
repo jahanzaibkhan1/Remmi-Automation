@@ -1,6 +1,14 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="54.45372699999996">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-14T08:46:53.386Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.658" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 31: Verify that a tag persists in the list after saving the form" classname="Pages\Contacts\contactForm.spec.ts" time="45.658">
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="66.84193099999986">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-14T12:08:51.613Z" hostname="chromium" tests="1" failures="1" skipped="0" time="60.016" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 32: Verify that double clicking a tag adds it to the tag field" classname="Pages\Contacts\contactForm.spec.ts" time="60.016">
+<failure message="contactForm.spec.ts:402:7 Test 32: Verify that double clicking a tag adds it to the tag field" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Contacts\contactForm.spec.ts:402:7 › Contacts side Menu Tests - Remmi E2E › Test 32: Verify that double clicking a tag adds it to the tag field 
+
+    Test timeout of 60000ms exceeded while setting up "context".
+
+    Error: browser._wrapApiCall: Target page, context or browser has been closed
+]]>
+</failure>
 </testcase>
 </testsuite>
 </testsuites>
