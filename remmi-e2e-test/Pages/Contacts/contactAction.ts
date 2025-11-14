@@ -2530,6 +2530,104 @@ export class ContactActions {
         // Expect that the tag option is visible in the dropdown (without locator in expect)
         await expect(tagSearchInput).toBeVisible()
     }
+    // Verify that entering data in address fields is reflected in the main/displayed address
+
+    async verifyMainAddressUpdatesWithAllFields() {
+        // Step 1: Navigate to contacts and select first contact
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        const rows = this.page.locator('table tbody tr');
+        const firstRow = rows.nth(0);
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        await firstRow.click();
+
+        // Step 2: Search Address field > type & select suggestion
+        const addressInput = this.page.locator('input[placeholder="Search Address"]');
+        await expect(addressInput).toBeVisible({ timeout: 5000 });
+        await addressInput.click();
+        const addressPartial = '221B Baker Street';
+        for (let i = 1; i <= addressPartial.length; ++i) {
+            await addressInput.fill(addressPartial.slice(0, i));
+            await this.page.waitForTimeout(50);
+        }
+        const suggestionsList = this.page.locator('.pac-item');
+        await expect(suggestionsList.first()).toBeVisible({ timeout: 5000 });
+        await suggestionsList.first().click();
+        await this.page.waitForTimeout(2000);
+
+        // Save search box value after selection
+        const selectedValue = await addressInput.inputValue();
+
+        // Step 3: Edit address fields by clicking edit icon (overlay/panel)
+        const editOverlayButton = this.page.locator('#toggle-overlay');
+        if (await editOverlayButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await editOverlayButton.click();
+        }
+
+        // Fill address fields with new fake data
+        const buildingNameField = this.page.locator('input[formcontrolname="building_name"]');
+        const unitNoField = this.page.locator('input[formcontrolname="unit_no"]');
+        const streetNoField = this.page.locator('input[formcontrolname="street_no"]');
+        const streetNameField = this.page.locator('input[formcontrolname="street_name"]');
+        const suburbField = this.page.locator('p-autocomplete[formcontrolname="suburb"] input.p-autocomplete-input');
+        const stateField = this.page.locator('input[formcontrolname="state"]');
+        const postCodeField = this.page.locator('input[formcontrolname="post_code"]');
+        const countryField = this.page.locator('input[formcontrolname="country"]');
+
+        const newAddressData = {
+            building: faker.company.name(),
+            unit: faker.string.numeric(2),
+            streetNo: faker.string.numeric(3),
+            streetName: faker.location.street(),
+            suburb: faker.location.city(),
+            state: faker.location.state(),
+            postCode: faker.location.zipCode(),
+            country: faker.location.country()
+        };
+
+        await expect(buildingNameField).toBeVisible();
+        await buildingNameField.fill(newAddressData.building);
+
+        await expect(unitNoField).toBeVisible();
+        await unitNoField.fill(newAddressData.unit);
+
+        await expect(streetNoField).toBeVisible();
+        await streetNoField.fill(newAddressData.streetNo);
+
+        await expect(streetNameField).toBeVisible();
+        await streetNameField.fill(newAddressData.streetName);
+
+        await expect(suburbField).toBeVisible();
+        await suburbField.fill(newAddressData.suburb);
+
+        await expect(stateField).toBeVisible();
+        await stateField.fill(newAddressData.state);
+
+        await expect(postCodeField).toBeVisible();
+        await postCodeField.fill(newAddressData.postCode);
+
+        await expect(countryField).toBeVisible();
+        await countryField.fill(newAddressData.country);
+
+        // Step 4: Save button click
+        const saveButton = this.page.getByRole('dialog').getByRole('button', { name: 'Save' });
+        await saveButton.click();
+
+        // Step 5: Search box must be updated with the new/edited address (not the previously searched value)
+        // Wait for the search box to reflect updated value
+        await this.page.waitForTimeout(2000);
+        const updatedValue = await addressInput.inputValue();
+
+        // It must NOT match the old selectedValue
+        expect(updatedValue.trim()).not.toBe(selectedValue.trim());
+
+        // Optionally: It should contain values you just entered in the fields
+        // Assert that the updated address includes relevant address fields
+        expect(updatedValue).toContain(newAddressData.streetName);
+        expect(updatedValue).toContain(newAddressData.state);
+        expect(updatedValue).toContain(newAddressData.postCode); 
+    }
 
 }
 

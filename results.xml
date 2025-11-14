@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.85292799999937">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-13T12:38:50.762Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.644" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 27: Verify that a new tag type can be added" classname="Pages\Contacts\contactForm.spec.ts" time="24.644">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.34683999999985">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-14T05:10:49.736Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.728" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 24: Verify that entering data in address fields updates the main address field" classname="Pages\Contacts\contactForm.spec.ts" time="29.728">
 </testcase>
 </testsuite>
 </testsuites>
