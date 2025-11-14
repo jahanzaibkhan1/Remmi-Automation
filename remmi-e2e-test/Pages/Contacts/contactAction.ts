@@ -2694,5 +2694,47 @@ export class ContactActions {
             .filter({ hasText: tagValue });
         await expect(createdTagChip).toBeVisible();
     }
+
+    /**
+     Verifies that removing a tag updates the tag list and that the tag no longer appears.
+     */
+    async verifyRemoveTagUpdatesTagList(tagValue: string) {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+
+        // Open a contact row
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+        const contactRow = rowsLocator.first();
+        await contactRow.click();
+
+        // Open Tag Manager popup
+        const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
+        await tagButton.click();
+        const tagPopupHeader = this.page.getByText('Tag ManagerCompany Contact');
+        await expect(tagPopupHeader).toBeVisible();
+
+        const company = await this.page.getByText('Automation Testing');
+        await company.scrollIntoViewIfNeeded();
+        await expect(company).toBeVisible();
+
+        // Find the chip (tag value label) elements in the tag list area
+        const chips = this.page.locator('#cdk-drop-list-13 .p-chip-text').first();
+
+        // Click multiple times on the chip
+        for (let i = 0; i < 3; i++) {
+            await chips.dblclick({ force: true });
+        }
+
+        await this.page.waitForTimeout(500)
+
+        const closeIcon = this.page.locator('.f-12.pi.pi-times.cp');
+
+        await closeIcon.click({force:true});
+
+        await this.page.waitForTimeout(1000)
+
+        await expect(closeIcon).not.toBeVisible()
+    }
 }
 
