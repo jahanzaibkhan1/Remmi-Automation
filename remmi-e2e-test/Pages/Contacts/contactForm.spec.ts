@@ -352,6 +352,21 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.searchForNonExistentTag('NonExistentTag123');
   });
 
+  test('Test 29: Verify that entering a valid tag and pressing "Enter" creates a tag', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+
+    const tagTypeName = 'Automation Testing';
+    const tagValue = faker.lorem.words(1);
+    await contact.verifyCreateTagByEnter(tagTypeName, tagValue);
+  });
+
 
 });
   

@@ -2653,6 +2653,46 @@ export class ContactActions {
         const noResult = this.page.getByText(/No data found|no results|no matching tags/i);
         await expect(noResult).toBeVisible();
     }
+     
+    async verifyCreateTagByEnter(tagTypeName: string, tagValue: string) {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
 
+        // Open a contact row
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+        const contactRow = rowsLocator.first();
+        await contactRow.click();
+
+        // Open Tag Manager popup
+        const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
+        await tagButton.click();
+        const tagPopupHeader = this.page.getByText('Tag ManagerCompany Contact');
+        await expect(tagPopupHeader).toBeVisible();
+
+        // Add Tag Type
+        const addTagTypeButton = this.page.locator('.p-element.p-button-rounded').first();
+        await addTagTypeButton.click();
+
+        // Select the tag type from dropdown
+        const tagTypeDropdown = this.page.locator('.ng-select-container:has-text("Select Tag Type")');
+        await tagTypeDropdown.click();
+        const tagTypeSearchInput = this.page.locator('.ng-dropdown-panel input[type="text"], input[role="combobox"], .ng-select input[type="text"]').last();
+        await tagTypeSearchInput.fill(tagTypeName);
+
+        const optionLocator = this.page.locator(`.ng-option:has-text("${tagTypeName}")`);
+        await expect(optionLocator).toBeVisible({ timeout: 5000 });
+        await optionLocator.click();
+
+        // Enter new tag + press Enter to create
+        const tagsInput = this.page.locator('input[placeholder="Add Multiple Tags"]');
+        await tagsInput.fill(tagValue);
+        await tagsInput.press('Enter');
+
+        // Verify chip for the new tag appears (common in tag editors)
+        const createdTagChip = this.page.locator(`.ng-value-label, .p-chips-token, .chip, .tag`)
+            .filter({ hasText: tagValue });
+        await expect(createdTagChip).toBeVisible();
+    }
 }
 
