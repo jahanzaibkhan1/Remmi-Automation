@@ -2629,5 +2629,30 @@ export class ContactActions {
         expect(updatedValue).toContain(newAddressData.postCode); 
     }
 
+// Search for a non existent tag in Tag Manager
+    async searchForNonExistentTag(tagName: string) {
+
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(4000);
+
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+
+        const contactRow = rowsLocator.first();
+        const nameCell = contactRow.locator('td').nth(0);
+        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
+        await contactRow.click();
+
+        const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
+        await tagButton.click();
+
+        const tagPopupHeader = this.page.getByText('Tag ManagerCompany Contact');
+        await expect(tagPopupHeader).toBeVisible();
+        const searchInput = this.page.getByPlaceholder('Search tags');
+        await searchInput.fill(tagName);
+        const noResult = this.page.getByText(/No data found|no results|no matching tags/i);
+        await expect(noResult).toBeVisible();
+    }
+
 }
 
