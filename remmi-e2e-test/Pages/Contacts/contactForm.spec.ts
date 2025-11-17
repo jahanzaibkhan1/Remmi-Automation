@@ -453,5 +453,21 @@ test('Test 35: Verify that clicking "Cancel" on the tag creation popup closes it
 
   await contact.verifyTagCreationPopupCloseWithCancel();
 });
+
+test('Test 36: Verify that clicking "Save" after filling all required fields in tag creation successfully saves the tag', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  const tagTypeName = 'Automation Testing';
+  const tagValue = faker.lorem.word();
+
+  await contact.verifyTagCreationPopupSaveWorks(tagTypeName, tagValue);
 });
-  
+
+});
