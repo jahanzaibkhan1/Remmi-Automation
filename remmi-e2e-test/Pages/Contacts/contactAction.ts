@@ -3010,5 +3010,65 @@ export class ContactActions {
         await expect(successToast).toBeVisible();
 
     }
+
+    /**
+     * 
+     */
+    public async verifyAddandCloseTag(tagTypeName: string, tagValue: string) {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Open the first contact row detail
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+        const contactRow = rowsLocator.first();
+        await contactRow.click();
+
+        // Open Tag Manager popup
+        const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
+        await tagButton.click();
+
+        // Wait for Tag Manager popup to be visible
+        const tagPopupHeader = this.page.getByText('Tag ManagerCompany Contact');
+        await expect(tagPopupHeader).toBeVisible();
+
+        // Click 'Add Tag Type' to open the tag creation dialog
+        const addTagTypeButton = this.page.locator('.p-element.p-button-rounded').first();
+        await addTagTypeButton.click();
+
+        // Wait for the tag creation popup to open
+        const tagCreationDialog = this.page.locator('.p-2');
+        await expect(tagCreationDialog).toBeVisible({ timeout: 5000 });
+
+        // Click into the tag type dropdown and search for the tag type
+        const tagTypeDropdown = this.page.locator('.ng-select-container:has-text("Select Tag Type")');
+        await tagTypeDropdown.click();
+        const tagTypeSearchInput = this.page.locator('.ng-dropdown-panel input[type="text"], input[role="combobox"], .ng-select input[type="text"]').last();
+        await tagTypeSearchInput.fill(tagTypeName);
+
+        // Select the tag type option
+        const optionLocator = this.page.locator(`.ng-option:has-text("${tagTypeName}")`);
+        await expect(optionLocator).toBeVisible({ timeout: 5000 });
+        await optionLocator.click();
+
+        // Enter a tag value in the tag input field
+        const tagsInput = this.page.locator('input[placeholder="Add Multiple Tags"]');
+        await tagsInput.fill(tagValue);
+        await tagsInput.press('Enter');
+
+        // Click the Add/Save button to confirm creation
+        const saveButton = this.page.getByRole('button', { name: /Add/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 2000 });
+        await saveButton.click();
+
+        // Check that the tag was successfully created via toast or popup
+        const successToast = this.page.locator('div').filter({ hasText: 'Tag successfully created' }).nth(2);
+        await expect(successToast).toBeVisible({ timeout: 5000 });
+
+        const closetag = this.page.locator('.d-flex.align-items-center > div > button:nth-child(2)')
+        await expect(closetag).toBeVisible();
+        await closetag.click();
+        await expect(closetag).not.toBeVisible()
+    }
 }
 

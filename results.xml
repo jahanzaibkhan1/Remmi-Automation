@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="66.34106999999936">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-17T05:43:16.387Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.983" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 36: Verify that clicking &quot;Save&quot; after filling all required fields in tag creation successfully saves the tag" classname="Pages\Contacts\contactForm.spec.ts" time="55.983">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.19012800000049">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-17T06:02:42.929Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.609" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 37: Verify that clicking &quot;Save &amp; Close&quot; after filling all required fields in tag creation saves and closes the form" classname="Pages\Contacts\contactForm.spec.ts" time="39.609">
 </testcase>
 </testsuite>
 </testsuites>
