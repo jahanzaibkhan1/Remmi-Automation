@@ -414,5 +414,76 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
 
     await contact.verifyDoubleClickTagAddsToField(tagTypeName, tagValue);
   });
+
+  test('Test 33: Verify that tags can be searched in the Tag Manager', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+
+    await contact.verifyTagCanBeSearchedInTagManager('Audeo');
+  });
+
+  test('Test 34: Verify that clicking "X" on the Tag Manager popup closes it', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+
+    await contact.verifyTagManagerPopupCloseWithX();
+  });
+
+test('Test 35: Verify that clicking "Cancel" on the tag creation popup closes it', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifyTagCreationPopupCloseWithCancel();
 });
-  
+
+test('Test 36: Verify that clicking "Save" after filling all required fields in tag creation successfully saves the tag', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  const tagTypeName = 'Automation Testing';
+  const tagValue = faker.lorem.word();
+
+  await contact.verifyTagCreationPopupSaveWorks(tagTypeName, tagValue);
+});
+
+test('Test 37: Verify that clicking "Save & Close" after filling all required fields in tag creation saves and closes the form', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  const tagTypeName = 'Automation testing';
+  const tagValue = faker.lorem.word();
+  await contact.verifyAddandCloseTag(tagTypeName, tagValue);
+
+});
+
+});
