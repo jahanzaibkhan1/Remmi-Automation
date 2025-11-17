@@ -2887,6 +2887,36 @@ export class ContactActions {
         await expect(resultTag.first()).toBeVisible({ timeout: 5000 });
     }
 
+    /**
+     * Verifies that clicking the "X" (close) button on the Tag Manager popup closes it.
+     */
+    async verifyTagManagerPopupCloseWithX() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Open a contact row
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+        const contactRow = rowsLocator.first();
+        await contactRow.click();
+
+        // Open Tag Manager popup
+        const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
+        await tagButton.click();
+
+        // Wait for Tag Manager popup to be visible
+        const tagPopupHeader = this.page.getByText('Tag ManagerCompany Contact');
+        await expect(tagPopupHeader).toBeVisible();
+
+        // Locate and click the X (close) button within the popup
+        const closeButton = this.page.locator('.d-flex.align-items-center > div > button:nth-child(2)');
+        await expect(closeButton).toBeVisible();
+        await closeButton.click();
+
+        // Verify that the popup is now closed (not visible)
+        await expect(tagPopupHeader).not.toBeVisible({ timeout: 5000 });
+    }
+
     
 }
 
