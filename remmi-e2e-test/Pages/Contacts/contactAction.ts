@@ -2917,6 +2917,43 @@ export class ContactActions {
         await expect(tagPopupHeader).not.toBeVisible({ timeout: 5000 });
     }
 
+    /**
+     * Verifies that clicking "Cancel" on the tag creation popup closes it.
+     */
+    async verifyTagCreationPopupCloseWithCancel() {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Open a contact row
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
+        const contactRow = rowsLocator.first();
+        await contactRow.click();
+
+        // Open Tag Manager popup
+        const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
+        await tagButton.click();
+
+        // Wait for Tag Manager popup to be visible
+        const tagPopupHeader = this.page.getByText('Tag ManagerCompany Contact');
+        await expect(tagPopupHeader).toBeVisible();
+
+        // Click 'Add Tag Type' to open the tag creation popup
+        const addTagTypeButton = this.page.locator('.p-element.p-button-rounded').first();
+        await addTagTypeButton.click();
+
+        // Wait for the tag creation popup to appear (look for dialog/modal)
+        const tagCreationDialog = this.page.locator('.p-2');
+        await expect(tagCreationDialog).toBeVisible({ timeout: 5000 });
+
+        // Locate and click the Cancel button (common patterns)
+        const cancelButton = this.page.getByRole('button', { name: /Cancel/i }).first();
+        await expect(cancelButton).toBeVisible({ timeout: 2000 });
+        await cancelButton.click();
+
+        // Confirm tag creation popup is no longer visible
+        await expect(tagCreationDialog).not.toBeVisible({ timeout: 5000 });
+    }
     
 }
 

@@ -440,5 +440,18 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
 
     await contact.verifyTagManagerPopupCloseWithX();
   });
+
+test('Test 35: Verify that clicking "Cancel" on the tag creation popup closes it', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  await contact.verifyTagCreationPopupCloseWithCancel();
+});
 });
   

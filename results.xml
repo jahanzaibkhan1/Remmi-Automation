@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="66.50261899999995">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-17T05:24:55.800Z" hostname="chromium" tests="1" failures="0" skipped="0" time="59.25" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 34: Verify that clicking &quot;X&quot; on the Tag Manager popup closes it" classname="Pages\Contacts\contactForm.spec.ts" time="59.25">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="58.55481299999915">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-17T05:32:09.288Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.279" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 35: Verify that clicking &quot;Cancel&quot; on the tag creation popup closes it" classname="Pages\Contacts\contactForm.spec.ts" time="51.279">
 </testcase>
 </testsuite>
 </testsuites>
