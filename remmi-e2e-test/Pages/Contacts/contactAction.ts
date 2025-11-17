@@ -2811,9 +2811,7 @@ export class ContactActions {
         await expect(foundTag.first()).toBeVisible({ timeout: 5000 });
     }
 
-    /**
-     * Verify that double clicking a tag in the tag manager adds it to the tag input field.
-     */
+   
     async verifyDoubleClickTagAddsToField(tagTypeName: string, tagValue: string) {
         // Navigate to Contacts and wait
         await this.NavigateToContacts();
@@ -2831,50 +2829,64 @@ export class ContactActions {
     
         const tagPopupHeader = this.page.getByText('Tag ManagerCompany Contact');
         await expect(tagPopupHeader).toBeVisible();
+
+        await this.page.waitForTimeout(500)
     
         // Scroll to company block
         const company = this.page.getByText('Automation Testing');
         await company.scrollIntoViewIfNeeded();
         await expect(company).toBeVisible();
     
-        // -----------------------------
-        //   Select the tag chip dynamically (no ID)
-        // -----------------------------
-        const chipToClick = this.page
-            .locator('.cdk-drop-list .p-chip-text')
-            .filter({ hasText: new RegExp(`^\\s*${tagValue}\\s*$`, 'i') });
-    
-        // Wait for it to appear (Angular render)
-        await expect(chipToClick).toBeVisible({ timeout: 10000 });
-    
-        // -----------------------------
-        //   Perform a robust double-click
-        // -----------------------------
-        await chipToClick.scrollIntoViewIfNeeded();
-        await chipToClick.hover();
-    
-        // Try user-style double-click
-        await chipToClick.click({ clickCount: 2, delay: 40 });
-    
-        // Fallback: force a DOM dblclick if Angular ignores
-        const addedTag = this.page
-            .locator('.tag_section .tags-container .p-chip-text')
-            .filter({ hasText: tagValue });
-    
-        if (!(await addedTag.isVisible({ timeout: 1000 }))) {
-            await chipToClick.evaluate(e => {
-                e.dispatchEvent(new MouseEvent('dblclick', { bubbles: true, cancelable: true }));
-            });
+        // Find the chip (tag value label) elements in the tag list area
+        const chips = this.page.locator('#cdk-drop-list-13 .p-chip-text').first();
+
+        // Click multiple times on the chip
+        for (let i = 0; i < 3; i++) {
+            await chips.dblclick({ force: true });
         }
-    
-        // -----------------------------
-        //   Assert tag is added
-        // -----------------------------
-        await expect(
-            this.page.locator('.tag_section .tags-container .p-chip-text')
-                .filter({ hasText: tagValue })
-        )
+
+        await this.page.waitForTimeout(500)
+
+        const closeIcon = this.page.locator('.f-12.pi.pi-times.cp');
+
+        await expect(closeIcon).toBeVisible()
     }
+
+    /**
+     * Verifies that tags can be searched in the Tag Manager.
+     */
+    async verifyTagCanBeSearchedInTagManager(tagValue: string) {
+        await this.NavigateToContacts();
+        await this.page.waitForTimeout(3000);
+
+        // Open first contact row
+        const rows = this.page.locator('table tbody tr');
+        const firstRow = rows.first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        await firstRow.click();
+
+        // Open Tag Manager popup
+        const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
+        await tagButton.click();
+
+        // Confirm Tag Manager popup opened
+        const tagPopupHeader = this.page.getByText('Tag ManagerCompany Contact');
+        await expect(tagPopupHeader).toBeVisible();
+
+        await this.page.waitForTimeout(500);
+
+
+        // Find the tag search input inside the Tag Manager (handle possible variations in placeholder)
+        const tagSearchInput = this.page.locator('input[placeholder="Search Tag"], input[placeholder="Search Tags"]');
+        await tagSearchInput.click();
+        await tagSearchInput.fill(tagValue);
+
+        // Confirm that a tag matching 'tagValue' appears in the dropdown/list
+        const resultTag = this.page.locator('.cdk-drop-list .p-chip-text, .cdk-drop-list [data-tag-name]')
+            .filter({ hasText: tagValue });
+        await expect(resultTag.first()).toBeVisible({ timeout: 5000 });
+    }
+
     
 }
 

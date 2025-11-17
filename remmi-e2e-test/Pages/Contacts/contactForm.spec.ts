@@ -414,5 +414,18 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
 
     await contact.verifyDoubleClickTagAddsToField(tagTypeName, tagValue);
   });
+
+  test('Test 33: Verify that tags can be searched in the Tag Manager', async ({ page }) => {
+    const login = new LoginActions(page);
+    const contact = new ContactActions(page);
+
+    await login.login(
+      OprationManager.email!,
+      OprationManager.password!,
+      process.env.E2E_MANAGER_OTP_SECRET!
+    );
+
+    await contact.verifyTagCanBeSearchedInTagManager('Audeo');
+  });
 });
   
