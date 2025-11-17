@@ -470,4 +470,20 @@ test('Test 36: Verify that clicking "Save" after filling all required fields in 
   await contact.verifyTagCreationPopupSaveWorks(tagTypeName, tagValue);
 });
 
+test('Test 37: Verify that clicking "Save & Close" after filling all required fields in tag creation saves and closes the form', async ({ page }) => {
+  const login = new LoginActions(page);
+  const contact = new ContactActions(page);
+
+  await login.login(
+    OprationManager.email!,
+    OprationManager.password!,
+    process.env.E2E_MANAGER_OTP_SECRET!
+  );
+
+  const tagTypeName = 'Automation testing';
+  const tagValue = faker.lorem.word();
+  await contact.verifyAddandCloseTag(tagTypeName, tagValue);
+
+});
+
 });
