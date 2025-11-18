@@ -1,6 +1,6 @@
 import { Page, expect, test, Locator } from '@playwright/test';
 import { LocatorLogin } from './LoginLocators';
-import { generateOtp } from '../../../helper/getOtp';
+import { generateOtp } from '../../helper/getOtp';
 import { LoginMessages } from './LoginMessages';
 import * as dotenv from 'dotenv';
 

@@ -2,9 +2,9 @@ import { Page, Locator, expect, test } from '@playwright/test';
 import { MyProfileLocators } from './MyProfileLocators';
 import { faker } from '@faker-js/faker';
 import * as dotenv from 'dotenv';
-import { extractSecretFromQr } from '../../../helper/mfaHelper';
-import { generateOtp } from '../../../helper/getOtp';
-import { updateEnvVariable } from '../../../helper/updateEnvVariable';
+import { extractSecretFromQr } from '../../helper/mfaHelper';
+import { generateOtp } from '../../helper/getOtp';
+import { updateEnvVariable } from '../../helper/updateEnvVariable';
 
 
 /**
