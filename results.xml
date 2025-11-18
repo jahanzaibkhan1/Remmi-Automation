@@ -1,6 +1,333 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.19012800000049">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2025-11-17T06:02:42.929Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.609" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 37: Verify that clicking &quot;Save &amp; Close&quot; after filling all required fields in tag creation saves and closes the form" classname="Pages\Contacts\contactForm.spec.ts" time="39.609">
+<testsuites id="" name="" tests="19" failures="8" skipped="11" errors="0" time="350.02985900000016">
+<testsuite name="Pages\Login\login.spec.ts" timestamp="2025-11-18T09:20:29.466Z" hostname="chromium" tests="19" failures="8" skipped="11" time="256.216" errors="0">
+<testcase name="Login Tests - Remmi E2E › Test case 1: Verify sign in with valid email and password" classname="Pages\Login\login.spec.ts" time="69.606">
+<failure message="login.spec.ts:11:7 Test case 1: Verify sign in with valid email and password" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Login\login.spec.ts:11:7 › Login Tests - Remmi E2E › Test case 1: Verify sign in with valid email and password 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.goto: net::ERR_CONNECTION_CLOSED at https://portal-staging.remmi.com.au/login
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:20
+
+      18 |
+      19 |   async gotoLogin() {
+    > 20 |     await this.page.goto('/login');
+         |                     ^
+      21 |     await this.page.waitForLoadState('networkidle');
+      22 |   }
+      23 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:20:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:84:16)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:174:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\login.spec.ts:13:17
+
+    Error Context: ..\test-results\Pages-Login-login-Login-Te-008b9-th-valid-email-and-password-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-008b9-th-valid-email-and-password-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 2: Verify password visibility toggle" classname="Pages\Login\login.spec.ts" time="60.129">
+<failure message="login.spec.ts:20:7 Test case 2: Verify password visibility toggle" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Login\login.spec.ts:20:7 › Login Tests - Remmi E2E › Test case 2: Verify password visibility toggle 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.fill: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByRole('textbox', { name: /email/i })
+
+
+       at Pages\Login\LoginAction.ts:25
+
+      23 |
+      24 |   async fillCredentials(email: string, password: string) {
+    > 25 |     await this.locators.emailField().fill(email);
+         |                                      ^
+      26 |     await expect(this.locators.emailField()).toHaveValue(email);
+      27 |     await this.locators.passwordField().fill(password);
+      28 |     await expect(this.locators.passwordField()).toHaveValue(password);
+        at LoginActions.fillCredentials (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:25:38)
+        at LoginActions.togglePasswordVisibility (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:183:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\login.spec.ts:22:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-db625--password-visibility-toggle-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Login-login-Login-Te-db625--password-visibility-toggle-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-db625--password-visibility-toggle-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-db625--password-visibility-toggle-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 3: Verify error message if checkbox is not selected" classname="Pages\Login\login.spec.ts" time="26.346">
+<failure message="login.spec.ts:25:7 Test case 3: Verify error message if checkbox is not selected" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Login\login.spec.ts:25:7 › Login Tests - Remmi E2E › Test case 3: Verify error message if checkbox is not selected 
+
+    Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://portal-staging.remmi.com.au/login
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:20
+
+      18 |
+      19 |   async gotoLogin() {
+    > 20 |     await this.page.goto('/login');
+         |                     ^
+      21 |     await this.page.waitForLoadState('networkidle');
+      22 |   }
+      23 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:20:21)
+        at LoginActions.withoutCheckbox (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:192:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\login.spec.ts:27:17
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-b23c1-if-checkbox-is-not-selected-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Login-login-Login-Te-b23c1-if-checkbox-is-not-selected-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-b23c1-if-checkbox-is-not-selected-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-b23c1-if-checkbox-is-not-selected-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 4: Verify error on invalid email " classname="Pages\Login\login.spec.ts" time="8.499">
+<failure message="login.spec.ts:30:7 Test case 4: Verify error on invalid email " type="FAILURE">
+<![CDATA[  [chromium] › Pages\Login\login.spec.ts:30:7 › Login Tests - Remmi E2E › Test case 4: Verify error on invalid email  
+
+    Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://portal-staging.remmi.com.au/login
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:20
+
+      18 |
+      19 |   async gotoLogin() {
+    > 20 |     await this.page.goto('/login');
+         |                     ^
+      21 |     await this.page.waitForLoadState('networkidle');
+      22 |   }
+      23 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:20:21)
+        at LoginActions.invalidEmail (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:199:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\login.spec.ts:32:17
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-b2854-ify-error-on-invalid-email--chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Login-login-Login-Te-b2854-ify-error-on-invalid-email--chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-b2854-ify-error-on-invalid-email--chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-b2854-ify-error-on-invalid-email--chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 5: Verify error message on incorrect password" classname="Pages\Login\login.spec.ts" time="23.921">
+<failure message="login.spec.ts:35:7 Test case 5: Verify error message on incorrect password" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Login\login.spec.ts:35:7 › Login Tests - Remmi E2E › Test case 5: Verify error message on incorrect password 
+
+    Error: page.goto: net::ERR_NETWORK_CHANGED at https://portal-staging.remmi.com.au/login
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:20
+
+      18 |
+      19 |   async gotoLogin() {
+    > 20 |     await this.page.goto('/login');
+         |                     ^
+      21 |     await this.page.waitForLoadState('networkidle');
+      22 |   }
+      23 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:20:21)
+        at LoginActions.incorrectPassword (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:207:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\login.spec.ts:37:17
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-3f785-ssage-on-incorrect-password-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Login-login-Login-Te-3f785-ssage-on-incorrect-password-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-3f785-ssage-on-incorrect-password-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-3f785-ssage-on-incorrect-password-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 6: Verify login after correcting incorrect email or password" classname="Pages\Login\login.spec.ts" time="5.138">
+<failure message="login.spec.ts:40:7 Test case 6: Verify login after correcting incorrect email or password" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Login\login.spec.ts:40:7 › Login Tests - Remmi E2E › Test case 6: Verify login after correcting incorrect email or password 
+
+    Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://portal-staging.remmi.com.au/login
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:20
+
+      18 |
+      19 |   async gotoLogin() {
+    > 20 |     await this.page.goto('/login');
+         |                     ^
+      21 |     await this.page.waitForLoadState('networkidle');
+      22 |   }
+      23 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:20:21)
+        at LoginActions.loginWithRetryWithoutOtp (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:220:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\login.spec.ts:42:17
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-2895b-incorrect-email-or-password-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Login-login-Login-Te-2895b-incorrect-email-or-password-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-2895b-incorrect-email-or-password-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-2895b-incorrect-email-or-password-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 7: Verify OTP is sent after successful login attempt" classname="Pages\Login\login.spec.ts" time="28.956">
+<failure message="login.spec.ts:45:7 Test case 7: Verify OTP is sent after successful login attempt" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Login\login.spec.ts:45:7 › Login Tests - Remmi E2E › Test case 7: Verify OTP is sent after successful login attempt 
+
+    Error: page.goto: net::ERR_CONNECTION_TIMED_OUT at https://portal-staging.remmi.com.au/login
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:20
+
+      18 |
+      19 |   async gotoLogin() {
+    > 20 |     await this.page.goto('/login');
+         |                     ^
+      21 |     await this.page.waitForLoadState('networkidle');
+      22 |   }
+      23 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:20:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:84:16)
+        at LoginActions.verifyOtp (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:233:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\login.spec.ts:47:17
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-6ede2-er-successful-login-attempt-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Login-login-Login-Te-6ede2-er-successful-login-attempt-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-6ede2-er-successful-login-attempt-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-6ede2-er-successful-login-attempt-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 8: Verify OTP functionality on valid OTP input" classname="Pages\Login\login.spec.ts" time="25.028">
+<failure message="login.spec.ts:50:7 Test case 8: Verify OTP functionality on valid OTP input" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Login\login.spec.ts:50:7 › Login Tests - Remmi E2E › Test case 8: Verify OTP functionality on valid OTP input › Enter OTP 
+
+    Error: locator.fill: Target page, context or browser has been closed
+    Call log:
+      - waiting for locator('input.otp-input').nth(5)
+
+
+       at Pages\Login\LoginAction.ts:43
+
+      41 |     const otpInputs = this.locators.otpField();
+      42 |     for (let i = 0; i < otp.length; i++) {
+    > 43 |       await otpInputs.nth(i).fill(otp[i]);
+         |                              ^
+      44 |     }
+      45 |   }
+      46 |
+        at LoginActions.fillOtp (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:43:30)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:102:18
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:100:7)
+        at LoginActions.verifyValidOtp (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:237:5)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\login.spec.ts:52:5
+]]>
+</failure>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 9: Verify OTP error on invalid OTP input" classname="Pages\Login\login.spec.ts" time="8.593">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 10: Verify &quot;Forgot Password&quot; functionality (email input)" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 11: Verify &quot;Forgot Password&quot; functionality with wrong (email input)" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 12: Verify &quot;Forgot Password&quot; functionality without (email input)" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 13: Verify OTP is sent after &quot;Forgot Password&quot;" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 15: Verify error on invalid email in &quot;Forgot Password&quot;" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 22: Verify proper placeholder text is shown in each input field" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Empty email" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Empty password" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › Test case 21: Verify validation triggers when &quot;Sign In&quot; button is clicked" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Login Tests - Remmi E2E › OTP shorter/longer than expected" classname="Pages\Login\login.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
 </testsuites>
