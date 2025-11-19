@@ -61,4 +61,24 @@ export class ListingActions {
         await expect(searchBox).toHaveValue('');
         await expect(searchBox).toBeVisible({ timeout: 800 });
     }
+
+    // Searching for an invalid listing should show no results
+    async searchForInvalidListing(keyword: string) {
+        await this.navigateToListings();
+        await this.page.waitForTimeout(3000);
+        await this.searchListing(keyword);
+
+        const noResults = this.page.getByText('No results found');
+        await expect(noResults).toBeVisible({ timeout: 1500 });
+        const searchBox = this.locators.SearchBox();
+        await expect(searchBox).toHaveValue(keyword);
+        const clearButton = this.locators.clearSearch();
+        if (await clearButton.isVisible({ timeout: 500 }).catch(() => false)) {
+            await clearButton.click();
+        } else {
+            await searchBox.fill('');
+        }
+        await expect(searchBox).toHaveValue('');
+        await expect(searchBox).toBeVisible({ timeout: 800 });
+    }
 }
