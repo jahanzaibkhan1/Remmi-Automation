@@ -1,0 +1,65 @@
+import { test as base } from '@playwright/test';
+import { ListingActions } from './ListingAction';
+import * as path from 'path';
+
+const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
+const DASHBOARD_URL = process.env.DASHBOARD_URL || 'https://remmi-app-stage-ui.azurewebsites.net/dashboard';
+
+const test = base.extend<{ sessionPage: any }>({
+  sessionPage: [async ({ browser }, use) => {
+    const context = await browser.newContext({ storageState: managerSessionPath });
+    try {
+      const page = await context.newPage();
+      await page.goto(DASHBOARD_URL);
+      await use(page);
+    } finally {
+
+    }
+  }, { scope: 'worker' }]
+});
+
+test.describe('Listing side Menu Tests - Remmi E2E', () => {
+
+  test('Test 1: Searching for a valid contact', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchForValidListing('Hina Ryan');
+  });
+
+  test('Test 2: Searching for an invalid contact', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchForInvalidListing('Invalid Contact Name');
+  });
+
+  test('Test 3: Searching with special characters', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchWithSpecialCharacters('$');
+  });
+
+  test('Test 4: Searching with an empty search field', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchWithEmptyField();
+  });
+
+  test('Test 5: Selecting a single property type filters listings correctly', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectSinglePropertyType();
+  });
+
+  test('Test 6: Selecting multiple property types filters listings correctly', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectMultiplePropertyTypes();
+  });
+
+  test('Test 7: Using "Select All" option selects all property types and filters listings accordingly', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectAllPropertyType();
+  });
+
+  test('Test 8: Using "Deselect All" option deselects all property types and resets filter', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deselectAllPropertyTypes();
+  });
+
+});
+
+export { test };
