@@ -33,7 +33,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.searchWithSpecialCharacters('$');
   });
-  
+
+  test('Searching with an empty search field', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchWithEmptyField();
+  });
+
 });
 
 export { test };
