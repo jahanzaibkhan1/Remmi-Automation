@@ -61,7 +61,7 @@ export class ListingActions {
     // Searching for an invalid listing should show no results
     async searchForInvalidListing(keyword: string) {
         await this.navigateToListings();
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(3000);
         await this.searchListing(keyword);
         await this.page.waitForTimeout(1000);
 
@@ -70,5 +70,33 @@ export class ListingActions {
 
         const clearButton = this.page.locator('i').nth(5);
         await clearButton.click({force:true})
+    }
+
+    // Searching with special characters in the search box
+    async searchWithSpecialCharacters(specialChars: string) {
+        await this.navigateToListings();
+        await this.page.waitForTimeout(500);
+        await this.searchListing(specialChars);
+        await this.page.waitForTimeout(1000);
+
+        const resultSelector = `tr:has-text("${specialChars}"), li:has-text("${specialChars}"), div:has-text("${specialChars}")`;
+        const resultsWithSpecialChars = this.page.locator(resultSelector);
+        const count = await resultsWithSpecialChars.count();
+        await expect(count).toBeGreaterThan(0);
+
+        // Scroll the first result with the special characters into view if found
+        if (count > 0) {
+            await resultsWithSpecialChars.first().scrollIntoViewIfNeeded();
+        }
+
+        // Clear the search box
+        const clearButton = this.locators.clearSearch?.() 
+            ?? this.page.locator('i').nth(5);
+        if (await clearButton.isVisible({ timeout: 500 }).catch(() => false)) {
+            await clearButton.click({ force: true });
+        } else {
+            const searchBox = this.locators.SearchBox();
+            await searchBox.fill('');
+        }
     }
 }

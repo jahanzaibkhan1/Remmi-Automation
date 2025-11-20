@@ -29,6 +29,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.searchForInvalidListing('Invalid Contact Name');
   });
+  test('Searching with special characters', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchWithSpecialCharacters('$');
+  });
+  
 });
 
 export { test };
