@@ -99,4 +99,26 @@ export class ListingActions {
             await searchBox.fill('');
         }
     }
+
+    // Searching with an empty search field
+    async searchWithEmptyField() {
+        await this.navigateToListings();
+        await this.page.waitForTimeout(3000)
+        const searchBox = this.locators?.SearchBox?.() ?? this.page.getByRole('textbox', { name: /search/i });
+        await searchBox.fill('');
+        await searchBox.press('Enter');
+        await this.page.waitForTimeout(1000);
+
+        // Expect all data rows to be visible (i.e., search reset displays all listings)
+        const allRows = this.page.locator('tr');
+        const rowCount = await allRows.count();
+        // Adjust the minimum expected row count as per your app's default data (1 for header, >1 for data, etc.)
+        await expect(rowCount).toBeGreaterThan(1); // Ensures there are multiple rows shown
+        for (let i = 1; i < rowCount; ++i) {  // Skipping header row (usually at index 0)
+            await expect(allRows.nth(i)).toBeVisible({ timeout: 3000 });
+        }
+
+        // Ensure the search box is still empty
+        await expect(searchBox).toHaveValue('');
+    }
 }

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.60630700000003">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-20T07:18:35.919Z" hostname="chromium" tests="1" failures="0" skipped="0" time="19.79" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Searching with special characters" classname="Pages\Listing\Listing.spec.ts" time="19.79">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="21.92897000000067">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-20T07:21:33.218Z" hostname="chromium" tests="1" failures="0" skipped="0" time="14.378" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Searching with an empty search field" classname="Pages\Listing\Listing.spec.ts" time="14.378">
 </testcase>
 </testsuite>
 </testsuites>
