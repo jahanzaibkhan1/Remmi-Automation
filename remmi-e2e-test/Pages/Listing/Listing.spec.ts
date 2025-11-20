@@ -10,33 +10,39 @@ const test = base.extend<{ sessionPage: any }>({
     const context = await browser.newContext({ storageState: managerSessionPath });
     try {
       const page = await context.newPage();
-      await page.goto(DASHBOARD_URL); // simple navigation to dashboard
+      await page.goto(DASHBOARD_URL);
       await use(page);
     } finally {
-      await context.close();
+
     }
   }, { scope: 'worker' }]
 });
 
 test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
-  test('Searching for a valid contact', async ({ sessionPage }) => {
+  test('Test 1: Searching for a valid contact', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.searchForValidListing('Hina Ryan');
   });
 
-  test('Searching for an invalid contact', async ({ sessionPage }) => {
+  test('Test 2: Searching for an invalid contact', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.searchForInvalidListing('Invalid Contact Name');
   });
-  test('Searching with special characters', async ({ sessionPage }) => {
+
+  test('Test 3: Searching with special characters', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.searchWithSpecialCharacters('$');
   });
 
-  test('Searching with an empty search field', async ({ sessionPage }) => {
+  test('Test 4: Searching with an empty search field', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.searchWithEmptyField();
+  });
+
+  test('Test 5: Selecting a single property type filters listings correctly', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectSinglePropertyType();
   });
 
 });

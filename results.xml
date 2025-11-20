@@ -1,6 +1,14 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="21.92897000000067">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-20T07:21:33.218Z" hostname="chromium" tests="1" failures="0" skipped="0" time="14.378" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Searching with an empty search field" classname="Pages\Listing\Listing.spec.ts" time="14.378">
+<testsuites id="" name="" tests="5" failures="0" skipped="0" errors="0" time="41.2123040000014">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-20T11:30:46.320Z" hostname="chromium" tests="5" failures="0" skipped="0" time="33.432" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Searching for a valid contact" classname="Pages\Listing\Listing.spec.ts" time="18.515">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Searching for an invalid contact" classname="Pages\Listing\Listing.spec.ts" time="2.983">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Searching with special characters" classname="Pages\Listing\Listing.spec.ts" time="4.943">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Searching with an empty search field" classname="Pages\Listing\Listing.spec.ts" time="3.439">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Selecting a single property type filters listings correctly" classname="Pages\Listing\Listing.spec.ts" time="3.552">
 </testcase>
 </testsuite>
 </testsuites>
