@@ -39,9 +39,39 @@ export class ListingActions {
         await expect(noResults).toHaveCount(0);
     }
 
+    private async openPropertyTypeDropdown() {
+        const dropdown = this.locators.propertyTypeDropdown();
+        await dropdown.click({ force: true });
+    }
+
+    private async searchPropertyType(type: string) {
+        const searchInput = this.locators.propertyTypeSearchInput();
+        await searchInput.click({ force: true });
+        await searchInput.fill(''); // clear any previous input
+        await searchInput.fill(type);
+    }
+
+    // Select the property type option from the dropdown
+    private async selectPropertyTypeOption(type: string) {
+        const option = this.locators.propertyTypeOption(type);
+        await option.waitFor({ state: 'visible', timeout: 5000 }); // wait until the option is visible
+        await option.click({ force: true });
+    }
+
+    private async selectAllPropertyTypes() {
+        const dropdown = this.locators.propertyTypeDropdown();
+        await dropdown.click();
+        const selectAll = this.locators.propertyTypeSelectAll();
+        await selectAll.click();
+    }
+
+
+
+    //*************************************Public Actions *************************************//
+
     async searchForValidListing(keyword: string) {
         await this.navigateToListings();
-        await this.page.waitForTimeout(2000);
+        await this.page.waitForTimeout(3000);
         await this.searchListing(keyword);
         await this.verifySearchResults(keyword);
 
@@ -61,15 +91,15 @@ export class ListingActions {
     // Searching for an invalid listing should show no results
     async searchForInvalidListing(keyword: string) {
         await this.navigateToListings();
-        await this.page.waitForTimeout(3000);
+        await this.page.waitForTimeout(500);
         await this.searchListing(keyword);
         await this.page.waitForTimeout(1000);
 
         const noResults = this.page.getByText('No results found');
-        await expect(noResults).toBeVisible({timeout:5000})
+        await expect(noResults).toBeVisible({ timeout: 5000 })
 
         const clearButton = this.page.locator('i').nth(5);
-        await clearButton.click({force:true})
+        await clearButton.click({ force: true })
     }
 
     // Searching with special characters in the search box
@@ -90,7 +120,7 @@ export class ListingActions {
         }
 
         // Clear the search box
-        const clearButton = this.locators.clearSearch?.() 
+        const clearButton = this.locators.clearSearch?.()
             ?? this.page.locator('i').nth(5);
         if (await clearButton.isVisible({ timeout: 500 }).catch(() => false)) {
             await clearButton.click({ force: true });
@@ -103,7 +133,7 @@ export class ListingActions {
     // Searching with an empty search field
     async searchWithEmptyField() {
         await this.navigateToListings();
-        await this.page.waitForTimeout(3000)
+        await this.page.waitForTimeout(500)
         const searchBox = this.locators?.SearchBox?.() ?? this.page.getByRole('textbox', { name: /search/i });
         await searchBox.fill('');
         await searchBox.press('Enter');
@@ -121,4 +151,22 @@ export class ListingActions {
         // Ensure the search box is still empty
         await expect(searchBox).toHaveValue('');
     }
+
+    // Selecting a single property type
+    async selectSinglePropertyType() {
+        await this.navigateToListings();
+
+        await this.page.waitForTimeout(500)
+        // Open dropdown and select property type
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000)
+
+        // Select the property type from dropdown
+        const firstPropertyTypeOption = this.page.locator('ul > li.p-element').first();
+        await firstPropertyTypeOption.click({ force: true });
+
+        const resetButton = this.page.locator('button').filter({ hasText: /reset/i });
+        await resetButton.click()
+    }
+
 }
