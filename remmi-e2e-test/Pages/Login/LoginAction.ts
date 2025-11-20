@@ -3,11 +3,14 @@ import { LocatorLogin } from './LoginLocators';
 import { generateOtp } from '../../helper/getOtp';
 import { LoginMessages } from './LoginMessages';
 import * as dotenv from 'dotenv';
+import * as fs from 'fs';
+import * as path from 'path';
 
 dotenv.config();
 
 /**
  * LoginActions class for handling login operations and validation steps.
+ * Now supports optional session saving for reuse.
  */
 export class LoginActions {
   private locators: LocatorLogin;
@@ -61,6 +64,7 @@ export class LoginActions {
 
   /**
    * General login flow; customizable for different paths.
+   * If saveSessionPath is provided, session storage is saved to that path.
    */
   async loginFlow({
     email,
@@ -71,6 +75,7 @@ export class LoginActions {
     skipOtp = false,
     customOtp,
     expectUrl,
+    saveSessionPath,
   }: {
     email: string;
     password: string;
@@ -80,6 +85,7 @@ export class LoginActions {
     skipOtp?: boolean;
     customOtp?: string;
     expectUrl?: string;
+    saveSessionPath?: string; // optional path to save session
   }) {
     await this.gotoLogin();
 
@@ -107,18 +113,23 @@ export class LoginActions {
     if (expectSuccess) {
       const dashboardUrl = expectUrl ?? (this.page.context() as any)._options.baseURL ?? '/';
 
-      await this.page.waitForURL(
-        url => !url.pathname.endsWith('/login'),
-        { timeout: 30000 }
-      );
+      await this.page.waitForURL(url => !url.pathname.endsWith('/login'), { timeout: 30000 });
 
       const dashboardElement = this.page.locator("//img[@src='assets/img/dashboadIcon/home.svg']");
       await dashboardElement.waitFor({ timeout: 30000 });
 
       await expect(this.page).toHaveURL(dashboardUrl, { timeout: 30000 });
     }
+
+    // Save session state if requested
+    if (saveSessionPath) {
+      const dir = path.dirname(saveSessionPath);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      await this.page.context().storageState({ path: saveSessionPath });
+      console.log(`✅ Saved Playwright session to ${saveSessionPath}`);
+    }
   }
-  
+
   async loginFlowwithoutOTP({
     email,
     password,
@@ -128,6 +139,7 @@ export class LoginActions {
     skipOtp = false,
     customOtp,
     expectUrl,
+    saveSessionPath,
   }: {
     email: string;
     password: string;
@@ -137,6 +149,7 @@ export class LoginActions {
     skipOtp?: boolean;
     customOtp?: string;
     expectUrl?: string;
+    saveSessionPath?: string;
   }) {
     await this.gotoLogin();
 
@@ -153,35 +166,35 @@ export class LoginActions {
       await this.clickSignIn();
     }
 
-
     if (expectSuccess) {
       const dashboardUrl = expectUrl ?? (this.page.context() as any)._options.baseURL ?? '/';
-
-      await this.page.waitForURL(
-        url => !url.pathname.endsWith('/login'),
-        { timeout: 30000 }
-      );
+      await this.page.waitForURL(url => !url.pathname.endsWith('/login'), { timeout: 30000 });
 
       const dashboardElement = this.page.locator("//img[@src='assets/img/dashboadIcon/home.svg']");
       await dashboardElement.waitFor({ timeout: 30000 });
 
       await expect(this.page).toHaveURL(dashboardUrl, { timeout: 30000 });
     }
+
+    if (saveSessionPath) {
+      const dir = path.dirname(saveSessionPath);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      await this.page.context().storageState({ path: saveSessionPath });
+      console.log(`✅ Saved Playwright session to ${saveSessionPath}`);
+    }
   }
 
-
-  async login(email: string, password: string, otpSecret: string) {
-    await this.loginFlow({ email, password, otpSecret });
+  async login(email: string, password: string, otpSecret: string, saveSessionPath?: string) {
+    await this.loginFlow({ email, password, otpSecret, saveSessionPath });
   }
 
-  async loginwithoutOTp(email: string, password: string) {
-    await this.loginFlowwithoutOTP({ email, password });
+  async loginwithoutOTp(email: string, password: string, saveSessionPath?: string) {
+    await this.loginFlowwithoutOTP({ email, password, saveSessionPath });
   }
 
   async togglePasswordVisibility(email: string, password: string) {
     await this.gotoLogin();
     await this.fillCredentials(email, password);
-
     await this.locators.eyeIcon().click();
     await expect(this.locators.passwordField()).toHaveAttribute('type', 'text');
     await this.locators.eyeIcon().click();
@@ -218,7 +231,6 @@ export class LoginActions {
     password: string
   ) {
     await this.gotoLogin();
-
     await this.fillCredentials(incorrectEmail, incorrectPassword);
     await this.acceptTerms();
     await this.clickSignIn();
@@ -238,13 +250,7 @@ export class LoginActions {
   }
 
   async invalidOtp(email: string, password: string, invalidOtp: string) {
-    await this.loginFlow({
-      email,
-      password,
-      skipOtp: true,
-      expectSuccess: false,
-    });
-
+    await this.loginFlow({ email, password, skipOtp: true, expectSuccess: false });
     await this.fillOtp(invalidOtp);
     await this.clickContinue();
     await expect(this.page.getByText(LoginMessages.otpIncorrect, { exact: false })).toBeVisible();
@@ -290,13 +296,7 @@ export class LoginActions {
   }
 
   async invalidOtpLength(email: string, password: string, otp: string) {
-    await this.loginFlow({
-      email,
-      password,
-      skipOtp: true,
-      expectSuccess: false,
-    });
-
+    await this.loginFlow({ email, password, skipOtp: false, expectSuccess: false });
     await this.fillOtp(otp);
     await this.clickContinue();
     await expect(this.page.getByText(LoginMessages.otpIncorrect, { exact: false })).toBeVisible();
@@ -332,11 +332,8 @@ export class LoginActions {
     await this.locators.forgetPasswordLink().click();
     await this.locators.resetEmailField().fill(email);
     await this.locators.continueResetButton().click();
-    await expect(
-      this.page.getByText(/We sent an OTP code to your email/i, { exact: false })
-    ).toBeVisible();
-    // Enter the OTP
-    const otp = generateOtp(otpSecret)
+    await expect(this.page.getByText(/We sent an OTP code to your email/i, { exact: false })).toBeVisible();
+    const otp = generateOtp(otpSecret);
     await this.fillForgotPasswordOtp(otp);
   }
 
@@ -350,7 +347,6 @@ export class LoginActions {
 
   // Verify password visibility toggle on "Forgot Password" new password page
 
-
   // Verify new password is accepted after entering valid OTP
 
   // Verify redirection to login page after setting new password
@@ -360,6 +356,4 @@ export class LoginActions {
   // Verify login functionality after "Forgot Password" with valid OTP
 
   // Verify validation triggers when "Sign In" button is clicked
-
 }
-

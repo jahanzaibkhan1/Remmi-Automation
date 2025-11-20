@@ -1,20 +1,72 @@
-import { test } from '@playwright/test';
+import { test as base } from '@playwright/test';
 import { LoginActions } from './LoginAction';
 import { LoginUsers } from '../../fixture/test-data';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const manager = LoginUsers.manager;
 const sales = LoginUsers.sales;
-const admin= LoginUsers.admin;
+const admin = LoginUsers.admin;
+
+// Path to store manager session
+const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
+
+// Extend the test object with a fixture for loading the manager session
+const test = base.extend<{ sessionPage: any, sessionContext: any }>({
+  // Provide page and context with manager session storage state if available
+  sessionPage: async ({ browser }, use) => {
+    let context, page;
+    if (fs.existsSync(managerSessionPath)) {
+      context = await browser.newContext({ storageState: managerSessionPath });
+      page = await context.newPage();
+      await use(page);
+      await context.close();
+    } else {
+      // Fallback to default test page, for cases like session creation test
+      await use(undefined);
+    }
+  },
+  sessionContext: async ({ browser }, use) => {
+    let context;
+    if (fs.existsSync(managerSessionPath)) {
+      context = await browser.newContext({ storageState: managerSessionPath });
+      await use(context);
+      await context.close();
+    } else {
+      await use(undefined);
+    }
+  }
+});
 
 test.describe('Login Tests - Remmi E2E', () => {
-  // test 1
+  // Save manager session before running other tests
+  test('Test case 0: Login and save manager session', async ({ browser }) => {
+    // Only save if session file doesn't exist
+    if (!fs.existsSync(managerSessionPath)) {
+      const context = await browser.newContext();
+      const page = await context.newPage();
+      const login = new LoginActions(page);
+      await login.login(
+        manager.email!,
+        manager.password!,
+        process.env.E2E_MANAGER_OTP_SECRET!
+      );
+      // Ensure directory exists
+      const dir = path.dirname(managerSessionPath);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+
+      await context.storageState({ path: managerSessionPath });
+      console.log(`✅ Manager session saved at: ${managerSessionPath}`);
+      await context.close();
+    }
+  });
+
+  // All other tests can reuse the manager session
+  // Use the sessionPage fixture for all tests, fallback to the default "page" if session not yet created/test 0 running
+
   test('Test case 1: Verify sign in with valid email and password', async ({ page }) => {
     const login = new LoginActions(page);
-    await login.login(
-      manager.email!,
-      manager.password!,
-      process.env.E2E_MANAGER_OTP_SECRET!
-    )
+    await login.login(manager.email!, manager.password!, process.env.E2E_MANAGER_OTP_SECRET!);
   });
 
   test('Test case 2: Verify password visibility toggle', async ({ page }) => {
@@ -27,7 +79,7 @@ test.describe('Login Tests - Remmi E2E', () => {
     await login.withoutCheckbox(manager.email!, manager.password!);
   });
 
-  test('Test case 4: Verify error on invalid email ', async ({ page }) => {
+  test('Test case 4: Verify error on invalid email', async ({ page }) => {
     const login = new LoginActions(page);
     await login.invalidEmail('invalid-email', manager.password!);
   });
@@ -62,7 +114,7 @@ test.describe('Login Tests - Remmi E2E', () => {
     await login.forgetPasswordWithoutOtp(manager.email!);
   });
 
- test('Test case 11: Verify "Forgot Password" functionality with wrong (email input)', async ({ page }) => {
+  test('Test case 11: Verify "Forgot Password" functionality with wrong (email input)', async ({ page }) => {
     const login = new LoginActions(page);
     await login.forgetPasswordWithIncorrectEmail();
   });
@@ -76,15 +128,12 @@ test.describe('Login Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     await login.verifyOtpSentAfterForgotPassword(manager.email!, manager.otpSecret!);
   });
-  
+
   test('Test case 15: Verify error on invalid email in "Forgot Password"', async ({ page }) => {
     const login = new LoginActions(page);
     await login.forgetPasswordWithInvalidEmail();
   });
-  // test('Test case 16: Verify password visibility toggle on "Forgot Password" new password page', async ({ page }) => {
-  //   const login = new LoginActions(page);
-  //   await login.togglePasswordVisibilityOnNewPasswordPage(manager.email!, 'Jahanzaib@123');
-  // });
+
   test('Test case 22: Verify proper placeholder text is shown in each input field', async ({ page }) => {
     const login = new LoginActions(page);
     await login.verifyLoginPlaceholder();
@@ -109,4 +158,5 @@ test.describe('Login Tests - Remmi E2E', () => {
     const login = new LoginActions(page);
     await login.invalidOtpLength(manager.email!, manager.password!, '12'); // Short OTP example
   });
+
 });
