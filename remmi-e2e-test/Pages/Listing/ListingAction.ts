@@ -193,4 +193,22 @@ export class ListingActions {
         await resetButton.click();
     }
 
+    // Using "Select All" option in property type dropdown
+    async selectAllPropertyType() {
+        await this.navigateToListings();
+        await this.page.waitForTimeout(500);
+        // Open the property type dropdown
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000);
+
+        // Click the "Select All" option (case-insensitive match)
+        const selectAllOption = this.page.locator('.checkbox__checkmark').first();
+        await selectAllOption.click();
+        await this.page.waitForTimeout(1000);
+
+        // Click the 'Reset' button to clear the selection
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await resetButton.click();
+    }
+
 }

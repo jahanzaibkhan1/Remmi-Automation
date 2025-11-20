@@ -50,6 +50,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.selectMultiplePropertyTypes();
   });
 
+  test('Test 7: Using "Select All" option selects all property types and filters listings accordingly', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectAllPropertyType();
+  });
+  
 });
 
 export { test };
