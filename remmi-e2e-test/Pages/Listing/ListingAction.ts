@@ -211,4 +211,26 @@ export class ListingActions {
         await resetButton.click();
     }
 
+    // Using "Deselect All" option
+    async deselectAllPropertyTypes() {
+        await this.navigateToListings();
+        await this.page.waitForTimeout(500);
+
+        // Open the property type dropdown
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000);
+
+        // Click the "Select All" checkbox to select all first (if not already)
+        const selectAllOption = this.page.locator('.checkbox__checkmark').first();
+        await selectAllOption.click();
+        await this.page.waitForTimeout(500);
+
+        // Click again to deselect all
+        await selectAllOption.click();
+        await this.page.waitForTimeout(1000);
+
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await resetButton.click();
+    }
+
 }

@@ -54,7 +54,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.selectAllPropertyType();
   });
-  
+
+  test('Test 8: Using "Deselect All" option deselects all property types and resets filter', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deselectAllPropertyTypes();
+  });
+
 });
 
 export { test };
