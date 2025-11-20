@@ -1,14 +1,16 @@
-<testsuites id="" name="" tests="5" failures="0" skipped="0" errors="0" time="41.2123040000014">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-20T11:30:46.320Z" hostname="chromium" tests="5" failures="0" skipped="0" time="33.432" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Searching for a valid contact" classname="Pages\Listing\Listing.spec.ts" time="18.515">
+<testsuites id="" name="" tests="6" failures="0" skipped="0" errors="0" time="55.83017600000277">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-20T12:01:19.247Z" hostname="chromium" tests="6" failures="0" skipped="0" time="47.768" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Searching for a valid contact" classname="Pages\Listing\Listing.spec.ts" time="36.214">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Searching for an invalid contact" classname="Pages\Listing\Listing.spec.ts" time="2.983">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Searching for an invalid contact" classname="Pages\Listing\Listing.spec.ts" time="2.308">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Searching with special characters" classname="Pages\Listing\Listing.spec.ts" time="4.943">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Searching with special characters" classname="Pages\Listing\Listing.spec.ts" time="2.032">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Searching with an empty search field" classname="Pages\Listing\Listing.spec.ts" time="3.439">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Searching with an empty search field" classname="Pages\Listing\Listing.spec.ts" time="2.243">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Selecting a single property type filters listings correctly" classname="Pages\Listing\Listing.spec.ts" time="3.552">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Selecting a single property type filters listings correctly" classname="Pages\Listing\Listing.spec.ts" time="1.898">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Selecting multiple property types filters listings correctly" classname="Pages\Listing\Listing.spec.ts" time="3.073">
 </testcase>
 </testsuite>
 </testsuites>

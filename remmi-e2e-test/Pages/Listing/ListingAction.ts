@@ -169,4 +169,28 @@ export class ListingActions {
         await resetButton.click()
     }
 
+    // Selecting multiple property types
+    async selectMultiplePropertyTypes() {
+        await this.navigateToListings();
+        await this.page.waitForTimeout(500);
+
+        // Open the property type dropdown
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000);
+
+        // Select two property types (first and second options)
+        const propertyTypeOptions = this.page.locator('ul > li.p-element');
+        const firstOption = propertyTypeOptions.nth(0);
+        const secondOption = propertyTypeOptions.nth(1);
+
+        await firstOption.click({ force: true });
+        await secondOption.click({ force: true });
+
+        await this.page.waitForTimeout(1000)
+
+        // Click the 'Reset' button to clear the selection
+        const resetButton = this.page.locator('button').filter({ hasText: /reset/i });
+        await resetButton.click();
+    }
+
 }
