@@ -1,28 +1,34 @@
-import { test } from '@playwright/test';
+import { test as base } from '@playwright/test';
 import { ListingActions } from './ListingAction';
-import { LoginActions } from '../Login/LoginAction';
-import { LoginUsers } from '../../fixture/test-data';
+import * as path from 'path';
 
-const manager = LoginUsers.manager;
+const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
+const DASHBOARD_URL = process.env.DASHBOARD_URL || 'https://remmi-app-stage-ui.azurewebsites.net/dashboard';
 
-test('Test Case 1: Searching for a valid contact', async ({ page }) => {
-  const login = new LoginActions(page);
-  await login.login(
-    manager.email!,
-    manager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET || manager.otpSecret!
-  );
-  const listingActions = new ListingActions(page);
-  await listingActions.searchForValidListing('Hina Ryan');
+const test = base.extend<{ sessionPage: any }>({
+  sessionPage: [async ({ browser }, use) => {
+    const context = await browser.newContext({ storageState: managerSessionPath });
+    try {
+      const page = await context.newPage();
+      await page.goto(DASHBOARD_URL); // simple navigation to dashboard
+      await use(page);
+    } finally {
+      await context.close();
+    }
+  }, { scope: 'worker' }]
 });
 
-test('Test Case 2: Searching for an invalid contact', async ({ page }) => {
-  const login = new LoginActions(page);
-  await login.login(
-    manager.email!,
-    manager.password!,
-    process.env.E2E_MANAGER_OTP_SECRET || manager.otpSecret!
-  );
-  const listingActions = new ListingActions(page);
-  await listingActions.searchForInvalidListing('Invalid Contact Name');
+test.describe('Listing side Menu Tests - Remmi E2E', () => {
+
+  test('Searching for a valid contact', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchForValidListing('Hina Ryan');
+  });
+
+  test('Searching for an invalid contact', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchForInvalidListing('Invalid Contact Name');
+  });
 });
+
+export { test };
