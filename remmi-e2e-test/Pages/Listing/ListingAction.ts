@@ -465,7 +465,7 @@ export class ListingActions {
         await resetButton.click();
     }
 
-    // Searching for a suburb in the dropdown
+    // Searching for a suburb in the dropdown 
     async searchWithinSuburbDropdown(suburbLabel: string) {
         await this.navigateToListings();
         await this.waitForTableRows();
@@ -497,15 +497,27 @@ export class ListingActions {
         const filteredRowCount = await this.getRowsCount();
         expect(filteredRowCount).toBeGreaterThan(0);
 
-        // Optional: ensure at least one row is visible
+        // Data show honay ka verification: at least ek table row me suburbLabel nazar aaye
         const filteredRows = this.getRowsLocator();
+        let dataShown = false;
+        // row 0 = header ("th"), usually data rows start from index 1
         for (let i = 1; i < filteredRowCount; ++i) {
-            await expect(filteredRows.nth(i)).toBeVisible({ timeout: 3000 });
+            const row = filteredRows.nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            // Check the text content of the row for the suburb label (case insensitive)
+            const rowText = (await row.innerText()).toLowerCase();
+            if (rowText.includes(suburbLabel.toLowerCase())) {
+                dataShown = true;
+                break;
+            }
         }
+        // Assertion: data must be shown in at least one row
+        expect(dataShown).toBe(true);
 
         // Click Reset to clear the filter for next tests
         const resetButton = this.page.getByRole('button', { name: /reset/i });
         await expect(resetButton).toBeEnabled();
         await resetButton.click();
     }
+
 }
