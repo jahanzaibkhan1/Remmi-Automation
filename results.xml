@@ -1,24 +1,6 @@
-<testsuites id="" name="" tests="10" failures="0" skipped="0" errors="0" time="61.71640699999989">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-21T04:21:13.102Z" hostname="chromium" tests="10" failures="0" skipped="0" time="52.308" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Searching for a valid contact" classname="Pages\Listing\Listing.spec.ts" time="26.42">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Searching for an invalid contact" classname="Pages\Listing\Listing.spec.ts" time="2.288">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Searching with special characters" classname="Pages\Listing\Listing.spec.ts" time="2.207">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Searching with an empty search field" classname="Pages\Listing\Listing.spec.ts" time="2.551">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Selecting a single property type filters listings correctly" classname="Pages\Listing\Listing.spec.ts" time="2.235">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Selecting multiple property types filters listings correctly" classname="Pages\Listing\Listing.spec.ts" time="3.043">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Using &quot;Select All&quot; option selects all property types and filters listings accordingly" classname="Pages\Listing\Listing.spec.ts" time="3.282">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Using &quot;Deselect All&quot; option deselects all property types and resets filter" classname="Pages\Listing\Listing.spec.ts" time="4.031">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Searching within property type filter displays correct filtered property types" classname="Pages\Listing\Listing.spec.ts" time="4.351">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Closing the property type dropdown works as expected" classname="Pages\Listing\Listing.spec.ts" time="1.9">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.65393899999978">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-21T04:50:58.332Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.981" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Selecting a single suburb with assertions" classname="Pages\Listing\Listing.spec.ts" time="21.981">
 </testcase>
 </testsuite>
 </testsuites>

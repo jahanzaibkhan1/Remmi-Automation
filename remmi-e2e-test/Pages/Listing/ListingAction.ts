@@ -15,14 +15,38 @@ export class ListingActions {
      */
     async navigateToListings() {
         const listingTab = this.locators.ListingTab();
-        await expect(listingTab).toBeVisible()
+        await expect(listingTab).toBeVisible();
         await listingTab.click({ force: true });
+    }
+
+    // Common function for returning rows locator
+    private getRowsLocator() {
+        return this.page.locator('tr');
+    }
+
+    // Function for returning rows count
+    private async getRowsCount() {
+        return await this.getRowsLocator().count();
+    }
+
+    // Waits for table loaded, header row visible and at least one data row
+    private async waitForTableRows(minRows: number = 2, rowTimeout = 10000) {
+        const rows = this.getRowsLocator();
+        await expect(rows.nth(0)).toBeVisible({ timeout: rowTimeout });
+        const count = await this.getRowsCount();
+        if (count < minRows) {
+            throw new Error('No data rows are visible in the table.');
+        }
+        for (let i = 1; i < count; ++i) {
+            await expect(rows.nth(i)).toBeVisible({ timeout: 5000 });
+        }
+        return count;
     }
 
     private async searchListing(keyword: string) {
         const searchBox = this.locators.SearchBox();
-        await expect(searchBox).toBeVisible()
-        await searchBox.click()
+        await expect(searchBox).toBeVisible();
+        await searchBox.click();
         await searchBox.fill(keyword);
         await this.page.keyboard.press('Enter');
     }
@@ -43,13 +67,13 @@ export class ListingActions {
 
     private async openPropertyTypeDropdown() {
         const dropdown = this.locators.propertyTypeDropdown();
-        await expect(dropdown).toBeVisible()
+        await expect(dropdown).toBeVisible();
         await dropdown.click({ force: true });
     }
 
     private async searchPropertyType(type: string) {
         const searchInput = this.locators.propertyTypeSearchInput();
-        await expect(searchInput).toBeVisible()
+        await expect(searchInput).toBeVisible();
         await searchInput.click({ force: true });
         await searchInput.fill(''); // clear any previous input
         await searchInput.fill(type);
@@ -70,12 +94,11 @@ export class ListingActions {
     }
 
 
-
     //*************************************Public Actions *************************************//
 
     async searchForValidListing(keyword: string) {
         await this.navigateToListings();
-        await this.page.waitForTimeout(3000);
+        await this.waitForTableRows();
         await this.searchListing(keyword);
         await this.verifySearchResults(keyword);
 
@@ -95,21 +118,21 @@ export class ListingActions {
     // Searching for an invalid listing should show no results
     async searchForInvalidListing(keyword: string) {
         await this.navigateToListings();
-        await this.page.waitForTimeout(500);
+        await this.waitForTableRows();
         await this.searchListing(keyword);
         await this.page.waitForTimeout(1000);
 
         const noResults = this.page.getByText('No results found');
-        await expect(noResults).toBeVisible({ timeout: 5000 })
+        await expect(noResults).toBeVisible({ timeout: 5000 });
 
         const clearButton = this.page.locator('i').nth(5);
-        await clearButton.click({ force: true })
+        await clearButton.click({ force: true });
     }
 
     // Searching with special characters in the search box
     async searchWithSpecialCharacters(specialChars: string) {
         await this.navigateToListings();
-        await this.page.waitForTimeout(500);
+        await this.waitForTableRows();
         await this.searchListing(specialChars);
         await this.page.waitForTimeout(1000);
 
@@ -137,19 +160,21 @@ export class ListingActions {
     // Searching with an empty search field
     async searchWithEmptyField() {
         await this.navigateToListings();
-        await this.page.waitForTimeout(500)
+
+        await this.waitForTableRows();
+
+        // Find the search input and wipe it
         const searchBox = this.locators?.SearchBox?.() ?? this.page.getByRole('textbox', { name: /search/i });
         await searchBox.fill('');
         await searchBox.press('Enter');
         await this.page.waitForTimeout(1000);
 
-        // Expect all data rows to be visible (i.e., search reset displays all listings)
-        const allRows = this.page.locator('tr');
-        const rowCount = await allRows.count();
-        // Adjust the minimum expected row count as per your app's default data (1 for header, >1 for data, etc.)
-        await expect(rowCount).toBeGreaterThan(1); // Ensures there are multiple rows shown
-        for (let i = 1; i < rowCount; ++i) {  // Skipping header row (usually at index 0)
-            await expect(allRows.nth(i)).toBeVisible({ timeout: 3000 });
+        // Re-fetch table rows after search is cleared
+        const visibleRows = this.getRowsLocator();
+        const visibleRowCount = await this.getRowsCount();
+        await expect(visibleRowCount).toBeGreaterThan(1); // should still have header + data
+        for (let i = 1; i < visibleRowCount; ++i) {
+            await expect(visibleRows.nth(i)).toBeVisible({ timeout: 3000 });
         }
 
         // Ensure the search box is still empty
@@ -159,24 +184,23 @@ export class ListingActions {
     // Selecting a single property type
     async selectSinglePropertyType() {
         await this.navigateToListings();
-
-        await this.page.waitForTimeout(500)
+        await this.waitForTableRows();
         // Open dropdown and select property type
         await this.openPropertyTypeDropdown();
-        await this.page.waitForTimeout(1000)
+        await this.page.waitForTimeout(1000);
 
         // Select the property type from dropdown
         const firstPropertyTypeOption = this.page.locator('ul > li.p-element').first();
         await firstPropertyTypeOption.click({ force: true });
 
         const resetButton = this.page.locator('button').filter({ hasText: /reset/i });
-        await resetButton.click()
+        await resetButton.click();
     }
 
     // Selecting multiple property types
     async selectMultiplePropertyTypes() {
         await this.navigateToListings();
-        await this.page.waitForTimeout(500);
+        await this.waitForTableRows();
 
         // Open the property type dropdown
         await this.openPropertyTypeDropdown();
@@ -190,7 +214,7 @@ export class ListingActions {
         await firstOption.click({ force: true });
         await secondOption.click({ force: true });
 
-        await this.page.waitForTimeout(1000)
+        await this.page.waitForTimeout(1000);
 
         // Click the 'Reset' button to clear the selection
         const resetButton = this.page.locator('button').filter({ hasText: /reset/i });
@@ -200,7 +224,8 @@ export class ListingActions {
     // Using "Select All" option in property type dropdown
     async selectAllPropertyType() {
         await this.navigateToListings();
-        await this.page.waitForTimeout(500);
+        await this.waitForTableRows();
+
         // Open the property type dropdown
         await this.openPropertyTypeDropdown();
         await this.page.waitForTimeout(1000);
@@ -218,7 +243,7 @@ export class ListingActions {
     // Using "Deselect All" option
     async deselectAllPropertyTypes() {
         await this.navigateToListings();
-        await this.page.waitForTimeout(500);
+        await this.waitForTableRows();
 
         // Open the property type dropdown
         await this.openPropertyTypeDropdown();
@@ -240,7 +265,7 @@ export class ListingActions {
     // Searching within property type filter
     async searchWithinPropertyTypeFilter(searchTerm: string) {
         await this.navigateToListings();
-        await this.page.waitForTimeout(500);
+        await this.waitForTableRows();
 
         // Open the property type dropdown
         await this.openPropertyTypeDropdown();
@@ -256,7 +281,7 @@ export class ListingActions {
         if (await matchedOption.isVisible()) {
             await matchedOption.click();
         }
-        await this.page.waitForTimeout(800)
+        await this.page.waitForTimeout(800);
         // Click the Reset button to clear the filter
         const resetButton = this.page.getByRole('button', { name: /reset/i });
         await resetButton.click();
@@ -264,11 +289,10 @@ export class ListingActions {
 
     async selectSinglePropertyAndCloseDropdown() {
         await this.navigateToListings();
-
-        await this.page.waitForTimeout(500)
+        await this.waitForTableRows();
         // Open dropdown and select property type
         await this.openPropertyTypeDropdown();
-        await this.page.waitForTimeout(1000)
+        await this.page.waitForTimeout(1000);
 
         // Select the property type from dropdown
         const firstPropertyTypeOption = this.page.locator('ul > li.p-element').first();
@@ -276,8 +300,33 @@ export class ListingActions {
         // Ab close button per click kerwao
         const closeButton = this.page.locator('.pi.pi-times-circle');
         if (await closeButton.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await closeButton.click({force:true});
+            await closeButton.click({ force: true });
         }
     }
 
+    // Selecting a single suburb with assertions
+    async selectSingleSuburb() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+        // Open suburb dropdown
+        const suburbDropdown = this.locators.suburbDropdown();
+        await expect(suburbDropdown).toBeVisible({ timeout: 2000 });
+        await suburbDropdown.click();
+        await this.page.waitForTimeout(1000);
+
+        // Select the first suburb option (assuming options are present)
+        const firstSuburbOption = this.page.locator('ul > li.p-element').first();
+        await expect(firstSuburbOption).toBeVisible({ timeout: 5000 });
+        const firstSuburbText = await firstSuburbOption.textContent();
+        await firstSuburbOption.click({ force: true });
+
+        // Click the Reset button to clear filter selection
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeEnabled();
+        await resetButton.click();
+        if (firstSuburbText) {
+            const filterChip = this.page.locator('.p-multiselect-token, .chip, .selected-value').filter({ hasText: firstSuburbText.trim() });
+            await expect(filterChip).not.toBeVisible({ timeout: 2000 }).catch(() => { });
+        }
+    }
 }

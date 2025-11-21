@@ -70,6 +70,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.selectSinglePropertyAndCloseDropdown();
   });
 
+  test('Test 11: Selecting a single suburb with assertions', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectSingleSuburb();
+  });
+
 });
 
 export { test };
