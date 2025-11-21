@@ -15,11 +15,13 @@ export class ListingActions {
      */
     async navigateToListings() {
         const listingTab = this.locators.ListingTab();
+        await expect(listingTab).toBeVisible()
         await listingTab.click({ force: true });
     }
 
     private async searchListing(keyword: string) {
         const searchBox = this.locators.SearchBox();
+        await expect(searchBox).toBeVisible()
         await searchBox.click()
         await searchBox.fill(keyword);
         await this.page.keyboard.press('Enter');
@@ -41,11 +43,13 @@ export class ListingActions {
 
     private async openPropertyTypeDropdown() {
         const dropdown = this.locators.propertyTypeDropdown();
+        await expect(dropdown).toBeVisible()
         await dropdown.click({ force: true });
     }
 
     private async searchPropertyType(type: string) {
         const searchInput = this.locators.propertyTypeSearchInput();
+        await expect(searchInput).toBeVisible()
         await searchInput.click({ force: true });
         await searchInput.fill(''); // clear any previous input
         await searchInput.fill(type);
@@ -256,6 +260,24 @@ export class ListingActions {
         // Click the Reset button to clear the filter
         const resetButton = this.page.getByRole('button', { name: /reset/i });
         await resetButton.click();
+    }
+
+    async selectSinglePropertyAndCloseDropdown() {
+        await this.navigateToListings();
+
+        await this.page.waitForTimeout(500)
+        // Open dropdown and select property type
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000)
+
+        // Select the property type from dropdown
+        const firstPropertyTypeOption = this.page.locator('ul > li.p-element').first();
+        await firstPropertyTypeOption.click({ force: true });
+        // Ab close button per click kerwao
+        const closeButton = this.page.locator('.pi.pi-times-circle');
+        if (await closeButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeButton.click({force:true});
+        }
     }
 
 }

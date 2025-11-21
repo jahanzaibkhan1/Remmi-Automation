@@ -65,6 +65,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.searchWithinPropertyTypeFilter('house');
   });
 
+  test('Test 10: Closing the property type dropdown works as expected', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectSinglePropertyAndCloseDropdown();
+  });
+
 });
 
 export { test };
