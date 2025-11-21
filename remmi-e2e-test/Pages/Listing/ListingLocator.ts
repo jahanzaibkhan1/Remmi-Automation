@@ -32,7 +32,7 @@ export class ListingLocators {
         return this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
     }
     suburbSelectAll(): Locator {
-        return this.page.locator('.checkbox__checkmark').nth(1); // adjust nth if Suburb select all is not first
+        return this.page.locator('.checkbox__checkmark').first(); // adjust nth if Suburb select all is not first
     }
     suburbOption(label: string) {
         return this.page.locator('li.p-element', { hasText: label });

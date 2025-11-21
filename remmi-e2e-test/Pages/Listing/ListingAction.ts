@@ -394,4 +394,39 @@ export class ListingActions {
         await expect(resetButton).toBeEnabled();
         await resetButton.click();
     }
+
+    // Using "Select All" in suburb dropdown
+    async selectAllSuburbs() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+
+        // Open the suburb dropdown
+        const suburbDropdown = this.locators?.suburbDropdown?.() ?? this.page.locator('re-multiselect[placeholder="Suburb"]');
+        await expect(suburbDropdown).toBeVisible();
+        await suburbDropdown.click({ force: true });
+
+        // Use the locator helper to select the "Select All" checkbox for suburbs
+        const selectAllCheckbox = this.locators.suburbSelectAll();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        // VERIFY: Assert each row is visible (toBeVisible assertion)
+        const rows = this.page.locator('tbody tr');
+        const rowCount = await rows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Extra assertion: check that at least one row is present and visible
+        await expect(rows.first()).toBeVisible();
+
+        for (let i = 0; i < rowCount; i++) {
+            await expect(rows.nth(i)).toBeVisible();
+        }
+
+        // Click Reset to clear selection
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeEnabled();
+        await expect(resetButton).toBeVisible();
+        await resetButton.click();
+    }
 }

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="29.88308100000024">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-21T05:07:39.841Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.12" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Selecting multiple suburbs filters listings correctly" classname="Pages\Listing\Listing.spec.ts" time="24.12">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="26.32189099999983">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-21T05:22:00.051Z" hostname="chromium" tests="1" failures="0" skipped="0" time="19.522" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Using &quot;Select All&quot; in suburb dropdown selects all suburbs and displays all listings" classname="Pages\Listing\Listing.spec.ts" time="19.522">
 </testcase>
 </testsuite>
 </testsuites>
