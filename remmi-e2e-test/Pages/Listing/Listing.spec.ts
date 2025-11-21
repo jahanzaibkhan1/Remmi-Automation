@@ -89,12 +89,16 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.deselectAllSuburbs();
   });
-
+  test('Test 15: Searching for a suburb in the dropdown filters listings', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchWithinSuburbDropdown('Anglesea');
+  });
+  
+  test('Test 16: Selecting a single listing status filters the listings correctly', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectSingleListingStatus();
 });
 
-test('Test 15: Searching for a suburb in the dropdown filters listings', async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.searchWithinSuburbDropdown('Anglesea');
 });
 
 export { test };

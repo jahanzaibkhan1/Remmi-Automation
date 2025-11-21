@@ -1,6 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="24.523558000000193">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-21T05:35:03.485Z" hostname="chromium" tests="1" failures="0" skipped="0" time="17.364" errors="0">
-<testcase name="Test 15: Searching for a suburb in the dropdown filters listings" classname="Pages\Listing\Listing.spec.ts" time="17.364">
+<testsuites id="" name="" tests="1" failures="0" skipped="1" errors="0" time="58.90637799999956">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-21T11:35:26.826Z" hostname="chromium" tests="1" failures="0" skipped="1" time="47.101" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Searching for a valid contact" classname="Pages\Listing\Listing.spec.ts" time="47.101">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
 </testsuites>
