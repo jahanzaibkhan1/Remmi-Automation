@@ -75,6 +75,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.selectSingleSuburb();
   });
 
+  test('Test 12: Selecting multiple suburbs filters listings correctly', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectMultipleSuburbs();
+  });
+
 });
 
 export { test };
