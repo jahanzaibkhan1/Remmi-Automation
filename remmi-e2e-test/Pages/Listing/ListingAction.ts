@@ -572,5 +572,39 @@ export class ListingActions {
         await expect(resetButton).toBeEnabled();
         await resetButton.click();
     }
+    // Using "Select All" in status filter
+    async selectAllListingStatuses() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+
+        // Open the listing status dropdown
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible();
+        await listingStatusDropdown.click({ force: true });
+
+        // Select "Select All" checkbox for listing status using locator helper
+        const selectAllCheckbox = this.locators.listingStatusSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        // VERIFY: Assert all rows are visible
+        const rows = this.page.locator('tbody tr');
+        const rowCount = await rows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Extra assertion: at least one row is visible
+        await expect(rows.first()).toBeVisible();
+        for (let i = 0; i < rowCount; i++) {
+            await expect(rows.nth(i)).toBeVisible();
+        }
+
+        // Click Reset to clear selection
+        await listingStatusDropdown.click();
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeEnabled();
+        await expect(resetButton).toBeVisible();
+        await resetButton.click();
+    }
 
 }
