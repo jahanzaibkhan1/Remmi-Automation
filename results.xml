@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="22.017996999999507">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-21T05:25:23.343Z" hostname="chromium" tests="1" failures="0" skipped="0" time="17.043" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Using &quot;Deselect All&quot; in suburb dropdown deselects all suburbs and resets filter" classname="Pages\Listing\Listing.spec.ts" time="17.043">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.32719599999953">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-21T05:30:00.386Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.703" errors="0">
+<testcase name="Test 15: Searching for a suburb in the dropdown filters listings" classname="Pages\Listing\Listing.spec.ts" time="31.703">
 </testcase>
 </testsuite>
 </testsuites>

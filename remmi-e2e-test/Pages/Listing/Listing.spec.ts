@@ -92,4 +92,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
 });
 
+test('Test 15: Searching for a suburb in the dropdown filters listings', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.searchWithinSuburbDropdown('Anglesea');
+});
+
 export { test };
