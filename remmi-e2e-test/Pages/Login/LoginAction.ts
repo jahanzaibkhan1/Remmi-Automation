@@ -10,7 +10,7 @@ dotenv.config();
 
 /**
  * LoginActions class for handling login operations and validation steps.
- * Now supports optional session saving for reuse.
+ * Now ensures that the session token is updated after every login.
  */
 export class LoginActions {
   private locators: LocatorLogin;
@@ -64,7 +64,9 @@ export class LoginActions {
 
   /**
    * General login flow; customizable for different paths.
+   * The session token is always updated and saved after every login.
    * If saveSessionPath is provided, session storage is saved to that path.
+   * Session state is always updated!
    */
   async loginFlow({
     email,
@@ -121,13 +123,14 @@ export class LoginActions {
       await expect(this.page).toHaveURL(dashboardUrl, { timeout: 30000 });
     }
 
-    // Save session state if requested
-    if (saveSessionPath) {
-      const dir = path.dirname(saveSessionPath);
-      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-      await this.page.context().storageState({ path: saveSessionPath });
-      console.log(`✅ Saved Playwright session to ${saveSessionPath}`);
-    }
+    // Always update session state after login (even if saveSessionPath is not passed)
+    const updateSessionPath = saveSessionPath
+      ? saveSessionPath
+      : path.join(__dirname, '../../sessions/manager-session.json');
+    const dir = path.dirname(updateSessionPath);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    await this.page.context().storageState({ path: updateSessionPath });
+    console.log(`✅ Session updated and saved to ${updateSessionPath}`);
   }
 
   async loginFlowwithoutOTP({
@@ -176,12 +179,14 @@ export class LoginActions {
       await expect(this.page).toHaveURL(dashboardUrl, { timeout: 30000 });
     }
 
-    if (saveSessionPath) {
-      const dir = path.dirname(saveSessionPath);
-      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-      await this.page.context().storageState({ path: saveSessionPath });
-      console.log(`✅ Saved Playwright session to ${saveSessionPath}`);
-    }
+    // Always update session state after login
+    const updateSessionPath = saveSessionPath
+      ? saveSessionPath
+      : path.join(__dirname, '../../sessions/manager-session.json');
+    const dir = path.dirname(updateSessionPath);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    await this.page.context().storageState({ path: updateSessionPath });
+    console.log(`✅ Session updated and saved to ${updateSessionPath}`);
   }
 
   async login(email: string, password: string, otpSecret: string, saveSessionPath?: string) {
@@ -239,6 +244,13 @@ export class LoginActions {
     await this.fillCredentials(email, password);
     await this.acceptTerms();
     await this.clickSignIn();
+
+    // Update session after successful login
+    const updateSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
+    const dir = path.dirname(updateSessionPath);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    await this.page.context().storageState({ path: updateSessionPath });
+    console.log(`✅ Session updated and saved to ${updateSessionPath}`);
   }
 
   async verifyOtp(email: string, password: string, otpSecret: string) {

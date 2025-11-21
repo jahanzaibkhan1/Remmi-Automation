@@ -233,4 +233,29 @@ export class ListingActions {
         await resetButton.click();
     }
 
+    // Searching within property type filter
+    async searchWithinPropertyTypeFilter(searchTerm: string) {
+        await this.navigateToListings();
+        await this.page.waitForTimeout(500);
+
+        // Open the property type dropdown
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000);
+
+        // Locate the search input inside the dropdown and type searchTerm
+        const propertyTypeSearchInput = this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
+        await propertyTypeSearchInput.fill(searchTerm);
+        await this.page.waitForTimeout(1000);
+
+        // Optionally: Select the first option that matches the filtered search
+        const matchedOption = this.page.locator('li.p-element').first();
+        if (await matchedOption.isVisible()) {
+            await matchedOption.click();
+        }
+        await this.page.waitForTimeout(800)
+        // Click the Reset button to clear the filter
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await resetButton.click();
+    }
+
 }

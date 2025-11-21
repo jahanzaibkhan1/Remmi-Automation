@@ -1,20 +1,6 @@
-<testsuites id="" name="" tests="8" failures="0" skipped="0" errors="0" time="56.87428599999845">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-20T12:10:52.205Z" hostname="chromium" tests="8" failures="0" skipped="0" time="38.327" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Searching for a valid contact" classname="Pages\Listing\Listing.spec.ts" time="16.22">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Searching for an invalid contact" classname="Pages\Listing\Listing.spec.ts" time="3.112">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Searching with special characters" classname="Pages\Listing\Listing.spec.ts" time="2.03">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Searching with an empty search field" classname="Pages\Listing\Listing.spec.ts" time="3.59">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Selecting a single property type filters listings correctly" classname="Pages\Listing\Listing.spec.ts" time="2.495">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Selecting multiple property types filters listings correctly" classname="Pages\Listing\Listing.spec.ts" time="3.191">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Using &quot;Select All&quot; option selects all property types and filters listings accordingly" classname="Pages\Listing\Listing.spec.ts" time="3.728">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Using &quot;Deselect All&quot; option deselects all property types and resets filter" classname="Pages\Listing\Listing.spec.ts" time="3.961">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="36.722228999999935">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-21T04:06:37.779Z" hostname="chromium" tests="1" failures="0" skipped="0" time="20.422" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Searching within property type filter displays correct filtered property types" classname="Pages\Listing\Listing.spec.ts" time="20.422">
 </testcase>
 </testsuite>
 </testsuites>
