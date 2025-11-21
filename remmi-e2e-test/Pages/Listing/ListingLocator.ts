@@ -24,4 +24,32 @@ export class ListingLocators {
     propertyTypeOption(label: string) {
         return this.page.locator('li.p-element', { hasText: label });
     }
+
+    suburbDropdown(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Suburb"]');
+    }
+    suburbSearchInput(): Locator {
+        return this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
+    }
+    suburbSelectAll(): Locator {
+        return this.page.locator('.checkbox__checkmark'); // adjust nth if Suburb select all is not first
+    }
+    suburbOption(label: string) {
+        return this.page.locator('li.p-element', { hasText: label });
+    }
+    // Listing Status k hain yeah
+
+    listingStatusDropdown(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Listing Status"]');
+    }
+    listingStatusSearchInput(): Locator {
+        return this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
+    }
+    listingStatusSelectAll(): Locator {
+        return this.page.locator('.checkbox__checkmark'); // Adjust nth if needed for Listing Status
+    }
+    listingStatusOption(label: string) {
+        return this.page.locator('li.p-element', { hasText: label });
+    }
+
 }
