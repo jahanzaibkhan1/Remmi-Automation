@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.65393899999978">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-21T04:50:58.332Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.981" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Selecting a single suburb with assertions" classname="Pages\Listing\Listing.spec.ts" time="21.981">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="29.88308100000024">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-21T05:07:39.841Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.12" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Selecting multiple suburbs filters listings correctly" classname="Pages\Listing\Listing.spec.ts" time="24.12">
 </testcase>
 </testsuite>
 </testsuites>
