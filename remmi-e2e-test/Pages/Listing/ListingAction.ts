@@ -429,4 +429,39 @@ export class ListingActions {
         await expect(resetButton).toBeVisible();
         await resetButton.click();
     }
+
+    // Using "Deselect All" in suburb dropdown
+    async deselectAllSuburbs() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+
+        // Open the suburb dropdown using the locator helper for consistency
+        const suburbDropdown = this.locators.suburbDropdown();
+        await expect(suburbDropdown).toBeVisible();
+        await suburbDropdown.click({ force: true });
+
+        // First, select all suburbs by clicking "Select All"
+        const selectAllCheckbox = this.locators.suburbSelectAll();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Then, deselect all suburbs by clicking "Select All" again
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        const visibleRows = this.getRowsLocator();
+        const visibleRowCount = await this.getRowsCount();
+        expect(visibleRowCount).toBeGreaterThan(0);
+
+        // Ensure at least header + some data
+        for (let i = 1; i < visibleRowCount; ++i) {
+            await expect(visibleRows.nth(i)).toBeVisible({ timeout: 3000 });
+        }
+
+        // Click Reset to clear filter selection (for next test runs)
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeEnabled();
+        await resetButton.click();
+    }
 }
