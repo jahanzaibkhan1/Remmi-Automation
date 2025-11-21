@@ -104,6 +104,11 @@ test('Test 17: Selecting multiple listing statuses filters listings correctly', 
   await listingActions.selectMultipleListingStatuses();
 });
 
+test('Test 18: Using "Select All" in status filter selects all listing statuses and displays all listings', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.selectAllListingStatuses();
+});
+
 });
 
 export { test };
