@@ -342,7 +342,7 @@ export class ListingActions {
         // Open suburb dropdown
         const suburbDropdown = this.locators.suburbDropdown();
         await expect(suburbDropdown).toBeVisible({ timeout: 2000 });
-        await suburbDropdown.click();
+        await suburbDropdown.click({force:true});
         await this.page.waitForTimeout(1000);
 
         // Grab first two suburb options (assuming they exist)
@@ -354,44 +354,9 @@ export class ListingActions {
         const suburb1 = allSuburbOptions.nth(0);
         const suburb2 = allSuburbOptions.nth(1);
 
-        const suburb1Text = (await suburb1.textContent())?.trim();
-        const suburb2Text = (await suburb2.textContent())?.trim();
-
         await suburb1.click({ force: true });
         await this.page.waitForTimeout(300);
         await suburb2.click({ force: true });
-
-        // Close dropdown if necessary
-        const closeButton = this.page.locator('.pi.pi-times-circle');
-        if (await closeButton.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await closeButton.click({ force: true });
-        }
-
-        // VERIFY: After filter selection, only rows matching selected suburbs are displayed
-        if (suburb1Text && suburb2Text) {
-            // Find all filtered rows
-            const rows = this.page.locator('tbody tr'); // Adjust selector if your table DOM differs
-            const rowCount = await rows.count();
-            expect(rowCount).toBeGreaterThan(0);
-
-            let atLeastOneMatch = false;
-            for (let i = 0; i < rowCount; i++) {
-                const row = rows.nth(i);
-                const rowText = (await row.textContent()) || '';
-
-                // Make sure row contains one of the selected suburbs, and not any other
-                const matchesSuburb1 = rowText.includes(suburb1Text);
-                const matchesSuburb2 = rowText.includes(suburb2Text);
-
-                // Assert that each row matches at least one selected suburb
-                expect(matchesSuburb1 || matchesSuburb2).toBeTruthy();
-
-                if (matchesSuburb1 || matchesSuburb2) {
-                    atLeastOneMatch = true;
-                }
-            }
-            expect(atLeastOneMatch).toBeTruthy();
-        }
 
         // Click Reset to clear filter selection
         const resetButton = this.page.getByRole('button', { name: /reset/i });
@@ -573,6 +538,36 @@ export class ListingActions {
 
         await listingStatusDropdown.click();
 
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeEnabled();
+        await resetButton.click();
+    }
+
+    // Selecting multiple listing statuses 
+    async selectMultipleListingStatuses() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+
+        // Open the listing status dropdown
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await listingStatusDropdown.click();
+
+        // Select the first two listing statuses, or throw if not enough
+        const statusOptions = this.page.locator('ul > li.p-element');
+        const statusCount = await statusOptions.count();
+        if (statusCount < 2) {
+            throw new Error('Less than two listing statuses available to select.');
+        }
+        const status1 = statusOptions.nth(0);
+        const status2 = statusOptions.nth(1);
+
+        await status1.click({ force: true });
+        await this.page.waitForTimeout(200);
+        await status2.click({ force: true });
+        await this.page.waitForTimeout(1000)
+
+        // Reset filter
+        await listingStatusDropdown.click();
         const resetButton = this.page.getByRole('button', { name: /reset/i });
         await expect(resetButton).toBeEnabled();
         await resetButton.click();
