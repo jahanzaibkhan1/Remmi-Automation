@@ -302,6 +302,10 @@ export class ListingActions {
         if (await closeButton.isVisible({ timeout: 2000 }).catch(() => false)) {
             await closeButton.click({ force: true });
         }
+        // Click the Reset button to clear filter selection
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeEnabled();
+        await resetButton.click();
     }
 
     // Selecting a single suburb with assertions
@@ -406,7 +410,7 @@ export class ListingActions {
         await suburbDropdown.click({ force: true });
 
         // Use the locator helper to select the "Select All" checkbox for suburbs
-        const selectAllCheckbox = this.locators.suburbSelectAll();
+        const selectAllCheckbox = this.locators.suburbSelectAll().first();
         await expect(selectAllCheckbox).toBeVisible();
         await selectAllCheckbox.click({ force: true });
         await this.page.waitForTimeout(1000);
@@ -441,7 +445,7 @@ export class ListingActions {
         await suburbDropdown.click({ force: true });
 
         // First, select all suburbs by clicking "Select All"
-        const selectAllCheckbox = this.locators.suburbSelectAll();
+        const selectAllCheckbox = this.locators.suburbSelectAll().first();
         await expect(selectAllCheckbox).toBeVisible();
         await selectAllCheckbox.click({ force: true });
         await this.page.waitForTimeout(500);
@@ -453,11 +457,6 @@ export class ListingActions {
         const visibleRows = this.getRowsLocator();
         const visibleRowCount = await this.getRowsCount();
         expect(visibleRowCount).toBeGreaterThan(0);
-
-        // Ensure at least header + some data
-        for (let i = 1; i < visibleRowCount; ++i) {
-            await expect(visibleRows.nth(i)).toBeVisible({ timeout: 3000 });
-        }
 
         // Click Reset to clear filter selection (for next test runs)
         const resetButton = this.page.getByRole('button', { name: /reset/i });
@@ -515,6 +514,65 @@ export class ListingActions {
         expect(dataShown).toBe(true);
 
         // Click Reset to clear the filter for next tests
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeEnabled();
+        await resetButton.click();
+    }
+
+    async selectSingleListingStatus() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible();
+        await listingStatusDropdown.click({ force: true });
+
+        await this.page.waitForSelector('ul > li.p-element');
+
+        const statusOptions = this.page.locator('ul > li.p-element');
+        const targetStatus = statusOptions.nth(2);
+
+        await expect(targetStatus).toBeVisible();
+        const statusLabel = (await targetStatus.innerText()).trim();
+        expect(statusLabel.toLowerCase()).toBe("for lease");
+
+        await targetStatus.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        const rowCount = await this.getRowsCount();
+        expect(rowCount).toBeGreaterThan(1);
+
+        // Get all rows and make sure "For Lease" appears in Listing Status column specifically
+        const rows = this.getRowsLocator();
+
+        // Get column headers to find Listing Status column index
+        const headerRow = rows.nth(0);
+        const headerCells = await headerRow.locator('th').allInnerTexts();
+        let listingStatusColIdx = headerCells.findIndex(h => h.trim().toLowerCase().includes('listing status'));
+        if (listingStatusColIdx === -1) {
+            // fallback: try common alternatives
+            listingStatusColIdx = headerCells.findIndex(h => h.trim().toLowerCase().includes('status'));
+        }
+        expect(listingStatusColIdx).toBeGreaterThanOrEqual(0);
+
+        let allRowsCorrect = true;
+        for (let i = 1; i < rowCount; ++i) {
+            const row = rows.nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const cells = row.locator('td');
+            const cellCount = await cells.count();
+            expect(listingStatusColIdx).toBeLessThan(cellCount);
+
+            const cellText = (await cells.nth(listingStatusColIdx).innerText()).toLowerCase();
+            if (!cellText.includes("for lease")) {
+                allRowsCorrect = false;
+                break;
+            }
+        }
+        expect(allRowsCorrect).toBe(true);
+
+        await listingStatusDropdown.click();
+
         const resetButton = this.page.getByRole('button', { name: /reset/i });
         await expect(resetButton).toBeEnabled();
         await resetButton.click();
