@@ -99,6 +99,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.selectSingleListingStatus();
 });
 
+test('Test 17: Selecting multiple listing statuses filters listings correctly', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.selectMultipleListingStatuses();
+});
+
 });
 
 export { test };
