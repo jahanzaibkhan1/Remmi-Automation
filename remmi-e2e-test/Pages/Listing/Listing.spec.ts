@@ -60,6 +60,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.deselectAllPropertyTypes();
   });
 
+  test('Test 9: Searching within property type filter displays correct filtered property types', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchWithinPropertyTypeFilter('house');
+  });
+
 });
 
 export { test };
