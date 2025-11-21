@@ -109,6 +109,11 @@ test('Test 18: Using "Select All" in status filter selects all listing statuses 
   await listingActions.selectAllListingStatuses();
 });
 
+test('Test 19: Using "Deselect All" in status filter deselects all statuses and resets filter', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.deselectAllListingStatuses();
+});
+
 });
 
 export { test };

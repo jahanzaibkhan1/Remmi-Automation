@@ -607,4 +607,31 @@ export class ListingActions {
         await resetButton.click();
     }
 
+    // Using "Deselect All" in status filter
+    async deselectAllListingStatuses() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+
+        // Open the listing status dropdown using the locator helper
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible();
+        await listingStatusDropdown.click({ force: true });
+
+        // Select all statuses by clicking "Select All"
+        const selectAllCheckbox = this.locators.listingStatusSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Deselect all statuses by clicking "Select All" again
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        // Click Reset to clear filter selection
+        await listingStatusDropdown.click();
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeEnabled();
+        await resetButton.click();
+    }
+
 }
