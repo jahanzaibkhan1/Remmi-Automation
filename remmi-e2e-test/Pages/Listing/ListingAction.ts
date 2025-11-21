@@ -464,4 +464,48 @@ export class ListingActions {
         await expect(resetButton).toBeEnabled();
         await resetButton.click();
     }
+
+    // Searching for a suburb in the dropdown
+    async searchWithinSuburbDropdown(suburbLabel: string) {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+
+        // Open the suburb dropdown
+        const suburbDropdown = this.locators.suburbDropdown();
+        await expect(suburbDropdown).toBeVisible();
+        await suburbDropdown.click({ force: true });
+
+        // Find the search input inside the dropdown and type the suburb label
+        const searchInput = this.locators.suburbSearchInput();
+        await expect(searchInput).toBeVisible();
+        await searchInput.fill(suburbLabel);
+
+        // Wait a moment for filter options to update
+        await this.page.waitForTimeout(800);
+
+        // Confirm the option with the label exists and is visible
+        const suburbOption = this.locators.suburbOption(suburbLabel);
+        await expect(suburbOption).toBeVisible();
+
+        // Select the filtered suburb option
+        await suburbOption.click({ force: true });
+
+        // Wait for listings to update
+        await this.page.waitForTimeout(1000);
+
+        // Assert that the table rows are filtered (should be > 0, but likely < total rows)
+        const filteredRowCount = await this.getRowsCount();
+        expect(filteredRowCount).toBeGreaterThan(0);
+
+        // Optional: ensure at least one row is visible
+        const filteredRows = this.getRowsLocator();
+        for (let i = 1; i < filteredRowCount; ++i) {
+            await expect(filteredRows.nth(i)).toBeVisible({ timeout: 3000 });
+        }
+
+        // Click Reset to clear the filter for next tests
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeEnabled();
+        await resetButton.click();
+    }
 }
