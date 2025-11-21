@@ -80,6 +80,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.selectMultipleSuburbs();
   });
 
+  test('Test 13: Using "Select All" in suburb dropdown selects all suburbs and displays all listings', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectAllSuburbs();
+  });
+
 });
 
 export { test };
