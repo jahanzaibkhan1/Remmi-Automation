@@ -85,6 +85,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.selectAllSuburbs();
   });
 
+  test('Test 14: Using "Deselect All" in suburb dropdown deselects all suburbs and resets filter', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deselectAllSuburbs();
+  });
+
 });
 
 export { test };
