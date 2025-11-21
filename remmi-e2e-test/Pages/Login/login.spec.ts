@@ -62,8 +62,6 @@ test.describe('Login Tests - Remmi E2E', () => {
   });
 
   // All other tests can reuse the manager session
-  // Use the sessionPage fixture for all tests, fallback to the default "page" if session not yet created/test 0 running
-
   test('Test case 1: Verify sign in with valid email and password', async ({ page }) => {
     const login = new LoginActions(page);
     await login.login(manager.email!, manager.password!, process.env.E2E_MANAGER_OTP_SECRET!);

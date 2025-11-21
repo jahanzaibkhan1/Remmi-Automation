@@ -60,6 +60,60 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.deselectAllPropertyTypes();
   });
 
+  test('Test 9: Searching within property type filter displays correct filtered property types', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchWithinPropertyTypeFilter('house');
+  });
+
+  test('Test 10: Closing the property type dropdown works as expected', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectSinglePropertyAndCloseDropdown();
+  });
+
+  test('Test 11: Selecting a single suburb with assertions', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectSingleSuburb();
+  });
+
+  test('Test 12: Selecting multiple suburbs filters listings correctly', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectMultipleSuburbs();
+  });
+
+  test('Test 13: Using "Select All" in suburb dropdown selects all suburbs and displays all listings', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectAllSuburbs();
+  });
+
+  test('Test 14: Using "Deselect All" in suburb dropdown deselects all suburbs and resets filter', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deselectAllSuburbs();
+  });
+  test('Test 15: Searching for a suburb in the dropdown filters listings', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchWithinSuburbDropdown('Anglesea');
+  });
+  
+  test('Test 16: Selecting a single listing status filters the listings correctly', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectSingleListingStatus();
+});
+
+test('Test 17: Selecting multiple listing statuses filters listings correctly', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.selectMultipleListingStatuses();
+});
+
+test('Test 18: Using "Select All" in status filter selects all listing statuses and displays all listings', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.selectAllListingStatuses();
+});
+
+test('Test 19: Using "Deselect All" in status filter deselects all statuses and resets filter', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.deselectAllListingStatuses();
+});
+
 });
 
 export { test };
