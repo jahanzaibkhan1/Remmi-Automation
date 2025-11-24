@@ -52,4 +52,57 @@ export class ListingLocators {
         return this.page.locator('li.p-element', { hasText: label });
     }
 
+    listingTypeDropdown(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Listing Type"]');
+    }
+    listingTypeSearchInput(): Locator {
+        return this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
+    }
+    listingTypeSelectAll(): Locator {
+        return this.page.locator('.checkbox__checkmark'); // Adjust nth if needed for Listing Type
+    }
+    listingTypeOption(label: string) {
+        return this.page.locator('li.p-element', { hasText: label });
+    }
+
+    // Select By Agent Filters
+    selectByAgentDropdown(): Locator {
+        return this.page.locator("//div[@class='p-multiselect-label p-placeholder']");
+    }
+    selectByAgentSearchInput(): Locator {
+        return this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
+    }
+    selectByAgentSelectAll(): Locator {
+        return this.page.locator('.checkbox__checkmark'); // May need .first() if multiple checkmarks on page
+    }
+    selectByAgentOption(label: string) {
+        return this.page.locator('li.p-element', { hasText: label });
+    }
+
+    contractStatusDropdown(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Contract Status"]');
+    }
+    contractStatusSearchInput(): Locator {
+        return this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
+    }
+    contractStatusSelectAll(): Locator {
+        return this.page.locator('.checkbox__checkmark'); // Adjust nth if needed for Contract Status
+    }
+    contractStatusOption(label: string) {
+        return this.page.locator('li.p-element', { hasText: label });
+    }
+
+    listingCreationDateDropdown(): Locator {
+        return this.page.locator("input[placeholder='Listing Creation Date']");
+    }
+    listingCreationDateSearchInput(): Locator {
+        return this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
+    }
+    listingCreationDateSelectAll(): Locator {
+        return this.page.locator('.checkbox__checkmark'); // Adjust nth if needed for Listing Creation Date filter
+    }
+    listingCreationDateOption(label: string): Locator {
+        return this.page.locator('li.p-element', { hasText: label });
+    }
+
 }

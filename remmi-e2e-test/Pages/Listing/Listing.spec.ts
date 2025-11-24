@@ -114,6 +114,41 @@ test('Test 19: Using "Deselect All" in status filter deselects all statuses and 
   await listingActions.deselectAllListingStatuses();
 });
 
+test('Test 20: Searching within listing status filter filters status options', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.searchListingStatusFilter('For Lease');
+});
+
+test('Test 21: Selecting a single listing type filters listings correctly', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.selectSingleListingType();
+});
+
+test('Test 22: Selecting multiple listing types filters listings correctly', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.selectMultipleListingTypes();
+});
+
+test('Test 23: Selecting a single agent filters listings to show only those for the chosen agent', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.selectSingleAgent();
+});
+
+});
+
+test('Test 24: Selecting multiple agents filters listings to show only those for the chosen agents', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.selectMultipleAgents();
+});
+
+test('Test 25: Selecting a single contract status', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.selectSingleContractStatus();
+});
+
+test('Test 26: Selecting multiple contract statuses filters listings correctly', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.selectMultipleContractStatuses();
 });
 
 export { test };
