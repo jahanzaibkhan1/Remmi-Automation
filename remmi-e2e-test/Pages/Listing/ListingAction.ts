@@ -100,11 +100,70 @@ export class ListingActions {
         await this.navigateToListings();
         await this.waitForTableRows();
         await this.searchListing(keyword);
-        await this.verifySearchResults(keyword);
 
         await this.page.waitForTimeout(1000);
 
         const searchBox = this.locators.SearchBox();
+        await expect(searchBox).toBeVisible({ timeout: 1000 });
+        await expect(searchBox).toHaveValue(keyword);
+
+        // --- Wait for table rows to update after searching
+        await this.waitForTableRows();
+
+        // --- Verify at least one table row contains the keyword in at least one of the visible table cells
+        const rows = this.getRowsLocator();
+        const rowCount = await rows.count();
+        expect(rowCount).toBeGreaterThan(1); // at least header + 1 result
+
+        // Find which columns are visible and searchable (for robust cross-project use)
+        const headerRow = rows.nth(0);
+        const headers = await headerRow.locator('th').allInnerTexts();
+
+        let found = false;
+        for (let i = 1; i < rowCount; ++i) {
+            const row = rows.nth(i);
+            await expect(row).toBeVisible({ timeout: 2000 });
+            const cellCount = await row.locator('td').count();
+            for (let j = 0; j < cellCount; ++j) {
+                const cellText = (await row.locator('td').nth(j).innerText()).toLowerCase();
+                if (cellText.includes(keyword.toLowerCase())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (found) break;
+        }
+        expect(found).toBe(true);
+
+        // Optionally: Assert keyword appears in either "Primary Agent" or "Selected by Agent" columns, if relevant headers are present
+        const agentColumns = headers
+            .map((h, idx) => ({ idx, h: h.trim().toLowerCase() }))
+            .filter(({ h }) => h.includes('primary agent') || h.includes('selected by agent'))
+            .map(({ idx }) => idx);
+
+        if (agentColumns.length > 0) {
+            let agentColumnHasKeyword = false;
+            for (let i = 1; i < rowCount; ++i) {
+                const row = rows.nth(i);
+                await expect(row).toBeVisible({ timeout: 5000 });
+                for (const colIdx of agentColumns) {
+                    const cell = row.locator('td').nth(colIdx);
+                    const cellText = (await cell.innerText()).toLowerCase();
+                    if (cellText.includes(keyword.toLowerCase())) {
+                        agentColumnHasKeyword = true;
+                        break;
+                    }
+                }
+                if (agentColumnHasKeyword) break;
+            }
+            expect(agentColumnHasKeyword).toBe(true);
+        }
+
+        // Optionally ensure no "No results found" message is present
+        const noResults = this.page.locator('text="No results found"');
+        await expect(noResults).toHaveCount(0);
+
+        // --- Clear the search box for cleanup
         const clearButton = this.locators.clearSearch();
         if (await clearButton.isVisible({ timeout: 500 }).catch(() => false)) {
             await clearButton.click();
@@ -185,19 +244,51 @@ export class ListingActions {
     async selectSinglePropertyType() {
         await this.navigateToListings();
         await this.waitForTableRows();
-        // Open dropdown and select property type
+
+        // Open dropdown and select the first property type
         await this.openPropertyTypeDropdown();
         await this.page.waitForTimeout(1000);
-
-        // Select the property type from dropdown
+        // Locate and click the first property type option
         const firstPropertyTypeOption = this.page.locator('ul > li.p-element').first();
+        await expect(firstPropertyTypeOption).toBeVisible({ timeout: 3000 });
+        const selectedLabel = (await firstPropertyTypeOption.innerText()).trim();
         await firstPropertyTypeOption.click({ force: true });
+        await this.page.waitForTimeout(1000);
 
-        const resetButton = this.page.locator('button').filter({ hasText: /reset/i });
+        // Verify in the table that the selected property type appears in at least one row in the Property Type column
+        const rows = this.getRowsLocator();
+        const rowCount = await this.getRowsCount();
+        expect(rowCount).toBeGreaterThan(1);
+
+        // Find the column index for Property Type
+        const headerRow = rows.nth(0);
+        const headerCells = await headerRow.locator('th').allInnerTexts();
+        let propertyTypeColIdx = headerCells.findIndex(h => h.trim().toLowerCase().includes('property type'));
+        expect(propertyTypeColIdx).toBeGreaterThanOrEqual(0);
+
+        let propertyTypeFound = false;
+        for (let i = 1; i < rowCount; i++) {
+            const row = rows.nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const cells = row.locator('td');
+            const cellCount = await cells.count();
+            expect(propertyTypeColIdx).toBeLessThan(cellCount);
+
+            const cellText = (await cells.nth(propertyTypeColIdx).innerText()).trim().toLowerCase();
+            if (cellText.includes(selectedLabel.toLowerCase())) {
+                propertyTypeFound = true;
+                break;
+            }
+        }
+        expect(propertyTypeFound).toBe(true);
+
+        // Click Reset to clear the filter for next tests
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeEnabled();
         await resetButton.click();
     }
 
-    // Selecting multiple property types
+    // Selecting multiple property types and verifying in the table
     async selectMultiplePropertyTypes() {
         await this.navigateToListings();
         await this.waitForTableRows();
@@ -211,13 +302,45 @@ export class ListingActions {
         const firstOption = propertyTypeOptions.nth(0);
         const secondOption = propertyTypeOptions.nth(1);
 
+        // Get their labels for later verification
+        const firstLabel = (await firstOption.innerText()).trim().toLowerCase();
+        const secondLabel = (await secondOption.innerText()).trim().toLowerCase();
+
         await firstOption.click({ force: true });
         await secondOption.click({ force: true });
-
         await this.page.waitForTimeout(1000);
 
+        // Verify in the table that selected property types appear in Property Type column
+        const rows = this.getRowsLocator();
+        const rowCount = await this.getRowsCount();
+        expect(rowCount).toBeGreaterThan(1);
+
+        // Find Property Type column index
+        const headerRow = rows.nth(0);
+        const headerCells = await headerRow.locator('th').allInnerTexts();
+        let propertyTypeColIdx = headerCells.findIndex(h => h.trim().toLowerCase().includes('property type'));
+        expect(propertyTypeColIdx).toBeGreaterThanOrEqual(0);
+
+        // For each data row, verify at least one selected type is present
+        let found = false;
+        for (let i = 1; i < rowCount; i++) {
+            const row = rows.nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const cells = row.locator('td');
+            const cellCount = await cells.count();
+            expect(propertyTypeColIdx).toBeLessThan(cellCount);
+
+            const cellText = (await cells.nth(propertyTypeColIdx).innerText()).trim().toLowerCase();
+            if (cellText.includes(firstLabel) || cellText.includes(secondLabel)) {
+                found = true;
+                break;
+            }
+        }
+        expect(found).toBe(true);
+
         // Click the 'Reset' button to clear the selection
-        const resetButton = this.page.locator('button').filter({ hasText: /reset/i });
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeEnabled();
         await resetButton.click();
     }
 
@@ -262,7 +385,7 @@ export class ListingActions {
         await resetButton.click();
     }
 
-    // Searching within property type filter
+    // Searching within property type filter and verify data in table
     async searchWithinPropertyTypeFilter(searchTerm: string) {
         await this.navigateToListings();
         await this.waitForTableRows();
@@ -276,12 +399,28 @@ export class ListingActions {
         await propertyTypeSearchInput.fill(searchTerm);
         await this.page.waitForTimeout(1000);
 
-        // Optionally: Select the first option that matches the filtered search
+        // Select the first option that matches the filtered search (if available)
         const matchedOption = this.page.locator('li.p-element').first();
         if (await matchedOption.isVisible()) {
             await matchedOption.click();
         }
         await this.page.waitForTimeout(800);
+
+        // Now verify at least one table row contains the searched property type term
+        // This assumes property type appears in at least one column per row after filter
+        const rowCount = await this.getRowsCount();
+        let found = false;
+        for (let i = 1; i < rowCount; ++i) { // Skip header (row 0)
+            const row = this.getRowsLocator().nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const rowText = (await row.innerText()).toLowerCase();
+            if (rowText.includes(searchTerm.toLowerCase())) {
+                found = true;
+                break;
+            }
+        }
+        expect(found).toBe(true);
+
         // Click the Reset button to clear the filter
         const resetButton = this.page.getByRole('button', { name: /reset/i });
         await resetButton.click();
@@ -308,10 +447,11 @@ export class ListingActions {
         await resetButton.click();
     }
 
-    // Selecting a single suburb with assertions
+    // Selecting a single suburb and verifying table data contains suburb
     async selectSingleSuburb() {
         await this.navigateToListings();
         await this.waitForTableRows();
+
         // Open suburb dropdown
         const suburbDropdown = this.locators.suburbDropdown();
         await expect(suburbDropdown).toBeVisible({ timeout: 2000 });
@@ -321,20 +461,32 @@ export class ListingActions {
         // Select the first suburb option (assuming options are present)
         const firstSuburbOption = this.page.locator('ul > li.p-element').first();
         await expect(firstSuburbOption).toBeVisible({ timeout: 5000 });
-        const firstSuburbText = await firstSuburbOption.textContent();
+        const firstSuburbTextRaw = await firstSuburbOption.textContent();
+        const firstSuburbText = firstSuburbTextRaw ? firstSuburbTextRaw.trim() : '';
         await firstSuburbOption.click({ force: true });
+        await this.page.waitForTimeout(1000);
 
-        // Click the Reset button to clear filter selection
+        // Verify that at least one table row contains the selected suburb text
+        const rowCount = await this.getRowsCount();
+        let found = false;
+        for (let i = 1; i < rowCount; ++i) { // Skip header (row 0)
+            const row = this.getRowsLocator().nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const rowText = (await row.innerText()).toLowerCase();
+            if (firstSuburbText && rowText.includes(firstSuburbText.toLowerCase())) {
+                found = true;
+                break;
+            }
+        }
+        expect(found).toBe(true);
+
+        // Click the Reset button to clear filter selection for next tests
         const resetButton = this.page.getByRole('button', { name: /reset/i });
         await expect(resetButton).toBeEnabled();
         await resetButton.click();
-        if (firstSuburbText) {
-            const filterChip = this.page.locator('.p-multiselect-token, .chip, .selected-value').filter({ hasText: firstSuburbText.trim() });
-            await expect(filterChip).not.toBeVisible({ timeout: 2000 }).catch(() => { });
-        }
     }
 
-    // Selecting multiple suburbs with assertions
+    // Selecting multiple suburbs and verifying table data contains the selected suburbs
     async selectMultipleSuburbs() {
         await this.navigateToListings();
         await this.waitForTableRows();
@@ -342,7 +494,7 @@ export class ListingActions {
         // Open suburb dropdown
         const suburbDropdown = this.locators.suburbDropdown();
         await expect(suburbDropdown).toBeVisible({ timeout: 2000 });
-        await suburbDropdown.click({force:true});
+        await suburbDropdown.click({ force: true });
         await this.page.waitForTimeout(1000);
 
         // Grab first two suburb options (assuming they exist)
@@ -354,9 +506,38 @@ export class ListingActions {
         const suburb1 = allSuburbOptions.nth(0);
         const suburb2 = allSuburbOptions.nth(1);
 
+        // Get their names/texts for later verification
+        const suburb1TextRaw = await suburb1.textContent();
+        const suburb2TextRaw = await suburb2.textContent();
+        const suburb1Text = suburb1TextRaw ? suburb1TextRaw.trim() : '';
+        const suburb2Text = suburb2TextRaw ? suburb2TextRaw.trim() : '';
+
         await suburb1.click({ force: true });
         await this.page.waitForTimeout(300);
         await suburb2.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        // Verify that at least one table row contains each of the selected suburb texts
+        const rowCount = await this.getRowsCount();
+
+        let foundSuburb1 = false;
+        let foundSuburb2 = false;
+
+        for (let i = 1; i < rowCount; ++i) { // Skip header (row 0)
+            const row = this.getRowsLocator().nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const rowText = (await row.innerText()).toLowerCase();
+            if (suburb1Text && rowText.includes(suburb1Text.toLowerCase())) {
+                foundSuburb1 = true;
+            }
+            if (suburb2Text && rowText.includes(suburb2Text.toLowerCase())) {
+                foundSuburb2 = true;
+            }
+            if (foundSuburb1 && foundSuburb2) break;
+        }
+
+        expect(foundSuburb1).toBe(true);
+        expect(foundSuburb2).toBe(true);
 
         // Click Reset to clear filter selection
         const resetButton = this.page.getByRole('button', { name: /reset/i });
@@ -543,7 +724,7 @@ export class ListingActions {
         await resetButton.click();
     }
 
-    // Selecting multiple listing statuses 
+    // Selecting multiple listing statuses
     async selectMultipleListingStatuses() {
         await this.navigateToListings();
         await this.waitForTableRows();
@@ -552,19 +733,61 @@ export class ListingActions {
         const listingStatusDropdown = this.locators.listingStatusDropdown();
         await listingStatusDropdown.click();
 
-        // Select the first two listing statuses, or throw if not enough
+        // Select the first two listing statuses (make sure at least two exist)
         const statusOptions = this.page.locator('ul > li.p-element');
         const statusCount = await statusOptions.count();
         if (statusCount < 2) {
             throw new Error('Less than two listing statuses available to select.');
         }
-        const status1 = statusOptions.nth(0);
-        const status2 = statusOptions.nth(1);
 
+        // Capture text of statuses to select so we can verify after
+        const selectedStatusLabels: string[] = [];
+        const status1 = statusOptions.nth(2);
+        const status2 = statusOptions.nth(4);
+
+        // Get and save status texts (lowercased and trimmed for comparison)
+        await this.waitForTableRows()
+        const status1Label = (await status1.innerText()).trim().toLowerCase();
+        const status2Label = (await status2.innerText()).trim().toLowerCase();
+        selectedStatusLabels.push(status1Label, status2Label);
+
+        // Click both statuses to select
         await status1.click({ force: true });
         await this.page.waitForTimeout(200);
         await status2.click({ force: true });
-        await this.page.waitForTimeout(1000)
+        await this.page.waitForTimeout(1000);
+
+        // Get table rows and verify 'Listing Status' column data matches selected statuses
+        const rowCount = await this.getRowsCount();
+        expect(rowCount).toBeGreaterThan(1);
+
+        // Get all rows
+        const rows = this.getRowsLocator();
+        // Get headers and locate the Listing Status column index
+        const headerRow = rows.nth(0);
+        const headerCells = await headerRow.locator('th').allInnerTexts();
+        let listingStatusColIdx = headerCells.findIndex(h => h.trim().toLowerCase().includes('listing status'));
+        if (listingStatusColIdx === -1) {
+            listingStatusColIdx = headerCells.findIndex(h => h.trim().toLowerCase().includes('status'));
+        }
+        expect(listingStatusColIdx).toBeGreaterThanOrEqual(0);
+
+        let allRowsMatch = true;
+        for (let i = 1; i < rowCount; ++i) {
+            const row = rows.nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const cells = row.locator('td');
+            const cellCount = await cells.count();
+            expect(listingStatusColIdx).toBeLessThan(cellCount);
+
+            const cellText = (await cells.nth(listingStatusColIdx).innerText()).trim().toLowerCase();
+            // Must match one of the two selected statuses
+            if (!selectedStatusLabels.some(label => cellText.includes(label))) {
+                allRowsMatch = false;
+                break;
+            }
+        }
+        expect(allRowsMatch).toBe(true);
 
         // Reset filter
         await listingStatusDropdown.click();
@@ -634,4 +857,43 @@ export class ListingActions {
         await resetButton.click();
     }
 
+    // Searching within listing status filter using locators file
+    async searchListingStatusFilter(searchTerm: string) {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+
+        // Open the listing status dropdown using locator from locators file
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible();
+        await listingStatusDropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Find the search box inside the listing status dropdown using locator
+        const statusDropdownSearchBox = this.locators.listingStatusSearchInput?.() 
+            ?? this.page.locator('input[placeholder="Search"][aria-label="Search Listing Status"]');
+        await expect(statusDropdownSearchBox).toBeVisible();
+        await statusDropdownSearchBox.fill(searchTerm);
+        await this.page.waitForTimeout(500);
+
+        // Assert that filtered results contain the search term
+        const filteredOptions = this.locators.listingStatusOption(searchTerm);
+        const count = await filteredOptions.count();
+        expect(count).toBeGreaterThan(0);
+        let found = false;
+        for (let i = 0; i < count; i++) {
+            const optionText = ((await filteredOptions.nth(i).innerText()) || '').toLowerCase();
+            if (optionText.includes(searchTerm.toLowerCase())) {
+                found = true;
+                break;
+            }
+        }
+        expect(found).toBe(true);
+        await listingStatusDropdown.click(); // Close dropdown after test
+
+        await this.page.waitForTimeout(1000)
+        // click reset button 
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeEnabled();
+        await resetButton.click();
+    }
 }
