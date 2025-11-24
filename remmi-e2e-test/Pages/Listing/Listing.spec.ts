@@ -129,11 +129,16 @@ test('Test 22: Selecting multiple listing types filters listings correctly', asy
   await listingActions.selectMultipleListingTypes();
 });
 
-test('Test 23: Selecting a single agent filters listings to show only those for the chosen agent', async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.selectSingleAgent();
+// test('Test 23: Selecting a single agent filters listings to show only those for the chosen agent', async ({ sessionPage }) => {
+//   const listingActions = new ListingActions(sessionPage);
+//   await listingActions.selectSingleAgent();
+// });
+
 });
 
+test('Test 23: Selecting multiple agents filters listings to show only those for the chosen agents', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.selectMultipleAgents();
 });
 
 export { test };

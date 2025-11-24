@@ -1,44 +1,6 @@
-<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="41.360316000001504">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-24T11:32:39.540Z" hostname="chromium" tests="1" failures="1" skipped="0" time="34.534" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Selecting a single agent filters listings to show only those for the chosen agent" classname="Pages\Listing\Listing.spec.ts" time="34.534">
-<failure message="Listing.spec.ts:132:1 Test 23: Selecting a single agent filters listings to show only those for the chosen agent" type="FAILURE">
-<![CDATA[  [chromium] › Pages\Listing\Listing.spec.ts:132:1 › Listing side Menu Tests - Remmi E2E › Test 23: Selecting a single agent filters listings to show only those for the chosen agent 
-
-    Error: Row 4: Expected agent "abdul rehman" in "dawood ahmad"
-    Row 5: Not enough cells (expected agent column idx 5, got 0)
-
-    expect(received).toHaveLength(expected)
-
-    Expected length: 0
-    Received length: 2
-    Received array:  ["Row 4: Expected agent \"abdul rehman\" in \"dawood ahmad\"", "Row 5: Not enough cells (expected agent column idx 5, got 0)"]
-
-       at Pages\Listing\ListingAction.ts:995
-
-      993 |             }
-      994 |         }
-    > 995 |         expect(failures, failures.join('\n')).toHaveLength(0);
-          |                                               ^
-      996 |
-      997 |         const resetButton = this.page.getByRole('button', { name: /reset/i });
-      998 |         await expect(resetButton).toBeEnabled();
-        at ListingActions.selectSingleAgent (E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\ListingAction.ts:995:47)
-        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\Listing.spec.ts:134:3
-
-    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ..\test-results\Pages-Listing-Listing-List-83218--those-for-the-chosen-agent-chromium\test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Error Context: ..\test-results\Pages-Listing-Listing-List-83218--those-for-the-chosen-agent-chromium\error-context.md
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|test-results\Pages-Listing-Listing-List-83218--those-for-the-chosen-agent-chromium\test-failed-1.png]]
-
-[[ATTACHMENT|test-results\Pages-Listing-Listing-List-83218--those-for-the-chosen-agent-chromium\error-context.md]]
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.41464999999851">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-24T11:41:30.399Z" hostname="chromium" tests="1" failures="0" skipped="0" time="17.429" errors="0">
+<testcase name="Test 23: Selecting multiple agents filters listings to show only those for the chosen agents" classname="Pages\Listing\Listing.spec.ts" time="17.429">
 </testcase>
 </testsuite>
 </testsuites>
