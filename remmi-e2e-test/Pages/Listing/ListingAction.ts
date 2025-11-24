@@ -896,4 +896,62 @@ export class ListingActions {
         await expect(resetButton).toBeEnabled();
         await resetButton.click();
     }
+
+    // Selecting a single listing type and verifying filtered results (robust header/cell handling)
+    async selectSingleListingType() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+
+        // Open listing type dropdown using locator
+        const listingTypeDropdown = this.locators.listingTypeDropdown();
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 3000 });
+        await listingTypeDropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Wait for at least one visible option
+        const allTypeOptions = this.page.locator('ul li.p-element');
+        const firstTypeOption = allTypeOptions.first();
+        await expect(firstTypeOption).toBeVisible({ timeout: 5000 });
+
+        const selectedTypeTextRaw = await firstTypeOption.textContent();
+        const selectedTypeText = selectedTypeTextRaw ? selectedTypeTextRaw.trim() : '';
+        await firstTypeOption.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        // Validate that at least one row in the Listing Type column contains the selected type
+        const rows = this.page.locator('tbody tr');
+        const rowCount = await rows.count();
+
+        // Defensive: Ensure there are data rows
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Get Listing Type column index from table header (thead)
+        const headerRow = this.page.locator('thead tr').first();
+        await expect(headerRow).toBeVisible({ timeout: 3000 });
+        const headerCells = await headerRow.locator('th').allInnerTexts();
+        const listingTypeColIdx = headerCells.findIndex(h => h.trim().toLowerCase().includes('listings type'));
+        expect(listingTypeColIdx).toBeGreaterThanOrEqual(0);
+
+        // Defensive: Ensure at least one cell in data rows matches filter
+        let found = false;
+        for (let i = 0; i < rowCount; ++i) {
+            const dataRow = rows.nth(i);
+            await expect(dataRow).toBeVisible({ timeout: 3000 });
+            const cells = dataRow.locator('td');
+            const cellCount = await cells.count();
+            if (listingTypeColIdx >= cellCount) continue; // skip malformed row
+
+            const cellText = (await cells.nth(listingTypeColIdx).innerText()).trim().toLowerCase();
+            if (selectedTypeText && cellText.includes(selectedTypeText.toLowerCase())) {
+                found = true;
+                break;
+            }
+        }
+        expect(found).toBe(true);
+
+        // Click Reset for the next test
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeEnabled();
+        await resetButton.click();
+    }
 }
