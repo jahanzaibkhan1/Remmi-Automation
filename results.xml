@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="26.16597599999979">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-21T12:24:38.893Z" hostname="chromium" tests="1" failures="0" skipped="0" time="18.074" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Using &quot;Deselect All&quot; in status filter deselects all statuses and resets filter" classname="Pages\Listing\Listing.spec.ts" time="18.074">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.29710499999858">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-24T12:03:21.787Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.215" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Selecting a single agent filters listings to show only those for the chosen agent" classname="Pages\Listing\Listing.spec.ts" time="27.215">
 </testcase>
 </testsuite>
 </testsuites>
