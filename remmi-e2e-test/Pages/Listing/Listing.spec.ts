@@ -141,4 +141,9 @@ test('Test 23: Selecting multiple agents filters listings to show only those for
   await listingActions.selectMultipleAgents();
 });
 
+test('Test 24: Selecting a single contract status', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.selectSingleContractStatus();
+});
+
 export { test };

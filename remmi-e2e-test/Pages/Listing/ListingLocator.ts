@@ -79,4 +79,17 @@ export class ListingLocators {
         return this.page.locator('li.p-element', { hasText: label });
     }
 
+    contractStatusDropdown(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Contract Status"]');
+    }
+    contractStatusSearchInput(): Locator {
+        return this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
+    }
+    contractStatusSelectAll(): Locator {
+        return this.page.locator('.checkbox__checkmark'); // Adjust nth if needed for Contract Status
+    }
+    contractStatusOption(label: string) {
+        return this.page.locator('li.p-element', { hasText: label });
+    }
+
 }
