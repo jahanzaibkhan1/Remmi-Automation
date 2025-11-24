@@ -1054,5 +1054,41 @@ export class ListingActions {
         await expect(resetButton).toBeEnabled();
         await resetButton.click();
     }
+    // Selecting a single contract status (NO table validation)
+    async selectSingleContractStatus() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+
+        // Open the Contract Status dropdown
+        const contractStatusDropdown = this.locators.contractStatusDropdown();
+        await expect(contractStatusDropdown).toBeVisible({ timeout: 3000 });
+        await contractStatusDropdown.click({ force: true });
+        await this.page.waitForTimeout(800);
+
+        // Find all contract status options
+        const statusOptions = this.page.locator('ul > li.p-element');
+        const optionCount = await statusOptions.count();
+        if (optionCount === 0) throw new Error('No contract status options found.');
+
+        // Pick the first one with non-empty text
+        let selectedIdx = -1;
+        for (let i = 0; i < optionCount; ++i) {
+            const text = (await statusOptions.nth(i).textContent())?.trim() ?? '';
+            if (text) {
+                selectedIdx = i;
+                break;
+            }
+        }
+        if (selectedIdx === -1) throw new Error('Could not find a valid contract status to select.');
+
+        // Select it
+        await statusOptions.nth(selectedIdx).click({ force: true });
+        await this.page.waitForTimeout(900);
+
+        // Click 'Reset' to clear the filter (skip table verification)
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeEnabled();
+        await resetButton.click();
+    }
 
 }
