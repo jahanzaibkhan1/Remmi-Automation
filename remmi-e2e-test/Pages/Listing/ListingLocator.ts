@@ -65,4 +65,18 @@ export class ListingLocators {
         return this.page.locator('li.p-element', { hasText: label });
     }
 
+    // Select By Agent Filters
+    selectByAgentDropdown(): Locator {
+        return this.page.locator("//div[@class='p-multiselect-label p-placeholder']");
+    }
+    selectByAgentSearchInput(): Locator {
+        return this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
+    }
+    selectByAgentSelectAll(): Locator {
+        return this.page.locator('.checkbox__checkmark'); // May need .first() if multiple checkmarks on page
+    }
+    selectByAgentOption(label: string) {
+        return this.page.locator('li.p-element', { hasText: label });
+    }
+
 }
