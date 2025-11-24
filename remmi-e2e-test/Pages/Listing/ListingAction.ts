@@ -999,4 +999,60 @@ export class ListingActions {
         await resetButton.click();
     }
 
+    async selectMultipleAgents() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+        await this.openSelectByAgentDropdown();
+
+        // Select nth(1) and nth(3) agent options (i.e., 2nd and 4th option due to 0-based indexing)
+        const agentOptions = this.page.locator('li.p-element');
+        const optionCount = await agentOptions.count();
+        expect(optionCount).toBeGreaterThan(3); // Ensure at least 4 options to select 1 and 3
+
+        const idx1 = 1;
+        const idx3 = 3;
+
+        const agentText1 = (await agentOptions.nth(idx1).innerText()).trim();
+        const agentText3 = (await agentOptions.nth(idx3).innerText()).trim();
+        if (!agentText1 || !agentText3) throw new Error('Could not find valid agent options at nth(1) or nth(3)');
+
+        await agentOptions.nth(idx1).click({ force: true });
+        await this.page.waitForTimeout(200);
+        await agentOptions.nth(idx3).click({ force: true });
+        await this.page.waitForTimeout(600);
+
+        const selectedAgents = [agentText1, agentText3];
+
+        // Wait for filter to apply
+        await this.page.locator('.p-datatable-loading, .loading-spinner')
+            .waitFor({ state: 'hidden', timeout: 7000 }).catch(() => { });
+
+        // Validate all rows have at least one of the selected agent names in Primary Agent column
+        const rows = this.page.locator('tbody tr');
+        const rowCount = await this.waitForTableRows();
+        expect(rowCount).toBeGreaterThan(0);
+
+        const headerCells = await this.page.locator('thead tr').first().locator('th').allInnerTexts();
+        const agentColIdx = headerCells.findIndex(h => h.trim().toLowerCase().includes('primary agent'));
+        expect(agentColIdx).toBeGreaterThanOrEqual(0);
+
+        let failures: string[] = [];
+        for (let i = 0; i < rowCount; ++i) {
+            const cells = rows.nth(i).locator('td');
+            const cellCount = await cells.count();
+            if (agentColIdx >= cellCount) {
+                failures.push(`Row ${i}: Not enough cells (expected agent column idx ${agentColIdx}, got ${cellCount})`);
+                continue;
+            }
+            const cellText = (await cells.nth(agentColIdx).innerText()).trim().toLowerCase();
+            if (!selectedAgents.some(a => cellText.includes(a.toLowerCase()))) {
+                failures.push(`Row ${i}: Expected an agent from [${selectedAgents.join(", ")}] in "${cellText}"`);
+            }
+        }
+
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeEnabled();
+        await resetButton.click();
+    }
+
 }
