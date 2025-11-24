@@ -954,4 +954,84 @@ export class ListingActions {
         await expect(resetButton).toBeEnabled();
         await resetButton.click();
     }
+
+    // Selecting multiple listing types and verifying table data contains selected types
+    async selectMultipleListingTypes() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+
+        // Open listing type dropdown using locator file
+        const listingTypeDropdown = this.locators.listingTypeDropdown();
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 3000 });
+        await listingTypeDropdown.click({ force: true });
+        await this.page.waitForTimeout(800);
+
+        // Get at least two listing type options using locator file
+        const allTypeOptions = this.page.locator('ul > li.p-element');
+        const optionCount = await allTypeOptions.count();
+        if (optionCount < 2) {
+            throw new Error('Less than two listing types available to select.');
+        }
+
+        // Get their texts for later verification
+        const type1 = allTypeOptions.nth(0);
+        const type2 = allTypeOptions.nth(2);
+
+        const type1TextRaw = await type1.textContent();
+        const type2TextRaw = await type2.textContent();
+        const type1Text = type1TextRaw ? type1TextRaw.trim() : '';
+        const type2Text = type2TextRaw ? type2TextRaw.trim() : '';
+
+        // Select both types
+        await type1.click({ force: true });
+        await this.page.waitForTimeout(300);
+        await type2.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        // Validate at least one row in the Listing Type column contains each selected type
+        const rows = this.page.locator('tbody tr');
+        const rowCount = await rows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Get Listing Type column index robustly
+        const headerRow = this.page.locator('thead tr').first();
+        await expect(headerRow).toBeVisible({ timeout: 3000 });
+        const headerCells = await headerRow.locator('th').allInnerTexts();
+        let listingTypeColIdx = headerCells.findIndex(h =>
+            h.trim().toLowerCase().includes('listing type')
+        );
+        if (listingTypeColIdx === -1) {
+            listingTypeColIdx = headerCells.findIndex(h =>
+                h.trim().toLowerCase().includes('listings type')
+            );
+        }
+        expect(listingTypeColIdx).toBeGreaterThanOrEqual(0);
+
+        let foundType1 = false;
+        let foundType2 = false;
+        for (let i = 0; i < rowCount; ++i) {
+            const dataRow = rows.nth(i);
+            await expect(dataRow).toBeVisible({ timeout: 3000 });
+            const cells = dataRow.locator('td');
+            const cellCount = await cells.count();
+            if (listingTypeColIdx >= cellCount) continue;
+
+            const cellText = (await cells.nth(listingTypeColIdx).innerText()).trim().toLowerCase();
+
+            if (type1Text && cellText.includes(type1Text.toLowerCase())) {
+                foundType1 = true;
+            }
+            if (type2Text && cellText.includes(type2Text.toLowerCase())) {
+                foundType2 = true;
+            }
+            if (foundType1 && foundType2) break;
+        }
+        expect(foundType1).toBe(true);
+        expect(foundType2).toBe(true);
+
+        // Click Reset for the next test
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeEnabled();
+        await resetButton.click();
+    }
 }
