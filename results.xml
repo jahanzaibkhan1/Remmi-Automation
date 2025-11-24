@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.45154099999927">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-24T11:56:42.765Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.522" errors="0">
-<testcase name="Test 25: Selecting multiple contract statuses filters listings correctly" classname="Pages\Listing\Listing.spec.ts" time="28.522">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.29710499999858">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-24T12:03:21.787Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.215" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Selecting a single agent filters listings to show only those for the chosen agent" classname="Pages\Listing\Listing.spec.ts" time="27.215">
 </testcase>
 </testsuite>
 </testsuites>
