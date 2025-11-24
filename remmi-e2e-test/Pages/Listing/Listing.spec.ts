@@ -114,6 +114,11 @@ test('Test 19: Using "Deselect All" in status filter deselects all statuses and 
   await listingActions.deselectAllListingStatuses();
 });
 
+test('Test 20: Searching within listing status filter filters status options', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.searchListingStatusFilter('For Lease');
+});
+
 });
 
 export { test };
