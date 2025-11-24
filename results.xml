@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.088917999999595">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-24T11:48:53.358Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.367" errors="0">
-<testcase name="Test 24: Selecting a single contract status" classname="Pages\Listing\Listing.spec.ts" time="34.367">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.45154099999927">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-24T11:56:42.765Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.522" errors="0">
+<testcase name="Test 25: Selecting multiple contract statuses filters listings correctly" classname="Pages\Listing\Listing.spec.ts" time="28.522">
 </testcase>
 </testsuite>
 </testsuites>
