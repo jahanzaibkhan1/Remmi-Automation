@@ -146,4 +146,9 @@ test('Test 24: Selecting a single contract status', async ({ sessionPage }) => {
   await listingActions.selectSingleContractStatus();
 });
 
+test('Test 25: Selecting multiple contract statuses filters listings correctly', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.selectMultipleContractStatuses();
+});
+
 export { test };

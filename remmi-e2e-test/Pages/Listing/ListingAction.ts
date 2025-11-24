@@ -1054,7 +1054,7 @@ export class ListingActions {
         await expect(resetButton).toBeEnabled();
         await resetButton.click();
     }
-    // Selecting a single contract status (NO table validation)
+    // Selecting a single contract status 
     async selectSingleContractStatus() {
         await this.navigateToListings();
         await this.waitForTableRows();
@@ -1086,6 +1086,44 @@ export class ListingActions {
         await this.page.waitForTimeout(900);
 
         // Click 'Reset' to clear the filter (skip table verification)
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeEnabled();
+        await resetButton.click();
+    }
+
+    // Selecting multiple Contract statuses
+    async selectMultipleContractStatuses() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+
+        // Open the Contract Status dropdown
+        const contractStatusDropdown = this.locators.contractStatusDropdown();
+        await expect(contractStatusDropdown).toBeVisible({ timeout: 3000 });
+        await contractStatusDropdown.click({ force: true });
+        await this.page.waitForTimeout(800);
+
+        // Find all contract status options
+        const statusOptions = this.page.locator('ul > li.p-element');
+        const optionCount = await statusOptions.count();
+        if (optionCount < 4) throw new Error('Less than four contract status options available to select.');
+
+        // Pick the 0th and 3rd options
+        const option0 = statusOptions.nth(0);
+        const option3 = statusOptions.nth(3);
+
+        const option0TextRaw = await option0.textContent();
+        const option3TextRaw = await option3.textContent();
+        const option0Text = option0TextRaw ? option0TextRaw.trim() : '';
+        const option3Text = option3TextRaw ? option3TextRaw.trim() : '';
+
+        await option0.click({ force: true });
+        await this.page.waitForTimeout(300);
+        await option3.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        // (You can place table validation here if required)
+
+        // Click 'Reset' to clear the filter
         const resetButton = this.page.getByRole('button', { name: /reset/i });
         await expect(resetButton).toBeEnabled();
         await resetButton.click();
