@@ -119,6 +119,11 @@ test('Test 20: Searching within listing status filter filters status options', a
   await listingActions.searchListingStatusFilter('For Lease');
 });
 
+test('Test 21: Selecting a single listing type filters listings correctly', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.selectSingleListingType();
+});
+
 });
 
 export { test };

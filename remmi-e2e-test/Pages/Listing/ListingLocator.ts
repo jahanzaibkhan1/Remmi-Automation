@@ -52,4 +52,17 @@ export class ListingLocators {
         return this.page.locator('li.p-element', { hasText: label });
     }
 
+    listingTypeDropdown(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Listing Type"]');
+    }
+    listingTypeSearchInput(): Locator {
+        return this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
+    }
+    listingTypeSelectAll(): Locator {
+        return this.page.locator('.checkbox__checkmark'); // Adjust nth if needed for Listing Type
+    }
+    listingTypeOption(label: string) {
+        return this.page.locator('li.p-element', { hasText: label });
+    }
+
 }

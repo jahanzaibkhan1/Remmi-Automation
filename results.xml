@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.03459200000018">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-24T06:51:11.363Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.354" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Searching within listing status filter filters status options" classname="Pages\Listing\Listing.spec.ts" time="24.354">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.08493200000003">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-24T07:00:50.368Z" hostname="chromium" tests="1" failures="0" skipped="0" time="43.723" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Selecting a single listing type filters listings correctly" classname="Pages\Listing\Listing.spec.ts" time="43.723">
 </testcase>
 </testsuite>
 </testsuites>
