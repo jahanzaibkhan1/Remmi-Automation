@@ -124,6 +124,11 @@ test('Test 21: Selecting a single listing type filters listings correctly', asyn
   await listingActions.selectSingleListingType();
 });
 
+test('Test 22: Selecting multiple listing types filters listings correctly', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.selectMultipleListingTypes();
+});
+
 });
 
 export { test };
