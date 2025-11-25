@@ -163,7 +163,7 @@ export class ListingActions {
         await this.page.waitForTimeout(700);
     }
 
-    
+
     private async searchContractStatus(status: string) {
         const searchInput = this.locators.contractStatusSearchInput();
         await expect(searchInput).toBeVisible();
@@ -1064,7 +1064,7 @@ export class ListingActions {
             .waitFor({ state: 'hidden', timeout: 7000 }).catch(() => { });
 
         const rows = this.page.locator('tbody tr');
-        const rowCount = await this.waitForTableRows(); 
+        const rowCount = await this.waitForTableRows();
         expect(rowCount).toBeGreaterThan(0);
 
         const headerCells = await this.page.locator('thead tr').first().locator('th').allInnerTexts();
@@ -1304,7 +1304,7 @@ export class ListingActions {
         // expect "No records found" message to be visible
         const noRecordsMsg = this.page.locator('text=/no results? found/i');
         await expect(noRecordsMsg).toBeVisible({ timeout: 3000 });
-      
+
     }
 
     // Checking if grid view button is displayed and toggling to grid view
@@ -1316,5 +1316,54 @@ export class ListingActions {
         const cardRows = this.locators.cardViewPropertyRow();
         await expect(cardRows).toBeVisible({ timeout: 30000 });
     }
-    
+
+    // Checking contact details in grid view - verify image, address, status, specifications, price
+    async checkContactDetailsInGridView() {
+        await this.navigateToListings();
+
+        // Grid view button should now be interacted with
+        const gridViewButton = this.locators.gridViewButton();
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        const image = this.page.locator('.s-property .product-thumbnail img').nth(2);
+        await expect(image).toBeVisible()
+
+        const heading = this.page.locator('.s-property h3[title]').nth(2);
+        const headingValue = await heading.textContent();
+        console.log("Heading:", headingValue?.trim());
+        // Optional: verify that image is visible
+        await expect(image).toBeVisible();
+
+        const status = this.page.locator('.tag-saved').nth(2);
+        const statusValue = await status.textContent();
+        console.log("Status:", statusValue?.trim());
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        const address = this.page.getByRole('heading', { name: '49 Hetheringtons Road, North Isis, QLD 4660' })
+        await expect(address).toBeVisible()
+        // Beds
+        const beds = this.page.locator('img[src*="Bed.svg"]').locator('xpath=../following-sibling::span').nth(2);
+        const bedsValue = await beds.textContent();
+        console.log("Beds:", bedsValue?.trim());
+
+        // Baths
+        const baths = this.page.locator('img[src*="Bath.svg"]').locator('xpath=../following-sibling::span').nth(2);
+        const bathsValue = await baths.textContent();
+        console.log("Baths:", bathsValue?.trim());
+
+        // Cars
+        const cars = this.page.locator('img[src*="Car.svg"]').locator('xpath=../following-sibling::span').nth(2);
+        const carsValue = await cars.textContent();
+        console.log("Cars:", carsValue?.trim());
+
+        // Area (16m2)
+        const area = this.page.locator('img[src*="area-1.svg"]').locator('xpath=../following-sibling::span').nth(2);
+        const areaValue = await area.textContent();
+        console.log("Area:", areaValue?.trim());
+
+        const price = this.page.locator('.price-from').nth(2);
+        const priceValue = await price.textContent();
+        console.log("Price:", priceValue?.trim());
+
+    }
+
 }
