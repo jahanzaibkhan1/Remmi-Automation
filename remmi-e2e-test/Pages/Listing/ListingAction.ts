@@ -1192,4 +1192,28 @@ export class ListingActions {
         await expect(resetBtn).toBeEnabled();
         await resetBtn.click();
     }
+
+    // Short version: just select the current date se agay wali date (tomorrow) in datepicker  
+    async selectInvalidListingCreationDate() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+
+        await this.locators.listingCreationDateDropdown().click();
+
+        // Calculate tomorrow's date
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const d = tomorrow.getDate();
+
+        // If calendar not showing correct month, click next (optional: most calendars default to current month)
+        const day = this.page.locator('.p-datepicker-calendar td:not(.p-disabled) span', { hasText: new RegExp(`^${d}$`) });
+        await day.first().click({ force: true });
+
+        // expect "No records found" message to be visible
+        const noRecordsMsg = this.page.locator('text=/no results? found/i');
+        await expect(noRecordsMsg).toBeVisible({ timeout: 3000 });
+      
+    }
+
+    
 }
