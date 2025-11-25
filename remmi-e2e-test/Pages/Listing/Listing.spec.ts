@@ -22,7 +22,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
   test('Test 1: Searching for a valid contact', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
-    await listingActions.searchForValidListing('Hina Ryan');
+    await listingActions.searchForValidListing('Hina Agent');
   });
 
   test('Test 2: Searching for an invalid contact', async ({ sessionPage }) => {
@@ -133,9 +133,6 @@ test('Test 23: Selecting a single agent filters listings to show only those for 
   const listingActions = new ListingActions(sessionPage);
   await listingActions.selectSingleAgent();
 });
-
-});
-
 test('Test 24: Selecting multiple agents filters listings to show only those for the chosen agents', async ({ sessionPage }) => {
   const listingActions = new ListingActions(sessionPage);
   await listingActions.selectMultipleAgents();
@@ -150,5 +147,14 @@ test('Test 26: Selecting multiple contract statuses filters listings correctly',
   const listingActions = new ListingActions(sessionPage);
   await listingActions.selectMultipleContractStatuses();
 });
+
+test('Test 27: Selecting a contact creation date', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.selectListingCreationDate();
+});
+
+});
+
+
 
 export { test };

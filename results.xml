@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.29710499999858">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-24T12:03:21.787Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.215" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Selecting a single agent filters listings to show only those for the chosen agent" classname="Pages\Listing\Listing.spec.ts" time="27.215">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="27.326048000000416">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-25T04:33:59.395Z" hostname="chromium" tests="1" failures="0" skipped="0" time="19.04" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Selecting a listing creation date filters listings accordingly" classname="Pages\Listing\Listing.spec.ts" time="19.04">
 </testcase>
 </testsuite>
 </testsuites>
