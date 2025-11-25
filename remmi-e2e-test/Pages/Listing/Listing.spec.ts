@@ -158,6 +158,11 @@ test('Test 28: Selecting an invalid date', async ({ sessionPage }) => {
   await listingActions.selectInvalidListingCreationDate();
 });
 
+test('Test 29: Checking grid view display', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.checkGridViewDisplay();
+});
+
 });
 
 

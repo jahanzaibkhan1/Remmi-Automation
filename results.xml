@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.13054199999944">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-25T08:37:30.115Z" hostname="chromium" tests="1" failures="0" skipped="0" time="26.053" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Selecting an invalid date" classname="Pages\Listing\Listing.spec.ts" time="26.053">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="24.69396299999999">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-25T10:44:32.280Z" hostname="chromium" tests="1" failures="0" skipped="0" time="14.547" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 29: Checking grid view display" classname="Pages\Listing\Listing.spec.ts" time="14.547">
 </testcase>
 </testsuite>
 </testsuites>

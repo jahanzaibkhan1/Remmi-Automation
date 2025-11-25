@@ -135,6 +135,98 @@ export class ListingActions {
         await this.page.waitForTimeout(700);
     }
 
+    // Private functions for "Contract Status" filter
+    private async openContractStatusDropdown() {
+        const dropdown = this.locators.contractStatusDropdown();
+        await expect(dropdown).toBeVisible({ timeout: 3000 });
+        await dropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+    }
+
+    private async selectAllContractStatuses() {
+        await this.openContractStatusDropdown();
+        const selectAllCheckbox = this.locators.contractStatusSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+    }
+
+    private async deselectAllContractStatuses() {
+        await this.openContractStatusDropdown();
+        const selectAllCheckbox = this.locators.contractStatusSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Optionally click again if toggle required for deselect scenario
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(700);
+    }
+
+    
+    private async searchContractStatus(status: string) {
+        const searchInput = this.locators.contractStatusSearchInput();
+        await expect(searchInput).toBeVisible();
+        await searchInput.click({ force: true });
+        await searchInput.fill('');
+        await searchInput.fill(status);
+        await this.page.waitForTimeout(400);
+    }
+
+    private async selectContractStatusOption(status: string) {
+        const option = this.locators.contractStatusOption(status);
+        await expect(option).toBeVisible({ timeout: 5000 });
+        await option.click({ force: true });
+        await this.page.waitForTimeout(600);
+    }
+
+
+    // Private functions for "Listing Creation Date" filter
+
+    private async openListingCreationDateDropdown() {
+        const dropdown = this.locators.listingCreationDateDropdown();
+        await expect(dropdown).toBeVisible({ timeout: 3000 });
+        await dropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+    }
+
+    private async searchListingCreationDate(searchText: string) {
+        const searchInput = this.locators.listingCreationDateSearchInput();
+        await expect(searchInput).toBeVisible();
+        await searchInput.click({ force: true });
+        await searchInput.fill('');
+        await searchInput.fill(searchText);
+        await this.page.waitForTimeout(400);
+    }
+
+    private async selectListingCreationDateOption(label: string) {
+        const option = this.locators.listingCreationDateOption(label);
+        await expect(option).toBeVisible({ timeout: 5000 });
+        await option.click({ force: true });
+        await this.page.waitForTimeout(600);
+    }
+
+    private async selectAllListingCreationDates() {
+        await this.openListingCreationDateDropdown();
+        const selectAllCheckbox = this.locators.listingCreationDateSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+    }
+
+    private async deselectAllListingCreationDates() {
+        await this.openListingCreationDateDropdown();
+        const selectAllCheckbox = this.locators.listingCreationDateSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Optionally click again if toggle required for deselect scenario
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(700);
+    }
+
+
     //*************************************Public Actions *************************************//
 
     async searchForValidListing(keyword: string) {
@@ -1215,5 +1307,14 @@ export class ListingActions {
       
     }
 
+    // Checking if grid view button is displayed and toggling to grid view
+    async checkGridViewDisplay() {
+        await this.navigateToListings();
+
+        // Grid view button should now be interacted with
+        const gridViewButton = this.locators.gridViewButton();
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+    }
     
 }
