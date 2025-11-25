@@ -153,7 +153,10 @@ test('Test 27: Selecting a contact creation date', async ({ sessionPage }) => {
   await listingActions.selectListingCreationDate();
 });
 
-
+test('Test 28: Selecting an invalid date', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.selectInvalidListingCreationDate();
+});
 
 });
 
