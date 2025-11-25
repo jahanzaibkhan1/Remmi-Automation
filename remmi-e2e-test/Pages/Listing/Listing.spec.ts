@@ -163,6 +163,11 @@ test('Test 29: Checking grid view display', async ({ sessionPage }) => {
   await listingActions.checkGridViewDisplay();
 });
 
+test('Test 30: Checking contact details in grid view', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.checkContactDetailsInGridView();
+});
+
 });
 
 
