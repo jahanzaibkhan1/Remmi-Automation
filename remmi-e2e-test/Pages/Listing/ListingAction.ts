@@ -1131,4 +1131,65 @@ export class ListingActions {
         await resetButton.click();
     }
 
+    // Selecting a contact creation date
+    async selectListingCreationDate() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+
+        // Open datepicker
+        const input = this.locators.listingCreationDateDropdown();
+        await expect(input).toBeVisible({ timeout: 3000 });
+        await input.click({ force: true });
+        await this.page.waitForTimeout(300);
+
+        // Get current month/year as text
+        const mElem = this.page.locator('.p-datepicker .p-datepicker-month');
+        const yElem = this.page.locator('.p-datepicker .p-datepicker-year');
+        const months = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+
+        const monthText = ((await mElem.textContent()) ?? '').trim().toLowerCase();
+        const yearText = (await yElem.textContent() ?? '0').trim();
+
+        const currM = months.findIndex(m => m.toLowerCase() === monthText);
+        const currY = parseInt(yearText, 10);
+
+        // Safety: Make sure current month/year are valid
+        if (currM < 0 || isNaN(currY)) {
+            throw new Error(`Failed to read month/year from datepicker: got month='${monthText}', year='${yearText}'`);
+        }
+
+        // Calculate how many "next" clicks are needed for Jan 2025
+        const targetYear = 2025, targetMonth = 0; // 0 = Jan
+        const nextClicks = (targetYear - currY) * 12 + (targetMonth - currM);
+
+        const navBtn = nextClicks >= 0
+            ? this.page.locator('.p-datepicker-next')
+            : this.page.locator('.p-datepicker-prev');
+
+        for (let i = 0; i < Math.abs(nextClicks); ++i) {
+            await navBtn.click();
+            await this.page.waitForTimeout(120);
+        }
+
+        // Select 1st Jan
+        await this.page.locator('.p-datepicker-calendar td span', { hasText: /^1$/ }).first().click({ force: true });
+        await this.page.waitForTimeout(300);
+
+        // Click 'Today' in datepicker
+        let todayBtn = this.page.locator('.p-datepicker-buttonbar button', { hasText: /today/i });
+        if (!(await todayBtn.isVisible().catch(() => false))) {
+            todayBtn = this.page.locator('button', { hasText: /today/i });
+        }
+        await todayBtn.click({ force: true });
+
+        await this.waitForTableRows()
+
+        // Reset filter
+        const resetBtn = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetBtn).toBeEnabled();
+        await resetBtn.click();
+    }
 }
