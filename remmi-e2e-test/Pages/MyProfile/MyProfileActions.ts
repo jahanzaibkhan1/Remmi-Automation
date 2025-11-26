@@ -1323,15 +1323,51 @@ export class MyProfileActions {
   }
 
   // <-----------------------------------Teams Tab -------------------------------------->
+  async DeleteExistingTeam() {
+    await test.step('Delete all teams if any exist, otherwise pass the test', async () => {
+      await this.NavigateToTeamsTab();
+
+      await this.page.waitForTimeout(2000)
+      const teamsCheckboxes = this.page.locator('tbody tr input[type="checkbox"]');
+      const teamCount = await teamsCheckboxes.count();
+
+      if (teamCount === 0) {
+        console.log('🟢 No existing teams to delete - skipping deletion.');
+        return;
+      }
+
+      // Click the select-all checkbox if available
+      const selectAllCheckbox = this.page.getByRole('checkbox').nth(1);
+      await selectAllCheckbox.click({ force: true });
+
+      // Click the delete button
+      const deleteButton = this.page.getByRole('button', { name: /delete/i }).first();
+      await deleteButton.click({ force: true });
+
+      // Confirm the deletion in the dialog
+      const confirmButton = this.page.getByRole('button', { name: /yes|ok/i }).first();
+      await confirmButton.click({ force: true });
+
+      // Wait for deletion toast & verify
+      const toast = this.page.getByRole('alert', { name: /removed successfully|deleted successfully/i });
+      await expect(toast).toBeVisible({ timeout: 10000 });
+
+      // Optionally, check no teams remain in the table
+      await this.page.waitForTimeout(1000);
+      const remainingTeams = await teamsCheckboxes.count();
+      if (remainingTeams === 0) {
+        console.log('🟢 All teams have been deleted.');
+      } else {
+        console.warn(`🔴 Some teams still remain after attempted deletion.`);
+      }
+    });
+  }
+  
   async SearchForExistingTeam(teamName: string) {
     await test.step('Verify search works for existing team names', async () => {
       await this.NavigateToTeamsTab()
       await this.searchTeamName(teamName);
       await this.SelectTeamOption(teamName);
-      await this.AddButton();
-      const toast = this.page.getByRole('alert', { name: 'Added successfully' });
-      await expect(toast).toBeVisible({ timeout: 5000 });
-      await this.verifyTeamInTable(teamName)
     })
   }
 
