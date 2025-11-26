@@ -1,6 +1,16 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.29710499999858">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-24T12:03:21.787Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.215" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Selecting a single agent filters listings to show only those for the chosen agent" classname="Pages\Listing\Listing.spec.ts" time="27.215">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="27.80803500000015">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-25T12:11:51.362Z" hostname="chromium" tests="1" failures="0" skipped="0" time="19.697" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 30: Checking contact details in grid view" classname="Pages\Listing\Listing.spec.ts" time="19.697">
+<system-out>
+<![CDATA[Heading: 49 Hetheringtons Road, North Isis, QLD 4660
+Status: For Sale
+Beds: 2
+Baths: 1
+Cars: 8
+Area: 16m2
+Price: 1330000
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>

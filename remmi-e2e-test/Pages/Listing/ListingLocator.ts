@@ -105,4 +105,12 @@ export class ListingLocators {
         return this.page.locator('li.p-element', { hasText: label });
     }
 
+    gridViewButton(): Locator {
+        return this.page.locator('img.grid-svg-image');
+    }
+    // Card view property row locator for listings
+    cardViewPropertyRow(): Locator {
+        return this.page.locator('.property-row.pl-1.ng-star-inserted');
+    }
+
 }
