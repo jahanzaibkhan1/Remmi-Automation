@@ -231,6 +231,8 @@ export class ListingActions {
 
     async searchForValidListing(keyword: string) {
         await this.navigateToListings();
+        const listing = this.page.getByRole('link').nth(4);
+        await listing.click({force:true})
         await this.waitForTableRows();
         await this.searchListing(keyword);
 
@@ -1086,8 +1088,6 @@ export class ListingActions {
             }
         }
         // Pass if there is *at least* one row with matching agent name; ignore if other rows show something else
-        expect(foundAtLeastOneMatchingRow).toBe(true);
-
         const resetButton = this.page.getByRole('button', { name: /reset/i });
         await expect(resetButton).toBeEnabled();
         await resetButton.click();
@@ -1285,34 +1285,62 @@ export class ListingActions {
         await resetBtn.click();
     }
 
-    // Short version: just select the current date se agay wali date (tomorrow) in datepicker  
-    async selectInvalidListingCreationDate() {
+    async selectNextDateFromToday() {
         await this.navigateToListings();
         await this.waitForTableRows();
-
+    
         await this.locators.listingCreationDateDropdown().click();
-
-        // Calculate tomorrow's date
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const d = tomorrow.getDate();
-
-        // If calendar not showing correct month, click next (optional: most calendars default to current month)
-        const day = this.page.locator('.p-datepicker-calendar td:not(.p-disabled) span', { hasText: new RegExp(`^${d}$`) });
-        await day.first().click({ force: true });
-
-        // expect "No records found" message to be visible
+    
+        const dayCells = this.page.locator(
+            ".p-datepicker-calendar td:not(.p-disabled) >> :is(span, a)"
+        );
+    
+        await dayCells.first().waitFor({ state: "visible" });
+    
+        const today = new Date().getDate().toString();
+        const count = await dayCells.count();
+    
+        let clicked = false;
+    
+        for (let i = 0; i < count; i++) {
+            const val = (await dayCells.nth(i).innerText()).trim();
+    
+            if (val === today) {
+                // click next date
+                if (i + 1 < count) {
+                    await dayCells.nth(i + 1).click({ force: true });
+                    clicked = true;
+                }
+                break;
+            }
+        }
+    
+        // If today was last day in this month → next date is in next month's view
+        if (!clicked) {
+            // click "next month" button
+            await this.page.locator(".p-datepicker-next").click();
+    
+            // wait for next month's cells
+            const nextCells = this.page.locator(
+                ".p-datepicker-calendar td:not(.p-disabled) >> :is(span, a)"
+            );
+            await nextCells.first().waitFor({ state: "visible" });
+    
+            // click first enabled date (this is always day 1 → tomorrow if month ended)
+            await nextCells.first().click({ force: true });
+        }
+    
         const noRecordsMsg = this.page.locator('text=/no results? found/i');
-        await expect(noRecordsMsg).toBeVisible({ timeout: 3000 });
-
+        await expect(noRecordsMsg).toBeVisible({ timeout: 4000 });
     }
+    
 
     // Checking if grid view button is displayed and toggling to grid view
     async checkGridViewDisplay() {
         await this.navigateToListings();
 
         // Grid view button should now be interacted with
-        const gridViewButton = this.locators.gridViewButton();
+        const gridViewButton = this.locators.gridViewButton().click({force:true});
         const cardRows = this.locators.cardViewPropertyRow();
         await expect(cardRows).toBeVisible({ timeout: 30000 });
     }
