@@ -18,6 +18,20 @@ function ensureFileExists(filepath: string, content = 'This is not a valid image
 
 test.describe('Teams Tab Tests - Remmi E2E', () => {
 
+  
+  test('Test case 0: Delete all existing teams', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
+
+    await login.login(
+        operationManager.email!,
+        operationManager.password!,
+        process.env.E2E_MANAGER_OTP_SECRET!
+      );
+    await profile.navigateToProfilePage();
+    await profile.DeleteExistingTeam();
+  });
+
   test('Test case 1: Verify search works for existing team names', async ({ page }) => {
     const login = new LoginActions(page);
     const profile = new MyProfileActions(page);
