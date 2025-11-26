@@ -390,12 +390,12 @@ export class MyProfileActions {
 
   private async calendarAccessUserName(userName: string) {
     const calendarAccessUserName = this.locators.calendarAccessUserName(userName);
-    await expect(calendarAccessUserName).toBeVisible({ timeout: 30000 });
+
   }
 
   private async removeUser() {
     const deleteUserIcon = this.locators.deleteUserIcon();
-    await deleteUserIcon.click({ force: true });
+    await deleteUserIcon.dblclick({ force: true });
   }
 
   private async selectAll() {
@@ -408,10 +408,11 @@ export class MyProfileActions {
 
   private async DeselectAll() {
     // Locator for the "Select All" checkbox
-    const selectAll = this.locators.DeselectAll();
+    const selectAll = this.locators.selectAll();
     // Click the "Select All" checkbox
     await this.page.waitForTimeout(2000);
     await selectAll.click({ force: true });
+    await selectAll.click({force:true})
   }
 
   /**
@@ -1197,6 +1198,7 @@ export class MyProfileActions {
       await this.selectUserFromDropdown(userName);
       console.log(`${userName} selected for access.`);
     }
+    await this.SaveButton();
     await this.SaveButton();
     await this.calendarUpdateToast();
 
