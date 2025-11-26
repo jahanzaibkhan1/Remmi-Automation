@@ -1366,4 +1366,27 @@ export class ListingActions {
 
     }
 
+    // Expands the first contact card in the listings and verifies expanded details are visible
+    async expandFirstContactCard() {
+        await this.navigateToListings();
+
+        // Wait for the card rows to be visible
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+        // Assuming `card` is the current card context
+        const accordionArrow = this.page.locator('p-accordiontab >> a.p-accordion-header-link[role="button"] >> chevronrighticon');
+
+        // Click to expand accordion
+        await accordionArrow.click();
+
+
+        // Wait to see expanded details (use a selector for an expanded section, or something unique that appears after expansion)
+        const expandedDetails = cardRows.first().locator('.details-expanded, .expanded-content, .property-details-block, .contact-details, .extra-details').first();
+        await expect(expandedDetails).toBeVisible({ timeout: 5000 });
+
+        // Optionally log summary details in expanded card
+        const expandedText = await expandedDetails.textContent();
+        console.log('Expanded Card Details:', expandedText?.trim());
+    }
+
 }
