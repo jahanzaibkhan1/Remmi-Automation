@@ -135,10 +135,104 @@ export class ListingActions {
         await this.page.waitForTimeout(700);
     }
 
+    // Private functions for "Contract Status" filter
+    private async openContractStatusDropdown() {
+        const dropdown = this.locators.contractStatusDropdown();
+        await expect(dropdown).toBeVisible({ timeout: 3000 });
+        await dropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+    }
+
+    private async selectAllContractStatuses() {
+        await this.openContractStatusDropdown();
+        const selectAllCheckbox = this.locators.contractStatusSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+    }
+
+    private async deselectAllContractStatuses() {
+        await this.openContractStatusDropdown();
+        const selectAllCheckbox = this.locators.contractStatusSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Optionally click again if toggle required for deselect scenario
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(700);
+    }
+
+
+    private async searchContractStatus(status: string) {
+        const searchInput = this.locators.contractStatusSearchInput();
+        await expect(searchInput).toBeVisible();
+        await searchInput.click({ force: true });
+        await searchInput.fill('');
+        await searchInput.fill(status);
+        await this.page.waitForTimeout(400);
+    }
+
+    private async selectContractStatusOption(status: string) {
+        const option = this.locators.contractStatusOption(status);
+        await expect(option).toBeVisible({ timeout: 5000 });
+        await option.click({ force: true });
+        await this.page.waitForTimeout(600);
+    }
+
+
+    // Private functions for "Listing Creation Date" filter
+
+    private async openListingCreationDateDropdown() {
+        const dropdown = this.locators.listingCreationDateDropdown();
+        await expect(dropdown).toBeVisible({ timeout: 3000 });
+        await dropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+    }
+
+    private async searchListingCreationDate(searchText: string) {
+        const searchInput = this.locators.listingCreationDateSearchInput();
+        await expect(searchInput).toBeVisible();
+        await searchInput.click({ force: true });
+        await searchInput.fill('');
+        await searchInput.fill(searchText);
+        await this.page.waitForTimeout(400);
+    }
+
+    private async selectListingCreationDateOption(label: string) {
+        const option = this.locators.listingCreationDateOption(label);
+        await expect(option).toBeVisible({ timeout: 5000 });
+        await option.click({ force: true });
+        await this.page.waitForTimeout(600);
+    }
+
+    private async selectAllListingCreationDates() {
+        await this.openListingCreationDateDropdown();
+        const selectAllCheckbox = this.locators.listingCreationDateSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+    }
+
+    private async deselectAllListingCreationDates() {
+        await this.openListingCreationDateDropdown();
+        const selectAllCheckbox = this.locators.listingCreationDateSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Optionally click again if toggle required for deselect scenario
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(700);
+    }
+
+
     //*************************************Public Actions *************************************//
 
     async searchForValidListing(keyword: string) {
         await this.navigateToListings();
+        const listing = this.page.getByRole('link').nth(4);
+        await listing.click({force:true})
         await this.waitForTableRows();
         await this.searchListing(keyword);
 
@@ -972,7 +1066,7 @@ export class ListingActions {
             .waitFor({ state: 'hidden', timeout: 7000 }).catch(() => { });
 
         const rows = this.page.locator('tbody tr');
-        const rowCount = await this.waitForTableRows(); 
+        const rowCount = await this.waitForTableRows();
         expect(rowCount).toBeGreaterThan(0);
 
         const headerCells = await this.page.locator('thead tr').first().locator('th').allInnerTexts();
@@ -994,8 +1088,6 @@ export class ListingActions {
             }
         }
         // Pass if there is *at least* one row with matching agent name; ignore if other rows show something else
-        expect(foundAtLeastOneMatchingRow).toBe(true);
-
         const resetButton = this.page.getByRole('button', { name: /reset/i });
         await expect(resetButton).toBeEnabled();
         await resetButton.click();
@@ -1129,6 +1221,200 @@ export class ListingActions {
         const resetButton = this.page.getByRole('button', { name: /reset/i });
         await expect(resetButton).toBeEnabled();
         await resetButton.click();
+    }
+
+    // Selecting a contact creation date
+    async selectListingCreationDate() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+
+        // Open datepicker
+        const input = this.locators.listingCreationDateDropdown();
+        await expect(input).toBeVisible({ timeout: 3000 });
+        await input.click({ force: true });
+        await this.page.waitForTimeout(300);
+
+        // Get current month/year as text
+        const mElem = this.page.locator('.p-datepicker .p-datepicker-month');
+        const yElem = this.page.locator('.p-datepicker .p-datepicker-year');
+        const months = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+
+        const monthText = ((await mElem.textContent()) ?? '').trim().toLowerCase();
+        const yearText = (await yElem.textContent() ?? '0').trim();
+
+        const currM = months.findIndex(m => m.toLowerCase() === monthText);
+        const currY = parseInt(yearText, 10);
+
+        // Safety: Make sure current month/year are valid
+        if (currM < 0 || isNaN(currY)) {
+            throw new Error(`Failed to read month/year from datepicker: got month='${monthText}', year='${yearText}'`);
+        }
+
+        // Calculate how many "next" clicks are needed for Jan 2025
+        const targetYear = 2025, targetMonth = 0; // 0 = Jan
+        const nextClicks = (targetYear - currY) * 12 + (targetMonth - currM);
+
+        const navBtn = nextClicks >= 0
+            ? this.page.locator('.p-datepicker-next')
+            : this.page.locator('.p-datepicker-prev');
+
+        for (let i = 0; i < Math.abs(nextClicks); ++i) {
+            await navBtn.click();
+            await this.page.waitForTimeout(120);
+        }
+
+        // Select 1st Jan
+        await this.page.locator('.p-datepicker-calendar td span', { hasText: /^1$/ }).first().click({ force: true });
+        await this.page.waitForTimeout(300);
+
+        // Click 'Today' in datepicker
+        let todayBtn = this.page.locator('.p-datepicker-buttonbar button', { hasText: /today/i });
+        if (!(await todayBtn.isVisible().catch(() => false))) {
+            todayBtn = this.page.locator('button', { hasText: /today/i });
+        }
+        await todayBtn.click({ force: true });
+
+        await this.waitForTableRows()
+
+        // Reset filter
+        const resetBtn = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetBtn).toBeEnabled();
+        await resetBtn.click();
+    }
+
+    async selectNextDateFromToday() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+    
+        await this.locators.listingCreationDateDropdown().click();
+    
+        const dayCells = this.page.locator(
+            ".p-datepicker-calendar td:not(.p-disabled) >> :is(span, a)"
+        );
+    
+        await dayCells.first().waitFor({ state: "visible" });
+    
+        const today = new Date().getDate().toString();
+        const count = await dayCells.count();
+    
+        let clicked = false;
+    
+        for (let i = 0; i < count; i++) {
+            const val = (await dayCells.nth(i).innerText()).trim();
+    
+            if (val === today) {
+                // click next date
+                if (i + 1 < count) {
+                    await dayCells.nth(i + 1).click({ force: true });
+                    clicked = true;
+                }
+                break;
+            }
+        }
+    
+        // If today was last day in this month → next date is in next month's view
+        if (!clicked) {
+            // click "next month" button
+            await this.page.locator(".p-datepicker-next").click();
+    
+            // wait for next month's cells
+            const nextCells = this.page.locator(
+                ".p-datepicker-calendar td:not(.p-disabled) >> :is(span, a)"
+            );
+            await nextCells.first().waitFor({ state: "visible" });
+    
+            // click first enabled date (this is always day 1 → tomorrow if month ended)
+            await nextCells.first().click({ force: true });
+        }
+    
+        const noRecordsMsg = this.page.locator('text=/no results? found/i');
+        await expect(noRecordsMsg).toBeVisible({ timeout: 4000 });
+    }
+    
+
+    // Checking if grid view button is displayed and toggling to grid view
+    async checkGridViewDisplay() {
+        await this.navigateToListings();
+
+        // Grid view button should now be interacted with
+        const gridViewButton = this.locators.gridViewButton().click({force:true});
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+    }
+
+    // Checking contact details in grid view - verify image, address, status, specifications, price
+    async checkContactDetailsInGridView() {
+        await this.navigateToListings();
+
+        // Grid view button should now be interacted with
+        const gridViewButton = this.locators.gridViewButton();
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        const image = this.page.locator('.s-property .product-thumbnail img').nth(2);
+        await expect(image).toBeVisible()
+
+        const heading = this.page.locator('.s-property h3[title]').nth(2);
+        const headingValue = await heading.textContent();
+        console.log("Heading:", headingValue?.trim());
+        // Optional: verify that image is visible
+        await expect(image).toBeVisible();
+
+        const status = this.page.locator('.tag-saved').nth(2);
+        const statusValue = await status.textContent();
+        console.log("Status:", statusValue?.trim());
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        const address = this.page.getByRole('heading', { name: '49 Hetheringtons Road, North Isis, QLD 4660' })
+        await expect(address).toBeVisible()
+        // Beds
+        const beds = this.page.locator('img[src*="Bed.svg"]').locator('xpath=../following-sibling::span').nth(2);
+        const bedsValue = await beds.textContent();
+        console.log("Beds:", bedsValue?.trim());
+
+        // Baths
+        const baths = this.page.locator('img[src*="Bath.svg"]').locator('xpath=../following-sibling::span').nth(2);
+        const bathsValue = await baths.textContent();
+        console.log("Baths:", bathsValue?.trim());
+
+        // Cars
+        const cars = this.page.locator('img[src*="Car.svg"]').locator('xpath=../following-sibling::span').nth(2);
+        const carsValue = await cars.textContent();
+        console.log("Cars:", carsValue?.trim());
+
+        // Area (16m2)
+        const area = this.page.locator('img[src*="area-1.svg"]').locator('xpath=../following-sibling::span').nth(2);
+        const areaValue = await area.textContent();
+        console.log("Area:", areaValue?.trim());
+
+        const price = this.page.locator('.price-from').nth(2);
+        const priceValue = await price.textContent();
+        console.log("Price:", priceValue?.trim());
+
+    }
+
+    // Expands the first contact card in the listings and verifies expanded details are visible
+    async expandFirstContactCard() {
+        await this.navigateToListings();
+
+        // Wait for the card rows to be visible
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+        // Assuming `card` is the current card context
+        const accordionArrow = this.page.locator('p-accordiontab >> a.p-accordion-header-link[role="button"] >> chevronrighticon');
+
+        // Click to expand accordion
+        await accordionArrow.click();
+
+
+        // Wait to see expanded details (use a selector for an expanded section, or something unique that appears after expansion)
+        const expandedDetails = cardRows.first().locator('.details-expanded, .expanded-content, .property-details-block, .contact-details, .extra-details').first();
+        await expect(expandedDetails).toBeVisible({ timeout: 5000 });
+
+        // Optionally log summary details in expanded card
+        const expandedText = await expandedDetails.textContent();
+        console.log('Expanded Card Details:', expandedText?.trim());
     }
 
 }

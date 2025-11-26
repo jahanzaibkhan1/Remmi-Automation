@@ -22,7 +22,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
   test('Test 1: Searching for a valid contact', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
-    await listingActions.searchForValidListing('Hina Ryan');
+    await listingActions.searchForValidListing('Hina Agent');
   });
 
   test('Test 2: Searching for an invalid contact', async ({ sessionPage }) => {
@@ -93,62 +93,83 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.searchWithinSuburbDropdown('Anglesea');
   });
-  
+
   test('Test 16: Selecting a single listing status filters the listings correctly', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.selectSingleListingStatus();
+  });
+
+  test('Test 17: Selecting multiple listing statuses filters listings correctly', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectMultipleListingStatuses();
+  });
+
+  test('Test 18: Using "Select All" in status filter selects all listing statuses and displays all listings', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectAllListingStatuses();
+  });
+
+  test('Test 19: Using "Deselect All" in status filter deselects all statuses and resets filter', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deselectAllListingStatuses();
+  });
+
+  test('Test 20: Searching within listing status filter filters status options', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchListingStatusFilter('For Lease');
+  });
+
+  test('Test 21: Selecting a single listing type filters listings correctly', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectSingleListingType();
+  });
+
+  test('Test 22: Selecting multiple listing types filters listings correctly', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectMultipleListingTypes();
+  });
+
+  test('Test 23: Selecting a single agent filters listings to show only those for the chosen agent', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectSingleAgent();
+  });
+  test('Test 24: Selecting multiple agents filters listings to show only those for the chosen agents', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectMultipleAgents();
+  });
+
+  test('Test 25: Selecting a single contract status', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectSingleContractStatus();
+  });
+
+  test('Test 26: Selecting multiple contract statuses filters listings correctly', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectMultipleContractStatuses();
+  });
+
+  test('Test 27: Selecting a contact creation date', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectListingCreationDate();
+  });
+
+  test('Test 28: Selecting an invalid date', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectNextDateFromToday();
+  });
+
+  test('Test 29: Checking grid view display', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.checkGridViewDisplay();
+  });
+
+  test('Test 30: Checking contact details in grid view', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.checkContactDetailsInGridView();
+  });
+
 });
 
-test('Test 17: Selecting multiple listing statuses filters listings correctly', async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.selectMultipleListingStatuses();
-});
 
-test('Test 18: Using "Select All" in status filter selects all listing statuses and displays all listings', async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.selectAllListingStatuses();
-});
-
-test('Test 19: Using "Deselect All" in status filter deselects all statuses and resets filter', async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.deselectAllListingStatuses();
-});
-
-test('Test 20: Searching within listing status filter filters status options', async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.searchListingStatusFilter('For Lease');
-});
-
-test('Test 21: Selecting a single listing type filters listings correctly', async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.selectSingleListingType();
-});
-
-test('Test 22: Selecting multiple listing types filters listings correctly', async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.selectMultipleListingTypes();
-});
-
-test('Test 23: Selecting a single agent filters listings to show only those for the chosen agent', async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.selectSingleAgent();
-});
-
-});
-
-test('Test 24: Selecting multiple agents filters listings to show only those for the chosen agents', async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.selectMultipleAgents();
-});
-
-test('Test 25: Selecting a single contract status', async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.selectSingleContractStatus();
-});
-
-test('Test 26: Selecting multiple contract statuses filters listings correctly', async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.selectMultipleContractStatuses();
-});
 
 export { test };

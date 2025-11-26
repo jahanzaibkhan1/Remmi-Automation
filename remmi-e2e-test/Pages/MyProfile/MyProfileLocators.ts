@@ -227,7 +227,7 @@ export class MyProfileLocators {
     return this.page.getByRole('tab', { name: 'Access' });
   }
   selectUser(): Locator {
-    return this.page.locator('div').filter({ hasText: /^Select$/ }).first()
+    return this.page.locator('div').filter({ hasText: /^Select$/ }).last()
   }
   SearchUserName(): Locator {
     return this.page.getByRole('textbox', { name: 'Type to search' })
