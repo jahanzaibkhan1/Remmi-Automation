@@ -1419,4 +1419,32 @@ export class ListingActions {
         await chevronDown.click({ force: true });
     }
 
+    // Deleting a Listing
+    async deleteListingCard() {
+        await this.navigateToListings();
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').nth(0);
+        await chevronDown.click({ force: true });
+
+        // Find the delete button for the first visible listing card in card/grid view
+        const cardDeleteButton = this.page.locator('a:nth-child(4)').nth(0);
+        await cardDeleteButton.scrollIntoViewIfNeeded()
+        await cardDeleteButton.click({ force: true });
+
+        // Wait for confirmation dialog to appear
+        const confirmationDialog = this.page.getByText('Are you sure you want to delete this listing ? Your listing will be permanently');
+        await expect(confirmationDialog).toBeVisible({ timeout: 10000 });
+
+        // Find and click the confirm Delete button
+        const confirmButton = this.page.getByRole('button', { name: 'Delete' });
+        await expect(confirmButton).toBeVisible({ timeout: 10000 });
+        // await confirmButton.click({ force: true });
+
+        // // Assert toast/snackbar notification or row is removed
+        // const toast = this.page.locator('.p-toast-message-success, .p-toast-message', { hasText: "success" });
+        // await expect(toast).toBeVisible({ timeout: 10000 });
+    }
+
 }
