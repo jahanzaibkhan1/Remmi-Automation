@@ -168,6 +168,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.checkContactDetailsInGridView();
   });
 
+  test('Test 31: Expanding a Listing card', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.expandFirstContactCard();
+  });
+
 });
 
 

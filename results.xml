@@ -1,8 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.233780000001193">
-<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-11-27T07:27:59.572Z" hostname="chromium" tests="1" failures="0" skipped="0" time="22.439" errors="0">
-<testcase name="Teams Tab Tests - Remmi E2E › Test case 30: Verify clicking Cancel on Delete popup keeps team." classname="Pages\MyProfile\teams.test.spec.ts" time="22.439">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="27.04476399999857">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-27T08:32:09.723Z" hostname="chromium" tests="1" failures="0" skipped="0" time="19.853" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 31: Expanding a Listing card" classname="Pages\Listing\Listing.spec.ts" time="19.853">
 <system-out>
-<![CDATA[✅ Session updated and saved to E:\remmi-qa-automation\remmi-e2e-test\sessions\manager-session.json
+<![CDATA[Expanded Card Details (trimmed): Property TypeAcreage/Semi RuralListing TypeOpenAgentHina AgentCompare Listing
 ]]>
 </system-out>
 </testcase>
