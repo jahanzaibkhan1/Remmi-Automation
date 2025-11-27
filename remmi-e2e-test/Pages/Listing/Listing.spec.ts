@@ -188,6 +188,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.editListingCard();
   });
 
+  test('Test 35: Editing and saving changes on a listing card', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    const newTitle = `Updated Listing Title ${Date.now()}`;
+    await listingActions.editAndSaveListingCard(newTitle);
+  });
+
 });
 
 
