@@ -292,7 +292,7 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
         process.env.E2E_MANAGER_OTP_SECRET!
       );
     await profile.navigateToProfilePage();
-    await profile.VerifyTeamLeaderDropdownActive('QA Tester', 'Dawood Ahmad');
+    await profile.VerifyTeamLeaderDropdownActive('QA Tester', 'Jahanzaib Xenex');
   });
 
   test('Test case 20: Verify team creation fails if no Team Leader is selected.', async ({ page }) => {
@@ -305,7 +305,7 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
         process.env.E2E_MANAGER_OTP_SECRET!
       );
     await profile.navigateToProfilePage();
-    await profile.VerifyTeamCreationWithoutLeader('QA Tester', 'Dawood Ahmad');
+    await profile.VerifyTeamCreationWithoutLeader('QA Tester', 'Jahanzaib Xenex');
   });
   test('Test case 21: Verify successful team creation with all valid details.', async ({ page }) => {
     const login = new LoginActions(page);
@@ -317,7 +317,7 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
         process.env.E2E_MANAGER_OTP_SECRET!
       );
     await profile.navigateToProfilePage();
-    await profile.VerifyTeamCreationWithValidDetails('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
+    await profile.VerifyTeamCreationWithValidDetails('QA Tester', 'Jahanzaib Xenex', 'Jahanzaib Xenex');
   });
   test('Test case 22: Verify Cancel button closes popup without saving.', async ({ page }) => {
     const login = new LoginActions(page);
@@ -329,7 +329,7 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
         process.env.E2E_MANAGER_OTP_SECRET!
       );
     await profile.navigateToProfilePage();
-    await profile.verifyCancelClosesPopupWithoutSaving('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
+    await profile.verifyCancelClosesPopupWithoutSaving('QA Tester', 'Jahanzaib Xenex', 'Jahanzaib Xenex');
   });
   test('Test case 23: Verify unsaved data does not persist after closing popup', async ({ page }) => {
     const login = new LoginActions(page);
@@ -341,7 +341,7 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
         process.env.E2E_MANAGER_OTP_SECRET!
       );
     await profile.navigateToProfilePage();
-    await profile.verifyUnsavedDataNotPersist('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
+    await profile.verifyUnsavedDataNotPersist('QA Tester', 'Jahanzaib Xenex', 'Jahanzaib Xenex');
   });
   
   test('Test case 24: Verify newly created team appears in dropdown and team list.', async ({ page }) => {
@@ -354,7 +354,7 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
         process.env.E2E_MANAGER_OTP_SECRET!
       );
     await profile.navigateToProfilePage();
-    await profile.verifyNewTeamAppearsInListAndDropdown('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
+    await profile.verifyNewTeamAppearsInListAndDropdown('QA Tester', 'Jahanzaib Xenex', 'Jahanzaib Xenex');
   });
   test('Test case 25: Verify failed team creation doesn’t reflect in list.', async ({ page }) => {
     const login = new LoginActions(page);
@@ -366,7 +366,7 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
         process.env.E2E_MANAGER_OTP_SECRET!
       );
     await profile.navigateToProfilePage();
-    await profile.verifyEmptySpacesTeamNameDoesNotReflectInList('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
+    await profile.verifyEmptySpacesTeamNameDoesNotReflectInList('QA Tester', 'Jahanzaib Xenex', 'Jahanzaib Xenex');
   });
 
   test('Test case 26: Verify failed team creation doesn’t reflect in list.', async ({ page }) => {
@@ -407,31 +407,31 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
     await profile.verifyEditIconOpensTeamForUpdate();
   });
 
-//   test('Test case 29: Verify Delete icon opens confirmation popup.', async ({ page }) => {
-//     const login = new LoginActions(page);
-//     const profile = new MyProfileActions(page);
+  test('Test case 29: Verify Delete icon opens confirmation popup.', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
   
-//     await login.login(
-//         operationManager.email!,
-//         operationManager.password!,
-//         process.env.E2E_MANAGER_OTP_SECRET!
-//       );
-//     await profile.navigateToProfilePage();
-//     await profile.verifyDeleteIconOpensConfirmationPopup();
-//   });
+    await login.login(
+        operationManager.email!,
+        operationManager.password!,
+        process.env.E2E_MANAGER_OTP_SECRET!
+      );
+    await profile.navigateToProfilePage();
+    await profile.verifyDeleteIconOpensConfirmationPopup();
+  });
 
-//   test('Test case 30: Verify clicking Cancel on Delete popup keeps team.', async ({ page }) => {
-//     const login = new LoginActions(page);
-//     const profile = new MyProfileActions(page);
+  test('Test case 30: Verify clicking Cancel on Delete popup keeps team.', async ({ page }) => {
+    const login = new LoginActions(page);
+    const profile = new MyProfileActions(page);
   
-//     await login.login(
-//         operationManager.email!,
-//         operationManager.password!,
-//         process.env.E2E_MANAGER_OTP_SECRET!
-//       );
-//     await profile.navigateToProfilePage();
-//     await profile.verifyCancelOnDeleteKeepsTeam();
-//   });
+    await login.login(
+        operationManager.email!,
+        operationManager.password!,
+        process.env.E2E_MANAGER_OTP_SECRET!
+      );
+    await profile.navigateToProfilePage();
+    await profile.verifyCancelOnDeleteKeepsTeam();
+  });
   
   test('Test case 31: Verify confirming Delete removes team permanently.', async ({ page }) => {
     const login = new LoginActions(page);
@@ -456,7 +456,7 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
         process.env.E2E_MANAGER_OTP_SECRET!
       );
     await profile.navigateToProfilePage();
-    await profile.verifyTeamCreatedInMyProfileAlsoAppearsInTeamModule('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
+    await profile.verifyTeamCreatedInMyProfileAlsoAppearsInTeamModule('QA Tester','Jahanzaib Xenex', 'Jahanzaib Xenex');
   });
 
   test('Test case 33: Verify alignment of Add button with Team dropdown.', async ({ page }) => {
@@ -506,7 +506,7 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
         process.env.E2E_MANAGER_OTP_SECRET!
       );
     await profile.navigateToProfilePage();
-    await profile.VerifyToastAfterTeamCreation('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
+    await profile.VerifyToastAfterTeamCreation('QA Tester', 'Jahanzaib Xenex', 'Jahanzaib Xenex');
   });
 
   test('Test case 37: Verify no duplicate toast shown for single event.', async ({ page }) => {
@@ -519,7 +519,7 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
         process.env.E2E_MANAGER_OTP_SECRET!
       );
     await profile.navigateToProfilePage();
-    await profile.VerifySingleToastOnMultipleClicks('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
+    await profile.VerifySingleToastOnMultipleClicks('QA Tester', 'Jahanzaib Xenex', 'Jahanzaib Xenex');
   });
 
   test('Test case 38: Verify validation message color (red for errors).', async ({ page }) => {
@@ -545,7 +545,7 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
         process.env.E2E_MANAGER_OTP_SECRET!
       );
     await profile.navigateToProfilePage();
-    await profile.VerifyConfirmationMessageColor('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
+    await profile.VerifyConfirmationMessageColor('QA Tester', 'Jahanzaib Xenex', 'Jahanzaib Xenex');
   });
   test('Test case 40: Verify data remains after page refresh.', async ({ page }) => {
     const login = new LoginActions(page);
@@ -557,7 +557,7 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
         process.env.E2E_MANAGER_OTP_SECRET!
       );
     await profile.navigateToProfilePage();
-    await profile.VerifyTeamCreationWithValidDetails('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
+    await profile.VerifyTeamCreationWithValidDetails('QA Tester', 'Jahanzaib Xenex', 'Jahanzaib Xenex');
   });
   test('Test case 41: Verify unsaved popup data lost on refresh.', async ({ page }) => {
     const login = new LoginActions(page);
@@ -569,6 +569,6 @@ test.describe('Teams Tab Tests - Remmi E2E', () => {
         process.env.E2E_MANAGER_OTP_SECRET!
       );
     await profile.navigateToProfilePage();
-    await profile.VerifyUnsavedPopupDataLostOnRefresh('QA Tester', 'Dawood Ahmad', 'Daud Ahmad');
+    await profile.VerifyUnsavedPopupDataLostOnRefresh('QA Tester', 'Jahanzaib Xenex', 'Jahanzaib Xenex');
   });
 });
