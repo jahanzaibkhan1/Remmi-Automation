@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="67.39592599999997">
-<testsuite name="Pages\Login\login.spec.ts" timestamp="2025-11-27T12:07:37.257Z" hostname="chromium" tests="1" failures="1" skipped="0" time="60.53" errors="0">
-<testcase name="Login Tests - Remmi E2E › Test case 1: Verify sign in with valid email and password" classname="Pages\Login\login.spec.ts" time="60.53">
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="73.87702199999988">
+<testsuite name="Pages\Login\login.spec.ts" timestamp="2025-11-27T12:09:03.169Z" hostname="chromium" tests="1" failures="1" skipped="0" time="62.028" errors="0">
+<testcase name="Login Tests - Remmi E2E › Test case 1: Verify sign in with valid email and password" classname="Pages\Login\login.spec.ts" time="62.028">
 <failure message="login.spec.ts:65:3 Test case 1: Verify sign in with valid email and password" type="FAILURE">
 <![CDATA[  [chromium] › Pages\Login\login.spec.ts:65:3 › Login Tests - Remmi E2E › Test case 1: Verify sign in with valid email and password 
 

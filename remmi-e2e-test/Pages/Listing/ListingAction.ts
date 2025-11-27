@@ -1447,4 +1447,24 @@ export class ListingActions {
         // await expect(toast).toBeVisible({ timeout: 10000 });
     }
 
+    // Editing a listing
+    async editListingCard() {
+        await this.navigateToListings();
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+
+        // Expand the first listing card (if needed)
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').nth(0);
+        await chevronDown.click({ force: true });
+
+        // Find and click the edit icon
+        const editIcon = this.page.locator('a:nth-child(3)').nth(0); // adjust selector if needed
+        await editIcon.scrollIntoViewIfNeeded();
+        await editIcon.click({ force: true });
+
+        // Optionally, add further steps to interact with the edit modal or form
+        // const editForm = this.page.locator('.edit-form-modal-selector');
+        // await expect(editForm).toBeVisible({ timeout: 10000 });
+    }
+
 }
