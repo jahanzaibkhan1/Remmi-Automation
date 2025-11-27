@@ -1,8 +1,42 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.74785700000078">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-27T08:36:52.095Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.284" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 32: Collapsing an expanded Listing card" classname="Pages\Listing\Listing.spec.ts" time="33.284">
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="67.39592599999997">
+<testsuite name="Pages\Login\login.spec.ts" timestamp="2025-11-27T12:07:37.257Z" hostname="chromium" tests="1" failures="1" skipped="0" time="60.53" errors="0">
+<testcase name="Login Tests - Remmi E2E › Test case 1: Verify sign in with valid email and password" classname="Pages\Login\login.spec.ts" time="60.53">
+<failure message="login.spec.ts:65:3 Test case 1: Verify sign in with valid email and password" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Login\login.spec.ts:65:3 › Login Tests - Remmi E2E › Test case 1: Verify sign in with valid email and password 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.goto: Test timeout of 60000ms exceeded.
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:23
+
+      21 |
+      22 |   async gotoLogin() {
+    > 23 |     await this.page.goto('/login');
+         |                     ^
+      24 |     await this.page.waitForLoadState('networkidle');
+      25 |   }
+      26 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:23:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:92:16)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:193:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\login.spec.ts:67:17
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Login-login-Login-Te-008b9-th-valid-email-and-password-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Login-login-Login-Te-008b9-th-valid-email-and-password-chromium\error-context.md
+]]>
+</failure>
 <system-out>
-<![CDATA[Expanded Card Details (trimmed): Property TypeAcreage/Semi RuralListing TypeOpenAgentHina AgentCompare Listing
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-008b9-th-valid-email-and-password-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Login-login-Login-Te-008b9-th-valid-email-and-password-chromium\error-context.md]]
 ]]>
 </system-out>
 </testcase>
