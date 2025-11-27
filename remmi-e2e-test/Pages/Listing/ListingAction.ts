@@ -1467,4 +1467,41 @@ export class ListingActions {
         // await expect(editForm).toBeVisible({ timeout: 10000 });
     }
 
+    // Editing and saving changes
+    async editAndSaveListingCard(newTitle: string) {
+        await this.navigateToListings();
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+
+        // Expand the first listing card
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').nth(0);
+        await chevronDown.click({ force: true });
+
+        // Click on the edit icon
+        const editIcon = this.page.locator('a:nth-child(3)').nth(0);
+        await editIcon.scrollIntoViewIfNeeded();
+        await editIcon.click({ force: true });
+
+        // Wait for edit modal/dialog to appear
+        const editModal = this.page.locator('.p-dialog, .edit-form-modal-selector').nth(0);
+        await expect(editModal).toBeVisible({ timeout: 10000 });
+
+        // Locate the title input field (adjust selector as needed)
+        const titleInput = editModal.locator('input[name="title"]');
+        await expect(titleInput).toBeVisible({ timeout: 5000 });
+        await titleInput.fill(newTitle);
+
+        // Click the save button within the modal (adjust selector as needed)
+        const saveButton = editModal.getByRole('button', { name: /save/i });
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+        await saveButton.click();
+
+        // Optionally, wait for success confirmation (toast/snackbar)
+        const toast = this.page.locator('.p-toast-message-success, .p-toast-message', { hasText: /success/i });
+        await expect(toast).toBeVisible({ timeout: 10000 });
+
+        // Optionally, check that the card now shows the new title
+        await expect(cardRows.first()).toContainText(newTitle);
+    }
+
 }
