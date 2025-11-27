@@ -1406,4 +1406,17 @@ export class ListingActions {
         console.log('Expanded Card Details (trimmed):', expandedText);
     }
 
+    // Collapsing an expanded listing card
+    async collapseExpandedListingCard() {
+        await this.navigateToListings();
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').nth(2);
+        await chevronDown.click({ force: true });
+        const expandedDetails = this.page.locator('.p-accordion-content, .expanded-section').nth(2);
+        const expandedText = (await expandedDetails.textContent() ?? '').trim();
+        console.log('Expanded Card Details (trimmed):', expandedText);
+        await chevronDown.click({ force: true });
+    }
+
 }
