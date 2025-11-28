@@ -1558,4 +1558,58 @@ export class ListingActions {
 
     }
 
+    // Comparing more than two Listings card (Pattern matching "oper walay code" style)
+    async compareMoreThanTwoListingCards() {
+        await this.navigateToListings();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+
+        // Expand the first listing card
+        const chevronDown1 = this.page.locator('i.pi.pi-chevron-down').nth(0);
+        await chevronDown1.click({ force: true });
+
+        const compare1 = this.page.locator('.p-checkbox-box').nth(0)
+
+        await compare1.scrollIntoViewIfNeeded()
+        await compare1.click({ force: true })
+        await chevronDown1.click({ force: true });
+
+        await this.page.waitForTimeout(1000)
+        const chevronDown2 = this.page.locator('i.pi.pi-chevron-down').nth(1);
+        await chevronDown2.click({ force: true });
+
+        const compare2 = this.page.locator('.p-checkbox-box').nth(1)
+
+        await compare2.scrollIntoViewIfNeeded()
+        await compare2.click({ force: true })
+        await chevronDown2.click()
+
+        await this.page.waitForTimeout(2000)
+
+        const chevronDown3 = this.page.locator('i.pi.pi-chevron-down').nth(3);
+        await chevronDown3.click({ force: true });
+
+        const compare3 = this.page.locator('.p-checkbox-box').nth(3)
+
+        await compare3.scrollIntoViewIfNeeded()
+        await compare3.click({ force: true })
+
+        await chevronDown3.click({force:true})
+
+        // Wait for form/modal
+        const compareButton = this.page.getByRole('button', { name: 'Compare' });
+        await compareButton.scrollIntoViewIfNeeded()
+        await compareButton.click({force:true})
+
+        const verifyRows = this.page.locator('.property-row')
+        await expect(verifyRows).toBeVisible({timeout:30000})
+
+        const clearCompare = this.page.getByRole('button', { name: 'Clear Compare' });
+
+        await expect(clearCompare).toBeVisible({timeout:30000})
+
+        await clearCompare.click({force:true})
+    }
+
 }

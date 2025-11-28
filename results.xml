@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.86425299999956">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-28T06:57:46.720Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.316" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 37: Comparing two listing cards" classname="Pages\Listing\Listing.spec.ts" time="25.316">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.668909999999215">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-28T07:44:54.502Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.01" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 38: Comparing more than two listing cards" classname="Pages\Listing\Listing.spec.ts" time="42.01">
 </testcase>
 </testsuite>
 </testsuites>
