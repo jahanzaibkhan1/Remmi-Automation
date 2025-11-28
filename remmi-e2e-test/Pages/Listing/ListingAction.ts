@@ -1429,7 +1429,7 @@ export class ListingActions {
         await chevronDown.click({ force: true });
 
         // Find the delete button for the first visible listing card in card/grid view
-        const cardDeleteButton = this.page.locator('a:nth-child(4)').nth(0);
+        const cardDeleteButton = this.page.locator('a:nth-child(4)').first();
         await cardDeleteButton.scrollIntoViewIfNeeded()
         await cardDeleteButton.click({ force: true });
 
@@ -1441,6 +1441,9 @@ export class ListingActions {
         const confirmButton = this.page.getByRole('button', { name: 'Delete' });
         await expect(confirmButton).toBeVisible({ timeout: 10000 });
         // await confirmButton.click({ force: true });
+
+        const cancell = this.page.getByRole('button', { name: 'Cancel' });
+        await cancell.click({force:true})
 
         // // Assert toast/snackbar notification or row is removed
         // const toast = this.page.locator('.p-toast-message-success, .p-toast-message', { hasText: "success" });
@@ -1458,50 +1461,77 @@ export class ListingActions {
         await chevronDown.click({ force: true });
 
         // Find and click the edit icon
-        const editIcon = this.page.locator('a:nth-child(3)').nth(0); // adjust selector if needed
+        const editIcon = this.page.locator('.ml-3.cp.ng-star-inserted').first(); // adjust selector if needed
         await editIcon.scrollIntoViewIfNeeded();
         await editIcon.click({ force: true });
 
         // Optionally, add further steps to interact with the edit modal or form
-        // const editForm = this.page.locator('.edit-form-modal-selector');
-        // await expect(editForm).toBeVisible({ timeout: 10000 });
+        const editForm = this.page.locator('#rightbarwithscroll');
+        await expect(editForm).toBeVisible({ timeout: 10000 });
+
+        const close = this.page.locator('.pi.pi-times').first()
+
+        await close.click({force:true})
     }
 
-    // Editing and saving changes
-    async editAndSaveListingCard(newTitle: string) {
-        await this.navigateToListings();
-        const cardRows = this.locators.cardViewPropertyRow();
-        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+// Editing and saving changes
+async editAndSaveListingCard(newTitle: string) {
+    await this.navigateToListings();
 
-        // Expand the first listing card
-        const chevronDown = this.page.locator('i.pi.pi-chevron-down').nth(0);
-        await chevronDown.click({ force: true });
+    const cardRows = this.locators.cardViewPropertyRow();
+    await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
 
-        // Click on the edit icon
-        const editIcon = this.page.locator('a:nth-child(3)').nth(0);
-        await editIcon.scrollIntoViewIfNeeded();
-        await editIcon.click({ force: true });
+    // Expand the first listing card
+    const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+    await chevronDown.click({ force: true });
 
-        // Wait for edit modal/dialog to appear
-        const editModal = this.page.locator('.p-dialog, .edit-form-modal-selector').nth(0);
-        await expect(editModal).toBeVisible({ timeout: 10000 });
+    // Click the edit icon
+    const editIcon = this.page.locator('.ml-3.cp.ng-star-inserted').first();
+    await editIcon.scrollIntoViewIfNeeded();
+    await editIcon.click({ force: true });
 
-        // Locate the title input field (adjust selector as needed)
-        const titleInput = editModal.locator('input[name="title"]');
-        await expect(titleInput).toBeVisible({ timeout: 5000 });
-        await titleInput.fill(newTitle);
+    // Wait for form/modal
+    const editForm = this.page.locator('#rightbarwithscroll, .p-dialog, .edit-form-modal-selector').first();
+    await expect(editForm).toBeVisible({ timeout: 10000 });
 
-        // Click the save button within the modal (adjust selector as needed)
-        const saveButton = editModal.getByRole('button', { name: /save/i });
-        await expect(saveButton).toBeVisible({ timeout: 5000 });
-        await saveButton.click();
+    // LOCATORS AS PER PROMPT
+    const propertyTypeValue = "House";
 
-        // Optionally, wait for success confirmation (toast/snackbar)
-        const toast = this.page.locator('.p-toast-message-success, .p-toast-message', { hasText: /success/i });
-        await expect(toast).toBeVisible({ timeout: 10000 });
+    // 1️⃣ Container
+    const propertyTypeSelect = this.page.locator('ng-select[formcontrolname="type"]');
+    await expect(propertyTypeSelect).toBeVisible({ timeout: 5000 });
 
-        // Optionally, check that the card now shows the new title
-        await expect(cardRows.first()).toContainText(newTitle);
-    }
+    await propertyTypeSelect.click()
+
+    // 3️⃣ Input for searching/typing
+    const input = propertyTypeSelect.locator('input[type="text"]');
+    await expect(input).toBeVisible({ timeout: 5000 });
+    await input.fill(propertyTypeValue);
+
+    // 6️⃣ All options - wait for visible
+    const options = this.page.locator('.ng-dropdown-panel .ng-option');
+    // 7️⃣ Specific option
+    const specificOption = options.locator(`text=${propertyTypeValue}`).first();
+    await expect(specificOption).toBeVisible({ timeout: 5000 });
+    await specificOption.click();
+
+    // Optionally log the selected value
+    const selectedValue = propertyTypeSelect.locator('.ng-value-label');
+    // Wait and log for debug
+    await expect(selectedValue).toBeVisible({ timeout: 2000 });
+    const selectedText = (await selectedValue.textContent())?.trim();
+    console.log("Selected Property Type:", selectedText);
+
+    // Save & Close
+    const saveButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+    await expect(saveButton).toBeVisible({ timeout: 5000 });
+    await saveButton.click({force:true});
+
+    // Optional: Success toast check
+    // const toast = this.page.locator('.p-toast-message-success');
+    // await expect(toast).toBeVisible({ timeout: 10000 });
+}
+
+
 
 }
