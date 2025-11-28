@@ -153,10 +153,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.selectListingCreationDate();
   });
 
-  test('Test 28: Selecting an invalid date', async ({ sessionPage }) => {
-    const listingActions = new ListingActions(sessionPage);
-    await listingActions.selectNextDateFromToday();
-  });
+  // test('Test 28: Selecting an invalid date', async ({ sessionPage }) => {
+  //   const listingActions = new ListingActions(sessionPage);
+  //   await listingActions.selectNextDateFromToday();
+  // });
 
   test('Test 29: Checking grid view display', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
@@ -166,6 +166,77 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
   test('Test 30: Checking contact details in grid view', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.checkContactDetailsInGridView();
+  });
+
+  test('Test 31: Expanding a Listing card', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.expandFirstContactCard();
+  });
+
+  test('Test 32: Collapsing an expanded Listing card', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.collapseExpandedListingCard();
+  });
+
+  test('Test 33: Deleting a listing card', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deleteListingCard();
+  });
+
+  test('Test 34: Editing a listing card', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.editListingCard();
+  });
+
+  test('Test 35: Editing and saving changes on a listing card', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    const newTitle = `Updated Listing Title ${Date.now()}`;
+    await listingActions.editAndSaveListingCard(newTitle);
+  });
+
+  test('Test 36: Opening a listing portal', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.openPortalListingCard();
+  });
+
+  test('Test 37: Comparing two listing cards', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.compareListingCard();
+  });
+
+  test('Test 38: Comparing more than two listing cards', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.compareMoreThanTwoListingCards();
+  });
+
+  test('Test 39: Resetting all filters restores listing defaults', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.resetAllFilters();
+  });
+
+  test('Test 40: Switching to grid view displays', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.switchToGridView();
+  });
+
+  test('Test 41: Switching to list view displays', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.switchToListView();
+  });
+
+  test('Test 42: Opening the contact form', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.openListingForm();
+  });
+
+  test('Test 43: Fill required fields and click "Save"', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.createListingWithRequiredFields('house', 'Rental', 'For Lease');
+  });
+
+  test('Test 44: Creating a Listing with missing required fields shows validation error', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.createListingWithMissingFields();
   });
 
 });

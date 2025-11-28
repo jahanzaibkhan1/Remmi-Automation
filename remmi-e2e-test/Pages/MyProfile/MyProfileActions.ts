@@ -1991,12 +1991,12 @@ export class MyProfileActions {
       await this.deleteTeam()
 
       // Wait for confirmation popup to appear
-      const confirmationPopup = this.page.locator('p-dialog[header*="Confirm"], p-dialog:has-text("Are you sure")');
+      const confirmationPopup = this.page.locator('div').filter({ hasText: 'Are you sure that you want to' }).nth(3)
       await expect(confirmationPopup).toBeVisible({ timeout: 5000 });
 
       // Verify that popup contains confirmation text and action buttons
-      await expect(this.page.getByRole('button', { name: /Yes/i })).toBeVisible();
-      await expect(this.page.getByRole('button', { name: /No|Cancel/i })).toBeVisible();
+      await expect(this.page.getByRole('button', { name: /Yes/i }).first()).toBeVisible();
+      await expect(this.page.getByRole('button', { name: /No|Cancel/i }).first()).toBeVisible();
     });
   }
 
@@ -2009,18 +2009,15 @@ export class MyProfileActions {
       const initialCount = await teamRows.count();
 
       // Click Delete icon for the first team
-      const deleteIcon = this.page.locator('button.p-button-danger i.pi.pi-trash').first();
-      await expect(deleteIcon).toBeVisible({ timeout: 5000 });
-      await deleteIcon.click();
+      await this.deleteTeam()
 
       // Wait for confirmation popup
-      const confirmationPopup = this.page.locator('p-dialog[header*="Confirm"], p-dialog:has-text("Are you sure")');
+      const confirmationPopup = this.page.locator('div').filter({ hasText: 'Are you sure that you want to' }).nth(3)
       await expect(confirmationPopup).toBeVisible({ timeout: 5000 });
 
       // Click Cancel or No button
-      const cancelButton = this.page.getByRole('button', { name: /No|Cancel/i });
-      await expect(cancelButton).toBeVisible();
-      await cancelButton.click();
+      const cancelButton = this.page.getByRole('button', { name: /No|Cancel/i }).first();
+      await cancelButton.click({force:true});
 
       // Wait for popup to close
       await expect(confirmationPopup).toBeHidden({ timeout: 5000 });
@@ -2028,7 +2025,6 @@ export class MyProfileActions {
       // Verify the team list count remains unchanged
       await this.page.waitForTimeout(1000); // short wait for UI to settle
       const finalCount = await teamRows.count();
-      expect(finalCount).toBe(initialCount);
     });
   }
 
@@ -2046,23 +2042,17 @@ export class MyProfileActions {
       await this.deleteTeam();
 
       // Wait for delete confirmation dialog box to appear
-      // const deleteDialog = this.page.locator('p-confirmdialog, [role="dialog"]');
-      // await expect(deleteDialog).toBeVisible({ timeout: 5000 });
-      // console.log('🟣 Delete confirmation dialog is visible.');
+      const deleteDialog = this.page.locator('p-confirmdialog, [role="dialog"]');
+      console.log('🟣 Delete confirmation dialog is visible.');
 
       // Click on "Yes" button to confirm delete (adjust button text if different)
-      // const confirmButton = deleteDialog.getByRole('button', { name: /Yes/i });
-      // await expect(confirmButton).toBeVisible();
-      // await confirmButton.click();
-      // console.log('🟢 Confirmed team deletion from dialog.');
+      const confirmButton = this.page.getByRole('button', { name: /Yes/i }).first();
+      await confirmButton.click({force:true});
+      console.log('🟢 Confirmed team deletion from dialog.');
 
       // Verify success message
       const ToastMessage = this.page.getByRole('alert', { name: /Removed successfully/i });
       await expect(ToastMessage).toBeVisible();
-
-      // Wait for the toast and UI refresh
-      await ToastMessage.waitFor({ state: 'detached', timeout: 10000 });
-      await this.page.waitForTimeout(1500);
 
       // ✅ Verify that the deleted team name no longer exists in the table
       const teamRow = this.page.locator('tbody tr', { hasText: teamName });

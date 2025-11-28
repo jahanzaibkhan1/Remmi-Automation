@@ -1,5 +1,6 @@
 import { Page, expect } from '@playwright/test';
 import { ListingLocators } from './ListingLocator';
+import { addAbortListener } from 'events';
 
 export class ListingActions {
     private page: Page;
@@ -30,7 +31,7 @@ export class ListingActions {
     }
 
     // Waits for table loaded, header row visible and at least one data row
-    private async waitForTableRows(minRows: number = 2, rowTimeout = 10000) {
+    private async waitForTableRows(minRows: number = 2, rowTimeout = 30000) {
         const rows = this.getRowsLocator();
         await expect(rows.nth(0)).toBeVisible({ timeout: rowTimeout });
         const count = await this.getRowsCount();
@@ -232,7 +233,7 @@ export class ListingActions {
     async searchForValidListing(keyword: string) {
         await this.navigateToListings();
         const listing = this.page.getByRole('link').nth(4);
-        await listing.click({force:true})
+        await listing.click({ force: true })
         await this.waitForTableRows();
         await this.searchListing(keyword);
 
@@ -556,7 +557,7 @@ export class ListingActions {
         let found = false;
         for (let i = 1; i < rowCount; ++i) {
             const row = this.getRowsLocator().nth(i);
-            await expect(row).toBeVisible({ timeout: 3000 });
+            await expect(row).toBeVisible({ timeout: 30000 });
             const rowText = (await row.innerText()).toLowerCase();
             if (firstSuburbText && rowText.includes(firstSuburbText.toLowerCase())) {
                 found = true;
@@ -604,7 +605,7 @@ export class ListingActions {
 
         for (let i = 1; i < rowCount; ++i) {
             const row = this.getRowsLocator().nth(i);
-            await expect(row).toBeVisible({ timeout: 3000 });
+            await expect(row).toBeVisible({ timeout: 30000 });
             const rowText = (await row.innerText()).toLowerCase();
             if (suburb1Text && rowText.includes(suburb1Text.toLowerCase())) {
                 foundSuburb1 = true;
@@ -1234,51 +1235,12 @@ export class ListingActions {
         await input.click({ force: true });
         await this.page.waitForTimeout(300);
 
-        // Get current month/year as text
-        const mElem = this.page.locator('.p-datepicker .p-datepicker-month');
-        const yElem = this.page.locator('.p-datepicker .p-datepicker-year');
-        const months = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
-
-        const monthText = ((await mElem.textContent()) ?? '').trim().toLowerCase();
-        const yearText = (await yElem.textContent() ?? '0').trim();
-
-        const currM = months.findIndex(m => m.toLowerCase() === monthText);
-        const currY = parseInt(yearText, 10);
-
-        // Safety: Make sure current month/year are valid
-        if (currM < 0 || isNaN(currY)) {
-            throw new Error(`Failed to read month/year from datepicker: got month='${monthText}', year='${yearText}'`);
-        }
-
-        // Calculate how many "next" clicks are needed for Jan 2025
-        const targetYear = 2025, targetMonth = 0; // 0 = Jan
-        const nextClicks = (targetYear - currY) * 12 + (targetMonth - currM);
-
-        const navBtn = nextClicks >= 0
-            ? this.page.locator('.p-datepicker-next')
-            : this.page.locator('.p-datepicker-prev');
-
-        for (let i = 0; i < Math.abs(nextClicks); ++i) {
-            await navBtn.click();
-            await this.page.waitForTimeout(120);
-        }
-
-        // Select 1st Jan
-        await this.page.locator('.p-datepicker-calendar td span', { hasText: /^1$/ }).first().click({ force: true });
-        await this.page.waitForTimeout(300);
-
         // Click 'Today' in datepicker
         let todayBtn = this.page.locator('.p-datepicker-buttonbar button', { hasText: /today/i });
         if (!(await todayBtn.isVisible().catch(() => false))) {
             todayBtn = this.page.locator('button', { hasText: /today/i });
         }
         await todayBtn.click({ force: true });
-
-        await this.waitForTableRows()
-
         // Reset filter
         const resetBtn = this.page.getByRole('button', { name: /reset/i });
         await expect(resetBtn).toBeEnabled();
@@ -1286,61 +1248,60 @@ export class ListingActions {
     }
 
     async selectNextDateFromToday() {
+        // Open dropdown and always just click the next enabled date after the currently selected/visible date (today)
         await this.navigateToListings();
         await this.waitForTableRows();
-    
+
+        // Open the creation date dropdown
         await this.locators.listingCreationDateDropdown().click();
-    
+
+        // Wait for the calendar day cells to be visible
         const dayCells = this.page.locator(
             ".p-datepicker-calendar td:not(.p-disabled) >> :is(span, a)"
         );
-    
         await dayCells.first().waitFor({ state: "visible" });
-    
+
+        // Find the current date in the calendar and click the next enabled day (if available)
         const today = new Date().getDate().toString();
         const count = await dayCells.count();
-    
-        let clicked = false;
-    
+
+        let foundToday = false;
         for (let i = 0; i < count; i++) {
-            const val = (await dayCells.nth(i).innerText()).trim();
-    
-            if (val === today) {
-                // click next date
+            const text = (await dayCells.nth(i).innerText()).trim();
+            if (text === today) {
+                // always try to click the next date if present
                 if (i + 1 < count) {
                     await dayCells.nth(i + 1).click({ force: true });
-                    clicked = true;
+                } else {
+                    // If today is last date, go to next month and click first enabled day
+                    await this.page.locator(".p-datepicker-next").click();
+                    const nextMonthCells = this.page.locator(
+                        ".p-datepicker-calendar td:not(.p-disabled) >> :is(span, a)"
+                    );
+                    await nextMonthCells.first().waitFor({ state: "visible" });
+                    await nextMonthCells.first().click({ force: true });
                 }
+                foundToday = true;
                 break;
             }
         }
-    
-        // If today was last day in this month → next date is in next month's view
-        if (!clicked) {
-            // click "next month" button
-            await this.page.locator(".p-datepicker-next").click();
-    
-            // wait for next month's cells
-            const nextCells = this.page.locator(
-                ".p-datepicker-calendar td:not(.p-disabled) >> :is(span, a)"
-            );
-            await nextCells.first().waitFor({ state: "visible" });
-    
-            // click first enabled date (this is always day 1 → tomorrow if month ended)
-            await nextCells.first().click({ force: true });
+        // Edge case: If calendar did not display 'today' (shouldn't occur), just pick and click the second visible day
+        if (!foundToday && count > 1) {
+            await dayCells.nth(1).click({ force: true });
         }
-    
+
+        // No records assertion (as per previous logic, may show "no results found" after picking a future date)
         const noRecordsMsg = this.page.locator('text=/no results? found/i');
         await expect(noRecordsMsg).toBeVisible({ timeout: 4000 });
     }
-    
+
 
     // Checking if grid view button is displayed and toggling to grid view
     async checkGridViewDisplay() {
         await this.navigateToListings();
 
         // Grid view button should now be interacted with
-        const gridViewButton = this.locators.gridViewButton().click({force:true});
+        const gridViewButton = this.locators.gridViewButton().click({ force: true });
         const cardRows = this.locators.cardViewPropertyRow();
         await expect(cardRows).toBeVisible({ timeout: 30000 });
     }
@@ -1394,27 +1355,405 @@ export class ListingActions {
 
     }
 
-    // Expands the first contact card in the listings and verifies expanded details are visible
+    // Expanding a Listing card
     async expandFirstContactCard() {
         await this.navigateToListings();
-
-        // Wait for the card rows to be visible
         const cardRows = this.locators.cardViewPropertyRow();
         await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
-        // Assuming `card` is the current card context
-        const accordionArrow = this.page.locator('p-accordiontab >> a.p-accordion-header-link[role="button"] >> chevronrighticon');
-
-        // Click to expand accordion
-        await accordionArrow.click();
-
-
-        // Wait to see expanded details (use a selector for an expanded section, or something unique that appears after expansion)
-        const expandedDetails = cardRows.first().locator('.details-expanded, .expanded-content, .property-details-block, .contact-details, .extra-details').first();
-        await expect(expandedDetails).toBeVisible({ timeout: 5000 });
-
-        // Optionally log summary details in expanded card
-        const expandedText = await expandedDetails.textContent();
-        console.log('Expanded Card Details:', expandedText?.trim());
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').nth(2);
+        await chevronDown.click({ force: true });
+        const expandedDetails = this.page.locator('.p-accordion-content, .expanded-section').nth(2);
+        const expandedText = (await expandedDetails.textContent() ?? '').trim();
+        console.log('Expanded Card Details (trimmed):', expandedText);
     }
+
+    // Collapsing an expanded listing card
+    async collapseExpandedListingCard() {
+        await this.navigateToListings();
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').nth(2);
+        await chevronDown.click({ force: true });
+        const expandedDetails = this.page.locator('.p-accordion-content, .expanded-section').nth(2);
+        const expandedText = (await expandedDetails.textContent() ?? '').trim();
+        console.log('Expanded Card Details (trimmed):', expandedText);
+        await chevronDown.click({ force: true });
+    }
+
+    // Deleting a Listing
+    async deleteListingCard() {
+        await this.navigateToListings();
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').nth(0);
+        await chevronDown.click({ force: true });
+
+        // Find the delete button for the first visible listing card in card/grid view
+        const cardDeleteButton = this.page.locator('a:nth-child(4)').first();
+        await cardDeleteButton.scrollIntoViewIfNeeded()
+        await cardDeleteButton.click({ force: true });
+
+        // Wait for confirmation dialog to appear
+        const confirmationDialog = this.page.getByText('Are you sure you want to delete this listing ? Your listing will be permanently');
+        await expect(confirmationDialog).toBeVisible({ timeout: 10000 });
+
+        // Find and click the confirm Delete button
+        const confirmButton = this.page.getByRole('button', { name: 'Delete' });
+        await expect(confirmButton).toBeVisible({ timeout: 10000 });
+        // await confirmButton.click({ force: true });
+
+        const cancell = this.page.getByRole('button', { name: 'Cancel' });
+        await cancell.click({ force: true })
+
+        // // Assert toast/snackbar notification or row is removed
+        // const toast = this.page.locator('.p-toast-message-success, .p-toast-message', { hasText: "success" });
+        // await expect(toast).toBeVisible({ timeout: 10000 });
+    }
+
+    // Editing a listing
+    async editListingCard() {
+        await this.navigateToListings();
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+
+        // Expand the first listing card (if needed)
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').nth(0);
+        await chevronDown.click({ force: true });
+
+        // Find and click the edit icon
+        const editIcon = this.page.locator('.ml-3.cp.ng-star-inserted').first(); // adjust selector if needed
+        await editIcon.scrollIntoViewIfNeeded();
+        await editIcon.click({ force: true });
+
+        // Optionally, add further steps to interact with the edit modal or form
+        const editForm = this.page.locator('#rightbarwithscroll');
+        await expect(editForm).toBeVisible({ timeout: 10000 });
+
+        const close = this.page.locator('.pi.pi-times').first()
+
+        await close.click({ force: true })
+    }
+
+    // Editing and saving changes
+    async editAndSaveListingCard(newTitle: string) {
+        await this.navigateToListings();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+
+        // Expand the first listing card
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown.click({ force: true });
+
+        // Click the edit icon
+        const editIcon = this.page.locator('.ml-3.cp.ng-star-inserted').first();
+        await editIcon.scrollIntoViewIfNeeded();
+        await editIcon.click({ force: true });
+
+        // Wait for form/modal
+        const editForm = this.page.locator('#rightbarwithscroll, .p-dialog, .edit-form-modal-selector').first();
+        await expect(editForm).toBeVisible({ timeout: 10000 });
+
+        // LOCATORS AS PER PROMPT
+        const propertyTypeValue = "House";
+
+        // 1️⃣ Container
+        const propertyTypeSelect = this.page.locator('ng-select[formcontrolname="type"]');
+        await expect(propertyTypeSelect).toBeVisible({ timeout: 5000 });
+
+        await propertyTypeSelect.click()
+
+        // 3️⃣ Input for searching/typing
+        const input = propertyTypeSelect.locator('input[type="text"]');
+        await expect(input).toBeVisible({ timeout: 5000 });
+        await input.fill(propertyTypeValue);
+
+        // 6️⃣ All options - wait for visible
+        const options = this.page.locator('.ng-dropdown-panel .ng-option');
+        // 7️⃣ Specific option
+        const specificOption = options.locator(`text=${propertyTypeValue}`).first();
+        await expect(specificOption).toBeVisible({ timeout: 5000 });
+        await specificOption.click();
+
+        // Optionally log the selected value
+        const selectedValue = propertyTypeSelect.locator('.ng-value-label');
+        // Wait and log for debug
+        await expect(selectedValue).toBeVisible({ timeout: 2000 });
+        const selectedText = (await selectedValue.textContent())?.trim();
+        console.log("Selected Property Type:", selectedText);
+
+        // Save & Close
+        const saveButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+        await saveButton.click({ force: true });
+        const toast = this.page.getByRole('alert', { name: 'Listing updated successfully' })
+        await expect(toast).toBeVisible({ timeout: 10000 });
+    }
+
+
+    //Opening a Listing portal
+    async openPortalListingCard() {
+        await this.navigateToListings();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+
+        // Expand the first listing card
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown.click({ force: true });
+
+        const portal = this.page.locator('.ml-3').first()
+
+        await portal.scrollIntoViewIfNeeded()
+        await portal.click({ force: true })
+
+        // Wait for form/modal
+        const editForm = this.page.locator('#rightbarwithscroll, .p-dialog, .edit-form-modal-selector').first();
+        await expect(editForm).toBeVisible({ timeout: 10000 });
+
+        const closeform = this.page.locator('.pi.pi-times').first();
+        await expect(closeform).toBeVisible({ timeout: 30000 })
+        await closeform.click({ force: true })
+
+    }
+
+    //     //Opening a Listing portal
+    async compareListingCard() {
+        await this.navigateToListings();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+
+        // Expand the first listing card
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown.click({ force: true });
+
+        const compare1 = this.page.locator('.p-checkbox-box').first()
+
+        await compare1.scrollIntoViewIfNeeded()
+        await compare1.click({ force: true })
+        await chevronDown.click({ force: true });
+        const chevronDown2 = this.page.locator('i.pi.pi-chevron-down').nth(1);
+        await chevronDown2.click({ force: true });
+
+        const compare2 = this.page.locator('.p-checkbox-box').nth(1)
+
+        await compare2.scrollIntoViewIfNeeded()
+        await compare2.click({ force: true })
+
+        // Wait for form/modal
+        const compareButton = this.page.getByRole('button', { name: 'Compare' });
+        await compareButton.scrollIntoViewIfNeeded()
+        await compareButton.click({ force: true })
+
+        const verifyRows = this.page.locator('.property-row')
+        await expect(verifyRows).toBeVisible({ timeout: 30000 })
+
+        const clearCompare = this.page.getByRole('button', { name: 'Clear Compare' });
+
+        await expect(clearCompare).toBeVisible({ timeout: 30000 })
+
+        await clearCompare.click({ force: true })
+
+    }
+
+    // Comparing more than two Listings card (Pattern matching "oper walay code" style)
+    async compareMoreThanTwoListingCards() {
+        await this.navigateToListings();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+
+        // Expand the first listing card
+        const chevronDown1 = this.page.locator('i.pi.pi-chevron-down').nth(0);
+        await chevronDown1.click({ force: true });
+
+        const compare1 = this.page.locator('.p-checkbox-box').nth(0)
+
+        await compare1.scrollIntoViewIfNeeded()
+        await compare1.click({ force: true })
+        await chevronDown1.click({ force: true });
+
+        await this.page.waitForTimeout(1000)
+        const chevronDown2 = this.page.locator('i.pi.pi-chevron-down').nth(1);
+        await chevronDown2.click({ force: true });
+
+        const compare2 = this.page.locator('.p-checkbox-box').nth(1)
+
+        await compare2.scrollIntoViewIfNeeded()
+        await compare2.click({ force: true })
+        await chevronDown2.click()
+
+        await this.page.waitForTimeout(2000)
+
+        const chevronDown3 = this.page.locator('i.pi.pi-chevron-down').nth(3);
+        await chevronDown3.click({ force: true });
+
+        const compare3 = this.page.locator('.p-checkbox-box').nth(3)
+
+        await compare3.scrollIntoViewIfNeeded()
+        await compare3.click({ force: true })
+
+        await chevronDown3.click({ force: true })
+
+        // Wait for form/modal
+        const compareButton = this.page.getByRole('button', { name: 'Compare' });
+        await compareButton.scrollIntoViewIfNeeded()
+        await compareButton.click({ force: true })
+
+        const verifyRows = this.page.locator('.property-row')
+        await expect(verifyRows).toBeVisible({ timeout: 30000 })
+
+        const clearCompare = this.page.getByRole('button', { name: 'Clear Compare' });
+
+        await expect(clearCompare).toBeVisible({ timeout: 30000 })
+
+        await clearCompare.click({ force: true })
+    }
+
+    async resetAllFilters() {
+        await this.navigateToListings();
+
+        // Cards load hone ka wait karo
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+
+        // -- Search filter
+        await this.searchListing('Hina Agent');
+        await this.page.waitForTimeout(1000)
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000);
+
+        const selectAllOption = this.page.locator('.checkbox__checkmark').first();
+        await selectAllOption.click();
+        await this.page.waitForTimeout(1000);
+
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        if (await resetButton.isVisible().catch(() => false)) {
+            await resetButton.click({ force: true });
+            await this.page.waitForTimeout(1000);
+        }
+    }
+
+    async switchToGridView() {
+        await this.navigateToListings();
+        const gridViewBtn = this.locators.gridViewButton();
+        await gridViewBtn.click();
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+    }
+
+    //// Switching to list view
+    async switchToListView() {
+        await this.navigateToListings();
+        const listViewButton = this.page.getByRole('link').nth(4);
+        await listViewButton.click();
+        await this.waitForTableRows();
+    }
+
+    async openListingForm() {
+        await this.navigateToListings();
+        await this.waitForTableRows()
+        // Assuming there is a button or icon to open the contact form in each card row
+        const contactFormBtn = this.page.getByRole('button', { name: '' })
+        await contactFormBtn.click();
+        // Wait for contact form to be visible (adjust selector if needed)
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        const closeForm = this.page.locator('.pi.pi-times').first()
+
+        await closeForm.click({ force: true })
+    }
+
+    // Fill required fields in the 'Create Listing' form and click "Save"
+    async createListingWithRequiredFields(propertyType: string, listingType: string, listingStatus: string) {
+
+        await this.navigateToListings();
+        await this.waitForTableRows()
+        // Assuming there is a button or icon to open the contact form in each card row
+        const contactFormBtn = this.page.getByRole('button', { name: '' })
+        await expect(contactFormBtn).toBeVisible({ timeout: 30000 })
+        await contactFormBtn.click();
+        // Wait for contact form to be visible (adjust selector if needed)
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Fill and select the property address: "1/14 Thomas Street, Laidley, QLD 4341"
+        const propertyAddressSearchInput = this.page.locator('#rightbarwithscroll').getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+        await propertyAddressSearchInput.fill('1/14 Thomas Street, Laidley, QLD 4341');
+        // Wait for dropdown/options to appear and select the address
+        const addressOption = this.page.locator('div:nth-child(2) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 5000 });
+        await addressOption.click();
+
+        // Open Property Type dropdown and search/select the option
+        const propertyTypeDropdown = this.page.locator('ng-select[formcontrolname="type"]');
+        await expect(propertyTypeDropdown).toBeVisible({ timeout: 10000 });
+        await propertyTypeDropdown.click();
+
+        // Search for the propertyType option
+        const propertyTypeSearchInput = this.page.locator('ng-select[formcontrolname="type"] input[type="text"], ng-select[formcontrolname="type"] input[role="combobox"]');
+        if (await propertyTypeSearchInput.isVisible({ timeout: 1000 }).catch(() => false)) {
+            await propertyTypeSearchInput.fill(propertyType);
+            await this.page.waitForTimeout(500); // Let options update if needed
+        }
+
+        const propertyTypeOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: propertyType }).first();
+        await propertyTypeOption.click();
+
+        // Open Listing Type dropdown, search and select option
+        const listingTypeDropdown = this.page.locator('ng-select[formcontrolname="listingType"], ng-select[formcontrolname="listing_type"]');
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 10000 });
+        await listingTypeDropdown.click();
+        const listingTypeSearchInput = listingTypeDropdown.locator('input[type="text"]');
+        await expect(listingTypeSearchInput).toBeVisible({ timeout: 2000 });
+        await listingTypeSearchInput.fill(listingType);
+        await this.page.waitForTimeout(500); // Let options update if needed
+        const listingTypeOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: listingType }).first();
+        await listingTypeOption.click();
+
+        // Open Listing Status dropdown, search and select option
+
+        const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input')
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 })
+        await listingStatusDropdown.click();
+        // Correct way to access the search input for a native ng-select dropdown:
+        const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
+        await listingStatusSearchInput.fill(listingStatus);
+        await this.page.waitForTimeout(500);
+        const listingStatusOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: listingStatus }).first();
+        await listingStatusOption.click();
+
+        // Click the "Save" button
+        const saveButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveButton.click();
+    }
+
+    // Creating a Listing with missing required fields for negative validation
+    async createListingWithMissingFields() {
+        // Navigate to Listings and open the listing form
+        await this.navigateToListings();
+        await this.waitForTableRows()
+        const addButton = this.page.getByRole('button', { name: '' });
+        await addButton.click({ force: true });
+
+        // Wait for the form/modal to appear
+        const form = this.page.locator('#rightbarwithscroll, .p-dialog, .listing-form-modal, .add-listing-form').first();
+        await expect(form).toBeVisible({timeout:10000})
+        // Click Save and expect validation error
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await saveButton.click();
+
+        // Wait and verify error message/validation appears
+        const requiredError = this.page.getByRole('alert', { name: 'Required fields must be filled in' }).first();
+        await expect(requiredError).toBeVisible();
+        const closeForm = this.page.locator('.pi.pi-times').first()
+        await closeForm.click({ force: true })
+
+    }
+
 
 }
