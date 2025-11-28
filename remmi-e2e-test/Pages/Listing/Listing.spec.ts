@@ -199,6 +199,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.openPortalListingCard();
   });
 
+  test('Test 37: Comparing two listing cards', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.compareListingCard();
+  });
+
 });
 
 
