@@ -208,7 +208,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.compareMoreThanTwoListingCards();
   });
-  
+
   test('Test 39: Resetting all filters restores listing defaults', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.resetAllFilters();
@@ -218,6 +218,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.switchToGridView();
   });
+
+  test('Test 41: Switching to list view displays', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.switchToListView();
+  });
+
 });
 
 

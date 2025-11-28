@@ -1643,4 +1643,12 @@ export class ListingActions {
         const cardRows = this.locators.cardViewPropertyRow();
         await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
     }
+
+    //// Switching to list view
+    async switchToListView() {
+        await this.navigateToListings();
+        const listViewButton = this.page.getByRole('link').nth(4);
+        await listViewButton.click();
+        await this.waitForTableRows();
+    }
 }

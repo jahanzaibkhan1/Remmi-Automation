@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.25120199999958">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-28T09:33:58.424Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.866" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 40: Switching to grid view displays" classname="Pages\Listing\Listing.spec.ts" time="31.866">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.84865499999933">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-28T09:38:38.690Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.444" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 41: Switching to list view displays" classname="Pages\Listing\Listing.spec.ts" time="39.444">
 </testcase>
 </testsuite>
 </testsuites>
