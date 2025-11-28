@@ -1612,4 +1612,28 @@ export class ListingActions {
         await clearCompare.click({force:true})
     }
 
+    async resetAllFilters() {
+        await this.navigateToListings();
+
+        // Cards load hone ka wait karo
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+
+        // -- Search filter
+        await this.searchListing('Hina Agent');
+        await this.page.waitForTimeout(1000)
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000);
+
+        const selectAllOption = this.page.locator('.checkbox__checkmark').first();
+        await selectAllOption.click();
+        await this.page.waitForTimeout(1000);
+
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        if (await resetButton.isVisible().catch(() => false)) {
+            await resetButton.click({ force: true });
+            await this.page.waitForTimeout(1000);
+        }
+    }
+
 }
