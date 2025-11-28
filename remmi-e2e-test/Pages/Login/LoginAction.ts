@@ -20,7 +20,7 @@ export class LoginActions {
   }
 
   async gotoLogin() {
-    await this.page.goto('/login');
+    await this.page.goto('/login',{ waitUntil: 'domcontentloaded' });
     await this.page.waitForLoadState('networkidle');
   }
 
