@@ -1545,16 +1545,16 @@ export class ListingActions {
         // Wait for form/modal
         const compareButton = this.page.getByRole('button', { name: 'Compare' });
         await compareButton.scrollIntoViewIfNeeded()
-        await compareButton.click({force:true})
+        await compareButton.click({ force: true })
 
         const verifyRows = this.page.locator('.property-row')
-        await expect(verifyRows).toBeVisible({timeout:30000})
+        await expect(verifyRows).toBeVisible({ timeout: 30000 })
 
         const clearCompare = this.page.getByRole('button', { name: 'Clear Compare' });
 
-        await expect(clearCompare).toBeVisible({timeout:30000})
+        await expect(clearCompare).toBeVisible({ timeout: 30000 })
 
-        await clearCompare.click({force:true})
+        await clearCompare.click({ force: true })
 
     }
 
@@ -1595,21 +1595,21 @@ export class ListingActions {
         await compare3.scrollIntoViewIfNeeded()
         await compare3.click({ force: true })
 
-        await chevronDown3.click({force:true})
+        await chevronDown3.click({ force: true })
 
         // Wait for form/modal
         const compareButton = this.page.getByRole('button', { name: 'Compare' });
         await compareButton.scrollIntoViewIfNeeded()
-        await compareButton.click({force:true})
+        await compareButton.click({ force: true })
 
         const verifyRows = this.page.locator('.property-row')
-        await expect(verifyRows).toBeVisible({timeout:30000})
+        await expect(verifyRows).toBeVisible({ timeout: 30000 })
 
         const clearCompare = this.page.getByRole('button', { name: 'Clear Compare' });
 
-        await expect(clearCompare).toBeVisible({timeout:30000})
+        await expect(clearCompare).toBeVisible({ timeout: 30000 })
 
-        await clearCompare.click({force:true})
+        await clearCompare.click({ force: true })
     }
 
     async resetAllFilters() {
@@ -1636,4 +1636,11 @@ export class ListingActions {
         }
     }
 
+    async switchToGridView() {
+        await this.navigateToListings();
+        const gridViewBtn = this.locators.gridViewButton();
+        await gridViewBtn.click();
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+    }
 }

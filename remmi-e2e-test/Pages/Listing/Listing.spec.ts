@@ -213,6 +213,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.resetAllFilters();
   });
+
+  test('Test 40: Switching to grid view displays', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.switchToGridView();
+  });
 });
 
 
