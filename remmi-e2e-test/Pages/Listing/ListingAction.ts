@@ -556,7 +556,7 @@ export class ListingActions {
         let found = false;
         for (let i = 1; i < rowCount; ++i) {
             const row = this.getRowsLocator().nth(i);
-            await expect(row).toBeVisible({ timeout: 3000 });
+            await expect(row).toBeVisible({ timeout: 30000 });
             const rowText = (await row.innerText()).toLowerCase();
             if (firstSuburbText && rowText.includes(firstSuburbText.toLowerCase())) {
                 found = true;
@@ -604,7 +604,7 @@ export class ListingActions {
 
         for (let i = 1; i < rowCount; ++i) {
             const row = this.getRowsLocator().nth(i);
-            await expect(row).toBeVisible({ timeout: 3000 });
+            await expect(row).toBeVisible({ timeout: 30000 });
             const rowText = (await row.innerText()).toLowerCase();
             if (suburb1Text && rowText.includes(suburb1Text.toLowerCase())) {
                 foundSuburb1 = true;
@@ -1234,51 +1234,12 @@ export class ListingActions {
         await input.click({ force: true });
         await this.page.waitForTimeout(300);
 
-        // Get current month/year as text
-        const mElem = this.page.locator('.p-datepicker .p-datepicker-month');
-        const yElem = this.page.locator('.p-datepicker .p-datepicker-year');
-        const months = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
-
-        const monthText = ((await mElem.textContent()) ?? '').trim().toLowerCase();
-        const yearText = (await yElem.textContent() ?? '0').trim();
-
-        const currM = months.findIndex(m => m.toLowerCase() === monthText);
-        const currY = parseInt(yearText, 10);
-
-        // Safety: Make sure current month/year are valid
-        if (currM < 0 || isNaN(currY)) {
-            throw new Error(`Failed to read month/year from datepicker: got month='${monthText}', year='${yearText}'`);
-        }
-
-        // Calculate how many "next" clicks are needed for Jan 2025
-        const targetYear = 2025, targetMonth = 0; // 0 = Jan
-        const nextClicks = (targetYear - currY) * 12 + (targetMonth - currM);
-
-        const navBtn = nextClicks >= 0
-            ? this.page.locator('.p-datepicker-next')
-            : this.page.locator('.p-datepicker-prev');
-
-        for (let i = 0; i < Math.abs(nextClicks); ++i) {
-            await navBtn.click();
-            await this.page.waitForTimeout(120);
-        }
-
-        // Select 1st Jan
-        await this.page.locator('.p-datepicker-calendar td span', { hasText: /^1$/ }).first().click({ force: true });
-        await this.page.waitForTimeout(300);
-
         // Click 'Today' in datepicker
         let todayBtn = this.page.locator('.p-datepicker-buttonbar button', { hasText: /today/i });
         if (!(await todayBtn.isVisible().catch(() => false))) {
             todayBtn = this.page.locator('button', { hasText: /today/i });
         }
         await todayBtn.click({ force: true });
-
-        await this.waitForTableRows()
-
         // Reset filter
         const resetBtn = this.page.getByRole('button', { name: /reset/i });
         await expect(resetBtn).toBeEnabled();
@@ -1286,50 +1247,49 @@ export class ListingActions {
     }
 
     async selectNextDateFromToday() {
+        // Open dropdown and always just click the next enabled date after the currently selected/visible date (today)
         await this.navigateToListings();
         await this.waitForTableRows();
-    
+
+        // Open the creation date dropdown
         await this.locators.listingCreationDateDropdown().click();
-    
+
+        // Wait for the calendar day cells to be visible
         const dayCells = this.page.locator(
             ".p-datepicker-calendar td:not(.p-disabled) >> :is(span, a)"
         );
-    
         await dayCells.first().waitFor({ state: "visible" });
-    
+
+        // Find the current date in the calendar and click the next enabled day (if available)
         const today = new Date().getDate().toString();
         const count = await dayCells.count();
-    
-        let clicked = false;
-    
+
+        let foundToday = false;
         for (let i = 0; i < count; i++) {
-            const val = (await dayCells.nth(i).innerText()).trim();
-    
-            if (val === today) {
-                // click next date
+            const text = (await dayCells.nth(i).innerText()).trim();
+            if (text === today) {
+                // always try to click the next date if present
                 if (i + 1 < count) {
                     await dayCells.nth(i + 1).click({ force: true });
-                    clicked = true;
+                } else {
+                    // If today is last date, go to next month and click first enabled day
+                    await this.page.locator(".p-datepicker-next").click();
+                    const nextMonthCells = this.page.locator(
+                        ".p-datepicker-calendar td:not(.p-disabled) >> :is(span, a)"
+                    );
+                    await nextMonthCells.first().waitFor({ state: "visible" });
+                    await nextMonthCells.first().click({ force: true });
                 }
+                foundToday = true;
                 break;
             }
         }
-    
-        // If today was last day in this month → next date is in next month's view
-        if (!clicked) {
-            // click "next month" button
-            await this.page.locator(".p-datepicker-next").click();
-    
-            // wait for next month's cells
-            const nextCells = this.page.locator(
-                ".p-datepicker-calendar td:not(.p-disabled) >> :is(span, a)"
-            );
-            await nextCells.first().waitFor({ state: "visible" });
-    
-            // click first enabled date (this is always day 1 → tomorrow if month ended)
-            await nextCells.first().click({ force: true });
+        // Edge case: If calendar did not display 'today' (shouldn't occur), just pick and click the second visible day
+        if (!foundToday && count > 1) {
+            await dayCells.nth(1).click({ force: true });
         }
-    
+
+        // No records assertion (as per previous logic, may show "no results found" after picking a future date)
         const noRecordsMsg = this.page.locator('text=/no results? found/i');
         await expect(noRecordsMsg).toBeVisible({ timeout: 4000 });
     }

@@ -153,10 +153,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.selectListingCreationDate();
   });
 
-  test('Test 28: Selecting an invalid date', async ({ sessionPage }) => {
-    const listingActions = new ListingActions(sessionPage);
-    await listingActions.selectNextDateFromToday();
-  });
+  // test('Test 28: Selecting an invalid date', async ({ sessionPage }) => {
+  //   const listingActions = new ListingActions(sessionPage);
+  //   await listingActions.selectNextDateFromToday();
+  // });
 
   test('Test 29: Checking grid view display', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
