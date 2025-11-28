@@ -1526,12 +1526,12 @@ async editAndSaveListingCard(newTitle: string) {
     const saveButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
     await expect(saveButton).toBeVisible({ timeout: 5000 });
     await saveButton.click({force:true});
-
-    // Optional: Success toast check
-    // const toast = this.page.locator('.p-toast-message-success');
-    // await expect(toast).toBeVisible({ timeout: 10000 });
+    const toast = this.page.getByRole('alert', { name: 'Listing updated successfully' })
+    await expect(toast).toBeVisible({ timeout: 10000 });
 }
 
+
+//
 
 
 }
