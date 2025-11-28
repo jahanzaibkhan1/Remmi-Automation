@@ -194,6 +194,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.editAndSaveListingCard(newTitle);
   });
 
+  test('Test 36: Opening a listing portal', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.openPortalListingCard();
+  });
+
 });
 
 
