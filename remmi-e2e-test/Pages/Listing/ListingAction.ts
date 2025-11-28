@@ -1651,4 +1651,19 @@ export class ListingActions {
         await listViewButton.click();
         await this.waitForTableRows();
     }
+
+    async openListingForm() {
+        await this.navigateToListings();
+        await this.waitForTableRows()
+        // Assuming there is a button or icon to open the contact form in each card row
+        const contactFormBtn = this.page.getByRole('button', { name: '' })
+        await contactFormBtn.click();
+        // Wait for contact form to be visible (adjust selector if needed)
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        const closeForm = this.page.locator('.pi.pi-times').first()
+
+        await closeForm.click({force:true})
+    }
 }
