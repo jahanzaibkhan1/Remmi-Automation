@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.692822999998924">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-28T11:03:51.594Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.543" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 43: Fill required fields and click &quot;Save&quot;" classname="Pages\Listing\Listing.spec.ts" time="27.543">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="59.03698699999973">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-28T11:52:36.995Z" hostname="chromium" tests="1" failures="0" skipped="0" time="52.263" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 44: Creating a Listing with missing required fields shows validation error" classname="Pages\Listing\Listing.spec.ts" time="52.263">
 </testcase>
 </testsuite>
 </testsuites>

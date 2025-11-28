@@ -1680,6 +1680,15 @@ export class ListingActions {
         const contactForm = this.page.locator('#rightbarwithscroll');
         await expect(contactForm).toBeVisible({ timeout: 10000 });
 
+        // Fill and select the property address: "1/14 Thomas Street, Laidley, QLD 4341"
+        const propertyAddressSearchInput = this.page.locator('#rightbarwithscroll').getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+        await propertyAddressSearchInput.fill('1/14 Thomas Street, Laidley, QLD 4341');
+        // Wait for dropdown/options to appear and select the address
+        const addressOption = this.page.locator('div:nth-child(2) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 5000 });
+        await addressOption.click();
+
         // Open Property Type dropdown and search/select the option
         const propertyTypeDropdown = this.page.locator('ng-select[formcontrolname="type"]');
         await expect(propertyTypeDropdown).toBeVisible({ timeout: 10000 });
@@ -1721,6 +1730,29 @@ export class ListingActions {
         // Click the "Save" button
         const saveButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
         await saveButton.click();
+    }
+
+    // Creating a Listing with missing required fields for negative validation
+    async createListingWithMissingFields() {
+        // Navigate to Listings and open the listing form
+        await this.navigateToListings();
+        await this.waitForTableRows()
+        const addButton = this.page.getByRole('button', { name: '' });
+        await addButton.click({ force: true });
+
+        // Wait for the form/modal to appear
+        const form = this.page.locator('#rightbarwithscroll, .p-dialog, .listing-form-modal, .add-listing-form').first();
+        await expect(form).toBeVisible({timeout:10000})
+        // Click Save and expect validation error
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await saveButton.click();
+
+        // Wait and verify error message/validation appears
+        const requiredError = this.page.getByRole('alert', { name: 'Required fields must be filled in' }).first();
+        await expect(requiredError).toBeVisible();
+        const closeForm = this.page.locator('.pi.pi-times').first()
+        await closeForm.click({ force: true })
+
     }
 
 
