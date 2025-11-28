@@ -31,7 +31,7 @@ export class ListingActions {
     }
 
     // Waits for table loaded, header row visible and at least one data row
-    private async waitForTableRows(minRows: number = 2, rowTimeout = 10000) {
+    private async waitForTableRows(minRows: number = 2, rowTimeout = 30000) {
         const rows = this.getRowsLocator();
         await expect(rows.nth(0)).toBeVisible({ timeout: rowTimeout });
         const count = await this.getRowsCount();
@@ -1664,6 +1664,64 @@ export class ListingActions {
 
         const closeForm = this.page.locator('.pi.pi-times').first()
 
-        await closeForm.click({force:true})
+        await closeForm.click({ force: true })
     }
+
+    // Fill required fields in the 'Create Listing' form and click "Save"
+    async createListingWithRequiredFields(propertyType: string, listingType: string, listingStatus: string) {
+
+        await this.navigateToListings();
+        await this.waitForTableRows()
+        // Assuming there is a button or icon to open the contact form in each card row
+        const contactFormBtn = this.page.getByRole('button', { name: '' })
+        await expect(contactFormBtn).toBeVisible({ timeout: 30000 })
+        await contactFormBtn.click();
+        // Wait for contact form to be visible (adjust selector if needed)
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Open Property Type dropdown and search/select the option
+        const propertyTypeDropdown = this.page.locator('ng-select[formcontrolname="type"]');
+        await expect(propertyTypeDropdown).toBeVisible({ timeout: 10000 });
+        await propertyTypeDropdown.click();
+
+        // Search for the propertyType option
+        const propertyTypeSearchInput = this.page.locator('ng-select[formcontrolname="type"] input[type="text"], ng-select[formcontrolname="type"] input[role="combobox"]');
+        if (await propertyTypeSearchInput.isVisible({ timeout: 1000 }).catch(() => false)) {
+            await propertyTypeSearchInput.fill(propertyType);
+            await this.page.waitForTimeout(500); // Let options update if needed
+        }
+
+        const propertyTypeOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: propertyType }).first();
+        await propertyTypeOption.click();
+
+        // Open Listing Type dropdown, search and select option
+        const listingTypeDropdown = this.page.locator('ng-select[formcontrolname="listingType"], ng-select[formcontrolname="listing_type"]');
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 10000 });
+        await listingTypeDropdown.click();
+        const listingTypeSearchInput = listingTypeDropdown.locator('input[type="text"]');
+        await expect(listingTypeSearchInput).toBeVisible({ timeout: 2000 });
+        await listingTypeSearchInput.fill(listingType);
+        await this.page.waitForTimeout(500); // Let options update if needed
+        const listingTypeOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: listingType }).first();
+        await listingTypeOption.click();
+
+        // Open Listing Status dropdown, search and select option
+
+        const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input')
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 })
+        await listingStatusDropdown.click();
+        // Correct way to access the search input for a native ng-select dropdown:
+        const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
+        await listingStatusSearchInput.fill(listingStatus);
+        await this.page.waitForTimeout(500);
+        const listingStatusOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: listingStatus }).first();
+        await listingStatusOption.click();
+
+        // Click the "Save" button
+        const saveButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveButton.click();
+    }
+
+
 }

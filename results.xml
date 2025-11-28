@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.663026000000535">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-28T10:03:03.433Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.017" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 42: Opening the contact form" classname="Pages\Listing\Listing.spec.ts" time="54.017">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.692822999998924">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-28T11:03:51.594Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.543" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 43: Fill required fields and click &quot;Save&quot;" classname="Pages\Listing\Listing.spec.ts" time="27.543">
 </testcase>
 </testsuite>
 </testsuites>
