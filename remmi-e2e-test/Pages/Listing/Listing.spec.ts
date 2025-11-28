@@ -234,6 +234,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.createListingWithRequiredFields('house', 'Rental', 'For Lease');
   });
 
+  test('Test 44: Creating a Listing with missing required fields shows validation error', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.createListingWithMissingFields();
+  });
+
 });
 
 
