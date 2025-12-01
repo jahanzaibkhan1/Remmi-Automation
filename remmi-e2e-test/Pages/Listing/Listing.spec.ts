@@ -273,6 +273,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.CheckRecordAndCount();
   });
 
+  test('Test 52: Checking for incorrect or mismatched records count', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.checkForIncorrectRecordsCount();
+  });
+
 });
 
 

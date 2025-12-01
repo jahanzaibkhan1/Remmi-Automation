@@ -2002,4 +2002,48 @@ export class ListingActions {
         const labelText = (await recordsLabel.textContent())?.trim();
         console.log("Records Label after scroll:", labelText);
     }
+
+    async checkForIncorrectRecordsCount() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+    
+        const cardLocator = this.page.locator('.property-row.pl-1.ng-star-inserted');
+        await expect(cardLocator.first()).toBeVisible({ timeout: 10000 });
+    
+        const recordsLabel = this.page.locator('text=Records:');
+        await expect(recordsLabel).toBeVisible();
+    
+        const labelText = (await recordsLabel.textContent())?.trim() || "";
+        const labelMatch = labelText.match(/Records:\s*(\d+)/);
+        const labelCount = labelMatch ? Number(labelMatch[1]) : NaN;
+    
+        if (isNaN(labelCount)) throw new Error(`Unable to parse count from label: ${labelText}`);
+    
+        let scrollContainer = this.page.locator('.card-list-container, .card-view-main, .p-grid').first();
+        if (!(await scrollContainer.isVisible().catch(() => false))) scrollContainer = this.page.locator('html');
+    
+        let loadedCount = await cardLocator.count();
+        let lastCount = 0;
+    
+        // Loop until no new rows load after scrolling
+        while (loadedCount !== lastCount) {
+            lastCount = loadedCount;
+    
+            // Scroll to bottom
+            await scrollContainer.evaluate((el: HTMLElement) => { el.scrollTop = el.scrollHeight; });
+    
+            // Wait for new rows to appear (or small timeout)
+            await this.page.waitForTimeout(1200);
+    
+            loadedCount = await cardLocator.count();
+        }
+    
+        if (loadedCount !== labelCount) {
+            console.warn(`❌ Mismatch: Label = ${labelCount}, Loaded = ${loadedCount}`);
+        } else {
+            console.log(`✅ Records count matches: ${loadedCount}`);
+        }
+    }
+
+    
 }
