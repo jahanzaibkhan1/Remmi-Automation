@@ -1968,4 +1968,17 @@ export class ListingActions {
         let newCount = await cardItemsLocator.count();
         // No assertion about increase
     }
+
+    // Verifying total records count
+    async verifyTotalRecordsCount() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const recordsLabel = this.page.locator('text=Records:');
+        await recordsLabel.scrollIntoViewIfNeeded()
+        await expect(recordsLabel).toBeVisible({ timeout: 3000 });
+
+        const labelText = (await recordsLabel.textContent())?.trim();
+        console.log("Total Records Label:", labelText);
+    }
 }
