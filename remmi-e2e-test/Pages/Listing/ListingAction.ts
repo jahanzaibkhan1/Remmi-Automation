@@ -1981,4 +1981,25 @@ export class ListingActions {
         const labelText = (await recordsLabel.textContent())?.trim();
         console.log("Total Records Label:", labelText);
     }
+
+    // Just scroll and trim the record
+    async CheckRecordAndCount() {
+
+        await this.navigateToListings();
+        await this.switchToGridView()
+        // Scroll to the bottom of listings
+        let cardContainer = this.page.locator('.property-row').first();
+        if (!(await cardContainer.isVisible({ timeout: 3000 }))) {
+            cardContainer = this.page.locator('html');
+        }
+        await cardContainer.evaluate((el: HTMLElement) => { el.scrollTop = el.scrollHeight; });
+        await this.page.waitForTimeout(1000);
+
+        // Get and trim the records label after scrolling
+        const recordsLabel = this.page.locator('text=Records:');
+        await recordsLabel.scrollIntoViewIfNeeded();
+        await expect(recordsLabel).toBeVisible({ timeout: 3000 });
+        const labelText = (await recordsLabel.textContent())?.trim();
+        console.log("Records Label after scroll:", labelText);
+    }
 }
