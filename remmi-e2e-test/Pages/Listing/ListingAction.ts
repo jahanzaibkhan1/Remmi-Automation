@@ -1843,4 +1843,64 @@ export class ListingActions {
         const finalCount = await cardItemsLocator.count();
         expect(finalCount).toBe(initialCount); // should be unchanged since no scroll attempted
     }
+
+    /**
+     * Simulates slow internet conditions while scrolling to load more listings.
+     */
+    async scrollWithSlowInternetSimulation() {
+        await this.navigateToListings();
+
+        // Ensure grid view is active
+        const gridViewBtn = this.locators.gridViewButton();
+        await expect(gridViewBtn).toBeVisible({ timeout: 7000 });
+        const isActive = await gridViewBtn.getAttribute('aria-pressed') === 'true'
+            || (await gridViewBtn.getAttribute('class'))?.includes('active');
+        if (!isActive) {
+            await gridViewBtn.click();
+        }
+
+        // Ensure the card items/container exist
+        const cardItemsLocator = this.page.locator('.property-row');
+        await expect(cardItemsLocator.first()).toBeVisible({ timeout: 10000 });
+
+        // Get the scrolling container
+        let cardContainer = this.page.locator('.card-list-container, .card-view-main, .p-grid').first();
+        if (!(await cardContainer.isVisible({ timeout: 3000 }))) {
+            cardContainer = this.page.locator('html');
+        }
+
+        // Simulate scrolling slowly, as if on a sluggish network
+        let loadedCount = await cardItemsLocator.count();
+        let attempts = 0;
+        const maxAttempts = 10;
+
+        while (attempts < maxAttempts) {
+            // Scroll to the bottom
+            await cardContainer.evaluate((el: HTMLElement) => { el.scrollTop = el.scrollHeight; });
+
+            // Artificial delay to simulate slow response
+            await this.page.waitForTimeout(3000);
+
+            // Wait for possible additional cards to load
+            const newCount = await cardItemsLocator.count();
+
+            if (newCount > loadedCount) {
+                loadedCount = newCount;
+            } else {
+                // Wait a little longer in case content is late
+                await this.page.waitForTimeout(2000);
+                const afterWaitCount = await cardItemsLocator.count();
+                if (afterWaitCount > loadedCount) {
+                    loadedCount = afterWaitCount;
+                } else {
+                    break;
+                }
+            }
+            attempts++;
+        }
+
+        // You may assert that all available cards are loaded (up to your expectations)
+        // Optionally: expect(loadedCount).toBeGreaterThanOrEqual(expectedTotalCards);
+        console.log('Total cards loaded (with slow internet simulation):', loadedCount);
+    }
 }
