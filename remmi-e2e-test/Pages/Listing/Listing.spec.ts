@@ -253,6 +253,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.scrollToLoadMoreListings();
   });
 
+  test('Test 48: Rapid scrolling loads multiple pages of listings without issues', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.rapidScrollToLoadMoreListings();
+  });
+
 });
 
 
