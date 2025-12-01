@@ -258,6 +258,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.rapidScrollToLoadMoreListings();
   });
 
+  test('Test 49: Listing count increases after scrolling (infinite scroll)', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.checkListingCountAfterScrolling();
+  });
+
 });
 
 

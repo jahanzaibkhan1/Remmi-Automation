@@ -1,8 +1,9 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.84213699999824">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-12-01T11:15:16.974Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.429" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 48: Rapid scrolling loads multiple pages of listings without issues" classname="Pages\Listing\Listing.spec.ts" time="32.429">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.96071700000018">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-12-01T11:19:39.256Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.196" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 49: Listing count increases after scrolling (infinite scroll)" classname="Pages\Listing\Listing.spec.ts" time="30.196">
 <system-out>
-<![CDATA[Total cards loaded (after rapid scroll): [33m1[39m
+<![CDATA[Listings before scrolling: 1
+Listings after scrolling: 1
 ]]>
 </system-out>
 </testcase>
