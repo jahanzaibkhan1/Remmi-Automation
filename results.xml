@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="59.03698699999973">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-11-28T11:52:36.995Z" hostname="chromium" tests="1" failures="0" skipped="0" time="52.263" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 44: Creating a Listing with missing required fields shows validation error" classname="Pages\Listing\Listing.spec.ts" time="52.263">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.12027300000005">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-12-01T12:25:59.488Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.87" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 52: Checking for incorrect or mismatched records count" classname="Pages\Listing\Listing.spec.ts" time="28.87">
+<system-err>
+<![CDATA[❌ Mismatch: Label = 35, Loaded = 1
+]]>
+</system-err>
 </testcase>
 </testsuite>
 </testsuites>
