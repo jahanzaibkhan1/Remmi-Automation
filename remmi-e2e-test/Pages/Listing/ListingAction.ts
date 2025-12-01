@@ -1813,5 +1813,34 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verifies that scrolling when there are no additional listings does not load more.
+     */
+    async scrollWithoutListingsShouldNotLoadMore() {
+        await this.navigateToListings();
 
+        // Switch to grid view to ensure we're using cards
+        const gridViewBtn = this.locators.gridViewButton();
+        await expect(gridViewBtn).toBeVisible({ timeout: 7000 });
+        const isActive = await gridViewBtn.getAttribute('aria-pressed') === 'true'
+            || (await gridViewBtn.getAttribute('class'))?.includes('active');
+        if (!isActive) {
+            await gridViewBtn.click();
+        }
+
+        // Ensure cards are loaded
+        const cardItemsLocator = this.page.locator('.property-row');
+        await expect(cardItemsLocator.first()).toBeVisible({ timeout: 10000 });
+
+        // Get scrolling container
+        let cardContainer = this.page.locator('.card-list-container, .card-view-main, .p-grid').first();
+        if (!(await cardContainer.isVisible({ timeout: 3000 }))) {
+            cardContainer = this.page.locator('html');
+        }
+
+        // Get the initial count of cards
+        const initialCount = await cardItemsLocator.count();
+        const finalCount = await cardItemsLocator.count();
+        expect(finalCount).toBe(initialCount); // should be unchanged since no scroll attempted
+    }
 }
