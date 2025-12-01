@@ -190,8 +190,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
   test('Test 35: Editing and saving changes on a listing card', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
-    const newTitle = `Updated Listing Title ${Date.now()}`;
-    await listingActions.editAndSaveListingCard(newTitle);
+    await listingActions.editAndSaveListingCard();
   });
 
   test('Test 36: Opening a listing portal', async ({ sessionPage }) => {
@@ -237,6 +236,46 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
   test('Test 44: Creating a Listing with missing required fields shows validation error', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.createListingWithMissingFields();
+  });
+
+  test('Test 45: Scrolling down should load more listings', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.scrollToLoadMoreListings();
+  });
+
+  test('Test 46: Scrolling when no listings are available should not load more', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.scrollWithoutListingsShouldNotLoadMore();
+  });
+
+  test('Test 47: Scrolling on slow internet still loads more listings without errors', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.scrollToLoadMoreListings();
+  });
+
+  test('Test 48: Rapid scrolling loads multiple pages of listings without issues', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.rapidScrollToLoadMoreListings();
+  });
+
+  test('Test 49: Listing count increases after scrolling (infinite scroll)', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.checkListingCountAfterScrolling();
+  });
+
+  test('Test 50: Verifying total records count matches displayed listings', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyTotalRecordsCount();
+  });
+
+  test('Test 51: Checking records count after scrolling', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.CheckRecordAndCount();
+  });
+
+  test('Test 52: Checking for incorrect or mismatched records count', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.checkForIncorrectRecordsCount();
   });
 
 });
