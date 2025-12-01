@@ -1,8 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="36.72139699999988">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-12-01T11:33:09.280Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.795" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 50: Verifying total records count matches displayed listings" classname="Pages\Listing\Listing.spec.ts" time="27.795">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.728427999999376">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-12-01T11:38:26.123Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.686" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 51: Checking records count after scrolling" classname="Pages\Listing\Listing.spec.ts" time="35.686">
 <system-out>
-<![CDATA[Total Records Label (trimmed): Records: 35
+<![CDATA[Trimmed Records Label after scroll: Records: 35
 ]]>
 </system-out>
 </testcase>

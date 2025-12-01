@@ -268,6 +268,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyTotalRecordsCount();
   });
 
+  test('Test 51: Checking records count after scrolling', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.CheckRecordAndCount();
+  });
+
 });
 
 
