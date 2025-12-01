@@ -190,8 +190,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
   test('Test 35: Editing and saving changes on a listing card', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
-    const newTitle = `Updated Listing Title ${Date.now()}`;
-    await listingActions.editAndSaveListingCard(newTitle);
+    await listingActions.editAndSaveListingCard();
   });
 
   test('Test 36: Opening a listing portal', async ({ sessionPage }) => {
@@ -237,6 +236,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
   test('Test 44: Creating a Listing with missing required fields shows validation error', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.createListingWithMissingFields();
+  });
+
+  test('Test 45: Scrolling down should load more listings', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.scrollToLoadMoreListings();
   });
 
 });
