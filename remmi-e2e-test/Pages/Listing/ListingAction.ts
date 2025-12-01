@@ -1903,4 +1903,44 @@ export class ListingActions {
         // Optionally: expect(loadedCount).toBeGreaterThanOrEqual(expectedTotalCards);
         console.log('Total cards loaded (with slow internet simulation):', loadedCount);
     }
+    // Rapid scrolling implementation for loading more listings in grid view
+    async rapidScrollToLoadMoreListings() {
+        // Switch to grid view if not already
+        await this.switchToGridView();
+
+        // Wait for card/list view items to appear
+        const cardItemsLocator = this.page.locator('.property-row');
+        await expect(cardItemsLocator.first()).toBeVisible({ timeout: 10000 });
+
+        // Get the scrolling container (use the most specific one if possible)
+        let cardContainer = this.page.locator('.card-list-container, .card-view-main, .p-grid').first();
+        if (!(await cardContainer.isVisible({ timeout: 3000 }))) {
+            cardContainer = this.page.locator('html');
+        }
+
+        let loadedCount = await cardItemsLocator.count();
+        let scrollAttempts = 0;
+        const maxScrollAttempts = 20;
+
+        while (scrollAttempts < maxScrollAttempts) {
+            // Scroll to the bottom rapidly
+            await cardContainer.evaluate((el: HTMLElement) => { el.scrollTop = el.scrollHeight; });
+
+            // Minimal wait to simulate rapid user scrolling
+            await this.page.waitForTimeout(300);
+
+            // Try to detect if new cards are loaded
+            const newCount = await cardItemsLocator.count();
+
+            // If no new cards after rapid scroll, exit
+            if (newCount === loadedCount) {
+                break;
+            }
+            loadedCount = newCount;
+            scrollAttempts++;
+        }
+
+        // Optional: validation for minimum cards loaded after rapid scroll
+        console.log('Total cards loaded (after rapid scroll):', loadedCount);
+    }
 }
