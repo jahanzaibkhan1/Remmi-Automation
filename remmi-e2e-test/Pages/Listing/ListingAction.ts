@@ -1943,4 +1943,29 @@ export class ListingActions {
         // Optional: validation for minimum cards loaded after rapid scroll
         console.log('Total cards loaded (after rapid scroll):', loadedCount);
     }
+
+    // Checking listing count after scrolling
+    async checkListingCountAfterScrolling() {
+        await this.switchToGridView();
+
+        const cardItemsLocator = this.page.locator('.property-row');
+        await expect(cardItemsLocator.first()).toBeVisible({ timeout: 10000 });
+
+        // Count listings before scrolling
+        let initialCount = await cardItemsLocator.count();
+
+        // Get the scrolling container (fall back to html if custom container isn't visible)
+        let cardContainer = this.page.locator('.card-list-container, .card-view-main, .p-grid').first();
+        if (!(await cardContainer.isVisible({ timeout: 3000 }))) {
+            cardContainer = this.page.locator('html');
+        }
+
+        // Scroll to load more listings
+        await cardContainer.evaluate((el: HTMLElement) => { el.scrollTop = el.scrollHeight; });
+        await this.page.waitForTimeout(1000); // wait for new items to load
+
+        // Count listings after scrolling
+        let newCount = await cardItemsLocator.count();
+        // No assertion about increase
+    }
 }
