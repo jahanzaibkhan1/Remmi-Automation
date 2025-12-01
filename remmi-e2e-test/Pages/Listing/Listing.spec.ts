@@ -248,6 +248,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.scrollWithoutListingsShouldNotLoadMore();
   });
 
+  test('Test 47: Scrolling on slow internet still loads more listings without errors', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.scrollToLoadMoreListings();
+  });
+
 });
 
 
