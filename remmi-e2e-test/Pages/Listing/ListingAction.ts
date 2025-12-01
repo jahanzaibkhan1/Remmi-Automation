@@ -1436,7 +1436,7 @@ export class ListingActions {
     }
 
     // Editing and saving changes
-    async editAndSaveListingCard(newTitle: string) {
+    async editAndSaveListingCard() {
         await this.navigateToListings();
 
         const cardRows = this.locators.cardViewPropertyRow();
@@ -1638,9 +1638,15 @@ export class ListingActions {
 
     async switchToGridView() {
         await this.navigateToListings();
+        // Detect if already in grid view by checking visibility of at least one card row
+        const cardRows = this.locators.cardViewPropertyRow();
+        if (await cardRows.first().isVisible().catch(() => false)) {
+            // Already in grid view, do nothing
+            return;
+        }
+        // Otherwise, switch to grid view
         const gridViewBtn = this.locators.gridViewButton();
         await gridViewBtn.click();
-        const cardRows = this.locators.cardViewPropertyRow();
         await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
     }
 
@@ -1657,7 +1663,7 @@ export class ListingActions {
         await this.waitForTableRows()
         // Assuming there is a button or icon to open the contact form in each card row
         const contactFormBtn = this.page.getByRole('button', { name: '' })
-        await contactFormBtn.click();
+        await contactFormBtn.dblclick();
         // Wait for contact form to be visible (adjust selector if needed)
         const contactForm = this.page.locator('#rightbarwithscroll');
         await expect(contactForm).toBeVisible({ timeout: 10000 });
@@ -1675,7 +1681,7 @@ export class ListingActions {
         // Assuming there is a button or icon to open the contact form in each card row
         const contactFormBtn = this.page.getByRole('button', { name: '' })
         await expect(contactFormBtn).toBeVisible({ timeout: 30000 })
-        await contactFormBtn.click();
+        await contactFormBtn.dblclick();
         // Wait for contact form to be visible (adjust selector if needed)
         const contactForm = this.page.locator('#rightbarwithscroll');
         await expect(contactForm).toBeVisible({ timeout: 10000 });
@@ -1738,7 +1744,7 @@ export class ListingActions {
         await this.navigateToListings();
         await this.waitForTableRows()
         const addButton = this.page.getByRole('button', { name: '' });
-        await addButton.click({ force: true });
+        await addButton.dblclick({ force: true });
 
         // Wait for the form/modal to appear
         const form = this.page.locator('#rightbarwithscroll, .p-dialog, .listing-form-modal, .add-listing-form').first();
@@ -1753,6 +1759,58 @@ export class ListingActions {
         const closeForm = this.page.locator('.pi.pi-times').first()
         await closeForm.click({ force: true })
 
+    }
+
+    // Scrolls through the grid view to load more listings via infinite scroll
+    async scrollToLoadMoreListings() {
+        await this.navigateToListings();
+
+        // Switch to grid view if not already there
+        const gridViewBtn = this.locators.gridViewButton();
+        await expect(gridViewBtn).toBeVisible({ timeout: 7000 });
+
+        // Check if already in grid view (active). If not, click to switch.
+        const isActive = await gridViewBtn.getAttribute('aria-pressed') === 'true'
+            || (await gridViewBtn.getAttribute('class'))?.includes('active');
+
+        if (!isActive) {
+            await gridViewBtn.click();
+        }
+
+        // Ensure at least one card appears in the grid view
+        const cardItemsLocator = this.page.locator('.property-row');
+        await expect(cardItemsLocator.first()).toBeVisible({ timeout: 10000 });
+
+        // Try to get the scrolling container, fallback to html/body
+        let cardContainer = this.page.locator('.card-list-container, .card-view-main, .p-grid').first();
+        if (!(await cardContainer.isVisible({ timeout: 3000 }))) {
+            // fallback to the documentElement for scrolling
+            cardContainer = this.page.locator('html');
+        }
+
+        // Track loaded card count
+        let previousCount = await cardItemsLocator.count();
+        let loadedCount = previousCount;
+
+        // Attempt scrolling down and waiting for more cards to load
+        for (let i = 0; i < 10; i++) {
+            await cardContainer.evaluate((el: HTMLElement) => { el.scrollTop = el.scrollHeight; });
+            await this.page.waitForTimeout(1000);
+
+            const newCount = await cardItemsLocator.count();
+            if (newCount > loadedCount) {
+                loadedCount = newCount;
+            } else {
+                // Try one more short delay in case of late lazy loading
+                await this.page.waitForTimeout(500);
+                const afterWaitCount = await cardItemsLocator.count();
+                if (afterWaitCount > loadedCount) {
+                    loadedCount = afterWaitCount;
+                } else {
+                    break;
+                }
+            }
+        }
     }
 
 
