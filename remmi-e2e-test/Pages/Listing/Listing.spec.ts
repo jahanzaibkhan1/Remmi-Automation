@@ -263,6 +263,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.checkListingCountAfterScrolling();
   });
 
+  test('Test 50: Verifying total records count matches displayed listings', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyTotalRecordsCount();
+  });
+
 });
 
 
