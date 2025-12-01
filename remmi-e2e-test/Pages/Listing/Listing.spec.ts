@@ -243,6 +243,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.scrollToLoadMoreListings();
   });
 
+  test('Test 46: Scrolling when no listings are available should not load more', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.scrollWithoutListingsShouldNotLoadMore();
+  });
+
 });
 
 
