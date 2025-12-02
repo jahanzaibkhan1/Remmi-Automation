@@ -110,7 +110,7 @@ export class ListingLocators {
     }
     // Card view property row locator for listings
     cardViewPropertyRow(): Locator {
-        return this.page.locator('.property-row.pl-1.ng-star-inserted');
+        return this.page.locator('.property-row.pl-1.ng-star-inserted')
     }
 
 }

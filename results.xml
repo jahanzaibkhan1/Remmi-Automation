@@ -1,10 +1,18 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.12027300000005">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-12-01T12:25:59.488Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.87" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 52: Checking for incorrect or mismatched records count" classname="Pages\Listing\Listing.spec.ts" time="28.87">
-<system-err>
-<![CDATA[❌ Mismatch: Label = 35, Loaded = 1
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.00158999999985">
+<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-12-02T12:00:18.224Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.755" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 45: Scrolling down should load more listings" classname="Pages\Listing\Listing.spec.ts" time="31.755">
+<system-out>
+<![CDATA[Total Records Label: [33m35[39m
+Initial cards: [33m15[39m
+Loaded so far: 15
+Loaded so far: 15
+Loaded so far: 30
+Loaded so far: 30
+Loaded so far: 30
+Loaded so far: 35
+Total cards loaded: [33m35[39m
 ]]>
-</system-err>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
