@@ -1,6 +1,36 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.09411100000143">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-03T11:32:51.263Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.494" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Selecting a single property type" classname="Pages\Listing\Listingview.spec.ts" time="47.494">
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="68.39431199999899">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-03T12:03:22.361Z" hostname="chromium" tests="1" failures="1" skipped="0" time="60.216" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Selecting multiple property types in List View" classname="Pages\Listing\Listingview.spec.ts" time="60.216">
+<failure message="Listingview.spec.ts:65:3 Test 8: Selecting multiple property types in List View" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Listing\Listingview.spec.ts:65:3 › Listing side Menu Tests - Remmi E2E › Test 8: Selecting multiple property types in List View 
+
+    Test timeout of 60000ms exceeded while setting up "sessionPage".
+
+    Error: page.goto: Target page, context or browser has been closed
+
+      11 |     try {
+      12 |       const page = await context.newPage();
+    > 13 |       await page.goto(DASHBOARD_URL);
+         |                  ^
+      14 |       await use(page);
+      15 |     } finally {
+      16 |
+        at Object.exports.test._test.test.extend.sessionPage.scope (E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\Listingview.spec.ts:13:18)
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Listing-Listingview--dbd00-property-types-in-List-View-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Listing-Listingview--dbd00-property-types-in-List-View-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Listing-Listingview--dbd00-property-types-in-List-View-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Listing-Listingview--dbd00-property-types-in-List-View-chromium\error-context.md]]
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
