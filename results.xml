@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.674702999999745">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-03T09:48:03.462Z" hostname="chromium" tests="1" failures="0" skipped="0" time="43.106" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Searching for a non-existing Listing" classname="Pages\Listing\Listingview.spec.ts" time="43.106">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.11348599999957">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-03T10:37:04.471Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.953" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Searching for a listing using partial name" classname="Pages\Listing\Listingview.spec.ts" time="25.953">
 </testcase>
 </testsuite>
 </testsuites>
