@@ -24,6 +24,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.searchForExistingListingview('Hina Agent');
   });
+
+  test('Test 2: Searching for a non-existing Listing', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchForNonExistingListing('Invalid listing name');
+  });
+
 });
 
 
