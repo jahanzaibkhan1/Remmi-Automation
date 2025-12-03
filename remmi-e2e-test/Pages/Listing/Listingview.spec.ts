@@ -56,6 +56,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 7: Selecting a single property type', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectPropertyType();
+    await listingActions.resetFilters();
+  });
+
 });
 
 

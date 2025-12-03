@@ -1901,5 +1901,57 @@ export class ListingActions {
         expect(rowCount).toBeGreaterThan(0); 
     }
 
+    // Selecting a single property type
+    async selectPropertyType() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Locate all visible table/list rows (tr in tbody, skipping header row if present)
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000);
+        const firstOption = this.page.locator('ul > li.p-element').first();
+        await expect(firstOption).toBeVisible({ timeout: 3000 });
+        const propertyTypeLabel = (await firstOption.textContent())?.trim() || '';
+        await firstOption.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // First, find the index of the "Property Type" column from the table header
+        const headers = this.page.locator('thead tr th');
+        const headerCount = await headers.count();
+
+        let propertyTypeIndex = -1;
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headers.nth(i).innerText()).trim().toLowerCase();
+            if (headerText === 'property type') {
+                propertyTypeIndex = i;
+                break;
+            }
+        }
+        expect(propertyTypeIndex).toBeGreaterThan(-1);
+
+        // Now, confirm the filtered value is present specifically in the property type column of at least one row
+        let found = false;
+        for (let i = 0; i < rowCount; i++) {
+            const row = tableRows.nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const cells = row.locator('td');
+            const cellCount = await cells.count();
+            if (propertyTypeIndex < cellCount) {
+                const propertyTypeCellText = (await cells.nth(propertyTypeIndex).innerText()).trim().toLowerCase();
+                if (propertyTypeLabel && propertyTypeCellText.includes(propertyTypeLabel.toLowerCase())) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+        expect(found).toBe(true);
+    }
+
 
 }
