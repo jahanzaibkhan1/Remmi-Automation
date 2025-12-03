@@ -270,6 +270,34 @@ export class ListingActions {
         await this.resetFilters()
     }
 
+    async searchForValidcontact(keyword: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Wait for cards to be visible before searching
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+
+        await this.searchListing(keyword);
+        await this.page.waitForTimeout(1000);
+
+        // Verify search result: cards should be visible and contain the searched keyword
+        await expect(cardRows.first()).toBeVisible({ timeout: 10000 });
+        const cardRowCount = await cardRows.count();
+        expect(cardRowCount).toBeGreaterThan(0);
+
+        let foundKeyword = false;
+        for (let i = 0; i < cardRowCount; ++i) {
+            const row = cardRows.nth(i);
+            const rowText = (await row.innerText()).toLowerCase();
+            if (rowText.includes(keyword.toLowerCase())) {
+                foundKeyword = true;
+                break;
+            }
+        }
+        expect(foundKeyword).toBe(true);
+    }
+
 
     async searchForInvalidListing(keyword: string) {
         await this.navigateToListings();
@@ -454,6 +482,41 @@ export class ListingActions {
         expect(found).toBe(true);
 
         await this.resetFilters()
+    }
+
+
+    async searchForProperty(searchTerm: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000);
+
+        const propertyTypeSearchInput = this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
+        await propertyTypeSearchInput.fill(searchTerm);
+        await this.page.waitForTimeout(1000);
+
+        const matchedOption = this.page.locator('li.p-element').filter({ hasText: new RegExp(searchTerm, 'i') }).first();
+        if (await matchedOption.isVisible()) {
+            await matchedOption.click();
+            await this.page.waitForTimeout(800);
+        }
+
+        const rowCount = await cardRows.count();
+        let found = false;
+        for (let i = 0; i < rowCount; ++i) {
+            const row = cardRows.nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const rowText = (await row.innerText()).toLowerCase();
+            if (rowText.includes(searchTerm.toLowerCase())) {
+                found = true;
+                break;
+            }
+        }
+        expect(found).toBe(true);
     }
 
     async selectSinglePropertyAndCloseDropdown() {
@@ -646,6 +709,43 @@ export class ListingActions {
         await this.resetFilters()
     }
 
+    async searchForSuburb(suburbLabel: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        const suburbDropdown = this.locators.suburbDropdown();
+        await expect(suburbDropdown).toBeVisible();
+        await suburbDropdown.click({ force: true });
+
+        const searchInput = this.locators.suburbSearchInput();
+        await expect(searchInput).toBeVisible();
+        await searchInput.fill(suburbLabel);
+
+        await this.page.waitForTimeout(800);
+
+        const suburbOption = this.locators.suburbOption(suburbLabel).first();
+        await expect(suburbOption).toBeVisible();
+
+        await suburbOption.click({ force: true });
+
+        await this.page.waitForTimeout(1000);
+
+        const count = await cardRows.count();
+        expect(count).toBeGreaterThan(0);
+
+        for (let i = 0; i < count; i++) {
+            const card = cardRows.nth(i);
+            await expect(card).toBeVisible({ timeout: 3000 });
+            const cardText = (await card.innerText()).toLowerCase();
+            // Check that suburbLabel is found in the card text
+            expect(cardText.includes(suburbLabel.toLowerCase())).toBe(true);
+        }
+    }
+
     async selectSingleListingStatus() {
         await this.navigateToListings();
         await this.switchToGridView();
@@ -825,6 +925,33 @@ export class ListingActions {
         await this.resetFilters()
     }
 
+    async searchForListingStatus(searchTerm: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible();
+        await listingStatusDropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        const statusDropdownSearchBox = this.locators.listingStatusSearchInput?.()
+            ?? this.page.locator('input[placeholder="Search"][aria-label="Search Listing Status"]');
+        await expect(statusDropdownSearchBox).toBeVisible();
+        await statusDropdownSearchBox.fill(searchTerm);
+        await this.page.waitForTimeout(500);
+
+        const filteredOptions = this.locators.listingStatusOption(searchTerm).first();
+        await filteredOptions.click()
+        await this.page.waitForTimeout(100)
+        await listingStatusDropdown.click();
+
+        await this.page.waitForTimeout(1000)
+    }
+
     async selectSingleListingType() {
         await this.navigateToListings();
         await this.switchToGridView();
@@ -851,6 +978,35 @@ export class ListingActions {
         expect(rowCount).toBeGreaterThan(0);
 
         await this.resetFilters()
+    }
+
+    // 
+    // Search for an option by typing in the listing type search box, then click it
+    async searchAndListingType(searchTerm: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        const listingTypeDropdown = this.locators.listingTypeDropdown();
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 3000 });
+        await listingTypeDropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Locate the search input inside listing type dropdown
+        const searchInput = this.locators.listingTypeSearchInput?.()
+            ?? this.page.locator('input[placeholder="Search"][aria-label="Search Listing Type"]');
+        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await searchInput.fill(searchTerm);
+        await this.page.waitForTimeout(500);
+
+        // Find and click the filtered option
+        const filteredOption = this.locators.listingTypeOption(searchTerm).first();
+        await expect(filteredOption).toBeVisible({ timeout: 2000 });
+        await filteredOption.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     async selectMultipleListingTypes() {
@@ -920,6 +1076,24 @@ export class ListingActions {
         expect(rowCount).toBeGreaterThan(0);
 
         await this.resetFilters()
+    }
+
+    async searchAgent(searchText = 'Dawood Ahmad') {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        await this.locators.cardViewPropertyRow().waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+        await this.openSelectByAgentDropdown();
+
+        const agentSearchInput = this.locators.selectByAgentSearchInput();
+        await agentSearchInput.fill('');
+        await agentSearchInput.fill(searchText);
+        await this.page.waitForTimeout(800);
+
+        // Click the first matching agent option
+        const agentOption = this.page.locator('li.p-element', { hasText: searchText }).first();
+        await agentOption.click({ force: true });
     }
 
     async selectMultipleAgents() {
@@ -1685,6 +1859,19 @@ export class ListingActions {
         return currentCount;
     }
     
+
+    // Searching and then applying filters using already created functions
+    async applyListingFilters() {
+        await this.navigateToListings();
+        // Search for listing by name (using existing function)
+        await this.searchForValidcontact('Dawood Ahmad');
+        // Select property type "House" (using existing function)
+        await this.searchForProperty('House');
+        await this.searchForSuburb('Laidley');
+        await this.searchForListingStatus('For Sale');
+        await this.searchAndListingType('Set Sale');
+        await this.searchAgent();
+    }
 
 
 
