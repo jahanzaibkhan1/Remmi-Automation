@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.26853900000081">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-03T10:57:39.880Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.405" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Searching listing with special characters returns no results" classname="Pages\Listing\Listingview.spec.ts" time="42.405">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.65814200000092">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-03T11:02:30.925Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.089" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Searching with Listing only" classname="Pages\Listing\Listingview.spec.ts" time="34.089">
 </testcase>
 </testsuite>
 </testsuites>
