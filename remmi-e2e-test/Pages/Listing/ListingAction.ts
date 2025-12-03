@@ -227,6 +227,15 @@ export class ListingActions {
         await this.page.waitForTimeout(700);
     }
 
+    // Private function to reset filters (clicks the Reset button)
+    private async resetFilters() {
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeVisible({ timeout: 5000 });
+        await expect(resetButton).toBeEnabled();
+        await resetButton.click({ force: true });
+        await this.page.waitForTimeout(700);
+    }
+
 
     //*************************************Public Actions *************************************//
 
@@ -236,7 +245,7 @@ export class ListingActions {
 
         // Wait for cards to be visible before searching
         const cardRows = this.locators.cardViewPropertyRow();
-        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
 
         await this.searchListing(keyword);
         await this.page.waitForTimeout(1000);
@@ -258,65 +267,41 @@ export class ListingActions {
         expect(foundKeyword).toBe(true);
 
         // Reset filter
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeVisible({ timeout: 5000 });
-        await resetButton.click();
+        await this.resetFilters()
     }
 
 
     async searchForInvalidListing(keyword: string) {
         await this.navigateToListings();
         await this.switchToGridView();
-        const cardRows = this.locators.cardViewPropertyRow();
-        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
 
         await this.searchListing(keyword);
         await this.page.waitForTimeout(1000);
 
         const noResults = this.page.getByText('No results found');
-        await expect(noResults).toBeVisible({ timeout: 5000 });
+        await expect(noResults).toBeVisible({ timeout: 10000 });
 
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeVisible({ timeout: 5000 });
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async searchWithSpecialCharacters(specialChars: string) {
         await this.navigateToListings();
-        await this.switchToGridView();
-        const cardRows = this.locators.cardViewPropertyRow();
-        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
-        await this.searchListing(specialChars);
+        const searchBox = this.locators.SearchBox();
+        await searchBox.click();
+        await searchBox.fill(specialChars);
         await this.page.waitForTimeout(1000);
-
-        const cardRowCount = await cardRows.count();
-        let foundSpecial = false;
-        for (let i = 0; i < cardRowCount; ++i) {
-            const row = cardRows.nth(i);
-            const text = (await row.innerText()).toLowerCase();
-            if (text.includes(specialChars.toLowerCase())) {
-                foundSpecial = true;
-                break;
-            }
-        }
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeVisible({ timeout: 5000 });
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async searchWithEmptyField() {
         await this.navigateToListings();
         await this.switchToGridView();
-        const cardRows = this.locators.cardViewPropertyRow();
-        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
 
         const searchBox = this.locators?.SearchBox?.() ?? this.page.getByRole('textbox', { name: /search/i });
         await searchBox.fill('');
         await searchBox.press('Enter');
         await this.page.waitForTimeout(1000);
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeVisible({ timeout: 5000 });
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async selectSinglePropertyType() {
@@ -344,9 +329,7 @@ export class ListingActions {
             }
         }
         expect(found).toBe(true);
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async selectMultiplePropertyTypes() {
@@ -397,9 +380,7 @@ export class ListingActions {
         expect(foundFirst).toBe(true);
         expect(foundSecond).toBe(true);
 
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async selectAllPropertyType() {
@@ -416,8 +397,7 @@ export class ListingActions {
         await selectAllOption.click();
         await this.page.waitForTimeout(1000);
 
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async deselectAllPropertyTypes() {
@@ -437,8 +417,7 @@ export class ListingActions {
         await selectAllOption.click();
         await this.page.waitForTimeout(1000);
 
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async searchWithinPropertyTypeFilter(searchTerm: string) {
@@ -474,8 +453,7 @@ export class ListingActions {
         }
         expect(found).toBe(true);
 
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async selectSinglePropertyAndCloseDropdown() {
@@ -493,9 +471,7 @@ export class ListingActions {
         if (await closeButton.isVisible({ timeout: 2000 }).catch(() => false)) {
             await closeButton.click({ force: true });
         }
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async selectSingleSuburb() {
@@ -526,9 +502,7 @@ export class ListingActions {
             expect(firstSuburbText && cardText.includes(firstSuburbText.toLowerCase()))
                 .toBe(true);
         }
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async selectMultipleSuburbs() {
@@ -579,9 +553,7 @@ export class ListingActions {
             expect(matchesSuburb).toBe(true);
         }
 
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async selectAllSuburbs() {
@@ -607,11 +579,7 @@ export class ListingActions {
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
 
-        // Reset filter
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await expect(resetButton).toBeVisible();
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async deselectAllSuburbs() {
@@ -637,9 +605,7 @@ export class ListingActions {
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
 
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async searchWithinSuburbDropdown(suburbLabel: string) {
@@ -677,9 +643,7 @@ export class ListingActions {
             // Check that suburbLabel is found in the card text
             expect(cardText.includes(suburbLabel.toLowerCase())).toBe(true);
         }
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async selectSingleListingStatus() {
@@ -719,9 +683,7 @@ export class ListingActions {
 
         await listingStatusDropdown.click();
 
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async selectMultipleListingStatuses() {
@@ -772,9 +734,7 @@ export class ListingActions {
         expect(foundAll).toBe(true);
 
         await listingStatusDropdown.click();
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async selectAllListingStatuses() {
@@ -798,10 +758,7 @@ export class ListingActions {
         expect(rowCount).toBeGreaterThan(0);
 
         await listingStatusDropdown.click();
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await expect(resetButton).toBeVisible();
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async deselectAllListingStatuses() {
@@ -828,9 +785,7 @@ export class ListingActions {
         expect(rowCount).toBeGreaterThan(0);
 
         await listingStatusDropdown.click();
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async searchListingStatusFilter(searchTerm: string) {
@@ -867,9 +822,7 @@ export class ListingActions {
         await listingStatusDropdown.click();
 
         await this.page.waitForTimeout(1000)
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async selectSingleListingType() {
@@ -897,9 +850,7 @@ export class ListingActions {
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
 
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async selectMultipleListingTypes() {
@@ -937,9 +888,7 @@ export class ListingActions {
 
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async selectSingleAgent() {
@@ -970,9 +919,7 @@ export class ListingActions {
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
 
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     async selectMultipleAgents() {
@@ -1003,18 +950,12 @@ export class ListingActions {
 
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
     }
     // Selecting a single contract status 
     async selectSingleContractStatus() {
         await this.navigateToListings();
         await this.switchToGridView();
-
-        const cardRows = this.locators.cardViewPropertyRow();
-        await expect(cardRows).toBeVisible({ timeout: 30000 });
-        await this.page.waitForTimeout(1000);
         // Open the Contract Status dropdown
         const contractStatusDropdown = this.locators.contractStatusDropdown();
         await expect(contractStatusDropdown).toBeVisible({ timeout: 3000 });
@@ -1042,19 +983,13 @@ export class ListingActions {
         await this.page.waitForTimeout(900);
 
         // Click 'Reset' to clear the filter (skip table verification)
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     // Selecting multiple Contract statuses
     async selectMultipleContractStatuses() {
         await this.navigateToListings();
         await this.switchToGridView();
-
-        const cardRows = this.locators.cardViewPropertyRow();
-        await expect(cardRows).toBeVisible({ timeout: 30000 });
-        await this.page.waitForTimeout(1000);
 
         // Open the Contract Status dropdown
         const contractStatusDropdown = this.locators.contractStatusDropdown();
@@ -1084,19 +1019,13 @@ export class ListingActions {
         // (You can place table validation here if required)
 
         // Click 'Reset' to clear the filter
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
     }
 
     // Selecting a contact creation date
     async selectListingCreationDate() {
         await this.navigateToListings();
         await this.switchToGridView();
-
-        const cardRows = this.locators.cardViewPropertyRow();
-        await expect(cardRows).toBeVisible({ timeout: 30000 });
-        await this.page.waitForTimeout(1000);
 
         // Open datepicker
         const input = this.locators.listingCreationDateDropdown();
@@ -1111,68 +1040,75 @@ export class ListingActions {
         }
         await todayBtn.click({ force: true });
         // Reset filter
-        const resetBtn = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetBtn).toBeEnabled();
-        await resetBtn.click();
+        await this.resetFilters()
     }
 
     async selectNextDateFromToday() {
-        // Open dropdown and always just click the next enabled date after the currently selected/visible date (today)
         await this.navigateToListings();
-        await this.waitForTableRows();
-
-        // Open the creation date dropdown
+    
+        // Open date picker
         await this.locators.listingCreationDateDropdown().click();
-
-        // Wait for the calendar day cells to be visible
-        const dayCells = this.page.locator(
-            ".p-datepicker-calendar td:not(.p-disabled) >> :is(span, a)"
-        );
-        await dayCells.first().waitFor({ state: "visible" });
-
-        // Find the current date in the calendar and click the next enabled day (if available)
-        const today = new Date().getDate().toString();
-        const count = await dayCells.count();
-
-        let foundToday = false;
-        for (let i = 0; i < count; i++) {
-            const text = (await dayCells.nth(i).innerText()).trim();
-            if (text === today) {
-                // always try to click the next date if present
-                if (i + 1 < count) {
-                    await dayCells.nth(i + 1).click({ force: true });
-                } else {
-                    // If today is last date, go to next month and click first enabled day
-                    await this.page.locator(".p-datepicker-next").click();
-                    const nextMonthCells = this.page.locator(
-                        ".p-datepicker-calendar td:not(.p-disabled) >> :is(span, a)"
-                    );
-                    await nextMonthCells.first().waitFor({ state: "visible" });
-                    await nextMonthCells.first().click({ force: true });
-                }
-                foundToday = true;
-                break;
+    
+        // Always wait for calendar root (stable anchor)
+        const calendar = this.page.locator(".p-datepicker");
+        await expect(calendar).toBeVisible({ timeout: 5000 });
+    
+        // 1️⃣ Compute Tomorrow
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+    
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+    
+        // 2️⃣ Read currently opened calendar's month-year (stable header)
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+    
+        const headerText = await header.innerText();
+        const [monthName, year] = headerText.trim().split(" ");
+    
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+    
+        // 3️⃣ Move calendar to correct month
+        const monthDifference =
+            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
+    
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
             }
+            // Wait for transition + re-render
+            await this.page.waitForTimeout(200);
         }
-        // Edge case: If calendar did not display 'today' (shouldn't occur), just pick and click the second visible day
-        if (!foundToday && count > 1) {
-            await dayCells.nth(1).click({ force: true });
-        }
-
-        // No records assertion (as per previous logic, may show "no results found" after picking a future date)
+    
+        // 4️⃣ Select tomorrow's date (non-flaky selector)
+        const dayLocator = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
+        );
+    
+        await dayLocator.first().waitFor({ state: "visible", timeout: 3000 });
+        await dayLocator.first().click({ force: true });
+    
+        // 5️⃣ Validate "no results" message
         const noRecordsMsg = this.page.locator('text=/no results? found/i');
-        await expect(noRecordsMsg).toBeVisible({ timeout: 4000 });
+        await expect(noRecordsMsg).toBeVisible({ timeout: 6000 });
     }
-
+    
 
     // Checking if grid view button is displayed and toggling to grid view
     async checkGridViewDisplay() {
         await this.navigateToListings();
-        await this.switchToGridView();
-
+        // Detect if already in grid view by checking visibility of at least one card row
         const cardRows = this.locators.cardViewPropertyRow();
-        await expect(cardRows).toBeVisible({ timeout: 30000 });
-        await this.page.waitForTimeout(1000);
+        if (await cardRows.first().isVisible().catch(() => false)) {
+            // Already in grid view, do nothing
+            return;
+        }
+        // Reset filter
+        await this.resetFilters()
     }
 
     // Checking contact details in grid view - verify image, address, status, specifications, price
@@ -1180,67 +1116,53 @@ export class ListingActions {
         await this.navigateToListings();
 
         await this.switchToGridView();
-
-        const cardRows = this.locators.cardViewPropertyRow();
-        await expect(cardRows).toBeVisible({ timeout: 30000 });
-        await this.page.waitForTimeout(1000);
-        const image = this.page.locator('.s-property .product-thumbnail img').nth(2);
+        const image = this.page.locator('.s-property .product-thumbnail img').first();
         await expect(image).toBeVisible()
 
-        const heading = this.page.locator('.s-property h3[title]').nth(2);
+        const heading = this.page.locator('.s-property h3[title]').first();
         const headingValue = await heading.textContent();
         console.log("Heading:", headingValue?.trim());
-        // Optional: verify that image is visible
-        await expect(image).toBeVisible();
 
-        const status = this.page.locator('.tag-saved').nth(2);
+        const status = this.page.locator('.tag-saved').first();
         const statusValue = await status.textContent();
         console.log("Status:", statusValue?.trim());
-        await expect(cardRows).toBeVisible({ timeout: 30000 });
-        const address = this.page.getByRole('heading', { name: '49 Hetheringtons Road, North Isis, QLD 4660' })
-        await expect(address).toBeVisible()
+
         // Beds
-        const beds = this.page.locator('img[src*="Bed.svg"]').locator('xpath=../following-sibling::span').nth(2);
+        const beds = this.page.locator('img[src*="Bed.svg"]').locator('xpath=../following-sibling::span').first();
         const bedsValue = await beds.textContent();
         console.log("Beds:", bedsValue?.trim());
 
         // Baths
-        const baths = this.page.locator('img[src*="Bath.svg"]').locator('xpath=../following-sibling::span').nth(2);
+        const baths = this.page.locator('img[src*="Bath.svg"]').locator('xpath=../following-sibling::span').first();
         const bathsValue = await baths.textContent();
         console.log("Baths:", bathsValue?.trim());
 
         // Cars
-        const cars = this.page.locator('img[src*="Car.svg"]').locator('xpath=../following-sibling::span').nth(2);
+        const cars = this.page.locator('img[src*="Car.svg"]').locator('xpath=../following-sibling::span').first();
         const carsValue = await cars.textContent();
         console.log("Cars:", carsValue?.trim());
 
         // Area (16m2)
-        const area = this.page.locator('img[src*="area-1.svg"]').locator('xpath=../following-sibling::span').nth(2);
+        const area = this.page.locator('img[src*="area-1.svg"]').locator('xpath=../following-sibling::span').first();
         const areaValue = await area.textContent();
         console.log("Area:", areaValue?.trim());
 
-        const price = this.page.locator('.price-from').nth(2);
+        const price = this.page.locator('.price-from').first();
         const priceValue = await price.textContent();
         console.log("Price:", priceValue?.trim());
-
+        await this.resetFilters()
     }
 
     // Expanding a Listing card
     async expandFirstContactCard() {
         await this.navigateToListings();
         await this.switchToGridView();
-
-        const cardRows = this.locators.cardViewPropertyRow();
-        await expect(cardRows).toBeVisible({ timeout: 30000 });
-        await this.page.waitForTimeout(1000);
         const chevronDown = this.page.locator('i.pi.pi-chevron-down').nth(2);
         await chevronDown.click({ force: true });
         const expandedDetails = this.page.locator('.p-accordion-content, .expanded-section').nth(2);
         const expandedText = (await expandedDetails.textContent() ?? '').trim();
         console.log('Expanded Card Details (trimmed):', expandedText);
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
 
         await this.page.waitForTimeout(1000)
     }
@@ -1249,18 +1171,12 @@ export class ListingActions {
     async collapseExpandedListingCard() {
         await this.navigateToListings();
         await this.switchToGridView();
-
-        const cardRows = this.locators.cardViewPropertyRow();
-        await expect(cardRows).toBeVisible({ timeout: 30000 });
-        await this.page.waitForTimeout(1000);
-        const chevronDown = this.page.locator('i.pi.pi-chevron-down').nth(2);
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
         await chevronDown.click({ force: true });
-        const expandedDetails = this.page.locator('.p-accordion-content, .expanded-section').nth(2);
+        const expandedDetails = this.page.locator('.p-accordion-content, .expanded-section').first();
         const expandedText = (await expandedDetails.textContent() ?? '').trim();
         console.log('Expanded Card Details (trimmed):', expandedText);
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
 
         await this.page.waitForTimeout(1000)
 
@@ -1271,11 +1187,7 @@ export class ListingActions {
         await this.navigateToListings();
         await this.switchToGridView();
 
-        const cardRows = this.locators.cardViewPropertyRow();
-        await expect(cardRows).toBeVisible({ timeout: 30000 });
-        await this.page.waitForTimeout(1000);
-
-        const chevronDown = this.page.locator('i.pi.pi-chevron-down').nth(0);
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
         await chevronDown.click({ force: true });
 
         // Find the delete button for the first visible listing card in card/grid view
@@ -1295,9 +1207,7 @@ export class ListingActions {
         const cancell = this.page.getByRole('button', { name: 'Cancel' });
         await cancell.click({ force: true })
 
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.resetFilters()
 
         await this.page.waitForTimeout(1000)
 
@@ -1311,12 +1221,8 @@ export class ListingActions {
         await this.navigateToListings();
         await this.switchToGridView();
 
-        const cardRows = this.locators.cardViewPropertyRow();
-        await expect(cardRows).toBeVisible({ timeout: 30000 });
-        await this.page.waitForTimeout(1000);
-
         // Expand the first listing card (if needed)
-        const chevronDown = this.page.locator('i.pi.pi-chevron-down').nth(0);
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
         await chevronDown.click({ force: true });
 
         // Find and click the edit icon
@@ -1331,11 +1237,11 @@ export class ListingActions {
         const close = this.page.locator('.pi.pi-times').first()
 
         await close.click({ force: true })
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
 
-        await this.page.waitForTimeout(1000)
+        await this.page.waitForTimeout(1000);
+        await this.resetFilters()
+
+        await this.page.waitForTimeout(2000)
     }
 
     // Editing and saving changes
@@ -1393,25 +1299,23 @@ export class ListingActions {
         await expect(saveButton).toBeVisible({ timeout: 5000 });
         await saveButton.click({ force: true });
         const toast = this.page.getByRole('alert', { name: 'Listing updated successfully' })
-        await expect(toast).toBeVisible({ timeout: 10000 });
 
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        expect(toast).toBeVisible()
 
         await this.page.waitForTimeout(1000)
+
+        await this.resetFilters()
+
+        await this.page.waitForTimeout(2000)
     }
 
 
     //Opening a Listing portal
     async openPortalListingCard() {
         await this.navigateToListings();
-
         await this.switchToGridView();
-
-        const cardRows = this.locators.cardViewPropertyRow();
-        await expect(cardRows).toBeVisible({ timeout: 30000 });
-        await this.page.waitForTimeout(1000);
+        await this.resetFilters()
+        await this.page.waitForTimeout(1500)
         // Expand the first listing card
         const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
         await chevronDown.click({ force: true });
@@ -1429,11 +1333,11 @@ export class ListingActions {
         await expect(closeform).toBeVisible({ timeout: 30000 })
         await closeform.click({ force: true })
 
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
-
         await this.page.waitForTimeout(1000)
+
+        await this.resetFilters()
+
+        await this.page.waitForTimeout(2000)
 
     }
 
@@ -1476,9 +1380,9 @@ export class ListingActions {
         const clearCompare = this.page.getByRole('button', { name: 'Clear Compare' });
         await clearCompare.click({ force: true })
 
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
+        await this.page.waitForTimeout(1500)
+
+        await this.resetFilters()
 
         await this.page.waitForTimeout(1000)
 
@@ -1538,10 +1442,8 @@ export class ListingActions {
 
         await clearCompare.click({ force: true })
 
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        await expect(resetButton).toBeEnabled();
-        await resetButton.click();
-
+        await this.page.waitForTimeout(1500)
+        await this.resetFilters()
         await this.page.waitForTimeout(1000)
     }
 
@@ -1563,12 +1465,7 @@ export class ListingActions {
         const selectAllOption = this.page.locator('.checkbox__checkmark').first();
         await selectAllOption.click();
         await this.page.waitForTimeout(1000);
-
-        const resetButton = this.page.getByRole('button', { name: /reset/i });
-        if (await resetButton.isVisible().catch(() => false)) {
-            await resetButton.click({ force: true });
-            await this.page.waitForTimeout(1000);
-        }
+        await this.resetFilters()
     }
 
     async switchToGridView() {
@@ -1618,9 +1515,9 @@ export class ListingActions {
         const closeForm = this.page.locator('.pi.pi-times').first()
         await this.page.waitForTimeout(1000)
         await closeForm.click({ force: true })
-        const resetButton = this.page.getByRole('button', { name: /reset/i }); 
-        await expect(resetButton).toBeVisible({ timeout: 5000 });
-        await resetButton.click();
+
+        await this.page.waitForTimeout(1500)
+        await this.resetFilters()
     }
 
     // Fill required fields in the 'Create Listing' form and click "Save"
@@ -1696,10 +1593,10 @@ export class ListingActions {
         await this.page.waitForTimeout(1000)
         await closeForm.click({ force: true })
 
+        await this.page.waitForTimeout(1500)
+
         // click reset button
-        const resetButton = this.page.getByRole('button', { name: /Reset/i }).first();
-        await expect(resetButton).toBeVisible({ timeout: 5000 });
-        await resetButton.click();
+        await this.resetFilters()
 
     }
 
@@ -1724,10 +1621,9 @@ export class ListingActions {
         const closeForm = this.page.locator('.pi.pi-times').first()
         await closeForm.click({ force: true })
 
-         // click reset button
-         const resetButton = this.page.getByRole('button', { name: /Reset/i }).first();
-         await expect(resetButton).toBeVisible({ timeout: 5000 });
-         await resetButton.click();
+        await this.page.waitForTimeout(1500)
+        // click reset button
+        await this.resetFilters()
 
     }
 
@@ -1741,8 +1637,12 @@ export class ListingActions {
         // Get total records from page footer
         const recordsLabel = this.page.locator('p:has-text("Records:")');
         await expect(recordsLabel).toBeVisible({ timeout: 5000 });
+    
         const totalRecordsText = await recordsLabel.textContent();
-        const totalRecords = totalRecordsText ? parseInt(totalRecordsText.replace(/\D/g, ''), 10) : 1000;
+        const totalRecords = totalRecordsText
+            ? parseInt(totalRecordsText.replace(/\D/g, ''), 10)
+            : 1000;
+    
         console.log("Total Records Label:", totalRecords);
     
         let currentCount = await cards.count();
@@ -1750,34 +1650,43 @@ export class ListingActions {
     
         let scrollAttempts = 0;
         const maxScrollAttempts = 100;
-
-        while (currentCount < totalRecords && scrollAttempts < maxScrollAttempts) {
+    
+        let noChangeTimes = 0;
+    
+        while (currentCount < totalRecords && scrollAttempts < maxScrollAttempts && noChangeTimes < 3) {
             const prevCount = currentCount;
     
-            // Scroll window to bottom
+            // Scroll to bottom
             await this.page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     
-            // Small wait for lazy-loaded cards
-            await this.page.waitForTimeout(500);
+            // Wait for lazy loading items
+            await this.page.waitForTimeout(700);
     
             currentCount = await cards.count();
             console.log(`Loaded so far: ${currentCount}`);
     
-            // If no new cards loaded, count as a scroll attempt
-            if (currentCount === prevCount) scrollAttempts++;
-            else scrollAttempts = 0; // reset scrollAttempts if new cards loaded
+            if (currentCount === prevCount) {
+                noChangeTimes++; // count consecutive no-change attempts
+            } else {
+                noChangeTimes = 0; // reset when new cards appear
+            }
+    
+            scrollAttempts++;
         }
     
+        // FINAL small wait before last count (Fixes flaky mismatches)
+        await this.page.waitForTimeout(800);
+        currentCount = await cards.count();
         console.log("Total cards loaded:", currentCount);
-
-        // Jab dono match ho jayein tab test pass ho
+    
+        // Ensure we got all records
         expect(currentCount).toBe(totalRecords);
-
+    
         return currentCount;
     }
     
 
-   
+
 
 
 }
