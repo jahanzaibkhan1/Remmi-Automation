@@ -1,6 +1,7 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { ListingLocators } from './ListingLocator';
 import { addAbortListener } from 'events';
+import { table } from 'console';
 
 export class ListingActions {
     private page: Page;
@@ -228,7 +229,7 @@ export class ListingActions {
     }
 
     // Private function to reset filters (clicks the Reset button)
-    private async resetFilters() {
+    public async resetFilters() {
         const resetButton = this.page.getByRole('button', { name: /reset/i });
         await expect(resetButton).toBeVisible({ timeout: 5000 });
         await expect(resetButton).toBeEnabled();
@@ -267,7 +268,7 @@ export class ListingActions {
         expect(foundKeyword).toBe(true);
 
         // Reset filter
-        await this.resetFilters()
+        
     }
 
 
@@ -280,8 +281,6 @@ export class ListingActions {
 
         const noResults = this.page.getByText('No results found');
         await expect(noResults).toBeVisible({ timeout: 10000 });
-
-        await this.resetFilters()
     }
 
     async searchWithSpecialCharacters(specialChars: string) {
@@ -290,7 +289,6 @@ export class ListingActions {
         await searchBox.click();
         await searchBox.fill(specialChars);
         await this.page.waitForTimeout(1000);
-        await this.resetFilters()
     }
 
     async searchWithEmptyField() {
@@ -301,7 +299,6 @@ export class ListingActions {
         await searchBox.fill('');
         await searchBox.press('Enter');
         await this.page.waitForTimeout(1000);
-        await this.resetFilters()
     }
 
     async selectSinglePropertyType() {
@@ -329,7 +326,7 @@ export class ListingActions {
             }
         }
         expect(found).toBe(true);
-        await this.resetFilters()
+        
     }
 
     async selectMultiplePropertyTypes() {
@@ -380,7 +377,6 @@ export class ListingActions {
         expect(foundFirst).toBe(true);
         expect(foundSecond).toBe(true);
 
-        await this.resetFilters()
     }
 
     async selectAllPropertyType() {
@@ -396,8 +392,6 @@ export class ListingActions {
         const selectAllOption = this.page.locator('.checkbox__checkmark').first();
         await selectAllOption.click();
         await this.page.waitForTimeout(1000);
-
-        await this.resetFilters()
     }
 
     async deselectAllPropertyTypes() {
@@ -417,7 +411,6 @@ export class ListingActions {
         await selectAllOption.click();
         await this.page.waitForTimeout(1000);
 
-        await this.resetFilters()
     }
 
     async searchWithinPropertyTypeFilter(searchTerm: string) {
@@ -452,8 +445,6 @@ export class ListingActions {
             }
         }
         expect(found).toBe(true);
-
-        await this.resetFilters()
     }
 
     async selectSinglePropertyAndCloseDropdown() {
@@ -471,7 +462,6 @@ export class ListingActions {
         if (await closeButton.isVisible({ timeout: 2000 }).catch(() => false)) {
             await closeButton.click({ force: true });
         }
-        await this.resetFilters()
     }
 
     async selectSingleSuburb() {
@@ -502,7 +492,6 @@ export class ListingActions {
             expect(firstSuburbText && cardText.includes(firstSuburbText.toLowerCase()))
                 .toBe(true);
         }
-        await this.resetFilters()
     }
 
     async selectMultipleSuburbs() {
@@ -553,7 +542,6 @@ export class ListingActions {
             expect(matchesSuburb).toBe(true);
         }
 
-        await this.resetFilters()
     }
 
     async selectAllSuburbs() {
@@ -578,8 +566,6 @@ export class ListingActions {
         // Count listings after selecting all suburbs
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
-
-        await this.resetFilters()
     }
 
     async deselectAllSuburbs() {
@@ -604,8 +590,6 @@ export class ListingActions {
 
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
-
-        await this.resetFilters()
     }
 
     async searchWithinSuburbDropdown(suburbLabel: string) {
@@ -643,7 +627,6 @@ export class ListingActions {
             // Check that suburbLabel is found in the card text
             expect(cardText.includes(suburbLabel.toLowerCase())).toBe(true);
         }
-        await this.resetFilters()
     }
 
     async selectSingleListingStatus() {
@@ -683,7 +666,6 @@ export class ListingActions {
 
         await listingStatusDropdown.click();
 
-        await this.resetFilters()
     }
 
     async selectMultipleListingStatuses() {
@@ -734,7 +716,6 @@ export class ListingActions {
         expect(foundAll).toBe(true);
 
         await listingStatusDropdown.click();
-        await this.resetFilters()
     }
 
     async selectAllListingStatuses() {
@@ -758,7 +739,6 @@ export class ListingActions {
         expect(rowCount).toBeGreaterThan(0);
 
         await listingStatusDropdown.click();
-        await this.resetFilters()
     }
 
     async deselectAllListingStatuses() {
@@ -785,7 +765,7 @@ export class ListingActions {
         expect(rowCount).toBeGreaterThan(0);
 
         await listingStatusDropdown.click();
-        await this.resetFilters()
+        
     }
 
     async searchListingStatusFilter(searchTerm: string) {
@@ -822,7 +802,34 @@ export class ListingActions {
         await listingStatusDropdown.click();
 
         await this.page.waitForTimeout(1000)
-        await this.resetFilters()
+        
+    }
+
+    async searchForListingStatus(searchTerm: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible();
+        await listingStatusDropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        const statusDropdownSearchBox = this.locators.listingStatusSearchInput?.()
+            ?? this.page.locator('input[placeholder="Search"][aria-label="Search Listing Status"]');
+        await expect(statusDropdownSearchBox).toBeVisible();
+        await statusDropdownSearchBox.fill(searchTerm);
+        await this.page.waitForTimeout(500);
+
+        const filteredOptions = this.locators.listingStatusOption(searchTerm).first();
+        await filteredOptions.click()
+        await this.page.waitForTimeout(100)
+        await listingStatusDropdown.click();
+
+        await this.page.waitForTimeout(1000)
     }
 
     async selectSingleListingType() {
@@ -850,7 +857,36 @@ export class ListingActions {
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
 
-        await this.resetFilters()
+        
+    }
+
+    // 
+    // Search for an option by typing in the listing type search box, then click it
+    async searchAndListingType(searchTerm: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        const listingTypeDropdown = this.locators.listingTypeDropdown();
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 3000 });
+        await listingTypeDropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Locate the search input inside listing type dropdown
+        const searchInput = this.locators.listingTypeSearchInput?.()
+            ?? this.page.locator('input[placeholder="Search"][aria-label="Search Listing Type"]');
+        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await searchInput.fill(searchTerm);
+        await this.page.waitForTimeout(500);
+
+        // Find and click the filtered option
+        const filteredOption = this.locators.listingTypeOption(searchTerm).first();
+        await expect(filteredOption).toBeVisible({ timeout: 2000 });
+        await filteredOption.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     async selectMultipleListingTypes() {
@@ -888,7 +924,7 @@ export class ListingActions {
 
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
-        await this.resetFilters()
+        
     }
 
     async selectSingleAgent() {
@@ -919,7 +955,25 @@ export class ListingActions {
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
 
-        await this.resetFilters()
+        
+    }
+
+    async searchAgent(searchText = 'Dawood Ahmad') {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        await this.locators.cardViewPropertyRow().waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+        await this.openSelectByAgentDropdown();
+
+        const agentSearchInput = this.locators.selectByAgentSearchInput();
+        await agentSearchInput.fill('');
+        await agentSearchInput.fill(searchText);
+        await this.page.waitForTimeout(800);
+
+        // Click the first matching agent option
+        const agentOption = this.page.locator('li.p-element', { hasText: searchText }).first();
+        await agentOption.click({ force: true });
     }
 
     async selectMultipleAgents() {
@@ -950,7 +1004,7 @@ export class ListingActions {
 
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
-        await this.resetFilters()
+        
     }
     // Selecting a single contract status 
     async selectSingleContractStatus() {
@@ -981,9 +1035,7 @@ export class ListingActions {
         // Select it
         await statusOptions.nth(selectedIdx).click({ force: true });
         await this.page.waitForTimeout(900);
-
-        // Click 'Reset' to clear the filter (skip table verification)
-        await this.resetFilters()
+        
     }
 
     // Selecting multiple Contract statuses
@@ -1019,7 +1071,7 @@ export class ListingActions {
         // (You can place table validation here if required)
 
         // Click 'Reset' to clear the filter
-        await this.resetFilters()
+        
     }
 
     // Selecting a contact creation date
@@ -1040,7 +1092,7 @@ export class ListingActions {
         }
         await todayBtn.click({ force: true });
         // Reset filter
-        await this.resetFilters()
+        
     }
 
     async selectNextDateFromToday() {
@@ -1108,7 +1160,7 @@ export class ListingActions {
             return;
         }
         // Reset filter
-        await this.resetFilters()
+        
     }
 
     // Checking contact details in grid view - verify image, address, status, specifications, price
@@ -1150,7 +1202,7 @@ export class ListingActions {
         const price = this.page.locator('.price-from').first();
         const priceValue = await price.textContent();
         console.log("Price:", priceValue?.trim());
-        await this.resetFilters()
+        
     }
 
     // Expanding a Listing card
@@ -1162,7 +1214,7 @@ export class ListingActions {
         const expandedDetails = this.page.locator('.p-accordion-content, .expanded-section').nth(2);
         const expandedText = (await expandedDetails.textContent() ?? '').trim();
         console.log('Expanded Card Details (trimmed):', expandedText);
-        await this.resetFilters()
+        
 
         await this.page.waitForTimeout(1000)
     }
@@ -1465,7 +1517,7 @@ export class ListingActions {
         const selectAllOption = this.page.locator('.checkbox__checkmark').first();
         await selectAllOption.click();
         await this.page.waitForTimeout(1000);
-        await this.resetFilters()
+        
     }
 
     async switchToGridView() {
@@ -1517,7 +1569,7 @@ export class ListingActions {
         await closeForm.click({ force: true })
 
         await this.page.waitForTimeout(1500)
-        await this.resetFilters()
+        
     }
 
     // Fill required fields in the 'Create Listing' form and click "Save"
@@ -1594,9 +1646,7 @@ export class ListingActions {
         await closeForm.click({ force: true })
 
         await this.page.waitForTimeout(1500)
-
-        // click reset button
-        await this.resetFilters()
+        
 
     }
 
@@ -1622,8 +1672,7 @@ export class ListingActions {
         await closeForm.click({ force: true })
 
         await this.page.waitForTimeout(1500)
-        // click reset button
-        await this.resetFilters()
+        
 
     }
 
@@ -1686,7 +1735,297 @@ export class ListingActions {
     }
     
 
+    // Searching and then applying filters using already created functions
+    async applyListingFilters() {
+        await this.navigateToListings();
+        // Search for listing by name (using existing function)
+        await this.searchForValidListing('Dawood Ahmad');
+        // Select property type "House" (using existing function)
+        await this.searchWithinPropertyTypeFilter('House');
+        await this.searchWithinSuburbDropdown('Laidley');
+        await this.searchForListingStatus('For Sale');
+        await this.searchAndListingType('Set Sale');
+        await this.searchAgent();
+    }
 
+    // Table view search/test function
+    async searchForExistingListingview(listingName: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Wait for table rows and get their count
+        await this.waitForTableRows();
+        const searchInput = this.locators.SearchBox();
+
+        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await searchInput.fill(listingName);
+        await this.page.waitForTimeout(500);
+
+        // Fetch all visible table rows after search
+        const rowsLocator = this.page.locator('tr');
+        const rowCount = await rowsLocator.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        let foundKeyword = false;
+        for (let i = 0; i < rowCount; ++i) {
+            const row = rowsLocator.nth(i);
+            const rowText = (await row.innerText()).toLowerCase();
+            if (rowText.includes(listingName.toLowerCase())) {
+                foundKeyword = true;
+                break;
+            }
+        }
+        expect(foundKeyword).toBe(true);
+
+        // Reset filters if the function exists
+        
+    }
+
+    // Searching for a non-existing Listing by keyword
+    async searchForNonExistingListing(keyword: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Wait for table rows (header at least)
+        await this.waitForTableRows();
+
+        // Search for the non-existing keyword
+        const searchInput = this.locators.SearchBox();
+        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await searchInput.fill(keyword);
+        await this.page.waitForTimeout(500);
+
+        // Assert "No results found" is visible after searching
+        const noResults = this.page.getByText('No results found');
+        await expect(noResults).toBeVisible({ timeout: 10000 });
+
+        // Optionally reset filters afterward
+        ;
+    }
+
+    // Searching for a listing using a partial name match
+    async searchForPartialListingview(partialName: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Search for the partial name
+        const searchInput = this.locators.SearchBox();
+        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await searchInput.fill(partialName);
+        await this.page.keyboard.press('Enter');
+        await this.page.waitForTimeout(500);
+
+        // Fetch all visible table rows after search (skip header row if present)
+        const rowsLocator = this.page.locator('tr');
+        const rowCount = await rowsLocator.count();
+        if (rowCount === 0) {
+            throw new Error('No rows found in the table after searching.');
+        }
+
+        let foundMatch = false;
+        for (let i = 0; i < rowCount; ++i) {
+            const row = rowsLocator.nth(i);
+            // Defensive: Only check visible rows and with text content
+            if (await row.isVisible()) {
+                const rowText = (await row.innerText()).toLowerCase();
+                if (rowText.includes(partialName.toLowerCase())) {
+                    foundMatch = true;
+                    break;
+                }
+            }
+        }
+        expect(foundMatch).toBe(true);
+    }
+
+    // Searching Listing with special characters
+    async searchListingWithSpecialCharacters(specialChars: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        const searchInput = this.locators.SearchBox();
+        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await searchInput.fill(specialChars);
+        await this.page.keyboard.press('Enter');
+        await this.page.waitForTimeout(500);
+
+        // Assert that "No results found" is visible, as special characters generally yield zero hits
+        const noResults = this.page.getByText('No results found', { exact: false });
+        await expect(noResults).toBeVisible({ timeout: 10000 });
+    }
+
+    async searchForListingview(listingName: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Wait for table rows and get their count
+        await this.waitForTableRows();
+        const searchInput = this.locators.SearchBox();
+
+        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await searchInput.fill(listingName);
+        await this.page.waitForTimeout(500);
+
+        // Fetch all visible table rows after search
+        const rowsLocator = this.page.locator('tr');
+        const rowCount = await rowsLocator.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        let foundKeyword = false;
+        for (let i = 0; i < rowCount; ++i) {
+            const row = rowsLocator.nth(i);
+            const rowText = (await row.innerText()).toLowerCase();
+            if (rowText.includes(listingName.toLowerCase())) {
+                foundKeyword = true;
+                break;
+            }
+        }
+        expect(foundKeyword).toBe(true);        
+    }
+
+    // Searching listing with an empty search field and pressing Enter
+    async searchListingWithEmptyField() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        const searchInput = this.locators.SearchBox();
+
+        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await searchInput.fill('');
+        await this.page.keyboard.press('Enter');
+        await this.page.waitForTimeout(500);
+
+        // Fetch all visible table rows after search
+        const rowsLocator = this.page.locator('tr');
+        const rowCount = await rowsLocator.count();
+
+        expect(rowCount).toBeGreaterThan(0); 
+    }
+
+    // Selecting a single property type
+    async selectPropertyType() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Locate all visible table/list rows (tr in tbody, skipping header row if present)
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000);
+        const firstOption = this.page.locator('ul > li.p-element').first();
+        await expect(firstOption).toBeVisible({ timeout: 3000 });
+        const propertyTypeLabel = (await firstOption.textContent())?.trim() || '';
+        await firstOption.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // First, find the index of the "Property Type" column from the table header
+        const headers = this.page.locator('thead tr th');
+        const headerCount = await headers.count();
+
+        let propertyTypeIndex = -1;
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headers.nth(i).innerText()).trim().toLowerCase();
+            if (headerText === 'property type') {
+                propertyTypeIndex = i;
+                break;
+            }
+        }
+        expect(propertyTypeIndex).toBeGreaterThan(-1);
+
+        // Now, confirm the filtered value is present specifically in the property type column of at least one row
+        let found = false;
+        for (let i = 0; i < rowCount; i++) {
+            const row = tableRows.nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const cells = row.locator('td');
+            const cellCount = await cells.count();
+            if (propertyTypeIndex < cellCount) {
+                const propertyTypeCellText = (await cells.nth(propertyTypeIndex).innerText()).trim().toLowerCase();
+                if (propertyTypeLabel && propertyTypeCellText.includes(propertyTypeLabel.toLowerCase())) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+        expect(found).toBe(true);
+    }
+
+    // Selecting multiple property types in List View
+
+    async selectMultiplePropertyTypesInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Locate all visible table/list rows (tr in tbody, skipping header row if present)
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000);
+
+        const propertyTypeOptions = this.page.locator('ul > li.p-element');
+        const optionCount = await propertyTypeOptions.count();
+
+        if (optionCount < 2) {
+            throw new Error('Less than two property type options available to select.');
+        }
+
+        const firstOption = propertyTypeOptions.nth(0);
+        const secondOption = propertyTypeOptions.nth(1);
+
+        const firstLabelRaw = await firstOption.textContent();
+        const secondLabelRaw = await secondOption.textContent();
+        const firstLabel = firstLabelRaw ? firstLabelRaw.trim().toLowerCase() : '';
+        const secondLabel = secondLabelRaw ? secondLabelRaw.trim().toLowerCase() : '';
+
+        await firstOption.click({ force: true });
+        await this.page.waitForTimeout(300);
+        await secondOption.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Find index of the "Property Type" column
+        const headers = this.page.locator('thead tr th');
+        const headerCount = await headers.count();
+
+        let propertyTypeIndex = -1;
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headers.nth(i).innerText()).trim().toLowerCase();
+            if (headerText === 'property type') {
+                propertyTypeIndex = i;
+                break;
+            }
+        }
+        expect(propertyTypeIndex).toBeGreaterThan(-1);
+
+        // Check if both selected property types are present in the relevant column of at least one row each
+        let foundFirst = false;
+        let foundSecond = false;
+
+        for (let i = 0; i < rowCount; i++) {
+            const row = tableRows.nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const cells = row.locator('td');
+            const cellCount = await cells.count();
+            if (propertyTypeIndex < cellCount) {
+                const propertyTypeCellText = (await cells.nth(propertyTypeIndex).innerText()).trim().toLowerCase();
+                if (firstLabel && propertyTypeCellText.includes(firstLabel)) {
+                    foundFirst = true;
+                }
+                if (secondLabel && propertyTypeCellText.includes(secondLabel)) {
+                    foundSecond = true;
+                }
+                if (foundFirst && foundSecond) break;
+            }
+        }
+        expect(foundFirst).toBe(true);
+        expect(foundSecond).toBe(true);
+    }
 
 
 }

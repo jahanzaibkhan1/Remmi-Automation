@@ -70,7 +70,8 @@ export class ListingLocators {
         return this.page.locator("//div[@class='p-multiselect-label p-placeholder']");
     }
     selectByAgentSearchInput(): Locator {
-        return this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
+        // Try common search input patterns (fallback to a broad match for stability)
+        return this.page.locator("//input[@role='textbox']").first();
     }
     selectByAgentSelectAll(): Locator {
         return this.page.locator('.checkbox__checkmark'); // May need .first() if multiple checkmarks on page
