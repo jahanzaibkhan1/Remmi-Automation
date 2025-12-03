@@ -1853,5 +1853,34 @@ export class ListingActions {
         await expect(noResults).toBeVisible({ timeout: 10000 });
     }
 
+    async searchForListingview(listingName: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Wait for table rows and get their count
+        await this.waitForTableRows();
+        const searchInput = this.locators.SearchBox();
+
+        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await searchInput.fill(listingName);
+        await this.page.waitForTimeout(500);
+
+        // Fetch all visible table rows after search
+        const rowsLocator = this.page.locator('tr');
+        const rowCount = await rowsLocator.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        let foundKeyword = false;
+        for (let i = 0; i < rowCount; ++i) {
+            const row = rowsLocator.nth(i);
+            const rowText = (await row.innerText()).toLowerCase();
+            if (rowText.includes(listingName.toLowerCase())) {
+                foundKeyword = true;
+                break;
+            }
+        }
+        expect(foundKeyword).toBe(true);        
+    }
+
 
 }
