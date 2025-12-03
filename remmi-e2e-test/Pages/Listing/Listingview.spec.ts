@@ -38,6 +38,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters()
   });
 
+  test('Test 4: Searching listing with special characters', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchListingWithSpecialCharacters('@@@$###!!!');
+    await listingActions.resetFilters();
+  });
+
 });
 
 

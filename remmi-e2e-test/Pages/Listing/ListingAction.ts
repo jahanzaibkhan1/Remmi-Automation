@@ -1837,7 +1837,21 @@ export class ListingActions {
         expect(foundMatch).toBe(true);
     }
 
+    // Searching Listing with special characters
+    async searchListingWithSpecialCharacters(specialChars: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
 
+        const searchInput = this.locators.SearchBox();
+        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await searchInput.fill(specialChars);
+        await this.page.keyboard.press('Enter');
+        await this.page.waitForTimeout(500);
+
+        // Assert that "No results found" is visible, as special characters generally yield zero hits
+        const noResults = this.page.getByText('No results found', { exact: false });
+        await expect(noResults).toBeVisible({ timeout: 10000 });
+    }
 
 
 }
