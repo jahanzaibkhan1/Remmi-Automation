@@ -1,12 +1,6 @@
-<testsuites id="" name="" tests="2" failures="0" skipped="2" errors="0" time="45.657365000000226">
-<testsuite name="Pages\Listing\Listing.spec.ts" timestamp="2025-12-03T09:15:33.157Z" hostname="chromium" tests="2" failures="0" skipped="2" time="32.761" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Searching for an invalid contact" classname="Pages\Listing\Listing.spec.ts" time="32.761">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 46: Searching and then applying filters" classname="Pages\Listing\Listing.spec.ts" time="0">
-<skipped>
-</skipped>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.66041200000048">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-03T09:41:26.561Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.714" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Searching for a valid Listing" classname="Pages\Listing\Listingview.spec.ts" time="41.714">
 </testcase>
 </testsuite>
 </testsuites>
