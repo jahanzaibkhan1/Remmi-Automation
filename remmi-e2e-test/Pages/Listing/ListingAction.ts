@@ -1902,9 +1902,31 @@ export class ListingActions {
             }
         }
         expect(foundKeyword).toBe(true);
-        
+
         // Reset filters if the function exists
         await this.resetFilters()
+    }
+
+    // Searching for a non-existing Listing by keyword
+    async searchForNonExistingListing(keyword: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Wait for table rows (header at least)
+        await this.waitForTableRows();
+
+        // Search for the non-existing keyword
+        const searchInput = this.locators.SearchBox();
+        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await searchInput.fill(keyword);
+        await this.page.waitForTimeout(500);
+
+        // Assert "No results found" is visible after searching
+        const noResults = this.page.getByText('No results found');
+        await expect(noResults).toBeVisible({ timeout: 10000 });
+
+        // Optionally reset filters afterward
+        await this.resetFilters();
     }
 
 
