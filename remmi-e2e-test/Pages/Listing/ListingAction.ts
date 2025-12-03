@@ -1953,5 +1953,79 @@ export class ListingActions {
         expect(found).toBe(true);
     }
 
+    // Selecting multiple property types in List View
+
+    async selectMultiplePropertyTypesInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Locate all visible table/list rows (tr in tbody, skipping header row if present)
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000);
+
+        const propertyTypeOptions = this.page.locator('ul > li.p-element');
+        const optionCount = await propertyTypeOptions.count();
+
+        if (optionCount < 2) {
+            throw new Error('Less than two property type options available to select.');
+        }
+
+        const firstOption = propertyTypeOptions.nth(0);
+        const secondOption = propertyTypeOptions.nth(1);
+
+        const firstLabelRaw = await firstOption.textContent();
+        const secondLabelRaw = await secondOption.textContent();
+        const firstLabel = firstLabelRaw ? firstLabelRaw.trim().toLowerCase() : '';
+        const secondLabel = secondLabelRaw ? secondLabelRaw.trim().toLowerCase() : '';
+
+        await firstOption.click({ force: true });
+        await this.page.waitForTimeout(300);
+        await secondOption.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Find index of the "Property Type" column
+        const headers = this.page.locator('thead tr th');
+        const headerCount = await headers.count();
+
+        let propertyTypeIndex = -1;
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headers.nth(i).innerText()).trim().toLowerCase();
+            if (headerText === 'property type') {
+                propertyTypeIndex = i;
+                break;
+            }
+        }
+        expect(propertyTypeIndex).toBeGreaterThan(-1);
+
+        // Check if both selected property types are present in the relevant column of at least one row each
+        let foundFirst = false;
+        let foundSecond = false;
+
+        for (let i = 0; i < rowCount; i++) {
+            const row = tableRows.nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const cells = row.locator('td');
+            const cellCount = await cells.count();
+            if (propertyTypeIndex < cellCount) {
+                const propertyTypeCellText = (await cells.nth(propertyTypeIndex).innerText()).trim().toLowerCase();
+                if (firstLabel && propertyTypeCellText.includes(firstLabel)) {
+                    foundFirst = true;
+                }
+                if (secondLabel && propertyTypeCellText.includes(secondLabel)) {
+                    foundSecond = true;
+                }
+                if (foundFirst && foundSecond) break;
+            }
+        }
+        expect(foundFirst).toBe(true);
+        expect(foundSecond).toBe(true);
+    }
+
 
 }
