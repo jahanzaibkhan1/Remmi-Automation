@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.65814200000092">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-03T11:02:30.925Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.089" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Searching with Listing only" classname="Pages\Listing\Listingview.spec.ts" time="34.089">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="52.43318500000052">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-03T11:06:23.355Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.998" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Searching listing with an empty field" classname="Pages\Listing\Listingview.spec.ts" time="41.998">
 </testcase>
 </testsuite>
 </testsuites>

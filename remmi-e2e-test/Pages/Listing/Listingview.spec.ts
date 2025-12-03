@@ -50,6 +50,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters()
   });
 
+  test('Test 6: Searching listing with an empty field', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchListingWithEmptyField();
+    await listingActions.resetFilters();
+  });
+
 });
 
 

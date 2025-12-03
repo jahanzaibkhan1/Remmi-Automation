@@ -1882,5 +1882,24 @@ export class ListingActions {
         expect(foundKeyword).toBe(true);        
     }
 
+    // Searching listing with an empty search field and pressing Enter
+    async searchListingWithEmptyField() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        const searchInput = this.locators.SearchBox();
+
+        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await searchInput.fill('');
+        await this.page.keyboard.press('Enter');
+        await this.page.waitForTimeout(500);
+
+        // Fetch all visible table rows after search
+        const rowsLocator = this.page.locator('tr');
+        const rowCount = await rowsLocator.count();
+
+        expect(rowCount).toBeGreaterThan(0); 
+    }
+
 
 }
