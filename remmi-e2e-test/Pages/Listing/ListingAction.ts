@@ -2496,4 +2496,81 @@ export class ListingActions {
         await listingTypeDropdown.click({ force: true });
     }
 
+    // Filtering by a valid agent (who may be in Primary Agent or Secondary Agent columns)
+    async filterByValidAgent(agentName: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Wait for table rows to be visible
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+
+        // Open agent dropdown and search for the agent
+        const agentDropdown = this.locators.selectByAgentDropdown?.() ?? this.page.locator('[aria-label*="Agent"]');
+        await expect(agentDropdown).toBeVisible({ timeout: 5000 });
+        await agentDropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        const searchInput = this.locators.selectByAgentSearchInput?.()
+            ?? this.page.locator('input[placeholder="Search"][aria-label*="Agent"]');
+        await expect(searchInput).toBeVisible();
+        await searchInput.fill(agentName);
+        await this.page.waitForTimeout(500);
+
+        const option = this.locators.selectByAgentOption?.(agentName)?.first()
+            ?? this.page.locator('ul > li.p-element').filter({ hasText: agentName }).first();
+
+        await expect(option).toBeVisible({ timeout: 2000 });
+        const agentLabel = (await option.textContent())?.trim().toLowerCase() || "";
+        await option.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        // Find the indexes for "Primary Agent" and "Secondary Agent" columns
+        const headers = this.page.locator('thead tr th');
+        const headerCount = await headers.count();
+        let primaryAgentColIndex = -1;
+        let secondaryAgentColIndex = -1;
+
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headers.nth(i).innerText()).trim().toLowerCase().replace(/\s+/g, " ");
+            if (headerText === "primary agent") {
+                primaryAgentColIndex = i;
+            } else if (headerText === "secondary agent") {
+                secondaryAgentColIndex = i;
+            }
+        }
+        expect(primaryAgentColIndex > -1 || secondaryAgentColIndex > -1).toBeTruthy();
+
+        // Validate at least one row contains the agent either in Primary Agent or Secondary Agent column
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        let found = false;
+        for (let i = 0; i < rowCount; i++) {
+            const row = tableRows.nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const cells = row.locator('td');
+            const cellCount = await cells.count();
+
+            let primaryAgentCellText = '';
+            let secondaryAgentCellText = '';
+
+            if (primaryAgentColIndex > -1 && primaryAgentColIndex < cellCount) {
+                primaryAgentCellText = (await cells.nth(primaryAgentColIndex).innerText()).trim().toLowerCase();
+            }
+            if (secondaryAgentColIndex > -1 && secondaryAgentColIndex < cellCount) {
+                secondaryAgentCellText = (await cells.nth(secondaryAgentColIndex).innerText()).trim().toLowerCase();
+            }
+
+            if (
+                (agentLabel && primaryAgentCellText.includes(agentLabel)) ||
+                (agentLabel && secondaryAgentCellText.includes(agentLabel))
+            ) {
+                found = true;
+                break;
+            }
+        }
+        expect(found).toBe(true);
+    }
+
 }

@@ -140,6 +140,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 21: Filtering by a valid agent in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.filterByValidAgent('Dawood Ahmad');
+    await listingActions.resetFilters();
+  });
+
 });
 
 
