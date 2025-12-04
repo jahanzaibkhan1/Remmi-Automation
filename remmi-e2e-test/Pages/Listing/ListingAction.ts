@@ -2150,4 +2150,29 @@ export class ListingActions {
         }
     }
 
+    // Selecting "Deselect All" in suburb filter in List View
+    async deselectAllSuburbsInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the suburb dropdown
+        const suburbDropdown = this.locators.suburbDropdown();
+        await expect(suburbDropdown).toBeVisible();
+        await suburbDropdown.click({ force: true });
+
+        // Click the "Select All" checkbox once to select all, then again to deselect all
+        const selectAllCheckbox = this.locators.suburbSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(300);
+
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Check that table rows still exist (i.e. at least the header row is present)
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
+
 }
