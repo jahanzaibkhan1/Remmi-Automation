@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.99435199999996">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-04T04:48:26.586Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.682" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Selecting multiple contract statuses in List View" classname="Pages\Listing\Listingview.spec.ts" time="32.682">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="66.81847400000039">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-04T05:51:21.943Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.35" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Deselecting all listing statuses in List View" classname="Pages\Listing\Listingview.spec.ts" time="55.35">
 </testcase>
 </testsuite>
 </testsuites>
