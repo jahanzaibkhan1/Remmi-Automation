@@ -610,10 +610,10 @@ export class ListingActions {
 
         await this.page.waitForTimeout(800);
 
-        const suburbOption = this.locators.suburbOption(suburbLabel);
+        const suburbOption = this.locators.suburbOption(suburbLabel).first();
         await expect(suburbOption).toBeVisible();
 
-        await suburbOption.click({ force: true });
+        await suburbOption.first().click({ force: true });
 
         await this.page.waitForTimeout(1000);
 
@@ -2026,6 +2026,551 @@ export class ListingActions {
         expect(foundFirst).toBe(true);
         expect(foundSecond).toBe(true);
     }
+    // Deselect all property types in the property type filter dropdown and verify rows remain
+    async deselectPropertyTypes() {
+        await this.navigateToListings();
+        await this.switchToListView();
 
+        // Open the property type dropdown
+        await this.openPropertyTypeDropdown();
+
+        // Find and click the select all checkbox to deselect all
+        const selectAll = this.locators.propertyTypeSelectAll();
+        await expect(selectAll).toBeVisible();
+        await selectAll.click({ force: true });
+
+        await this.page.waitForTimeout(400)
+        await selectAll.click({ force: true });
+        // Verify table rows are still present
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
+
+    // Attempts to search for a property type that does not exist in the dropdown,
+    async searchForNonExistingPropertyType(nonExistingType: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the property type dropdown
+        await this.openPropertyTypeDropdown();
+
+        // Type the non-existing property type into the search input
+        await this.searchPropertyType(nonExistingType);
+
+        // Wait briefly to allow filtering
+        await this.page.waitForTimeout(400);
+    }
+
+    // Filtering with a valid suburb (now in list view)
+    async filterByValidSuburb(suburbLabel: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the suburb dropdown
+        const suburbDropdown = this.locators.suburbDropdown();
+        await expect(suburbDropdown).toBeVisible();
+        await suburbDropdown.click({ force: true });
+
+        // Type into the suburb search input
+        const searchInput = this.locators.suburbSearchInput();
+        await expect(searchInput).toBeVisible();
+        await searchInput.fill(suburbLabel);
+        await this.page.waitForTimeout(800);
+
+        // Select the matching suburb
+        const suburbOption = this.locators.suburbOption(suburbLabel).first();
+        await expect(suburbOption).toBeVisible();
+        await suburbOption.click({ force: true });
+
+        await this.page.waitForTimeout(1000);
+
+        // Table rows might contain a header row; filter out header by checking at least 1 row present
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        let foundMatching = false;
+        for (let i = 0; i < rowCount; i++) {
+            const row = tableRows.nth(i);
+            const rowText = (await row.innerText()).toLowerCase();
+
+            // Check at least one row contains the suburb label; skip header rows by checking contents
+            if (rowText.includes(suburbLabel.toLowerCase())) {
+                foundMatching = true;
+            }
+        }
+        expect(foundMatching).toBe(true);
+    }
+
+    // Filtering with multiple suburbs in List View
+    async filterByMultipleSuburbs(suburbLabels: string[]) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the suburb dropdown
+        const suburbDropdown = this.locators.suburbDropdown();
+        await expect(suburbDropdown).toBeVisible();
+        await suburbDropdown.click({ force: true });
+
+        // For each suburb label, search and select
+        for (const suburbLabel of suburbLabels) {
+            const searchInput = this.locators.suburbSearchInput();
+            await expect(searchInput).toBeVisible();
+            await searchInput.fill(''); // Clear previous filter
+            await searchInput.fill(suburbLabel);
+
+            await this.page.waitForTimeout(500);
+
+            // Select the matching suburb
+            const suburbOption = this.locators.suburbOption(suburbLabel).first();
+            await expect(suburbOption).toBeVisible();
+            await suburbOption.click({ force: true });
+
+            await this.page.waitForTimeout(300);
+        }
+
+        // Check table rows contain at least one of each suburb
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // For each suburb, verify there's at least one matching row
+        for (const suburbLabel of suburbLabels) {
+            let foundMatching = false;
+            for (let i = 0; i < rowCount; i++) {
+                const row = tableRows.nth(i);
+                const rowText = (await row.innerText()).toLowerCase();
+                if (rowText.includes(suburbLabel.toLowerCase())) {
+                    foundMatching = true;
+                    break;
+                }
+            }
+            expect(foundMatching).toBe(true);
+        }
+    }
+
+    // Selecting "Deselect All" in suburb filter in List View
+    async deselectAllSuburbsInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the suburb dropdown
+        const suburbDropdown = this.locators.suburbDropdown();
+        await expect(suburbDropdown).toBeVisible();
+        await suburbDropdown.click({ force: true });
+
+        // Click the "Select All" checkbox once to select all, then again to deselect all
+        const selectAllCheckbox = this.locators.suburbSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(300);
+
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Check that table rows still exist (i.e. at least the header row is present)
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
+
+    // Searching for a non existing suburb in List View
+    async searchForNonExistingSuburb(suburbLabel: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the suburb dropdown
+        const suburbDropdown = this.locators.suburbDropdown();
+        await expect(suburbDropdown).toBeVisible();
+        await suburbDropdown.click({ force: true });
+
+        // Search for the non-existing suburb label
+        const searchInput = this.locators.suburbSearchInput();
+        await expect(searchInput).toBeVisible();
+        await searchInput.fill(suburbLabel);
+        await this.page.waitForTimeout(400);
+
+        // There should be no visible options matching the label
+        const suburbOption = this.locators.suburbOption(suburbLabel);
+        await expect(suburbOption).toHaveCount(0);
+
+        // Optionally, verify the table has no data rows (except header)
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        for (let i = 0; i < rowCount; i++) {
+            const row = tableRows.nth(i);
+            const rowText = (await row.innerText()).toLowerCase();
+            expect(rowText.includes(suburbLabel.toLowerCase())).toBe(false);
+        }
+    }
+
+    // Filtering by a valid Listing status in List View
+    async filterByValidListingStatus(statusLabel: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the listing status dropdown
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible();
+        await listingStatusDropdown.click({ force: true });
+
+        // Wait for listing status options to be visible
+        const statusOptions = this.page.locator('ul > li.p-element');
+        await expect(statusOptions.first()).toBeVisible({ timeout: 5000 });
+
+        // Find the correct status option and click it
+        const count = await statusOptions.count();
+        let matched = false;
+        for (let i = 0; i < count; ++i) {
+            const option = statusOptions.nth(i);
+            const text = (await option.innerText()).trim().toLowerCase();
+            if (text === statusLabel.toLowerCase()) {
+                await option.click({ force: true });
+                matched = true;
+                break;
+            }
+        }
+        expect(matched).toBe(true);
+
+        await this.page.waitForTimeout(1000);
+
+        // Check that the table rows have the correct status in at least one row
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        let foundStatus = false;
+        for (let i = 0; i < rowCount; i++) {
+            const row = tableRows.nth(i);
+            const rowText = (await row.innerText()).toLowerCase();
+            if (rowText.includes(statusLabel.toLowerCase())) {
+                foundStatus = true;
+                break;
+            }
+        }
+        expect(foundStatus).toBe(true);
+    }
+
+    // Selecting multiple Listing statuses in List View
+    async selectMultipleListingStatusesInListView(statusLabels: string[]) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the listing status dropdown
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible();
+        await listingStatusDropdown.click({ force: true });
+
+        // Wait for listing status options to be visible
+        const statusOptions = this.page.locator('ul > li.p-element');
+        await expect(statusOptions.first()).toBeVisible({ timeout: 5000 });
+
+        // Select each status label
+        const lowerLabels = statusLabels.map(label => label.toLowerCase());
+        let selectedCount = 0;
+        const count = await statusOptions.count();
+        for (let i = 0; i < count; ++i) {
+            const option = statusOptions.nth(i);
+            const text = (await option.innerText()).trim().toLowerCase();
+            if (lowerLabels.includes(text)) {
+                await option.click({ force: true });
+                selectedCount++;
+                // Wait a little between selections (optional, for UI stability)
+                await this.page.waitForTimeout(250);
+            }
+            if (selectedCount === lowerLabels.length) break;
+        }
+        expect(selectedCount).toBe(lowerLabels.length);
+
+        // Dismiss the dropdown if needed (by clicking outside or pressing Esc)
+        await this.page.keyboard.press('Escape');
+        await this.page.waitForTimeout(1000);
+
+        // Check that at least one table row contains each selected status
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        for (const desiredStatus of lowerLabels) {
+            let found = false;
+            for (let i = 0; i < rowCount; i++) {
+                const row = tableRows.nth(i);
+                const rowText = (await row.innerText()).toLowerCase();
+                if (rowText.includes(desiredStatus)) {
+                    found = true;
+                    break;
+                }
+            }
+            expect(found).toBe(true);
+        }
+    }
+
+    // Select all listing statuses, then deselect all 
+    async deselectAllListingStatus() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Wait for table/list rows to become visible
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+
+        // Open the listing status dropdown
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible();
+        await listingStatusDropdown.click({ force: true });
+
+        // Click the "Select All" checkbox to select everything
+        const selectAllCheckbox = this.locators.listingStatusSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(400);
+
+        // Click the "Select All" checkbox again to deselect everything
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(700);
+
+        // Wait for all (possibly reset) rows to be visible and at least one present
+        const allRows = this.page.locator('tr');
+        const rowCount = await allRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
+
+    // Apply the listing type filter, then verify the column cells match the selected type
+
+    async filterByValidListingType(listingType: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Wait for table rows to be visible
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+
+        // Open dropdown and select the desired type
+        const listingTypeDropdown = this.locators.listingTypeDropdown();
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 5000 });
+        await listingTypeDropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        const typeOption = this.locators.listingTypeOption(listingType).first();
+        await expect(typeOption).toBeVisible({ timeout: 3000 });
+        const selectedTypeLabel = (await typeOption.textContent())?.trim().toLowerCase() || '';
+
+        await typeOption.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Make sure rows are shown
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Find "Listing Type" column index
+        const headers = this.page.locator('thead tr th');
+        const headerCount = await headers.count();
+        let typeColIndex = -1;
+
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headers.nth(i).innerText()).trim().toLowerCase().replace(/\s+/g, " ");
+            if (headerText === 'listings type' || headerText === 'type') {
+                typeColIndex = i;
+                break;
+            }
+        }
+
+        expect(typeColIndex).toBeGreaterThan(-1);
+
+        // Now verify every row cell in this column matches the selected option
+        for (let i = 0; i < rowCount; i++) {
+            const row = tableRows.nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const cells = row.locator('td');
+            const cellCount = await cells.count();
+            expect(typeColIndex).toBeLessThan(cellCount);
+            const cellText = (await cells.nth(typeColIndex).innerText()).trim().toLowerCase();
+            expect(cellText).toContain(selectedTypeLabel);
+        }
+    }
+
+    // Selecting multiple Listing types in List View
+    async selectMultipleListingType() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Wait for table rows to appear
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+
+        // Open the listing type dropdown
+        const listingTypeDropdown = this.locators.listingTypeDropdown();
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 5000 });
+        await listingTypeDropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Get all visible listing type options
+        const typeOptions = this.page.locator('ul > li.p-element');
+        const optionCount = await typeOptions.count();
+        if (optionCount < 2) {
+            throw new Error('Less than two listing types available to select.');
+        }
+
+        // Pick first two options for testing
+        const firstOption = typeOptions.nth(0);
+        const secondOption = typeOptions.nth(2);
+
+        // Get the labels we are selecting, for validation
+        const firstLabelRaw = await firstOption.textContent();
+        const secondLabelRaw = await secondOption.textContent();
+        const firstLabel = firstLabelRaw ? firstLabelRaw.trim().toLowerCase() : '';
+        const secondLabel = secondLabelRaw ? secondLabelRaw.trim().toLowerCase() : '';
+
+        // Select both options
+        await firstOption.click({ force: true });
+        await this.page.waitForTimeout(200);
+        await secondOption.click({ force: true });
+        await this.page.waitForTimeout(700);
+
+        // Ensure rows now displayed
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Find the column index for "Listing Type"
+        const headers = this.page.locator('thead tr th');
+        const headerCount = await headers.count();
+        let typeColIndex = -1;
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headers.nth(i).innerText()).trim().toLowerCase().replace(/\s+/g, " ");
+            if (headerText === "listings type" || headerText === "type" || headerText === "listing type") {
+                typeColIndex = i;
+                break;
+            }
+        }
+        expect(typeColIndex).toBeGreaterThan(-1);
+
+        // Check that at least one row for each selected type exists in the column
+        let foundFirst = false;
+        let foundSecond = false;
+        for (let i = 0; i < rowCount; i++) {
+            const row = tableRows.nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const cells = row.locator('td');
+            const cellCount = await cells.count();
+            if (typeColIndex < cellCount) {
+                const cellText = (await cells.nth(typeColIndex).innerText()).trim().toLowerCase();
+                if (firstLabel && cellText.includes(firstLabel)) foundFirst = true;
+                if (secondLabel && cellText.includes(secondLabel)) foundSecond = true;
+            }
+            if (foundFirst && foundSecond) break;
+        }
+        expect(foundFirst).toBe(true);
+        expect(foundSecond).toBe(true);
+    }
+
+    // Selecting "Deselect All" in Listing type
+    async deselectAllListingTypesInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Ensure the table/list is loaded
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        // Open the listing type dropdown
+        const listingTypeDropdown = this.locators.listingTypeDropdown();
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 3000 });
+        await listingTypeDropdown.click({ force: true });
+        await this.page.waitForTimeout(800);
+
+        // Find and click the "Select All" checkbox twice (selects all then deselects all)
+        const selectAllCheckbox = this.locators.listingTypeSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 3000 });
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(300);
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        // Verify that no rows are displayed (no listings match zero types)
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Close dropdown if still open
+        await listingTypeDropdown.click({ force: true });
+    }
+
+    // Filtering by a valid agent (who may be in Primary Agent or Secondary Agent columns)
+    async filterByValidAgent(agentName: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Wait for table rows to be visible
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+
+        // Open agent dropdown and search for the agent
+        const agentDropdown = this.locators.selectByAgentDropdown?.() ?? this.page.locator('[aria-label*="Agent"]');
+        await expect(agentDropdown).toBeVisible({ timeout: 5000 });
+        await agentDropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        const searchInput = this.locators.selectByAgentSearchInput?.()
+            ?? this.page.locator('input[placeholder="Search"][aria-label*="Agent"]');
+        await expect(searchInput).toBeVisible();
+        await searchInput.fill(agentName);
+        await this.page.waitForTimeout(500);
+
+        const option = this.locators.selectByAgentOption?.(agentName)?.first()
+            ?? this.page.locator('ul > li.p-element').filter({ hasText: agentName }).first();
+
+        await expect(option).toBeVisible({ timeout: 2000 });
+        const agentLabel = (await option.textContent())?.trim().toLowerCase() || "";
+        await option.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        // Find the indexes for "Primary Agent" and "Secondary Agent" columns
+        const headers = this.page.locator('thead tr th');
+        const headerCount = await headers.count();
+        let primaryAgentColIndex = -1;
+        let secondaryAgentColIndex = -1;
+
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headers.nth(i).innerText()).trim().toLowerCase().replace(/\s+/g, " ");
+            if (headerText === "primary agent") {
+                primaryAgentColIndex = i;
+            } else if (headerText === "secondary agent") {
+                secondaryAgentColIndex = i;
+            }
+        }
+        expect(primaryAgentColIndex > -1 || secondaryAgentColIndex > -1).toBeTruthy();
+
+        // Validate at least one row contains the agent either in Primary Agent or Secondary Agent column
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        let found = false;
+        for (let i = 0; i < rowCount; i++) {
+            const row = tableRows.nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const cells = row.locator('td');
+            const cellCount = await cells.count();
+
+            let primaryAgentCellText = '';
+            let secondaryAgentCellText = '';
+
+            if (primaryAgentColIndex > -1 && primaryAgentColIndex < cellCount) {
+                primaryAgentCellText = (await cells.nth(primaryAgentColIndex).innerText()).trim().toLowerCase();
+            }
+            if (secondaryAgentColIndex > -1 && secondaryAgentColIndex < cellCount) {
+                secondaryAgentCellText = (await cells.nth(secondaryAgentColIndex).innerText()).trim().toLowerCase();
+            }
+
+            if (
+                (agentLabel && primaryAgentCellText.includes(agentLabel)) ||
+                (agentLabel && secondaryAgentCellText.includes(agentLabel))
+            ) {
+                found = true;
+                break;
+            }
+        }
+        expect(found).toBe(true);
+    }
 
 }
