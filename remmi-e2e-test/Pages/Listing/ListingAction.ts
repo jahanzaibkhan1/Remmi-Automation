@@ -2047,4 +2047,19 @@ export class ListingActions {
         expect(rowCount).toBeGreaterThan(0);
     }
 
+    // Attempts to search for a property type that does not exist in the dropdown,
+    async searchForNonExistingPropertyType(nonExistingType: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the property type dropdown
+        await this.openPropertyTypeDropdown();
+
+        // Type the non-existing property type into the search input
+        await this.searchPropertyType(nonExistingType);
+
+        // Wait briefly to allow filtering
+        await this.page.waitForTimeout(400);
+    }
+
 }
