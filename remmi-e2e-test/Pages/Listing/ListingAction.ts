@@ -2336,4 +2336,58 @@ export class ListingActions {
         expect(rowCount).toBeGreaterThan(0);
     }
 
+    // Apply the listing type filter, then verify the column cells match the selected type
+
+    async filterByValidListingType(listingType: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Wait for table rows to be visible
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+
+        // Open dropdown and select the desired type
+        const listingTypeDropdown = this.locators.listingTypeDropdown();
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 5000 });
+        await listingTypeDropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        const typeOption = this.locators.listingTypeOption(listingType).first();
+        await expect(typeOption).toBeVisible({ timeout: 3000 });
+        const selectedTypeLabel = (await typeOption.textContent())?.trim().toLowerCase() || '';
+
+        await typeOption.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Make sure rows are shown
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Find "Listing Type" column index
+        const headers = this.page.locator('thead tr th');
+        const headerCount = await headers.count();
+        let typeColIndex = -1;
+
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headers.nth(i).innerText()).trim().toLowerCase().replace(/\s+/g, " ");
+            if (headerText === 'listings type' || headerText === 'type') {
+                typeColIndex = i;
+                break;
+            }
+        }
+
+        expect(typeColIndex).toBeGreaterThan(-1);
+
+        // Now verify every row cell in this column matches the selected option
+        for (let i = 0; i < rowCount; i++) {
+            const row = tableRows.nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const cells = row.locator('td');
+            const cellCount = await cells.count();
+            expect(typeColIndex).toBeLessThan(cellCount);
+            const cellText = (await cells.nth(typeColIndex).innerText()).trim().toLowerCase();
+            expect(cellText).toContain(selectedTypeLabel);
+        }
+    }
+
 }

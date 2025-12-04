@@ -122,6 +122,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 18: Filtering by a valid listing type in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.filterByValidListingType('Auction');
+    await listingActions.resetFilters();
+  });
+
 });
 
 
