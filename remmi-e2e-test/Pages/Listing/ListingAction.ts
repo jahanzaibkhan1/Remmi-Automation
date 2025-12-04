@@ -2390,4 +2390,78 @@ export class ListingActions {
         }
     }
 
+    // Selecting multiple Listing types in List View
+    async selectMultipleListingType() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Wait for table rows to appear
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+
+        // Open the listing type dropdown
+        const listingTypeDropdown = this.locators.listingTypeDropdown();
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 5000 });
+        await listingTypeDropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Get all visible listing type options
+        const typeOptions = this.page.locator('ul > li.p-element');
+        const optionCount = await typeOptions.count();
+        if (optionCount < 2) {
+            throw new Error('Less than two listing types available to select.');
+        }
+
+        // Pick first two options for testing
+        const firstOption = typeOptions.nth(0);
+        const secondOption = typeOptions.nth(2);
+
+        // Get the labels we are selecting, for validation
+        const firstLabelRaw = await firstOption.textContent();
+        const secondLabelRaw = await secondOption.textContent();
+        const firstLabel = firstLabelRaw ? firstLabelRaw.trim().toLowerCase() : '';
+        const secondLabel = secondLabelRaw ? secondLabelRaw.trim().toLowerCase() : '';
+
+        // Select both options
+        await firstOption.click({ force: true });
+        await this.page.waitForTimeout(200);
+        await secondOption.click({ force: true });
+        await this.page.waitForTimeout(700);
+
+        // Ensure rows now displayed
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Find the column index for "Listing Type"
+        const headers = this.page.locator('thead tr th');
+        const headerCount = await headers.count();
+        let typeColIndex = -1;
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headers.nth(i).innerText()).trim().toLowerCase().replace(/\s+/g, " ");
+            if (headerText === "listings type" || headerText === "type" || headerText === "listing type") {
+                typeColIndex = i;
+                break;
+            }
+        }
+        expect(typeColIndex).toBeGreaterThan(-1);
+
+        // Check that at least one row for each selected type exists in the column
+        let foundFirst = false;
+        let foundSecond = false;
+        for (let i = 0; i < rowCount; i++) {
+            const row = tableRows.nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const cells = row.locator('td');
+            const cellCount = await cells.count();
+            if (typeColIndex < cellCount) {
+                const cellText = (await cells.nth(typeColIndex).innerText()).trim().toLowerCase();
+                if (firstLabel && cellText.includes(firstLabel)) foundFirst = true;
+                if (secondLabel && cellText.includes(secondLabel)) foundSecond = true;
+            }
+            if (foundFirst && foundSecond) break;
+        }
+        expect(foundFirst).toBe(true);
+        expect(foundSecond).toBe(true);
+    }
+
 }

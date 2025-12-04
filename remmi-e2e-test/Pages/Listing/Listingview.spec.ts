@@ -128,6 +128,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 19: Selecting multiple listing types in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectMultipleListingType();
+    await listingActions.resetFilters();
+  });
+
 });
 
 
