@@ -1,20 +1,6 @@
-<testsuites id="" name="" tests="8" failures="0" skipped="0" errors="0" time="31.91401">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-04T04:13:20.950Z" hostname="chromium" tests="8" failures="0" skipped="0" time="29.298" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Searching for a valid Listing" classname="Pages\Listing\Listingview.spec.ts" time="14.359">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Searching for a non-existing Listing" classname="Pages\Listing\Listingview.spec.ts" time="1.855">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Searching for a listing using partial name" classname="Pages\Listing\Listingview.spec.ts" time="1.56">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Searching listing with special characters" classname="Pages\Listing\Listingview.spec.ts" time="1.582">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Searching with Listing only" classname="Pages\Listing\Listingview.spec.ts" time="1.734">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Searching listing with an empty field" classname="Pages\Listing\Listingview.spec.ts" time="1.496">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Selecting a single property type" classname="Pages\Listing\Listingview.spec.ts" time="3.135">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Selecting multiple property types in List View" classname="Pages\Listing\Listingview.spec.ts" time="3.577">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.188403000000164">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-04T04:22:48.457Z" hostname="chromium" tests="1" failures="0" skipped="0" time="22.314" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Deselecting all property types in List View" classname="Pages\Listing\Listingview.spec.ts" time="22.314">
 </testcase>
 </testsuite>
 </testsuites>
