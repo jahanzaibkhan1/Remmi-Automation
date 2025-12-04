@@ -2306,4 +2306,34 @@ export class ListingActions {
         }
     }
 
+    // Select all listing statuses, then deselect all 
+    async deselectAllListingStatus() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Wait for table/list rows to become visible
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+
+        // Open the listing status dropdown
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible();
+        await listingStatusDropdown.click({ force: true });
+
+        // Click the "Select All" checkbox to select everything
+        const selectAllCheckbox = this.locators.listingStatusSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(400);
+
+        // Click the "Select All" checkbox again to deselect everything
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(700);
+
+        // Wait for all (possibly reset) rows to be visible and at least one present
+        const allRows = this.page.locator('tr');
+        const rowCount = await allRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
+
 }
