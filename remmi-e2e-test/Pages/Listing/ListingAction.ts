@@ -2175,4 +2175,34 @@ export class ListingActions {
         expect(rowCount).toBeGreaterThan(0);
     }
 
+    // Searching for a non existing suburb in List View
+    async searchForNonExistingSuburb(suburbLabel: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the suburb dropdown
+        const suburbDropdown = this.locators.suburbDropdown();
+        await expect(suburbDropdown).toBeVisible();
+        await suburbDropdown.click({ force: true });
+
+        // Search for the non-existing suburb label
+        const searchInput = this.locators.suburbSearchInput();
+        await expect(searchInput).toBeVisible();
+        await searchInput.fill(suburbLabel);
+        await this.page.waitForTimeout(400);
+
+        // There should be no visible options matching the label
+        const suburbOption = this.locators.suburbOption(suburbLabel);
+        await expect(suburbOption).toHaveCount(0);
+
+        // Optionally, verify the table has no data rows (except header)
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        for (let i = 0; i < rowCount; i++) {
+            const row = tableRows.nth(i);
+            const rowText = (await row.innerText()).toLowerCase();
+            expect(rowText.includes(suburbLabel.toLowerCase())).toBe(false);
+        }
+    }
+
 }
