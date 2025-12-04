@@ -2252,4 +2252,58 @@ export class ListingActions {
         expect(foundStatus).toBe(true);
     }
 
+    // Selecting multiple Listing statuses in List View
+    async selectMultipleListingStatusesInListView(statusLabels: string[]) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the listing status dropdown
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible();
+        await listingStatusDropdown.click({ force: true });
+
+        // Wait for listing status options to be visible
+        const statusOptions = this.page.locator('ul > li.p-element');
+        await expect(statusOptions.first()).toBeVisible({ timeout: 5000 });
+
+        // Select each status label
+        const lowerLabels = statusLabels.map(label => label.toLowerCase());
+        let selectedCount = 0;
+        const count = await statusOptions.count();
+        for (let i = 0; i < count; ++i) {
+            const option = statusOptions.nth(i);
+            const text = (await option.innerText()).trim().toLowerCase();
+            if (lowerLabels.includes(text)) {
+                await option.click({ force: true });
+                selectedCount++;
+                // Wait a little between selections (optional, for UI stability)
+                await this.page.waitForTimeout(250);
+            }
+            if (selectedCount === lowerLabels.length) break;
+        }
+        expect(selectedCount).toBe(lowerLabels.length);
+
+        // Dismiss the dropdown if needed (by clicking outside or pressing Esc)
+        await this.page.keyboard.press('Escape');
+        await this.page.waitForTimeout(1000);
+
+        // Check that at least one table row contains each selected status
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        for (const desiredStatus of lowerLabels) {
+            let found = false;
+            for (let i = 0; i < rowCount; i++) {
+                const row = tableRows.nth(i);
+                const rowText = (await row.innerText()).toLowerCase();
+                if (rowText.includes(desiredStatus)) {
+                    found = true;
+                    break;
+                }
+            }
+            expect(found).toBe(true);
+        }
+    }
+
 }
