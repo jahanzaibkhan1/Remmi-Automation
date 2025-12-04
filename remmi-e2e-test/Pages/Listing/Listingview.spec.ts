@@ -68,6 +68,84 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 9: Deselecting all property types in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deselectPropertyTypes();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 10: Searching for a non-existing property type in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchForNonExistingPropertyType('NonExistentType123');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 11: Filtering with a valid suburb in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.filterByValidSuburb('Laidley');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 12: Filtering with multiple suburbs in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.filterByMultipleSuburbs(['Laidley', 'Anglesea']);
+    await listingActions.resetFilters();
+  });
+
+  test('Test 13: Deselecting all suburbs in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deselectAllSuburbsInListView();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 14: Searching for a non-existing suburb in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchForNonExistingSuburb('NonExistentSuburb123');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 15: Filtering by a valid listing status in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.filterByValidListingStatus('For Sale');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 16: Selecting multiple contract statuses in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectMultipleListingStatusesInListView(['For Sale', 'For Lease']);
+    await listingActions.resetFilters();
+  });
+
+  test('Test 17: Deselecting all listing statuses in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deselectAllListingStatus();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 18: Filtering by a valid listing type in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.filterByValidListingType('Auction');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 19: Selecting multiple listing types in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectMultipleListingType();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 20: Deselecting all listing types in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deselectAllListingTypesInListView();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 21: Filtering by a valid agent in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.filterByValidAgent('Dawood Ahmad');
+    await listingActions.resetFilters();
+  });
+
 });
 
 
