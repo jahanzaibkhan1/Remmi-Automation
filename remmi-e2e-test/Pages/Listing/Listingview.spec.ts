@@ -68,6 +68,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 9: Deselecting all property types in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deselectPropertyTypes();
+    await listingActions.resetFilters();
+  });
+
 });
 
 

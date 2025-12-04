@@ -2026,6 +2026,25 @@ export class ListingActions {
         expect(foundFirst).toBe(true);
         expect(foundSecond).toBe(true);
     }
+    // Deselect all property types in the property type filter dropdown and verify rows remain
+    async deselectPropertyTypes() {
+        await this.navigateToListings();
+        await this.switchToListView();
 
+        // Open the property type dropdown
+        await this.openPropertyTypeDropdown();
+
+        // Find and click the select all checkbox to deselect all
+        const selectAll = this.locators.propertyTypeSelectAll();
+        await expect(selectAll).toBeVisible();
+        await selectAll.click({ force: true });
+
+        await this.page.waitForTimeout(400)
+        await selectAll.click({ force: true });
+        // Verify table rows are still present
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
 
 }
