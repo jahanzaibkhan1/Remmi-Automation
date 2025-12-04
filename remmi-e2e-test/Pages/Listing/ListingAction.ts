@@ -610,10 +610,10 @@ export class ListingActions {
 
         await this.page.waitForTimeout(800);
 
-        const suburbOption = this.locators.suburbOption(suburbLabel);
+        const suburbOption = this.locators.suburbOption(suburbLabel).first();
         await expect(suburbOption).toBeVisible();
 
-        await suburbOption.click({ force: true });
+        await suburbOption.first().click({ force: true });
 
         await this.page.waitForTimeout(1000);
 
