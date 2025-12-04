@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.437787000000014">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-04T04:36:43.320Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.86" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Filtering with multiple suburbs in List View" classname="Pages\Listing\Listingview.spec.ts" time="25.86">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="22.948961000000125">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-04T04:38:35.183Z" hostname="chromium" tests="1" failures="0" skipped="0" time="16.799" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Deselecting all suburbs in List View" classname="Pages\Listing\Listingview.spec.ts" time="16.799">
 </testcase>
 </testsuite>
 </testsuites>
