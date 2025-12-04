@@ -2062,4 +2062,45 @@ export class ListingActions {
         await this.page.waitForTimeout(400);
     }
 
+    // Filtering with a valid suburb (now in list view)
+    async filterByValidSuburb(suburbLabel: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the suburb dropdown
+        const suburbDropdown = this.locators.suburbDropdown();
+        await expect(suburbDropdown).toBeVisible();
+        await suburbDropdown.click({ force: true });
+
+        // Type into the suburb search input
+        const searchInput = this.locators.suburbSearchInput();
+        await expect(searchInput).toBeVisible();
+        await searchInput.fill(suburbLabel);
+        await this.page.waitForTimeout(800);
+
+        // Select the matching suburb
+        const suburbOption = this.locators.suburbOption(suburbLabel).first();
+        await expect(suburbOption).toBeVisible();
+        await suburbOption.click({ force: true });
+
+        await this.page.waitForTimeout(1000);
+
+        // Table rows might contain a header row; filter out header by checking at least 1 row present
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        let foundMatching = false;
+        for (let i = 0; i < rowCount; i++) {
+            const row = tableRows.nth(i);
+            const rowText = (await row.innerText()).toLowerCase();
+
+            // Check at least one row contains the suburb label; skip header rows by checking contents
+            if (rowText.includes(suburbLabel.toLowerCase())) {
+                foundMatching = true;
+            }
+        }
+        expect(foundMatching).toBe(true);
+    }
+
 }
