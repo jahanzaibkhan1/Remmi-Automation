@@ -2464,4 +2464,36 @@ export class ListingActions {
         expect(foundSecond).toBe(true);
     }
 
+    // Selecting "Deselect All" in Listing type
+    async deselectAllListingTypesInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Ensure the table/list is loaded
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        // Open the listing type dropdown
+        const listingTypeDropdown = this.locators.listingTypeDropdown();
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 3000 });
+        await listingTypeDropdown.click({ force: true });
+        await this.page.waitForTimeout(800);
+
+        // Find and click the "Select All" checkbox twice (selects all then deselects all)
+        const selectAllCheckbox = this.locators.listingTypeSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 3000 });
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(300);
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        // Verify that no rows are displayed (no listings match zero types)
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Close dropdown if still open
+        await listingTypeDropdown.click({ force: true });
+    }
+
 }
