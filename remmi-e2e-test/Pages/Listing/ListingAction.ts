@@ -2205,4 +2205,51 @@ export class ListingActions {
         }
     }
 
+    // Filtering by a valid Listing status in List View
+    async filterByValidListingStatus(statusLabel: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the listing status dropdown
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible();
+        await listingStatusDropdown.click({ force: true });
+
+        // Wait for listing status options to be visible
+        const statusOptions = this.page.locator('ul > li.p-element');
+        await expect(statusOptions.first()).toBeVisible({ timeout: 5000 });
+
+        // Find the correct status option and click it
+        const count = await statusOptions.count();
+        let matched = false;
+        for (let i = 0; i < count; ++i) {
+            const option = statusOptions.nth(i);
+            const text = (await option.innerText()).trim().toLowerCase();
+            if (text === statusLabel.toLowerCase()) {
+                await option.click({ force: true });
+                matched = true;
+                break;
+            }
+        }
+        expect(matched).toBe(true);
+
+        await this.page.waitForTimeout(1000);
+
+        // Check that the table rows have the correct status in at least one row
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        let foundStatus = false;
+        for (let i = 0; i < rowCount; i++) {
+            const row = tableRows.nth(i);
+            const rowText = (await row.innerText()).toLowerCase();
+            if (rowText.includes(statusLabel.toLowerCase())) {
+                foundStatus = true;
+                break;
+            }
+        }
+        expect(foundStatus).toBe(true);
+    }
+
 }
