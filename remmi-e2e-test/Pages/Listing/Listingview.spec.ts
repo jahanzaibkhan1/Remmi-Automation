@@ -86,6 +86,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 12: Filtering with multiple suburbs in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.filterByMultipleSuburbs(['Laidley', 'Anglesea']);
+    await listingActions.resetFilters();
+  });
+
 });
 
 
