@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.74155700000003">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-04T06:26:36.023Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.792" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Selecting multiple listing types in List View" classname="Pages\Listing\Listingview.spec.ts" time="40.792">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.84342699999921">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-04T06:31:06.492Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.011" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Deselecting all listing types in List View" classname="Pages\Listing\Listingview.spec.ts" time="42.011">
 </testcase>
 </testsuite>
 </testsuites>
