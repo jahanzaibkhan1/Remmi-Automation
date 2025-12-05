@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.17301999999955">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-04T06:36:55.199Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.379" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Filtering by a valid agent in List View" classname="Pages\Listing\Listingview.spec.ts" time="24.379">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.96827599999995">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-05T03:59:37.843Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.171" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Selecting multiple agents in List View" classname="Pages\Listing\Listingview.spec.ts" time="24.171">
 </testcase>
 </testsuite>
 </testsuites>
