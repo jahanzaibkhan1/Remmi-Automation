@@ -114,4 +114,14 @@ export class ListingLocators {
         return this.page.locator('.property-row.pl-1.ng-star-inserted')
     }
 
+    adminDefaultButton(): Locator {
+        return this.page.getByText('Admin Default').first()
+    }
+
+    // Admin view button (if any specific admin-only UI element needed)
+    adminView(): Locator {
+        // Adjust the selector as per actual admin view button/control
+        return this.page.getByText('View OptionsSaveSelect')
+    }
+
 }
