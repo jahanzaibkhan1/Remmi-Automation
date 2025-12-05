@@ -2929,4 +2929,62 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+// Dragging a status to change position
+async dragStatusToNewPosition() {
+    await this.navigateToListings();
+    await this.switchToListView();
+    await this.waitForTableRows();
+
+    // Open Admin Default options
+    const adminDefaultBtn = this.locators.adminDefaultButton();
+    await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+    await adminDefaultBtn.click({ force: true });
+
+    // Wait for Admin options to appear
+    const adminView = this.locators.adminView();
+    await expect(adminView).toBeVisible();
+
+    const draggableHandles = this.page.locator('.cdk-drag.column-item.custom-field-views');
+
+    const handleCount = await draggableHandles.count();
+    if (handleCount < 2) {
+        throw new Error('Less than 2 draggable statuses found, cannot perform drag-and-drop.');
+    }
+
+    // Drag the first status below the second (swap order)
+    const firstHandle = draggableHandles.nth(0);
+    const secondHandle = draggableHandles.nth(1);
+
+    // Use Playwright drag-and-drop if supported
+    if (typeof firstHandle.dragTo === 'function') {
+        await firstHandle.dragTo(secondHandle);
+    } else {
+        // Fallback: manual drag
+        const box1 = await firstHandle.boundingBox();
+        const box2 = await secondHandle.boundingBox();
+
+        if (box1 && box2) {
+            await this.page.mouse.move(
+                box1.x + box1.width / 2,
+                box1.y + box1.height / 2
+            );
+            await this.page.mouse.down();
+            await this.page.waitForTimeout(150);
+
+            await this.page.mouse.move(
+                box2.x + box2.width / 2,
+                box2.y + box2.height / 2,
+                { steps: 8 }
+            );
+
+            await this.page.mouse.up();
+        }
+    }
+
+    // Close focus
+    await this.page.mouse.click(0, 0);
+    await this.page.waitForTimeout(500);
+}
+
+
 }
