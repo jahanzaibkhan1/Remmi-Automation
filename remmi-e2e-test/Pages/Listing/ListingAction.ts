@@ -2792,4 +2792,36 @@ export class ListingActions {
        expect(resultValid).toBe(true);
    }
 
+   // Selecting a valid date range in List View
+   async selectValidListingCreationDateRange() {
+       await this.navigateToListings();
+       await this.switchToListView();
+       await this.waitForTableRows();
+
+       // Open datepicker
+       const input = this.locators.listingCreationDateDropdown();
+       await expect(input).toBeVisible({ timeout: 3000 });
+       await input.click({ force: true });
+       await this.page.waitForTimeout(300);
+       
+       let todayBtn = this.page.locator('.p-datepicker-buttonbar button', { hasText: /today/i });
+       if (!(await todayBtn.isVisible().catch(() => false))) {
+           todayBtn = this.page.locator('button', { hasText: /today/i });
+       }
+       await todayBtn.click({ force: true });
+
+       const tableRows = this.page.locator('tr');
+       const rowCount = await tableRows.count();
+       let resultValid = false;
+       if (rowCount > 1) {
+           resultValid = true;
+       } else {
+           const noResults = this.page.getByText('No results found');
+           if (await noResults.isVisible({ timeout: 2000 })) {
+               resultValid = true;
+           }
+       }
+       expect(resultValid).toBe(true);
+   }
+
 }

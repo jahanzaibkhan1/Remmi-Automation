@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.84268199999956">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-05T04:43:48.424Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.977" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Deselecting all contract statuses in List View" classname="Pages\Listing\Listingview.spec.ts" time="42.977">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.79925300000003">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-05T04:53:56.621Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.409" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Selecting a valid listing creation date range in List View" classname="Pages\Listing\Listingview.spec.ts" time="35.409">
 </testcase>
 </testsuite>
 </testsuites>
