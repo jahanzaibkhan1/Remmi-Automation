@@ -2754,125 +2754,140 @@ export class ListingActions {
         expect(filterWorked).toBe(true);
     }
 
-   // Selecting "Deselect All" in contract status in List View
-   async deselectAllContractStatusesInListView() {
-       await this.navigateToListings();
-       await this.switchToListView();
-       await this.waitForTableRows();
+    // Selecting "Deselect All" in contract status in List View
+    async deselectAllContractStatusesInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
 
-       // Open the contract status dropdown using locator from locators file
-       const contractStatusDropdown = this.locators.contractStatusDropdown();
-       await expect(contractStatusDropdown).toBeVisible();
-       await contractStatusDropdown.click({ force: true });
+        // Open the contract status dropdown using locator from locators file
+        const contractStatusDropdown = this.locators.contractStatusDropdown();
+        await expect(contractStatusDropdown).toBeVisible();
+        await contractStatusDropdown.click({ force: true });
 
-       // Wait for "Select All" checkbox (deselect all) using locator from locators file
-       const contractStatusSelectAll = this.locators.contractStatusSelectAll();
-       await expect(contractStatusSelectAll.first()).toBeVisible({ timeout: 5000 });
-       // Click to deselect all 
-       await contractStatusSelectAll.click({ force: true });
-       await this.page.waitForTimeout(500);
+        // Wait for "Select All" checkbox (deselect all) using locator from locators file
+        const contractStatusSelectAll = this.locators.contractStatusSelectAll();
+        await expect(contractStatusSelectAll.first()).toBeVisible({ timeout: 5000 });
+        // Click to deselect all 
+        await contractStatusSelectAll.click({ force: true });
+        await this.page.waitForTimeout(500);
 
-       await contractStatusSelectAll.click({ force: true });
-       // Close dropdown if needed (optional)
-       // await contractStatusDropdown.press('Escape');
+        await contractStatusSelectAll.click({ force: true });
+        // Close dropdown if needed (optional)
+        // await contractStatusDropdown.press('Escape');
 
-       // Verify that filter is cleared:
-       // Expect table rows to show all/none or "No results found" message as a result of deselect
-       const tableRows = this.page.locator('tr');
-       const rowCount = await tableRows.count();
-       let resultValid = false;
-       if (rowCount > 1) {
-           resultValid = true;
-       } else {
-           const noResults = this.page.getByText('No results found');
-           if (await noResults.isVisible({ timeout: 2000 })) {
-               resultValid = true;
-           }
-       }
-       expect(resultValid).toBe(true);
-   }
+        // Verify that filter is cleared:
+        // Expect table rows to show all/none or "No results found" message as a result of deselect
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        let resultValid = false;
+        if (rowCount > 1) {
+            resultValid = true;
+        } else {
+            const noResults = this.page.getByText('No results found');
+            if (await noResults.isVisible({ timeout: 2000 })) {
+                resultValid = true;
+            }
+        }
+        expect(resultValid).toBe(true);
+    }
 
-   // Selecting a valid date range in List View
-   async selectValidListingCreationDateRange() {
-       await this.navigateToListings();
-       await this.switchToListView();
-       await this.waitForTableRows();
+    // Selecting a valid date range in List View
+    async selectValidListingCreationDateRange() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
 
-       // Open datepicker
-       const input = this.locators.listingCreationDateDropdown();
-       await expect(input).toBeVisible({ timeout: 3000 });
-       await input.click({ force: true });
-       await this.page.waitForTimeout(300);
+        // Open datepicker
+        const input = this.locators.listingCreationDateDropdown();
+        await expect(input).toBeVisible({ timeout: 3000 });
+        await input.click({ force: true });
+        await this.page.waitForTimeout(300);
 
-       let todayBtn = this.page.locator('.p-datepicker-buttonbar button', { hasText: /today/i });
-       if (!(await todayBtn.isVisible().catch(() => false))) {
-           todayBtn = this.page.locator('button', { hasText: /today/i });
-       }
-       await todayBtn.click({ force: true });
+        let todayBtn = this.page.locator('.p-datepicker-buttonbar button', { hasText: /today/i });
+        if (!(await todayBtn.isVisible().catch(() => false))) {
+            todayBtn = this.page.locator('button', { hasText: /today/i });
+        }
+        await todayBtn.click({ force: true });
 
-       const tableRows = this.page.locator('tr');
-       const rowCount = await tableRows.count();
-       let resultValid = false;
-       if (rowCount > 1) {
-           resultValid = true;
-       } else {
-           const noResults = this.page.getByText('No results found');
-           if (await noResults.isVisible({ timeout: 2000 })) {
-               resultValid = true;
-           }
-       }
-       expect(resultValid).toBe(true);
-   }
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        let resultValid = false;
+        if (rowCount > 1) {
+            resultValid = true;
+        } else {
+            const noResults = this.page.getByText('No results found');
+            if (await noResults.isVisible({ timeout: 2000 })) {
+                resultValid = true;
+            }
+        }
+        expect(resultValid).toBe(true);
+    }
 
-   // Selecting a future date in List View
-   async selectFutureListingCreationDateInListView() {
-       await this.navigateToListings();
-       await this.switchToListView();
-       await this.waitForTableRows();
+    // Selecting a future date in List View
+    async selectFutureListingCreationDateInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
 
-       // Open date picker
-       const dateInput = this.locators.listingCreationDateDropdown();
-       await expect(dateInput).toBeVisible({ timeout: 3000 });
-       await dateInput.click({ force: true });
+        // Open date picker
+        const dateInput = this.locators.listingCreationDateDropdown();
+        await expect(dateInput).toBeVisible({ timeout: 3000 });
+        await dateInput.click({ force: true });
 
-       // Wait for calendar to show
-       const calendar = this.page.locator(".p-datepicker");
-       await expect(calendar).toBeVisible({ timeout: 5000 });
+        // Wait for calendar to show
+        const calendar = this.page.locator(".p-datepicker");
+        await expect(calendar).toBeVisible({ timeout: 5000 });
 
-       // Compute tomorrow's date
-       const t = new Date();
-       t.setDate(t.getDate() + 1);
+        // Compute tomorrow's date
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
 
-       const targetDay = t.getDate();
-       const targetMonth = t.getMonth();
-       const targetYear = t.getFullYear();
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
 
-       // Read calendar month and year displayed
-       const header = this.page.locator(".p-datepicker-title");
-       await expect(header).toBeVisible();
-       const headerText = await header.innerText();
-       const [monthName, year] = headerText.trim().split(" ");
-       const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+        // Read calendar month and year displayed
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+        const headerText = await header.innerText();
+        const [monthName, year] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
 
-       // Move calendar if necessary to target month/year
-       const monthDifference = (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
-       for (let i = 0; i < Math.abs(monthDifference); i++) {
-           if (monthDifference > 0) {
-               await this.page.locator(".p-datepicker-next").click();
-           } else {
-               await this.page.locator(".p-datepicker-prev").click();
-           }
-           await this.page.waitForTimeout(200);
-       }
+        // Move calendar if necessary to target month/year
+        const monthDifference = (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+            await this.page.waitForTimeout(200);
+        }
 
-       // Click the target (future) day
-       const dayLocator = this.page.locator(`.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`);
-       await dayLocator.first().waitFor({ state: "visible", timeout: 3000 });
-       await dayLocator.first().click({ force: true });
+        // Click the target (future) day
+        const dayLocator = this.page.locator(`.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`);
+        await dayLocator.first().waitFor({ state: "visible", timeout: 3000 });
+        await dayLocator.first().click({ force: true });
 
-       // Validate "No results found" message appears
-       const noResults = this.page.getByText('No results found');
-       await expect(noResults).toBeVisible({ timeout: 4000 });
-   }
+        // Validate "No results found" message appears
+        const noResults = this.page.getByText('No results found');
+        await expect(noResults).toBeVisible({ timeout: 4000 });
+    }
+
+    // Clicking on Admin Default
+    async clickAdminDefaultButton() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+        const adminDefaultBtn = this.locators.adminDefaultButton();
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+        await adminDefaultBtn.click({ force: true });
+        const adminView = this.locators.adminView();
+        await expect(adminView).toBeVisible();
+
+        await this.page.mouse.click(0, 0); 
+
+        await this.page.waitForTimeout(500)
+    }
 
 }
