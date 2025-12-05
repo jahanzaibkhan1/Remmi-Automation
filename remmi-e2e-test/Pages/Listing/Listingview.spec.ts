@@ -176,6 +176,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 27: Deselecting all contract statuses in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deselectAllContractStatusesInListView();
+    await listingActions.resetFilters();
+  });
+
 });
 
 

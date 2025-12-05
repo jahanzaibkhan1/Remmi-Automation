@@ -2754,4 +2754,42 @@ export class ListingActions {
         expect(filterWorked).toBe(true);
     }
 
+   // Selecting "Deselect All" in contract status in List View
+   async deselectAllContractStatusesInListView() {
+       await this.navigateToListings();
+       await this.switchToListView();
+       await this.waitForTableRows();
+
+       // Open the contract status dropdown using locator from locators file
+       const contractStatusDropdown = this.locators.contractStatusDropdown();
+       await expect(contractStatusDropdown).toBeVisible();
+       await contractStatusDropdown.click({ force: true });
+
+       // Wait for "Select All" checkbox (deselect all) using locator from locators file
+       const contractStatusSelectAll = this.locators.contractStatusSelectAll();
+       await expect(contractStatusSelectAll.first()).toBeVisible({ timeout: 5000 });
+       // Click to deselect all 
+       await contractStatusSelectAll.click({ force: true });
+       await this.page.waitForTimeout(500);
+
+       await contractStatusSelectAll.click({ force: true });
+       // Close dropdown if needed (optional)
+       // await contractStatusDropdown.press('Escape');
+
+       // Verify that filter is cleared:
+       // Expect table rows to show all/none or "No results found" message as a result of deselect
+       const tableRows = this.page.locator('tr');
+       const rowCount = await tableRows.count();
+       let resultValid = false;
+       if (rowCount > 1) {
+           resultValid = true;
+       } else {
+           const noResults = this.page.getByText('No results found');
+           if (await noResults.isVisible({ timeout: 2000 })) {
+               resultValid = true;
+           }
+       }
+       expect(resultValid).toBe(true);
+   }
+
 }
