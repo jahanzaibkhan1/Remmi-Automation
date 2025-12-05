@@ -146,6 +146,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 22: Selecting multiple agents in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectMultipleAgent();
+    await listingActions.resetFilters();
+  });
+
 });
 
 

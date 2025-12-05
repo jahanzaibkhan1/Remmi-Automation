@@ -2573,4 +2573,38 @@ export class ListingActions {
         expect(found).toBe(true);
     }
 
+    // Selecting multiple agents in List View
+    async selectMultipleAgent() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Wait for table rows to appear
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+
+        await this.openSelectByAgentDropdown();
+
+        // Select nth(1) and nth(3) agent options (i.e., 2nd and 4th option due to 0-based indexing)
+        const agentOptions = this.page.locator('li.p-element');
+        const optionCount = await agentOptions.count();
+        expect(optionCount).toBeGreaterThan(3); // Ensure at least 4 options to select 1 and 3
+
+        const idx1 = 1;
+        const idx3 = 2;
+
+        const agentText1 = (await agentOptions.nth(idx1).innerText()).trim();
+        const agentText3 = (await agentOptions.nth(idx3).innerText()).trim();
+        if (!agentText1 || !agentText3) throw new Error('Could not find valid agent options at nth(1) or nth(3)');
+
+        await agentOptions.nth(idx1).click({ force: true });
+        await this.page.waitForTimeout(200);
+        await agentOptions.nth(idx3).click({ force: true });
+        await this.page.waitForTimeout(600);
+
+
+        // Wait for listing rows to update
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
+    
 }
