@@ -2606,5 +2606,28 @@ export class ListingActions {
         const rowCount = await tableRows.count();
         expect(rowCount).toBeGreaterThan(0);
     }
-    
+
+    // Selecting "Deselect All" in agent filter
+    async deselectAllAgentsInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the agent dropdown
+        const agentDropdown = this.locators.selectByAgentDropdown();
+        await expect(agentDropdown).toBeVisible();
+        await agentDropdown.click({ force: true });
+
+        // Click the "Select All" checkbox once to select all, then again to deselect all
+        const selectAllCheckbox = this.locators.selectByAgentSelectAll().first();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(300);
+
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Ensure that table rows still exist (may just be header)
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
 }

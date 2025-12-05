@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.96827599999995">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-05T03:59:37.843Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.171" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Selecting multiple agents in List View" classname="Pages\Listing\Listingview.spec.ts" time="24.171">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.35270099999988">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-05T04:03:07.914Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.144" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Deselecting all agents in List View" classname="Pages\Listing\Listingview.spec.ts" time="23.144">
 </testcase>
 </testsuite>
 </testsuites>
