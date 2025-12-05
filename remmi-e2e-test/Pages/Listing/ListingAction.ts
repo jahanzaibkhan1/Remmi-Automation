@@ -268,7 +268,7 @@ export class ListingActions {
         expect(foundKeyword).toBe(true);
 
         // Reset filter
-        
+
     }
 
 
@@ -326,7 +326,7 @@ export class ListingActions {
             }
         }
         expect(found).toBe(true);
-        
+
     }
 
     async selectMultiplePropertyTypes() {
@@ -765,7 +765,7 @@ export class ListingActions {
         expect(rowCount).toBeGreaterThan(0);
 
         await listingStatusDropdown.click();
-        
+
     }
 
     async searchListingStatusFilter(searchTerm: string) {
@@ -802,7 +802,7 @@ export class ListingActions {
         await listingStatusDropdown.click();
 
         await this.page.waitForTimeout(1000)
-        
+
     }
 
     async searchForListingStatus(searchTerm: string) {
@@ -857,7 +857,7 @@ export class ListingActions {
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
 
-        
+
     }
 
     // 
@@ -924,7 +924,7 @@ export class ListingActions {
 
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
-        
+
     }
 
     async selectSingleAgent() {
@@ -955,7 +955,7 @@ export class ListingActions {
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
 
-        
+
     }
 
     async searchAgent(searchText = 'Dawood Ahmad') {
@@ -1004,7 +1004,7 @@ export class ListingActions {
 
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
-        
+
     }
     // Selecting a single contract status 
     async selectSingleContractStatus() {
@@ -1035,7 +1035,7 @@ export class ListingActions {
         // Select it
         await statusOptions.nth(selectedIdx).click({ force: true });
         await this.page.waitForTimeout(900);
-        
+
     }
 
     // Selecting multiple Contract statuses
@@ -1071,7 +1071,7 @@ export class ListingActions {
         // (You can place table validation here if required)
 
         // Click 'Reset' to clear the filter
-        
+
     }
 
     // Selecting a contact creation date
@@ -1092,40 +1092,40 @@ export class ListingActions {
         }
         await todayBtn.click({ force: true });
         // Reset filter
-        
+
     }
 
     async selectNextDateFromToday() {
         await this.navigateToListings();
-    
+
         // Open date picker
         await this.locators.listingCreationDateDropdown().click();
-    
+
         // Always wait for calendar root (stable anchor)
         const calendar = this.page.locator(".p-datepicker");
         await expect(calendar).toBeVisible({ timeout: 5000 });
-    
+
         // 1️⃣ Compute Tomorrow
         const t = new Date();
         t.setDate(t.getDate() + 1);
-    
+
         const targetDay = t.getDate();
         const targetMonth = t.getMonth();
         const targetYear = t.getFullYear();
-    
+
         // 2️⃣ Read currently opened calendar's month-year (stable header)
         const header = this.page.locator(".p-datepicker-title");
         await expect(header).toBeVisible();
-    
+
         const headerText = await header.innerText();
         const [monthName, year] = headerText.trim().split(" ");
-    
+
         const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
-    
+
         // 3️⃣ Move calendar to correct month
         const monthDifference =
             (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
-    
+
         for (let i = 0; i < Math.abs(monthDifference); i++) {
             if (monthDifference > 0) {
                 await this.page.locator(".p-datepicker-next").click();
@@ -1135,20 +1135,20 @@ export class ListingActions {
             // Wait for transition + re-render
             await this.page.waitForTimeout(200);
         }
-    
+
         // 4️⃣ Select tomorrow's date (non-flaky selector)
         const dayLocator = this.page.locator(
             `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
         );
-    
+
         await dayLocator.first().waitFor({ state: "visible", timeout: 3000 });
         await dayLocator.first().click({ force: true });
-    
+
         // 5️⃣ Validate "no results" message
         const noRecordsMsg = this.page.locator('text=/no results? found/i');
         await expect(noRecordsMsg).toBeVisible({ timeout: 6000 });
     }
-    
+
 
     // Checking if grid view button is displayed and toggling to grid view
     async checkGridViewDisplay() {
@@ -1160,7 +1160,7 @@ export class ListingActions {
             return;
         }
         // Reset filter
-        
+
     }
 
     // Checking contact details in grid view - verify image, address, status, specifications, price
@@ -1202,7 +1202,7 @@ export class ListingActions {
         const price = this.page.locator('.price-from').first();
         const priceValue = await price.textContent();
         console.log("Price:", priceValue?.trim());
-        
+
     }
 
     // Expanding a Listing card
@@ -1214,7 +1214,7 @@ export class ListingActions {
         const expandedDetails = this.page.locator('.p-accordion-content, .expanded-section').nth(2);
         const expandedText = (await expandedDetails.textContent() ?? '').trim();
         console.log('Expanded Card Details (trimmed):', expandedText);
-        
+
 
         await this.page.waitForTimeout(1000)
     }
@@ -1517,7 +1517,7 @@ export class ListingActions {
         const selectAllOption = this.page.locator('.checkbox__checkmark').first();
         await selectAllOption.click();
         await this.page.waitForTimeout(1000);
-        
+
     }
 
     async switchToGridView() {
@@ -1569,7 +1569,7 @@ export class ListingActions {
         await closeForm.click({ force: true })
 
         await this.page.waitForTimeout(1500)
-        
+
     }
 
     // Fill required fields in the 'Create Listing' form and click "Save"
@@ -1646,7 +1646,7 @@ export class ListingActions {
         await closeForm.click({ force: true })
 
         await this.page.waitForTimeout(1500)
-        
+
 
     }
 
@@ -1672,68 +1672,68 @@ export class ListingActions {
         await closeForm.click({ force: true })
 
         await this.page.waitForTimeout(1500)
-        
+
 
     }
 
     async scrollToLoadMoreListings() {
         await this.navigateToListings();
         await this.switchToGridView();
-    
+
         const cards = this.page.locator('.s-property');
         await expect(cards.first()).toBeVisible({ timeout: 20000 });
-    
+
         // Get total records from page footer
         const recordsLabel = this.page.locator('p:has-text("Records:")');
         await expect(recordsLabel).toBeVisible({ timeout: 5000 });
-    
+
         const totalRecordsText = await recordsLabel.textContent();
         const totalRecords = totalRecordsText
             ? parseInt(totalRecordsText.replace(/\D/g, ''), 10)
             : 1000;
-    
+
         console.log("Total Records Label:", totalRecords);
-    
+
         let currentCount = await cards.count();
         console.log("Initial cards:", currentCount);
-    
+
         let scrollAttempts = 0;
         const maxScrollAttempts = 100;
-    
+
         let noChangeTimes = 0;
-    
+
         while (currentCount < totalRecords && scrollAttempts < maxScrollAttempts && noChangeTimes < 3) {
             const prevCount = currentCount;
-    
+
             // Scroll to bottom
             await this.page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    
+
             // Wait for lazy loading items
             await this.page.waitForTimeout(700);
-    
+
             currentCount = await cards.count();
             console.log(`Loaded so far: ${currentCount}`);
-    
+
             if (currentCount === prevCount) {
                 noChangeTimes++; // count consecutive no-change attempts
             } else {
                 noChangeTimes = 0; // reset when new cards appear
             }
-    
+
             scrollAttempts++;
         }
-    
+
         // FINAL small wait before last count (Fixes flaky mismatches)
         await this.page.waitForTimeout(800);
         currentCount = await cards.count();
         console.log("Total cards loaded:", currentCount);
-    
+
         // Ensure we got all records
         expect(currentCount).toBe(totalRecords);
-    
+
         return currentCount;
     }
-    
+
 
     // Searching and then applying filters using already created functions
     async applyListingFilters() {
@@ -1778,7 +1778,7 @@ export class ListingActions {
         expect(foundKeyword).toBe(true);
 
         // Reset filters if the function exists
-        
+
     }
 
     // Searching for a non-existing Listing by keyword
@@ -1879,7 +1879,7 @@ export class ListingActions {
                 break;
             }
         }
-        expect(foundKeyword).toBe(true);        
+        expect(foundKeyword).toBe(true);
     }
 
     // Searching listing with an empty search field and pressing Enter
@@ -1898,7 +1898,7 @@ export class ListingActions {
         const rowsLocator = this.page.locator('tr');
         const rowCount = await rowsLocator.count();
 
-        expect(rowCount).toBeGreaterThan(0); 
+        expect(rowCount).toBeGreaterThan(0);
     }
 
     // Selecting a single property type
@@ -2653,7 +2653,7 @@ export class ListingActions {
         await this.page.waitForTimeout(700);
 
         const noResult = this.page.getByText('No results found');
-        await expect(noResult).toBeVisible({timeout:5000})
+        await expect(noResult).toBeVisible({ timeout: 5000 })
     }
 
     // Filtering by contract status in List View
@@ -2665,11 +2665,11 @@ export class ListingActions {
         const contractStatusDropdown = this.locators.contractStatusDropdown();
         await expect(contractStatusDropdown).toBeVisible();
         await contractStatusDropdown.click({ force: true });
-    
+
         // Wait for contract status options to be visible
         const statusOptions = this.page.locator('ul > li.p-element');
         await expect(statusOptions.first()).toBeVisible({ timeout: 5000 });
-    
+
         // Find and select the desired status option
         const count = await statusOptions.count();
         let matched = false;
@@ -2683,9 +2683,9 @@ export class ListingActions {
             }
         }
         expect(matched).toBe(true);
-    
+
         await this.page.waitForTimeout(1000);
-    
+
         // Now either table rows with results are visible OR "No results found" should be present
         const tableRows = this.page.locator('tr');
         const rowCount = await tableRows.count();
@@ -2703,4 +2703,55 @@ export class ListingActions {
         }
         expect(hasVisibleResults).toBe(true); // pass if either table data or "No results found"
     }
+    // Selecting multiple contract statuses in List View
+    async selectMultipleContractStatusesInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+        // Open the contract status dropdown
+        const contractStatusDropdown = this.locators.contractStatusDropdown();
+        await expect(contractStatusDropdown).toBeVisible();
+        await contractStatusDropdown.click({ force: true });
+
+        // Wait for contract status options to be visible
+        const statusOptions = this.page.locator('ul > li.p-element');
+        await expect(statusOptions.first()).toBeVisible({ timeout: 5000 });
+
+        // Select the 1st and 2nd contract statuses with non-empty text (skip any "Select All" if present)
+        const selectedIndexes: number[] = [];
+        const validTexts: string[] = [];
+        const count = await statusOptions.count();
+        for (let i = 0; i < count && validTexts.length < 2; ++i) {
+            const option = statusOptions.nth(i);
+            const text = (await option.innerText()).trim();
+            // avoid empty, "select all", or similar (case-insensitive)
+            if (text && !/^select all$/i.test(text)) {
+                selectedIndexes.push(i);
+                validTexts.push(text);
+            }
+        }
+        if (selectedIndexes.length < 2) throw new Error("Not enough contract statuses found to select two distinct options.");
+        // Select both
+        for (const idx of selectedIndexes) {
+            await statusOptions.nth(idx).click({ force: true });
+            await this.page.waitForTimeout(300);
+        }
+
+        await this.page.waitForTimeout(1000);
+
+        // Check if table rows or "No results found" is visible (as filter outcome)
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        let filterWorked = false;
+        if (rowCount > 1) {
+            filterWorked = true;
+        } else {
+            const noResults = this.page.getByText('No results found');
+            if (await noResults.isVisible({ timeout: 2000 })) {
+                filterWorked = true;
+            }
+        }
+        expect(filterWorked).toBe(true);
+    }
+
 }
