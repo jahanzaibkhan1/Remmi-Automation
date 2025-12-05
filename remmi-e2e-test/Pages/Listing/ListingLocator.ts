@@ -74,7 +74,7 @@ export class ListingLocators {
         return this.page.locator("//input[@role='textbox']").first();
     }
     selectByAgentSelectAll(): Locator {
-        return this.page.locator('.checkbox__checkmark'); // May need .first() if multiple checkmarks on page
+        return this.page.getByRole('checkbox').nth(1); // May need .first() if multiple checkmarks on page
     }
     selectByAgentOption(label: string) {
         return this.page.locator('li.p-element', { hasText: label });
