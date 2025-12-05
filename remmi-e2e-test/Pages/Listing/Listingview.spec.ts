@@ -206,6 +206,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 32: Dragging a status to change its position in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.dragStatusToNewPosition();
+    await listingActions.resetFilters();
+  });
+
 });
 
 
