@@ -2655,4 +2655,52 @@ export class ListingActions {
         const noResult = this.page.getByText('No results found');
         await expect(noResult).toBeVisible({timeout:5000})
     }
+
+    // Filtering by contract status in List View
+    async filterByValidContractStatus(statusLabel: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+        // Open the contract status dropdown
+        const contractStatusDropdown = this.locators.contractStatusDropdown();
+        await expect(contractStatusDropdown).toBeVisible();
+        await contractStatusDropdown.click({ force: true });
+    
+        // Wait for contract status options to be visible
+        const statusOptions = this.page.locator('ul > li.p-element');
+        await expect(statusOptions.first()).toBeVisible({ timeout: 5000 });
+    
+        // Find and select the desired status option
+        const count = await statusOptions.count();
+        let matched = false;
+        for (let i = 0; i < count; ++i) {
+            const option = statusOptions.nth(i);
+            const text = (await option.innerText()).trim().toLowerCase();
+            if (text === statusLabel.toLowerCase()) {
+                await option.click({ force: true });
+                matched = true;
+                break;
+            }
+        }
+        expect(matched).toBe(true);
+    
+        await this.page.waitForTimeout(1000);
+    
+        // Now either table rows with results are visible OR "No results found" should be present
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+
+        // Check for both conditions: Table rows (other than header), or "No results found"
+        let hasVisibleResults = false;
+        if (rowCount > 1) { // usually header + data; adjust if only data
+            hasVisibleResults = true;
+        } else {
+            // Try to find "No results found" visible text in table
+            const noResults = this.page.getByText('No results found');
+            if (await noResults.isVisible({ timeout: 2000 })) {
+                hasVisibleResults = true;
+            }
+        }
+        expect(hasVisibleResults).toBe(true); // pass if either table data or "No results found"
+    }
 }

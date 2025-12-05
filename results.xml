@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="26.427130999999818">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-05T04:23:08.067Z" hostname="chromium" tests="1" failures="0" skipped="0" time="20.778" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Searching for an inactive agent in List View" classname="Pages\Listing\Listingview.spec.ts" time="20.778">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="28.555973000000233">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-05T04:35:04.993Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.617" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Filtering by a valid contract status in List View" classname="Pages\Listing\Listingview.spec.ts" time="21.617">
 </testcase>
 </testsuite>
 </testsuites>
