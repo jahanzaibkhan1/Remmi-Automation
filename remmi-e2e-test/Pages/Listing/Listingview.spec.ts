@@ -164,6 +164,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 25: Filtering by a valid contract status in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.filterByValidContractStatus('Contract issued');
+    await listingActions.resetFilters();
+  });
+
 });
 
 
