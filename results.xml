@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="24.101360000000334">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-05T05:56:29.362Z" hostname="chromium" tests="1" failures="0" skipped="0" time="18.429" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 32: Dragging a status to change its position in List View" classname="Pages\Listing\Listingview.spec.ts" time="18.429">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.39298900000006">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-05T06:00:25.572Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.473" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 32: Dragging a status to change its position in List View" classname="Pages\Listing\Listingview.spec.ts" time="24.473">
 </testcase>
 </testsuite>
 </testsuites>
