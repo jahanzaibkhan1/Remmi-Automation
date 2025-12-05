@@ -136,7 +136,7 @@ export class ListingLocators {
     }
 
     dragHandle(): Locator {
-        return this.page.locator('.cdk-drag.column-item.custom-field-views').nth(0);
+        return this.page.locator('.cdk-drag.column-item.custom-field-views');
     }
     
     plusButton(): Locator {
