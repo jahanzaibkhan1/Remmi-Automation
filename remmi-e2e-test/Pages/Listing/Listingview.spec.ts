@@ -182,6 +182,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 28: Selecting a valid listing creation date range in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectValidListingCreationDateRange();
+    await listingActions.resetFilters();
+  });
+
 });
 
 
