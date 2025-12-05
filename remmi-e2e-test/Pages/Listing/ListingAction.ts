@@ -3065,7 +3065,44 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+// Creating a view without a name
+async CreateViewWithoutName() {
+    await this.navigateToListings();
+    await this.switchToListView();
+    await this.waitForTableRows();
 
+    // Open Admin Default panel
+    const adminDefaultBtn = this.locators.adminDefaultButton();
+    await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+    await adminDefaultBtn.click({ force: true });
+
+    // Ensure Admin options are visible
+    const adminView = this.locators.adminView();
+    await expect(adminView).toBeVisible({ timeout: 3000 });
+
+    // Click the plus (+) button to open the "create new view" dialog
+    const plusBtn = this.locators.plusButton();
+    await expect(plusBtn).toBeVisible({ timeout: 5000 });
+    await plusBtn.click({ force: true });
+
+    // Do not fill the view name input (leave empty)
+    const viewNameInput = this.locators.viewNameInput();
+    await expect(viewNameInput).toBeVisible({ timeout: 5000 });
+    await viewNameInput.click();
+    await viewNameInput.fill('');
+
+    // Try to confirm/save the new view with an empty name
+    const saveBtn = this.page.getByRole('button', { name: /save|create/i }).first();
+    await expect(saveBtn).toBeVisible({ timeout: 5000 });
+    await saveBtn.click({ force: true });
+
+    // Expect the input to have a red border (validation error is shown as border, not as a text message)
+    await expect(viewNameInput).toHaveCSS('border-color', 'rgb(205, 24, 24)');
+
+    // Optionally, click away or close dialog if needed
+    await this.page.mouse.click(0, 0);
+    await this.page.waitForTimeout(500);
+}
 
 
 
