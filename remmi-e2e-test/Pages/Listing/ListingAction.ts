@@ -2986,5 +2986,34 @@ async dragStatusToNewPosition() {
     await this.page.waitForTimeout(500);
 }
 
+// Searching for a status inside Admin View
+async searchStatusInAdminView(searchTerm: string) {
+    await this.navigateToListings();
+    await this.switchToListView();
+    await this.waitForTableRows();
+
+    // Open Admin Default panel
+    const adminDefaultBtn = this.locators.adminDefaultButton();
+    await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+    await adminDefaultBtn.click({ force: true });
+
+    // Ensure Admin options are visible
+    const adminView = this.locators.adminView();
+    await expect(adminView).toBeVisible({ timeout: 3000 });
+
+    // The search input is visually identified by an input with placeholder 'Search'
+
+    const searchInput = this.page.getByRole('textbox', { name: 'Search' }).nth(2);
+    await expect(searchInput).toBeVisible({ timeout: 3000 });
+    await searchInput.fill(searchTerm);
+
+    const draggableRow = this.page.locator('.cdk-drag.column-item.custom-field-views', { hasText: searchTerm }).first();
+    await expect(draggableRow).toBeVisible({ timeout: 2000 });
+
+    // Close Admin View focus (click away)
+    await this.page.mouse.click(0, 0);
+    await this.page.waitForTimeout(500);
+}
+
 
 }
