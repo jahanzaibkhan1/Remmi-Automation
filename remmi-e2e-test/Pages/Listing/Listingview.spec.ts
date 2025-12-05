@@ -188,6 +188,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 29: Selecting a future listing creation date in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectFutureListingCreationDateInListView();
+    await listingActions.resetFilters();
+  });
+
 });
 
 
