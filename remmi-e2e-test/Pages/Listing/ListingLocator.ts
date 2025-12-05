@@ -74,7 +74,7 @@ export class ListingLocators {
         return this.page.locator("//input[@role='textbox']").first();
     }
     selectByAgentSelectAll(): Locator {
-        return this.page.locator('.checkbox__checkmark'); // May need .first() if multiple checkmarks on page
+        return this.page.getByRole('checkbox').nth(1); // May need .first() if multiple checkmarks on page
     }
     selectByAgentOption(label: string) {
         return this.page.locator('li.p-element', { hasText: label });
@@ -87,7 +87,7 @@ export class ListingLocators {
         return this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
     }
     contractStatusSelectAll(): Locator {
-        return this.page.locator('.checkbox__checkmark'); // Adjust nth if needed for Contract Status
+        return this.page.locator('.checkbox__checkmark').first(); // Adjust nth if needed for Contract Status
     }
     contractStatusOption(label: string) {
         return this.page.locator('li.p-element', { hasText: label });
@@ -114,4 +114,36 @@ export class ListingLocators {
         return this.page.locator('.property-row.pl-1.ng-star-inserted')
     }
 
+    adminDefaultButton(): Locator {
+        return this.page.getByText('Admin Default').first()
+    }
+
+    // Admin view button (if any specific admin-only UI element needed)
+    adminView(): Locator {
+        // Adjust the selector as per actual admin view button/control
+        return this.page.getByText('View OptionsSaveSelect')
+    }
+
+    hideStatus():Locator{
+        return this.page.locator('._flex_between > img').nth(0)
+    }
+
+    hideAllButton(): Locator {
+        return this.page.getByText('Hide All');
+    }
+    showAllButton(): Locator {
+        return this.page.getByText('Show All');
+    }
+
+    dragHandle(): Locator {
+        return this.page.locator('.cdk-drag.column-item.custom-field-views');
+    }
+    
+    plusButton(): Locator {
+        return this.page.locator('.cursor-pointer > img').first();
+    }
+
+    viewNameInput(): Locator {
+        return this.page.locator('input[placeholder="View name"]');
+    }
 }

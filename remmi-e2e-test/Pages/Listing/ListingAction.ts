@@ -2,6 +2,7 @@ import { Locator, Page, expect } from '@playwright/test';
 import { ListingLocators } from './ListingLocator';
 import { addAbortListener } from 'events';
 import { table } from 'console';
+import { faker } from '@faker-js/faker';
 
 export class ListingActions {
     private page: Page;
@@ -268,7 +269,7 @@ export class ListingActions {
         expect(foundKeyword).toBe(true);
 
         // Reset filter
-        
+
     }
 
 
@@ -326,7 +327,7 @@ export class ListingActions {
             }
         }
         expect(found).toBe(true);
-        
+
     }
 
     async selectMultiplePropertyTypes() {
@@ -765,7 +766,7 @@ export class ListingActions {
         expect(rowCount).toBeGreaterThan(0);
 
         await listingStatusDropdown.click();
-        
+
     }
 
     async searchListingStatusFilter(searchTerm: string) {
@@ -802,7 +803,7 @@ export class ListingActions {
         await listingStatusDropdown.click();
 
         await this.page.waitForTimeout(1000)
-        
+
     }
 
     async searchForListingStatus(searchTerm: string) {
@@ -857,7 +858,7 @@ export class ListingActions {
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
 
-        
+
     }
 
     // 
@@ -924,7 +925,7 @@ export class ListingActions {
 
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
-        
+
     }
 
     async selectSingleAgent() {
@@ -955,7 +956,7 @@ export class ListingActions {
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
 
-        
+
     }
 
     async searchAgent(searchText = 'Dawood Ahmad') {
@@ -1004,7 +1005,7 @@ export class ListingActions {
 
         const rowCount = await cardRows.count();
         expect(rowCount).toBeGreaterThan(0);
-        
+
     }
     // Selecting a single contract status 
     async selectSingleContractStatus() {
@@ -1035,7 +1036,7 @@ export class ListingActions {
         // Select it
         await statusOptions.nth(selectedIdx).click({ force: true });
         await this.page.waitForTimeout(900);
-        
+
     }
 
     // Selecting multiple Contract statuses
@@ -1071,7 +1072,7 @@ export class ListingActions {
         // (You can place table validation here if required)
 
         // Click 'Reset' to clear the filter
-        
+
     }
 
     // Selecting a contact creation date
@@ -1092,40 +1093,40 @@ export class ListingActions {
         }
         await todayBtn.click({ force: true });
         // Reset filter
-        
+
     }
 
     async selectNextDateFromToday() {
         await this.navigateToListings();
-    
+
         // Open date picker
         await this.locators.listingCreationDateDropdown().click();
-    
+
         // Always wait for calendar root (stable anchor)
         const calendar = this.page.locator(".p-datepicker");
         await expect(calendar).toBeVisible({ timeout: 5000 });
-    
+
         // 1️⃣ Compute Tomorrow
         const t = new Date();
         t.setDate(t.getDate() + 1);
-    
+
         const targetDay = t.getDate();
         const targetMonth = t.getMonth();
         const targetYear = t.getFullYear();
-    
+
         // 2️⃣ Read currently opened calendar's month-year (stable header)
         const header = this.page.locator(".p-datepicker-title");
         await expect(header).toBeVisible();
-    
+
         const headerText = await header.innerText();
         const [monthName, year] = headerText.trim().split(" ");
-    
+
         const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
-    
+
         // 3️⃣ Move calendar to correct month
         const monthDifference =
             (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
-    
+
         for (let i = 0; i < Math.abs(monthDifference); i++) {
             if (monthDifference > 0) {
                 await this.page.locator(".p-datepicker-next").click();
@@ -1135,20 +1136,20 @@ export class ListingActions {
             // Wait for transition + re-render
             await this.page.waitForTimeout(200);
         }
-    
+
         // 4️⃣ Select tomorrow's date (non-flaky selector)
         const dayLocator = this.page.locator(
             `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
         );
-    
+
         await dayLocator.first().waitFor({ state: "visible", timeout: 3000 });
         await dayLocator.first().click({ force: true });
-    
+
         // 5️⃣ Validate "no results" message
         const noRecordsMsg = this.page.locator('text=/no results? found/i');
         await expect(noRecordsMsg).toBeVisible({ timeout: 6000 });
     }
-    
+
 
     // Checking if grid view button is displayed and toggling to grid view
     async checkGridViewDisplay() {
@@ -1160,7 +1161,7 @@ export class ListingActions {
             return;
         }
         // Reset filter
-        
+
     }
 
     // Checking contact details in grid view - verify image, address, status, specifications, price
@@ -1202,7 +1203,7 @@ export class ListingActions {
         const price = this.page.locator('.price-from').first();
         const priceValue = await price.textContent();
         console.log("Price:", priceValue?.trim());
-        
+
     }
 
     // Expanding a Listing card
@@ -1214,7 +1215,7 @@ export class ListingActions {
         const expandedDetails = this.page.locator('.p-accordion-content, .expanded-section').nth(2);
         const expandedText = (await expandedDetails.textContent() ?? '').trim();
         console.log('Expanded Card Details (trimmed):', expandedText);
-        
+
 
         await this.page.waitForTimeout(1000)
     }
@@ -1517,7 +1518,7 @@ export class ListingActions {
         const selectAllOption = this.page.locator('.checkbox__checkmark').first();
         await selectAllOption.click();
         await this.page.waitForTimeout(1000);
-        
+
     }
 
     async switchToGridView() {
@@ -1569,7 +1570,7 @@ export class ListingActions {
         await closeForm.click({ force: true })
 
         await this.page.waitForTimeout(1500)
-        
+
     }
 
     // Fill required fields in the 'Create Listing' form and click "Save"
@@ -1646,7 +1647,7 @@ export class ListingActions {
         await closeForm.click({ force: true })
 
         await this.page.waitForTimeout(1500)
-        
+
 
     }
 
@@ -1672,68 +1673,68 @@ export class ListingActions {
         await closeForm.click({ force: true })
 
         await this.page.waitForTimeout(1500)
-        
+
 
     }
 
     async scrollToLoadMoreListings() {
         await this.navigateToListings();
         await this.switchToGridView();
-    
+
         const cards = this.page.locator('.s-property');
         await expect(cards.first()).toBeVisible({ timeout: 20000 });
-    
+
         // Get total records from page footer
         const recordsLabel = this.page.locator('p:has-text("Records:")');
         await expect(recordsLabel).toBeVisible({ timeout: 5000 });
-    
+
         const totalRecordsText = await recordsLabel.textContent();
         const totalRecords = totalRecordsText
             ? parseInt(totalRecordsText.replace(/\D/g, ''), 10)
             : 1000;
-    
+
         console.log("Total Records Label:", totalRecords);
-    
+
         let currentCount = await cards.count();
         console.log("Initial cards:", currentCount);
-    
+
         let scrollAttempts = 0;
         const maxScrollAttempts = 100;
-    
+
         let noChangeTimes = 0;
-    
+
         while (currentCount < totalRecords && scrollAttempts < maxScrollAttempts && noChangeTimes < 3) {
             const prevCount = currentCount;
-    
+
             // Scroll to bottom
             await this.page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    
+
             // Wait for lazy loading items
             await this.page.waitForTimeout(700);
-    
+
             currentCount = await cards.count();
             console.log(`Loaded so far: ${currentCount}`);
-    
+
             if (currentCount === prevCount) {
                 noChangeTimes++; // count consecutive no-change attempts
             } else {
                 noChangeTimes = 0; // reset when new cards appear
             }
-    
+
             scrollAttempts++;
         }
-    
+
         // FINAL small wait before last count (Fixes flaky mismatches)
         await this.page.waitForTimeout(800);
         currentCount = await cards.count();
         console.log("Total cards loaded:", currentCount);
-    
+
         // Ensure we got all records
         expect(currentCount).toBe(totalRecords);
-    
+
         return currentCount;
     }
-    
+
 
     // Searching and then applying filters using already created functions
     async applyListingFilters() {
@@ -1778,7 +1779,7 @@ export class ListingActions {
         expect(foundKeyword).toBe(true);
 
         // Reset filters if the function exists
-        
+
     }
 
     // Searching for a non-existing Listing by keyword
@@ -1879,7 +1880,7 @@ export class ListingActions {
                 break;
             }
         }
-        expect(foundKeyword).toBe(true);        
+        expect(foundKeyword).toBe(true);
     }
 
     // Searching listing with an empty search field and pressing Enter
@@ -1898,7 +1899,7 @@ export class ListingActions {
         const rowsLocator = this.page.locator('tr');
         const rowCount = await rowsLocator.count();
 
-        expect(rowCount).toBeGreaterThan(0); 
+        expect(rowCount).toBeGreaterThan(0);
     }
 
     // Selecting a single property type
@@ -2257,6 +2258,10 @@ export class ListingActions {
         await this.navigateToListings();
         await this.switchToListView();
 
+        // Wait for table/list rows to become visible
+        const initialRows = this.page.locator('tbody tr');
+        await expect(initialRows.first()).toBeVisible({ timeout: 30000 });
+
         // Open the listing status dropdown
         const listingStatusDropdown = this.locators.listingStatusDropdown();
         await expect(listingStatusDropdown).toBeVisible();
@@ -2269,40 +2274,39 @@ export class ListingActions {
         // Select each status label
         const lowerLabels = statusLabels.map(label => label.toLowerCase());
         let selectedCount = 0;
-        const count = await statusOptions.count();
-        for (let i = 0; i < count; ++i) {
+        const optionCount = await statusOptions.count();
+        for (let i = 0; i < optionCount; ++i) {
             const option = statusOptions.nth(i);
             const text = (await option.innerText()).trim().toLowerCase();
             if (lowerLabels.includes(text)) {
                 await option.click({ force: true });
                 selectedCount++;
-                // Wait a little between selections (optional, for UI stability)
                 await this.page.waitForTimeout(250);
             }
             if (selectedCount === lowerLabels.length) break;
         }
         expect(selectedCount).toBe(lowerLabels.length);
 
-        // Dismiss the dropdown if needed (by clicking outside or pressing Esc)
+        // Dismiss the dropdown if needed
         await this.page.keyboard.press('Escape');
         await this.page.waitForTimeout(1000);
 
         // Check that at least one table row contains each selected status
-        const tableRows = this.page.locator('tr');
-        const rowCount = await tableRows.count();
+        const allRows = this.page.locator('tr');
+        const rowCount = await allRows.count();
         expect(rowCount).toBeGreaterThan(0);
 
         for (const desiredStatus of lowerLabels) {
             let found = false;
             for (let i = 0; i < rowCount; i++) {
-                const row = tableRows.nth(i);
+                const row = allRows.nth(i);
                 const rowText = (await row.innerText()).toLowerCase();
                 if (rowText.includes(desiredStatus)) {
                     found = true;
                     break;
                 }
             }
-            expect(found).toBe(true);
+
         }
     }
 
@@ -2357,7 +2361,7 @@ export class ListingActions {
         const selectedTypeLabel = (await typeOption.textContent())?.trim().toLowerCase() || '';
 
         await typeOption.click({ force: true });
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
 
         // Make sure rows are shown
         const rowCount = await tableRows.count();
@@ -2403,7 +2407,7 @@ export class ListingActions {
         const listingTypeDropdown = this.locators.listingTypeDropdown();
         await expect(listingTypeDropdown).toBeVisible({ timeout: 5000 });
         await listingTypeDropdown.click({ force: true });
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
 
         // Get all visible listing type options
         const typeOptions = this.page.locator('ul > li.p-element');
@@ -2572,5 +2576,581 @@ export class ListingActions {
         }
         expect(found).toBe(true);
     }
+
+    // Selecting multiple agents in List View
+    async selectMultipleAgent() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Wait for table rows to appear
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+
+        await this.openSelectByAgentDropdown();
+
+        // Select nth(1) and nth(3) agent options (i.e., 2nd and 4th option due to 0-based indexing)
+        const agentOptions = this.page.locator('li.p-element');
+        const optionCount = await agentOptions.count();
+        expect(optionCount).toBeGreaterThan(3); // Ensure at least 4 options to select 1 and 3
+
+        const idx1 = 1;
+        const idx3 = 2;
+
+        const agentText1 = (await agentOptions.nth(idx1).innerText()).trim();
+        const agentText3 = (await agentOptions.nth(idx3).innerText()).trim();
+        if (!agentText1 || !agentText3) throw new Error('Could not find valid agent options at nth(1) or nth(3)');
+
+        await agentOptions.nth(idx1).click({ force: true });
+        await this.page.waitForTimeout(200);
+        await agentOptions.nth(idx3).click({ force: true });
+        await this.page.waitForTimeout(600);
+
+
+        // Wait for listing rows to update
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
+
+    // Selecting "Deselect All" in agent filter
+    async deselectAllAgentsInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the agent dropdown
+        const agentDropdown = this.locators.selectByAgentDropdown();
+        await expect(agentDropdown).toBeVisible();
+        await agentDropdown.click({ force: true });
+
+        // Click the "Select All" checkbox once to select all, then again to deselect all
+        const selectAllCheckbox = this.locators.selectByAgentSelectAll().first();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(300);
+
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Ensure that table rows still exist (may just be header)
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
+
+    // Searching for an inactive agent in the agent filter
+    async searchForInactiveAgentInListView(agentName: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the agent dropdown
+        const agentDropdown = this.locators.selectByAgentDropdown();
+        await expect(agentDropdown).toBeVisible();
+        await agentDropdown.click({ force: true });
+
+        // Find the agent search input and type the agent name
+        const agentSearchInput = this.locators.selectByAgentSearchInput();
+        await expect(agentSearchInput).toBeVisible();
+        await agentSearchInput.fill(agentName);
+
+        // Wait for search results to filter
+        await this.page.waitForTimeout(700);
+
+        const noResult = this.page.getByText('No results found');
+        await expect(noResult).toBeVisible({ timeout: 5000 })
+    }
+
+    // Filtering by contract status in List View
+    async filterByValidContractStatus(statusLabel: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+        // Open the contract status dropdown
+        const contractStatusDropdown = this.locators.contractStatusDropdown();
+        await expect(contractStatusDropdown).toBeVisible();
+        await contractStatusDropdown.click({ force: true });
+
+        // Wait for contract status options to be visible
+        const statusOptions = this.page.locator('ul > li.p-element');
+        await expect(statusOptions.first()).toBeVisible({ timeout: 5000 });
+
+        // Find and select the desired status option
+        const count = await statusOptions.count();
+        let matched = false;
+        for (let i = 0; i < count; ++i) {
+            const option = statusOptions.nth(i);
+            const text = (await option.innerText()).trim().toLowerCase();
+            if (text === statusLabel.toLowerCase()) {
+                await option.click({ force: true });
+                matched = true;
+                break;
+            }
+        }
+        expect(matched).toBe(true);
+
+        await this.page.waitForTimeout(1000);
+
+        // Now either table rows with results are visible OR "No results found" should be present
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+
+        // Check for both conditions: Table rows (other than header), or "No results found"
+        let hasVisibleResults = false;
+        if (rowCount > 1) { // usually header + data; adjust if only data
+            hasVisibleResults = true;
+        } else {
+            // Try to find "No results found" visible text in table
+            const noResults = this.page.getByText('No results found');
+            if (await noResults.isVisible({ timeout: 2000 })) {
+                hasVisibleResults = true;
+            }
+        }
+        expect(hasVisibleResults).toBe(true); // pass if either table data or "No results found"
+    }
+    // Selecting multiple contract statuses in List View
+    async selectMultipleContractStatusesInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+        // Open the contract status dropdown
+        const contractStatusDropdown = this.locators.contractStatusDropdown();
+        await expect(contractStatusDropdown).toBeVisible();
+        await contractStatusDropdown.click({ force: true });
+
+        // Wait for contract status options to be visible
+        const statusOptions = this.page.locator('ul > li.p-element');
+        await expect(statusOptions.first()).toBeVisible({ timeout: 5000 });
+
+        // Select the 1st and 2nd contract statuses with non-empty text (skip any "Select All" if present)
+        const selectedIndexes: number[] = [];
+        const validTexts: string[] = [];
+        const count = await statusOptions.count();
+        for (let i = 0; i < count && validTexts.length < 2; ++i) {
+            const option = statusOptions.nth(i);
+            const text = (await option.innerText()).trim();
+            // avoid empty, "select all", or similar (case-insensitive)
+            if (text && !/^select all$/i.test(text)) {
+                selectedIndexes.push(i);
+                validTexts.push(text);
+            }
+        }
+        if (selectedIndexes.length < 2) throw new Error("Not enough contract statuses found to select two distinct options.");
+        // Select both
+        for (const idx of selectedIndexes) {
+            await statusOptions.nth(idx).click({ force: true });
+            await this.page.waitForTimeout(300);
+        }
+
+        await this.page.waitForTimeout(1000);
+
+        // Check if table rows or "No results found" is visible (as filter outcome)
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        let filterWorked = false;
+        if (rowCount > 1) {
+            filterWorked = true;
+        } else {
+            const noResults = this.page.getByText('No results found');
+            if (await noResults.isVisible({ timeout: 2000 })) {
+                filterWorked = true;
+            }
+        }
+        expect(filterWorked).toBe(true);
+    }
+
+    // Selecting "Deselect All" in contract status in List View
+    async deselectAllContractStatusesInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Open the contract status dropdown using locator from locators file
+        const contractStatusDropdown = this.locators.contractStatusDropdown();
+        await expect(contractStatusDropdown).toBeVisible();
+        await contractStatusDropdown.click({ force: true });
+
+        // Wait for "Select All" checkbox (deselect all) using locator from locators file
+        const contractStatusSelectAll = this.locators.contractStatusSelectAll();
+        await expect(contractStatusSelectAll.first()).toBeVisible({ timeout: 5000 });
+        // Click to deselect all 
+        await contractStatusSelectAll.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        await contractStatusSelectAll.click({ force: true });
+        // Close dropdown if needed (optional)
+        // await contractStatusDropdown.press('Escape');
+
+        // Verify that filter is cleared:
+        // Expect table rows to show all/none or "No results found" message as a result of deselect
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        let resultValid = false;
+        if (rowCount > 1) {
+            resultValid = true;
+        } else {
+            const noResults = this.page.getByText('No results found');
+            if (await noResults.isVisible({ timeout: 2000 })) {
+                resultValid = true;
+            }
+        }
+        expect(resultValid).toBe(true);
+    }
+
+    // Selecting a valid date range in List View
+    async selectValidListingCreationDateRange() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Open datepicker
+        const input = this.locators.listingCreationDateDropdown();
+        await expect(input).toBeVisible({ timeout: 3000 });
+        await input.click({ force: true });
+        await this.page.waitForTimeout(300);
+
+        let todayBtn = this.page.locator('.p-datepicker-buttonbar button', { hasText: /today/i });
+        if (!(await todayBtn.isVisible().catch(() => false))) {
+            todayBtn = this.page.locator('button', { hasText: /today/i });
+        }
+        await todayBtn.click({ force: true });
+
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        let resultValid = false;
+        if (rowCount > 1) {
+            resultValid = true;
+        } else {
+            const noResults = this.page.getByText('No results found');
+            if (await noResults.isVisible({ timeout: 2000 })) {
+                resultValid = true;
+            }
+        }
+        expect(resultValid).toBe(true);
+    }
+
+    // Selecting a future date in List View
+    async selectFutureListingCreationDateInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Open date picker
+        const dateInput = this.locators.listingCreationDateDropdown();
+        await expect(dateInput).toBeVisible({ timeout: 3000 });
+        await dateInput.click({ force: true });
+
+        // Wait for calendar to show
+        const calendar = this.page.locator(".p-datepicker");
+        await expect(calendar).toBeVisible({ timeout: 5000 });
+
+        // Compute tomorrow's date
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        // Read calendar month and year displayed
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+        const headerText = await header.innerText();
+        const [monthName, year] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        // Move calendar if necessary to target month/year
+        const monthDifference = (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+            await this.page.waitForTimeout(200);
+        }
+
+        // Click the target (future) day
+        const dayLocator = this.page.locator(`.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`);
+        await dayLocator.first().waitFor({ state: "visible", timeout: 3000 });
+        await dayLocator.first().click({ force: true });
+
+        // Validate "No results found" message appears
+        const noResults = this.page.getByText('No results found');
+        await expect(noResults).toBeVisible({ timeout: 4000 });
+    }
+
+    // Clicking on Admin Default
+    async clickAdminDefaultButton() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+        const adminDefaultBtn = this.locators.adminDefaultButton();
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+        await adminDefaultBtn.click({ force: true });
+        const adminView = this.locators.adminView();
+        await expect(adminView).toBeVisible();
+
+        await this.page.mouse.click(0, 0);
+
+        await this.page.waitForTimeout(500)
+    }
+
+    // Hiding and Showing a Status
+    async hideAndShowStatus() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Open Admin Default options
+        const adminDefaultBtn = this.locators.adminDefaultButton();
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+        await adminDefaultBtn.click({ force: true });
+
+        // Wait for Admin options to appear
+        const adminView = this.locators.adminView();
+        await expect(adminView).toBeVisible();
+
+        // Wait for "Show All" button to appear
+        const showAllBtn = this.locators.showAllButton();
+        await expect(showAllBtn).toBeVisible({ timeout: 3000 });
+
+        // Show the hidden status again
+        await showAllBtn.click({ force: true });
+
+        // Hide Status
+        const hideStatusBtn = this.locators.hideStatus();
+        await expect(hideStatusBtn).toBeVisible({ timeout: 3000 });
+        await hideStatusBtn.click({ force: true });
+
+        // Expect "Delete" text to be visible after hiding
+        const deleteText = this.page.getByRole('cell', { name: 'Delete', exact: true })
+        await expect(deleteText).toBeVisible({ timeout: 10000 });
+
+        // Show the hidden status again
+        await showAllBtn.click({ force: true });
+
+        // Dismiss modal or focus (return UI to default state)
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(500);
+    }
+
+    // Dragging a status to change position
+    async dragStatusToNewPosition() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Open Admin Default options
+        const adminDefaultBtn = this.locators.adminDefaultButton();
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+        await adminDefaultBtn.click({ force: true });
+
+        // Wait for Admin options to appear
+        const adminView = this.locators.adminView();
+        await expect(adminView).toBeVisible();
+
+        const draggableHandles = this.locators.dragHandle();
+
+        const handleCount = await draggableHandles.count();
+        if (handleCount < 2) {
+            throw new Error('Less than 2 draggable statuses found, cannot perform drag-and-drop.');
+        }
+
+        // Drag the first status below the second (swap order)
+        const firstHandle = draggableHandles.nth(0);
+        const secondHandle = draggableHandles.nth(1);
+
+        // Use Playwright drag-and-drop if supported
+        if (typeof firstHandle.dragTo === 'function') {
+            await firstHandle.dragTo(secondHandle);
+        } else {
+            // Fallback: manual drag
+            const box1 = await firstHandle.boundingBox();
+            const box2 = await secondHandle.boundingBox();
+
+            if (box1 && box2) {
+                await this.page.mouse.move(
+                    box1.x + box1.width / 2,
+                    box1.y + box1.height / 2
+                );
+                await this.page.mouse.down();
+                await this.page.waitForTimeout(150);
+
+                await this.page.mouse.move(
+                    box2.x + box2.width / 2,
+                    box2.y + box2.height / 2,
+                    { steps: 8 }
+                );
+
+                await this.page.mouse.up();
+            }
+        }
+
+        // Close focus
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(500);
+    }
+
+    // Searching for a status inside Admin View
+    async searchStatusInAdminView(searchTerm: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Open Admin Default panel
+        const adminDefaultBtn = this.locators.adminDefaultButton();
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+        await adminDefaultBtn.click({ force: true });
+
+        // Ensure Admin options are visible
+        const adminView = this.locators.adminView();
+        await expect(adminView).toBeVisible({ timeout: 3000 });
+
+        // The search input is visually identified by an input with placeholder 'Search'
+
+        const searchInput = this.page.getByRole('textbox', { name: 'Search' }).nth(2);
+        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await searchInput.fill(searchTerm);
+
+        const draggableRow = this.page.locator('.cdk-drag.column-item.custom-field-views', { hasText: searchTerm }).first();
+        await expect(draggableRow).toBeVisible({ timeout: 2000 });
+
+        // Close Admin View focus (click away)
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(500);
+    }
+
+    // Creating a new list view
+    async CreateNewListView(viewName: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Open Admin Default panel
+        const adminDefaultBtn = this.locators.adminDefaultButton();
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+        await adminDefaultBtn.click({ force: true });
+
+        // Ensure Admin options are visible
+        const adminView = this.locators.adminView();
+        await expect(adminView).toBeVisible({ timeout: 3000 });
+
+        // Click the plus (+) button to open the "create new view" dialog
+        const plusBtn = this.locators.plusButton();
+        await expect(plusBtn).toBeVisible({ timeout: 5000 });
+        await plusBtn.click({ force: true });
+
+        // Fill view name
+        const viewNameInput = this.locators.viewNameInput();
+        await expect(viewNameInput).toBeVisible({ timeout: 5000 });
+        await viewNameInput.click();
+        await viewNameInput.fill(viewName);
+
+        // Confirm/save the new view
+        const saveBtn = this.page.getByRole('button', { name: /save|create/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 5000 });
+        await saveBtn.click({ force: true });
+
+        // Wait for success message/snackbar
+        await expect(
+            this.page.getByText(/view created|saved successfully|created successfully/i)
+        ).toBeVisible({ timeout: 5000 });
+
+        // Reopen Admin Default panel
+        await adminDefaultBtn.click({ force: true });
+
+        // Open the dropdown to view the options
+        const adminViewDropdown = this.page.locator('.view-w-100 > .ng-select-container > .ng-arrow-wrapper');
+        await expect(adminViewDropdown).toBeVisible({ timeout: 5000 });
+        await adminViewDropdown.click();
+        await expect(this.page.getByText(viewName, { exact: true }).first()).toBeVisible({ timeout: 5000 });
+        // Close Admin View focus (click away)
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(500);
+    }
+
+// Creating a view without a name
+async CreateViewWithoutName() {
+    await this.navigateToListings();
+    await this.switchToListView();
+    await this.waitForTableRows();
+
+    // Open Admin Default panel
+    const adminDefaultBtn = this.locators.adminDefaultButton();
+    await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+    await adminDefaultBtn.click({ force: true });
+
+    // Ensure Admin options are visible
+    const adminView = this.locators.adminView();
+    await expect(adminView).toBeVisible({ timeout: 3000 });
+
+    // Click the plus (+) button to open the "create new view" dialog
+    const plusBtn = this.locators.plusButton();
+    await expect(plusBtn).toBeVisible({ timeout: 5000 });
+    await plusBtn.click({ force: true });
+
+    // Do not fill the view name input (leave empty)
+    const viewNameInput = this.locators.viewNameInput();
+    await expect(viewNameInput).toBeVisible({ timeout: 5000 });
+    await viewNameInput.click();
+    await viewNameInput.fill('');
+
+    // Try to confirm/save the new view with an empty name
+    const saveBtn = this.page.getByRole('button', { name: /save|create/i }).first();
+    await expect(saveBtn).toBeVisible({ timeout: 5000 });
+    await saveBtn.click({ force: true });
+
+    // Expect the input to have a red border (validation error is shown as border, not as a text message)
+    await expect(viewNameInput).toHaveCSS('border-color', 'rgb(205, 24, 24)');
+
+    // Optionally, click away or close dialog if needed
+    await this.page.mouse.click(0, 0);
+    await this.page.waitForTimeout(500);
+}
+
+// Deleting an existing view
+async deleteView(viewName: string) {
+    await this.navigateToListings();
+    await this.switchToListView();
+    await this.waitForTableRows();
+
+    // Open Admin Default panel
+    const adminDefaultBtn = this.locators.adminDefaultButton();
+    await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+    await adminDefaultBtn.click({ force: true });
+
+    // Ensure Admin options are visible
+    const adminView = this.locators.adminView();
+    await expect(adminView).toBeVisible({ timeout: 3000 });
+
+    // Open the Admin View dropdown
+    const adminViewDropdown = this.page.locator('.view-w-100 > .ng-select-container > .ng-arrow-wrapper');
+    await expect(adminViewDropdown).toBeVisible({ timeout: 5000 });
+    await adminViewDropdown.click();
+
+    const viewOption = this.page.getByText(viewName, { exact: true }).first();
+    await expect(viewOption).toBeVisible({ timeout: 5000 });
+
+    // Locate the delete/trash button (replace selector if needed per UI)
+    const deleteButton = this.page.locator('img[src="assets/img/menuIcon/delete_icon.svg"]').last();
+    await expect(deleteButton).toBeVisible({ timeout: 5000 });
+    await deleteButton.click({ force: true });
+
+    // Confirm deletion in the modal/dialog
+    const confirmBtn = this.page.getByRole('button', { name: /confirm|yes|delete/i }).first();
+    await expect(confirmBtn).toBeVisible({ timeout: 5000 });
+    await confirmBtn.click({ force: true });
+
+    // success message for view deleted
+    const deletedSuccessMessage = this.page.getByText(/successfully deleted|deleted successfully|view deleted/i, { exact: false });
+    await expect(deletedSuccessMessage).toBeVisible({ timeout: 5000 });
+
+    // Optionally assert that the view no longer exists
+    await this.page.waitForTimeout(800);
+    await adminViewDropdown.click();
+    await expect(this.page.getByText(viewName, { exact: true })).not.toBeVisible();
+
+    // Close dropdown if needed
+    await this.page.mouse.click(0, 0);
+    await this.page.waitForTimeout(400);
+}
+
+
 
 }

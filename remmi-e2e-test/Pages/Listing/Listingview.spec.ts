@@ -146,6 +146,96 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 22: Selecting multiple agents in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectMultipleAgent();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 23: Deselecting all agents in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deselectAllAgentsInListView();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 24: Searching for an inactive agent in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchForInactiveAgentInListView('Test Inactive Agent');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 25: Filtering by a valid contract status in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.filterByValidContractStatus('Contract issued');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 26: Selecting multiple contract statuses in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectMultipleContractStatusesInListView();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 27: Deselecting all contract statuses in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deselectAllContractStatusesInListView();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 28: Selecting a valid listing creation date range in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectValidListingCreationDateRange();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 29: Selecting a future listing creation date in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectFutureListingCreationDateInListView();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 30: Clicking on Admin Default in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.clickAdminDefaultButton();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 31: Hiding and showing a Status in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.hideAndShowStatus();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 32: Dragging a status to change its position in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.dragStatusToNewPosition();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 33: Searching for a status inside Admin View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchStatusInAdminView('Primary Agent');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 34: Creating a new list view', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.CreateNewListView('Automation Testing');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 35: Creating a view without a name (should show error)', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.CreateViewWithoutName();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 36: Deleting an existing view', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deleteView('Automation Testing');
+    await listingActions.resetFilters();
+  });
+
 });
 
 
