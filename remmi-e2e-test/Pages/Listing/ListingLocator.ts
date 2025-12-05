@@ -139,5 +139,11 @@ export class ListingLocators {
         return this.page.locator('.cdk-drag.column-item.custom-field-views').nth(0);
     }
     
+    plusButton(): Locator {
+        return this.page.locator('.cursor-pointer > img').first();
+    }
 
+    viewNameInput(): Locator {
+        return this.page.locator('input[placeholder="View name"]');
+    }
 }

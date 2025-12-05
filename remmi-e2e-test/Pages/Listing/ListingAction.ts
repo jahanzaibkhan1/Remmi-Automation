@@ -2,6 +2,7 @@ import { Locator, Page, expect } from '@playwright/test';
 import { ListingLocators } from './ListingLocator';
 import { addAbortListener } from 'events';
 import { table } from 'console';
+import { faker } from '@faker-js/faker';
 
 export class ListingActions {
     private page: Page;
@@ -2929,91 +2930,143 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
-// Dragging a status to change position
-async dragStatusToNewPosition() {
-    await this.navigateToListings();
-    await this.switchToListView();
-    await this.waitForTableRows();
+    // Dragging a status to change position
+    async dragStatusToNewPosition() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
 
-    // Open Admin Default options
-    const adminDefaultBtn = this.locators.adminDefaultButton();
-    await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
-    await adminDefaultBtn.click({ force: true });
+        // Open Admin Default options
+        const adminDefaultBtn = this.locators.adminDefaultButton();
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+        await adminDefaultBtn.click({ force: true });
 
-    // Wait for Admin options to appear
-    const adminView = this.locators.adminView();
-    await expect(adminView).toBeVisible();
+        // Wait for Admin options to appear
+        const adminView = this.locators.adminView();
+        await expect(adminView).toBeVisible();
 
-    const draggableHandles = this.locators.dragHandle();
+        const draggableHandles = this.locators.dragHandle();
 
-    const handleCount = await draggableHandles.count();
-    if (handleCount < 2) {
-        throw new Error('Less than 2 draggable statuses found, cannot perform drag-and-drop.');
-    }
-
-    // Drag the first status below the second (swap order)
-    const firstHandle = draggableHandles.nth(0);
-    const secondHandle = draggableHandles.nth(1);
-
-    // Use Playwright drag-and-drop if supported
-    if (typeof firstHandle.dragTo === 'function') {
-        await firstHandle.dragTo(secondHandle);
-    } else {
-        // Fallback: manual drag
-        const box1 = await firstHandle.boundingBox();
-        const box2 = await secondHandle.boundingBox();
-
-        if (box1 && box2) {
-            await this.page.mouse.move(
-                box1.x + box1.width / 2,
-                box1.y + box1.height / 2
-            );
-            await this.page.mouse.down();
-            await this.page.waitForTimeout(150);
-
-            await this.page.mouse.move(
-                box2.x + box2.width / 2,
-                box2.y + box2.height / 2,
-                { steps: 8 }
-            );
-
-            await this.page.mouse.up();
+        const handleCount = await draggableHandles.count();
+        if (handleCount < 2) {
+            throw new Error('Less than 2 draggable statuses found, cannot perform drag-and-drop.');
         }
+
+        // Drag the first status below the second (swap order)
+        const firstHandle = draggableHandles.nth(0);
+        const secondHandle = draggableHandles.nth(1);
+
+        // Use Playwright drag-and-drop if supported
+        if (typeof firstHandle.dragTo === 'function') {
+            await firstHandle.dragTo(secondHandle);
+        } else {
+            // Fallback: manual drag
+            const box1 = await firstHandle.boundingBox();
+            const box2 = await secondHandle.boundingBox();
+
+            if (box1 && box2) {
+                await this.page.mouse.move(
+                    box1.x + box1.width / 2,
+                    box1.y + box1.height / 2
+                );
+                await this.page.mouse.down();
+                await this.page.waitForTimeout(150);
+
+                await this.page.mouse.move(
+                    box2.x + box2.width / 2,
+                    box2.y + box2.height / 2,
+                    { steps: 8 }
+                );
+
+                await this.page.mouse.up();
+            }
+        }
+
+        // Close focus
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(500);
     }
 
-    // Close focus
-    await this.page.mouse.click(0, 0);
-    await this.page.waitForTimeout(500);
-}
+    // Searching for a status inside Admin View
+    async searchStatusInAdminView(searchTerm: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
 
-// Searching for a status inside Admin View
-async searchStatusInAdminView(searchTerm: string) {
-    await this.navigateToListings();
-    await this.switchToListView();
-    await this.waitForTableRows();
+        // Open Admin Default panel
+        const adminDefaultBtn = this.locators.adminDefaultButton();
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+        await adminDefaultBtn.click({ force: true });
 
-    // Open Admin Default panel
-    const adminDefaultBtn = this.locators.adminDefaultButton();
-    await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
-    await adminDefaultBtn.click({ force: true });
+        // Ensure Admin options are visible
+        const adminView = this.locators.adminView();
+        await expect(adminView).toBeVisible({ timeout: 3000 });
 
-    // Ensure Admin options are visible
-    const adminView = this.locators.adminView();
-    await expect(adminView).toBeVisible({ timeout: 3000 });
+        // The search input is visually identified by an input with placeholder 'Search'
 
-    // The search input is visually identified by an input with placeholder 'Search'
+        const searchInput = this.page.getByRole('textbox', { name: 'Search' }).nth(2);
+        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await searchInput.fill(searchTerm);
 
-    const searchInput = this.page.getByRole('textbox', { name: 'Search' }).nth(2);
-    await expect(searchInput).toBeVisible({ timeout: 3000 });
-    await searchInput.fill(searchTerm);
+        const draggableRow = this.page.locator('.cdk-drag.column-item.custom-field-views', { hasText: searchTerm }).first();
+        await expect(draggableRow).toBeVisible({ timeout: 2000 });
 
-    const draggableRow = this.page.locator('.cdk-drag.column-item.custom-field-views', { hasText: searchTerm }).first();
-    await expect(draggableRow).toBeVisible({ timeout: 2000 });
+        // Close Admin View focus (click away)
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(500);
+    }
 
-    // Close Admin View focus (click away)
-    await this.page.mouse.click(0, 0);
-    await this.page.waitForTimeout(500);
-}
+    // Creating a new list view
+    async CreateNewListView(viewName: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Open Admin Default panel
+        const adminDefaultBtn = this.locators.adminDefaultButton();
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+        await adminDefaultBtn.click({ force: true });
+
+        // Ensure Admin options are visible
+        const adminView = this.locators.adminView();
+        await expect(adminView).toBeVisible({ timeout: 3000 });
+
+        // Click the plus (+) button to open the "create new view" dialog
+        const plusBtn = this.locators.plusButton();
+        await expect(plusBtn).toBeVisible({ timeout: 5000 });
+        await plusBtn.click({ force: true });
+
+        // Fill view name
+        const viewNameInput = this.locators.viewNameInput();
+        await expect(viewNameInput).toBeVisible({ timeout: 5000 });
+        await viewNameInput.click();
+        await viewNameInput.fill(viewName);
+
+        // Confirm/save the new view
+        const saveBtn = this.page.getByRole('button', { name: /save|create/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 5000 });
+        await saveBtn.click({ force: true });
+
+        // Wait for success message/snackbar
+        await expect(
+            this.page.getByText(/view created|saved successfully|created successfully/i)
+        ).toBeVisible({ timeout: 5000 });
+
+        // Reopen Admin Default panel
+        await adminDefaultBtn.click({ force: true });
+
+        // Open the dropdown to view the options
+        const adminViewDropdown = this.page.locator('.view-w-100 > .ng-select-container > .ng-arrow-wrapper');
+        await expect(adminViewDropdown).toBeVisible({ timeout: 5000 });
+        await adminViewDropdown.click();
+        await expect(this.page.getByText(viewName, { exact: true }).first()).toBeVisible({ timeout: 5000 });
+        // Close Admin View focus (click away)
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(500);
+    }
+
+
+
 
 
 }
