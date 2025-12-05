@@ -2803,7 +2803,7 @@ export class ListingActions {
        await expect(input).toBeVisible({ timeout: 3000 });
        await input.click({ force: true });
        await this.page.waitForTimeout(300);
-       
+
        let todayBtn = this.page.locator('.p-datepicker-buttonbar button', { hasText: /today/i });
        if (!(await todayBtn.isVisible().catch(() => false))) {
            todayBtn = this.page.locator('button', { hasText: /today/i });
@@ -2822,6 +2822,57 @@ export class ListingActions {
            }
        }
        expect(resultValid).toBe(true);
+   }
+
+   // Selecting a future date in List View
+   async selectFutureListingCreationDateInListView() {
+       await this.navigateToListings();
+       await this.switchToListView();
+       await this.waitForTableRows();
+
+       // Open date picker
+       const dateInput = this.locators.listingCreationDateDropdown();
+       await expect(dateInput).toBeVisible({ timeout: 3000 });
+       await dateInput.click({ force: true });
+
+       // Wait for calendar to show
+       const calendar = this.page.locator(".p-datepicker");
+       await expect(calendar).toBeVisible({ timeout: 5000 });
+
+       // Compute tomorrow's date
+       const t = new Date();
+       t.setDate(t.getDate() + 1);
+
+       const targetDay = t.getDate();
+       const targetMonth = t.getMonth();
+       const targetYear = t.getFullYear();
+
+       // Read calendar month and year displayed
+       const header = this.page.locator(".p-datepicker-title");
+       await expect(header).toBeVisible();
+       const headerText = await header.innerText();
+       const [monthName, year] = headerText.trim().split(" ");
+       const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+       // Move calendar if necessary to target month/year
+       const monthDifference = (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
+       for (let i = 0; i < Math.abs(monthDifference); i++) {
+           if (monthDifference > 0) {
+               await this.page.locator(".p-datepicker-next").click();
+           } else {
+               await this.page.locator(".p-datepicker-prev").click();
+           }
+           await this.page.waitForTimeout(200);
+       }
+
+       // Click the target (future) day
+       const dayLocator = this.page.locator(`.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`);
+       await dayLocator.first().waitFor({ state: "visible", timeout: 3000 });
+       await dayLocator.first().click({ force: true });
+
+       // Validate "No results found" message appears
+       const noResults = this.page.getByText('No results found');
+       await expect(noResults).toBeVisible({ timeout: 4000 });
    }
 
 }
