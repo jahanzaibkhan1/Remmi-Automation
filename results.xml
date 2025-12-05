@@ -1,6 +1,194 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.32374499999918">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-05T08:42:27.667Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.419" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 36: Deleting an existing view" classname="Pages\Listing\Listingview.spec.ts" time="39.419">
+<testsuites id="" name="" tests="36" failures="2" skipped="27" errors="0" time="191.36084099999815">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-05T12:13:51.245Z" hostname="chromium" tests="36" failures="2" skipped="27" time="177.382" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Searching for a valid Listing" classname="Pages\Listing\Listingview.spec.ts" time="53.048">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Searching for a non-existing Listing" classname="Pages\Listing\Listingview.spec.ts" time="2.643">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Searching for a listing using partial name" classname="Pages\Listing\Listingview.spec.ts" time="1.993">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Searching listing with special characters" classname="Pages\Listing\Listingview.spec.ts" time="2.145">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Searching with Listing only" classname="Pages\Listing\Listingview.spec.ts" time="2.745">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Searching listing with an empty field" classname="Pages\Listing\Listingview.spec.ts" time="1.765">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Selecting a single property type" classname="Pages\Listing\Listingview.spec.ts" time="5.449">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Selecting multiple property types in List View" classname="Pages\Listing\Listingview.spec.ts" time="4.069">
+<failure message="Listingview.spec.ts:65:3 Test 8: Selecting multiple property types in List View" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Listing\Listingview.spec.ts:65:3 › Listing side Menu Tests - Remmi E2E › Test 8: Selecting multiple property types in List View 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+       at Pages\Listing\ListingAction.ts:2027
+
+      2025 |         }
+      2026 |         expect(foundFirst).toBe(true);
+    > 2027 |         expect(foundSecond).toBe(true);
+           |                             ^
+      2028 |     }
+      2029 |     // Deselect all property types in the property type filter dropdown and verify rows remain
+      2030 |     async deselectPropertyTypes() {
+        at ListingActions.selectMultiplePropertyTypesInListView (E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\ListingAction.ts:2027:29)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\Listingview.spec.ts:67:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Listing-Listingview--dbd00-property-types-in-List-View-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Listing-Listingview--dbd00-property-types-in-List-View-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Listing-Listingview--dbd00-property-types-in-List-View-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Listing-Listingview--dbd00-property-types-in-List-View-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Deselecting all property types in List View" classname="Pages\Listing\Listingview.spec.ts" time="60.14">
+<failure message="Listingview.spec.ts:71:3 Test 9: Deselecting all property types in List View" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Listing\Listingview.spec.ts:71:3 › Listing side Menu Tests - Remmi E2E › Test 9: Deselecting all property types in List View 
+
+    Test timeout of 60000ms exceeded while setting up "sessionPage".
+
+    Error: page.goto: Target page, context or browser has been closed
+
+      11 |     try {
+      12 |       const page = await context.newPage();
+    > 13 |       await page.goto(DASHBOARD_URL);
+         |                  ^
+      14 |       await use(page);
+      15 |     } finally {
+      16 |
+        at Object.exports.test._test.test.extend.sessionPage.scope (E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\Listingview.spec.ts:13:18)
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Listing-Listingview--4bc08-property-types-in-List-View-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Listing-Listingview--4bc08-property-types-in-List-View-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Listing-Listingview--4bc08-property-types-in-List-View-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Listing-Listingview--4bc08-property-types-in-List-View-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Searching for a non-existing property type in List View" classname="Pages\Listing\Listingview.spec.ts" time="43.385">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Filtering with a valid suburb in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Filtering with multiple suburbs in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Deselecting all suburbs in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Searching for a non-existing suburb in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Filtering by a valid listing status in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Selecting multiple contract statuses in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Deselecting all listing statuses in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Filtering by a valid listing type in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Selecting multiple listing types in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Deselecting all listing types in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Filtering by a valid agent in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Selecting multiple agents in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Deselecting all agents in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Searching for an inactive agent in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Filtering by a valid contract status in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 26: Selecting multiple contract statuses in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Deselecting all contract statuses in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Selecting a valid listing creation date range in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 29: Selecting a future listing creation date in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 30: Clicking on Admin Default in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 31: Hiding and showing a Status in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 32: Dragging a status to change its position in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 33: Searching for a status inside Admin View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 34: Creating a new list view" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 35: Creating a view without a name (should show error)" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 36: Deleting an existing view" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
 </testsuites>
