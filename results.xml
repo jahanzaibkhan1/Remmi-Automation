@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.89338000000082">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-05T06:20:48.058Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.068" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 33: Searching for a status inside Admin View" classname="Pages\Listing\Listingview.spec.ts" time="33.068">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.50290299999993">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-05T08:16:13.945Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.371" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 34: Creating a new list view" classname="Pages\Listing\Listingview.spec.ts" time="34.371">
 </testcase>
 </testsuite>
 </testsuites>
