@@ -2630,4 +2630,26 @@ export class ListingActions {
         const rowCount = await tableRows.count();
         expect(rowCount).toBeGreaterThan(0);
     }
+
+    // Searching for an inactive agent in the agent filter
+    async searchForInactiveAgentInListView(agentName: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the agent dropdown
+        const agentDropdown = this.locators.selectByAgentDropdown();
+        await expect(agentDropdown).toBeVisible();
+        await agentDropdown.click({ force: true });
+
+        // Find the agent search input and type the agent name
+        const agentSearchInput = this.locators.selectByAgentSearchInput();
+        await expect(agentSearchInput).toBeVisible();
+        await agentSearchInput.fill(agentName);
+
+        // Wait for search results to filter
+        await this.page.waitForTimeout(700);
+
+        const noResult = this.page.getByText('No results found');
+        await expect(noResult).toBeVisible({timeout:5000})
+    }
 }

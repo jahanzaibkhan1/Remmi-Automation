@@ -158,6 +158,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 24: Searching for an inactive agent in List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchForInactiveAgentInListView('Test Inactive Agent');
+    await listingActions.resetFilters();
+  });
+
 });
 
 
