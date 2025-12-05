@@ -2885,9 +2885,48 @@ export class ListingActions {
         const adminView = this.locators.adminView();
         await expect(adminView).toBeVisible();
 
-        await this.page.mouse.click(0, 0); 
+        await this.page.mouse.click(0, 0);
 
         await this.page.waitForTimeout(500)
+    }
+
+    // Hiding and Showing a Status
+    async hideAndShowStatus() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Open Admin Default options
+        const adminDefaultBtn = this.locators.adminDefaultButton();
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+        await adminDefaultBtn.click({ force: true });
+
+        // Wait for Admin options to appear
+        const adminView = this.locators.adminView();
+        await expect(adminView).toBeVisible();
+
+        // Wait for "Show All" button to appear
+        const showAllBtn = this.locators.showAllButton();
+        await expect(showAllBtn).toBeVisible({ timeout: 3000 });
+
+        // Show the hidden status again
+        await showAllBtn.click({ force: true });
+
+        // Hide Status
+        const hideStatusBtn = this.locators.hideStatus();
+        await expect(hideStatusBtn).toBeVisible({ timeout: 3000 });
+        await hideStatusBtn.click({ force: true });
+
+        // Expect "Delete" text to be visible after hiding
+        const deleteText = this.page.getByRole('cell', { name: 'Delete', exact: true })
+        await expect(deleteText).toBeVisible({ timeout: 10000 });
+
+        // Show the hidden status again
+        await showAllBtn.click({ force: true });
+
+        // Dismiss modal or focus (return UI to default state)
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(500);
     }
 
 }

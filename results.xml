@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.23967799999937">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-05T05:16:56.796Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.79" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 30: Clicking on Admin Default in List View applies admin default settings" classname="Pages\Listing\Listingview.spec.ts" time="30.79">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.53990000000037">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-05T05:47:38.748Z" hostname="chromium" tests="1" failures="0" skipped="0" time="50.717" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 31: Hiding and showing a Status in List View" classname="Pages\Listing\Listingview.spec.ts" time="50.717">
 </testcase>
 </testsuite>
 </testsuites>

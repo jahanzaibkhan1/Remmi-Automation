@@ -124,4 +124,15 @@ export class ListingLocators {
         return this.page.getByText('View OptionsSaveSelect')
     }
 
+    hideStatus():Locator{
+        return this.page.locator('._flex_between > img').nth(0)
+    }
+
+    hideAllButton(): Locator {
+        return this.page.getByText('Hide All');
+    }
+    showAllButton(): Locator {
+        return this.page.getByText('Show All');
+    }
+
 }
