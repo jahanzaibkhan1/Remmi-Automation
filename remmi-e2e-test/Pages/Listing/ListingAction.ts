@@ -2944,7 +2944,7 @@ async dragStatusToNewPosition() {
     const adminView = this.locators.adminView();
     await expect(adminView).toBeVisible();
 
-    const draggableHandles = this.page.locator('.cdk-drag.column-item.custom-field-views');
+    const draggableHandles = this.locators.dragHandle();
 
     const handleCount = await draggableHandles.count();
     if (handleCount < 2) {
