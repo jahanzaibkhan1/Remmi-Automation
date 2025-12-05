@@ -224,6 +224,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 35: Creating a view without a name (should show error)', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.CreateViewWithoutName();
+    await listingActions.resetFilters();
+  });
+
 });
 
 
