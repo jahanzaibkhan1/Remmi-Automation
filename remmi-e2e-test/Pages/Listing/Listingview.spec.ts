@@ -230,6 +230,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 36: Deleting an existing view', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deleteView('Automation Testing');
+    await listingActions.resetFilters();
+  });
+
 });
 
 

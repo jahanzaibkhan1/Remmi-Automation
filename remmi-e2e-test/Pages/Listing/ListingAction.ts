@@ -3104,6 +3104,53 @@ async CreateViewWithoutName() {
     await this.page.waitForTimeout(500);
 }
 
+// Deleting an existing view
+async deleteView(viewName: string) {
+    await this.navigateToListings();
+    await this.switchToListView();
+    await this.waitForTableRows();
+
+    // Open Admin Default panel
+    const adminDefaultBtn = this.locators.adminDefaultButton();
+    await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+    await adminDefaultBtn.click({ force: true });
+
+    // Ensure Admin options are visible
+    const adminView = this.locators.adminView();
+    await expect(adminView).toBeVisible({ timeout: 3000 });
+
+    // Open the Admin View dropdown
+    const adminViewDropdown = this.page.locator('.view-w-100 > .ng-select-container > .ng-arrow-wrapper');
+    await expect(adminViewDropdown).toBeVisible({ timeout: 5000 });
+    await adminViewDropdown.click();
+
+    const viewOption = this.page.getByText(viewName, { exact: true }).first();
+    await expect(viewOption).toBeVisible({ timeout: 5000 });
+
+    // Locate the delete/trash button (replace selector if needed per UI)
+    const deleteButton = this.page.locator('img[src="assets/img/menuIcon/delete_icon.svg"]').last();
+    await expect(deleteButton).toBeVisible({ timeout: 5000 });
+    await deleteButton.click({ force: true });
+
+    // Confirm deletion in the modal/dialog
+    const confirmBtn = this.page.getByRole('button', { name: /confirm|yes|delete/i }).first();
+    await expect(confirmBtn).toBeVisible({ timeout: 5000 });
+    await confirmBtn.click({ force: true });
+
+    // success message for view deleted
+    const deletedSuccessMessage = this.page.getByText(/successfully deleted|deleted successfully|view deleted/i, { exact: false });
+    await expect(deletedSuccessMessage).toBeVisible({ timeout: 5000 });
+
+    // Optionally assert that the view no longer exists
+    await this.page.waitForTimeout(800);
+    await adminViewDropdown.click();
+    await expect(this.page.getByText(viewName, { exact: true })).not.toBeVisible();
+
+    // Close dropdown if needed
+    await this.page.mouse.click(0, 0);
+    await this.page.waitForTimeout(400);
+}
+
 
 
 }
