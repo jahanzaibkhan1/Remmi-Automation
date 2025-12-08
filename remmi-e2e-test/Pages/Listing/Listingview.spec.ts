@@ -259,6 +259,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.clickResetNoFilters();
   });
 
+  test('Test 41: Deleting a listing from List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deleteListingFromListView();
+    await listingActions.resetFilters();
+  });
+
 });
 
 
