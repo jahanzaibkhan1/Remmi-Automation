@@ -146,4 +146,23 @@ export class ListingLocators {
     viewNameInput(): Locator {
         return this.page.locator('input[placeholder="View name"]');
     }
+
+    // write locator for share 
+
+    shareIcon(): Locator {
+        return this.page.locator('.cursor-pointer > img').last();
+    }
+
+    selectUser():Locator{
+        return this.page.locator('div').filter({ hasText: 'Select Users' }).nth(4);
+    }
+
+    selectTeams(): Locator{
+        return this.page.locator('div').filter({ hasText: 'Select Teams' }).nth(4)
+    }
+
+    shareButton():Locator{
+        return this.page.getByRole('button', { name: /share/i }).first()
+    }
+
 }
