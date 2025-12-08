@@ -165,4 +165,9 @@ export class ListingLocators {
         return this.page.getByRole('button', { name: /share/i }).first()
     }
 
+    filterIcon(): Locator {
+        // Returns the filter icon for the "Listing Status" column
+        return this.page.locator('div.d-flex.align-items-center', { hasText: "Listing Status" })
+                        .locator('img[alt="filter"]');
+    }
 }
