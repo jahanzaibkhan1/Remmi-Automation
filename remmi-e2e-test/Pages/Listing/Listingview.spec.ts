@@ -283,6 +283,14 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 45: Clearing an applied filter on Listing', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.clearAppliedFilters('For Sale');
+    await listingActions.resetFilters();
+  });
+
+
+
 });
 
 

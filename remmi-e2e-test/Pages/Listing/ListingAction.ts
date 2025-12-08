@@ -3386,5 +3386,45 @@ export class ListingActions {
       await this.waitForTableRows(2, 5000);
   }
 
+  // Clearing applied filter
+  async clearAppliedFilters(name : string){
+    await this.navigateToListings();
+      await this.switchToListView();
+
+      // Optional: ensure table is loaded first
+      await this.waitForTableRows();
+
+      const filterIcon = this.locators.filterIcon();
+      await expect(filterIcon).toBeVisible({timeout:10000});
+      await filterIcon.dblclick({ force: true });
+
+      const selectField = this.page.getByText('Select', { exact: true }).first();
+      await selectField.click();
+
+      // Choose "Equals"
+      const equalsOption = this.page.getByRole('option', { name: /equals/i });
+      await expect(equalsOption).toBeVisible({ timeout: 5000 });
+      await equalsOption.click();
+
+      const selectField1 = this.page.getByText('Select', { exact: true }).last();
+      await selectField1.click();
+      // Fill in the keyword/type value to filter
+      const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+      await searchBox.click();
+      await searchBox.fill(name);
+
+      // Select the desired option that matches the 'name' (e.g., 'Agency' or 'Individual')
+      const optionItem = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: name });
+      await optionItem.click();
+      const tag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+      await tag.click()
+      // Click "Apply" to activate the filter
+      const clearBtn = this.page.getByRole('button', { name: /clear/i });
+      await clearBtn.click();
+      await this.page.waitForTimeout(1500);
+
+      // Wait for filter to take effect — at least header + 1 data row
+      await this.waitForTableRows(2, 5000);
+  }
 
 }
