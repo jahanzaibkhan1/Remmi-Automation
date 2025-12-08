@@ -3427,4 +3427,34 @@ export class ListingActions {
       await this.waitForTableRows(2, 5000);
   }
 
+  // Selecting a condition but not selecting data
+  async selectConditionWithoutData() {
+    await this.navigateToListings();
+    await this.switchToListView();
+
+    // Ensure table is loaded before interacting
+    await this.waitForTableRows();
+
+    const filterIcon = this.locators.filterIcon();
+    await expect(filterIcon).toBeVisible({ timeout: 10000 });
+    await filterIcon.dblclick({ force: true });
+
+    const selectField = this.page.getByText('Select', { exact: true }).first();
+    await selectField.click();
+
+    // Choose "Equals" as the condition
+    const equalsOption = this.page.getByRole('option', { name: /equals/i });
+    await expect(equalsOption).toBeVisible({ timeout: 5000 });
+    await equalsOption.click();
+
+    // Intentionally do NOT select a value or type data
+
+    // Try to apply filter without selecting data
+    const applyBtn = this.page.getByRole('button', { name: /apply/i });
+    await applyBtn.click();
+
+    // Optionally: wait for error message, validation, or confirmation UI
+    await this.page.waitForSelector('text=Please select a value', { timeout: 2000 });
+  }
+
 }
