@@ -1,192 +1,322 @@
-<testsuites id="" name="" tests="36" failures="2" skipped="27" errors="0" time="191.36084099999815">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-05T12:13:51.245Z" hostname="chromium" tests="36" failures="2" skipped="27" time="177.382" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Searching for a valid Listing" classname="Pages\Listing\Listingview.spec.ts" time="53.048">
+<testsuites id="" name="" tests="42" failures="4" skipped="29" errors="0" time="610.4064649999998">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2025-12-08T05:54:54.706Z" hostname="chromium" tests="42" failures="4" skipped="29" time="593.174" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 0: Delete all existing teams" classname="Pages\MyProfile\teams.test.spec.ts" time="29.562">
+<system-out>
+<![CDATA[✅ Session updated and saved to E:\remmi-qa-automation\remmi-e2e-test\sessions\manager-session.json
+🟢 All teams have been deleted.
+]]>
+</system-out>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Searching for a non-existing Listing" classname="Pages\Listing\Listingview.spec.ts" time="2.643">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 1: Verify search works for existing team names" classname="Pages\MyProfile\teams.test.spec.ts" time="23.431">
+<system-out>
+<![CDATA[✅ Session updated and saved to E:\remmi-qa-automation\remmi-e2e-test\sessions\manager-session.json
+]]>
+</system-out>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Searching for a listing using partial name" classname="Pages\Listing\Listingview.spec.ts" time="1.993">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 2: Verify no results message appears for invalid team name." classname="Pages\MyProfile\teams.test.spec.ts" time="39.373">
+<system-out>
+<![CDATA[✅ Session updated and saved to E:\remmi-qa-automation\remmi-e2e-test\sessions\manager-session.json
+]]>
+</system-out>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Searching listing with special characters" classname="Pages\Listing\Listingview.spec.ts" time="2.145">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 3: Verify Add button remains disabled when no team is selected." classname="Pages\MyProfile\teams.test.spec.ts" time="21.879">
+<system-out>
+<![CDATA[✅ Session updated and saved to E:\remmi-qa-automation\remmi-e2e-test\sessions\manager-session.json
+]]>
+</system-out>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Searching with Listing only" classname="Pages\Listing\Listingview.spec.ts" time="2.745">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 4: Verify clicking disabled Add button performs no action." classname="Pages\MyProfile\teams.test.spec.ts" time="47.577">
+<system-out>
+<![CDATA[✅ Session updated and saved to E:\remmi-qa-automation\remmi-e2e-test\sessions\manager-session.json
+]]>
+</system-out>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Searching listing with an empty field" classname="Pages\Listing\Listingview.spec.ts" time="1.765">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Selecting a single property type" classname="Pages\Listing\Listingview.spec.ts" time="5.449">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Selecting multiple property types in List View" classname="Pages\Listing\Listingview.spec.ts" time="4.069">
-<failure message="Listingview.spec.ts:65:3 Test 8: Selecting multiple property types in List View" type="FAILURE">
-<![CDATA[  [chromium] › Pages\Listing\Listingview.spec.ts:65:3 › Listing side Menu Tests - Remmi E2E › Test 8: Selecting multiple property types in List View 
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 5: Verify selecting a team enables Add button." classname="Pages\MyProfile\teams.test.spec.ts" time="60.129">
+<failure message="teams.test.spec.ts:87:7 Test case 5: Verify selecting a team enables Add button." type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\teams.test.spec.ts:87:7 › Teams Tab Tests - Remmi E2E › Test case 5: Verify selecting a team enables Add button. 
 
-    Error: expect(received).toBe(expected) // Object.is equality
+    Test timeout of 60000ms exceeded.
 
-    Expected: true
-    Received: false
+    Error: page.goto: Test timeout of 60000ms exceeded.
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
 
-       at Pages\Listing\ListingAction.ts:2027
 
-      2025 |         }
-      2026 |         expect(foundFirst).toBe(true);
-    > 2027 |         expect(foundSecond).toBe(true);
-           |                             ^
-      2028 |     }
-      2029 |     // Deselect all property types in the property type filter dropdown and verify rows remain
-      2030 |     async deselectPropertyTypes() {
-        at ListingActions.selectMultiplePropertyTypesInListView (E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\ListingAction.ts:2027:29)
-        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\Listingview.spec.ts:67:5
+       at Pages\Login\LoginAction.ts:23
+
+      21 |
+      22 |   async gotoLogin() {
+    > 23 |     await this.page.goto('/login');
+         |                     ^
+      24 |     await this.page.waitForLoadState('networkidle');
+      25 |   }
+      26 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:23:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:92:16)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:193:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\teams.test.spec.ts:91:17
 
     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ..\test-results\Pages-Listing-Listingview--dbd00-property-types-in-List-View-chromium\test-failed-1.png
+    ..\test-results\Pages-MyProfile-teams.test-7a76c--a-team-enables-Add-button--chromium\test-failed-1.png
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Error Context: ..\test-results\Pages-Listing-Listingview--dbd00-property-types-in-List-View-chromium\error-context.md
+    Error Context: ..\test-results\Pages-MyProfile-teams.test-7a76c--a-team-enables-Add-button--chromium\error-context.md
 ]]>
 </failure>
 <system-out>
 <![CDATA[
-[[ATTACHMENT|test-results\Pages-Listing-Listingview--dbd00-property-types-in-List-View-chromium\test-failed-1.png]]
+[[ATTACHMENT|test-results\Pages-MyProfile-teams.test-7a76c--a-team-enables-Add-button--chromium\test-failed-1.png]]
 
-[[ATTACHMENT|test-results\Pages-Listing-Listingview--dbd00-property-types-in-List-View-chromium\error-context.md]]
+[[ATTACHMENT|test-results\Pages-MyProfile-teams.test-7a76c--a-team-enables-Add-button--chromium\error-context.md]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Deselecting all property types in List View" classname="Pages\Listing\Listingview.spec.ts" time="60.14">
-<failure message="Listingview.spec.ts:71:3 Test 9: Deselecting all property types in List View" type="FAILURE">
-<![CDATA[  [chromium] › Pages\Listing\Listingview.spec.ts:71:3 › Listing side Menu Tests - Remmi E2E › Test 9: Deselecting all property types in List View 
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 6: Verify Add button doesn’t enable due to dropdown lag." classname="Pages\MyProfile\teams.test.spec.ts" time="60.173">
+<failure message="teams.test.spec.ts:100:7 Test case 6: Verify Add button doesn’t enable due to dropdown lag." type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\teams.test.spec.ts:100:7 › Teams Tab Tests - Remmi E2E › Test case 6: Verify Add button doesn’t enable due to dropdown lag. 
 
-    Test timeout of 60000ms exceeded while setting up "sessionPage".
+    Test timeout of 60000ms exceeded.
 
-    Error: page.goto: Target page, context or browser has been closed
+    Error: page.goto: Test timeout of 60000ms exceeded.
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
 
-      11 |     try {
-      12 |       const page = await context.newPage();
-    > 13 |       await page.goto(DASHBOARD_URL);
-         |                  ^
-      14 |       await use(page);
-      15 |     } finally {
-      16 |
-        at Object.exports.test._test.test.extend.sessionPage.scope (E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\Listingview.spec.ts:13:18)
+
+       at Pages\Login\LoginAction.ts:23
+
+      21 |
+      22 |   async gotoLogin() {
+    > 23 |     await this.page.goto('/login');
+         |                     ^
+      24 |     await this.page.waitForLoadState('networkidle');
+      25 |   }
+      26 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:23:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:92:16)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:193:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\teams.test.spec.ts:104:17
 
     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ..\test-results\Pages-Listing-Listingview--4bc08-property-types-in-List-View-chromium\test-failed-1.png
+    ..\test-results\Pages-MyProfile-teams.test-e7ed0-enable-due-to-dropdown-lag--chromium\test-failed-1.png
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Error Context: ..\test-results\Pages-Listing-Listingview--4bc08-property-types-in-List-View-chromium\error-context.md
+    Error Context: ..\test-results\Pages-MyProfile-teams.test-e7ed0-enable-due-to-dropdown-lag--chromium\error-context.md
 ]]>
 </failure>
 <system-out>
 <![CDATA[
-[[ATTACHMENT|test-results\Pages-Listing-Listingview--4bc08-property-types-in-List-View-chromium\test-failed-1.png]]
+[[ATTACHMENT|test-results\Pages-MyProfile-teams.test-e7ed0-enable-due-to-dropdown-lag--chromium\test-failed-1.png]]
 
-[[ATTACHMENT|test-results\Pages-Listing-Listingview--4bc08-property-types-in-List-View-chromium\error-context.md]]
+[[ATTACHMENT|test-results\Pages-MyProfile-teams.test-e7ed0-enable-due-to-dropdown-lag--chromium\error-context.md]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Searching for a non-existing property type in List View" classname="Pages\Listing\Listingview.spec.ts" time="43.385">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 7: Verify selected teams appear as tags below the dropdown." classname="Pages\MyProfile\teams.test.spec.ts" time="33.168">
+<system-out>
+<![CDATA[✅ Session updated and saved to E:\remmi-qa-automation\remmi-e2e-test\sessions\manager-session.json
+🟢 Tag for team "Team 1" is visible below dropdown.
+]]>
+</system-out>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 8: Verify removing a tag updates the list" classname="Pages\MyProfile\teams.test.spec.ts" time="15.774">
+<system-out>
+<![CDATA[✅ Session updated and saved to E:\remmi-qa-automation\remmi-e2e-test\sessions\manager-session.json
+🟢 Tag for team "Team 2" is visible below dropdown.
+]]>
+</system-out>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 9: Verify user can select multiple teams from dropdown." classname="Pages\MyProfile\teams.test.spec.ts" time="20.364">
+<system-out>
+<![CDATA[✅ Session updated and saved to E:\remmi-qa-automation\remmi-e2e-test\sessions\manager-session.json
+]]>
+</system-out>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 10: Verify clicking Add adds selected teams to list." classname="Pages\MyProfile\teams.test.spec.ts" time="55.567">
+<system-out>
+<![CDATA[✅ Session updated and saved to E:\remmi-qa-automation\remmi-e2e-test\sessions\manager-session.json
+]]>
+</system-out>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 11: Verify “Create New” opens Add Team popup." classname="Pages\MyProfile\teams.test.spec.ts" time="60.147">
+<failure message="teams.test.spec.ts:165:7 Test case 11: Verify “Create New” opens Add Team popup." type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\teams.test.spec.ts:165:7 › Teams Tab Tests - Remmi E2E › Test case 11: Verify “Create New” opens Add Team popup. 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.goto: Test timeout of 60000ms exceeded.
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:23
+
+      21 |
+      22 |   async gotoLogin() {
+    > 23 |     await this.page.goto('/login');
+         |                     ^
+      24 |     await this.page.waitForLoadState('networkidle');
+      25 |   }
+      26 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:23:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:92:16)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:193:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\teams.test.spec.ts:169:17
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-MyProfile-teams.test-d9814--New”-opens-Add-Team-popup--chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-MyProfile-teams.test-d9814--New”-opens-Add-Team-popup--chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-MyProfile-teams.test-d9814--New”-opens-Add-Team-popup--chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-MyProfile-teams.test-d9814--New”-opens-Add-Team-popup--chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 12: Verify popup close (X) closes Add Team popup." classname="Pages\MyProfile\teams.test.spec.ts" time="70.072">
+<failure message="teams.test.spec.ts:178:7 Test case 12: Verify popup close (X) closes Add Team popup." type="FAILURE">
+<![CDATA[  [chromium] › Pages\MyProfile\teams.test.spec.ts:178:7 › Teams Tab Tests - Remmi E2E › Test case 12: Verify popup close (X) closes Add Team popup. 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.goto: Test timeout of 60000ms exceeded.
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/login", waiting until "load"
+
+
+       at Pages\Login\LoginAction.ts:23
+
+      21 |
+      22 |   async gotoLogin() {
+    > 23 |     await this.page.goto('/login');
+         |                     ^
+      24 |     await this.page.waitForLoadState('networkidle');
+      25 |   }
+      26 |
+        at LoginActions.gotoLogin (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:23:21)
+        at LoginActions.loginFlow (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:92:16)
+        at LoginActions.login (E:\remmi-qa-automation\remmi-e2e-test\Pages\Login\LoginAction.ts:193:16)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\teams.test.spec.ts:182:17
+]]>
+</failure>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 13: Verify JPG and PNG formats are accepted, and invalid image format is rejected for team upload." classname="Pages\MyProfile\teams.test.spec.ts" time="55.958">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Filtering with a valid suburb in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 14: Verify unsupported file formats show validation error." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Filtering with multiple suburbs in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 15: Verify required field validation for Team Name, Office, and Members." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Deselecting all suburbs in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 16: Verify team cannot be created with missing required field." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Searching for a non-existing suburb in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 17: Verify selecting office filters available members." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Filtering by a valid listing status in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 18: Verify no members shown when office not selected" classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Selecting multiple contract statuses in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 19: Verify selecting members activates Team Leader dropdown." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Deselecting all listing statuses in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 20: Verify team creation fails if no Team Leader is selected." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Filtering by a valid listing type in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 21: Verify successful team creation with all valid details." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Selecting multiple listing types in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 22: Verify Cancel button closes popup without saving." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Deselecting all listing types in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 23: Verify unsaved data does not persist after closing popup" classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Filtering by a valid agent in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 24: Verify newly created team appears in dropdown and team list." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Selecting multiple agents in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 25: Verify failed team creation doesn’t reflect in list." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Deselecting all agents in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 26: Verify failed team creation doesn’t reflect in list." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Searching for an inactive agent in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 27: Verify sort button on empty list doesn’t crash UI." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Filtering by a valid contract status in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 28: Verify Edit icon opens existing team for update" classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 26: Selecting multiple contract statuses in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 29: Verify Delete icon opens confirmation popup." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Deselecting all contract statuses in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 30: Verify clicking Cancel on Delete popup keeps team." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Selecting a valid listing creation date range in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 31: Verify confirming Delete removes team permanently." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 29: Selecting a future listing creation date in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 32: Verify team created in My Profile also appears in Team module" classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 30: Clicking on Admin Default in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 33: Verify alignment of Add button with Team dropdown." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 31: Hiding and showing a Status in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 34: Verify dropdown supports search for large team lists." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 32: Dragging a status to change its position in List View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 35: Verify dropdown search with invalid keyword." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 33: Searching for a status inside Admin View" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 36: Verify toast notification appears after team creation." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 34: Creating a new list view" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 37: Verify no duplicate toast shown for single event." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 35: Creating a view without a name (should show error)" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 38: Verify validation message color (red for errors)." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 36: Deleting an existing view" classname="Pages\Listing\Listingview.spec.ts" time="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 39: Verify confirmation message color (green for success)" classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 40: Verify data remains after page refresh." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 41: Verify unsaved popup data lost on refresh." classname="Pages\MyProfile\teams.test.spec.ts" time="0">
 <skipped>
 </skipped>
 </testcase>

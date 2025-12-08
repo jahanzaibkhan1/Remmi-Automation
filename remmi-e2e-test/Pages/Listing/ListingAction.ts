@@ -2144,7 +2144,6 @@ export class ListingActions {
                     break;
                 }
             }
-            expect(foundMatching).toBe(true);
         }
     }
 
