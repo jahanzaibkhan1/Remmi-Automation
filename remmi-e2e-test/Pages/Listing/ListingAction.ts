@@ -3296,4 +3296,34 @@ export class ListingActions {
     }
 
 
+  async fastSearch(keyword: string) {
+      await this.navigateToListings();
+      await this.switchToListView();
+      await this.waitForTableRows();
+
+      const TIMEOUT = 2000;
+
+      const searchBox = this.locators.SearchBox();
+      await searchBox.click();
+      await searchBox.fill(keyword);
+
+      // Wait for header and at least 1 data row (total 2 rows) to appear, or timeout
+      const rowsLocator = this.page.locator('tr');
+      await rowsLocator.nth(0).waitFor({ timeout: TIMEOUT });
+      
+      // Wait for one additional data row after header
+      await this.page.waitForFunction(
+        () => document.querySelectorAll('tr').length >= 2,
+        null,
+        { timeout: TIMEOUT }
+      );
+
+      // Final check: there must be at least 2 rows (header + 1 data row)
+      const dataRows = await rowsLocator.count();
+      if (dataRows < 2) {
+          throw new Error('Search results did not load within 2 seconds.');
+      }
+  }
+
+
 }
