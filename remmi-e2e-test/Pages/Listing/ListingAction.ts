@@ -3269,6 +3269,31 @@ export class ListingActions {
         await this.resetFilters()
     }
 
+    // Deleting a Listing from List View
+    async deleteListingFromListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Search for the listing by name
+        const delete_icon = this.page.locator('img[alt="delete"]').first();
+
+        await expect(delete_icon).toBeVisible({timeout:10000});
+
+        await delete_icon.click();
+
+        // Wait for confirmation dialog to appear
+        const confirmationDialog = this.page.getByText('Are you sure you want to delete this listing ? Your listing will be permanently');
+        await expect(confirmationDialog).toBeVisible({ timeout: 10000 });
+
+        // Find and click the confirm Delete button
+        const confirmButton = this.page.getByRole('button', { name: 'Delete', exact: true });
+        await expect(confirmButton).toBeVisible({ timeout: 10000 });
+        // await confirmButton.click({ force: true });
+
+        const cancell = this.page.getByRole('button', { name: 'Cancel' });
+        await cancell.click({ force: true });
+    }
 
 
 }
