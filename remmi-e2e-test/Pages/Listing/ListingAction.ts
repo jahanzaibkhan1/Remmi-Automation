@@ -3249,7 +3249,16 @@ export class ListingActions {
         await this.page.mouse.click(0, 0);
         await this.page.waitForTimeout(400);
     }
-
+    // Apply a filter and verify reset removes all filters
+    async applyListingFilter() {
+        await this.navigateToListings();
+        // Search for a specific listing
+        await this.searchForExistingListingview('Hina');
+        // Apply the "House" property type filter
+        await this.selectPropertyType();
+        // Click reset filters to remove all filters
+        await this.resetFilters();
+    }
 
 
 

@@ -249,6 +249,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 39: Apply a filter and verify reset removes all filters', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.applyListingFilter();
+  });
+
 });
 
 
