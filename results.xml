@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.79281199999899">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-08T10:26:52.760Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.962" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 41: Deleting a listing from List View" classname="Pages\Listing\Listingview.spec.ts" time="30.962">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.90190900000185">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-08T10:49:31.025Z" hostname="chromium" tests="1" failures="0" skipped="0" time="49.614" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 42: Searching should not take more than 2 seconds" classname="Pages\Listing\Listingview.spec.ts" time="49.614">
 </testcase>
 </testsuite>
 </testsuites>

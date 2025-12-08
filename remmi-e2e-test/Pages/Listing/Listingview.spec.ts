@@ -265,6 +265,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 42: Searching should not take more than 2 seconds', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.fastSearch('Hina');
+    await listingActions.resetFilters();
+  });
+
 });
 
 
