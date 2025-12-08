@@ -2034,7 +2034,7 @@ export class ListingActions {
 
         // Find and click the select all checkbox to deselect all
         const selectAll = this.locators.propertyTypeSelectAll();
-        await expect(selectAll).toBeVisible({timeout:3000});
+        await expect(selectAll).toBeVisible({ timeout: 3000 });
         await selectAll.click({ force: true });
 
         await this.page.waitForTimeout(400)
@@ -2067,18 +2067,18 @@ export class ListingActions {
 
         // Open the suburb dropdown
         const suburbDropdown = this.locators.suburbDropdown();
-        await expect(suburbDropdown).toBeVisible({timeout:30000});
+        await expect(suburbDropdown).toBeVisible({ timeout: 30000 });
         await suburbDropdown.click({ force: true });
 
         // Type into the suburb search input
         const searchInput = this.locators.suburbSearchInput();
-        await expect(searchInput).toBeVisible({timeout:30000});
+        await expect(searchInput).toBeVisible({ timeout: 30000 });
         await searchInput.fill(suburbLabel);
         await this.page.waitForTimeout(800);
 
         // Select the matching suburb
         const suburbOption = this.locators.suburbOption(suburbLabel).first();
-        await expect(suburbOption).toBeVisible({timeout:10000});
+        await expect(suburbOption).toBeVisible({ timeout: 10000 });
         await suburbOption.click({ force: true });
 
         await this.page.waitForTimeout(1000);
@@ -2108,7 +2108,7 @@ export class ListingActions {
 
         // Open the suburb dropdown
         const suburbDropdown = this.locators.suburbDropdown();
-        await expect(suburbDropdown).toBeVisible({timeout:10000});
+        await expect(suburbDropdown).toBeVisible({ timeout: 10000 });
         await suburbDropdown.click({ force: true });
 
         // For each suburb label, search and select
@@ -2154,12 +2154,12 @@ export class ListingActions {
 
         // Open the suburb dropdown
         const suburbDropdown = this.locators.suburbDropdown();
-        await expect(suburbDropdown).toBeVisible({timeout:10000});
+        await expect(suburbDropdown).toBeVisible({ timeout: 10000 });
         await suburbDropdown.click({ force: true });
 
         // Click the "Select All" checkbox once to select all, then again to deselect all
         const selectAllCheckbox = this.locators.suburbSelectAll().first();
-        await expect(selectAllCheckbox).toBeVisible({timeout:10000});
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 10000 });
         await selectAllCheckbox.click({ force: true });
         await this.page.waitForTimeout(300);
 
@@ -2179,12 +2179,12 @@ export class ListingActions {
 
         // Open the suburb dropdown
         const suburbDropdown = this.locators.suburbDropdown();
-        await expect(suburbDropdown).toBeVisible({timeout:10000});
+        await expect(suburbDropdown).toBeVisible({ timeout: 10000 });
         await suburbDropdown.click({ force: true });
 
         // Search for the non-existing suburb label
         const searchInput = this.locators.suburbSearchInput();
-        await expect(searchInput).toBeVisible({timeout:10000});
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
         await searchInput.fill(suburbLabel);
         await this.page.waitForTimeout(400);
 
@@ -2209,12 +2209,12 @@ export class ListingActions {
 
         // Open the listing status dropdown
         const listingStatusDropdown = this.locators.listingStatusDropdown();
-        await expect(listingStatusDropdown).toBeVisible({timeout:10000});
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
         await listingStatusDropdown.click({ force: true });
 
         // Wait for listing status options to be visible
         const statusOptions = this.page.locator('ul > li.p-element');
-        await expect(statusOptions.first()).toBeVisible({timeout:10000});
+        await expect(statusOptions.first()).toBeVisible({ timeout: 10000 });
 
         // Find the correct status option and click it
         const count = await statusOptions.count();
@@ -2260,12 +2260,12 @@ export class ListingActions {
 
         // Open the listing status dropdown
         const listingStatusDropdown = this.locators.listingStatusDropdown();
-        await expect(listingStatusDropdown).toBeVisible({timeout:10000});
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
         await listingStatusDropdown.click({ force: true });
 
         // Wait for listing status options to be visible
         const statusOptions = this.page.locator('ul > li.p-element');
-        await expect(statusOptions.first()).toBeVisible({timeout:10000});
+        await expect(statusOptions.first()).toBeVisible({ timeout: 10000 });
 
         // Select each status label
         const lowerLabels = statusLabels.map(label => label.toLowerCase());
@@ -2317,12 +2317,12 @@ export class ListingActions {
 
         // Open the listing status dropdown
         const listingStatusDropdown = this.locators.listingStatusDropdown();
-        await expect(listingStatusDropdown).toBeVisible({timeout:10000});
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
         await listingStatusDropdown.click({ force: true });
 
         // Click the "Select All" checkbox to select everything
         const selectAllCheckbox = this.locators.listingStatusSelectAll().first();
-        await expect(selectAllCheckbox).toBeVisible({timeout:10000});
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 10000 });
         await selectAllCheckbox.click({ force: true });
         await this.page.waitForTimeout(400);
 
@@ -2348,12 +2348,12 @@ export class ListingActions {
 
         // Open dropdown and select the desired type
         const listingTypeDropdown = this.locators.listingTypeDropdown();
-        await expect(listingTypeDropdown).toBeVisible({timeout:10000});
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 10000 });
         await listingTypeDropdown.click({ force: true });
         await this.page.waitForTimeout(500);
 
         const typeOption = this.locators.listingTypeOption(listingType).first();
-        await expect(typeOption).toBeVisible({timeout:10000});
+        await expect(typeOption).toBeVisible({ timeout: 10000 });
         const selectedTypeLabel = (await typeOption.textContent())?.trim().toLowerCase() || '';
 
         await typeOption.click({ force: true });
@@ -2381,7 +2381,7 @@ export class ListingActions {
         // Now verify every row cell in this column matches the selected option
         for (let i = 0; i < rowCount; i++) {
             const row = tableRows.nth(i);
-            await expect(row).toBeVisible({timeout:10000});
+            await expect(row).toBeVisible({ timeout: 10000 });
             const cells = row.locator('td');
             const cellCount = await cells.count();
             expect(typeColIndex).toBeLessThan(cellCount);
@@ -2401,7 +2401,7 @@ export class ListingActions {
 
         // Open the listing type dropdown
         const listingTypeDropdown = this.locators.listingTypeDropdown();
-        await expect(listingTypeDropdown).toBeVisible({timeout:10000});
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 10000 });
         await listingTypeDropdown.click({ force: true });
         await this.page.waitForTimeout(1000);
 
@@ -2482,7 +2482,7 @@ export class ListingActions {
 
         // Find and click the "Select All" checkbox twice (selects all then deselects all)
         const selectAllCheckbox = this.locators.listingTypeSelectAll().first();
-        await expect(selectAllCheckbox).toBeVisible({timeout:10000});
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 10000 });
         await selectAllCheckbox.click({ force: true });
         await this.page.waitForTimeout(300);
         await selectAllCheckbox.click({ force: true });
@@ -2507,20 +2507,20 @@ export class ListingActions {
 
         // Open agent dropdown and search for the agent
         const agentDropdown = this.locators.selectByAgentDropdown?.() ?? this.page.locator('[aria-label*="Agent"]');
-        await expect(agentDropdown).toBeVisible({timeout:10000});
+        await expect(agentDropdown).toBeVisible({ timeout: 10000 });
         await agentDropdown.click({ force: true });
         await this.page.waitForTimeout(500);
 
         const searchInput = this.locators.selectByAgentSearchInput?.()
             ?? this.page.locator('input[placeholder="Search"][aria-label*="Agent"]');
-        await expect(searchInput).toBeVisible({timeout:10000});
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
         await searchInput.fill(agentName);
         await this.page.waitForTimeout(500);
 
         const option = this.locators.selectByAgentOption?.(agentName)?.first()
             ?? this.page.locator('ul > li.p-element').filter({ hasText: agentName }).first();
 
-        await expect(option).toBeVisible({timeout:10000});
+        await expect(option).toBeVisible({ timeout: 10000 });
         const agentLabel = (await option.textContent())?.trim().toLowerCase() || "";
         await option.click({ force: true });
         await this.page.waitForTimeout(1000);
@@ -2548,7 +2548,7 @@ export class ListingActions {
         let found = false;
         for (let i = 0; i < rowCount; i++) {
             const row = tableRows.nth(i);
-            await expect(row).toBeVisible({timeout:10000});
+            await expect(row).toBeVisible({ timeout: 10000 });
             const cells = row.locator('td');
             const cellCount = await cells.count();
 
@@ -2614,7 +2614,7 @@ export class ListingActions {
 
         // Open the agent dropdown
         const agentDropdown = this.locators.selectByAgentDropdown();
-        await expect(agentDropdown).toBeVisible({timeout:10000});
+        await expect(agentDropdown).toBeVisible({ timeout: 10000 });
         await agentDropdown.click({ force: true });
 
         // Click the "Select All" checkbox once to select all, then again to deselect all
@@ -2638,7 +2638,7 @@ export class ListingActions {
 
         // Open the agent dropdown
         const agentDropdown = this.locators.selectByAgentDropdown();
-        await expect(agentDropdown).toBeVisible({timeout:10000});
+        await expect(agentDropdown).toBeVisible({ timeout: 10000 });
         await agentDropdown.click({ force: true });
 
         // Find the agent search input and type the agent name
@@ -2660,12 +2660,12 @@ export class ListingActions {
         await this.waitForTableRows();
         // Open the contract status dropdown
         const contractStatusDropdown = this.locators.contractStatusDropdown();
-        await expect(contractStatusDropdown).toBeVisible({timeout:10000});
+        await expect(contractStatusDropdown).toBeVisible({ timeout: 10000 });
         await contractStatusDropdown.click({ force: true });
 
         // Wait for contract status options to be visible
         const statusOptions = this.page.locator('ul > li.p-element');
-        await expect(statusOptions.first()).toBeVisible({timeout:10000});
+        await expect(statusOptions.first()).toBeVisible({ timeout: 10000 });
 
         // Find and select the desired status option
         const count = await statusOptions.count();
@@ -2694,7 +2694,7 @@ export class ListingActions {
         } else {
             // Try to find "No results found" visible text in table
             const noResults = this.page.getByText('No results found');
-            if (await noResults.isVisible({timeout:10000})) {
+            if (await noResults.isVisible({ timeout: 10000 })) {
                 hasVisibleResults = true;
             }
         }
@@ -2707,12 +2707,12 @@ export class ListingActions {
         await this.waitForTableRows();
         // Open the contract status dropdown
         const contractStatusDropdown = this.locators.contractStatusDropdown();
-        await expect(contractStatusDropdown).toBeVisible({timeout:10000});
+        await expect(contractStatusDropdown).toBeVisible({ timeout: 10000 });
         await contractStatusDropdown.click({ force: true });
 
         // Wait for contract status options to be visible
         const statusOptions = this.page.locator('ul > li.p-element');
-        await expect(statusOptions.first()).toBeVisible({timeout:10000});
+        await expect(statusOptions.first()).toBeVisible({ timeout: 10000 });
 
         // Select the 1st and 2nd contract statuses with non-empty text (skip any "Select All" if present)
         const selectedIndexes: number[] = [];
@@ -2744,7 +2744,7 @@ export class ListingActions {
             filterWorked = true;
         } else {
             const noResults = this.page.getByText('No results found');
-            if (await noResults.isVisible({timeout:10000})) {
+            if (await noResults.isVisible({ timeout: 10000 })) {
                 filterWorked = true;
             }
         }
@@ -2759,12 +2759,12 @@ export class ListingActions {
 
         // Open the contract status dropdown using locator from locators file
         const contractStatusDropdown = this.locators.contractStatusDropdown();
-        await expect(contractStatusDropdown).toBeVisible({timeout:10000});
+        await expect(contractStatusDropdown).toBeVisible({ timeout: 10000 });
         await contractStatusDropdown.click({ force: true });
 
         // Wait for "Select All" checkbox (deselect all) using locator from locators file
         const contractStatusSelectAll = this.locators.contractStatusSelectAll();
-        await expect(contractStatusSelectAll.first()).toBeVisible({timeout:10000});
+        await expect(contractStatusSelectAll.first()).toBeVisible({ timeout: 10000 });
         // Click to deselect all 
         await contractStatusSelectAll.click({ force: true });
         await this.page.waitForTimeout(500);
@@ -2782,7 +2782,7 @@ export class ListingActions {
             resultValid = true;
         } else {
             const noResults = this.page.getByText('No results found');
-            if (await noResults.isVisible({timeout:10000})) {
+            if (await noResults.isVisible({ timeout: 10000 })) {
                 resultValid = true;
             }
         }
@@ -2797,7 +2797,7 @@ export class ListingActions {
 
         // Open datepicker
         const input = this.locators.listingCreationDateDropdown();
-        await expect(input).toBeVisible({timeout:10000});
+        await expect(input).toBeVisible({ timeout: 10000 });
         await input.click({ force: true });
         await this.page.waitForTimeout(300);
 
@@ -2814,7 +2814,7 @@ export class ListingActions {
             resultValid = true;
         } else {
             const noResults = this.page.getByText('No results found');
-            if (await noResults.isVisible({timeout:10000})) {
+            if (await noResults.isVisible({ timeout: 10000 })) {
                 resultValid = true;
             }
         }
@@ -2829,12 +2829,12 @@ export class ListingActions {
 
         // Open date picker
         const dateInput = this.locators.listingCreationDateDropdown();
-        await expect(dateInput).toBeVisible({timeout:10000});
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
         await dateInput.click({ force: true });
 
         // Wait for calendar to show
         const calendar = this.page.locator(".p-datepicker");
-        await expect(calendar).toBeVisible({timeout:10000});
+        await expect(calendar).toBeVisible({ timeout: 10000 });
 
         // Compute tomorrow's date
         const t = new Date();
@@ -2880,7 +2880,7 @@ export class ListingActions {
         await expect(adminDefaultBtn).toBeVisible({ timeout: 10000 });
         await adminDefaultBtn.click({ force: true });
         const adminView = this.locators.adminView();
-        await expect(adminView).toBeVisible({timeout:10000});
+        await expect(adminView).toBeVisible({ timeout: 10000 });
 
         await this.page.mouse.click(0, 0);
 
@@ -2900,7 +2900,7 @@ export class ListingActions {
 
         // Wait for Admin options to appear
         const adminView = this.locators.adminView();
-        await expect(adminView).toBeVisible({timeout:10000});
+        await expect(adminView).toBeVisible({ timeout: 10000 });
 
         // Wait for "Show All" button to appear
         const showAllBtn = this.locators.showAllButton();
@@ -2939,7 +2939,7 @@ export class ListingActions {
 
         // Wait for Admin options to appear
         const adminView = this.locators.adminView();
-        await expect(adminView).toBeVisible({timeout:10000});
+        await expect(adminView).toBeVisible({ timeout: 10000 });
 
         const draggableHandles = this.locators.dragHandle();
 
@@ -3061,91 +3061,147 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
-// Creating a view without a name
-async CreateViewWithoutName() {
-    await this.navigateToListings();
-    await this.switchToListView();
-    await this.waitForTableRows();
+    // Creating a view without a name
+    async CreateViewWithoutName() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
 
-    // Open Admin Default panel
-    const adminDefaultBtn = this.locators.adminDefaultButton();
-    await expect(adminDefaultBtn).toBeVisible({ timeout: 30000 });
-    await adminDefaultBtn.click({ force: true });
+        // Open Admin Default panel
+        const adminDefaultBtn = this.locators.adminDefaultButton();
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 30000 });
+        await adminDefaultBtn.click({ force: true });
 
-    // Ensure Admin options are visible
-    const adminView = this.locators.adminView();
-    await expect(adminView).toBeVisible({ timeout: 30000 });
+        // Ensure Admin options are visible
+        const adminView = this.locators.adminView();
+        await expect(adminView).toBeVisible({ timeout: 30000 });
 
-    // Click the plus (+) button to open the "create new view" dialog
-    const plusBtn = this.locators.plusButton();
-    await expect(plusBtn).toBeVisible({ timeout: 10000 });
-    await plusBtn.click({ force: true });
+        // Click the plus (+) button to open the "create new view" dialog
+        const plusBtn = this.locators.plusButton();
+        await expect(plusBtn).toBeVisible({ timeout: 10000 });
+        await plusBtn.click({ force: true });
 
-    // Do not fill the view name input (leave empty)
-    const viewNameInput = this.locators.viewNameInput();
-    await expect(viewNameInput).toBeVisible({ timeout: 10000 });
-    await viewNameInput.click();
-    await viewNameInput.fill('');
+        // Do not fill the view name input (leave empty)
+        const viewNameInput = this.locators.viewNameInput();
+        await expect(viewNameInput).toBeVisible({ timeout: 10000 });
+        await viewNameInput.click();
+        await viewNameInput.fill('');
 
-    // Try to confirm/save the new view with an empty name
-    const saveBtn = this.page.getByRole('button', { name: /save|create/i }).first();
-    await expect(saveBtn).toBeVisible({ timeout: 10000 });
-    await saveBtn.click({ force: true });
+        // Try to confirm/save the new view with an empty name
+        const saveBtn = this.page.getByRole('button', { name: /save|create/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click({ force: true });
 
-    // Expect the input to have a red border (validation error is shown as border, not as a text message)
-    await expect(viewNameInput).toHaveCSS('border-color', 'rgb(205, 24, 24)');
+        // Expect the input to have a red border (validation error is shown as border, not as a text message)
+        await expect(viewNameInput).toHaveCSS('border-color', 'rgb(205, 24, 24)');
 
-    // Optionally, click away or close dialog if needed
-    await this.page.mouse.click(0, 0);
-    await this.page.waitForTimeout(500);
-}
+        // Optionally, click away or close dialog if needed
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(500);
+    }
 
-// Deleting an existing view
-async deleteView(viewName: string) {
-    await this.navigateToListings();
-    await this.switchToListView();
-    await this.waitForTableRows();
+    // Deleting an existing view
+    async deleteView(viewName: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
 
-    // Open Admin Default panel
-    const adminDefaultBtn = this.locators.adminDefaultButton();
-    await expect(adminDefaultBtn).toBeVisible({ timeout: 30000 });
-    await adminDefaultBtn.click({ force: true });
+        // Open Admin Default panel
+        const adminDefaultBtn = this.locators.adminDefaultButton();
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 30000 });
+        await adminDefaultBtn.click({ force: true });
 
-    // Ensure Admin options are visible
-    const adminView = this.locators.adminView();
-    await expect(adminView).toBeVisible({ timeout: 30000 });
+        // Ensure Admin options are visible
+        const adminView = this.locators.adminView();
+        await expect(adminView).toBeVisible({ timeout: 30000 });
 
-    // Open the Admin View dropdown
-    const adminViewDropdown = this.page.locator('.view-w-100 > .ng-select-container > .ng-arrow-wrapper');
-    await expect(adminViewDropdown).toBeVisible({ timeout: 10000 });
-    await adminViewDropdown.click();
+        // Open the Admin View dropdown
+        const adminViewDropdown = this.page.locator('.view-w-100 > .ng-select-container > .ng-arrow-wrapper');
+        await expect(adminViewDropdown).toBeVisible({ timeout: 10000 });
+        await adminViewDropdown.click();
 
-    const viewOption = this.page.getByText(viewName, { exact: true }).first();
-    await expect(viewOption).toBeVisible({ timeout: 10000 });
+        const viewOption = this.page.getByText(viewName, { exact: true }).first();
+        await expect(viewOption).toBeVisible({ timeout: 10000 });
 
-    // Locate the delete/trash button (replace selector if needed per UI)
-    const deleteButton = this.page.locator('img[src="assets/img/menuIcon/delete_icon.svg"]').last();
-    await expect(deleteButton).toBeVisible({ timeout: 10000 });
-    await deleteButton.click({ force: true });
+        // Locate the delete/trash button (replace selector if needed per UI)
+        const deleteButton = this.page.locator('img[src="assets/img/menuIcon/delete_icon.svg"]').last();
+        await expect(deleteButton).toBeVisible({ timeout: 10000 });
+        await deleteButton.click({ force: true });
 
-    // Confirm deletion in the modal/dialog
-    const confirmBtn = this.page.getByRole('button', { name: /confirm|yes|delete/i }).first();
-    await expect(confirmBtn).toBeVisible({ timeout: 10000 });
-    await confirmBtn.click({ force: true });
+        // Confirm deletion in the modal/dialog
+        const confirmBtn = this.page.getByRole('button', { name: /confirm|yes|delete/i }).first();
+        await expect(confirmBtn).toBeVisible({ timeout: 10000 });
+        await confirmBtn.click({ force: true });
 
-    // success message for view deleted
-    const deletedSuccessMessage = this.page.getByText(/successfully deleted|deleted successfully|view deleted/i, { exact: false });
-    await expect(deletedSuccessMessage).toBeVisible({ timeout: 10000 });
+        // success message for view deleted
+        const deletedSuccessMessage = this.page.getByText(/successfully deleted|deleted successfully|view deleted/i, { exact: false });
+        await expect(deletedSuccessMessage).toBeVisible({ timeout: 10000 });
 
-    // Optionally assert that the view no longer exists
-    await this.page.waitForTimeout(800);
-    await adminViewDropdown.click();
-    await expect(this.page.getByText(viewName, { exact: true })).not.toBeVisible({timeout:10000});
+        // Optionally assert that the view no longer exists
+        await this.page.waitForTimeout(800);
+        await adminViewDropdown.click();
+        await expect(this.page.getByText(viewName, { exact: true })).not.toBeVisible({ timeout: 10000 });
 
-    // Close dropdown if needed
-    await this.page.mouse.click(0, 0);
-    await this.page.waitForTimeout(400);
-}
+        // Close dropdown if needed
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(400);
+    }
+
+    
+    // Sharing a view with a user/team
+    async shareView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Open the Admin Default panel
+        const adminDefaultBtn = this.locators.adminDefaultButton();
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 30000 });
+        await adminDefaultBtn.click({ force: true });
+
+        // Make sure admin options show up
+        const adminView = this.locators.adminView();
+        await expect(adminView).toBeVisible({ timeout: 30000 });
+
+        // Click the share icon
+        const shareIcon = this.locators.shareIcon();
+        await expect(shareIcon).toBeVisible({ timeout: 10000 });
+        await shareIcon.click({ force: true });
+
+        // In share modal, click to select users
+        const selectUsers = this.locators.selectUser();
+        await selectUsers.click();
+
+        // Choose the first user
+        const firstUserCheckbox = this.page.locator('.checkbox__checkmark').first();
+        await expect(firstUserCheckbox).toBeVisible({ timeout: 10000 });
+        await firstUserCheckbox.click({ force: true });
+
+        // Expand dropdown for teams
+        const dropdown = this.page.locator('.w-100 > .box > .tags > .fas');
+        await dropdown.click({ force: true });
+
+        // Now select a team
+        const selectTeams = this.locators.selectTeams();
+        await selectTeams.click();
+
+        // Check first team checkbox
+        const firstTeamCheckbox = this.page.locator('.checkbox__checkmark').first();
+        await expect(firstTeamCheckbox).toBeVisible({ timeout: 10000 });
+        await firstTeamCheckbox.click({ force: true });
+
+        // Click share button
+        const shareBtn = this.locators.shareButton();
+        await expect(shareBtn).toBeVisible({ timeout: 10000 });
+        await shareBtn.click({ force: true });
+
+        // Assert sharing succeeded
+        const sharedSuccessMessage = this.page.getByText(/view shared|View already shared with one or more selected users or teams/i, { exact: false });
+        await expect(sharedSuccessMessage).toBeVisible({ timeout: 10000 });
+
+        // Give the UI a moment to settle
+        await this.page.waitForTimeout(800);
+    }
 
 
 

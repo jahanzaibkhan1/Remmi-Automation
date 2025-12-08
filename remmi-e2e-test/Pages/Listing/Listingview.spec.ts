@@ -236,6 +236,13 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 37: Sharing a view with a user or team', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    // Use a view name that is present or was created by previous tests
+    await listingActions.shareView();
+    await listingActions.resetFilters();
+  });
+
 });
 
 
