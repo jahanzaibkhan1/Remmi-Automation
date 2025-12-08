@@ -271,6 +271,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 43: Filtering 100+ listings should be smooth', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.filterHundredPlusListingsSmoothly('Hina');
+    await listingActions.resetFilters();
+  });
+
 });
 
 

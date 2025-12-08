@@ -3325,5 +3325,25 @@ export class ListingActions {
       }
   }
 
+  // Filtering 100+ contacts should be smooth
+  async filterHundredPlusListingsSmoothly(filterValue: string) {
+      await this.navigateToListings();
+      await this.switchToListView();
+
+      // Optional: Ensure table is loaded initially
+      await this.waitForTableRows();
+
+      const searchBox = this.locators.SearchBox();
+
+      await searchBox.click();
+      await searchBox.fill(filterValue);
+
+      // We expect results to show up within 2 seconds (header + at least 1 result)
+      const TIMEOUT = 2000;
+
+      // Wait for second row (index 1, since index 0 is header)
+      await this.page.locator('tr').nth(1).waitFor({ timeout: TIMEOUT });
+  }
+
 
 }
