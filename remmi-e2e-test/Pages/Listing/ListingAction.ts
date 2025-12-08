@@ -3147,7 +3147,7 @@ export class ListingActions {
         await this.page.waitForTimeout(400);
     }
 
-    
+
     // Sharing a view with a user/team
     async shareView() {
         await this.navigateToListings();
@@ -3202,6 +3202,54 @@ export class ListingActions {
         // Give the UI a moment to settle
         await this.page.waitForTimeout(800);
     }
+
+    // Searching for a user/team inside Share View
+    async searchUserAndTeamInShareView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+        // Open the Admin Default panel
+        const adminDefaultBtn = this.locators.adminDefaultButton();
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 30000 });
+        await adminDefaultBtn.click({ force: true });
+        // Ensure admin options are visible
+        const adminView = this.locators.adminView();
+        await expect(adminView).toBeVisible({ timeout: 30000 });
+        // Open the share dialog
+        const shareIcon = this.locators.shareIcon();
+        await expect(shareIcon).toBeVisible({ timeout: 10000 });
+        await shareIcon.click({ force: true });
+        // Define the user and team to search for
+        const user = "Dawood Ahmad";
+        const team = "Hina Team";
+        const selectUsers = this.locators.selectUser();
+        await selectUsers.click();
+        // User search input
+        const searchUserInput = this.page.getByRole('textbox', { name: /Type to search/i });
+        await expect(searchUserInput).toBeVisible({ timeout: 10000 });
+        await searchUserInput.fill(user);
+        // Wait for list items to appear
+        await this.page.waitForSelector('li.p-element', { timeout: 10000 });
+        // Select user
+        const userOption = this.page.locator('li.p-element', { hasText: user });
+        await expect(userOption).toBeVisible({ timeout: 10000 });
+        const dropdown = this.page.locator('.w-100 > .box > .tags > .fas');
+        await dropdown.click({ force: true });
+        const selectTeams = this.locators.selectTeams();
+        await selectTeams.click();
+        const searchTeamInput = this.page.locator('input[placeholder="Type to search"]');
+        await expect(searchTeamInput).toBeVisible({ timeout: 10000 });
+        await searchTeamInput.fill(team);
+        // Wait for list items
+        await this.page.waitForSelector('li.p-element', { timeout: 10000 });
+        // Select team
+        const teamOption = this.page.locator('li.p-element', { hasText: team });
+        await expect(teamOption).toBeVisible({ timeout: 10000 });
+        // Click outside to close dropdowns
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(400);
+    }
+
 
 
 
