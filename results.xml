@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.90190900000185">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-08T10:49:31.025Z" hostname="chromium" tests="1" failures="0" skipped="0" time="49.614" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 42: Searching should not take more than 2 seconds" classname="Pages\Listing\Listingview.spec.ts" time="49.614">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.965090999998154">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-08T10:59:42.909Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.114" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 43: Filtering 100+ listings should be smooth" classname="Pages\Listing\Listingview.spec.ts" time="39.114">
 </testcase>
 </testsuite>
 </testsuites>
