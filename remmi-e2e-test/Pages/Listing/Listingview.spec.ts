@@ -243,6 +243,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 38: Searching for a user/team inside Share View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchUserAndTeamInShareView();
+    await listingActions.resetFilters();
+  });
+
 });
 
 

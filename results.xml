@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.65308600000106">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-08T07:47:30.542Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.632" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 37: Sharing a view with a user or team" classname="Pages\Listing\Listingview.spec.ts" time="34.632">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.54883899999969">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-08T08:14:44.937Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.852" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 38: Searching for a user/team inside Share View" classname="Pages\Listing\Listingview.spec.ts" time="33.852">
 </testcase>
 </testsuite>
 </testsuites>
