@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="67.79474399999901">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-08T12:16:13.623Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.168" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 44: Applying a valid filter on a status" classname="Pages\Listing\Listingview.spec.ts" time="55.168">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.89179499999806">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-08T12:24:43.195Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.6" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 45: Clearing an applied filter on Listing" classname="Pages\Listing\Listingview.spec.ts" time="42.6">
 </testcase>
 </testsuite>
 </testsuites>
