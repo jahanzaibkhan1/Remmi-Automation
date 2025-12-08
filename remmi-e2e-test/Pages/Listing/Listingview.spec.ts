@@ -254,6 +254,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.applyListingFilter();
   });
 
+  test('Test 40: Clicking Reset when no filters are applied', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.clickResetNoFilters();
+  });
+
 });
 
 

@@ -3260,6 +3260,15 @@ export class ListingActions {
         await this.resetFilters();
     }
 
+    // Test clicking Reset button when no filters are applied
+    async clickResetNoFilters() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+        // Ensure we are viewing listings with default filters (none applied)
+        await this.resetFilters()
+    }
+
 
 
 }
