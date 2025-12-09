@@ -1099,6 +1099,8 @@ export class MyProfileActions {
       await expect(uploadErrorToast.first()).toBeVisible({ timeout: 20000 });
 
       console.log('✅ Upload failure due to network offline verified successfully.');
+
+      await context.setOffline(false);
     });
   }
 

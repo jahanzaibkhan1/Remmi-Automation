@@ -236,6 +236,91 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 37: Sharing a view with a user or team', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    // Use a view name that is present or was created by previous tests
+    await listingActions.shareView();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 38: Searching for a user/team inside Share View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchUserAndTeamInShareView();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 39: Apply a filter and verify reset removes all filters', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.applyListingFilter();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 40: Clicking Reset when no filters are applied', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.clickResetNoFilters();
+  });
+
+  test('Test 41: Deleting a listing from List View', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deleteListingFromListView();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 42: Searching should not take more than 2 seconds', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.fastSearch('Hina');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 43: Filtering 100+ listings should be smooth', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.filterHundredPlusListingsSmoothly('Hina');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 44: Applying a valid filter on a status', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.applyvalidListingFilter('For Sale');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 45: Clearing an applied filter on Listing', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.clearAppliedFilters('For Sale');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 46: Selecting invalid data for a condition', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.selectInvalidData('under Offer');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 47: Sorting by a valid column', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.sortByValidColumn();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 48: Sorting after applying a filter', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.sortAfterFiltering('For Sale');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 49: Sorting by an empty column', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.sortListingByEmptyColumn();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 50: Scrolling down to load more Listings', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.scrollToLoadMoreListing();
+    await listingActions.resetFilters();
+  });
+
+
 });
 
 
