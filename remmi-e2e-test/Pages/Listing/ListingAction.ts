@@ -3463,4 +3463,21 @@ export class ListingActions {
         await this.page.waitForTimeout(100);
     }
 
+    // Sorting by a valid column using locator
+    async sortByValidColumn() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Wait for the table to load fully
+        await this.waitForTableRows();
+
+        // Use the sortingIcon locator from ListingLocator
+        const sortingIcon = this.locators.sortingIcon();
+        await sortingIcon.waitFor({ state: 'visible', timeout: 5000 });
+        await sortingIcon.click();
+
+        // Optional: Wait for the sort to take effect (look for a sort icon or data change)
+        await this.page.waitForTimeout(1000);
+    }
+
 }
