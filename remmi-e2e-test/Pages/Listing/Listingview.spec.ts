@@ -296,6 +296,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 47: Sorting by a valid column', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.sortByValidColumn();
+    await listingActions.resetFilters();
+  });
+
 
 });
 

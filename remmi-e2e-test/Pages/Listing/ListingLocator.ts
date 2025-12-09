@@ -169,4 +169,11 @@ export class ListingLocators {
         // Returns the filter icon for the "Listing Status" column
         return this.page.getByRole('img', { name: 'filter' }).nth(1);
     }
+
+    sortingIcon(): Locator {
+        return this.page.locator(
+          'div.d-flex.align-items-center:has(p:text("Listing Status")) p-sorticon .p-sortable-column-icon'
+        );
+      }
+    
 }
