@@ -3541,4 +3541,60 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    async scrollToLoadMoreListing() {
+        await this.navigateToListings();
+        await this.switchToListView();
+    
+        const scrollContainer = '.p-datatable-wrapper'; // container to scroll
+        const rowSelector = '.p-datatable-wrapper tbody tr'; // rows in the table
+    
+        // Trigger initial rendering
+        await this.page.evaluate((selector) => {
+            const el = document.querySelector(selector);
+            if (el) el.scrollTop = 1;
+        }, scrollContainer);
+    
+        // Wait for first row to appear
+        await this.page.locator(rowSelector).first().waitFor({ state: 'visible', timeout: 15000 });
+    
+        // Get total records from footer
+        const recordsFooter = this.page.locator('text=Records:');
+        await recordsFooter.waitFor({ state: 'visible', timeout: 5000 });
+        const recordsText = await recordsFooter.textContent();
+        let totalRecords = 1000;
+        if (recordsText) {
+            const match = recordsText.match(/\d+/);
+            if (match) totalRecords = Number(match[0]);
+        }
+    
+        let lastCount = 0;
+        let unchangedTries = 0;
+        const maxTries = 10;
+    
+        while (unchangedTries < maxTries) {
+            const rows = this.page.locator(rowSelector);
+            const currentCount = await rows.count();
+    
+            if (currentCount === lastCount) {
+                unchangedTries++;
+            } else {
+                unchangedTries = 0;
+                lastCount = currentCount;
+            }
+    
+            if (currentCount > 0 && currentCount < totalRecords) {
+                const lastRow = rows.nth(currentCount - 1);
+                await lastRow.scrollIntoViewIfNeeded();
+            }
+    
+            await this.page.waitForTimeout(500);
+            if (lastCount >= totalRecords) break;
+        }
+    
+        const finalCount = await this.page.locator(rowSelector).count();
+        console.log(`Fast scrolling complete. Loaded ${finalCount} of ${totalRecords} records.`);
+        expect(finalCount).toBe(totalRecords);
+    }
+    
+    
 }
