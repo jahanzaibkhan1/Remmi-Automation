@@ -308,6 +308,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 49: Sorting by an empty column', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.sortListingByEmptyColumn();
+    await listingActions.resetFilters();
+  });
+
 
 });
 
