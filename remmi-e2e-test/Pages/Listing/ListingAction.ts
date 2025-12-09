@@ -3524,4 +3524,21 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    // Sorting by an empty column
+    async sortListingByEmptyColumn() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Sort (for example by Listing Status)
+        const sortingIcon = this.page.locator(
+            'div.d-flex.align-items-center:has(p:text("Portal")) p-sorticon .p-sortable-column-icon'
+          );
+        await sortingIcon.waitFor({ state: 'visible', timeout: 5000 });
+        await sortingIcon.click();
+
+        // Wait to observe sort effect
+        await this.page.waitForTimeout(1000);
+    }
+
 }
