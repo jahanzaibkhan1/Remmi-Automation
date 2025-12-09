@@ -252,6 +252,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
   test('Test 39: Apply a filter and verify reset removes all filters', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.applyListingFilter();
+    await listingActions.resetFilters();
   });
 
   test('Test 40: Clicking Reset when no filters are applied', async ({ sessionPage }) => {
@@ -289,9 +290,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
-  test('Test 46: Applying a filter condition without selecting data should show error', async ({ sessionPage }) => {
+  test('Test 46: Selecting invalid data for a condition', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
-    await listingActions.selectConditionWithoutData();
+    await listingActions.selectInvalidData('under Offer');
     await listingActions.resetFilters();
   });
 
