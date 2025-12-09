@@ -154,11 +154,11 @@ export class ListingLocators {
     }
 
     selectUser():Locator{
-        return this.page.locator('div').filter({ hasText: 'Select Users' }).nth(4);
+        return this.page.locator("//span[normalize-space()='Select Users']").first();
     }
 
     selectTeams(): Locator{
-        return this.page.locator('div').filter({ hasText: 'Select Teams' }).nth(4)
+        return this.page.locator("//span[normalize-space()='Select Teams']").first();
     }
 
     shareButton():Locator{
@@ -167,7 +167,6 @@ export class ListingLocators {
 
     filterIcon(): Locator {
         // Returns the filter icon for the "Listing Status" column
-        return this.page.locator('div.d-flex.align-items-center', { hasText: "Listing Status" })
-                        .locator('img[alt="filter"]');
+        return this.page.getByRole('img', { name: 'filter' }).nth(1);
     }
 }
