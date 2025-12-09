@@ -146,4 +146,34 @@ export class ListingLocators {
     viewNameInput(): Locator {
         return this.page.locator('input[placeholder="View name"]');
     }
+
+    // write locator for share 
+
+    shareIcon(): Locator {
+        return this.page.locator('.cursor-pointer > img').last();
+    }
+
+    selectUser():Locator{
+        return this.page.locator("//span[normalize-space()='Select Users']").first();
+    }
+
+    selectTeams(): Locator{
+        return this.page.locator("//span[normalize-space()='Select Teams']").first();
+    }
+
+    shareButton():Locator{
+        return this.page.getByRole('button', { name: /share/i }).first()
+    }
+
+    filterIcon(): Locator {
+        // Returns the filter icon for the "Listing Status" column
+        return this.page.getByRole('img', { name: 'filter' }).nth(1);
+    }
+
+    sortingIcon(): Locator {
+        return this.page.locator(
+          'div.d-flex.align-items-center:has(p:text("Listing Status")) p-sorticon .p-sortable-column-icon'
+        );
+      }
+    
 }

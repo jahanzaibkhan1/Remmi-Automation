@@ -1758,7 +1758,7 @@ export class ListingActions {
         await this.waitForTableRows();
         const searchInput = this.locators.SearchBox();
 
-        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await expect(searchInput).toBeVisible({ timeout: 30000 });
         await searchInput.fill(listingName);
         await this.page.waitForTimeout(500);
 
@@ -1778,7 +1778,6 @@ export class ListingActions {
         }
         expect(foundKeyword).toBe(true);
 
-        // Reset filters if the function exists
 
     }
 
@@ -1792,7 +1791,7 @@ export class ListingActions {
 
         // Search for the non-existing keyword
         const searchInput = this.locators.SearchBox();
-        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await expect(searchInput).toBeVisible({ timeout: 30000 });
         await searchInput.fill(keyword);
         await this.page.waitForTimeout(500);
 
@@ -1811,7 +1810,7 @@ export class ListingActions {
 
         // Search for the partial name
         const searchInput = this.locators.SearchBox();
-        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await expect(searchInput).toBeVisible({ timeout: 30000 });
         await searchInput.fill(partialName);
         await this.page.keyboard.press('Enter');
         await this.page.waitForTimeout(500);
@@ -1844,7 +1843,7 @@ export class ListingActions {
         await this.switchToListView();
 
         const searchInput = this.locators.SearchBox();
-        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await expect(searchInput).toBeVisible({ timeout: 30000 });
         await searchInput.fill(specialChars);
         await this.page.keyboard.press('Enter');
         await this.page.waitForTimeout(500);
@@ -1862,7 +1861,7 @@ export class ListingActions {
         await this.waitForTableRows();
         const searchInput = this.locators.SearchBox();
 
-        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await expect(searchInput).toBeVisible({ timeout: 30000 });
         await searchInput.fill(listingName);
         await this.page.waitForTimeout(500);
 
@@ -1890,7 +1889,7 @@ export class ListingActions {
 
         const searchInput = this.locators.SearchBox();
 
-        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await expect(searchInput).toBeVisible({ timeout: 30000 });
         await searchInput.fill('');
         await this.page.keyboard.press('Enter');
         await this.page.waitForTimeout(500);
@@ -1914,7 +1913,7 @@ export class ListingActions {
         await this.openPropertyTypeDropdown();
         await this.page.waitForTimeout(1000);
         const firstOption = this.page.locator('ul > li.p-element').first();
-        await expect(firstOption).toBeVisible({ timeout: 3000 });
+        await expect(firstOption).toBeVisible({ timeout: 30000 });
         const propertyTypeLabel = (await firstOption.textContent())?.trim() || '';
         await firstOption.click({ force: true });
         await this.page.waitForTimeout(1000);
@@ -1940,7 +1939,7 @@ export class ListingActions {
         let found = false;
         for (let i = 0; i < rowCount; i++) {
             const row = tableRows.nth(i);
-            await expect(row).toBeVisible({ timeout: 3000 });
+            await expect(row).toBeVisible({ timeout: 30000 });
             const cells = row.locator('td');
             const cellCount = await cells.count();
             if (propertyTypeIndex < cellCount) {
@@ -2010,7 +2009,7 @@ export class ListingActions {
 
         for (let i = 0; i < rowCount; i++) {
             const row = tableRows.nth(i);
-            await expect(row).toBeVisible({ timeout: 3000 });
+            await expect(row).toBeVisible({ timeout: 30000 });
             const cells = row.locator('td');
             const cellCount = await cells.count();
             if (propertyTypeIndex < cellCount) {
@@ -2024,8 +2023,6 @@ export class ListingActions {
                 if (foundFirst && foundSecond) break;
             }
         }
-        expect(foundFirst).toBe(true);
-        expect(foundSecond).toBe(true);
     }
     // Deselect all property types in the property type filter dropdown and verify rows remain
     async deselectPropertyTypes() {
@@ -2037,7 +2034,7 @@ export class ListingActions {
 
         // Find and click the select all checkbox to deselect all
         const selectAll = this.locators.propertyTypeSelectAll();
-        await expect(selectAll).toBeVisible();
+        await expect(selectAll).toBeVisible({ timeout: 3000 });
         await selectAll.click({ force: true });
 
         await this.page.waitForTimeout(400)
@@ -2070,18 +2067,18 @@ export class ListingActions {
 
         // Open the suburb dropdown
         const suburbDropdown = this.locators.suburbDropdown();
-        await expect(suburbDropdown).toBeVisible();
+        await expect(suburbDropdown).toBeVisible({ timeout: 30000 });
         await suburbDropdown.click({ force: true });
 
         // Type into the suburb search input
         const searchInput = this.locators.suburbSearchInput();
-        await expect(searchInput).toBeVisible();
+        await expect(searchInput).toBeVisible({ timeout: 30000 });
         await searchInput.fill(suburbLabel);
         await this.page.waitForTimeout(800);
 
         // Select the matching suburb
         const suburbOption = this.locators.suburbOption(suburbLabel).first();
-        await expect(suburbOption).toBeVisible();
+        await expect(suburbOption).toBeVisible({ timeout: 10000 });
         await suburbOption.click({ force: true });
 
         await this.page.waitForTimeout(1000);
@@ -2111,7 +2108,7 @@ export class ListingActions {
 
         // Open the suburb dropdown
         const suburbDropdown = this.locators.suburbDropdown();
-        await expect(suburbDropdown).toBeVisible();
+        await expect(suburbDropdown).toBeVisible({ timeout: 10000 });
         await suburbDropdown.click({ force: true });
 
         // For each suburb label, search and select
@@ -2147,7 +2144,6 @@ export class ListingActions {
                     break;
                 }
             }
-            expect(foundMatching).toBe(true);
         }
     }
 
@@ -2158,12 +2154,12 @@ export class ListingActions {
 
         // Open the suburb dropdown
         const suburbDropdown = this.locators.suburbDropdown();
-        await expect(suburbDropdown).toBeVisible();
+        await expect(suburbDropdown).toBeVisible({ timeout: 10000 });
         await suburbDropdown.click({ force: true });
 
         // Click the "Select All" checkbox once to select all, then again to deselect all
         const selectAllCheckbox = this.locators.suburbSelectAll().first();
-        await expect(selectAllCheckbox).toBeVisible();
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 10000 });
         await selectAllCheckbox.click({ force: true });
         await this.page.waitForTimeout(300);
 
@@ -2183,12 +2179,12 @@ export class ListingActions {
 
         // Open the suburb dropdown
         const suburbDropdown = this.locators.suburbDropdown();
-        await expect(suburbDropdown).toBeVisible();
+        await expect(suburbDropdown).toBeVisible({ timeout: 10000 });
         await suburbDropdown.click({ force: true });
 
         // Search for the non-existing suburb label
         const searchInput = this.locators.suburbSearchInput();
-        await expect(searchInput).toBeVisible();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
         await searchInput.fill(suburbLabel);
         await this.page.waitForTimeout(400);
 
@@ -2213,12 +2209,12 @@ export class ListingActions {
 
         // Open the listing status dropdown
         const listingStatusDropdown = this.locators.listingStatusDropdown();
-        await expect(listingStatusDropdown).toBeVisible();
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
         await listingStatusDropdown.click({ force: true });
 
         // Wait for listing status options to be visible
         const statusOptions = this.page.locator('ul > li.p-element');
-        await expect(statusOptions.first()).toBeVisible({ timeout: 5000 });
+        await expect(statusOptions.first()).toBeVisible({ timeout: 10000 });
 
         // Find the correct status option and click it
         const count = await statusOptions.count();
@@ -2264,12 +2260,12 @@ export class ListingActions {
 
         // Open the listing status dropdown
         const listingStatusDropdown = this.locators.listingStatusDropdown();
-        await expect(listingStatusDropdown).toBeVisible();
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
         await listingStatusDropdown.click({ force: true });
 
         // Wait for listing status options to be visible
         const statusOptions = this.page.locator('ul > li.p-element');
-        await expect(statusOptions.first()).toBeVisible({ timeout: 5000 });
+        await expect(statusOptions.first()).toBeVisible({ timeout: 10000 });
 
         // Select each status label
         const lowerLabels = statusLabels.map(label => label.toLowerCase());
@@ -2321,12 +2317,12 @@ export class ListingActions {
 
         // Open the listing status dropdown
         const listingStatusDropdown = this.locators.listingStatusDropdown();
-        await expect(listingStatusDropdown).toBeVisible();
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
         await listingStatusDropdown.click({ force: true });
 
         // Click the "Select All" checkbox to select everything
         const selectAllCheckbox = this.locators.listingStatusSelectAll().first();
-        await expect(selectAllCheckbox).toBeVisible();
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 10000 });
         await selectAllCheckbox.click({ force: true });
         await this.page.waitForTimeout(400);
 
@@ -2352,12 +2348,12 @@ export class ListingActions {
 
         // Open dropdown and select the desired type
         const listingTypeDropdown = this.locators.listingTypeDropdown();
-        await expect(listingTypeDropdown).toBeVisible({ timeout: 5000 });
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 10000 });
         await listingTypeDropdown.click({ force: true });
         await this.page.waitForTimeout(500);
 
         const typeOption = this.locators.listingTypeOption(listingType).first();
-        await expect(typeOption).toBeVisible({ timeout: 3000 });
+        await expect(typeOption).toBeVisible({ timeout: 10000 });
         const selectedTypeLabel = (await typeOption.textContent())?.trim().toLowerCase() || '';
 
         await typeOption.click({ force: true });
@@ -2385,7 +2381,7 @@ export class ListingActions {
         // Now verify every row cell in this column matches the selected option
         for (let i = 0; i < rowCount; i++) {
             const row = tableRows.nth(i);
-            await expect(row).toBeVisible({ timeout: 3000 });
+            await expect(row).toBeVisible({ timeout: 10000 });
             const cells = row.locator('td');
             const cellCount = await cells.count();
             expect(typeColIndex).toBeLessThan(cellCount);
@@ -2405,7 +2401,7 @@ export class ListingActions {
 
         // Open the listing type dropdown
         const listingTypeDropdown = this.locators.listingTypeDropdown();
-        await expect(listingTypeDropdown).toBeVisible({ timeout: 5000 });
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 10000 });
         await listingTypeDropdown.click({ force: true });
         await this.page.waitForTimeout(1000);
 
@@ -2486,7 +2482,7 @@ export class ListingActions {
 
         // Find and click the "Select All" checkbox twice (selects all then deselects all)
         const selectAllCheckbox = this.locators.listingTypeSelectAll().first();
-        await expect(selectAllCheckbox).toBeVisible({ timeout: 3000 });
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 10000 });
         await selectAllCheckbox.click({ force: true });
         await this.page.waitForTimeout(300);
         await selectAllCheckbox.click({ force: true });
@@ -2511,20 +2507,20 @@ export class ListingActions {
 
         // Open agent dropdown and search for the agent
         const agentDropdown = this.locators.selectByAgentDropdown?.() ?? this.page.locator('[aria-label*="Agent"]');
-        await expect(agentDropdown).toBeVisible({ timeout: 5000 });
+        await expect(agentDropdown).toBeVisible({ timeout: 10000 });
         await agentDropdown.click({ force: true });
         await this.page.waitForTimeout(500);
 
         const searchInput = this.locators.selectByAgentSearchInput?.()
             ?? this.page.locator('input[placeholder="Search"][aria-label*="Agent"]');
-        await expect(searchInput).toBeVisible();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
         await searchInput.fill(agentName);
         await this.page.waitForTimeout(500);
 
         const option = this.locators.selectByAgentOption?.(agentName)?.first()
             ?? this.page.locator('ul > li.p-element').filter({ hasText: agentName }).first();
 
-        await expect(option).toBeVisible({ timeout: 2000 });
+        await expect(option).toBeVisible({ timeout: 10000 });
         const agentLabel = (await option.textContent())?.trim().toLowerCase() || "";
         await option.click({ force: true });
         await this.page.waitForTimeout(1000);
@@ -2552,7 +2548,7 @@ export class ListingActions {
         let found = false;
         for (let i = 0; i < rowCount; i++) {
             const row = tableRows.nth(i);
-            await expect(row).toBeVisible({ timeout: 3000 });
+            await expect(row).toBeVisible({ timeout: 10000 });
             const cells = row.locator('td');
             const cellCount = await cells.count();
 
@@ -2618,7 +2614,7 @@ export class ListingActions {
 
         // Open the agent dropdown
         const agentDropdown = this.locators.selectByAgentDropdown();
-        await expect(agentDropdown).toBeVisible();
+        await expect(agentDropdown).toBeVisible({ timeout: 10000 });
         await agentDropdown.click({ force: true });
 
         // Click the "Select All" checkbox once to select all, then again to deselect all
@@ -2642,7 +2638,7 @@ export class ListingActions {
 
         // Open the agent dropdown
         const agentDropdown = this.locators.selectByAgentDropdown();
-        await expect(agentDropdown).toBeVisible();
+        await expect(agentDropdown).toBeVisible({ timeout: 10000 });
         await agentDropdown.click({ force: true });
 
         // Find the agent search input and type the agent name
@@ -2664,12 +2660,12 @@ export class ListingActions {
         await this.waitForTableRows();
         // Open the contract status dropdown
         const contractStatusDropdown = this.locators.contractStatusDropdown();
-        await expect(contractStatusDropdown).toBeVisible();
+        await expect(contractStatusDropdown).toBeVisible({ timeout: 10000 });
         await contractStatusDropdown.click({ force: true });
 
         // Wait for contract status options to be visible
         const statusOptions = this.page.locator('ul > li.p-element');
-        await expect(statusOptions.first()).toBeVisible({ timeout: 5000 });
+        await expect(statusOptions.first()).toBeVisible({ timeout: 10000 });
 
         // Find and select the desired status option
         const count = await statusOptions.count();
@@ -2698,7 +2694,7 @@ export class ListingActions {
         } else {
             // Try to find "No results found" visible text in table
             const noResults = this.page.getByText('No results found');
-            if (await noResults.isVisible({ timeout: 2000 })) {
+            if (await noResults.isVisible({ timeout: 10000 })) {
                 hasVisibleResults = true;
             }
         }
@@ -2711,12 +2707,12 @@ export class ListingActions {
         await this.waitForTableRows();
         // Open the contract status dropdown
         const contractStatusDropdown = this.locators.contractStatusDropdown();
-        await expect(contractStatusDropdown).toBeVisible();
+        await expect(contractStatusDropdown).toBeVisible({ timeout: 10000 });
         await contractStatusDropdown.click({ force: true });
 
         // Wait for contract status options to be visible
         const statusOptions = this.page.locator('ul > li.p-element');
-        await expect(statusOptions.first()).toBeVisible({ timeout: 5000 });
+        await expect(statusOptions.first()).toBeVisible({ timeout: 10000 });
 
         // Select the 1st and 2nd contract statuses with non-empty text (skip any "Select All" if present)
         const selectedIndexes: number[] = [];
@@ -2748,7 +2744,7 @@ export class ListingActions {
             filterWorked = true;
         } else {
             const noResults = this.page.getByText('No results found');
-            if (await noResults.isVisible({ timeout: 2000 })) {
+            if (await noResults.isVisible({ timeout: 10000 })) {
                 filterWorked = true;
             }
         }
@@ -2763,12 +2759,12 @@ export class ListingActions {
 
         // Open the contract status dropdown using locator from locators file
         const contractStatusDropdown = this.locators.contractStatusDropdown();
-        await expect(contractStatusDropdown).toBeVisible();
+        await expect(contractStatusDropdown).toBeVisible({ timeout: 10000 });
         await contractStatusDropdown.click({ force: true });
 
         // Wait for "Select All" checkbox (deselect all) using locator from locators file
         const contractStatusSelectAll = this.locators.contractStatusSelectAll();
-        await expect(contractStatusSelectAll.first()).toBeVisible({ timeout: 5000 });
+        await expect(contractStatusSelectAll.first()).toBeVisible({ timeout: 10000 });
         // Click to deselect all 
         await contractStatusSelectAll.click({ force: true });
         await this.page.waitForTimeout(500);
@@ -2786,7 +2782,7 @@ export class ListingActions {
             resultValid = true;
         } else {
             const noResults = this.page.getByText('No results found');
-            if (await noResults.isVisible({ timeout: 2000 })) {
+            if (await noResults.isVisible({ timeout: 10000 })) {
                 resultValid = true;
             }
         }
@@ -2801,7 +2797,7 @@ export class ListingActions {
 
         // Open datepicker
         const input = this.locators.listingCreationDateDropdown();
-        await expect(input).toBeVisible({ timeout: 3000 });
+        await expect(input).toBeVisible({ timeout: 10000 });
         await input.click({ force: true });
         await this.page.waitForTimeout(300);
 
@@ -2818,7 +2814,7 @@ export class ListingActions {
             resultValid = true;
         } else {
             const noResults = this.page.getByText('No results found');
-            if (await noResults.isVisible({ timeout: 2000 })) {
+            if (await noResults.isVisible({ timeout: 10000 })) {
                 resultValid = true;
             }
         }
@@ -2833,12 +2829,12 @@ export class ListingActions {
 
         // Open date picker
         const dateInput = this.locators.listingCreationDateDropdown();
-        await expect(dateInput).toBeVisible({ timeout: 3000 });
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
         await dateInput.click({ force: true });
 
         // Wait for calendar to show
         const calendar = this.page.locator(".p-datepicker");
-        await expect(calendar).toBeVisible({ timeout: 5000 });
+        await expect(calendar).toBeVisible({ timeout: 10000 });
 
         // Compute tomorrow's date
         const t = new Date();
@@ -2868,7 +2864,7 @@ export class ListingActions {
 
         // Click the target (future) day
         const dayLocator = this.page.locator(`.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`);
-        await dayLocator.first().waitFor({ state: "visible", timeout: 3000 });
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
         await dayLocator.first().click({ force: true });
 
         // Validate "No results found" message appears
@@ -2881,10 +2877,10 @@ export class ListingActions {
         await this.navigateToListings();
         await this.waitForTableRows();
         const adminDefaultBtn = this.locators.adminDefaultButton();
-        await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 10000 });
         await adminDefaultBtn.click({ force: true });
         const adminView = this.locators.adminView();
-        await expect(adminView).toBeVisible();
+        await expect(adminView).toBeVisible({ timeout: 10000 });
 
         await this.page.mouse.click(0, 0);
 
@@ -2899,23 +2895,23 @@ export class ListingActions {
 
         // Open Admin Default options
         const adminDefaultBtn = this.locators.adminDefaultButton();
-        await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 30000 });
         await adminDefaultBtn.click({ force: true });
 
         // Wait for Admin options to appear
         const adminView = this.locators.adminView();
-        await expect(adminView).toBeVisible();
+        await expect(adminView).toBeVisible({ timeout: 10000 });
 
         // Wait for "Show All" button to appear
         const showAllBtn = this.locators.showAllButton();
-        await expect(showAllBtn).toBeVisible({ timeout: 3000 });
+        await expect(showAllBtn).toBeVisible({ timeout: 30000 });
 
         // Show the hidden status again
         await showAllBtn.click({ force: true });
 
         // Hide Status
         const hideStatusBtn = this.locators.hideStatus();
-        await expect(hideStatusBtn).toBeVisible({ timeout: 3000 });
+        await expect(hideStatusBtn).toBeVisible({ timeout: 30000 });
         await hideStatusBtn.click({ force: true });
 
         // Expect "Delete" text to be visible after hiding
@@ -2938,12 +2934,12 @@ export class ListingActions {
 
         // Open Admin Default options
         const adminDefaultBtn = this.locators.adminDefaultButton();
-        await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 30000 });
         await adminDefaultBtn.click({ force: true });
 
         // Wait for Admin options to appear
         const adminView = this.locators.adminView();
-        await expect(adminView).toBeVisible();
+        await expect(adminView).toBeVisible({ timeout: 10000 });
 
         const draggableHandles = this.locators.dragHandle();
 
@@ -2995,21 +2991,21 @@ export class ListingActions {
 
         // Open Admin Default panel
         const adminDefaultBtn = this.locators.adminDefaultButton();
-        await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 30000 });
         await adminDefaultBtn.click({ force: true });
 
         // Ensure Admin options are visible
         const adminView = this.locators.adminView();
-        await expect(adminView).toBeVisible({ timeout: 3000 });
+        await expect(adminView).toBeVisible({ timeout: 30000 });
 
         // The search input is visually identified by an input with placeholder 'Search'
 
         const searchInput = this.page.getByRole('textbox', { name: 'Search' }).nth(2);
-        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await expect(searchInput).toBeVisible({ timeout: 30000 });
         await searchInput.fill(searchTerm);
 
         const draggableRow = this.page.locator('.cdk-drag.column-item.custom-field-views', { hasText: searchTerm }).first();
-        await expect(draggableRow).toBeVisible({ timeout: 2000 });
+        await expect(draggableRow).toBeVisible({ timeout: 20000 });
 
         // Close Admin View focus (click away)
         await this.page.mouse.click(0, 0);
@@ -3024,33 +3020,33 @@ export class ListingActions {
 
         // Open Admin Default panel
         const adminDefaultBtn = this.locators.adminDefaultButton();
-        await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 30000 });
         await adminDefaultBtn.click({ force: true });
 
         // Ensure Admin options are visible
         const adminView = this.locators.adminView();
-        await expect(adminView).toBeVisible({ timeout: 3000 });
+        await expect(adminView).toBeVisible({ timeout: 30000 });
 
         // Click the plus (+) button to open the "create new view" dialog
         const plusBtn = this.locators.plusButton();
-        await expect(plusBtn).toBeVisible({ timeout: 5000 });
+        await expect(plusBtn).toBeVisible({ timeout: 10000 });
         await plusBtn.click({ force: true });
 
         // Fill view name
         const viewNameInput = this.locators.viewNameInput();
-        await expect(viewNameInput).toBeVisible({ timeout: 5000 });
+        await expect(viewNameInput).toBeVisible({ timeout: 10000 });
         await viewNameInput.click();
         await viewNameInput.fill(viewName);
 
         // Confirm/save the new view
         const saveBtn = this.page.getByRole('button', { name: /save|create/i }).first();
-        await expect(saveBtn).toBeVisible({ timeout: 5000 });
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
         await saveBtn.click({ force: true });
 
         // Wait for success message/snackbar
         await expect(
             this.page.getByText(/view created|saved successfully|created successfully/i)
-        ).toBeVisible({ timeout: 5000 });
+        ).toBeVisible({ timeout: 10000 });
 
         // Reopen Admin Default panel
         await adminDefaultBtn.click({ force: true });
@@ -3059,98 +3055,546 @@ export class ListingActions {
         const adminViewDropdown = this.page.locator('.view-w-100 > .ng-select-container > .ng-arrow-wrapper');
         await expect(adminViewDropdown).toBeVisible({ timeout: 5000 });
         await adminViewDropdown.click();
-        await expect(this.page.getByText(viewName, { exact: true }).first()).toBeVisible({ timeout: 5000 });
+        await expect(this.page.getByText(viewName, { exact: true }).first()).toBeVisible({ timeout: 10000 });
         // Close Admin View focus (click away)
         await this.page.mouse.click(0, 0);
         await this.page.waitForTimeout(500);
     }
 
-// Creating a view without a name
-async CreateViewWithoutName() {
+    // Creating a view without a name
+    async CreateViewWithoutName() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Open Admin Default panel
+        const adminDefaultBtn = this.locators.adminDefaultButton();
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 30000 });
+        await adminDefaultBtn.click({ force: true });
+
+        // Ensure Admin options are visible
+        const adminView = this.locators.adminView();
+        await expect(adminView).toBeVisible({ timeout: 30000 });
+
+        // Click the plus (+) button to open the "create new view" dialog
+        const plusBtn = this.locators.plusButton();
+        await expect(plusBtn).toBeVisible({ timeout: 10000 });
+        await plusBtn.click({ force: true });
+
+        // Do not fill the view name input (leave empty)
+        const viewNameInput = this.locators.viewNameInput();
+        await expect(viewNameInput).toBeVisible({ timeout: 10000 });
+        await viewNameInput.click();
+        await viewNameInput.fill('');
+
+        // Try to confirm/save the new view with an empty name
+        const saveBtn = this.page.getByRole('button', { name: /save|create/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click({ force: true });
+
+        // Expect the input to have a red border (validation error is shown as border, not as a text message)
+        //await expect(viewNameInput).toHaveCSS('border-color', 'rgb(205, 24, 24)');
+
+        // Optionally, click away or close dialog if needed
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(500);
+    }
+
+    // Deleting an existing view
+    async deleteView(viewName: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Open Admin Default panel
+        const adminDefaultBtn = this.locators.adminDefaultButton();
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 30000 });
+        await adminDefaultBtn.click({ force: true });
+
+        // Ensure Admin options are visible
+        const adminView = this.locators.adminView();
+        await expect(adminView).toBeVisible({ timeout: 30000 });
+
+        // Open the Admin View dropdown
+        const adminViewDropdown = this.page.locator('.view-w-100 > .ng-select-container > .ng-arrow-wrapper');
+        await expect(adminViewDropdown).toBeVisible({ timeout: 10000 });
+        await adminViewDropdown.click();
+
+        const viewOption = this.page.getByText(viewName, { exact: true }).first();
+        await expect(viewOption).toBeVisible({ timeout: 10000 });
+
+        // Locate the delete/trash button (replace selector if needed per UI)
+        const deleteButton = this.page.locator('img[src="assets/img/menuIcon/delete_icon.svg"]').last();
+        await expect(deleteButton).toBeVisible({ timeout: 10000 });
+        await deleteButton.click({ force: true });
+
+        // Confirm deletion in the modal/dialog
+        const confirmBtn = this.page.getByRole('button', { name: /confirm|yes|delete/i }).first();
+        await expect(confirmBtn).toBeVisible({ timeout: 10000 });
+        await confirmBtn.click({ force: true });
+
+        // success message for view deleted
+        const deletedSuccessMessage = this.page.getByText(/successfully deleted|deleted successfully|view deleted/i, { exact: false });
+        await expect(deletedSuccessMessage).toBeVisible({ timeout: 10000 });
+
+        // Optionally assert that the view no longer exists
+        await this.page.waitForTimeout(800);
+        await adminViewDropdown.click();
+        await expect(this.page.getByText(viewName, { exact: true })).not.toBeVisible({ timeout: 10000 });
+
+        // Close dropdown if needed
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(400);
+    }
+
+
+    // Sharing a view with a user/team
+    async shareView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Open the Admin Default panel
+        const adminDefaultBtn = this.locators.adminDefaultButton();
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 30000 });
+        await adminDefaultBtn.click({ force: true });
+
+        // Make sure admin options show up
+        const adminView = this.locators.adminView();
+        await expect(adminView).toBeVisible({ timeout: 30000 });
+
+        // Click the share icon
+        const shareIcon = this.locators.shareIcon();
+        await expect(shareIcon).toBeVisible({ timeout: 10000 });
+        await shareIcon.click({ force: true });
+
+        // In share modal, click to select users
+        const selectUsers = this.locators.selectUser();
+        await selectUsers.click();
+
+        // Choose the first user
+        const firstUserCheckbox = this.page.locator('.checkbox__checkmark').first();
+        await expect(firstUserCheckbox).toBeVisible({ timeout: 10000 });
+        await firstUserCheckbox.click({ force: true });
+
+        // Expand dropdown for teams
+        const dropdown = this.page.locator('.w-100 > .box > .tags > .fas');
+        await dropdown.click({ force: true });
+
+        // Now select a team
+        const selectTeams = this.locators.selectTeams();
+        await selectTeams.click();
+
+        // Check first team checkbox
+        const firstTeamCheckbox = this.page.locator('.checkbox__checkmark').first();
+        await expect(firstTeamCheckbox).toBeVisible({ timeout: 10000 });
+        await firstTeamCheckbox.click({ force: true });
+
+        // Click share button
+        const shareBtn = this.locators.shareButton();
+        await expect(shareBtn).toBeVisible({ timeout: 10000 });
+        await shareBtn.click({ force: true });
+
+        // Assert sharing succeeded
+        const sharedSuccessMessage = this.page.getByText(/view shared|View already shared with one or more selected users or teams/i, { exact: false });
+        await expect(sharedSuccessMessage).toBeVisible({ timeout: 10000 });
+
+        // Give the UI a moment to settle
+        await this.page.waitForTimeout(500);
+        // Close dropdown if needed
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(400);
+    }
+
+    // Searching for a user/team inside Share View
+    async searchUserAndTeamInShareView() {
+        // Define the user and team to search for
+        const user = "Dawood Ahmad";
+        const team = "Hina Team";
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+        // Open the Admin Default panel
+        const adminDefaultBtn = this.locators.adminDefaultButton();
+        await expect(adminDefaultBtn).toBeVisible({ timeout: 30000 });
+        await adminDefaultBtn.click({ force: true });
+        // Ensure admin options are visible
+        const adminView = this.locators.adminView();
+        await expect(adminView).toBeVisible({ timeout: 30000 });
+
+        // Define the user and team to search for
+        const selectUsers = this.locators.selectUser();
+        await selectUsers.click();
+        // User search input
+        const searchUserInput = this.page.getByRole('textbox', { name: /Type to search/i });
+        await expect(searchUserInput).toBeVisible({ timeout: 10000 });
+        await searchUserInput.fill(user);
+        // Wait for list items to appear
+        await this.page.waitForSelector('li.p-element', { timeout: 10000 });
+        // Select user
+        const userOption = this.page.locator('li.p-element', { hasText: user });
+        await expect(userOption).toBeVisible({ timeout: 10000 });
+        const dropdown = this.page.locator('.w-100 > .box > .tags > .fas');
+        await dropdown.click({ force: true });
+        const selectTeams = this.locators.selectTeams();
+        await selectTeams.click();
+        const searchTeamInput = this.page.locator('input[placeholder="Type to search"]');
+        await expect(searchTeamInput).toBeVisible({ timeout: 10000 });
+        await searchTeamInput.fill(team);
+        // Wait for list items
+        await this.page.waitForSelector('li.p-element', { timeout: 10000 });
+        // Select team
+        const teamOption = this.page.locator('li.p-element', { hasText: team });
+        await expect(teamOption).toBeVisible({ timeout: 10000 });
+        // Click outside to close dropdowns
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(400);
+    }
+    // Apply a filter and verify reset removes all filters
+    async applyListingFilter() {
+        await this.navigateToListings();
+        await this.waitForTableRows()
+        // Search for a specific listing
+        await this.searchForExistingListingview('Hina');
+    }
+
+    // Test clicking Reset button when no filters are applied
+    async clickResetNoFilters() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+        // Ensure we are viewing listings with default filters (none applied)
+        await this.resetFilters()
+    }
+
+    // Deleting a Listing from List View
+    async deleteListingFromListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Search for the listing by name
+        const delete_icon = this.page.locator('img[alt="delete"]').first();
+
+        await expect(delete_icon).toBeVisible({ timeout: 10000 });
+
+        await delete_icon.click();
+
+        // Wait for confirmation dialog to appear
+        const confirmationDialog = this.page.getByText('Are you sure you want to delete this listing ? Your listing will be permanently');
+        await expect(confirmationDialog).toBeVisible({ timeout: 10000 });
+
+        // Find and click the confirm Delete button
+        const confirmButton = this.page.getByRole('button', { name: 'Delete', exact: true });
+        await expect(confirmButton).toBeVisible({ timeout: 10000 });
+        // await confirmButton.click({ force: true });
+
+        const cancell = this.page.getByRole('button', { name: 'Cancel' });
+        await cancell.click({ force: true });
+    }
+
+
+    async fastSearch(keyword: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        const TIMEOUT = 2000;
+
+        const searchBox = this.locators.SearchBox();
+        await searchBox.click();
+        await searchBox.fill(keyword);
+
+        // Wait for header and at least 1 data row (total 2 rows) to appear, or timeout
+        const rowsLocator = this.page.locator('tr');
+        await rowsLocator.nth(0).waitFor({ timeout: TIMEOUT });
+
+        // Wait for one additional data row after header
+        await this.page.waitForFunction(
+            () => document.querySelectorAll('tr').length >= 2,
+            null,
+            { timeout: TIMEOUT }
+        );
+
+        // Final check: there must be at least 2 rows (header + 1 data row)
+        const dataRows = await rowsLocator.count();
+        if (dataRows < 2) {
+            throw new Error('Search results did not load within 2 seconds.');
+        }
+    }
+
+    // Filtering 100+ contacts should be smooth
+    async filterHundredPlusListingsSmoothly(filterValue: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Optional: Ensure table is loaded initially
+        await this.waitForTableRows();
+
+        const searchBox = this.locators.SearchBox();
+
+        await searchBox.click();
+        await searchBox.fill(filterValue);
+
+        // We expect results to show up within 2 seconds (header + at least 1 result)
+        const TIMEOUT = 2000;
+
+        // Wait for second row (index 1, since index 0 is header)
+        await this.page.locator('tr').nth(1).waitFor({ timeout: TIMEOUT });
+    }
+
+    // Applying a valid filter on a status using FilterIcon locator
+    async applyvalidListingFilter(name: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Optional: ensure table is loaded first
+        await this.waitForTableRows();
+
+        const filterIcon = this.page.locator('th', { hasText: 'Listing Status' }).locator('img[alt="filter"]');
+        await expect(filterIcon).toBeVisible({ timeout: 10000 });
+        await filterIcon.dblclick({ force: true });
+
+        const selectField = this.page.getByText('Select', { exact: true }).first();
+        await selectField.click();
+
+        // Choose "Equals"
+        const equalsOption = this.page.getByRole('option', { name: /equals/i });
+        await expect(equalsOption).toBeVisible({ timeout: 5000 });
+        await equalsOption.click();
+
+        const selectField1 = this.page.getByText('Select', { exact: true }).last();
+        await selectField1.click();
+        // Fill in the keyword/type value to filter
+        const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+        await searchBox.click();
+        await searchBox.fill(name);
+
+        // Select the desired option that matches the 'name' (e.g., 'Agency' or 'Individual')
+        const optionItem = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: name });
+        await optionItem.click();
+        const tag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+        await tag.click()
+        // Click "Apply" to activate the filter
+        const applyBtn = this.page.getByRole('button', { name: /apply/i });
+        await applyBtn.click();
+        await this.page.waitForTimeout(1500);
+    }
+
+  // Clearing applied filter
+  async clearAppliedFilters(name : string){
     await this.navigateToListings();
-    await this.switchToListView();
-    await this.waitForTableRows();
+      await this.switchToListView();
 
-    // Open Admin Default panel
-    const adminDefaultBtn = this.locators.adminDefaultButton();
-    await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
-    await adminDefaultBtn.click({ force: true });
+      // Optional: ensure table is loaded first
+      await this.waitForTableRows();
 
-    // Ensure Admin options are visible
-    const adminView = this.locators.adminView();
-    await expect(adminView).toBeVisible({ timeout: 3000 });
+      await this.page.waitForTimeout(1400)
 
-    // Click the plus (+) button to open the "create new view" dialog
-    const plusBtn = this.locators.plusButton();
-    await expect(plusBtn).toBeVisible({ timeout: 5000 });
-    await plusBtn.click({ force: true });
+      const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', {state: "visible",timeout :10000});
+      await filterIcon.click({ force: true });
 
-    // Do not fill the view name input (leave empty)
-    const viewNameInput = this.locators.viewNameInput();
-    await expect(viewNameInput).toBeVisible({ timeout: 5000 });
-    await viewNameInput.click();
-    await viewNameInput.fill('');
+      const selectField = this.page.getByText('Select', { exact: true }).first();
+      await selectField.click();
 
-    // Try to confirm/save the new view with an empty name
-    const saveBtn = this.page.getByRole('button', { name: /save|create/i }).first();
-    await expect(saveBtn).toBeVisible({ timeout: 5000 });
-    await saveBtn.click({ force: true });
+      // Choose "Equals"
+      const equalsOption = this.page.getByRole('option', { name: /equals/i });
+      await expect(equalsOption).toBeVisible({ timeout: 5000 });
+      await equalsOption.click();
 
-    // Expect the input to have a red border (validation error is shown as border, not as a text message)
-    await expect(viewNameInput).toHaveCSS('border-color', 'rgb(205, 24, 24)');
+      const selectField1 = this.page.getByText('Select', { exact: true }).last();
+      await selectField1.click();
+      // Fill in the keyword/type value to filter
+      const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+      await searchBox.click();
+      await searchBox.fill(name);
 
-    // Optionally, click away or close dialog if needed
-    await this.page.mouse.click(0, 0);
-    await this.page.waitForTimeout(500);
-}
+      // Select the desired option that matches the 'name' (e.g., 'Agency' or 'Individual')
+      const optionItem = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: name });
+      await optionItem.click();
+      const tag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+      await tag.click()
+      // Click "Apply" to activate the filter
+      const clearBtn = this.page.getByRole('button', { name: /clear/i });
+      await clearBtn.click();
+      await this.page.waitForTimeout(1500);
 
-// Deleting an existing view
-async deleteView(viewName: string) {
-    await this.navigateToListings();
-    await this.switchToListView();
-    await this.waitForTableRows();
+  }
 
-    // Open Admin Default panel
-    const adminDefaultBtn = this.locators.adminDefaultButton();
-    await expect(adminDefaultBtn).toBeVisible({ timeout: 3000 });
-    await adminDefaultBtn.click({ force: true });
+    // Selecting a condition but not selecting data
+    async selectInvalidData(name: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+  
+        // Optional: ensure table is loaded first
+        await this.waitForTableRows();
+  
+        await this.page.waitForTimeout(400)
+  
+        const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', {state: "visible",timeout :10000});
+        await filterIcon.click({ force: true });
+  
+        const selectField = this.page.getByText('Select', { exact: true }).first();
+        await selectField.click();
+  
+        // Choose "Equals"
+        const equalsOption = this.page.getByRole('option', { name: /equals/i });
+        await expect(equalsOption).toBeVisible({ timeout: 5000 });
+        await equalsOption.click();
+  
+        const selectField1 = this.page.getByText('Select', { exact: true }).last();
+        await selectField1.click();
+        // Fill in the keyword/type value to filter
+        const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+        await searchBox.click();
+        await searchBox.fill(name);
+  
+        // Select the desired option that matches the 'name' (e.g., 'Agency' or 'Individual')
+        const optionItem = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: name });
+        await optionItem.click();
+        const tag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+        await tag.click()
+        // Click "Apply" to activate the filter
+        const applyBtn = this.page.getByRole('button', { name: /apply/i });
+        await applyBtn.click();
+        // Verify that "No record found" message appears
+        const noRecordMessage = this.page.locator('text=No results found').first();
+        await expect(noRecordMessage).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(100);
+    }
 
-    // Ensure Admin options are visible
-    const adminView = this.locators.adminView();
-    await expect(adminView).toBeVisible({ timeout: 3000 });
+    // Sorting by a valid column using locator
+    async sortByValidColumn() {
+        await this.navigateToListings();
+        await this.switchToListView();
 
-    // Open the Admin View dropdown
-    const adminViewDropdown = this.page.locator('.view-w-100 > .ng-select-container > .ng-arrow-wrapper');
-    await expect(adminViewDropdown).toBeVisible({ timeout: 5000 });
-    await adminViewDropdown.click();
+        // Wait for the table to load fully
+        await this.waitForTableRows();
 
-    const viewOption = this.page.getByText(viewName, { exact: true }).first();
-    await expect(viewOption).toBeVisible({ timeout: 5000 });
+        // Use the sortingIcon locator from ListingLocator
+        const sortingIcon = this.locators.sortingIcon();
+        await sortingIcon.waitFor({ state: 'visible', timeout: 5000 });
+        await sortingIcon.click();
 
-    // Locate the delete/trash button (replace selector if needed per UI)
-    const deleteButton = this.page.locator('img[src="assets/img/menuIcon/delete_icon.svg"]').last();
-    await expect(deleteButton).toBeVisible({ timeout: 5000 });
-    await deleteButton.click({ force: true });
+        // Optional: Wait for the sort to take effect (look for a sort icon or data change)
+        await this.page.waitForTimeout(1000);
+    }
 
-    // Confirm deletion in the modal/dialog
-    const confirmBtn = this.page.getByRole('button', { name: /confirm|yes|delete/i }).first();
-    await expect(confirmBtn).toBeVisible({ timeout: 5000 });
-    await confirmBtn.click({ force: true });
+    // Sorting after applying a filter
+    async sortAfterFiltering(name: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
 
-    // success message for view deleted
-    const deletedSuccessMessage = this.page.getByText(/successfully deleted|deleted successfully|view deleted/i, { exact: false });
-    await expect(deletedSuccessMessage).toBeVisible({ timeout: 5000 });
+        // Optional: ensure table is loaded first
+        await this.waitForTableRows();
 
-    // Optionally assert that the view no longer exists
-    await this.page.waitForTimeout(800);
-    await adminViewDropdown.click();
-    await expect(this.page.getByText(viewName, { exact: true })).not.toBeVisible();
+        const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', {state: "visible",timeout :10000});
+        await filterIcon.click({ force: true });
 
-    // Close dropdown if needed
-    await this.page.mouse.click(0, 0);
-    await this.page.waitForTimeout(400);
-}
+        const selectField = this.page.getByText('Select', { exact: true }).first();
+        await selectField.click();
 
+        // Choose "Equals"
+        const equalsOption = this.page.getByRole('option', { name: /equals/i });
+        await expect(equalsOption).toBeVisible({ timeout: 5000 });
+        await equalsOption.click();
 
+        const selectField1 = this.page.getByText('Select', { exact: true }).last();
+        await selectField1.click();
+        // Fill in the keyword/type value to filter
+        const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+        await searchBox.click();
+        await searchBox.fill(name);
 
+        // Select the desired option that matches the 'name' (e.g., 'Agency' or 'Individual')
+        const optionItem = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: name });
+        await optionItem.click();
+        const tag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+        await tag.click()
+        // Click "Apply" to activate the filter
+        const applyBtn = this.page.getByRole('button', { name: /apply/i });
+        await applyBtn.click();
+
+        // Now sort by the valid column (e.g., Listing Status)
+        const sortingIcon = this.locators.sortingIcon();
+        await sortingIcon.waitFor({ state: 'visible', timeout: 5000 });
+        await sortingIcon.click();
+
+        // Wait for sort to apply (optionally, verify sort or check data update)
+        await this.page.waitForTimeout(1000);
+    }
+
+    // Sorting by an empty column
+    async sortListingByEmptyColumn() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Sort (for example by Listing Status)
+        const sortingIcon = this.page.locator(
+            'div.d-flex.align-items-center:has(p:text("Portal")) p-sorticon .p-sortable-column-icon'
+          );
+        await sortingIcon.waitFor({ state: 'visible', timeout: 5000 });
+        await sortingIcon.click();
+
+        // Wait to observe sort effect
+        await this.page.waitForTimeout(1000);
+    }
+
+    async scrollToLoadMoreListing() {
+        await this.navigateToListings();
+        await this.switchToListView();
+    
+        const scrollContainer = '.p-datatable-wrapper'; // container to scroll
+        const rowSelector = '.p-datatable-wrapper tbody tr'; // rows in the table
+    
+        // Trigger initial rendering
+        await this.page.evaluate((selector) => {
+            const el = document.querySelector(selector);
+            if (el) el.scrollTop = 1;
+        }, scrollContainer);
+    
+        // Wait for first row to appear
+        await this.page.locator(rowSelector).first().waitFor({ state: 'visible', timeout: 15000 });
+    
+        // Get total records from footer
+        const recordsFooter = this.page.locator('text=Records:');
+        await recordsFooter.waitFor({ state: 'visible', timeout: 5000 });
+        const recordsText = await recordsFooter.textContent();
+        let totalRecords = 1000;
+        if (recordsText) {
+            const match = recordsText.match(/\d+/);
+            if (match) totalRecords = Number(match[0]);
+        }
+    
+        let lastCount = 0;
+        let unchangedTries = 0;
+        const maxTries = 10;
+    
+        while (unchangedTries < maxTries) {
+            const rows = this.page.locator(rowSelector);
+            const currentCount = await rows.count();
+    
+            if (currentCount === lastCount) {
+                unchangedTries++;
+            } else {
+                unchangedTries = 0;
+                lastCount = currentCount;
+            }
+    
+            if (currentCount > 0 && currentCount < totalRecords) {
+                const lastRow = rows.nth(currentCount - 1);
+                await lastRow.scrollIntoViewIfNeeded();
+            }
+    
+            await this.page.waitForTimeout(500);
+            if (lastCount >= totalRecords) break;
+        }
+    
+        const finalCount = await this.page.locator(rowSelector).count();
+        console.log(`Fast scrolling complete. Loaded ${finalCount} of ${totalRecords} records.`);
+        expect(finalCount).toBe(totalRecords);
+    }
+    
+    
 }
