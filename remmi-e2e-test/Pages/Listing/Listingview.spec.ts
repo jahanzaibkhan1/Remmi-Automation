@@ -314,6 +314,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 50: Scrolling down to load more Listings', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.scrollToLoadMoreListing();
+    await listingActions.resetFilters();
+  });
+
 
 });
 
