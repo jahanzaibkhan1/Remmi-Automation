@@ -356,6 +356,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 57: Creating a Listing with required fields', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.createListingWithRequiredField('House', 'Rental', 'For Lease');
+    await listingActions.resetFilters();
+  });
 
 });
 
