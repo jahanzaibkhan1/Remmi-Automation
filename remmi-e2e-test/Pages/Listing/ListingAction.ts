@@ -3899,6 +3899,7 @@ export class ListingActions {
     // Creating a listing
     async createListingWithRequiredField(propertyType: string, listingType: string, listingStatus: string) {
         await this.navigateToListings();
+        await this.switchToListView()
         await this.waitForTableRows()
         // Assuming there is a button or icon to open the contact form in each card row
         const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
@@ -3964,6 +3965,31 @@ export class ListingActions {
         await this.page.waitForTimeout(1000)
         await closeForm.click({ force: true })
 
+    }
+
+    // Creating a Listing with missing required fields
+    async createListingWithMissingField() {
+        // Navigate to Listings and open the listing form
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows()
+
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick({ force: true });
+
+        // Wait for the form/modal to appear
+        const form = this.page.locator('#rightbarwithscroll, .p-dialog, .listing-form-modal, .add-listing-form').first();
+        await expect(form).toBeVisible({ timeout: 10000 })
+        // Click Save and expect validation error
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await saveButton.click();
+
+        // Expect validation error to be visible after attempt to save with missing fields
+        await expect(this.page.getByRole('alert', { name: /Required fields must be/i })).toBeVisible();
+        const closeForm = this.page.locator('.pi.pi-times').first()
+        await closeForm.click({ force: true })
+
+        await this.page.waitForTimeout(1500)
     }
 
 }
