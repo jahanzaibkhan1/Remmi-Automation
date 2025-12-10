@@ -2024,6 +2024,27 @@ export class ListingActions {
             }
         }
     }
+    // Selecting all property types in List View
+    async selectAllPropertyTypesInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the property type dropdown
+        await this.openPropertyTypeDropdown();
+
+        // Click the "Select All" checkbox
+        const selectAll = this.locators.propertyTypeSelectAll();
+        await expect(selectAll).toBeVisible({ timeout: 3000 });
+        await selectAll.click({ force: true });
+
+        // Wait for filter to apply and table to update
+        await this.page.waitForTimeout(1000);
+
+        // Verify that table rows are present
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
     // Deselect all property types in the property type filter dropdown and verify rows remain
     async deselectPropertyTypes() {
         await this.navigateToListings();
@@ -2145,6 +2166,28 @@ export class ListingActions {
                 }
             }
         }
+    }
+
+    // Selecting "Select All" in suburb filter in List View
+    async selectAllSuburbsInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the suburb dropdown
+        const suburbDropdown = this.locators.suburbDropdown();
+        await expect(suburbDropdown).toBeVisible({ timeout: 10000 });
+        await suburbDropdown.click({ force: true });
+
+        // Click the "Select All" checkbox to select all suburbs
+        const selectAllCheckbox = this.locators.suburbSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 10000 });
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Check that the table rows exist (i.e., at least the header or data rows are present)
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
     }
 
     // Selecting "Deselect All" in suburb filter in List View
@@ -2306,6 +2349,37 @@ export class ListingActions {
         }
     }
 
+    // Select all listing statuses in the listing status filter dropdown
+    async selectAllListingStatusesInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Wait for table rows to become visible
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+
+        // Open the listing status dropdown
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
+        await listingStatusDropdown.click({ force: true });
+
+        // Click the "Select All" checkbox to select all listing statuses
+        const selectAllCheckbox = this.locators.listingStatusSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 10000 });
+        await selectAllCheckbox.click({ force: true });
+
+        await this.page.waitForTimeout(700);
+
+        // Optionally, dismiss the dropdown if necessary
+        await this.page.keyboard.press('Escape');
+        await this.page.waitForTimeout(700);
+
+        // Verify that table rows are present after selecting all
+        const allRows = this.page.locator('tr');
+        const rowCount = await allRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
+
     // Select all listing statuses, then deselect all 
     async deselectAllListingStatus() {
         await this.navigateToListings();
@@ -2463,6 +2537,35 @@ export class ListingActions {
         expect(foundFirst).toBe(true);
         expect(foundSecond).toBe(true);
     }
+    // Selecting "Select All" in Listing type
+    async selectAllListingTypesInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Ensure the table/list is loaded
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        // Open the listing type dropdown
+        const listingTypeDropdown = this.locators.listingTypeDropdown();
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 3000 });
+        await listingTypeDropdown.click({ force: true });
+        await this.page.waitForTimeout(800);
+
+        // Click the "Select All" checkbox to select all listing types
+        const selectAllCheckbox = this.locators.listingTypeSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 10000 });
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(700);
+
+        // Optionally, close the dropdown if it remains open
+        await listingTypeDropdown.click({ force: true });
+
+        // Check that table rows are present after selecting all types
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
 
     // Selecting "Deselect All" in Listing type
     async deselectAllListingTypesInListView() {
@@ -2603,6 +2706,29 @@ export class ListingActions {
 
 
         // Wait for listing rows to update
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
+
+    // Selecting "Select All" in agent filter in List View
+    async selectAllAgentsInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the agent dropdown
+        const agentDropdown = this.locators.selectByAgentDropdown();
+        await expect(agentDropdown).toBeVisible({ timeout: 10000 });
+        await agentDropdown.click({ force: true });
+
+        // Click the "Select All" checkbox to select all agents
+        const selectAllCheckbox = this.locators.selectByAgentSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 10000 });
+        await selectAllCheckbox.click({ force: true });
+
+        await this.page.waitForTimeout(500);
+
+        // Ensure that table rows are present after selecting all
+        const tableRows = this.page.locator('tr');
         const rowCount = await tableRows.count();
         expect(rowCount).toBeGreaterThan(0);
     }
@@ -3594,6 +3720,19 @@ export class ListingActions {
         const finalCount = await this.page.locator(rowSelector).count();
         console.log(`Fast scrolling complete. Loaded ${finalCount} of ${totalRecords} records.`);
         expect(finalCount).toBe(totalRecords);
+    }
+
+    // Apply multiple filters simultaneously on the listing table.
+    public async applyMultipleFilters() {
+       await this.navigateToListings();
+       await this.waitForTableRows();
+       await this.searchForExistingListingview('Hina');
+       await this.selectAllPropertyTypesInListView();
+       await this.selectAllSuburbsInListView();
+       await this.selectAllListingStatusesInListView();
+       await this.selectAllListingTypesInListView();
+       await this.selectAllAgentsInListView();
+
     }
     
     
