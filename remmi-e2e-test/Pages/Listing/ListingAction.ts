@@ -3821,5 +3821,19 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
 
     }
+    // Searching with an extremely long string
+    async searchWithExtremelyLongString(search: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+        const searchInput = this.page.locator('input[placeholder="Search"]').last();
+        await searchInput.waitFor({ state: 'visible', timeout: 5000 });
+        await searchInput.fill('');
+        await searchInput.fill(search);
+        // Check if "No results found" or similar text is displayed
+        const noResultsLocator = this.page.locator('text=/no results found|no listings found|no data/i');
+        await expect(noResultsLocator).toBeVisible({ timeout: 5000 });
+        await this.page.waitForTimeout(1000);
+    }
 
 }
