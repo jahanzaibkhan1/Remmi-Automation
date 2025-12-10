@@ -4161,4 +4161,59 @@ export class ListingActions {
         await this.scrollToLoadListings();
     }
 
+    async openAndCloseListingDetailsThenApplyFilter(status: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Open details modal for first row
+        const firstRow = this.page.locator('tbody tr').first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        await firstRow.click();
+        const detailsModal = this.page.locator('#rightbarwithscroll').first();
+        await expect(detailsModal).toBeVisible({ timeout: 5000 });
+
+        // Close modal
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        await closeBtn.click({ force: true });
+        await this.page.waitForTimeout(600);
+        await expect(detailsModal).toBeHidden({ timeout: 3000 });
+
+        // Now apply a filter to the Listing Status column (same logic as applyvalidListingFilter)
+        // Click filter icon for Listing Status
+        const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', { state: 'visible', timeout: 5000 });
+        await filterIcon.click({ force: true });
+
+        // Open and select "Equals"
+        const selectField = this.page.getByText('Select', { exact: true }).first();
+        await selectField.click();
+        const equalsOption = this.page.getByRole('option', { name: /equals/i });
+        await expect(equalsOption).toBeVisible({ timeout: 5000 });
+        await equalsOption.click();
+
+        // Choose Listing Status value
+        const selectField2 = this.page.getByText('Select', { exact: true }).last();
+        await selectField2.click();
+        const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+        await searchBox.click();
+        await searchBox.fill(status);
+
+        // Select the actual match in dropdown
+        const optionItem = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: status });
+        await optionItem.click();
+
+        // Tag close (if any tag shown)
+        const tag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+        if (await tag.isVisible({ timeout: 500 }).catch(() => false)) {
+            await tag.click();
+        }
+
+        // Click Apply
+        const applyBtn = this.page.getByRole('button', { name: /apply/i });
+        await applyBtn.click();
+
+        // Wait optionally for filter to complete
+        await this.page.waitForTimeout(1200);
+    }
+
 }

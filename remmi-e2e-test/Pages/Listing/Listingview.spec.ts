@@ -392,6 +392,13 @@ test('Test 62: Open/close multiple listing modals, then scroll and load more', a
   await listingActions.resetFilters();
 });
 
+test('Test 63: Opening and closing a Listing, then applying filters', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  // Apply filter and then quickly reset it
+  await listingActions.openAndCloseListingDetailsThenApplyFilter('For Sale');
+  await listingActions.resetFilters();
+});
+
 });
 
 
