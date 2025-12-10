@@ -4113,4 +4113,52 @@ export class ListingActions {
         await this.scrollToLoadListings()
     }
 
+    // Opens, then closes the first row modal, then opens/closes second, then scrolls table to load more rows
+    async openCloseMultipleListingsThenScroll() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        const rows = this.page.locator('tbody tr');
+        const count = await rows.count();
+        const maxOpen = Math.min(2, count);
+
+        // Click first row, close form
+        if (maxOpen >= 1) {
+            const firstRow = rows.nth(0);
+            await expect(firstRow).toBeVisible({ timeout: 10000 });
+            await firstRow.click();
+            const detailsModal = this.page.locator('#rightbarwithscroll').first();
+            await expect(detailsModal).toBeVisible({ timeout: 5000 });
+            const closeBtn = this.page.locator('.pi.pi-times').first();
+            await closeBtn.click({ force: true });
+            await this.page.waitForTimeout(600);
+            await expect(detailsModal).toBeHidden({ timeout: 3000 });
+            await this.page.waitForTimeout(400);
+        }
+
+        // Click second row, close form
+        if (maxOpen >= 2) {
+            const secondRow = rows.nth(1);
+            await expect(secondRow).toBeVisible({ timeout: 10000 });
+            await secondRow.click();
+            const detailsModal2 = this.page.locator('#rightbarwithscroll').first();
+            await expect(detailsModal2).toBeVisible({ timeout: 5000 });
+            const closeBtn2 = this.page.locator('.pi.pi-times').first();
+            await closeBtn2.click({ force: true });
+            await this.page.waitForTimeout(600);
+            await expect(detailsModal2).toBeHidden({ timeout: 3000 });
+            await this.page.waitForTimeout(400);
+        }
+
+        // Scroll to the bottom to load more listings
+        await this.page.evaluate(() => {
+            const tableWrapper = document.querySelector('.p-datatable-wrapper');
+            if (tableWrapper) tableWrapper.scrollTop = tableWrapper.scrollHeight;
+        });
+
+        await this.page.waitForTimeout(1200);
+        await this.scrollToLoadListings();
+    }
+
 }
