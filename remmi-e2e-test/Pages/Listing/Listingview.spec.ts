@@ -338,6 +338,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 54: Searching with an extremely long string', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchWithExtremelyLongString('The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs, safely!');
+    await listingActions.resetFilters();
+  });
+
 
 });
 
