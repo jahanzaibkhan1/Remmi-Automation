@@ -386,6 +386,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+test('Test 62: Open/close multiple listing modals, then scroll and load more', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.openCloseMultipleListingsThenScroll();
+  await listingActions.resetFilters();
+});
+
 });
 
 
