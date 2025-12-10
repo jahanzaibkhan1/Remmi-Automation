@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.437314000000015">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-10T03:58:33.074Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.175" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 51: Applying multiple filters at once" classname="Pages\Listing\Listingview.spec.ts" time="29.175">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.64551800000016">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-10T04:24:35.182Z" hostname="chromium" tests="1" failures="0" skipped="0" time="26.9" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 52: Sorting and filtering together" classname="Pages\Listing\Listingview.spec.ts" time="26.9">
 </testcase>
 </testsuite>
 </testsuites>

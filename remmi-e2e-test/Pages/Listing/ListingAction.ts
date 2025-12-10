@@ -3507,74 +3507,74 @@ export class ListingActions {
         await this.page.waitForTimeout(1500);
     }
 
-  // Clearing applied filter
-  async clearAppliedFilters(name : string){
-    await this.navigateToListings();
-      await this.switchToListView();
-
-      // Optional: ensure table is loaded first
-      await this.waitForTableRows();
-
-      await this.page.waitForTimeout(1400)
-
-      const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', {state: "visible",timeout :10000});
-      await filterIcon.click({ force: true });
-
-      const selectField = this.page.getByText('Select', { exact: true }).first();
-      await selectField.click();
-
-      // Choose "Equals"
-      const equalsOption = this.page.getByRole('option', { name: /equals/i });
-      await expect(equalsOption).toBeVisible({ timeout: 5000 });
-      await equalsOption.click();
-
-      const selectField1 = this.page.getByText('Select', { exact: true }).last();
-      await selectField1.click();
-      // Fill in the keyword/type value to filter
-      const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
-      await searchBox.click();
-      await searchBox.fill(name);
-
-      // Select the desired option that matches the 'name' (e.g., 'Agency' or 'Individual')
-      const optionItem = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: name });
-      await optionItem.click();
-      const tag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
-      await tag.click()
-      // Click "Apply" to activate the filter
-      const clearBtn = this.page.getByRole('button', { name: /clear/i });
-      await clearBtn.click();
-      await this.page.waitForTimeout(1500);
-
-  }
-
-    // Selecting a condition but not selecting data
-    async selectInvalidData(name: string) {
+    // Clearing applied filter
+    async clearAppliedFilters(name: string) {
         await this.navigateToListings();
         await this.switchToListView();
-  
+
         // Optional: ensure table is loaded first
         await this.waitForTableRows();
-  
-        await this.page.waitForTimeout(400)
-  
-        const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', {state: "visible",timeout :10000});
+
+        await this.page.waitForTimeout(1400)
+
+        const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', { state: "visible", timeout: 10000 });
         await filterIcon.click({ force: true });
-  
+
         const selectField = this.page.getByText('Select', { exact: true }).first();
         await selectField.click();
-  
+
         // Choose "Equals"
         const equalsOption = this.page.getByRole('option', { name: /equals/i });
         await expect(equalsOption).toBeVisible({ timeout: 5000 });
         await equalsOption.click();
-  
+
         const selectField1 = this.page.getByText('Select', { exact: true }).last();
         await selectField1.click();
         // Fill in the keyword/type value to filter
         const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
         await searchBox.click();
         await searchBox.fill(name);
-  
+
+        // Select the desired option that matches the 'name' (e.g., 'Agency' or 'Individual')
+        const optionItem = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: name });
+        await optionItem.click();
+        const tag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+        await tag.click()
+        // Click "Apply" to activate the filter
+        const clearBtn = this.page.getByRole('button', { name: /clear/i });
+        await clearBtn.click();
+        await this.page.waitForTimeout(1500);
+
+    }
+
+    // Selecting a condition but not selecting data
+    async selectInvalidData(name: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Optional: ensure table is loaded first
+        await this.waitForTableRows();
+
+        await this.page.waitForTimeout(400)
+
+        const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', { state: "visible", timeout: 10000 });
+        await filterIcon.click({ force: true });
+
+        const selectField = this.page.getByText('Select', { exact: true }).first();
+        await selectField.click();
+
+        // Choose "Equals"
+        const equalsOption = this.page.getByRole('option', { name: /equals/i });
+        await expect(equalsOption).toBeVisible({ timeout: 5000 });
+        await equalsOption.click();
+
+        const selectField1 = this.page.getByText('Select', { exact: true }).last();
+        await selectField1.click();
+        // Fill in the keyword/type value to filter
+        const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+        await searchBox.click();
+        await searchBox.fill(name);
+
         // Select the desired option that matches the 'name' (e.g., 'Agency' or 'Individual')
         const optionItem = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: name });
         await optionItem.click();
@@ -3614,7 +3614,7 @@ export class ListingActions {
         // Optional: ensure table is loaded first
         await this.waitForTableRows();
 
-        const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', {state: "visible",timeout :10000});
+        const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', { state: "visible", timeout: 10000 });
         await filterIcon.click({ force: true });
 
         const selectField = this.page.getByText('Select', { exact: true }).first();
@@ -3659,7 +3659,7 @@ export class ListingActions {
         // Sort (for example by Listing Status)
         const sortingIcon = this.page.locator(
             'div.d-flex.align-items-center:has(p:text("Portal")) p-sorticon .p-sortable-column-icon'
-          );
+        );
         await sortingIcon.waitFor({ state: 'visible', timeout: 5000 });
         await sortingIcon.click();
 
@@ -3670,19 +3670,19 @@ export class ListingActions {
     async scrollToLoadMoreListing() {
         await this.navigateToListings();
         await this.switchToListView();
-    
+
         const scrollContainer = '.p-datatable-wrapper'; // container to scroll
         const rowSelector = '.p-datatable-wrapper tbody tr'; // rows in the table
-    
+
         // Trigger initial rendering
         await this.page.evaluate((selector) => {
             const el = document.querySelector(selector);
             if (el) el.scrollTop = 1;
         }, scrollContainer);
-    
+
         // Wait for first row to appear
         await this.page.locator(rowSelector).first().waitFor({ state: 'visible', timeout: 15000 });
-    
+
         // Get total records from footer
         const recordsFooter = this.page.locator('text=Records:');
         await recordsFooter.waitFor({ state: 'visible', timeout: 5000 });
@@ -3692,31 +3692,31 @@ export class ListingActions {
             const match = recordsText.match(/\d+/);
             if (match) totalRecords = Number(match[0]);
         }
-    
+
         let lastCount = 0;
         let unchangedTries = 0;
         const maxTries = 10;
-    
+
         while (unchangedTries < maxTries) {
             const rows = this.page.locator(rowSelector);
             const currentCount = await rows.count();
-    
+
             if (currentCount === lastCount) {
                 unchangedTries++;
             } else {
                 unchangedTries = 0;
                 lastCount = currentCount;
             }
-    
+
             if (currentCount > 0 && currentCount < totalRecords) {
                 const lastRow = rows.nth(currentCount - 1);
                 await lastRow.scrollIntoViewIfNeeded();
             }
-    
+
             await this.page.waitForTimeout(500);
             if (lastCount >= totalRecords) break;
         }
-    
+
         const finalCount = await this.page.locator(rowSelector).count();
         console.log(`Fast scrolling complete. Loaded ${finalCount} of ${totalRecords} records.`);
         expect(finalCount).toBe(totalRecords);
@@ -3724,16 +3724,37 @@ export class ListingActions {
 
     // Apply multiple filters simultaneously on the listing table.
     public async applyMultipleFilters() {
-       await this.navigateToListings();
-       await this.waitForTableRows();
-       await this.searchForExistingListingview('Hina');
-       await this.selectAllPropertyTypesInListView();
-       await this.selectAllSuburbsInListView();
-       await this.selectAllListingStatusesInListView();
-       await this.selectAllListingTypesInListView();
-       await this.selectAllAgentsInListView();
+        await this.navigateToListings();
+        await this.waitForTableRows();
+        await this.searchForExistingListingview('Hina');
+        await this.selectAllPropertyTypesInListView();
+        await this.selectAllSuburbsInListView();
+        await this.selectAllListingStatusesInListView();
+        await this.selectAllListingTypesInListView();
+        await this.selectAllAgentsInListView();
 
     }
-    
-    
+
+    // Sorting and filtering together 
+    public async sortAfterFilter(statusLabel: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Apply a filter by searching for status
+        const searchInput = this.locators.SearchBox();
+        await expect(searchInput).toBeVisible({ timeout: 30000 });
+        await searchInput.fill(statusLabel);
+        await this.page.waitForTimeout(500);
+
+        // Optionally verify results exist
+        const rowsLocator = this.page.locator('tr');
+        const rowCount = await rowsLocator.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Now do the sorting
+        const sortingIcon = this.locators.sortingIcon();
+        await sortingIcon.waitFor({ state: 'visible', timeout: 5000 });
+        await sortingIcon.click();
+    }
+
 }
