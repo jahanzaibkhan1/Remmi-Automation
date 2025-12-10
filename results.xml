@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="66.99313199999928">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-09T11:52:50.966Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.791" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 50: Scrolling down to load more Listings" classname="Pages\Listing\Listingview.spec.ts" time="58.791">
-<system-out>
-<![CDATA[Fast scrolling complete. Loaded 34 of 34 records.
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.437314000000015">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-10T03:58:33.074Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.175" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 51: Applying multiple filters at once" classname="Pages\Listing\Listingview.spec.ts" time="29.175">
 </testcase>
 </testsuite>
 </testsuites>
