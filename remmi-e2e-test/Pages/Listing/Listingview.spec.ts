@@ -362,6 +362,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 58: Creating a Listing with missing required fields shows validation error', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.createListingWithMissingField();
+    await listingActions.resetFilters();
+  });
+
 });
 
 
