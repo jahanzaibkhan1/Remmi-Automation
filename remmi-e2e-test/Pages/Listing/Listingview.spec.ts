@@ -399,6 +399,12 @@ test('Test 63: Opening and closing a Listing, then applying filters', async ({ s
   await listingActions.resetFilters();
 });
 
+test('Test 64: Searching for a listing and opening Listing details', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.searchAndOpenListing('Hina');
+  await listingActions.resetFilters();
+});
+
 });
 
 

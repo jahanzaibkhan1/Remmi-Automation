@@ -4189,4 +4189,30 @@ export class ListingActions {
         await this.page.waitForTimeout(1200);
     }
 
+    //Search for a Listing and open its details modal.
+
+    async searchAndOpenListing(searchTerm: string) {
+
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+        // Type into the search input/filter bar
+        const searchInput = this.page.getByRole('textbox', { name: /search/i }).last();
+        await searchInput.click();
+        await searchInput.fill(searchTerm);
+
+        // Wait until the table updates with the search result
+        const firstRow = this.page.locator('tbody tr').first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+
+        // Open the first result's details modal
+        await firstRow.click();
+        const detailsModal = this.page.locator('#rightbarwithscroll').first();
+        await expect(detailsModal).toBeVisible({ timeout: 5000 });
+        // Close the details modal
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        await closeBtn.click({ force: true });
+        await this.page.waitForTimeout(1200);
+    }
+
 }
