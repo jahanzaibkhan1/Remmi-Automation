@@ -320,6 +320,90 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 51: Applying multiple filters at once', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.applyMultipleFilters();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 52: Sorting and filtering together', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.sortAfterFilter('Hina');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 53: Opening multiple filters without applying', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.openMultipleFiltersWithoutApplying();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 54: Searching with an extremely long string', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchWithExtremelyLongString('The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs, safely!');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 55: Applying a filter and then quickly clicking Reset', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.applyFilterAndQuickReset('For Sale');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 56: Opening the contact form', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.openContactForm();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 57: Creating a Listing with required fields', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.createListingWithRequiredField('House', 'Rental', 'For Lease');
+    await listingActions.resetFilters();
+  });
+
+  test('Test 58: Creating a Listing with missing required fields shows validation error', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.createListingWithMissingField();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 59: Scrolling down should load more listings', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.scrollToLoadListings();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 60: Opening and closing listing details modal', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.openAndCloseListingDetails();
+    await listingActions.resetFilters();
+  });
+
+  test('Test 61: Opens, closes a listing details modal, then scrolls', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.openCloseListingThenScroll();
+    await listingActions.resetFilters();
+  });
+
+test('Test 62: Open/close multiple listing modals, then scroll and load more', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.openCloseMultipleListingsThenScroll();
+  await listingActions.resetFilters();
+});
+
+test('Test 63: Opening and closing a Listing, then applying filters', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  // Apply filter and then quickly reset it
+  await listingActions.openAndCloseListingDetailsThenApplyFilter('For Sale');
+  await listingActions.resetFilters();
+});
+
+test('Test 64: Searching for a listing and opening Listing details', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.searchAndOpenListing('Hina');
+  await listingActions.resetFilters();
+});
 
 });
 

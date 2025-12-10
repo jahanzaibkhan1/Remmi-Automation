@@ -2024,6 +2024,27 @@ export class ListingActions {
             }
         }
     }
+    // Selecting all property types in List View
+    async selectAllPropertyTypesInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the property type dropdown
+        await this.openPropertyTypeDropdown();
+
+        // Click the "Select All" checkbox
+        const selectAll = this.locators.propertyTypeSelectAll();
+        await expect(selectAll).toBeVisible({ timeout: 3000 });
+        await selectAll.click({ force: true });
+
+        // Wait for filter to apply and table to update
+        await this.page.waitForTimeout(1000);
+
+        // Verify that table rows are present
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
     // Deselect all property types in the property type filter dropdown and verify rows remain
     async deselectPropertyTypes() {
         await this.navigateToListings();
@@ -2145,6 +2166,28 @@ export class ListingActions {
                 }
             }
         }
+    }
+
+    // Selecting "Select All" in suburb filter in List View
+    async selectAllSuburbsInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the suburb dropdown
+        const suburbDropdown = this.locators.suburbDropdown();
+        await expect(suburbDropdown).toBeVisible({ timeout: 10000 });
+        await suburbDropdown.click({ force: true });
+
+        // Click the "Select All" checkbox to select all suburbs
+        const selectAllCheckbox = this.locators.suburbSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 10000 });
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Check that the table rows exist (i.e., at least the header or data rows are present)
+        const tableRows = this.page.locator('tr');
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
     }
 
     // Selecting "Deselect All" in suburb filter in List View
@@ -2306,6 +2349,37 @@ export class ListingActions {
         }
     }
 
+    // Select all listing statuses in the listing status filter dropdown
+    async selectAllListingStatusesInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Wait for table rows to become visible
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+
+        // Open the listing status dropdown
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
+        await listingStatusDropdown.click({ force: true });
+
+        // Click the "Select All" checkbox to select all listing statuses
+        const selectAllCheckbox = this.locators.listingStatusSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 10000 });
+        await selectAllCheckbox.click({ force: true });
+
+        await this.page.waitForTimeout(700);
+
+        // Optionally, dismiss the dropdown if necessary
+        await this.page.keyboard.press('Escape');
+        await this.page.waitForTimeout(700);
+
+        // Verify that table rows are present after selecting all
+        const allRows = this.page.locator('tr');
+        const rowCount = await allRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
+
     // Select all listing statuses, then deselect all 
     async deselectAllListingStatus() {
         await this.navigateToListings();
@@ -2463,6 +2537,35 @@ export class ListingActions {
         expect(foundFirst).toBe(true);
         expect(foundSecond).toBe(true);
     }
+    // Selecting "Select All" in Listing type
+    async selectAllListingTypesInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Ensure the table/list is loaded
+        const tableRows = this.page.locator('tbody tr');
+        await expect(tableRows.first()).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        // Open the listing type dropdown
+        const listingTypeDropdown = this.locators.listingTypeDropdown();
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 3000 });
+        await listingTypeDropdown.click({ force: true });
+        await this.page.waitForTimeout(800);
+
+        // Click the "Select All" checkbox to select all listing types
+        const selectAllCheckbox = this.locators.listingTypeSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 10000 });
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(700);
+
+        // Optionally, close the dropdown if it remains open
+        await listingTypeDropdown.click({ force: true });
+
+        // Check that table rows are present after selecting all types
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
 
     // Selecting "Deselect All" in Listing type
     async deselectAllListingTypesInListView() {
@@ -2603,6 +2706,29 @@ export class ListingActions {
 
 
         // Wait for listing rows to update
+        const rowCount = await tableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
+
+    // Selecting "Select All" in agent filter in List View
+    async selectAllAgentsInListView() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the agent dropdown
+        const agentDropdown = this.locators.selectByAgentDropdown();
+        await expect(agentDropdown).toBeVisible({ timeout: 10000 });
+        await agentDropdown.click({ force: true });
+
+        // Click the "Select All" checkbox to select all agents
+        const selectAllCheckbox = this.locators.selectByAgentSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 10000 });
+        await selectAllCheckbox.click({ force: true });
+
+        await this.page.waitForTimeout(500);
+
+        // Ensure that table rows are present after selecting all
+        const tableRows = this.page.locator('tr');
         const rowCount = await tableRows.count();
         expect(rowCount).toBeGreaterThan(0);
     }
@@ -3381,74 +3507,74 @@ export class ListingActions {
         await this.page.waitForTimeout(1500);
     }
 
-  // Clearing applied filter
-  async clearAppliedFilters(name : string){
-    await this.navigateToListings();
-      await this.switchToListView();
-
-      // Optional: ensure table is loaded first
-      await this.waitForTableRows();
-
-      await this.page.waitForTimeout(1400)
-
-      const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', {state: "visible",timeout :10000});
-      await filterIcon.click({ force: true });
-
-      const selectField = this.page.getByText('Select', { exact: true }).first();
-      await selectField.click();
-
-      // Choose "Equals"
-      const equalsOption = this.page.getByRole('option', { name: /equals/i });
-      await expect(equalsOption).toBeVisible({ timeout: 5000 });
-      await equalsOption.click();
-
-      const selectField1 = this.page.getByText('Select', { exact: true }).last();
-      await selectField1.click();
-      // Fill in the keyword/type value to filter
-      const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
-      await searchBox.click();
-      await searchBox.fill(name);
-
-      // Select the desired option that matches the 'name' (e.g., 'Agency' or 'Individual')
-      const optionItem = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: name });
-      await optionItem.click();
-      const tag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
-      await tag.click()
-      // Click "Apply" to activate the filter
-      const clearBtn = this.page.getByRole('button', { name: /clear/i });
-      await clearBtn.click();
-      await this.page.waitForTimeout(1500);
-
-  }
-
-    // Selecting a condition but not selecting data
-    async selectInvalidData(name: string) {
+    // Clearing applied filter
+    async clearAppliedFilters(name: string) {
         await this.navigateToListings();
         await this.switchToListView();
-  
+
         // Optional: ensure table is loaded first
         await this.waitForTableRows();
-  
-        await this.page.waitForTimeout(400)
-  
-        const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', {state: "visible",timeout :10000});
+
+        await this.page.waitForTimeout(1400)
+
+        const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', { state: "visible", timeout: 10000 });
         await filterIcon.click({ force: true });
-  
+
         const selectField = this.page.getByText('Select', { exact: true }).first();
         await selectField.click();
-  
+
         // Choose "Equals"
         const equalsOption = this.page.getByRole('option', { name: /equals/i });
         await expect(equalsOption).toBeVisible({ timeout: 5000 });
         await equalsOption.click();
-  
+
         const selectField1 = this.page.getByText('Select', { exact: true }).last();
         await selectField1.click();
         // Fill in the keyword/type value to filter
         const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
         await searchBox.click();
         await searchBox.fill(name);
-  
+
+        // Select the desired option that matches the 'name' (e.g., 'Agency' or 'Individual')
+        const optionItem = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: name });
+        await optionItem.click();
+        const tag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+        await tag.click()
+        // Click "Apply" to activate the filter
+        const clearBtn = this.page.getByRole('button', { name: /clear/i });
+        await clearBtn.click();
+        await this.page.waitForTimeout(1500);
+
+    }
+
+    // Selecting a condition but not selecting data
+    async selectInvalidData(name: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Optional: ensure table is loaded first
+        await this.waitForTableRows();
+
+        await this.page.waitForTimeout(400)
+
+        const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', { state: "visible", timeout: 10000 });
+        await filterIcon.click({ force: true });
+
+        const selectField = this.page.getByText('Select', { exact: true }).first();
+        await selectField.click();
+
+        // Choose "Equals"
+        const equalsOption = this.page.getByRole('option', { name: /equals/i });
+        await expect(equalsOption).toBeVisible({ timeout: 5000 });
+        await equalsOption.click();
+
+        const selectField1 = this.page.getByText('Select', { exact: true }).last();
+        await selectField1.click();
+        // Fill in the keyword/type value to filter
+        const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+        await searchBox.click();
+        await searchBox.fill(name);
+
         // Select the desired option that matches the 'name' (e.g., 'Agency' or 'Individual')
         const optionItem = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: name });
         await optionItem.click();
@@ -3488,7 +3614,7 @@ export class ListingActions {
         // Optional: ensure table is loaded first
         await this.waitForTableRows();
 
-        const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', {state: "visible",timeout :10000});
+        const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', { state: "visible", timeout: 10000 });
         await filterIcon.click({ force: true });
 
         const selectField = this.page.getByText('Select', { exact: true }).first();
@@ -3533,7 +3659,7 @@ export class ListingActions {
         // Sort (for example by Listing Status)
         const sortingIcon = this.page.locator(
             'div.d-flex.align-items-center:has(p:text("Portal")) p-sorticon .p-sortable-column-icon'
-          );
+        );
         await sortingIcon.waitFor({ state: 'visible', timeout: 5000 });
         await sortingIcon.click();
 
@@ -3544,19 +3670,19 @@ export class ListingActions {
     async scrollToLoadMoreListing() {
         await this.navigateToListings();
         await this.switchToListView();
-    
+
         const scrollContainer = '.p-datatable-wrapper'; // container to scroll
         const rowSelector = '.p-datatable-wrapper tbody tr'; // rows in the table
-    
+
         // Trigger initial rendering
         await this.page.evaluate((selector) => {
             const el = document.querySelector(selector);
             if (el) el.scrollTop = 1;
         }, scrollContainer);
-    
+
         // Wait for first row to appear
         await this.page.locator(rowSelector).first().waitFor({ state: 'visible', timeout: 15000 });
-    
+
         // Get total records from footer
         const recordsFooter = this.page.locator('text=Records:');
         await recordsFooter.waitFor({ state: 'visible', timeout: 5000 });
@@ -3566,35 +3692,527 @@ export class ListingActions {
             const match = recordsText.match(/\d+/);
             if (match) totalRecords = Number(match[0]);
         }
-    
+
         let lastCount = 0;
         let unchangedTries = 0;
         const maxTries = 10;
-    
+
         while (unchangedTries < maxTries) {
             const rows = this.page.locator(rowSelector);
             const currentCount = await rows.count();
-    
+
             if (currentCount === lastCount) {
                 unchangedTries++;
             } else {
                 unchangedTries = 0;
                 lastCount = currentCount;
             }
-    
+
             if (currentCount > 0 && currentCount < totalRecords) {
                 const lastRow = rows.nth(currentCount - 1);
                 await lastRow.scrollIntoViewIfNeeded();
             }
-    
+
             await this.page.waitForTimeout(500);
             if (lastCount >= totalRecords) break;
         }
-    
+
         const finalCount = await this.page.locator(rowSelector).count();
         console.log(`Fast scrolling complete. Loaded ${finalCount} of ${totalRecords} records.`);
         expect(finalCount).toBe(totalRecords);
     }
-    
-    
+
+    // Apply multiple filters simultaneously on the listing table.
+    public async applyMultipleFilters() {
+        await this.navigateToListings();
+        await this.waitForTableRows();
+        await this.searchForExistingListingview('Hina');
+        await this.selectAllPropertyTypesInListView();
+        await this.selectAllSuburbsInListView();
+        await this.selectAllListingStatusesInListView();
+        await this.selectAllListingTypesInListView();
+        await this.selectAllAgentsInListView();
+
+    }
+
+    // Sorting and filtering together 
+    public async sortAfterFilter(statusLabel: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Apply a filter by searching for status
+        const searchInput = this.locators.SearchBox();
+        await expect(searchInput).toBeVisible({ timeout: 30000 });
+        await searchInput.fill(statusLabel);
+        await this.page.waitForTimeout(500);
+
+        // Optionally verify results exist
+        const rowsLocator = this.page.locator('tr');
+        const rowCount = await rowsLocator.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Now do the sorting
+        const sortingIcon = this.locators.sortingIcon();
+        await sortingIcon.waitFor({ state: 'visible', timeout: 5000 });
+        await sortingIcon.click();
+    }
+
+    // Opening multiple filters without applying
+
+    public async openMultipleFiltersWithoutApplying() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // 1. Open Portal filter (assuming column with "Portal")
+        const portalFilterIcon = this.page.locator('th:has-text("Portal") img[alt="filter"]');
+        await portalFilterIcon.waitFor({ state: "visible", timeout: 10000 });
+        await portalFilterIcon.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // 2. Open Listing Status filter
+        const listingStatusFilterIcon = this.page.locator('th:has-text("Listing Status") img[alt="filter"]');
+        await listingStatusFilterIcon.waitFor({ state: "visible", timeout: 10000 });
+        await listingStatusFilterIcon.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // 3. Open Property Address filter (assuming column with "Property Address")
+        const propertyAddressFilterIcon = this.page.locator('th:has-text("Property Address") img[alt="filter"]');
+        await propertyAddressFilterIcon.waitFor({ state: "visible", timeout: 10000 });
+        await propertyAddressFilterIcon.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // 4. Open Property Type filter
+        const propertyTypeFilterIcon = this.page.locator('th:has-text("Property Type") img[alt="filter"]');
+        await propertyTypeFilterIcon.waitFor({ state: "visible", timeout: 10000 });
+        await propertyTypeFilterIcon.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // 5. Open Listing Type filter (assuming column with "Listing Type" or "Listings Type")
+        const listingTypeFilterIcon = this.page.locator('th:has-text("Listing Type") img[alt="filter"], th:has-text("Listings Type") img[alt="filter"]');
+        await listingTypeFilterIcon.waitFor({ state: "visible", timeout: 10000 });
+        await listingTypeFilterIcon.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // 6. Open Primary Agent filter
+        const primaryAgentFilterIcon = this.page.locator('th:has-text("Primary Agent") img[alt="filter"]');
+        await primaryAgentFilterIcon.waitFor({ state: "visible", timeout: 10000 });
+        await primaryAgentFilterIcon.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // 7. Open Secondary Agent filter
+        const secondaryAgentFilterIcon = this.page.locator('th:has-text("Secondary Agent") img[alt="filter"]');
+        await secondaryAgentFilterIcon.waitFor({ state: "visible", timeout: 10000 });
+        await secondaryAgentFilterIcon.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // 8. Open Price filter
+        const priceFilterIcon = this.page.locator('th:has-text("Price") img[alt="filter"]');
+        await priceFilterIcon.waitFor({ state: "visible", timeout: 10000 });
+        await priceFilterIcon.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // 9. Open Create Date filter (assuming column with "Create Date" or "Created Date" or "Created On")
+        const createDateFilterIcon = this.page.locator(
+            'th:has-text("Create Date") img[alt="filter"], th:has-text("Created Date") img[alt="filter"], th:has-text("Created On") img[alt="filter"]'
+        );
+        await createDateFilterIcon.waitFor({ state: "visible", timeout: 10000 });
+        await createDateFilterIcon.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+    }
+    // Searching with an extremely long string
+    async searchWithExtremelyLongString(search: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+        const searchInput = this.page.locator('input[placeholder="Search"]').last();
+        await searchInput.waitFor({ state: 'visible', timeout: 5000 });
+        await searchInput.fill('');
+        await searchInput.fill(search);
+        // Check if "No results found" or similar text is displayed
+        const noResultsLocator = this.page.locator('text=/no results found|no listings found|no data/i');
+        await expect(noResultsLocator).toBeVisible({ timeout: 5000 });
+        await this.page.waitForTimeout(1000);
+    }
+
+    // Applying a filter and then quickly clicking Reset
+    async applyFilterAndQuickReset(name: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Find the filter icon for "Listing Status"
+       
+        const filterIcon =  await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', { state: 'visible', timeout: 5000 });
+        await filterIcon.click({ force: true });
+
+       
+        const selectField = this.page.getByText('Select', { exact: true }).first();
+        await selectField.click();
+
+        // Choose "Equals"
+        const equalsOption = this.page.getByRole('option', { name: /equals/i });
+        await expect(equalsOption).toBeVisible({ timeout: 5000 });
+        await equalsOption.click();
+
+        const selectField1 = this.page.getByText('Select', { exact: true }).last();
+        await selectField1.click();
+        // Fill in the keyword/type value to filter
+        const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+        await searchBox.click();
+        await searchBox.fill(name);
+
+        // Select the desired option that matches the 'name' (e.g., 'Agency' or 'Individual')
+        const optionItem = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: name });
+        await optionItem.click();
+        const tag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+        await tag.click()
+        // Click "Apply" to activate the filter
+        const applyBtn = this.page.getByRole('button', { name: /apply/i });
+        await applyBtn.click();
+        // Optionally, wait and verify that the filters were reset
+        await this.page.waitForTimeout(1200);
+        // You may wish to add an assertion here that all table rows are shown or the filter is cleared
+    }
+
+    // Opening the contact form
+    async openContactForm() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+          // Assuming there is a button or icon to open the contact form in each card row
+          const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+          await contactFormBtn.dblclick();
+          // Wait for contact form to be visible (adjust selector if needed)
+          const contactForm = this.page.locator('#rightbarwithscroll');
+          await expect(contactForm).toBeVisible({ timeout: 10000 });
+  
+          const closeForm = this.page.locator('.pi.pi-times').first()
+          await this.page.waitForTimeout(1000)
+          await closeForm.click({ force: true })
+  
+          await this.page.waitForTimeout(1500)
+    }
+
+    // Creating a listing
+    async createListingWithRequiredField(propertyType: string, listingType: string, listingStatus: string) {
+        await this.navigateToListings();
+        await this.switchToListView()
+        await this.waitForTableRows()
+        // Assuming there is a button or icon to open the contact form in each card row
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick({ force: true });
+        // Wait for contact form to be visible (adjust selector if needed)
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Fill and select the property address: "1/14 Thomas Street, Laidley, QLD 4341"
+        const propertyAddressSearchInput = this.page.locator('#rightbarwithscroll').getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+        await propertyAddressSearchInput.fill('140 Coates Street, Laidley, QLD 4341');
+        // Wait for dropdown/options to appear and select the address
+        const addressOption = this.page.locator('div:nth-child(2) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 5000 });
+        await addressOption.click();
+
+        // Open Property Type dropdown and search/select the option
+        const propertyTypeDropdown = this.page.locator('ng-select[formcontrolname="type"]');
+        await expect(propertyTypeDropdown).toBeVisible({ timeout: 10000 });
+        await propertyTypeDropdown.click();
+
+        // Search for the propertyType option
+        const propertyTypeSearchInput = this.page.locator('ng-select[formcontrolname="type"] input[type="text"], ng-select[formcontrolname="type"] input[role="combobox"]');
+        if (await propertyTypeSearchInput.isVisible({ timeout: 1000 }).catch(() => false)) {
+            await propertyTypeSearchInput.fill(propertyType);
+            await this.page.waitForTimeout(500); // Let options update if needed
+        }
+
+        const propertyTypeOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: propertyType }).first();
+        await propertyTypeOption.click();
+
+        // Open Listing Type dropdown, search and select option
+        const listingTypeDropdown = this.page.locator('ng-select[formcontrolname="listingType"], ng-select[formcontrolname="listing_type"]');
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 10000 });
+        await listingTypeDropdown.click();
+        const listingTypeSearchInput = listingTypeDropdown.locator('input[type="text"]');
+        await expect(listingTypeSearchInput).toBeVisible({ timeout: 2000 });
+        await listingTypeSearchInput.fill(listingType);
+        await this.page.waitForTimeout(500); // Let options update if needed
+        const listingTypeOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: listingType }).first();
+        await listingTypeOption.click();
+
+        // Open Listing Status dropdown, search and select option
+
+        const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input')
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 })
+        await listingStatusDropdown.click();
+        // Correct way to access the search input for a native ng-select dropdown:
+        const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
+        await listingStatusSearchInput.fill(listingStatus);
+        await this.page.waitForTimeout(500);
+        const listingStatusOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: listingStatus }).first();
+        await listingStatusOption.click();
+
+        // Click the "Save" button
+        const saveButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveButton.click();
+
+        await expect(this.page.getByRole('alert', { name: 'Active listing already exist' })).toBeVisible()
+
+        const closeForm = this.page.locator('.pi.pi-times').first()
+        await this.page.waitForTimeout(1000)
+        await closeForm.click({ force: true })
+
+    }
+
+    // Creating a Listing with missing required fields
+    async createListingWithMissingField() {
+        // Navigate to Listings and open the listing form
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows()
+
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick({ force: true });
+
+        // Wait for the form/modal to appear
+        const form = this.page.locator('#rightbarwithscroll, .p-dialog, .listing-form-modal, .add-listing-form').first();
+        await expect(form).toBeVisible({ timeout: 10000 })
+        // Click Save and expect validation error
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await saveButton.click();
+
+        // Expect validation error to be visible after attempt to save with missing fields
+        await expect(this.page.getByRole('alert', { name: /Required fields must be/i })).toBeVisible();
+        const closeForm = this.page.locator('.pi.pi-times').first()
+        await closeForm.click({ force: true })
+
+        await this.page.waitForTimeout(1500)
+    }
+
+    async scrollToLoadListings() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        this.waitForTableRows()
+
+        const scrollContainer = '.p-datatable-wrapper'; // container to scroll
+        const rowSelector = '.p-datatable-wrapper tbody tr'; // rows in the table
+
+        // Trigger initial rendering
+        await this.page.evaluate((selector) => {
+            const el = document.querySelector(selector);
+            if (el) el.scrollTop = 1;
+        }, scrollContainer);
+
+        // Wait for first row to appear
+        await this.page.locator(rowSelector).first().waitFor({ state: 'visible', timeout: 15000 });
+
+        // Get total records from footer
+        const recordsFooter = this.page.locator('text=Records:');
+        await recordsFooter.waitFor({ state: 'visible', timeout: 5000 });
+        const recordsText = await recordsFooter.textContent();
+        let totalRecords = 1000;
+        if (recordsText) {
+            const match = recordsText.match(/\d+/);
+            if (match) totalRecords = Number(match[0]);
+        }
+
+        let lastCount = 0;
+        let unchangedTries = 0;
+        const maxTries = 10;
+
+        while (unchangedTries < maxTries) {
+            const rows = this.page.locator(rowSelector);
+            const currentCount = await rows.count();
+
+            if (currentCount === lastCount) {
+                unchangedTries++;
+            } else {
+                unchangedTries = 0;
+                lastCount = currentCount;
+            }
+
+            if (currentCount > 0 && currentCount < totalRecords) {
+                const lastRow = rows.nth(currentCount - 1);
+                await lastRow.scrollIntoViewIfNeeded();
+            }
+
+            await this.page.waitForTimeout(500);
+            if (lastCount >= totalRecords) break;
+        }
+
+        const finalCount = await this.page.locator(rowSelector).count();
+        console.log(`Fast scrolling complete. Loaded ${finalCount} of ${totalRecords} records.`);
+        expect(finalCount).toBe(totalRecords);
+
+        // Scroll to the position where the table body (first row) starts
+        await this.page.evaluate((rowSelector) => {
+            const row = document.querySelector(rowSelector);
+            if (row) {
+                row.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, rowSelector);
+    }
+
+    // Opening and closing a listing details modal
+    async openAndCloseListingDetails() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Open the first listing row (assume clicking will open details modal)
+        const firstRow = this.page.locator('tbody tr').first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        await firstRow.click();
+
+        const closeForm = this.page.locator('.pi.pi-times').first()
+        await closeForm.click({ force: true })
+
+        await this.page.waitForTimeout(1200)
+    }
+
+    // Opens the first listing details modal, closes it, then scrolls table to top
+    async openCloseListingThenScroll() {
+        await this.navigateToListings();
+        await this.switchToListView();
+
+        // Open the first listing row to show details modal
+        const firstRow = this.page.locator('tbody tr').first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        await firstRow.click();
+
+        // Wait for details modal to show, then close it
+        const detailsModal = this.page.locator('#rightbarwithscroll').first();
+        await expect(detailsModal).toBeVisible({ timeout: 5000 });
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        await closeBtn.click({ force: true });
+
+        await this.page.waitForTimeout(1000); // brief pause
+
+        // Optionally ensure modal is closed
+        await expect(detailsModal).toBeHidden({ timeout: 3000 });
+        // Wait for any additional rows to load
+        await this.page.waitForTimeout(1000);
+    }
+
+    // Opens, then closes the first row modal, then opens/closes second, then scrolls table to load more rows
+    async openCloseMultipleListingsThenScroll() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        const rows = this.page.locator('tbody tr');
+        const count = await rows.count();
+        const maxOpen = Math.min(2, count);
+
+        // Click first row, close form
+        if (maxOpen >= 1) {
+            const firstRow = rows.nth(0);
+            await expect(firstRow).toBeVisible({ timeout: 10000 });
+            await firstRow.click();
+            const detailsModal = this.page.locator('#rightbarwithscroll').first();
+            await expect(detailsModal).toBeVisible({ timeout: 5000 });
+            const closeBtn = this.page.locator('.pi.pi-times').first();
+            await closeBtn.click({ force: true });
+            await this.page.waitForTimeout(600);
+            await expect(detailsModal).toBeHidden({ timeout: 3000 });
+            await this.page.waitForTimeout(400);
+        }
+
+        // Click second row, close form
+        if (maxOpen >= 2) {
+            const secondRow = rows.nth(1);
+            await expect(secondRow).toBeVisible({ timeout: 10000 });
+            await secondRow.click();
+            const detailsModal2 = this.page.locator('#rightbarwithscroll').first();
+            await expect(detailsModal2).toBeVisible({ timeout: 5000 });
+            const closeBtn2 = this.page.locator('.pi.pi-times').first();
+            await closeBtn2.click({ force: true });
+            await this.page.waitForTimeout(600);
+            await expect(detailsModal2).toBeHidden({ timeout: 3000 });
+            await this.page.waitForTimeout(400);
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+    async openAndCloseListingDetailsThenApplyFilter(status: string) {
+        await this.navigateToListings();
+        await this.switchToListView();
+        // Open details modal for first row
+        const firstRow = this.page.locator('tbody tr').first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        await firstRow.click();
+        const detailsModal = this.page.locator('#rightbarwithscroll').first();
+        await expect(detailsModal).toBeVisible({ timeout: 5000 });
+
+        // Close modal
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        await closeBtn.click({ force: true });
+        await this.page.waitForTimeout(600);
+        await expect(detailsModal).toBeHidden({ timeout: 3000 });
+
+        // Now apply a filter to the Listing Status column (same logic as applyvalidListingFilter)
+        // Click filter icon for Listing Status
+        const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', { state: 'visible', timeout: 5000 });
+        await filterIcon.click({ force: true });
+
+        // Open and select "Equals"
+        const selectField = this.page.getByText('Select', { exact: true }).first();
+        await selectField.click();
+        const equalsOption = this.page.getByRole('option', { name: /equals/i });
+        await expect(equalsOption).toBeVisible({ timeout: 5000 });
+        await equalsOption.click();
+
+        // Choose Listing Status value
+        const selectField2 = this.page.getByText('Select', { exact: true }).last();
+        await selectField2.click();
+        const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+        await searchBox.click();
+        await searchBox.fill(status);
+
+        // Select the actual match in dropdown
+        const optionItem = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: status });
+        await optionItem.click();
+
+        // Tag close (if any tag shown)
+        const tag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+        if (await tag.isVisible({ timeout: 500 }).catch(() => false)) {
+            await tag.click();
+        }
+
+        // Click Apply
+        const applyBtn = this.page.getByRole('button', { name: /apply/i });
+        await applyBtn.click();
+
+        // Wait optionally for filter to complete
+        await this.page.waitForTimeout(1200);
+    }
+
+    //Search for a Listing and open its details modal.
+
+    async searchAndOpenListing(searchTerm: string) {
+
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+        // Type into the search input/filter bar
+        const searchInput = this.page.getByRole('textbox', { name: /search/i }).last();
+        await searchInput.click();
+        await searchInput.fill(searchTerm);
+
+        // Wait until the table updates with the search result
+        const firstRow = this.page.locator('tbody tr').first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+
+        // Open the first result's details modal
+        await firstRow.click();
+        const detailsModal = this.page.locator('#rightbarwithscroll').first();
+        await expect(detailsModal).toBeVisible({ timeout: 5000 });
+        // Close the details modal
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        await closeBtn.click({ force: true });
+        await this.page.waitForTimeout(1200);
+    }
+
 }
