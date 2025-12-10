@@ -1,6 +1,18 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.64551800000016">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-10T04:24:35.182Z" hostname="chromium" tests="1" failures="0" skipped="0" time="26.9" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 52: Sorting and filtering together" classname="Pages\Listing\Listingview.spec.ts" time="26.9">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.52637600000016">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-10T04:45:41.513Z" hostname="chromium" tests="1" failures="0" skipped="0" time="22.335" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 53: Opening multiple filters without applying" classname="Pages\Listing\Listingview.spec.ts" time="22.335">
+<system-out>
+<![CDATA[Opened Portal filter
+Opened Listing Status filter
+Opened Property Address filter
+Opened Property Type filter
+Opened Listing Type filter
+Opened Primary Agent filter
+Opened Secondary Agent filter
+Opened Price filter
+Opened Create Date filter
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>

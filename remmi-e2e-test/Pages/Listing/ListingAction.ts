@@ -3757,4 +3757,69 @@ export class ListingActions {
         await sortingIcon.click();
     }
 
+    // Opening multiple filters without applying
+
+    public async openMultipleFiltersWithoutApplying() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // 1. Open Portal filter (assuming column with "Portal")
+        const portalFilterIcon = this.page.locator('th:has-text("Portal") img[alt="filter"]');
+        await portalFilterIcon.waitFor({ state: "visible", timeout: 10000 });
+        await portalFilterIcon.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // 2. Open Listing Status filter
+        const listingStatusFilterIcon = this.page.locator('th:has-text("Listing Status") img[alt="filter"]');
+        await listingStatusFilterIcon.waitFor({ state: "visible", timeout: 10000 });
+        await listingStatusFilterIcon.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // 3. Open Property Address filter (assuming column with "Property Address")
+        const propertyAddressFilterIcon = this.page.locator('th:has-text("Property Address") img[alt="filter"]');
+        await propertyAddressFilterIcon.waitFor({ state: "visible", timeout: 10000 });
+        await propertyAddressFilterIcon.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // 4. Open Property Type filter
+        const propertyTypeFilterIcon = this.page.locator('th:has-text("Property Type") img[alt="filter"]');
+        await propertyTypeFilterIcon.waitFor({ state: "visible", timeout: 10000 });
+        await propertyTypeFilterIcon.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // 5. Open Listing Type filter (assuming column with "Listing Type" or "Listings Type")
+        const listingTypeFilterIcon = this.page.locator('th:has-text("Listing Type") img[alt="filter"], th:has-text("Listings Type") img[alt="filter"]');
+        await listingTypeFilterIcon.waitFor({ state: "visible", timeout: 10000 });
+        await listingTypeFilterIcon.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // 6. Open Primary Agent filter
+        const primaryAgentFilterIcon = this.page.locator('th:has-text("Primary Agent") img[alt="filter"]');
+        await primaryAgentFilterIcon.waitFor({ state: "visible", timeout: 10000 });
+        await primaryAgentFilterIcon.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // 7. Open Secondary Agent filter
+        const secondaryAgentFilterIcon = this.page.locator('th:has-text("Secondary Agent") img[alt="filter"]');
+        await secondaryAgentFilterIcon.waitFor({ state: "visible", timeout: 10000 });
+        await secondaryAgentFilterIcon.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // 8. Open Price filter
+        const priceFilterIcon = this.page.locator('th:has-text("Price") img[alt="filter"]');
+        await priceFilterIcon.waitFor({ state: "visible", timeout: 10000 });
+        await priceFilterIcon.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // 9. Open Create Date filter (assuming column with "Create Date" or "Created Date" or "Created On")
+        const createDateFilterIcon = this.page.locator(
+            'th:has-text("Create Date") img[alt="filter"], th:has-text("Created Date") img[alt="filter"], th:has-text("Created On") img[alt="filter"]'
+        );
+        await createDateFilterIcon.waitFor({ state: "visible", timeout: 10000 });
+        await createDateFilterIcon.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+    }
+
 }
