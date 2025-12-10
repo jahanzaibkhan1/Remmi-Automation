@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.63160299999919">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-10T05:21:45.051Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.614" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 56: Opening the contact form" classname="Pages\Listing\Listingview.spec.ts" time="27.614">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="54.93919199999981">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-10T05:27:00.496Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.844" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 57: Creating a Listing with required fields" classname="Pages\Listing\Listingview.spec.ts" time="38.844">
 </testcase>
 </testsuite>
 </testsuites>
