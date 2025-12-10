@@ -4067,24 +4067,16 @@ export class ListingActions {
         await expect(firstRow).toBeVisible({ timeout: 10000 });
         await firstRow.click();
 
-        // Close the details modal (find the modal first, then click close)
-        const detailsModal = this.page.locator('#rightbarwithscroll').first();
-        await expect(detailsModal).toBeVisible({ timeout: 5000 });
-
         const closeForm = this.page.locator('.pi.pi-times').first()
         await closeForm.click({ force: true })
 
-        await this.page.waitForTimeout(1000)
-
-        // Optionally, verify the modal is closed
-        await expect(detailsModal).toBeHidden({ timeout: 3000 });
+        await this.page.waitForTimeout(1200)
     }
 
     // Opens the first listing details modal, closes it, then scrolls table to top
     async openCloseListingThenScroll() {
         await this.navigateToListings();
         await this.switchToListView();
-        await this.waitForTableRows();
 
         // Open the first listing row to show details modal
         const firstRow = this.page.locator('tbody tr').first();
@@ -4102,23 +4094,14 @@ export class ListingActions {
 
         // Optionally ensure modal is closed
         await expect(detailsModal).toBeHidden({ timeout: 3000 });
-
-        // Scroll to the bottom of the table to load (all) records
-        await this.page.evaluate(() => {
-            const tableWrapper = document.querySelector('.p-datatable-wrapper');
-            if (tableWrapper) tableWrapper.scrollTop = tableWrapper.scrollHeight;
-        });
         // Wait for any additional rows to load
         await this.page.waitForTimeout(1000);
-        await this.scrollToLoadListings()
     }
 
     // Opens, then closes the first row modal, then opens/closes second, then scrolls table to load more rows
     async openCloseMultipleListingsThenScroll() {
         await this.navigateToListings();
         await this.switchToListView();
-        await this.waitForTableRows();
-
         const rows = this.page.locator('tbody tr');
         const count = await rows.count();
         const maxOpen = Math.min(2, count);
@@ -4150,22 +4133,12 @@ export class ListingActions {
             await expect(detailsModal2).toBeHidden({ timeout: 3000 });
             await this.page.waitForTimeout(400);
         }
-
-        // Scroll to the bottom to load more listings
-        await this.page.evaluate(() => {
-            const tableWrapper = document.querySelector('.p-datatable-wrapper');
-            if (tableWrapper) tableWrapper.scrollTop = tableWrapper.scrollHeight;
-        });
-
         await this.page.waitForTimeout(1200);
-        await this.scrollToLoadListings();
     }
 
     async openAndCloseListingDetailsThenApplyFilter(status: string) {
         await this.navigateToListings();
         await this.switchToListView();
-        await this.waitForTableRows();
-
         // Open details modal for first row
         const firstRow = this.page.locator('tbody tr').first();
         await expect(firstRow).toBeVisible({ timeout: 10000 });

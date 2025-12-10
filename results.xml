@@ -1,6 +1,138 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.10952499999851">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-10T07:37:06.399Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.38" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 63: Opening and closing a Listing, then applying filters" classname="Pages\Listing\Listingview.spec.ts" time="55.38">
+<testsuites id="" name="" tests="63" failures="0" skipped="0" errors="0" time="214.91242">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-10T11:09:20.283Z" hostname="chromium" tests="63" failures="0" skipped="0" time="210.464" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Searching for a valid Listing" classname="Pages\Listing\Listingview.spec.ts" time="20.89">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Searching for a non-existing Listing" classname="Pages\Listing\Listingview.spec.ts" time="2.032">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Searching for a listing using partial name" classname="Pages\Listing\Listingview.spec.ts" time="1.58">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Searching listing with special characters" classname="Pages\Listing\Listingview.spec.ts" time="1.64">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Searching with Listing only" classname="Pages\Listing\Listingview.spec.ts" time="1.726">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Searching listing with an empty field" classname="Pages\Listing\Listingview.spec.ts" time="1.433">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Selecting a single property type" classname="Pages\Listing\Listingview.spec.ts" time="3.095">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Selecting multiple property types in List View" classname="Pages\Listing\Listingview.spec.ts" time="3.577">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Deselecting all property types in List View" classname="Pages\Listing\Listingview.spec.ts" time="1.419">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Searching for a non-existing property type in List View" classname="Pages\Listing\Listingview.spec.ts" time="1.763">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Filtering with a valid suburb in List View" classname="Pages\Listing\Listingview.spec.ts" time="3.049">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Filtering with multiple suburbs in List View" classname="Pages\Listing\Listingview.spec.ts" time="2.813">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Deselecting all suburbs in List View" classname="Pages\Listing\Listingview.spec.ts" time="1.906">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Searching for a non-existing suburb in List View" classname="Pages\Listing\Listingview.spec.ts" time="1.933">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Filtering by a valid listing status in List View" classname="Pages\Listing\Listingview.spec.ts" time="2.096">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Selecting multiple contract statuses in List View" classname="Pages\Listing\Listingview.spec.ts" time="2.761">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Deselecting all listing statuses in List View" classname="Pages\Listing\Listingview.spec.ts" time="2.218">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Filtering by a valid listing type in List View" classname="Pages\Listing\Listingview.spec.ts" time="2.675">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Selecting multiple listing types in List View" classname="Pages\Listing\Listingview.spec.ts" time="3.08">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Deselecting all listing types in List View" classname="Pages\Listing\Listingview.spec.ts" time="4.306">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Filtering by a valid agent in List View" classname="Pages\Listing\Listingview.spec.ts" time="3.227">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Selecting multiple agents in List View" classname="Pages\Listing\Listingview.spec.ts" time="2.462">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Deselecting all agents in List View" classname="Pages\Listing\Listingview.spec.ts" time="2.105">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Searching for an inactive agent in List View" classname="Pages\Listing\Listingview.spec.ts" time="1.793">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Filtering by a valid contract status in List View" classname="Pages\Listing\Listingview.spec.ts" time="2.237">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 26: Selecting multiple contract statuses in List View" classname="Pages\Listing\Listingview.spec.ts" time="2.782">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Deselecting all contract statuses in List View" classname="Pages\Listing\Listingview.spec.ts" time="1.761">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Selecting a valid listing creation date range in List View" classname="Pages\Listing\Listingview.spec.ts" time="1.51">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 29: Selecting a future listing creation date in List View" classname="Pages\Listing\Listingview.spec.ts" time="1.62">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 30: Clicking on Admin Default in List View" classname="Pages\Listing\Listingview.spec.ts" time="1.77">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 31: Hiding and showing a Status in List View" classname="Pages\Listing\Listingview.spec.ts" time="5.243">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 32: Dragging a status to change its position in List View" classname="Pages\Listing\Listingview.spec.ts" time="3.704">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 33: Searching for a status inside Admin View" classname="Pages\Listing\Listingview.spec.ts" time="2.728">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 34: Creating a new list view" classname="Pages\Listing\Listingview.spec.ts" time="5.552">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 35: Creating a view without a name (should show error)" classname="Pages\Listing\Listingview.spec.ts" time="2.017">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 36: Deleting an existing view" classname="Pages\Listing\Listingview.spec.ts" time="3.909">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 37: Sharing a view with a user or team" classname="Pages\Listing\Listingview.spec.ts" time="5.462">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 38: Searching for a user/team inside Share View" classname="Pages\Listing\Listingview.spec.ts" time="4.323">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 39: Apply a filter and verify reset removes all filters" classname="Pages\Listing\Listingview.spec.ts" time="1.992">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 40: Clicking Reset when no filters are applied" classname="Pages\Listing\Listingview.spec.ts" time="1.085">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 41: Deleting a listing from List View" classname="Pages\Listing\Listingview.spec.ts" time="1.221">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 42: Searching should not take more than 2 seconds" classname="Pages\Listing\Listingview.spec.ts" time="1.359">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 43: Filtering 100+ listings should be smooth" classname="Pages\Listing\Listingview.spec.ts" time="1.196">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 44: Applying a valid filter on a status" classname="Pages\Listing\Listingview.spec.ts" time="4.147">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 45: Clearing an applied filter on Listing" classname="Pages\Listing\Listingview.spec.ts" time="5.99">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 46: Selecting invalid data for a condition" classname="Pages\Listing\Listingview.spec.ts" time="3.446">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 47: Sorting by a valid column" classname="Pages\Listing\Listingview.spec.ts" time="2.217">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 48: Sorting after applying a filter" classname="Pages\Listing\Listingview.spec.ts" time="3.381">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 49: Sorting by an empty column" classname="Pages\Listing\Listingview.spec.ts" time="2.271">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 50: Scrolling down to load more Listings" classname="Pages\Listing\Listingview.spec.ts" time="2.696">
+<system-out>
+<![CDATA[Fast scrolling complete. Loaded 34 of 34 records.
+]]>
+</system-out>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 51: Applying multiple filters at once" classname="Pages\Listing\Listingview.spec.ts" time="8.663">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 52: Sorting and filtering together" classname="Pages\Listing\Listingview.spec.ts" time="1.547">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 53: Opening multiple filters without applying" classname="Pages\Listing\Listingview.spec.ts" time="6.102">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 54: Searching with an extremely long string" classname="Pages\Listing\Listingview.spec.ts" time="3.056">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 55: Applying a filter and then quickly clicking Reset" classname="Pages\Listing\Listingview.spec.ts" time="3.134">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 56: Opening the contact form" classname="Pages\Listing\Listingview.spec.ts" time="4.699">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 57: Creating a Listing with required fields" classname="Pages\Listing\Listingview.spec.ts" time="6.64">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 58: Creating a Listing with missing required fields shows validation error" classname="Pages\Listing\Listingview.spec.ts" time="4.358">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 59: Scrolling down should load more listings" classname="Pages\Listing\Listingview.spec.ts" time="2.807">
+<system-out>
+<![CDATA[Fast scrolling complete. Loaded 34 of 34 records.
+]]>
+</system-out>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 60: Opening and closing listing details modal" classname="Pages\Listing\Listingview.spec.ts" time="3.182">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 61: Opens, closes a listing details modal, then scrolls" classname="Pages\Listing\Listingview.spec.ts" time="3.982">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 62: Open/close multiple listing modals, then scroll and load more" classname="Pages\Listing\Listingview.spec.ts" time="6.253">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 63: Opening and closing a Listing, then applying filters" classname="Pages\Listing\Listingview.spec.ts" time="4.843">
 </testcase>
 </testsuite>
 </testsuites>
