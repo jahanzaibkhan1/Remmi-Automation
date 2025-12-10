@@ -326,6 +326,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 52: Sorting and filtering together', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.sortAfterFilter('Hina');
+    await listingActions.resetFilters();
+  });
+
 
 });
 
