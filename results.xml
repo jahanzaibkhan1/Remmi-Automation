@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.239345999998974">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-10T07:32:22.495Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.073" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 62: Open/close multiple listing modals, then scroll and load more" classname="Pages\Listing\Listingview.spec.ts" time="28.073">
-<system-out>
-<![CDATA[Fast scrolling complete. Loaded 34 of 34 records.
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.10952499999851">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-10T07:37:06.399Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.38" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 63: Opening and closing a Listing, then applying filters" classname="Pages\Listing\Listingview.spec.ts" time="55.38">
 </testcase>
 </testsuite>
 </testsuites>
