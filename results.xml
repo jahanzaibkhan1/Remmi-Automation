@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.68261900000088">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-10T07:20:34.019Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.075" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 60: Opening and closing listing details modal" classname="Pages\Listing\Listingview.spec.ts" time="30.075">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.67263299999945">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2025-12-10T07:27:48.654Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.965" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 61: Opens, closes a listing details modal, then scrolls" classname="Pages\Listing\Listingview.spec.ts" time="29.965">
+<system-out>
+<![CDATA[Fast scrolling complete. Loaded 34 of 34 records.
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>

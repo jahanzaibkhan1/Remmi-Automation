@@ -4080,4 +4080,37 @@ export class ListingActions {
         await expect(detailsModal).toBeHidden({ timeout: 3000 });
     }
 
+    // Opens the first listing details modal, closes it, then scrolls table to top
+    async openCloseListingThenScroll() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Open the first listing row to show details modal
+        const firstRow = this.page.locator('tbody tr').first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        await firstRow.click();
+
+        // Wait for details modal to show, then close it
+        const detailsModal = this.page.locator('#rightbarwithscroll').first();
+        await expect(detailsModal).toBeVisible({ timeout: 5000 });
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        await closeBtn.click({ force: true });
+
+        await this.page.waitForTimeout(1000); // brief pause
+
+        // Optionally ensure modal is closed
+        await expect(detailsModal).toBeHidden({ timeout: 3000 });
+
+        // Scroll to the bottom of the table to load (all) records
+        await this.page.evaluate(() => {
+            const tableWrapper = document.querySelector('.p-datatable-wrapper');
+            if (tableWrapper) tableWrapper.scrollTop = tableWrapper.scrollHeight;
+        });
+        // Wait for any additional rows to load
+        await this.page.waitForTimeout(1000);
+        await this.scrollToLoadListings()
+    }
+
 }

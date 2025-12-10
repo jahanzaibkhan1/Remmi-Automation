@@ -380,6 +380,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 61: Opens, closes a listing details modal, then scrolls', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.openCloseListingThenScroll();
+    await listingActions.resetFilters();
+  });
+
 });
 
 
