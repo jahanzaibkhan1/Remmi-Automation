@@ -3876,4 +3876,24 @@ export class ListingActions {
         // You may wish to add an assertion here that all table rows are shown or the filter is cleared
     }
 
+    // Opening the contact form
+    async openContactForm() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+          // Assuming there is a button or icon to open the contact form in each card row
+          const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+          await contactFormBtn.dblclick();
+          // Wait for contact form to be visible (adjust selector if needed)
+          const contactForm = this.page.locator('#rightbarwithscroll');
+          await expect(contactForm).toBeVisible({ timeout: 10000 });
+  
+          const closeForm = this.page.locator('.pi.pi-times').first()
+          await this.page.waitForTimeout(1000)
+          await closeForm.click({ force: true })
+  
+          await this.page.waitForTimeout(1500)
+    }
+
 }
