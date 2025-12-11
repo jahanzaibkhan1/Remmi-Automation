@@ -40,4 +40,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.pinFirstListing();
   });
 
+  test('Test 5: Opening a pinned listing', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.openPinnedListing();
+  });
+
 });
