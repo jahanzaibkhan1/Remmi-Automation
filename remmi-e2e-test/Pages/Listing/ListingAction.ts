@@ -4380,5 +4380,32 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    // Unpin a pinned listing card in the grid view
+    async unpinFirstPinnedListing() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Wait for cards to appear
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+
+        // Find the pinned icon in the grid, assuming first pinned card
+        const pinnedIcon = this.page.locator('app-props-grid img[src*="pin"]').first();
+        await expect(pinnedIcon).toBeVisible({ timeout: 5000 });
+
+        // Get the bounding box of the pinned icon for right-click
+        const box = await pinnedIcon.boundingBox();
+        if (!box) throw new Error("Pinned icon bounding box not found");
+
+        // Right-click on the pinned icon to open the context menu
+        await this.page.mouse.click(box.x + box.width / 2, box.y + box.height / 2, { button: 'right' });
+
+        // Click "Unpin to Dashboard" in the context menu
+        const unpinMenuItem = this.page.getByText('Unpin to Dashboard').first();
+        await expect(unpinMenuItem).toBeVisible({ timeout: 5000 });
+        await unpinMenuItem.click();
+        await this.page.waitForTimeout(1000);
+    }
+
 
 }
