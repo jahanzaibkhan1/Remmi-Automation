@@ -4087,8 +4087,8 @@ export class ListingActions {
         await expect(firstRow).toBeVisible({ timeout: 10000 });
         await firstRow.click();
 
-        const closeBtn = this.page.locator('.close-rightBar');
-        await closeBtn.dblclick({ force: true });
+        await this.page.waitForSelector('.pi.pi-times', { timeout: 10000 });
+        await this.page.dblclick('.pi.pi-times');
 
         await this.page.waitForTimeout(1000);
     }
@@ -4107,8 +4107,8 @@ export class ListingActions {
             const firstRow = rows.nth(0);
             await expect(firstRow).toBeVisible({ timeout: 10000 });
             await firstRow.click();
-            const closeBtn = this.page.locator('.close-rightBar');
-            await closeBtn.dblclick({ force: true });
+            await this.page.waitForSelector('.pi.pi-times', { timeout: 10000 });
+            await this.page.dblclick('.pi.pi-times');
             await this.page.waitForTimeout(1000);
         }
 
@@ -4117,8 +4117,8 @@ export class ListingActions {
             const secondRow = rows.nth(1);
             await expect(secondRow).toBeVisible({ timeout: 10000 });
             await secondRow.click();
-            const closeBtn = this.page.locator('.close-rightBar');
-            await closeBtn.dblclick({ force: true });
+            await this.page.waitForSelector('.pi.pi-times', { timeout: 10000 });
+            await this.page.dblclick('.pi.pi-times');
             await this.page.waitForTimeout(600);
         }
         await this.page.waitForTimeout(1200);
@@ -4133,8 +4133,8 @@ export class ListingActions {
         await firstRow.click();
 
         // Close modal
-        const closeBtn = this.page.locator('.close-rightBar');
-        await closeBtn.dblclick({ force: true });
+        await this.page.waitForSelector('.pi.pi-times', { timeout: 10000 });
+        await this.page.dblclick('.pi.pi-times');
         await this.page.waitForTimeout(1200);
 
         // Click filter icon for Listing Status
@@ -4202,8 +4202,8 @@ export class ListingActions {
         // Open the first result's details modal
         await firstRow.click();
         // Close the details modal
-        const closeBtn = this.page.locator('.close-rightBar');
-        await closeBtn.dblclick({ force: true });
+        await this.page.waitForSelector('.pi.pi-times', { timeout: 10000 });
+        await this.page.dblclick('.pi.pi-times');
         await this.page.waitForTimeout(1200);
     }
 
@@ -4372,11 +4372,8 @@ export class ListingActions {
         const listingDetails = this.page.locator('#rightbarwithscroll');
         await expect(listingDetails).toBeVisible({ timeout: 10000 });
         // Optionally, close the details modal
-        const closeButton = this.page.locator('.pi.pi-times').first();
-        if (await closeButton.isVisible()) {
-            await closeButton.click({ force: true });
-        }
-
+        await this.page.waitForSelector('.pi.pi-times', { timeout: 10000 });
+        await this.page.dblclick('.pi.pi-times');
         await this.page.waitForTimeout(1000);
     }
 
