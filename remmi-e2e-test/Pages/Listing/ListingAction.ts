@@ -4354,5 +4354,31 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    // Opening a pinned listing
+    async openPinnedListing() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+        // Find a pinned icon in the grid and click it to open the pinned listing
+        const pinnedIcon = this.page.locator('app-props-grid img[src*="pin"]').first();
+        await expect(pinnedIcon).toBeVisible({ timeout: 5000 });
+        // Click on the first card
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 5000 });
+        await firstCard.click();
+        // Wait for the details modal or rightbar to appear
+        const listingDetails = this.page.locator('#rightbarwithscroll');
+        await expect(listingDetails).toBeVisible({ timeout: 10000 });
+        // Optionally, close the details modal
+        const closeButton = this.page.locator('.pi.pi-times').first();
+        if (await closeButton.isVisible()) {
+            await closeButton.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(1000);
+    }
+
 
 }
