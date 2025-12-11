@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.27232299999986">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-11T10:37:58.851Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.341" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Open listing  form" classname="Pages\Listing\listingForm.spec.ts" time="31.341">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.53987899999972">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-11T10:39:44.449Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.86" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Close listing  form using cross icon" classname="Pages\Listing\listingForm.spec.ts" time="27.86">
 </testcase>
 </testsuite>
 </testsuites>
