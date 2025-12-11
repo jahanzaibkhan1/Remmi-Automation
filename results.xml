@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.750865000000225">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-11T10:42:37.102Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Close form without saving" classname="Pages\Listing\listingForm.spec.ts" time="32">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.686752000000325">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-11T11:40:45.339Z" hostname="chromium" tests="1" failures="0" skipped="0" time="53.718" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Pinning the first listing card" classname="Pages\Listing\listingForm.spec.ts" time="53.718">
 </testcase>
 </testsuite>
 </testsuites>

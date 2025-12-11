@@ -2972,7 +2972,7 @@ export class ListingActions {
 
         // Read calendar month and year displayed
         const header = this.page.locator(".p-datepicker-title");
-        await expect(header).toBeVisible({timeout:10000});
+        await expect(header).toBeVisible({ timeout: 10000 });
         const headerText = await header.innerText();
         const [monthName, year] = headerText.trim().split(" ");
         const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
@@ -4324,5 +4324,35 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
 
     }
+
+    // Pinning a listing card row via right-click context menu
+    async pinFirstListing() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Wait for cards to appear
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+
+        // Get bounding box of the first card to use mouse
+        const firstCardRow = cards.first();
+        const box = await firstCardRow.boundingBox();
+        if (!box) throw new Error("First card bounding box not found");
+
+        // Right-click using mouse at the center of the first card
+        await this.page.mouse.click(box.x + box.width / 2, box.y + box.height / 2, { button: 'right' });
+
+        // Click "Pin To Dashboard" in the context menu
+        const pinToDashboardMenuItem = this.page.getByText('Pin To Dashboard').first();
+        await expect(pinToDashboardMenuItem).toBeVisible({ timeout: 5000 });
+        await pinToDashboardMenuItem.click();
+
+        // Assert the pinned icon appears
+        const pinnedIcon = this.page.locator('app-props-grid img[src*="pin"]').first();
+        await expect(pinnedIcon).toBeVisible({ timeout: 5000 });
+
+        await this.page.waitForTimeout(1000);
+    }
+
 
 }
