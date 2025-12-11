@@ -4080,7 +4080,7 @@ export class ListingActions {
         await this.navigateToListings();
         await this.switchToListView();
 
-        await this.page.waitForTimeout(2100);
+        await this.waitForTableRows();
 
         // Open the first listing row to show details modal
         const firstRow = this.page.locator('tbody tr').first();
