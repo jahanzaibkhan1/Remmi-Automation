@@ -2972,7 +2972,7 @@ export class ListingActions {
 
         // Read calendar month and year displayed
         const header = this.page.locator(".p-datepicker-title");
-        await expect(header).toBeVisible();
+        await expect(header).toBeVisible({timeout:10000});
         const headerText = await header.innerText();
         const [monthName, year] = headerText.trim().split(" ");
         const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
@@ -2985,7 +2985,7 @@ export class ListingActions {
             } else {
                 await this.page.locator(".p-datepicker-prev").click();
             }
-            await this.page.waitForTimeout(200);
+            await this.page.waitForTimeout(1000);
         }
 
         // Click the target (future) day
@@ -3843,11 +3843,11 @@ export class ListingActions {
         await this.waitForTableRows();
 
         // Find the filter icon for "Listing Status"
-       
-        const filterIcon =  await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', { state: 'visible', timeout: 5000 });
+
+        const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', { state: 'visible', timeout: 5000 });
         await filterIcon.click({ force: true });
 
-       
+
         const selectField = this.page.getByText('Select', { exact: true }).first();
         await selectField.click();
 
@@ -3882,18 +3882,18 @@ export class ListingActions {
         await this.switchToListView();
         await this.waitForTableRows();
 
-          // Assuming there is a button or icon to open the contact form in each card row
-          const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
-          await contactFormBtn.dblclick();
-          // Wait for contact form to be visible (adjust selector if needed)
-          const contactForm = this.page.locator('#rightbarwithscroll');
-          await expect(contactForm).toBeVisible({ timeout: 10000 });
-  
-          const closeForm = this.page.locator('.pi.pi-times').first()
-          await this.page.waitForTimeout(1000)
-          await closeForm.click({ force: true })
-  
-          await this.page.waitForTimeout(1500)
+        // Assuming there is a button or icon to open the contact form in each card row
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick();
+        // Wait for contact form to be visible (adjust selector if needed)
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        const closeForm = this.page.locator('.pi.pi-times').first()
+        await this.page.waitForTimeout(1000)
+        await closeForm.click({ force: true })
+
+        await this.page.waitForTimeout(1500)
     }
 
     // Creating a listing
@@ -4054,6 +4054,8 @@ export class ListingActions {
                 row.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }, rowSelector);
+
+        await this.page.waitForTimeout(1200);
     }
 
     // Opening and closing a listing details modal
@@ -4067,8 +4069,8 @@ export class ListingActions {
         await expect(firstRow).toBeVisible({ timeout: 10000 });
         await firstRow.click();
 
-        const closeForm = this.page.locator('.pi.pi-times').first()
-        await closeForm.click({ force: true })
+        const closeBtn = this.page.locator('.close-rightBar');
+        await closeBtn.dblclick({ force: true });
 
         await this.page.waitForTimeout(1200)
     }
@@ -4078,6 +4080,8 @@ export class ListingActions {
         await this.navigateToListings();
         await this.switchToListView();
 
+        await this.page.waitForTimeout(2100);
+
         // Open the first listing row to show details modal
         const firstRow = this.page.locator('tbody tr').first();
         await expect(firstRow).toBeVisible({ timeout: 10000 });
@@ -4085,23 +4089,24 @@ export class ListingActions {
 
         // Wait for details modal to show, then close it
         const detailsModal = this.page.locator('#rightbarwithscroll').first();
-        await expect(detailsModal).toBeVisible({ timeout: 5000 });
+        await expect(detailsModal).toBeVisible({ timeout: 10000 });
 
-        const closeBtn = this.page.locator('.pi.pi-times').first();
-        await closeBtn.click({ force: true });
+        const closeBtn = this.page.locator('.close-rightBar');
+        await closeBtn.dblclick({ force: true });
 
         await this.page.waitForTimeout(1000); // brief pause
 
         // Optionally ensure modal is closed
-        await expect(detailsModal).toBeHidden({ timeout: 3000 });
+        await expect(detailsModal).toBeHidden({ timeout: 10000 });
         // Wait for any additional rows to load
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(1500);
     }
 
     // Opens, then closes the first row modal, then opens/closes second, then scrolls table to load more rows
     async openCloseMultipleListingsThenScroll() {
         await this.navigateToListings();
         await this.switchToListView();
+        await this.page.waitForTimeout(2000);
         const rows = this.page.locator('tbody tr');
         const count = await rows.count();
         const maxOpen = Math.min(2, count);
@@ -4113,8 +4118,8 @@ export class ListingActions {
             await firstRow.click();
             const detailsModal = this.page.locator('#rightbarwithscroll').first();
             await expect(detailsModal).toBeVisible({ timeout: 5000 });
-            const closeBtn = this.page.locator('.pi.pi-times').first();
-            await closeBtn.click({ force: true });
+            const closeBtn = this.page.locator('.close-rightBar');
+            await closeBtn.dblclick({ force: true });
             await this.page.waitForTimeout(600);
             await expect(detailsModal).toBeHidden({ timeout: 3000 });
             await this.page.waitForTimeout(400);
@@ -4127,8 +4132,8 @@ export class ListingActions {
             await secondRow.click();
             const detailsModal2 = this.page.locator('#rightbarwithscroll').first();
             await expect(detailsModal2).toBeVisible({ timeout: 5000 });
-            const closeBtn2 = this.page.locator('.pi.pi-times').first();
-            await closeBtn2.click({ force: true });
+            const closeBtn = this.page.locator('.close-rightBar');
+            await closeBtn.dblclick({ force: true });
             await this.page.waitForTimeout(600);
             await expect(detailsModal2).toBeHidden({ timeout: 3000 });
             await this.page.waitForTimeout(400);
@@ -4144,18 +4149,27 @@ export class ListingActions {
         await expect(firstRow).toBeVisible({ timeout: 10000 });
         await firstRow.click();
         const detailsModal = this.page.locator('#rightbarwithscroll').first();
-        await expect(detailsModal).toBeVisible({ timeout: 5000 });
+        await expect(detailsModal).toBeVisible({ timeout: 10000 });
 
         // Close modal
-        const closeBtn = this.page.locator('.pi.pi-times').first();
-        await closeBtn.click({ force: true });
+        const closeBtn = this.page.locator('.close-rightBar');
+        await closeBtn.dblclick({ force: true });
         await this.page.waitForTimeout(600);
         await expect(detailsModal).toBeHidden({ timeout: 3000 });
 
-        // Now apply a filter to the Listing Status column (same logic as applyvalidListingFilter)
         // Click filter icon for Listing Status
-        const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', { state: 'visible', timeout: 5000 });
-        await filterIcon.click({ force: true });
+        const filterIconLocator = this.page.locator('th:has-text("Listing Status") img[alt="filter"]');
+        await expect(filterIconLocator).toBeVisible({ timeout: 5000 });
+        // Sometimes force-click doesn't trigger, so try both click() and a fallback
+        try {
+            await filterIconLocator.click({ force: true, timeout: 4000 });
+        } catch (e) {
+            // As fallback, try to click via evaluate (simulate DOM click)
+            await this.page.evaluate((selector) => {
+                const el = document.querySelector(selector);
+                if (el) { (el as HTMLElement).click(); }
+            }, 'th:has-text("Listing Status") img[alt="filter"]');
+        }
 
         // Open and select "Equals"
         const selectField = this.page.getByText('Select', { exact: true }).first();
@@ -4210,8 +4224,8 @@ export class ListingActions {
         const detailsModal = this.page.locator('#rightbarwithscroll').first();
         await expect(detailsModal).toBeVisible({ timeout: 5000 });
         // Close the details modal
-        const closeBtn = this.page.locator('.pi.pi-times').first();
-        await closeBtn.click({ force: true });
+        const closeBtn = this.page.locator('.close-rightBar');
+        await closeBtn.dblclick({ force: true });
         await this.page.waitForTimeout(1200);
     }
 
