@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.29025200000033">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-11T11:48:41.766Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.036" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Opening a pinned listing" classname="Pages\Listing\listingForm.spec.ts" time="25.036">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.263370999999346">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-11T11:56:12.782Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.045" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Unpinning a pinned listing" classname="Pages\Listing\listingForm.spec.ts" time="27.045">
 </testcase>
 </testsuite>
 </testsuites>
