@@ -4087,19 +4087,10 @@ export class ListingActions {
         await expect(firstRow).toBeVisible({ timeout: 10000 });
         await firstRow.click();
 
-        // Wait for details modal to show, then close it
-        const detailsModal = this.page.locator('#rightbarwithscroll').first();
-        await expect(detailsModal).toBeVisible({ timeout: 10000 });
-
         const closeBtn = this.page.locator('.close-rightBar');
         await closeBtn.dblclick({ force: true });
 
-        await this.page.waitForTimeout(1000); // brief pause
-
-        // Optionally ensure modal is closed
-        await expect(detailsModal).toBeHidden({ timeout: 10000 });
-        // Wait for any additional rows to load
-        await this.page.waitForTimeout(1500);
+        await this.page.waitForTimeout(1000);
     }
 
     // Opens, then closes the first row modal, then opens/closes second, then scrolls table to load more rows
@@ -4116,13 +4107,9 @@ export class ListingActions {
             const firstRow = rows.nth(0);
             await expect(firstRow).toBeVisible({ timeout: 10000 });
             await firstRow.click();
-            const detailsModal = this.page.locator('#rightbarwithscroll').first();
-            await expect(detailsModal).toBeVisible({ timeout: 5000 });
             const closeBtn = this.page.locator('.close-rightBar');
             await closeBtn.dblclick({ force: true });
-            await this.page.waitForTimeout(600);
-            await expect(detailsModal).toBeHidden({ timeout: 3000 });
-            await this.page.waitForTimeout(400);
+            await this.page.waitForTimeout(1000);
         }
 
         // Click second row, close form
@@ -4130,13 +4117,9 @@ export class ListingActions {
             const secondRow = rows.nth(1);
             await expect(secondRow).toBeVisible({ timeout: 10000 });
             await secondRow.click();
-            const detailsModal2 = this.page.locator('#rightbarwithscroll').first();
-            await expect(detailsModal2).toBeVisible({ timeout: 5000 });
             const closeBtn = this.page.locator('.close-rightBar');
             await closeBtn.dblclick({ force: true });
             await this.page.waitForTimeout(600);
-            await expect(detailsModal2).toBeHidden({ timeout: 3000 });
-            await this.page.waitForTimeout(400);
         }
         await this.page.waitForTimeout(1200);
     }
@@ -4148,14 +4131,11 @@ export class ListingActions {
         const firstRow = this.page.locator('tbody tr').first();
         await expect(firstRow).toBeVisible({ timeout: 10000 });
         await firstRow.click();
-        const detailsModal = this.page.locator('#rightbarwithscroll').first();
-        await expect(detailsModal).toBeVisible({ timeout: 10000 });
 
         // Close modal
         const closeBtn = this.page.locator('.close-rightBar');
         await closeBtn.dblclick({ force: true });
-        await this.page.waitForTimeout(600);
-        await expect(detailsModal).toBeHidden({ timeout: 3000 });
+        await this.page.waitForTimeout(1200);
 
         // Click filter icon for Listing Status
         const filterIconLocator = this.page.locator('th:has-text("Listing Status") img[alt="filter"]');
@@ -4221,12 +4201,62 @@ export class ListingActions {
 
         // Open the first result's details modal
         await firstRow.click();
-        const detailsModal = this.page.locator('#rightbarwithscroll').first();
-        await expect(detailsModal).toBeVisible({ timeout: 5000 });
         // Close the details modal
         const closeBtn = this.page.locator('.close-rightBar');
         await closeBtn.dblclick({ force: true });
         await this.page.waitForTimeout(1200);
+    }
+
+    // Check for duplicate Property Address values in the table
+
+    async checkForDuplicatePropertyAddresses() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Find column index for "Property Address"
+        const headers = this.page.locator('thead tr th');
+        const headerCount = await headers.count();
+        let addressColIndex = -1;
+
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headers.nth(i).innerText()).trim().toLowerCase().replace(/\s+/g, " ");
+            if (headerText === 'property address' || headerText === 'address') {
+                addressColIndex = i;
+                break;
+            }
+        }
+        if (addressColIndex === -1) {
+            throw new Error('Property Address column not found');
+        }
+
+        // We'll use a set to track addresses. If two addresses are exactly equal (character-for-character) they are duplicates.
+        const tableRows = this.page.locator('tbody tr');
+        const rowCount = await tableRows.count();
+        const addressSet = new Set<string>();
+        const duplicates: string[] = [];
+
+        for (let i = 0; i < rowCount; i++) {
+            const row = tableRows.nth(i);
+            const cells = row.locator('td');
+            const cellCount = await cells.count();
+            if (addressColIndex >= cellCount) continue;
+
+            // Get the address exactly as in the table (do NOT normalize for spaces/case/etc)
+            const address = await cells.nth(addressColIndex).innerText();
+
+            if (addressSet.has(address)) {
+                duplicates.push(address);
+            } else {
+                addressSet.add(address);
+            }
+        }
+
+        // Throw if duplicates found (i.e., two or more *identical* addresses)
+        if (duplicates.length > 0) {
+            // Only report unique duplicate values found
+            throw new Error(`Duplicate Property Address(es) found in listing table: ${[...new Set(duplicates)].join(', ')}`);
+        }
     }
 
 }

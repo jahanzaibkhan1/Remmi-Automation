@@ -405,6 +405,12 @@ test('Test 64: Searching for a listing and opening Listing details', async ({ se
   await listingActions.resetFilters();
 });
 
+test('Test 65: Check for duplicate Property Address values in the table', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.checkForDuplicatePropertyAddresses();
+  await listingActions.resetFilters();
+});
+
 });
 
 
