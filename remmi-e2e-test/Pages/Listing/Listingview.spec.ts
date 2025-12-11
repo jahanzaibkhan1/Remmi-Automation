@@ -377,31 +377,33 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
   test('Test 60: Opening and closing listing details modal', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.openAndCloseListingDetails();
-    await listingActions.resetFilters();
   });
 
   test('Test 61: Opens, closes a listing details modal, then scrolls', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.openCloseListingThenScroll();
-    await listingActions.resetFilters();
   });
 
 test('Test 62: Open/close multiple listing modals, then scroll and load more', async ({ sessionPage }) => {
   const listingActions = new ListingActions(sessionPage);
   await listingActions.openCloseMultipleListingsThenScroll();
-  await listingActions.resetFilters();
 });
 
 test('Test 63: Opening and closing a Listing, then applying filters', async ({ sessionPage }) => {
   const listingActions = new ListingActions(sessionPage);
   // Apply filter and then quickly reset it
   await listingActions.openAndCloseListingDetailsThenApplyFilter('For Sale');
-  await listingActions.resetFilters();
 });
 
 test('Test 64: Searching for a listing and opening Listing details', async ({ sessionPage }) => {
   const listingActions = new ListingActions(sessionPage);
   await listingActions.searchAndOpenListing('Hina');
+  await listingActions.resetFilters();
+});
+
+test('Test 65: Check for duplicate Property Address values in the table', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.checkForDuplicatePropertyAddresses();
   await listingActions.resetFilters();
 });
 

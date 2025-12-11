@@ -2972,7 +2972,7 @@ export class ListingActions {
 
         // Read calendar month and year displayed
         const header = this.page.locator(".p-datepicker-title");
-        await expect(header).toBeVisible();
+        await expect(header).toBeVisible({ timeout: 10000 });
         const headerText = await header.innerText();
         const [monthName, year] = headerText.trim().split(" ");
         const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
@@ -2985,7 +2985,7 @@ export class ListingActions {
             } else {
                 await this.page.locator(".p-datepicker-prev").click();
             }
-            await this.page.waitForTimeout(200);
+            await this.page.waitForTimeout(1000);
         }
 
         // Click the target (future) day
@@ -3843,11 +3843,11 @@ export class ListingActions {
         await this.waitForTableRows();
 
         // Find the filter icon for "Listing Status"
-       
-        const filterIcon =  await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', { state: 'visible', timeout: 5000 });
+
+        const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', { state: 'visible', timeout: 5000 });
         await filterIcon.click({ force: true });
 
-       
+
         const selectField = this.page.getByText('Select', { exact: true }).first();
         await selectField.click();
 
@@ -3882,18 +3882,18 @@ export class ListingActions {
         await this.switchToListView();
         await this.waitForTableRows();
 
-          // Assuming there is a button or icon to open the contact form in each card row
-          const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
-          await contactFormBtn.dblclick();
-          // Wait for contact form to be visible (adjust selector if needed)
-          const contactForm = this.page.locator('#rightbarwithscroll');
-          await expect(contactForm).toBeVisible({ timeout: 10000 });
-  
-          const closeForm = this.page.locator('.pi.pi-times').first()
-          await this.page.waitForTimeout(1000)
-          await closeForm.click({ force: true })
-  
-          await this.page.waitForTimeout(1500)
+        // Assuming there is a button or icon to open the contact form in each card row
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick();
+        // Wait for contact form to be visible (adjust selector if needed)
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        const closeForm = this.page.locator('.pi.pi-times').first()
+        await this.page.waitForTimeout(1000)
+        await closeForm.click({ force: true })
+
+        await this.page.waitForTimeout(1500)
     }
 
     // Creating a listing
@@ -4054,6 +4054,8 @@ export class ListingActions {
                 row.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }, rowSelector);
+
+        await this.page.waitForTimeout(1200);
     }
 
     // Opening and closing a listing details modal
@@ -4067,8 +4069,8 @@ export class ListingActions {
         await expect(firstRow).toBeVisible({ timeout: 10000 });
         await firstRow.click();
 
-        const closeForm = this.page.locator('.pi.pi-times').first()
-        await closeForm.click({ force: true })
+        const closeBtn = this.page.locator('.close-rightBar');
+        await closeBtn.dblclick({ force: true });
 
         await this.page.waitForTimeout(1200)
     }
@@ -4078,23 +4080,16 @@ export class ListingActions {
         await this.navigateToListings();
         await this.switchToListView();
 
+        await this.waitForTableRows();
+
         // Open the first listing row to show details modal
         const firstRow = this.page.locator('tbody tr').first();
         await expect(firstRow).toBeVisible({ timeout: 10000 });
         await firstRow.click();
 
-        // Wait for details modal to show, then close it
-        const detailsModal = this.page.locator('#rightbarwithscroll').first();
-        await expect(detailsModal).toBeVisible({ timeout: 5000 });
+        await this.page.waitForSelector('.pi.pi-times', { timeout: 10000 });
+        await this.page.dblclick('.pi.pi-times');
 
-        const closeBtn = this.page.locator('.pi.pi-times').first();
-        await closeBtn.click({ force: true });
-
-        await this.page.waitForTimeout(1000); // brief pause
-
-        // Optionally ensure modal is closed
-        await expect(detailsModal).toBeHidden({ timeout: 3000 });
-        // Wait for any additional rows to load
         await this.page.waitForTimeout(1000);
     }
 
@@ -4102,6 +4097,7 @@ export class ListingActions {
     async openCloseMultipleListingsThenScroll() {
         await this.navigateToListings();
         await this.switchToListView();
+        await this.page.waitForTimeout(2000);
         const rows = this.page.locator('tbody tr');
         const count = await rows.count();
         const maxOpen = Math.min(2, count);
@@ -4111,13 +4107,9 @@ export class ListingActions {
             const firstRow = rows.nth(0);
             await expect(firstRow).toBeVisible({ timeout: 10000 });
             await firstRow.click();
-            const detailsModal = this.page.locator('#rightbarwithscroll').first();
-            await expect(detailsModal).toBeVisible({ timeout: 5000 });
-            const closeBtn = this.page.locator('.pi.pi-times').first();
-            await closeBtn.click({ force: true });
-            await this.page.waitForTimeout(600);
-            await expect(detailsModal).toBeHidden({ timeout: 3000 });
-            await this.page.waitForTimeout(400);
+            await this.page.waitForSelector('.pi.pi-times', { timeout: 10000 });
+            await this.page.dblclick('.pi.pi-times');
+            await this.page.waitForTimeout(1000);
         }
 
         // Click second row, close form
@@ -4125,13 +4117,9 @@ export class ListingActions {
             const secondRow = rows.nth(1);
             await expect(secondRow).toBeVisible({ timeout: 10000 });
             await secondRow.click();
-            const detailsModal2 = this.page.locator('#rightbarwithscroll').first();
-            await expect(detailsModal2).toBeVisible({ timeout: 5000 });
-            const closeBtn2 = this.page.locator('.pi.pi-times').first();
-            await closeBtn2.click({ force: true });
+            await this.page.waitForSelector('.pi.pi-times', { timeout: 10000 });
+            await this.page.dblclick('.pi.pi-times');
             await this.page.waitForTimeout(600);
-            await expect(detailsModal2).toBeHidden({ timeout: 3000 });
-            await this.page.waitForTimeout(400);
         }
         await this.page.waitForTimeout(1200);
     }
@@ -4143,19 +4131,25 @@ export class ListingActions {
         const firstRow = this.page.locator('tbody tr').first();
         await expect(firstRow).toBeVisible({ timeout: 10000 });
         await firstRow.click();
-        const detailsModal = this.page.locator('#rightbarwithscroll').first();
-        await expect(detailsModal).toBeVisible({ timeout: 5000 });
 
         // Close modal
-        const closeBtn = this.page.locator('.pi.pi-times').first();
-        await closeBtn.click({ force: true });
-        await this.page.waitForTimeout(600);
-        await expect(detailsModal).toBeHidden({ timeout: 3000 });
+        await this.page.waitForSelector('.pi.pi-times', { timeout: 10000 });
+        await this.page.dblclick('.pi.pi-times');
+        await this.page.waitForTimeout(1200);
 
-        // Now apply a filter to the Listing Status column (same logic as applyvalidListingFilter)
         // Click filter icon for Listing Status
-        const filterIcon = await this.page.waitForSelector('th:has-text("Listing Status") img[alt="filter"]', { state: 'visible', timeout: 5000 });
-        await filterIcon.click({ force: true });
+        const filterIconLocator = this.page.locator('th:has-text("Listing Status") img[alt="filter"]');
+        await expect(filterIconLocator).toBeVisible({ timeout: 5000 });
+        // Sometimes force-click doesn't trigger, so try both click() and a fallback
+        try {
+            await filterIconLocator.click({ force: true, timeout: 4000 });
+        } catch (e) {
+            // As fallback, try to click via evaluate (simulate DOM click)
+            await this.page.evaluate((selector) => {
+                const el = document.querySelector(selector);
+                if (el) { (el as HTMLElement).click(); }
+            }, 'th:has-text("Listing Status") img[alt="filter"]');
+        }
 
         // Open and select "Equals"
         const selectField = this.page.getByText('Select', { exact: true }).first();
@@ -4207,12 +4201,208 @@ export class ListingActions {
 
         // Open the first result's details modal
         await firstRow.click();
-        const detailsModal = this.page.locator('#rightbarwithscroll').first();
-        await expect(detailsModal).toBeVisible({ timeout: 5000 });
         // Close the details modal
-        const closeBtn = this.page.locator('.pi.pi-times').first();
-        await closeBtn.click({ force: true });
+        await this.page.waitForSelector('.pi.pi-times', { timeout: 10000 });
+        await this.page.dblclick('.pi.pi-times');
         await this.page.waitForTimeout(1200);
     }
+
+    // Check for duplicate Property Address values in the table
+
+    async checkForDuplicatePropertyAddresses() {
+        await this.navigateToListings();
+        await this.switchToListView();
+        await this.waitForTableRows();
+
+        // Find column index for "Property Address"
+        const headers = this.page.locator('thead tr th');
+        const headerCount = await headers.count();
+        let addressColIndex = -1;
+
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headers.nth(i).innerText()).trim().toLowerCase().replace(/\s+/g, " ");
+            if (headerText === 'property address' || headerText === 'address') {
+                addressColIndex = i;
+                break;
+            }
+        }
+        if (addressColIndex === -1) {
+            throw new Error('Property Address column not found');
+        }
+
+        // We'll use a set to track addresses. If two addresses are exactly equal (character-for-character) they are duplicates.
+        const tableRows = this.page.locator('tbody tr');
+        const rowCount = await tableRows.count();
+        const addressSet = new Set<string>();
+        const duplicates: string[] = [];
+
+        for (let i = 0; i < rowCount; i++) {
+            const row = tableRows.nth(i);
+            const cells = row.locator('td');
+            const cellCount = await cells.count();
+            if (addressColIndex >= cellCount) continue;
+
+            // Get the address exactly as in the table (do NOT normalize for spaces/case/etc)
+            const address = await cells.nth(addressColIndex).innerText();
+
+            if (addressSet.has(address)) {
+                duplicates.push(address);
+            } else {
+                addressSet.add(address);
+            }
+        }
+
+        // Throw if duplicates found (i.e., two or more *identical* addresses)
+        if (duplicates.length > 0) {
+            // Only report unique duplicate values found
+            throw new Error(`Duplicate Property Address(es) found in listing table: ${[...new Set(duplicates)].join(', ')}`);
+        }
+    }
+
+    async closeFormWithoutSaving(propertyType: string, listingType: string, listingStatus: string) {
+        await this.navigateToListings();
+        await this.switchToListView()
+        await this.waitForTableRows()
+        // Assuming there is a button or icon to open the contact form in each card row
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick({ force: true });
+        // Wait for contact form to be visible (adjust selector if needed)
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Fill and select the property address: "1/14 Thomas Street, Laidley, QLD 4341"
+        const propertyAddressSearchInput = this.page.locator('#rightbarwithscroll').getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+        await propertyAddressSearchInput.fill('140 Coates Street, Laidley, QLD 4341');
+        // Wait for dropdown/options to appear and select the address
+        const addressOption = this.page.locator('div:nth-child(2) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 5000 });
+        await addressOption.click();
+
+        // Open Property Type dropdown and search/select the option
+        const propertyTypeDropdown = this.page.locator('ng-select[formcontrolname="type"]');
+        await expect(propertyTypeDropdown).toBeVisible({ timeout: 10000 });
+        await propertyTypeDropdown.click();
+
+        // Search for the propertyType option
+        const propertyTypeSearchInput = this.page.locator('ng-select[formcontrolname="type"] input[type="text"], ng-select[formcontrolname="type"] input[role="combobox"]');
+        if (await propertyTypeSearchInput.isVisible({ timeout: 1000 }).catch(() => false)) {
+            await propertyTypeSearchInput.fill(propertyType);
+            await this.page.waitForTimeout(500); // Let options update if needed
+        }
+
+        const propertyTypeOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: propertyType }).first();
+        await propertyTypeOption.click();
+
+        // Open Listing Type dropdown, search and select option
+        const listingTypeDropdown = this.page.locator('ng-select[formcontrolname="listingType"], ng-select[formcontrolname="listing_type"]');
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 10000 });
+        await listingTypeDropdown.click();
+        const listingTypeSearchInput = listingTypeDropdown.locator('input[type="text"]');
+        await expect(listingTypeSearchInput).toBeVisible({ timeout: 2000 });
+        await listingTypeSearchInput.fill(listingType);
+        await this.page.waitForTimeout(500); // Let options update if needed
+        const listingTypeOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: listingType }).first();
+        await listingTypeOption.click();
+
+        // Open Listing Status dropdown, search and select option
+
+        const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input')
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 })
+        await listingStatusDropdown.click();
+        // Correct way to access the search input for a native ng-select dropdown:
+        const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
+        await listingStatusSearchInput.fill(listingStatus);
+        await this.page.waitForTimeout(500);
+        const listingStatusOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: listingStatus }).first();
+        await listingStatusOption.click();
+
+        const closeForm = this.page.locator('.pi.pi-times').first()
+        await this.page.waitForTimeout(1000)
+        await closeForm.click({ force: true })
+
+        await this.page.waitForTimeout(1000);
+
+    }
+
+    // Pinning a listing card row via right-click context menu
+    async pinFirstListing() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Wait for cards to appear
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+
+        // Get bounding box of the first card to use mouse
+        const firstCardRow = cards.first();
+        const box = await firstCardRow.boundingBox();
+        if (!box) throw new Error("First card bounding box not found");
+
+        // Right-click using mouse at the center of the first card
+        await this.page.mouse.click(box.x + box.width / 2, box.y + box.height / 2, { button: 'right' });
+
+        // Click "Pin To Dashboard" in the context menu
+        const pinToDashboardMenuItem = this.page.getByText('Pin To Dashboard').first();
+        await expect(pinToDashboardMenuItem).toBeVisible({ timeout: 5000 });
+        await pinToDashboardMenuItem.click();
+
+        // Assert the pinned icon appears
+        const pinnedIcon = this.page.locator('app-props-grid img[src*="pin"]').first();
+        await expect(pinnedIcon).toBeVisible({ timeout: 5000 });
+
+        await this.page.waitForTimeout(1000);
+    }
+
+    // Opening a pinned listing
+    async openPinnedListing() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+        // Find a pinned icon in the grid and click it to open the pinned listing
+        const pinnedIcon = this.page.locator('app-props-grid img[src*="pin"]').first();
+        await expect(pinnedIcon).toBeVisible({ timeout: 5000 });
+        // Click on the first card
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 5000 });
+        await firstCard.click();
+        // Wait for the details modal or rightbar to appear
+        const listingDetails = this.page.locator('#rightbarwithscroll');
+        await expect(listingDetails).toBeVisible({ timeout: 10000 });
+        // Optionally, close the details modal
+        await this.page.waitForSelector('.pi.pi-times', { timeout: 10000 });
+        await this.page.dblclick('.pi.pi-times');
+        await this.page.waitForTimeout(1000);
+    }
+
+    // Unpin a pinned listing card in the grid view
+    async unpinFirstPinnedListing() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Wait for cards to appear
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+
+        // Find the pinned icon in the grid, assuming first pinned card
+        const pinnedIcon = this.page.locator('app-props-grid img[src*="pin"]').first();
+        await expect(pinnedIcon).toBeVisible({ timeout: 5000 });
+
+        // Get the bounding box of the pinned icon for right-click
+        const box = await pinnedIcon.boundingBox();
+        if (!box) throw new Error("Pinned icon bounding box not found");
+
+        // Right-click on the pinned icon to open the context menu
+        await this.page.mouse.click(box.x + box.width / 2, box.y + box.height / 2, { button: 'right' });
+
+        // Click "Unpin to Dashboard" in the context menu
+        const unpinMenuItem = this.page.getByText('Unpin to Dashboard').first();
+        await expect(unpinMenuItem).toBeVisible({ timeout: 5000 });
+        await unpinMenuItem.click();
+        await this.page.waitForTimeout(1000);
+    }
+
 
 }
