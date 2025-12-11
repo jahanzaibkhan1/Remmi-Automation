@@ -24,4 +24,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.openContactForm();
   });
+
+  test('Test 2: Close listing  form using cross icon', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.openContactForm();
+  });
+
 });
