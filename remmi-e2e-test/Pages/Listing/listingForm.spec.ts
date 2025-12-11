@@ -30,4 +30,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.openContactForm();
   });
 
+  test('Test 3: Close form without saving', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.closeFormWithoutSaving('House', 'Rental', 'For Lease');
+  });
+
 });
