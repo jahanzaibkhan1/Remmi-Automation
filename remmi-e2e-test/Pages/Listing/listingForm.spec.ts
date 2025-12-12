@@ -91,4 +91,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.selectPropertyInSearch();
   });
 
+  test('Test 14: Selecting previous listing in search', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.selectPreviousListing();
+  });
+
 });
