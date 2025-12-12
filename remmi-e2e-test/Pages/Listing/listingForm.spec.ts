@@ -50,4 +50,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.unpinFirstPinnedListing();
   });
 
+  test('Test 7: Search field listing functionality', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchfieldListing('For Lease');
+  });
+
 });
