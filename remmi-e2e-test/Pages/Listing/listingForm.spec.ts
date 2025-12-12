@@ -103,4 +103,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.previousListingCopy();
   });
 
+  test('Test 16: Declining previous listing data copy', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.declinePreviousListingCopy();
+  });
+
 });

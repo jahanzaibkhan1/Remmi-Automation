@@ -4728,5 +4728,47 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    // Declining previous listing data copy
+    async declinePreviousListingCopy() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Wait for at least one listing card
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+
+        // Double click to open contact form
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]");
+        await contactFormBtn.dblclick({ force: true });
+
+        // Wait for contact form to be visible
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Fill search input and select matching property address
+        const propertyAddressSearchInput = contactForm.getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+        await propertyAddressSearchInput.fill('140 Coates Street, Laidley, QLD 4341');
+
+        // Wait for dropdown/option to appear and click it
+        const addressOption = this.page.locator('div:nth-child(1) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 5000 });
+        await addressOption.click();
+
+        // Wait for "Would you like to copy this" dialog, click "No"
+        const copyDialog = this.page.getByText('Would you like to copy this');
+        await expect(copyDialog).toBeVisible({ timeout: 5000 });
+        const noButton = this.page.getByRole('button', { name: 'No' });
+        await expect(noButton).toBeVisible({ timeout: 5000 });
+        await noButton.click();
+
+        // Close the form after declining copy
+        const closeForm = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeForm.click({ force: true });
+
+        await this.page.waitForTimeout(1000);
+    }
+
 
 }
