@@ -85,4 +85,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetSearchField();
   });
 
+  test('Test 13: Selecting a property in search', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.selectPropertyInSearch();
+  });
+
 });
