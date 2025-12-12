@@ -4550,5 +4550,40 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    async closePopup() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+        // Open the contact form (or listing dialog)
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick({ force: true });
+        // Wait for contact form to be visible
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Fill and select the property address to trigger the copy dialog
+        const propertyAddressSearchInput = this.page.locator('#rightbarwithscroll').getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+        await propertyAddressSearchInput.fill('140 Coates Street, Laidley, QLD 4341');
+        // Wait for dropdown/options to appear and select the address
+        const addressOption = this.page.locator('div:nth-child(1) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 5000 });
+        await addressOption.click();
+
+        // Wait for the copy dialog and decline it
+        const copyDialog = this.page.getByText('Would you like to copy this');
+        await expect(copyDialog).toBeVisible({ timeout: 5000 });
+        const crossicon = this.page.getByRole('button').filter({ hasText: /^$/ }).nth(2);
+        await expect(crossicon).toBeVisible({ timeout: 5000 });
+        await crossicon.click();
+
+        // Optional: close the contact form after declining
+        const closeForm = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeForm.click({ force: true });
+        await this.page.waitForTimeout(1000);
+    }
+
 
 }
