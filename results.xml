@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.49213399999961">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-12T12:06:49.955Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.075" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Selecting a property in search" classname="Pages\Listing\listingForm.spec.ts" time="38.075">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.97836599999852">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-12T12:12:30.269Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.495" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Selecting previous listing in search" classname="Pages\Listing\listingForm.spec.ts" time="37.495">
 </testcase>
 </testsuite>
 </testsuites>
