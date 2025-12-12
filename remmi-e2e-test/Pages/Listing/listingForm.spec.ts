@@ -52,7 +52,13 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
   test('Test 7: Search field listing functionality', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
-    await listingActions.searchfieldListing('For Lease');
+    await listingActions.searchfieldListing();
+  });
+
+  test('Test 8: Selecting a listing from search', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    // Example address can be changed as necessary
+    await listingActions.selectListingFromSearch();
   });
 
 });
