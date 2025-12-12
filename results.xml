@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.378261999998244">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-12T12:14:59.532Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.624" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Confirming previous listing data copy" classname="Pages\Listing\listingForm.spec.ts" time="28.624">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.457593000000344">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-12T12:16:38.954Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.742" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Declining previous listing data copy" classname="Pages\Listing\listingForm.spec.ts" time="35.742">
 </testcase>
 </testsuite>
 </testsuites>
