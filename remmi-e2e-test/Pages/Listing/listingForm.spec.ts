@@ -73,4 +73,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.declineListingCopy()
   });
 
+  test('Test 11: Closing the popup using the cross icon', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.closePopup();
+  });
+
 });
