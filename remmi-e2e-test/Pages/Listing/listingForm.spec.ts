@@ -79,4 +79,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.closePopup();
   });
 
+  test('Test 12: Search field reset', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.resetSearchField();
+  });
+
 });
