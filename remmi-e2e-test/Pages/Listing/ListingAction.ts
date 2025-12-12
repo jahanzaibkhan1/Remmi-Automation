@@ -4770,5 +4770,52 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    // Search field reset after previous data selection
+    async resetPreviousDataSearchField() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Ensure listing cards are loaded
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+
+        // Double click Add New to open contact form
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]");
+        await contactFormBtn.dblclick({ force: true });
+
+        // Wait for the contact form and its search field
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+        const propertyAddressSearchInput = contactForm.getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+
+        // Fill in address to trigger previous data dialog
+        await propertyAddressSearchInput.fill('140 Coates Street, Laidley, QLD 4341');
+
+        // Wait for dropdown/option and select address
+        const addressOption = this.page.locator('div:nth-child(1) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 5000 });
+        await addressOption.click();
+
+        // Wait for copy dialog to appear
+        const copyDialog = this.page.getByText('Would you like to copy this');
+        await expect(copyDialog).toBeVisible({ timeout: 5000 });
+
+        const noButton = this.page.getByRole('button', { name: 'No' });
+        await expect(noButton).toBeVisible({ timeout: 5000 });
+        await noButton.click();
+
+        // Click the cross icon (close the dialog, which should reset the field)
+        const crossIcon = this.page.locator('.pi.pi-times._cross-icon');
+        await expect(crossIcon).toBeVisible({ timeout: 10000 });
+        await crossIcon.click({ force: true });
+
+        // Optional: close the form after test
+        const closeForm = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeForm.click({ force: true });
+        await this.page.waitForTimeout(1000);
+    }
+
 
 }

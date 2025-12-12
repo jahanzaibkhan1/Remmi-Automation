@@ -109,4 +109,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.declinePreviousListingCopy();
   });
 
+  test('Test 17: Search field reset after previous data selection', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.resetPreviousDataSearchField();
+  });
+
 });

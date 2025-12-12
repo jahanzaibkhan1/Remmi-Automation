@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.457593000000344">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-12T12:16:38.954Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.742" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Declining previous listing data copy" classname="Pages\Listing\listingForm.spec.ts" time="35.742">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="36.62243499999866">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-12T12:20:02.211Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.928" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Search field reset after previous data selection" classname="Pages\Listing\listingForm.spec.ts" time="28.928">
 </testcase>
 </testsuite>
 </testsuites>
