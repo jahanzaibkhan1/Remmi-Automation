@@ -1,16 +1,6 @@
-<testsuites id="" name="" tests="6" failures="0" skipped="0" errors="0" time="42.489556">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-11T12:12:52.674Z" hostname="chromium" tests="6" failures="0" skipped="0" time="38.461" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Open listing form" classname="Pages\Listing\listingForm.spec.ts" time="22.799">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Close listing  form using cross icon" classname="Pages\Listing\listingForm.spec.ts" time="3.179">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Close form without saving" classname="Pages\Listing\listingForm.spec.ts" time="6.179">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Pinning a listing" classname="Pages\Listing\listingForm.spec.ts" time="2.293">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Opening a pinned listing" classname="Pages\Listing\listingForm.spec.ts" time="2.665">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Unpinning a pinned listing" classname="Pages\Listing\listingForm.spec.ts" time="1.346">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="36.62243499999866">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-12T12:20:02.211Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.928" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Search field reset after previous data selection" classname="Pages\Listing\listingForm.spec.ts" time="28.928">
 </testcase>
 </testsuite>
 </testsuites>
