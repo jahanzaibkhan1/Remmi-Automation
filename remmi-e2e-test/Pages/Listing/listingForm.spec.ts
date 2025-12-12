@@ -61,4 +61,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.selectListingFromSearch();
   });
 
+  test('Test 9: Confirming listing copy', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.confirmListingCopy();
+  });
+
 });
