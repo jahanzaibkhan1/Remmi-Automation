@@ -66,4 +66,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.confirmListingCopy();
   });
 
+  test('Test 10: Declining listing copy', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    // This test should trigger the "Would you like to copy this" dialog and then decline it (click "No")
+    await listingActions.navigateToListings();
+    await listingActions.declineListingCopy()
+  });
+
 });
