@@ -4404,5 +4404,418 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    // Search field functionality for Listings table
+    async searchfieldListing() {
+        await this.navigateToListings();
+
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+        // Assuming there is a button or icon to open the contact form in each card row
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick({ force: true });
+        // Wait for contact form to be visible (adjust selector if needed)
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Fill and select the property address: "1/14 Thomas Street, Laidley, QLD 4341"
+        const propertyAddressSearchInput = this.page.locator('#rightbarwithscroll').getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+        await propertyAddressSearchInput.fill('140 Coates Street, Laidley, QLD 4341');
+        // Wait for dropdown/options to appear and select the address
+        const addressOption = this.page.locator('div:nth-child(1) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 5000 });
+        await addressOption.click();
+
+        // Wait for the dialog and click Yes
+        const copyDialog = this.page.getByText('Would you like to copy this');
+        await expect(copyDialog).toBeVisible({ timeout: 5000 });
+        const yesButton = this.page.getByRole('button', { name: 'Yes' });
+        await expect(yesButton).toBeVisible({ timeout: 5000 });
+        await yesButton.click();
+
+        const closeForm = this.page.locator('.pi.pi-times').first()
+        await this.page.waitForTimeout(1000)
+        await closeForm.click({ force: true })
+
+        await this.page.waitForTimeout(1000);
+
+    }
+
+    // Select a listing from search result
+    async selectListingFromSearch() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+        // Assuming there is a button or icon to open the contact form in each card row
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick({ force: true });
+        // Wait for contact form to be visible (adjust selector if needed)
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Fill and select the property address: "1/14 Thomas Street, Laidley, QLD 4341"
+        const propertyAddressSearchInput = this.page.locator('#rightbarwithscroll').getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+        await propertyAddressSearchInput.fill('140 Coates Street, Laidley, QLD 4341');
+        // Wait for dropdown/options to appear and select the address
+        const addressOption = this.page.locator('div:nth-child(1) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 5000 });
+        await addressOption.click();
+
+        // Wait for the dialog and click Yes
+        const copyDialog = this.page.getByText('Would you like to copy this');
+        await expect(copyDialog).toBeVisible({ timeout: 5000 });
+
+        const closeForm = this.page.locator('.pi.pi-times').first()
+        await this.page.waitForTimeout(1000)
+        await closeForm.click({ force: true })
+
+        await this.page.waitForTimeout(1000);
+    }
+
+    async confirmListingCopy() {
+        await this.navigateToListings();
+
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+        // Assuming there is a button or icon to open the contact form in each card row
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick({ force: true });
+        // Wait for contact form to be visible (adjust selector if needed)
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Fill and select the property address: "1/14 Thomas Street, Laidley, QLD 4341"
+        const propertyAddressSearchInput = this.page.locator('#rightbarwithscroll').getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+        await propertyAddressSearchInput.fill('140 Coates Street, Laidley, QLD 4341');
+        // Wait for dropdown/options to appear and select the address
+        const addressOption = this.page.locator('div:nth-child(1) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 5000 });
+        await addressOption.click();
+
+        // Wait for the dialog and click Yes
+        const copyDialog = this.page.getByText('Would you like to copy this');
+        await expect(copyDialog).toBeVisible({ timeout: 5000 });
+        const yesButton = this.page.getByRole('button', { name: 'Yes' });
+        await expect(yesButton).toBeVisible({ timeout: 5000 });
+        await yesButton.click();
+
+        const closeForm = this.page.locator('.pi.pi-times').first()
+        await this.page.waitForTimeout(1000)
+        await closeForm.click({ force: true })
+
+        await this.page.waitForTimeout(1000);
+
+    }
+
+    // Decline listing copy dialog
+    async declineListingCopy() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+        // Open the contact form (or listing dialog)
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick({ force: true });
+        // Wait for contact form to be visible
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Fill and select the property address to trigger the copy dialog
+        const propertyAddressSearchInput = this.page.locator('#rightbarwithscroll').getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+        await propertyAddressSearchInput.fill('140 Coates Street, Laidley, QLD 4341');
+        // Wait for dropdown/options to appear and select the address
+        const addressOption = this.page.locator('div:nth-child(1) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 5000 });
+        await addressOption.click();
+
+        // Wait for the copy dialog and decline it
+        const copyDialog = this.page.getByText('Would you like to copy this');
+        await expect(copyDialog).toBeVisible({ timeout: 5000 });
+        const noButton = this.page.getByRole('button', { name: 'No' });
+        await expect(noButton).toBeVisible({ timeout: 5000 });
+        await noButton.click();
+
+        // Optional: close the contact form after declining
+        const closeForm = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeForm.click({ force: true });
+        await this.page.waitForTimeout(1000);
+    }
+
+    async closePopup() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+        // Open the contact form (or listing dialog)
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick({ force: true });
+        // Wait for contact form to be visible
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Fill and select the property address to trigger the copy dialog
+        const propertyAddressSearchInput = this.page.locator('#rightbarwithscroll').getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+        await propertyAddressSearchInput.fill('140 Coates Street, Laidley, QLD 4341');
+        // Wait for dropdown/options to appear and select the address
+        const addressOption = this.page.locator('div:nth-child(1) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 5000 });
+        await addressOption.click();
+
+        // Wait for the copy dialog and decline it
+        const copyDialog = this.page.getByText('Would you like to copy this');
+        await expect(copyDialog).toBeVisible({ timeout: 5000 });
+        const crossicon = this.page.getByRole('button').filter({ hasText: /^$/ }).nth(2);
+        await expect(crossicon).toBeVisible({ timeout: 5000 });
+        await crossicon.click();
+
+        // Optional: close the contact form after declining
+        const closeForm = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeForm.click({ force: true });
+        await this.page.waitForTimeout(1000);
+    }
+
+    async resetSearchField() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+        // Open the contact form (or listing dialog)
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick({ force: true });
+        // Wait for contact form to be visible
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Fill and select the property address to trigger the copy dialog
+        const propertyAddressSearchInput = this.page.locator('#rightbarwithscroll').getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+        await propertyAddressSearchInput.fill('140 Coates Street, Laidley, QLD 4341');
+        // Wait for dropdown/options to appear and select the address
+        const addressOption = this.page.locator('div:nth-child(1) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 5000 });
+        await addressOption.click();
+
+        // Wait for the copy dialog and decline it
+        const copyDialog = this.page.getByText('Would you like to copy this');
+        await expect(copyDialog).toBeVisible({ timeout: 5000 });
+        const noButton = this.page.getByRole('button', { name: 'No' });
+        await expect(noButton).toBeVisible({ timeout: 5000 });
+        const crossicon = this.page.locator('.pi.pi-times._cross-icon');
+        await expect(crossicon).toBeVisible({ timeout: 10000 });
+        await crossicon.click({ force: true });
+
+        // Optional: close the contact form after declining
+        const closeForm = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeForm.click({ force: true });
+        await this.page.waitForTimeout(1000);
+    }
+
+    // Selecting a property in search
+    async selectPropertyInSearch() {
+        await this.navigateToListings();
+
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+        // Assuming there is a button or icon to open the contact form in each card row
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick({ force: true });
+        // Wait for contact form to be visible (adjust selector if needed)
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Fill and select the property address: "1/14 Thomas Street, Laidley, QLD 4341"
+        const propertyAddressSearchInput = this.page.locator('#rightbarwithscroll').getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+        await propertyAddressSearchInput.fill('140 Coates Street, Laidley, QLD 4341');
+        // Wait for dropdown/options to appear and select the address
+        const addressOption = this.page.locator('div:nth-child(2) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 5000 });
+        await addressOption.click();
+
+        const closeForm = this.page.locator('.pi.pi-times').first()
+        await this.page.waitForTimeout(1000)
+        await closeForm.click({ force: true })
+
+        await this.page.waitForTimeout(1000);
+    }
+
+    // Selecting a previous Listing in search
+    async selectPreviousListing() {
+        await this.navigateToListings();
+
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+        // Assuming there is a button or icon to open the contact form in each card row
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick({ force: true });
+        // Wait for contact form to be visible (adjust selector if needed)
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Fill and select the property address: "1/14 Thomas Street, Laidley, QLD 4341"
+        const propertyAddressSearchInput = this.page.locator('#rightbarwithscroll').getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+        await propertyAddressSearchInput.fill('140 Coates Street, Laidley, QLD 4341');
+        // Wait for dropdown/options to appear and select the address
+        const addressOption = this.page.locator('div:nth-child(1) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 5000 });
+        await addressOption.click();
+        // Wait for the dialog and click Yes
+        const copyDialog = this.page.getByText('Would you like to copy this');
+        await expect(copyDialog).toBeVisible({ timeout: 5000 });
+        const closeForm = this.page.locator('.pi.pi-times').first()
+        await this.page.waitForTimeout(1000)
+        await closeForm.click({ force: true })
+
+        await this.page.waitForTimeout(1000);
+    }
+
+    // Confirming previous listing data copy
+    async previousListingCopy() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Wait for at least one listing card
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+
+        // Double click to open contact form
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]");
+        await contactFormBtn.dblclick({ force: true });
+
+        // Wait for contact form to be visible
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Fill search input and select matching property address
+        const propertyAddressSearchInput = contactForm.getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+        await propertyAddressSearchInput.fill('140 Coates Street, Laidley, QLD 4341');
+
+        // Wait for dropdown/option to appear and click it (nth-child(1); double-check if this should be 1 or 2)
+        const addressOption = this.page.locator('div:nth-child(1) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 5000 });
+        await addressOption.click();
+
+        // Wait for "Would you like to copy this" dialog, click "Yes"
+        const copyDialog = this.page.getByText('Would you like to copy this');
+        await expect(copyDialog).toBeVisible({ timeout: 5000 });
+        const yesButton = this.page.getByRole('button', { name: 'Yes' });
+        await expect(yesButton).toBeVisible({ timeout: 5000 });
+        await yesButton.click();
+
+        // Close the form after confirming copy
+        const closeForm = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeForm.click({ force: true });
+
+        await this.page.waitForTimeout(1000);
+    }
+
+    // Declining previous listing data copy
+    async declinePreviousListingCopy() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Wait for at least one listing card
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+
+        // Double click to open contact form
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]");
+        await contactFormBtn.dblclick({ force: true });
+
+        // Wait for contact form to be visible
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Fill search input and select matching property address
+        const propertyAddressSearchInput = contactForm.getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+        await propertyAddressSearchInput.fill('140 Coates Street, Laidley, QLD 4341');
+
+        // Wait for dropdown/option to appear and click it
+        const addressOption = this.page.locator('div:nth-child(1) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 5000 });
+        await addressOption.click();
+
+        // Wait for "Would you like to copy this" dialog, click "No"
+        const copyDialog = this.page.getByText('Would you like to copy this');
+        await expect(copyDialog).toBeVisible({ timeout: 5000 });
+        const noButton = this.page.getByRole('button', { name: 'No' });
+        await expect(noButton).toBeVisible({ timeout: 5000 });
+        await noButton.click();
+
+        // Close the form after declining copy
+        const closeForm = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeForm.click({ force: true });
+
+        await this.page.waitForTimeout(1000);
+    }
+
+    // Search field reset after previous data selection
+    async resetPreviousDataSearchField() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Ensure listing cards are loaded
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+
+        // Double click Add New to open contact form
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]");
+        await contactFormBtn.dblclick({ force: true });
+
+        // Wait for the contact form and its search field
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+        const propertyAddressSearchInput = contactForm.getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+
+        // Fill in address to trigger previous data dialog
+        await propertyAddressSearchInput.fill('140 Coates Street, Laidley, QLD 4341');
+
+        // Wait for dropdown/option and select address
+        const addressOption = this.page.locator('div:nth-child(1) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 5000 });
+        await addressOption.click();
+
+        // Wait for copy dialog to appear
+        const copyDialog = this.page.getByText('Would you like to copy this');
+        await expect(copyDialog).toBeVisible({ timeout: 5000 });
+
+        const noButton = this.page.getByRole('button', { name: 'No' });
+        await expect(noButton).toBeVisible({ timeout: 5000 });
+        await noButton.click();
+
+        // Click the cross icon (close the dialog, which should reset the field)
+        const crossIcon = this.page.locator('.pi.pi-times._cross-icon');
+        await expect(crossIcon).toBeVisible({ timeout: 10000 });
+        await crossIcon.click({ force: true });
+
+        // Optional: close the form after test
+        const closeForm = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeForm.click({ force: true });
+        await this.page.waitForTimeout(1000);
+    }
+
 
 }

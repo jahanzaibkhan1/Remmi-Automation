@@ -50,4 +50,69 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.unpinFirstPinnedListing();
   });
 
+  test('Test 7: Search field listing functionality', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.searchfieldListing();
+  });
+
+  test('Test 8: Selecting a listing from search', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    // Example address can be changed as necessary
+    await listingActions.selectListingFromSearch();
+  });
+
+  test('Test 9: Confirming listing copy', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.confirmListingCopy();
+  });
+
+  test('Test 10: Declining listing copy', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    // This test should trigger the "Would you like to copy this" dialog and then decline it (click "No")
+    await listingActions.navigateToListings();
+    await listingActions.declineListingCopy()
+  });
+
+  test('Test 11: Closing the popup using the cross icon', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.closePopup();
+  });
+
+  test('Test 12: Search field reset', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.resetSearchField();
+  });
+
+  test('Test 13: Selecting a property in search', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.selectPropertyInSearch();
+  });
+
+  test('Test 14: Selecting previous listing in search', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.selectPreviousListing();
+  });
+
+  test('Test 15: Confirming previous listing data copy', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.previousListingCopy();
+  });
+
+  test('Test 16: Declining previous listing data copy', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.declinePreviousListingCopy();
+  });
+
+  test('Test 17: Search field reset after previous data selection', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.resetPreviousDataSearchField();
+  });
+
 });
