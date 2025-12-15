@@ -5084,4 +5084,40 @@ export class ListingActions {
         ).toBeVisible({ timeout: 5000 });
         
     }
+
+    // Selecting "Auction" as the listing type
+    async selectAuctionAsListingType() {
+        await this.createProperty();
+
+        await this.page.waitForTimeout(2000);
+        // Ensure listing cards are loaded
+        const addListingBtn = this.page.locator("button", { hasText: "Add Listing" });
+        await expect(addListingBtn).toBeVisible({ timeout: 10000 });
+        await addListingBtn.click();
+
+        const listingsTypeDropdown = this.page.locator('ng-select').filter({ hasText: 'Listings Type' }).getByRole('combobox');
+        await expect(listingsTypeDropdown).toBeVisible({ timeout: 5000 });
+        await listingsTypeDropdown.click();
+
+        const auctionOption = this.page.getByRole('option', { name: 'Auction' });
+        await expect(auctionOption).toBeVisible({ timeout: 5000 });
+        await auctionOption.click();
+
+        const listingStatusDropdown = this.page.locator('ng-select').filter({ hasText: 'Listing Status' });
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 5000 });
+        await listingStatusDropdown.click();
+
+        const forSaleOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'For sale' }).first();
+        await expect(forSaleOption).toBeVisible({ timeout: 5000 });
+        await forSaleOption.click();
+
+
+        const auctionDateLabel = this.page.getByText('Auction dateAuction Start');
+        await expect(auctionDateLabel).toBeVisible({ timeout: 5000 });
+        await auctionDateLabel.click();
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+    }
 }
