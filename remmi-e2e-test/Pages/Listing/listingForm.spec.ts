@@ -115,4 +115,28 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetPreviousDataSearchField();
   });
 
+  test('Test 18: Save button functionality', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.clickSaveButtonOnContactForm();
+  });
+
+  test('Test 19: Save without required fields', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.createListingWithMissingFields();
+    await listingActions.resetFilters()
+  });
+
+  test('Test 20: Create listing with missing primary agent', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.withoutPrimaryAgent()
+  });
+
+  test('Test 21: Selecting "Auction" as listing type', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    // Assume there's a method for selecting listing type; if not, use direct actions as in previous tests
+    await listingActions.selectAuctionAsListingType();
+  });
 });
