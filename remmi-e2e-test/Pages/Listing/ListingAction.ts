@@ -4469,6 +4469,10 @@ export class ListingActions {
         const copyDialog = this.page.getByText('Would you like to copy this');
         await expect(copyDialog).toBeVisible({ timeout: 5000 });
 
+        const crossicon = this.page.getByRole('button').filter({ hasText: /^$/ }).nth(2);
+        await expect(crossicon).toBeVisible({ timeout: 5000 });
+        await crossicon.click();
+
         const closeForm = this.page.locator('.pi.pi-times').first()
         await this.page.waitForTimeout(1000)
         await closeForm.click({ force: true })
@@ -4541,7 +4545,7 @@ export class ListingActions {
         await expect(copyDialog).toBeVisible({ timeout: 5000 });
         const noButton = this.page.getByRole('button', { name: 'No' });
         await expect(noButton).toBeVisible({ timeout: 5000 });
-        await noButton.click();
+        await noButton.click({ force: true });
 
         // Optional: close the contact form after declining
         const closeForm = this.page.locator('.pi.pi-times').first();
@@ -4611,6 +4615,7 @@ export class ListingActions {
         await expect(copyDialog).toBeVisible({ timeout: 5000 });
         const noButton = this.page.getByRole('button', { name: 'No' });
         await expect(noButton).toBeVisible({ timeout: 5000 });
+        await noButton.click({ force: true });
         const crossicon = this.page.locator('.pi.pi-times._cross-icon');
         await expect(crossicon).toBeVisible({ timeout: 10000 });
         await crossicon.click({ force: true });
@@ -4679,6 +4684,11 @@ export class ListingActions {
         // Wait for the dialog and click Yes
         const copyDialog = this.page.getByText('Would you like to copy this');
         await expect(copyDialog).toBeVisible({ timeout: 5000 });
+
+        const noButton = this.page.getByRole('button', { name: 'No' });
+        await expect(noButton).toBeVisible({ timeout: 5000 });
+        await noButton.click({ force: true });
+
         const closeForm = this.page.locator('.pi.pi-times').first()
         await this.page.waitForTimeout(1000)
         await closeForm.click({ force: true })
@@ -4712,6 +4722,7 @@ export class ListingActions {
         const addressOption = this.page.locator('div:nth-child(1) > .loop-item > div > .item-display');
         await expect(addressOption).toBeVisible({ timeout: 5000 });
         await addressOption.click();
+        await this.page.waitForTimeout(1200);
 
         // Wait for "Would you like to copy this" dialog, click "Yes"
         const copyDialog = this.page.getByText('Would you like to copy this');
@@ -4803,7 +4814,7 @@ export class ListingActions {
 
         const noButton = this.page.getByRole('button', { name: 'No' });
         await expect(noButton).toBeVisible({ timeout: 5000 });
-        await noButton.click();
+        await noButton.click({force:true});
 
         // Click the cross icon (close the dialog, which should reset the field)
         const crossIcon = this.page.locator('.pi.pi-times._cross-icon');
