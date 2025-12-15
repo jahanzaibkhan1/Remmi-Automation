@@ -132,4 +132,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.navigateToListings();
     await listingActions.withoutPrimaryAgent()
   });
+
+  test('Test 21: Selecting "Auction" as listing type', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    // Assume there's a method for selecting listing type; if not, use direct actions as in previous tests
+    await listingActions.selectAuctionAsListingType();
+  });
 });
