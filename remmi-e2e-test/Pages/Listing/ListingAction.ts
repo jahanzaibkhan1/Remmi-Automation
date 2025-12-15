@@ -5023,8 +5023,65 @@ export class ListingActions {
         await expect(listingAddedAlert).toBeVisible({ timeout: 10000 });
         await this.page.locator("//p[normalize-space()='Listing']").click();
         await this.page.waitForTimeout(1200);
-
     }
 
+    async withoutPrimaryAgent() {
+        await this.createProperty();
 
+        await this.page.waitForTimeout(2000);
+        // Ensure listing cards are loaded
+        const addListingBtn = this.page.locator("button", { hasText: "Add Listing" });
+        await expect(addListingBtn).toBeVisible({ timeout: 10000 });
+        await addListingBtn.click();
+
+        const listingsTypeDropdown = this.page.locator('ng-select').filter({ hasText: 'Listings Type' }).getByRole('combobox');
+        await expect(listingsTypeDropdown).toBeVisible({ timeout: 5000 });
+        await listingsTypeDropdown.click();
+
+        const auctionOption = this.page.getByRole('option', { name: 'Auction' });
+        await expect(auctionOption).toBeVisible({ timeout: 5000 });
+        await auctionOption.click();
+
+        const listingStatusDropdown = this.page.locator('ng-select').filter({ hasText: 'Listing Status' });
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 5000 });
+        await listingStatusDropdown.click();
+
+        const forSaleOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'For sale' }).first();
+        await expect(forSaleOption).toBeVisible({ timeout: 5000 });
+        await forSaleOption.click();
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+
+        const listingAddedAlert = this.page.getByRole('alert', { name: 'Listing added successfully' });
+        await expect(listingAddedAlert).toBeVisible({ timeout: 10000 });
+        await this.page.locator("//p[normalize-space()='Listing']").click();
+        await this.page.waitForTimeout(1200);
+
+        // Click on the first listing card
+        const firstListingCard = this.page.locator('.s-property').first();
+        await expect(firstListingCard).toBeVisible({ timeout: 10000 });
+        await firstListingCard.click();
+
+        // Wait for and focus the 'Calendar' input by placeholder text
+        const calendar = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendar).toBeVisible({ timeout: 7000 });
+
+        await calendar.click();
+
+        // Click on the "Please select and connect Listing Agent" prompt (6th occurrence)
+        await expect(
+            this.page.locator('div').filter({ hasText: /^Please select and connect Listing Agent$/ }).nth(5)
+        ).toBeVisible({ timeout: 5000 });
+
+        const inspection = this.page.getByRole('tab', { name: 'gavel Inspections' });
+        await expect(inspection).toBeVisible({ timeout: 7000 });
+        await inspection.click();
+
+        await expect(
+            this.page.getByLabel('Inspections').getByText('Please select and connect')
+        ).toBeVisible({ timeout: 5000 });
+        
+    }
 }

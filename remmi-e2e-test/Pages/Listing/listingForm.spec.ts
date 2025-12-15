@@ -126,4 +126,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.createListingWithMissingFields();
     await listingActions.resetFilters()
   });
+
+  test('Test 20: Create listing with missing primary agent', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.withoutPrimaryAgent()
+  });
 });
