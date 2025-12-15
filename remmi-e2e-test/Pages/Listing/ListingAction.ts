@@ -5021,6 +5021,9 @@ export class ListingActions {
 
         const listingAddedAlert = this.page.getByRole('alert', { name: 'Listing added successfully' });
         await expect(listingAddedAlert).toBeVisible({ timeout: 10000 });
+        await this.page.locator("//p[normalize-space()='Listing']").click();
+        await this.page.waitForTimeout(1200);
+
     }
 
 
