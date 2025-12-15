@@ -115,4 +115,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetPreviousDataSearchField();
   });
 
+  test('Test 18: Save button functionality', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.clickSaveButtonOnContactForm();
+  });
+
 });

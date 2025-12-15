@@ -1,38 +1,6 @@
-<testsuites id="" name="" tests="17" failures="0" skipped="0" errors="0" time="97.362033">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-15T05:00:07.450Z" hostname="chromium" tests="17" failures="0" skipped="0" time="91.35" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Open listing form" classname="Pages\Listing\listingForm.spec.ts" time="22">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Close listing  form using cross icon" classname="Pages\Listing\listingForm.spec.ts" time="3.433">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Close form without saving" classname="Pages\Listing\listingForm.spec.ts" time="6.82">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Pinning a listing" classname="Pages\Listing\listingForm.spec.ts" time="2.433">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Opening a pinned listing" classname="Pages\Listing\listingForm.spec.ts" time="2.416">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Unpinning a pinned listing" classname="Pages\Listing\listingForm.spec.ts" time="1.295">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Search field listing functionality" classname="Pages\Listing\listingForm.spec.ts" time="4.005">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Selecting a listing from search" classname="Pages\Listing\listingForm.spec.ts" time="4.369">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Confirming listing copy" classname="Pages\Listing\listingForm.spec.ts" time="4.385">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Declining listing copy" classname="Pages\Listing\listingForm.spec.ts" time="4.273">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Closing the popup using the cross icon" classname="Pages\Listing\listingForm.spec.ts" time="6.633">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Search field reset" classname="Pages\Listing\listingForm.spec.ts" time="3.905">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Selecting a property in search" classname="Pages\Listing\listingForm.spec.ts" time="3.701">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Selecting previous listing in search" classname="Pages\Listing\listingForm.spec.ts" time="5.923">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Confirming previous listing data copy" classname="Pages\Listing\listingForm.spec.ts" time="5.704">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Declining previous listing data copy" classname="Pages\Listing\listingForm.spec.ts" time="5.323">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Search field reset after previous data selection" classname="Pages\Listing\listingForm.spec.ts" time="4.732">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="52.20127399999928">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-15T10:28:09.988Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.013" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Save button functionality" classname="Pages\Listing\listingForm.spec.ts" time="45.013">
 </testcase>
 </testsuite>
 </testsuites>

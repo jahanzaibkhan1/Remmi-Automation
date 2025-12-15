@@ -175,5 +175,9 @@ export class ListingLocators {
           'div.d-flex.align-items-center:has(p:text("Listing Status")) p-sorticon .p-sortable-column-icon'
         );
       }
+
+      propertyTab(): Locator{
+        return this.page.locator("//p[normalize-space()='Properties']");
+      }
     
 }
