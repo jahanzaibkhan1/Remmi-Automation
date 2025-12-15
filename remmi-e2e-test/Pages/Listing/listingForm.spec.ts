@@ -121,4 +121,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.clickSaveButtonOnContactForm();
   });
 
+  test('Test 19: Save without required fields', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.createListingWithMissingFields();
+    await listingActions.resetFilters()
+  });
 });
