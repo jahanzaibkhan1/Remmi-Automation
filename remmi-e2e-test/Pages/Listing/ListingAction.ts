@@ -5242,4 +5242,34 @@ export class ListingActions {
 
     }
 
+    // Feature name selection dropdown
+    async selectFeatureByName() {
+        const listing = this.page.locator("//p[normalize-space()='Listing']");
+        await expect(listing).toBeVisible({ timeout: 10000 });
+        await listing.click();
+
+        const firstListingCard = this.page.locator('.s-property').first();
+        await expect(firstListingCard).toBeVisible({ timeout: 10000 });
+        await firstListingCard.click();
+        // Locate the dropdown for Feature Name (assumes label or placeholder contains "Feature Name")
+        const featuresHeading = this.page.locator('div.boxHeadingText:has-text("Features") p');
+        await featuresHeading.scrollIntoViewIfNeeded();
+        await expect(featuresHeading).toBeVisible();
+
+        // Find the option with the given featureName and click it
+        const featuredropdown = this.page.locator("//span[normalize-space()='Please Select']").first();
+        await expect(featuredropdown).toBeVisible({ timeout: 5000 });
+        await featuredropdown.click();
+        // Click on the clickable div (checkmark)
+        const selectAllCheckbox = this.page.locator('label.checkbox.select_all .checkbox__checkmark');
+        await expect(selectAllCheckbox).toBeVisible();
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+
+        await this.page.waitForTimeout(1200)
+    }
+
 }
