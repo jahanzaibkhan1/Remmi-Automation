@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.390071999999694">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-16T06:00:05.915Z" hostname="chromium" tests="1" failures="0" skipped="0" time="22.783" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 26: Closing feature dropdown by clicking outside" classname="Pages\Listing\listingForm.spec.ts" time="22.783">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.92863100000005">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-16T06:09:24.354Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.853" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Creating new listing from search" classname="Pages\Listing\listingForm.spec.ts" time="42.853">
 </testcase>
 </testsuite>
 </testsuites>

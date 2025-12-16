@@ -180,4 +180,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.closeFeatureDropdown();
   });
 
+  test('Test 27: Creating new listing from search', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.createNewListingFromSearch();
+  });
+
 });
