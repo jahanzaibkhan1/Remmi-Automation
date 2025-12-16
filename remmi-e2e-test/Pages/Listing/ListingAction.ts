@@ -5383,4 +5383,9 @@ export class ListingActions {
        await this.resetPreviousDataSearchField();
     }
 
+    // Check the Save button visibility and state
+    async checkSaveButton() {
+        await this.createListingWithMissingFields();
+    }
+
 }
