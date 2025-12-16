@@ -139,4 +139,82 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     // Assume there's a method for selecting listing type; if not, use direct actions as in previous tests
     await listingActions.selectAuctionAsListingType();
   });
+
+  test('Test 22: Selecting "For Lease" as listing status', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.selectingForLease();
+  });
+
+  test('Test 23: Adding multiple agents to a listing', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+
+    const agentNames = [
+      'Automation Test',
+      'Hina Agent',
+      'Dawood Ahmad',
+      'Jahanzaib Xenex'
+    ];
+
+    await listingActions.addMultipleAgents(agentNames);
+  });
+
+  test('Test 24: Feature name selection dropdown', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.selectFeatureByName();
+  });
+
+  test('Test 25: Searching in feature dropdown by name', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    // Provide the feature name you want to search for
+    const featureName = "Air Conditioning";
+    await listingActions.searchFeatureInDropdown(featureName);
+  });
+
+  test('Test 26: Closing feature dropdown', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.closeFeatureDropdown();
+  });
+
+  test('Test 27: Creating new listing from search', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.createNewListingFromSearch();
+  });
+
+  test('Test 28: Editing an existing listing', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.editExistingListing();
+  });
+
+  test('Test 29: Verify toggles functionality in search field selection', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifySearchFieldToggles();
+  });
+
+  test('Test 30: Verify toggles disappear after saving', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyTogglesDisappearAfterSaving();
+  });
+
+  test('Test 31: Resetting listing form', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.resetListingForm();
+  });
+
+  test('Test 32: Verify Save button functionality', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.checkSaveButton();
+    await listingActions.resetFilters();
+  });
+
 });

@@ -214,6 +214,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.deleteListingCard();
   });
 
+
   test('Test 34: Editing a listing card', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.editListingCard();
