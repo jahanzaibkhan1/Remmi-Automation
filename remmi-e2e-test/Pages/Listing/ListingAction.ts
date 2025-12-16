@@ -5120,4 +5120,39 @@ export class ListingActions {
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
     }
+    async selectingForLease(){
+        await this.createProperty();
+
+        await this.page.waitForTimeout(2000);
+        // Ensure listing cards are loaded
+        const addListingBtn = this.page.locator("button", { hasText: "Add Listing" });
+        await expect(addListingBtn).toBeVisible({ timeout: 10000 });
+        await addListingBtn.click();
+
+        const listingsTypeDropdown = this.page.locator('ng-select').filter({ hasText: 'Listings Type' }).getByRole('combobox');
+        await expect(listingsTypeDropdown).toBeVisible({ timeout: 5000 });
+        await listingsTypeDropdown.click();
+
+        const auctionOption = this.page.getByRole('option', { name: 'Rental' });
+        await expect(auctionOption).toBeVisible({ timeout: 5000 });
+        await auctionOption.click();
+
+        const listingStatusDropdown = this.page.locator('ng-select').filter({ hasText: 'Listing Status' });
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 5000 });
+        await listingStatusDropdown.click();
+
+        const forSaleOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'For Lease' }).first();
+        await expect(forSaleOption).toBeVisible({ timeout: 5000 });
+        await forSaleOption.click();
+
+
+        const rentalSection = this.page.locator("div[class='mb-2'] div[class='mb-2'] div[class='align-items-end mt-2 overlay-background row']"); 
+          
+          await expect(rentalSection).toBeVisible();
+          
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+    }
 }

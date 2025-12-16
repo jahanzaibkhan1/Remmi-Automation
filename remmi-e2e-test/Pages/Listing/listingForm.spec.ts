@@ -139,4 +139,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     // Assume there's a method for selecting listing type; if not, use direct actions as in previous tests
     await listingActions.selectAuctionAsListingType();
   });
+
+  test('Test 22: Selecting "For Lease" as listing status', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.selectingForLease();
+  });
 });
