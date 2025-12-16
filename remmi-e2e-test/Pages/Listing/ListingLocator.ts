@@ -16,7 +16,7 @@ export class ListingLocators {
         return this.page.locator('re-multiselect[placeholder="Property Type"]');
     }
     propertyTypeSearchInput(): Locator {
-        return this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
+        return this.page.locator('re-multiselect').filter({ hasText: 'Property Type' }).getByPlaceholder('Search');
     }
     propertyTypeSelectAll(): Locator {
         return this.page.locator('.checkbox__checkmark').first();
@@ -29,7 +29,7 @@ export class ListingLocators {
         return this.page.locator('re-multiselect[placeholder="Suburb"]');
     }
     suburbSearchInput(): Locator {
-        return this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
+        return this.page.locator('re-multiselect').filter({ hasText: 'Suburb' }).getByPlaceholder('Search')
     }
     suburbSelectAll(): Locator {
         return this.page.locator('.checkbox__checkmark'); // adjust nth if Suburb select all is not first
@@ -43,7 +43,7 @@ export class ListingLocators {
         return this.page.locator('re-multiselect[placeholder="Listing Status"]');
     }
     listingStatusSearchInput(): Locator {
-        return this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
+        return this.page.locator('re-multiselect').filter({ hasText: 'Listing Status' }).getByPlaceholder('Search');
     }
     listingStatusSelectAll(): Locator {
         return this.page.locator('.checkbox__checkmark'); // Adjust nth if needed for Listing Status
@@ -56,7 +56,7 @@ export class ListingLocators {
         return this.page.locator('re-multiselect[placeholder="Listing Type"]');
     }
     listingTypeSearchInput(): Locator {
-        return this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
+        return this.page.locator('re-multiselect').filter({ hasText: 'Listing Type' }).getByPlaceholder('Search');
     }
     listingTypeSelectAll(): Locator {
         return this.page.locator('.checkbox__checkmark'); // Adjust nth if needed for Listing Type
@@ -84,7 +84,7 @@ export class ListingLocators {
         return this.page.locator('re-multiselect[placeholder="Contract Status"]');
     }
     contractStatusSearchInput(): Locator {
-        return this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
+        return this.page.locator('re-multiselect').filter({ hasText: 'Contract Status' }).getByPlaceholder('Search');
     }
     contractStatusSelectAll(): Locator {
         return this.page.locator('.checkbox__checkmark').first(); // Adjust nth if needed for Contract Status
