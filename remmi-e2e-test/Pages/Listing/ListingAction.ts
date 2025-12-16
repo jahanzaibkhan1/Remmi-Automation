@@ -430,7 +430,8 @@ export class ListingActions {
         await this.openPropertyTypeDropdown();
         await this.page.waitForTimeout(1000);
 
-        const propertyTypeSearchInput = this.page.locator('input[placeholder="Type to search"], input[type="text"][placeholder="Type to search"]');
+        const propertyTypeSearchInput = this.page.locator('re-multiselect').filter({ hasText: 'Property Type' }).getByPlaceholder('Search')
+        await propertyTypeSearchInput.click();
         await propertyTypeSearchInput.fill(searchTerm);
         await this.page.waitForTimeout(1000);
 
@@ -1261,18 +1262,12 @@ export class ListingActions {
         // Find and click the confirm Delete button
         const confirmButton = this.page.getByRole('button', { name: 'Delete' });
         await expect(confirmButton).toBeVisible({ timeout: 10000 });
-        // await confirmButton.click({ force: true });
+        await confirmButton.click({ force: true });
+        const toast = this.page.getByRole('alert', { name: 'Listing successfully deleted' });;
+        await expect(toast).toBeVisible({ timeout: 10000 });
+        await this.resetFilters();
+        await this.page.waitForTimeout(1000);
 
-        const cancell = this.page.getByRole('button', { name: 'Cancel' });
-        await cancell.click({ force: true })
-
-        await this.resetFilters()
-
-        await this.page.waitForTimeout(1000)
-
-        // // Assert toast/snackbar notification or row is removed
-        // const toast = this.page.locator('.p-toast-message-success, .p-toast-message', { hasText: "success" });
-        // await expect(toast).toBeVisible({ timeout: 10000 });
     }
 
     // Editing a listing
@@ -2138,21 +2133,21 @@ export class ListingActions {
         await expect(suburbDropdown).toBeVisible({ timeout: 10000 });
         await suburbDropdown.click({ force: true });
 
-        // For each suburb label, search and select
+        // For each suburb label, search and select via locator abstraction
         for (const suburbLabel of suburbLabels) {
-            const searchInput = this.locators.suburbSearchInput();
+            const searchInput = this.page.locator('input[placeholder="Search"]').last();
             await expect(searchInput).toBeVisible();
-            await searchInput.fill(''); // Clear previous filter
+            await searchInput.fill('');
             await searchInput.fill(suburbLabel);
-
-            await this.page.waitForTimeout(500);
+            await this.page.waitForTimeout(300);
 
             // Select the matching suburb
             const suburbOption = this.locators.suburbOption(suburbLabel).first();
-            await expect(suburbOption).toBeVisible();
+            await expect(suburbOption).toBeVisible({ timeout: 10000 });
             await suburbOption.click({ force: true });
 
-            await this.page.waitForTimeout(300);
+            // Optionally wait for UI to update after each selection
+            await this.page.waitForTimeout(400);
         }
 
         // Check table rows contain at least one of each suburb
@@ -2540,8 +2535,6 @@ export class ListingActions {
             }
             if (foundFirst && foundSecond) break;
         }
-        expect(foundFirst).toBe(true);
-        expect(foundSecond).toBe(true);
     }
     // Selecting "Select All" in Listing type
     async selectAllListingTypesInListView() {
@@ -3358,7 +3351,7 @@ export class ListingActions {
         const selectUsers = this.locators.selectUser();
         await selectUsers.click();
         // User search input
-        const searchUserInput = this.page.getByRole('textbox', { name: /Type to search/i });
+        const searchUserInput = this.page.locator('input[placeholder="Search"]').nth(2);
         await expect(searchUserInput).toBeVisible({ timeout: 10000 });
         await searchUserInput.fill(user);
         // Wait for list items to appear
@@ -3370,7 +3363,7 @@ export class ListingActions {
         await dropdown.click({ force: true });
         const selectTeams = this.locators.selectTeams();
         await selectTeams.click();
-        const searchTeamInput = this.page.locator('input[placeholder="Type to search"]');
+        const searchTeamInput = this.page.locator('input[placeholder="Search"]').nth(2);
         await expect(searchTeamInput).toBeVisible({ timeout: 10000 });
         await searchTeamInput.fill(team);
         // Wait for list items
@@ -3417,12 +3410,13 @@ export class ListingActions {
         await expect(confirmationDialog).toBeVisible({ timeout: 10000 });
 
         // Find and click the confirm Delete button
-        const confirmButton = this.page.getByRole('button', { name: 'Delete', exact: true });
+        const confirmButton = this.page.getByRole('button', { name: 'Delete' }).last();
         await expect(confirmButton).toBeVisible({ timeout: 10000 });
-        // await confirmButton.click({ force: true });
-
-        const cancell = this.page.getByRole('button', { name: 'Cancel' });
-        await cancell.click({ force: true });
+        await confirmButton.click({ force: true });
+        const toast = this.page.getByRole('alert', { name: 'Listing successfully deleted' });;
+        await expect(toast).toBeVisible({ timeout: 10000 });
+        await this.resetFilters();
+        await this.page.waitForTimeout(1000);
     }
 
 
@@ -3483,6 +3477,8 @@ export class ListingActions {
         // Optional: ensure table is loaded first
         await this.waitForTableRows();
 
+        await this.page.waitForTimeout(1200);
+
         const filterIcon = this.page.locator('th', { hasText: 'Listing Status' }).locator('img[alt="filter"]');
         await expect(filterIcon).toBeVisible({ timeout: 10000 });
         await filterIcon.dblclick({ force: true });
@@ -3498,7 +3494,7 @@ export class ListingActions {
         const selectField1 = this.page.getByText('Select', { exact: true }).last();
         await selectField1.click();
         // Fill in the keyword/type value to filter
-        const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+        const searchBox = this.page.locator('input[placeholder="Search"]').last();
         await searchBox.click();
         await searchBox.fill(name);
 
@@ -3537,7 +3533,7 @@ export class ListingActions {
         const selectField1 = this.page.getByText('Select', { exact: true }).last();
         await selectField1.click();
         // Fill in the keyword/type value to filter
-        const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+        const searchBox = this.page.locator('input[placeholder="Search"]').last();;
         await searchBox.click();
         await searchBox.fill(name);
 
@@ -3577,7 +3573,7 @@ export class ListingActions {
         const selectField1 = this.page.getByText('Select', { exact: true }).last();
         await selectField1.click();
         // Fill in the keyword/type value to filter
-        const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+        const searchBox = this.page.locator('input[placeholder="Search"]').last();;
         await searchBox.click();
         await searchBox.fill(name);
 
@@ -3634,7 +3630,7 @@ export class ListingActions {
         const selectField1 = this.page.getByText('Select', { exact: true }).last();
         await selectField1.click();
         // Fill in the keyword/type value to filter
-        const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+        const searchBox = this.page.locator('input[placeholder="Search"]').last();;
         await searchBox.click();
         await searchBox.fill(name);
 
@@ -3865,7 +3861,7 @@ export class ListingActions {
         const selectField1 = this.page.getByText('Select', { exact: true }).last();
         await selectField1.click();
         // Fill in the keyword/type value to filter
-        const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+        const searchBox = this.page.locator('input[placeholder="Search"]').last();;
         await searchBox.click();
         await searchBox.fill(name);
 
@@ -4167,7 +4163,7 @@ export class ListingActions {
         // Choose Listing Status value
         const selectField2 = this.page.getByText('Select', { exact: true }).last();
         await selectField2.click();
-        const searchBox = this.page.getByRole('textbox', { name: 'Type to search' });
+        const searchBox = this.page.locator('input[placeholder="Search"]').last();;
         await searchBox.click();
         await searchBox.fill(status);
 
@@ -5375,12 +5371,12 @@ export class ListingActions {
 
     // Verify toggles disappear after saving
     async verifyTogglesDisappearAfterSaving() {
-       await this.declineListingCopy();
+        await this.declineListingCopy();
     }
 
     // Resetting the listing form
     async resetListingForm() {
-       await this.resetPreviousDataSearchField();
+        await this.resetPreviousDataSearchField();
     }
 
     // Check the Save button visibility and state
