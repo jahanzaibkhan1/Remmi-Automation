@@ -5373,4 +5373,9 @@ export class ListingActions {
         await this.confirmListingCopy()
     }
 
+    // Verify toggles disappear after saving
+    async verifyTogglesDisappearAfterSaving() {
+       await this.declineListingCopy();
+    }
+
 }

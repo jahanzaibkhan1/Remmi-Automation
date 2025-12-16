@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="45.51287800000049">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-16T07:10:14.035Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.052" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 29: Verify toggles functionality in search field selection" classname="Pages\Listing\listingForm.spec.ts" time="33.052">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.402405999999495">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-16T07:20:06.481Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.099" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 30: Verify toggles disappear after saving" classname="Pages\Listing\listingForm.spec.ts" time="25.099">
 </testcase>
 </testsuite>
 </testsuites>
