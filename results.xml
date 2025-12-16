@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.402405999999495">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-16T07:20:06.481Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.099" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 30: Verify toggles disappear after saving" classname="Pages\Listing\listingForm.spec.ts" time="25.099">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.789800999999045">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-16T07:23:57.489Z" hostname="chromium" tests="1" failures="0" skipped="0" time="22.422" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 31: Resetting listing form" classname="Pages\Listing\listingForm.spec.ts" time="22.422">
 </testcase>
 </testsuite>
 </testsuites>
