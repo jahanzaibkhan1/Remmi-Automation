@@ -2,7 +2,7 @@ import { Locator, Page, expect } from '@playwright/test';
 import { ListingLocators } from './ListingLocator';
 import { addAbortListener } from 'events';
 import { table } from 'console';
-import { faker } from '@faker-js/faker';
+import { faker, th } from '@faker-js/faker';
 
 export class ListingActions {
     private page: Page;
@@ -5270,6 +5270,42 @@ export class ListingActions {
         await saveAndCloseButton.click();
 
         await this.page.waitForTimeout(1200)
+    }
+
+    // Searching in feature dropdown by name
+    async searchFeatureInDropdown(featureName: string) {
+        const listing = this.page.locator("//p[normalize-space()='Listing']");
+        await expect(listing).toBeVisible({ timeout: 10000 });
+        await listing.click();
+
+        const firstListingCard = this.page.locator('.s-property').first();
+        await expect(firstListingCard).toBeVisible({ timeout: 10000 });
+        await firstListingCard.click();
+
+        const featuresHeading = this.page.locator('div.boxHeadingText:has-text("Features") p');
+        await featuresHeading.scrollIntoViewIfNeeded();
+        await expect(featuresHeading).toBeVisible();
+
+        const featureDropdown = this.page.locator("//span[normalize-space()='Please Select']").first();
+        await expect(featureDropdown).toBeVisible({ timeout: 5000 });
+        await featureDropdown.click();
+
+        // Locate and use the feature search field
+        const searchInput = this.page.getByRole('tabpanel', { name: 'gavel Listing Details' }).getByPlaceholder('Search');
+        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await searchInput.click();
+        await searchInput.fill(featureName);
+
+        const featureOption = this.page.locator('li.p-element', { hasText: featureName }).first();
+        await expect(featureOption).toBeVisible({ timeout: 5000 });
+        await featureOption.click();
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+
+        await this.page.waitForTimeout(1200);
     }
 
 }
