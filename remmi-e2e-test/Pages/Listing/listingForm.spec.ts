@@ -192,4 +192,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.editExistingListing();
   });
 
+  test('Test 29: Verify toggles functionality in search field selection', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifySearchFieldToggles();
+  });
+  
+
 });

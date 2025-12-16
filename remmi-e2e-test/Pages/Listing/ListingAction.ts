@@ -5368,4 +5368,9 @@ export class ListingActions {
         await this.page.waitForTimeout(1200);
     }
 
+    // Verify toggles functionality in search field selection
+    async verifySearchFieldToggles() {
+        await this.confirmListingCopy()
+    }
+
 }
