@@ -5322,7 +5322,7 @@ export class ListingActions {
         await featuresHeading.scrollIntoViewIfNeeded();
         await expect(featuresHeading).toBeVisible();
         const closeDropdown = this.page.locator("//span[@class='pi pi-times-circle']");
-        await expect(closeDropdown).toBeVisible({timeout:10000});
+        await expect(closeDropdown).toBeVisible({ timeout: 10000 });
         await closeDropdown.click();
 
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
@@ -5336,6 +5336,36 @@ export class ListingActions {
     // Creating a new listing from search
     async createNewListingFromSearch() {
         await this.clickSaveButtonOnContactForm();
+    }
+
+    // Editing an existing listing
+    async editExistingListing() {
+        // Go to the listings page
+        const listing = this.page.locator("//p[normalize-space()='Listing']");
+        await expect(listing).toBeVisible({ timeout: 10000 });
+        await listing.click();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator('.s-property').first();
+        await expect(firstListingCard).toBeVisible({ timeout: 10000 });
+        await firstListingCard.click();
+
+        // Optionally update price if provided
+
+        const priceInput = this.page.locator('input[name="price"]').first();
+        await expect(priceInput).toBeVisible({ timeout: 5000 });
+        await priceInput.click();
+        await priceInput.clear();
+        await priceInput.fill('1234');
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+
+        // Optionally check for success message
+        await expect(this.page.getByText('Listing updated successfully', { exact: false })).toBeVisible({ timeout: 7000 });
+        await this.page.waitForTimeout(1200);
     }
 
 }
