@@ -174,4 +174,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.searchFeatureInDropdown(featureName);
   });
 
+  test('Test 26: Closing feature dropdown', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.closeFeatureDropdown();
+  });
+
 });

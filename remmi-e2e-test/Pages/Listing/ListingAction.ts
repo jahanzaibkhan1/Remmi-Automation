@@ -5308,4 +5308,29 @@ export class ListingActions {
         await this.page.waitForTimeout(1200);
     }
 
+    // Closing the feature dropdown by clicking outside it
+    async closeFeatureDropdown() {
+        const listing = this.page.locator("//p[normalize-space()='Listing']");
+        await expect(listing).toBeVisible({ timeout: 10000 });
+        await listing.click();
+
+        const firstListingCard = this.page.locator('.s-property').first();
+        await expect(firstListingCard).toBeVisible({ timeout: 10000 });
+        await firstListingCard.click();
+
+        const featuresHeading = this.page.locator('div.boxHeadingText:has-text("Features") p');
+        await featuresHeading.scrollIntoViewIfNeeded();
+        await expect(featuresHeading).toBeVisible();
+        const closeDropdown = this.page.locator("//span[@class='pi pi-times-circle']");
+        await expect(closeDropdown).toBeVisible({timeout:10000});
+        await closeDropdown.click();
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+
+        await this.page.waitForTimeout(1200);
+    }
+
 }
