@@ -4980,7 +4980,7 @@ export class ListingActions {
         const saveBtun = this.page.locator("button", { hasText: "Save" }).last();
         await expect(saveBtun).toBeVisible({ timeout: 10000 });
         await saveBtun.click();
-        
+
 
         await expect(this.page.getByText('added successfully', { exact: false })).toBeVisible({ timeout: 7000 });
 
@@ -5123,7 +5123,7 @@ export class ListingActions {
         await saveAndCloseButton.click();
         await this.page.waitForTimeout(1200);
     }
-    async selectingForLease(){
+    async selectingForLease() {
         await this.createProperty();
 
         await this.page.waitForTimeout(2000);
@@ -5149,10 +5149,10 @@ export class ListingActions {
         await forSaleOption.click();
 
 
-        const rentalSection = this.page.locator("div[class='mb-2'] div[class='mb-2'] div[class='align-items-end mt-2 overlay-background row']"); 
-          
-          await expect(rentalSection).toBeVisible();
-          
+        const rentalSection = this.page.locator("div[class='mb-2'] div[class='mb-2'] div[class='align-items-end mt-2 overlay-background row']");
+
+        await expect(rentalSection).toBeVisible();
+
 
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
@@ -5161,5 +5161,85 @@ export class ListingActions {
         await this.page.waitForTimeout(1200)
     }
 
+    // Adding multiple agents to a listing
+    async addMultipleAgents(agentNames: string[]) {
+
+        const listing = this.page.locator("//p[normalize-space()='Listing']");
+        await expect(listing).toBeVisible({ timeout: 10000 });
+        await listing.click();
+
+        const firstListingCard = this.page.locator('.s-property').first();
+        await expect(firstListingCard).toBeVisible({ timeout: 10000 });
+        await firstListingCard.click();
+
+        const primaryAgent = this.page.locator(
+            'div.form-group:has-text("Primary Agent") ng-select'
+        );
+
+        await expect(primaryAgent).toBeVisible();
+        await primaryAgent.click();
+
+        const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(primaryInput).toBeVisible({ timeout: 3000 });
+        await primaryInput.fill(agentNames[0]);
+
+        const primaryOption = this.page.locator(
+            '.ng-dropdown-panel .ng-option',
+            { hasText: agentNames[0] }
+        ).first();
+        await expect(primaryOption).toBeVisible({ timeout: 5000 });
+        await primaryOption.click();
+
+        const secondaryAgent = this.page.locator(
+            'div.form-group:has-text("Secondary Agent") ng-select'
+        );
+
+        await expect(secondaryAgent).toBeVisible();
+        await secondaryAgent.click();
+
+        const secondaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(secondaryInput).toBeVisible({ timeout: 3000 });
+        await secondaryInput.fill(agentNames[1]);
+
+        const secondaryOption = this.page.locator(
+            '.ng-dropdown-panel .ng-option',
+            { hasText: agentNames[1] }
+        ).first();
+        await expect(secondaryOption).toBeVisible({ timeout: 5000 });
+        await secondaryOption.click();
+
+        const addAgentBtn = this.page.locator('button.add-plus-btn');
+
+        for (let i = 2; i < agentNames.length; i++) {
+
+            await addAgentBtn.click();
+
+            const dynamicAgentDropdown = this.page
+                .locator('ng-select[id^="otherAgent"]')
+                .last();
+
+            await expect(dynamicAgentDropdown).toBeVisible({ timeout: 5000 });
+
+            await dynamicAgentDropdown.click();
+
+            const dynamicInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+            await expect(dynamicInput).toBeVisible({ timeout: 3000 });
+            await dynamicInput.fill(agentNames[i]);
+
+            const dynamicOption = this.page.locator(
+                '.ng-dropdown-panel .ng-option',
+                { hasText: agentNames[i] }
+            ).first();
+            await expect(dynamicOption).toBeVisible({ timeout: 5000 });
+            await dynamicOption.click();
+        }
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+
+        await this.page.waitForTimeout(1200)
+
+    }
 
 }

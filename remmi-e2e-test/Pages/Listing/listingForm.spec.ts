@@ -145,5 +145,19 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.navigateToListings();
     await listingActions.selectingForLease();
   });
-  
+
+  test('Test 23: Adding multiple agents to a listing', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+
+    const agentNames = [
+      'Automation Test',
+      'Hina Agent',
+      'Dawood Ahmad',
+      'Jahanzaib Xenex'
+    ];
+
+    await listingActions.addMultipleAgents(agentNames);
+  });
+
 });
