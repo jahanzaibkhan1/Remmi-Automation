@@ -5378,4 +5378,9 @@ export class ListingActions {
        await this.declineListingCopy();
     }
 
+    // Resetting the listing form
+    async resetListingForm() {
+       await this.resetPreviousDataSearchField();
+    }
+
 }
