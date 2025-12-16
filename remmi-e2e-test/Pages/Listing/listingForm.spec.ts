@@ -186,4 +186,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.createNewListingFromSearch();
   });
 
+  test('Test 28: Editing an existing listing', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.editExistingListing();
+  });
+
 });
