@@ -166,4 +166,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.selectFeatureByName();
   });
 
+  test('Test 25: Searching in feature dropdown by name', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    // Provide the feature name you want to search for
+    const featureName = "Air Conditioning";
+    await listingActions.searchFeatureInDropdown(featureName);
+  });
+
 });
