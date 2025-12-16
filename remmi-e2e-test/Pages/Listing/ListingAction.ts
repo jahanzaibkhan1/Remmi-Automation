@@ -5082,7 +5082,9 @@ export class ListingActions {
         await expect(
             this.page.getByLabel('Inspections').getByText('Please select and connect')
         ).toBeVisible({ timeout: 5000 });
-        
+
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(1200);
     }
 
     // Selecting "Auction" as the listing type
@@ -5119,6 +5121,7 @@ export class ListingActions {
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
+        await this.page.waitForTimeout(1200);
     }
     async selectingForLease(){
         await this.createProperty();
@@ -5154,5 +5157,9 @@ export class ListingActions {
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
+
+        await this.page.waitForTimeout(1200)
     }
+
+
 }
