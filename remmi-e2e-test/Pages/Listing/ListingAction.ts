@@ -5333,4 +5333,9 @@ export class ListingActions {
         await this.page.waitForTimeout(1200);
     }
 
+    // Creating a new listing from search
+    async createNewListingFromSearch() {
+        await this.clickSaveButtonOnContactForm();
+    }
+
 }
