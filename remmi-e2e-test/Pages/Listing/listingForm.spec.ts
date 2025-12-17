@@ -226,4 +226,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.uploadImagesToLibrary(imagePath);
   });
 
+  test('Test 34: No image uploaded', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.noImageUploadedScenario();
+  });
+
 });
