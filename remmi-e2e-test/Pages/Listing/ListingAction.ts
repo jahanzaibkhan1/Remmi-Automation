@@ -1,6 +1,7 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { ListingLocators } from './ListingLocator';
 import { addAbortListener } from 'events';
+import path from 'path';
 import { table } from 'console';
 import { faker, th } from '@faker-js/faker';
 
@@ -5383,5 +5384,75 @@ export class ListingActions {
     async checkSaveButton() {
         await this.createListingWithMissingFields();
     }
+
+
+    async uploadImagesToLibrary(imagePath: string) {
+        // Navigate to Listing grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+    
+        // Open first listing card
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+    
+        // Click Images tab
+        const imagesTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imagesTab).toBeVisible({ timeout: 10000 });
+        await imagesTab.click();
+
+        await this.page.waitForTimeout(6000);
+        // Click "Add" button until "File Upload (Public)" menu option becomes visible
+        const addBtn = this.page.getByRole('button', { name: /Add/i }).first();
+        let fileUploadPublic = this.page.getByRole('menuitem', { name: 'File Upload (Public)' });
+
+        const maxTries = 5;
+        let tries = 0;
+        // Retry clicking Add until file upload becomes visible or reach maxTries
+        while (!(await fileUploadPublic.isVisible({ timeout: 1000 }).catch(() => false)) && tries < maxTries) {
+            await addBtn.waitFor({ state: 'attached', timeout: 10000 }); // ensure DOM ready
+            await addBtn.click({ force: true });
+            await this.page.waitForTimeout(400); // Small wait for menu to open
+            tries++;
+            // re-acquire locator after menu open attempt
+            fileUploadPublic = this.page.getByRole('menuitem', { name: 'File Upload (Public)' });
+        }
+        await expect(fileUploadPublic).toBeVisible({ timeout: 5000 });
+        await fileUploadPublic.click();
+    
+        // Wait for hidden input to appear
+        const fileInput = this.page.locator('#fileUpload');
+    
+        // Upload the file
+        await fileInput.setInputFiles(imagePath);
+    
+        // Wait for "Added Successfully" toast
+        const toast = this.page.locator('text=Added Successfully');
+        await expect(toast).toBeVisible({ timeout: 30000 });
+
+        await this.page.waitForTimeout(3000);
+
+        // image name should be visible 
+        const imageName = imagePath.split(/[\\/]/).pop();
+        if (imageName) {
+            // Primary: check by <p> text containing the file name
+            let uploadedImage = this.page.locator(`.mt-3.black-text.pb-1.f-12:has-text("${imageName}")`);
+            let found = await uploadedImage.isVisible({ timeout: 5000 }).catch(() => false);
+        
+            if (!found) {
+                // Fallback: check by <img> src or alt attribute
+                uploadedImage = this.page.locator(`img[src*="${imageName}"], img[alt="${imageName}"]`);
+                await expect(uploadedImage).toBeVisible({ timeout: 10000 });
+            } else {
+                await expect(uploadedImage).toBeVisible({ timeout: 10000 });
+            }
+        }
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+        
+      }
 
 }
