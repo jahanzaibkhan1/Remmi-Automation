@@ -231,4 +231,13 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.noImageUploadedScenario();
   });
 
+  test('Test 35: Upload unsupported image format', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    // Use a relative image path within the repo's PropertyImages folder
+    const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+    const imagePath = path.join(IMAGE_DIR, 'invalidImage.webp');
+    await listingActions.uploadunsupportedImageFormat(imagePath);
+  });
+
 });
