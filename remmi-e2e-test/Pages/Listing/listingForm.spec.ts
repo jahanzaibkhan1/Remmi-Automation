@@ -269,4 +269,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.searchForSavedListing();
   });
 
+  test('Test 41: Delete a listing', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deleteListingCard();
+  });
+
 });
