@@ -5824,4 +5824,52 @@ export class ListingActions {
         await expect(detailHeading).toBeVisible({ timeout: 10000 });
     }
 
+    // Listing should not be visible after deletion
+    async verifyListingNotVisibleAfterDeletion() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 20000 });
+
+        // Ab usi heading ka title search karo search box mein
+        const headingTitle = await this.page.locator('h3.props-bg.cp.mb-1.px-0').first().innerText().catch(async () => {
+            // fallback: grab all text content if selectors above not available
+            return await firstCard.innerText();
+        });
+
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown.click({ force: true });
+
+        // Find the delete button for the first visible listing card in card/grid view
+        const cardDeleteButton = this.page.locator('a:nth-child(4)').first();
+        await cardDeleteButton.scrollIntoViewIfNeeded()
+        await cardDeleteButton.click({ force: true });
+
+        // Wait for confirmation dialog to appear
+        const confirmationDialog = this.page.getByText('Are you sure you want to delete this listing ? Your listing will be permanently');
+        await expect(confirmationDialog).toBeVisible({ timeout: 10000 });
+
+        // Find and click the confirm Delete button
+        const confirmButton = this.page.getByRole('button', { name: 'Delete' });
+        await expect(confirmButton).toBeVisible({ timeout: 10000 });
+        await confirmButton.click({ force: true });
+        const toast = this.page.getByRole('alert', { name: 'Listing successfully deleted' });;
+        await expect(toast).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+
+        const searchInput = this.locators.SearchBox();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.click();
+        await searchInput.fill(headingTitle);
+
+        // Wait for search results to update
+        await this.page.waitForTimeout(1000);
+        // Confirm that the listing was opened by checking the heading title is visible in the detailed view
+        const detailHeading = this.page.locator('h3.props-bg.cp.mb-1.px-0', { hasText: headingTitle });
+        await expect(detailHeading).not.toBeVisible({ timeout: 10000 });
+
+        await this.resetFilters();
+    }
+
 }
