@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.58175800000131">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-17T09:54:28.304Z" hostname="chromium" tests="1" failures="0" skipped="0" time="26.008" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 37: Invalid characters in fields" classname="Pages\Listing\listingForm.spec.ts" time="26.008">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.730538000002504">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-17T09:58:30.213Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.076" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 38: Duplicate listing  creation" classname="Pages\Listing\listingForm.spec.ts" time="33.076">
 </testcase>
 </testsuite>
 </testsuites>
