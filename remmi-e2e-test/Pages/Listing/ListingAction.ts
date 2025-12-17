@@ -5872,4 +5872,27 @@ export class ListingActions {
         await this.resetFilters();
     }
 
+    // Verify project association popup opens
+    async verifyProjectAssociationPopupOpens() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click on the first card
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 10000 });
+        await firstCard.click();
+
+        // Find and click the project association button/icon if available
+        const projectAssociation = this.page.getByText('Associate Project').first();
+        await expect(projectAssociation).toBeVisible({ timeout: 10000 });
+        await projectAssociation.click({ force: true });
+        // Assert the popup/modal/dialog appears
+        const projectAssociationModal = this.page.getByText('ProjectsSelect ProjectCancelAssociate');
+        await expect(projectAssociationModal).toBeVisible({ timeout: 10000 });
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await saveAndCloseButton.click();
+    }
+
 }
