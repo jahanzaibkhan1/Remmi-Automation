@@ -1,8 +1,10 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { ListingLocators } from './ListingLocator';
 import { addAbortListener } from 'events';
+import path from 'path';
 import { table } from 'console';
 import { faker, th } from '@faker-js/faker';
+import { text } from 'stream/consumers';
 
 export class ListingActions {
     private page: Page;
@@ -5382,6 +5384,515 @@ export class ListingActions {
     // Check the Save button visibility and state
     async checkSaveButton() {
         await this.createListingWithMissingFields();
+    }
+
+
+    async uploadImagesToLibrary(imagePath: string) {
+        // Navigate to Listing grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing card
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Click Images tab
+        const imagesTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imagesTab).toBeVisible({ timeout: 10000 });
+        await imagesTab.click();
+
+        await this.page.waitForTimeout(6000);
+        // Click "Add" button until "File Upload (Public)" menu option becomes visible
+        const addBtn = this.page.getByRole('button', { name: /Add/i }).first();
+        let fileUploadPublic = this.page.getByRole('menuitem', { name: 'File Upload (Public)' });
+
+        const maxTries = 5;
+        let tries = 0;
+        // Retry clicking Add until file upload becomes visible or reach maxTries
+        while (!(await fileUploadPublic.isVisible({ timeout: 1000 }).catch(() => false)) && tries < maxTries) {
+            await addBtn.waitFor({ state: 'attached', timeout: 10000 }); // ensure DOM ready
+            await addBtn.click({ force: true });
+            await this.page.waitForTimeout(400); // Small wait for menu to open
+            tries++;
+            // re-acquire locator after menu open attempt
+            fileUploadPublic = this.page.getByRole('menuitem', { name: 'File Upload (Public)' });
+        }
+        await expect(fileUploadPublic).toBeVisible({ timeout: 5000 });
+        await fileUploadPublic.click();
+
+        // Wait for hidden input to appear
+        const fileInput = this.page.locator('#fileUpload');
+
+        // Upload the file
+        await fileInput.setInputFiles(imagePath);
+
+        // Wait for "Added Successfully" toast
+        const toast = this.page.locator('text=Added Successfully');
+        await expect(toast).toBeVisible({ timeout: 30000 });
+
+        await this.page.waitForTimeout(3000);
+
+        // image name should be visible 
+        const imageName = imagePath.split(/[\\/]/).pop();
+        if (imageName) {
+            // Primary: check by <p> text containing the file name
+            let uploadedImage = this.page.locator(`.mt-3.black-text.pb-1.f-12:has-text("${imageName}")`);
+            let found = await uploadedImage.isVisible({ timeout: 5000 }).catch(() => false);
+
+            if (!found) {
+                // Fallback: check by <img> src or alt attribute
+                uploadedImage = this.page.locator(`img[src*="${imageName}"], img[alt="${imageName}"]`);
+                await expect(uploadedImage).toBeVisible({ timeout: 10000 });
+            } else {
+                await expect(uploadedImage).toBeVisible({ timeout: 10000 });
+            }
+        }
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+
+    }
+
+    async noImageUploadedScenario() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing card
+        const firstListing = this.page.locator('.s-property').nth(1);
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Click Images tab
+        const imagesTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imagesTab).toBeVisible({ timeout: 10000 });
+        await imagesTab.click();
+        await this.page.waitForTimeout(6000);
+
+
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+    }
+
+    async uploadunsupportedImageFormat(imagePath: string) {
+        // Navigate to Listing grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing card
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Click Images tab
+        const imagesTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imagesTab).toBeVisible({ timeout: 10000 });
+        await imagesTab.click();
+
+        await this.page.waitForTimeout(6000);
+        // Click "Add" button until "File Upload (Public)" menu option becomes visible
+        const addBtn = this.page.getByRole('button', { name: /Add/i }).first();
+        let fileUploadPublic = this.page.getByRole('menuitem', { name: 'File Upload (Public)' });
+
+        const maxTries = 5;
+        let tries = 0;
+        // Retry clicking Add until file upload becomes visible or reach maxTries
+        while (!(await fileUploadPublic.isVisible({ timeout: 1000 }).catch(() => false)) && tries < maxTries) {
+            await addBtn.waitFor({ state: 'attached', timeout: 10000 }); // ensure DOM ready
+            await addBtn.click({ force: true });
+            await this.page.waitForTimeout(400); // Small wait for menu to open
+            tries++;
+            // re-acquire locator after menu open attempt
+            fileUploadPublic = this.page.getByRole('menuitem', { name: 'File Upload (Public)' });
+        }
+        await expect(fileUploadPublic).toBeVisible({ timeout: 5000 });
+        await fileUploadPublic.click();
+
+        // Wait for hidden input to appear
+        const fileInput = this.page.locator('#fileUpload');
+
+        // Upload the file
+        await fileInput.setInputFiles(imagePath);
+
+        const fileTypeNotSupportedAlert = this.page.locator('text=File Type Not Supported');
+        await expect(fileTypeNotSupportedAlert).toBeVisible({ timeout: 10000 });
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+
+    }
+
+    // Delete uploaded image
+    async deleteUploadedImage() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing card
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Click Images tab
+        const imagesTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imagesTab).toBeVisible({ timeout: 10000 });
+        await imagesTab.click();
+
+        const imageLocator = this.page.locator('img.img-hub2').first();
+        await expect(imageLocator).toBeVisible({ timeout: 15000 })
+        await imageLocator.click();
+
+        // Locator for Remove (Delete) icon in images popup
+        const removeIcon = this.page.locator('img[alt="Remove"][src*="delete_icon.svg"].cursor-pointer');
+        await expect(removeIcon).toBeVisible({ timeout: 5000 });
+        await removeIcon.click();
+
+        // "Deleted successfully"
+        const deletedSuccessfullyToast = this.page.locator('text= Deleted successfully');
+        await expect(deletedSuccessfullyToast).toBeVisible({ timeout: 20000 });
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+
+    }
+
+    // Invalid characters in fields
+    async checkInvalidCharactersInFields() {
+
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing card
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Open Property Type dropdown and search/select the option
+        const propertyTypeDropdown = this.page.locator('ng-select[formcontrolname="type"]');
+        await expect(propertyTypeDropdown).toBeVisible({ timeout: 10000 });
+        await propertyTypeDropdown.click();
+
+        // Search for the propertyType option
+        const propertyTypeSearchInput = this.page.locator('ng-select[formcontrolname="type"] input[type="text"], ng-select[formcontrolname="type"] input[role="combobox"]');
+        if (await propertyTypeSearchInput.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await propertyTypeSearchInput.fill('@#$%');
+            await this.page.waitForTimeout(500); // Let options update if needed
+        }
+        // Verify that "No items found" appears in the dropdown
+        const noItemsFound = this.page.locator('text = No items found').first();
+        await expect(noItemsFound).toBeVisible({ timeout: 10000 });
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await saveAndCloseButton.click();
+
+        // Optionally check for success message
+        await expect(this.page.getByText('Listing updated successfully', { exact: false })).toBeVisible({ timeout: 7000 });
+        await this.page.waitForTimeout(1200);
+    }
+
+    // Check that a newly saved listing appears in the grid and verify it's the first property in the grid
+    async verifyListingAppearsInGrid() {
+        // Use faker for address details (track property for later grid match)
+        const buildingNameValue = faker.company.name();
+        const unitNoValue = faker.number.int({ min: 1, max: 50 }).toString();
+        const streetNoValue = faker.location.buildingNumber();
+        const streetNameValue = faker.location.street();
+        const suburbValue = 'East Albury';
+        const stateValue = faker.location.state();
+        const postcodeValue = faker.location.zipCode('#####');
+        const countryValue = faker.location.country();
+
+        await this.navigateToListings();
+        await this.navigateToProperties();
+        // Ensure listing cards are loaded
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]").first();
+        await expect(contactFormBtn).toBeVisible({ timeout: 5000 });
+        await contactFormBtn.dblclick({ force: true });
+
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+        const propertyAddressSearchInput = contactForm.getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+
+        const propertyTypeDropdown = this.page.locator('ng-select[formcontrolname="type"]');
+        await expect(propertyTypeDropdown).toBeVisible({ timeout: 10000 });
+        await propertyTypeDropdown.click();
+        await expect(propertyTypeDropdown).toHaveClass(/ng-select-opened/);
+
+        const propertyTypeSearchInput = this.page.locator('ng-select[formcontrolname="type"] input[type="text"], ng-select[formcontrolname="type"] input[role="combobox"]');
+        if (await propertyTypeSearchInput.isVisible({ timeout: 1000 }).catch(() => false)) {
+            await propertyTypeSearchInput.fill('Alpine');
+            await this.page.waitForTimeout(700);
+            const alpineOption = this.page.locator('.ng-option', { hasText: 'Alpine' });
+            await expect(alpineOption).toBeVisible({ timeout: 5000 });
+            await expect(alpineOption).toHaveText(/Alpine/i);
+            await alpineOption.click({ force: true });
+        }
+
+        const createAddress = this.page.locator("//img[contains(@class,'pencil-cross')]");
+        await expect(createAddress).toBeVisible({ timeout: 10000 });
+        await createAddress.click({ force: true });
+
+        const buildingName = this.page.locator("input[formcontrolname='building_name']");
+        await expect(buildingName).toBeVisible({ timeout: 10000 });
+        await buildingName.click();
+        await buildingName.fill(buildingNameValue);
+        await expect(buildingName).toHaveValue(buildingNameValue);
+
+        const unitNo = this.page.locator("input[formcontrolname='unit_no']");
+        await expect(unitNo).toBeVisible({ timeout: 10000 });
+        await unitNo.click();
+        await unitNo.fill(unitNoValue);
+        await expect(unitNo).toHaveValue(unitNoValue);
+
+        const streetNo = this.page.locator("input[formcontrolname='street_no']");
+        await expect(streetNo).toBeVisible({ timeout: 10000 });
+        await streetNo.click();
+        await streetNo.fill(streetNoValue);
+        await expect(streetNo).toHaveValue(streetNoValue);
+
+        const streetName = this.page.locator("input[formcontrolname='street_name']");
+        await expect(streetName).toBeVisible({ timeout: 10000 });
+        await streetName.click();
+        await streetName.fill(streetNameValue);
+        await expect(streetName).toHaveValue(streetNameValue);
+
+        const suburbInput = this.page.locator("p-autocomplete[formcontrolname='suburb'] input");
+        await expect(suburbInput).toBeVisible({ timeout: 10000 });
+        await suburbInput.click();
+        await suburbInput.fill(suburbValue);
+        await expect(suburbInput).toHaveValue(suburbValue);
+
+        const suggestion = this.page.locator("ul.p-autocomplete-items li").first();
+        await expect(suggestion).toBeVisible({ timeout: 5000 });
+        await suggestion.click();
+
+        const stateInput = this.page.locator("input[formcontrolname='state']");
+        await expect(stateInput).toBeVisible({ timeout: 10000 });
+        await stateInput.click();
+        await stateInput.fill(stateValue);
+        await expect(stateInput).toHaveValue(stateValue);
+
+        const postcodeInput = this.page.locator("input[formcontrolname='post_code']");
+        await expect(postcodeInput).toBeVisible({ timeout: 10000 });
+        await postcodeInput.click();
+        await postcodeInput.fill(postcodeValue);
+        await expect(postcodeInput).toHaveValue(postcodeValue);
+
+        const countryInput = this.page.locator("input[formcontrolname='country']");
+        await expect(countryInput).toBeVisible({ timeout: 10000 });
+        await countryInput.click();
+        await countryInput.fill(countryValue);
+        await expect(countryInput).toHaveValue(countryValue);
+
+        const saveButton = this.page.locator("button[type='submit'], button:has-text('Save')").last();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click({ force: true });
+        await expect(saveButton).toBeEnabled();
+
+        await this.page.waitForTimeout(1000);
+
+        const saveBtn = this.page.locator("button", { hasText: "Save" }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+
+        const yesButton = this.page.locator('button:has-text("Yes")');
+        await expect(yesButton).toBeVisible({ timeout: 10000 });
+        await yesButton.click({ force: true });
+        await expect(yesButton).not.toBeVisible({ timeout: 4000 });
+
+        const selectCurrentOwnerSpan = this.page.locator("//span[normalize-space()='Select Current Owner']");
+        await expect(selectCurrentOwnerSpan).toBeVisible({ timeout: 10000 });
+        await selectCurrentOwnerSpan.click();
+
+        const searchInput = this.page.locator("input[placeholder='Search']").last();
+        await expect(searchInput).toBeVisible({ timeout: 5000 });
+        await searchInput.click();
+        await searchInput.fill("Automation Testing");
+
+        const option = this.page.locator("ul li", { hasText: "Automation Testing" });
+        await expect(option).toBeVisible({ timeout: 5000 });
+        await option.click();
+        const sortUp = this.page.locator('.fas.fa-sort-up');
+        await expect(sortUp).toBeVisible({ timeout: 5000 });
+        await sortUp.click();
+        await this.page.waitForTimeout(1500);
+
+        const ddMmYyTextbox = this.page.getByRole('textbox', { name: 'DD-MM-YY' });
+        await expect(ddMmYyTextbox).toBeVisible({ timeout: 5000 });
+        await ddMmYyTextbox.click();
+
+        const currentDay = new Date().getDate().toString();
+        const date = this.page.getByText(currentDay, { exact: true });
+        await expect(date).toBeVisible({ timeout: 2000 });
+        await date.click();
+
+        const priceInput = this.page.locator('input[name="price"]');
+        await expect(priceInput).toBeVisible({ timeout: 2000 });
+        await priceInput.fill('123456');
+
+        const saveBtun = this.page.locator("button", { hasText: "Save" }).last();
+        await expect(saveBtun).toBeVisible({ timeout: 10000 });
+        await saveBtun.click();
+
+        await expect(this.page.getByText('added successfully', { exact: false })).toBeVisible({ timeout: 7000 });
+
+        await saveBtn.click();
+
+        // Add Listing to this property
+        await this.page.waitForTimeout(2000);
+        // Ensure listing cards are loaded
+        const addListingBtn = this.page.locator("button", { hasText: "Add Listing" });
+        await expect(addListingBtn).toBeVisible({ timeout: 10000 });
+        await addListingBtn.click();
+
+        const listingsTypeDropdown = this.page.locator('ng-select').filter({ hasText: 'Listings Type' }).getByRole('combobox');
+        await expect(listingsTypeDropdown).toBeVisible({ timeout: 5000 });
+        await listingsTypeDropdown.click();
+
+        const auctionOption = this.page.getByRole('option', { name: 'Auction' });
+        await expect(auctionOption).toBeVisible({ timeout: 5000 });
+        await auctionOption.click();
+
+        const listingStatusDropdown = this.page.locator('ng-select').filter({ hasText: 'Listing Status' });
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 5000 });
+        await listingStatusDropdown.click();
+
+        const forSaleOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'For sale' }).first();
+        await expect(forSaleOption).toBeVisible({ timeout: 5000 });
+        await forSaleOption.click();
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+
+        const listingAddedAlert = this.page.getByRole('alert', { name: 'Listing added successfully' });
+        await expect(listingAddedAlert).toBeVisible({ timeout: 10000 });
+
+        // Grid me jao
+        await this.page.locator("//p[normalize-space()='Listing']").click();
+        await this.page.waitForTimeout(1200);
+        // Wait for the first card row to load
+        const firstProperty = this.page.locator('.s-property').first();
+        await expect(firstProperty).toBeVisible({ timeout: 20000 });
+    }
+
+    // Searching for a saved listing
+    async searchForSavedListing() {
+        // Navigate to the Listing grid page
+        // First card show ho
+        await this.page.locator("//p[normalize-space()='Listing']").click();
+        await this.page.waitForTimeout(1200);
+
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 20000 });
+
+        // Ab usi heading ka title search karo search box mein
+        const headingTitle = await this.page.locator('h3.props-bg.cp.mb-1.px-0').first().innerText().catch(async () => {
+            // fallback: grab all text content if selectors above not available
+            return await firstCard.innerText();
+        });
+
+        const searchInput = this.locators.SearchBox();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.click();
+        await searchInput.fill(headingTitle);
+
+        // Wait for search results to update
+        await this.page.waitForTimeout(1000);
+
+        // Locate matching listing in the results
+        const searchResult = this.page.locator('.s-property', { hasText: headingTitle }).first();
+        await expect(searchResult).toBeVisible({ timeout: 10000 });
+
+        // Optionally: Open the listing to verify details
+        await searchResult.click();
+        // Confirm that the listing was opened by checking the heading title is visible in the detailed view
+        const detailHeading = this.page.locator('h3.props-bg.cp.mb-1.px-0', { hasText: headingTitle });
+        await expect(detailHeading).toBeVisible({ timeout: 10000 });
+    }
+
+    // Listing should not be visible after deletion
+    async verifyListingNotVisibleAfterDeletion() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 20000 });
+
+        // Ab usi heading ka title search karo search box mein
+        const headingTitle = await this.page.locator('h3.props-bg.cp.mb-1.px-0').first().innerText().catch(async () => {
+            // fallback: grab all text content if selectors above not available
+            return await firstCard.innerText();
+        });
+
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown.click({ force: true });
+
+        // Find the delete button for the first visible listing card in card/grid view
+        const cardDeleteButton = this.page.locator('a:nth-child(4)').first();
+        await cardDeleteButton.scrollIntoViewIfNeeded()
+        await cardDeleteButton.click({ force: true });
+
+        // Wait for confirmation dialog to appear
+        const confirmationDialog = this.page.getByText('Are you sure you want to delete this listing ? Your listing will be permanently');
+        await expect(confirmationDialog).toBeVisible({ timeout: 10000 });
+
+        // Find and click the confirm Delete button
+        const confirmButton = this.page.getByRole('button', { name: 'Delete' });
+        await expect(confirmButton).toBeVisible({ timeout: 10000 });
+        await confirmButton.click({ force: true });
+        const toast = this.page.getByRole('alert', { name: 'Listing successfully deleted' });;
+        await expect(toast).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+
+        const searchInput = this.locators.SearchBox();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.click();
+        await searchInput.fill(headingTitle);
+
+        // Wait for search results to update
+        await this.page.waitForTimeout(1000);
+        // Confirm that the listing was opened by checking the heading title is visible in the detailed view
+        const detailHeading = this.page.locator('h3.props-bg.cp.mb-1.px-0', { hasText: headingTitle });
+        await expect(detailHeading).not.toBeVisible({ timeout: 10000 });
+
+        await this.resetFilters();
+    }
+
+    // Verify project association popup opens
+    async verifyProjectAssociationPopupOpens() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click on the first card
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 10000 });
+        await firstCard.click();
+
+        // Find and click the project association button/icon if available
+        const projectAssociation = this.page.getByText('Associate Project').first();
+        await expect(projectAssociation).toBeVisible({ timeout: 10000 });
+        await projectAssociation.click({ force: true });
+        // Assert the popup/modal/dialog appears
+        const projectAssociationModal = this.page.getByText('ProjectsSelect ProjectCancelAssociate');
+        await expect(projectAssociationModal).toBeVisible({ timeout: 10000 });
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await saveAndCloseButton.click();
     }
 
 }
