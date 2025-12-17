@@ -5789,4 +5789,39 @@ export class ListingActions {
         await expect(firstProperty).toBeVisible({ timeout: 20000 });
     }
 
+    // Searching for a saved listing
+    async searchForSavedListing() {
+        // Navigate to the Listing grid page
+        // First card show ho
+        await this.page.locator("//p[normalize-space()='Listing']").click();
+        await this.page.waitForTimeout(1200);
+
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 20000 });
+
+        // Ab usi heading ka title search karo search box mein
+        const headingTitle = await this.page.locator('h3.props-bg.cp.mb-1.px-0').first().innerText().catch(async () => {
+            // fallback: grab all text content if selectors above not available
+            return await firstCard.innerText();
+        });
+
+        const searchInput = this.locators.SearchBox();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.click();
+        await searchInput.fill(headingTitle);
+
+        // Wait for search results to update
+        await this.page.waitForTimeout(1000);
+
+        // Locate matching listing in the results
+        const searchResult = this.page.locator('.s-property', { hasText: headingTitle }).first();
+        await expect(searchResult).toBeVisible({ timeout: 10000 });
+
+        // Optionally: Open the listing to verify details
+        await searchResult.click();
+        // Confirm that the listing was opened by checking the heading title is visible in the detailed view
+        const detailHeading = this.page.locator('h3.props-bg.cp.mb-1.px-0', { hasText: headingTitle });
+        await expect(detailHeading).toBeVisible({ timeout: 10000 });
+    }
+
 }
