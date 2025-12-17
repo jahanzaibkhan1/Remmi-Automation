@@ -5564,4 +5564,40 @@ export class ListingActions {
 
     }
 
+    // Invalid characters in fields
+    async checkInvalidCharactersInFields() {
+
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing card
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Open Property Type dropdown and search/select the option
+        const propertyTypeDropdown = this.page.locator('ng-select[formcontrolname="type"]');
+        await expect(propertyTypeDropdown).toBeVisible({ timeout: 10000 });
+        await propertyTypeDropdown.click();
+
+        // Search for the propertyType option
+        const propertyTypeSearchInput = this.page.locator('ng-select[formcontrolname="type"] input[type="text"], ng-select[formcontrolname="type"] input[role="combobox"]');
+        if (await propertyTypeSearchInput.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await propertyTypeSearchInput.fill('@#$%');
+            await this.page.waitForTimeout(500); // Let options update if needed
+        }
+        // Verify that "No items found" appears in the dropdown
+        const noItemsFound = this.page.locator('text = No items found').first();
+        await expect(noItemsFound).toBeVisible({ timeout: 10000 });
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await saveAndCloseButton.click();
+
+        // Optionally check for success message
+        await expect(this.page.getByText('Listing updated successfully', { exact: false })).toBeVisible({ timeout: 7000 });
+        await this.page.waitForTimeout(1200);
+    }
+
 }

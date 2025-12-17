@@ -246,4 +246,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.deleteUploadedImage();
   });
 
+  test('Test 37: Invalid characters in fields', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.checkInvalidCharactersInFields();
+  });
+
 });

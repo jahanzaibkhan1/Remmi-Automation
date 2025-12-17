@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="62.86220799999684">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-17T09:34:01.115Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.961" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 36: Delete uploaded image" classname="Pages\Listing\listingForm.spec.ts" time="55.961">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.58175800000131">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-17T09:54:28.304Z" hostname="chromium" tests="1" failures="0" skipped="0" time="26.008" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 37: Invalid characters in fields" classname="Pages\Listing\listingForm.spec.ts" time="26.008">
 </testcase>
 </testsuite>
 </testsuites>
