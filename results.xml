@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.306272999998185">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-17T09:07:29.354Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.408" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 35: Upload images to library" classname="Pages\Listing\listingForm.spec.ts" time="38.408">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="62.86220799999684">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-17T09:34:01.115Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.961" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 36: Delete uploaded image" classname="Pages\Listing\listingForm.spec.ts" time="55.961">
 </testcase>
 </testsuite>
 </testsuites>

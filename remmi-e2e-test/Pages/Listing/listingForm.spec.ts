@@ -240,4 +240,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.uploadunsupportedImageFormat(imagePath);
   });
 
+  test('Test 36: Delete uploaded image', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.deleteUploadedImage();
+  });
+
 });
