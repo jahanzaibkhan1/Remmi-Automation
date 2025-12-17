@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.88042000000179">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-17T10:52:24.246Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.087" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 41: Delete a listing from the grid" classname="Pages\Listing\listingForm.spec.ts" time="24.087">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.83471999999881">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-17T11:00:22.005Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.505" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 42: Listing should not be visible after deletion" classname="Pages\Listing\listingForm.spec.ts" time="45.505">
 </testcase>
 </testsuite>
 </testsuites>
