@@ -4,6 +4,7 @@ import { addAbortListener } from 'events';
 import path from 'path';
 import { table } from 'console';
 import { faker, th } from '@faker-js/faker';
+import { text } from 'stream/consumers';
 
 export class ListingActions {
     private page: Page;
@@ -5390,12 +5391,12 @@ export class ListingActions {
         // Navigate to Listing grid view
         await this.navigateToListings();
         await this.switchToGridView();
-    
+
         // Open first listing card
         const firstListing = this.page.locator('.s-property').first();
         await expect(firstListing).toBeVisible({ timeout: 10000 });
         await firstListing.click();
-    
+
         // Click Images tab
         const imagesTab = this.page.getByRole('tab', { name: /Images/i });
         await expect(imagesTab).toBeVisible({ timeout: 10000 });
@@ -5419,13 +5420,13 @@ export class ListingActions {
         }
         await expect(fileUploadPublic).toBeVisible({ timeout: 5000 });
         await fileUploadPublic.click();
-    
+
         // Wait for hidden input to appear
         const fileInput = this.page.locator('#fileUpload');
-    
+
         // Upload the file
         await fileInput.setInputFiles(imagePath);
-    
+
         // Wait for "Added Successfully" toast
         const toast = this.page.locator('text=Added Successfully');
         await expect(toast).toBeVisible({ timeout: 30000 });
@@ -5438,7 +5439,7 @@ export class ListingActions {
             // Primary: check by <p> text containing the file name
             let uploadedImage = this.page.locator(`.mt-3.black-text.pb-1.f-12:has-text("${imageName}")`);
             let found = await uploadedImage.isVisible({ timeout: 5000 }).catch(() => false);
-        
+
             if (!found) {
                 // Fallback: check by <img> src or alt attribute
                 uploadedImage = this.page.locator(`img[src*="${imageName}"], img[alt="${imageName}"]`);
@@ -5452,10 +5453,10 @@ export class ListingActions {
         await saveAndCloseButton.scrollIntoViewIfNeeded();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
-        
-      }
 
-      async noImageUploadedScenario() {
+    }
+
+    async noImageUploadedScenario() {
         await this.navigateToListings();
         await this.switchToGridView();
 
@@ -5476,18 +5477,18 @@ export class ListingActions {
         await saveAndCloseButton.scrollIntoViewIfNeeded();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
-      }
+    }
 
-      async uploadunsupportedImageFormat(imagePath: string) {
+    async uploadunsupportedImageFormat(imagePath: string) {
         // Navigate to Listing grid view
         await this.navigateToListings();
         await this.switchToGridView();
-    
+
         // Open first listing card
         const firstListing = this.page.locator('.s-property').first();
         await expect(firstListing).toBeVisible({ timeout: 10000 });
         await firstListing.click();
-    
+
         // Click Images tab
         const imagesTab = this.page.getByRole('tab', { name: /Images/i });
         await expect(imagesTab).toBeVisible({ timeout: 10000 });
@@ -5511,10 +5512,10 @@ export class ListingActions {
         }
         await expect(fileUploadPublic).toBeVisible({ timeout: 5000 });
         await fileUploadPublic.click();
-    
+
         // Wait for hidden input to appear
         const fileInput = this.page.locator('#fileUpload');
-    
+
         // Upload the file
         await fileInput.setInputFiles(imagePath);
 
@@ -5525,7 +5526,42 @@ export class ListingActions {
         await saveAndCloseButton.scrollIntoViewIfNeeded();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
-        
-      }
+
+    }
+
+    // Delete uploaded image
+    async deleteUploadedImage() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing card
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Click Images tab
+        const imagesTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imagesTab).toBeVisible({ timeout: 10000 });
+        await imagesTab.click();
+
+        const imageLocator = this.page.locator('img.img-hub2').first();
+        await expect(imageLocator).toBeVisible({ timeout: 15000 })
+        await imageLocator.click();
+
+        // Locator for Remove (Delete) icon in images popup
+        const removeIcon = this.page.locator('img[alt="Remove"][src*="delete_icon.svg"].cursor-pointer');
+        await expect(removeIcon).toBeVisible({ timeout: 5000 });
+        await removeIcon.click();
+
+        // "Deleted successfully"
+        const deletedSuccessfullyToast = this.page.locator('text= Deleted successfully');
+        await expect(deletedSuccessfullyToast).toBeVisible({ timeout: 20000 });
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+
+    }
 
 }
