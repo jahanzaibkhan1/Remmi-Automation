@@ -5455,4 +5455,27 @@ export class ListingActions {
         
       }
 
+      async noImageUploadedScenario() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing card
+        const firstListing = this.page.locator('.s-property').nth(1);
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Click Images tab
+        const imagesTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imagesTab).toBeVisible({ timeout: 10000 });
+        await imagesTab.click();
+        await this.page.waitForTimeout(6000);
+
+        
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+      }
+
 }

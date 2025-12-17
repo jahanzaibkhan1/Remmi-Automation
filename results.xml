@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.11936799999699">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-17T08:39:39.207Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.142" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 33: Upload images to library" classname="Pages\Listing\listingForm.spec.ts" time="48.142">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.18099499999732">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-17T08:56:11.811Z" hostname="chromium" tests="1" failures="0" skipped="0" time="43.832" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 34: No image uploaded" classname="Pages\Listing\listingForm.spec.ts" time="43.832">
 </testcase>
 </testsuite>
 </testsuites>
