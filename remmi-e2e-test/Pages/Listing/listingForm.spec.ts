@@ -217,4 +217,73 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 33: Upload images to library', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    // Use a relative image path within the repo's PropertyImages folder
+    const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+    const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+    await listingActions.uploadImagesToLibrary(imagePath);
+  });
+
+  test('Test 34: No image uploaded', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.noImageUploadedScenario();
+  });
+
+  test('Test 35: Upload unsupported image format', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    // Use a relative image path within the repo's PropertyImages folder
+    const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+    const imagePath = path.join(IMAGE_DIR, 'invalidImage.webp');
+    await listingActions.uploadunsupportedImageFormat(imagePath);
+  });
+
+  test('Test 36: Delete uploaded image', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.deleteUploadedImage();
+  });
+
+  test('Test 37: Invalid characters in fields', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.checkInvalidCharactersInFields();
+  });
+
+  test('Test 38: Duplicate listing  creation', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.createListingWithRequiredFields('house', 'Rental', 'For Lease');
+    await listingActions.resetFilters()
+  });
+
+  test('Test 39: Listing appears in grid after save', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyListingAppearsInGrid();
+  });
+
+  test('Test 40: Search for a saved listing appears in results', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.searchForSavedListing();
+  });
+
+  test('Test 41: Delete a listing', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deleteListingCard();
+  });
+
+  test('Test 42: Verifying delete action', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings()
+    await listingActions.verifyListingNotVisibleAfterDeletion();
+  });
+
+  test('Test 43: Verify project association popup opens', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyProjectAssociationPopupOpens();
+  });
+
 });
