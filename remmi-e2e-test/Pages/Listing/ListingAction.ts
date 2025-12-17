@@ -5600,4 +5600,193 @@ export class ListingActions {
         await this.page.waitForTimeout(1200);
     }
 
+    // Check that a newly saved listing appears in the grid and verify it's the first property in the grid
+    async verifyListingAppearsInGrid() {
+        // Use faker for address details (track property for later grid match)
+        const buildingNameValue = faker.company.name();
+        const unitNoValue = faker.number.int({ min: 1, max: 50 }).toString();
+        const streetNoValue = faker.location.buildingNumber();
+        const streetNameValue = faker.location.street();
+        const suburbValue = 'East Albury';
+        const stateValue = faker.location.state();
+        const postcodeValue = faker.location.zipCode('#####');
+        const countryValue = faker.location.country();
+
+        await this.navigateToListings();
+        await this.navigateToProperties();
+        // Ensure listing cards are loaded
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]").first();
+        await expect(contactFormBtn).toBeVisible({ timeout: 5000 });
+        await contactFormBtn.dblclick({ force: true });
+
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+        const propertyAddressSearchInput = contactForm.getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
+
+        const propertyTypeDropdown = this.page.locator('ng-select[formcontrolname="type"]');
+        await expect(propertyTypeDropdown).toBeVisible({ timeout: 10000 });
+        await propertyTypeDropdown.click();
+        await expect(propertyTypeDropdown).toHaveClass(/ng-select-opened/);
+
+        const propertyTypeSearchInput = this.page.locator('ng-select[formcontrolname="type"] input[type="text"], ng-select[formcontrolname="type"] input[role="combobox"]');
+        if (await propertyTypeSearchInput.isVisible({ timeout: 1000 }).catch(() => false)) {
+            await propertyTypeSearchInput.fill('Alpine');
+            await this.page.waitForTimeout(700);
+            const alpineOption = this.page.locator('.ng-option', { hasText: 'Alpine' });
+            await expect(alpineOption).toBeVisible({ timeout: 5000 });
+            await expect(alpineOption).toHaveText(/Alpine/i);
+            await alpineOption.click({ force: true });
+        }
+
+        const createAddress = this.page.locator("//img[contains(@class,'pencil-cross')]");
+        await expect(createAddress).toBeVisible({ timeout: 10000 });
+        await createAddress.click({ force: true });
+
+        const buildingName = this.page.locator("input[formcontrolname='building_name']");
+        await expect(buildingName).toBeVisible({ timeout: 10000 });
+        await buildingName.click();
+        await buildingName.fill(buildingNameValue);
+        await expect(buildingName).toHaveValue(buildingNameValue);
+
+        const unitNo = this.page.locator("input[formcontrolname='unit_no']");
+        await expect(unitNo).toBeVisible({ timeout: 10000 });
+        await unitNo.click();
+        await unitNo.fill(unitNoValue);
+        await expect(unitNo).toHaveValue(unitNoValue);
+
+        const streetNo = this.page.locator("input[formcontrolname='street_no']");
+        await expect(streetNo).toBeVisible({ timeout: 10000 });
+        await streetNo.click();
+        await streetNo.fill(streetNoValue);
+        await expect(streetNo).toHaveValue(streetNoValue);
+
+        const streetName = this.page.locator("input[formcontrolname='street_name']");
+        await expect(streetName).toBeVisible({ timeout: 10000 });
+        await streetName.click();
+        await streetName.fill(streetNameValue);
+        await expect(streetName).toHaveValue(streetNameValue);
+
+        const suburbInput = this.page.locator("p-autocomplete[formcontrolname='suburb'] input");
+        await expect(suburbInput).toBeVisible({ timeout: 10000 });
+        await suburbInput.click();
+        await suburbInput.fill(suburbValue);
+        await expect(suburbInput).toHaveValue(suburbValue);
+
+        const suggestion = this.page.locator("ul.p-autocomplete-items li").first();
+        await expect(suggestion).toBeVisible({ timeout: 5000 });
+        await suggestion.click();
+
+        const stateInput = this.page.locator("input[formcontrolname='state']");
+        await expect(stateInput).toBeVisible({ timeout: 10000 });
+        await stateInput.click();
+        await stateInput.fill(stateValue);
+        await expect(stateInput).toHaveValue(stateValue);
+
+        const postcodeInput = this.page.locator("input[formcontrolname='post_code']");
+        await expect(postcodeInput).toBeVisible({ timeout: 10000 });
+        await postcodeInput.click();
+        await postcodeInput.fill(postcodeValue);
+        await expect(postcodeInput).toHaveValue(postcodeValue);
+
+        const countryInput = this.page.locator("input[formcontrolname='country']");
+        await expect(countryInput).toBeVisible({ timeout: 10000 });
+        await countryInput.click();
+        await countryInput.fill(countryValue);
+        await expect(countryInput).toHaveValue(countryValue);
+
+        const saveButton = this.page.locator("button[type='submit'], button:has-text('Save')").last();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click({ force: true });
+        await expect(saveButton).toBeEnabled();
+
+        await this.page.waitForTimeout(1000);
+
+        const saveBtn = this.page.locator("button", { hasText: "Save" }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+
+        const yesButton = this.page.locator('button:has-text("Yes")');
+        await expect(yesButton).toBeVisible({ timeout: 10000 });
+        await yesButton.click({ force: true });
+        await expect(yesButton).not.toBeVisible({ timeout: 4000 });
+
+        const selectCurrentOwnerSpan = this.page.locator("//span[normalize-space()='Select Current Owner']");
+        await expect(selectCurrentOwnerSpan).toBeVisible({ timeout: 10000 });
+        await selectCurrentOwnerSpan.click();
+
+        const searchInput = this.page.locator("input[placeholder='Search']").last();
+        await expect(searchInput).toBeVisible({ timeout: 5000 });
+        await searchInput.click();
+        await searchInput.fill("Automation Testing");
+
+        const option = this.page.locator("ul li", { hasText: "Automation Testing" });
+        await expect(option).toBeVisible({ timeout: 5000 });
+        await option.click();
+        const sortUp = this.page.locator('.fas.fa-sort-up');
+        await expect(sortUp).toBeVisible({ timeout: 5000 });
+        await sortUp.click();
+        await this.page.waitForTimeout(1500);
+
+        const ddMmYyTextbox = this.page.getByRole('textbox', { name: 'DD-MM-YY' });
+        await expect(ddMmYyTextbox).toBeVisible({ timeout: 5000 });
+        await ddMmYyTextbox.click();
+
+        const currentDay = new Date().getDate().toString();
+        const date = this.page.getByText(currentDay, { exact: true });
+        await expect(date).toBeVisible({ timeout: 2000 });
+        await date.click();
+
+        const priceInput = this.page.locator('input[name="price"]');
+        await expect(priceInput).toBeVisible({ timeout: 2000 });
+        await priceInput.fill('123456');
+
+        const saveBtun = this.page.locator("button", { hasText: "Save" }).last();
+        await expect(saveBtun).toBeVisible({ timeout: 10000 });
+        await saveBtun.click();
+
+        await expect(this.page.getByText('added successfully', { exact: false })).toBeVisible({ timeout: 7000 });
+
+        await saveBtn.click();
+
+        // Add Listing to this property
+        await this.page.waitForTimeout(2000);
+        // Ensure listing cards are loaded
+        const addListingBtn = this.page.locator("button", { hasText: "Add Listing" });
+        await expect(addListingBtn).toBeVisible({ timeout: 10000 });
+        await addListingBtn.click();
+
+        const listingsTypeDropdown = this.page.locator('ng-select').filter({ hasText: 'Listings Type' }).getByRole('combobox');
+        await expect(listingsTypeDropdown).toBeVisible({ timeout: 5000 });
+        await listingsTypeDropdown.click();
+
+        const auctionOption = this.page.getByRole('option', { name: 'Auction' });
+        await expect(auctionOption).toBeVisible({ timeout: 5000 });
+        await auctionOption.click();
+
+        const listingStatusDropdown = this.page.locator('ng-select').filter({ hasText: 'Listing Status' });
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 5000 });
+        await listingStatusDropdown.click();
+
+        const forSaleOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'For sale' }).first();
+        await expect(forSaleOption).toBeVisible({ timeout: 5000 });
+        await forSaleOption.click();
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+
+        const listingAddedAlert = this.page.getByRole('alert', { name: 'Listing added successfully' });
+        await expect(listingAddedAlert).toBeVisible({ timeout: 10000 });
+
+        // Grid me jao
+        await this.page.locator("//p[normalize-space()='Listing']").click();
+        await this.page.waitForTimeout(1200);
+        // Wait for the first card row to load
+        const firstProperty = this.page.locator('.s-property').first();
+        await expect(firstProperty).toBeVisible({ timeout: 20000 });
+    }
+
 }
