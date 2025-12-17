@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.730538000002504">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-17T09:58:30.213Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.076" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 38: Duplicate listing  creation" classname="Pages\Listing\listingForm.spec.ts" time="33.076">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.622129000000655">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-17T10:23:43.219Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.624" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 39: Listing appears in grid after save" classname="Pages\Listing\listingForm.spec.ts" time="38.624">
 </testcase>
 </testsuite>
 </testsuites>
