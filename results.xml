@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.83471999999881">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-17T11:00:22.005Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.505" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 42: Listing should not be visible after deletion" classname="Pages\Listing\listingForm.spec.ts" time="45.505">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.90241899999976">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-17T11:17:12.239Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.195" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 43: Verify project association popup opens" classname="Pages\Listing\listingForm.spec.ts" time="32.195">
 </testcase>
 </testsuite>
 </testsuites>
