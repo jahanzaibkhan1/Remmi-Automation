@@ -217,4 +217,13 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.resetFilters();
   });
 
+  test('Test 33: Upload images to library', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    // Use a relative image path within the repo's PropertyImages folder
+    const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+    const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+    await listingActions.uploadImagesToLibrary(imagePath);
+  });
+
 });
