@@ -5470,12 +5470,62 @@ export class ListingActions {
         await imagesTab.click();
         await this.page.waitForTimeout(6000);
 
-        
+
 
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
         await saveAndCloseButton.scrollIntoViewIfNeeded();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
+      }
+
+      async uploadunsupportedImageFormat(imagePath: string) {
+        // Navigate to Listing grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+    
+        // Open first listing card
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+    
+        // Click Images tab
+        const imagesTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imagesTab).toBeVisible({ timeout: 10000 });
+        await imagesTab.click();
+
+        await this.page.waitForTimeout(6000);
+        // Click "Add" button until "File Upload (Public)" menu option becomes visible
+        const addBtn = this.page.getByRole('button', { name: /Add/i }).first();
+        let fileUploadPublic = this.page.getByRole('menuitem', { name: 'File Upload (Public)' });
+
+        const maxTries = 5;
+        let tries = 0;
+        // Retry clicking Add until file upload becomes visible or reach maxTries
+        while (!(await fileUploadPublic.isVisible({ timeout: 1000 }).catch(() => false)) && tries < maxTries) {
+            await addBtn.waitFor({ state: 'attached', timeout: 10000 }); // ensure DOM ready
+            await addBtn.click({ force: true });
+            await this.page.waitForTimeout(400); // Small wait for menu to open
+            tries++;
+            // re-acquire locator after menu open attempt
+            fileUploadPublic = this.page.getByRole('menuitem', { name: 'File Upload (Public)' });
+        }
+        await expect(fileUploadPublic).toBeVisible({ timeout: 5000 });
+        await fileUploadPublic.click();
+    
+        // Wait for hidden input to appear
+        const fileInput = this.page.locator('#fileUpload');
+    
+        // Upload the file
+        await fileInput.setInputFiles(imagePath);
+
+        const fileTypeNotSupportedAlert = this.page.locator('text=File Type Not Supported');
+        await expect(fileTypeNotSupportedAlert).toBeVisible({ timeout: 10000 });
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+        
       }
 
 }
