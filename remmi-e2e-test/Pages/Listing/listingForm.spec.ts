@@ -263,4 +263,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyListingAppearsInGrid();
   });
 
+  test('Test 40: Search for a saved listing appears in results', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.searchForSavedListing();
+  });
+
 });
