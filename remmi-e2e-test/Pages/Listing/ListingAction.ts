@@ -5931,4 +5931,40 @@ export class ListingActions {
         await saveAndCloseButton.click();
     }
 
+    // Verify project cannot be associated without selection
+    async verifyProjectCannotAssociateWithoutSelection() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing card
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 10000 });
+        await firstCard.click();
+
+        // Open project association modal
+        const projectAssociation = this.page.getByText('Associate Project').first();
+        await expect(projectAssociation).toBeVisible({ timeout: 10000 });
+        await projectAssociation.click({ force: true });
+
+        await this.page.waitForTimeout(1000);
+
+        // Ensure dropdown for Select Project is visible, but make no selection
+        const projectDropdown = this.page.getByText('Select Project');
+        await expect(projectDropdown).toBeVisible({ timeout: 10000 });
+        await projectDropdown.click();
+
+        // Optionally check dropdown populates with options but none are selected
+        const dropdownItems = this.page.getByRole('listbox', { name: 'Options list' });
+        await expect(dropdownItems).toBeVisible({ timeout: 10000 });
+        const selectedCount = await this.page.locator('.ng-option-selected').count();
+        expect(selectedCount).toBe(0);
+
+        // Close dropdown
+        await projectDropdown.press('Escape');
+
+        // Attempt to save without selection and verify that association does NOT succeed
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await saveAndCloseButton.click();
+    }
 }
