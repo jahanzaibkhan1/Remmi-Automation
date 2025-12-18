@@ -271,6 +271,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
   test('Test 41: Delete a listing', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
     await listingActions.deleteListingCard();
   });
 
@@ -284,6 +285,54 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.navigateToListings();
     await listingActions.verifyProjectAssociationPopupOpens();
+  });
+
+  test('Test 44: Verify project dropdown displays all projects', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyProjectDropdownDisplaysAllProjects();
+  });
+
+  test('Test 45: Verify project cannot be associated without selection', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyProjectCannotAssociateWithoutSelection();
+  });
+  
+  test('Test 46: Verify successful project association', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifySuccessfulProjectAssociation();
+  });
+
+  test('Test 47: Verify closing the project association popup without selecting', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyProjectAssociateWithoutSelection();
+  });
+
+  test('Test 48: Verify associated project listing leads', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyAssociatedProjectListingLeads();
+  });
+
+  test('Test 49: Verify buttons in lead, task, and related tabs before saving', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyButtonsInTabsBeforeSave()
+  });
+
+  test('Test 50: Verify conjunction tabs before saving', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyConjunctionTabsBeforeSave();
+  });
+
+  test('Test 51: Verify preview listing', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyPreviewListing();
   });
 
 });
