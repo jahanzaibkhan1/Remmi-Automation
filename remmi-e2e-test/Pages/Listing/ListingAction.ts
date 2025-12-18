@@ -5922,7 +5922,7 @@ export class ListingActions {
 
         const dropdownItems = this.page.getByRole('listbox', { name: 'Options list' });
 
-        await expect(dropdownItems).toBeVisible({timeout:10000});
+        await expect(dropdownItems).toBeVisible({ timeout: 10000 });
 
         // Optionally, close the dropdown and modal
         await projectDropdown.press('Escape');
@@ -5966,5 +5966,53 @@ export class ListingActions {
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
         await saveAndCloseButton.click();
+    }
+
+    // Verify successful project association
+    async verifySuccessfulProjectAssociation() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing card
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 10000 });
+        await firstCard.click();
+
+        // Open project association modal
+        const projectAssociation = this.page.getByText('Associate Project').first();
+        await expect(projectAssociation).toBeVisible({ timeout: 10000 });
+        await projectAssociation.click({ force: true });
+
+        await this.page.waitForTimeout(1000);
+
+        // Open and select first available option in the project dropdown
+        const projectDropdown = this.page.getByText('Select Project');
+        await expect(projectDropdown).toBeVisible({ timeout: 10000 });
+        await projectDropdown.click();
+
+        // Wait for the dropdown options to be visible
+        const dropdownItems = this.page.getByRole('listbox', { name: 'Options list' });
+        await expect(dropdownItems).toBeVisible({ timeout: 10000 });
+
+        // Select the first (non-disabled) option
+        const firstOption = dropdownItems.locator('.ng-option:not(.ng-option-disabled)').first();
+        await expect(firstOption).toBeVisible({ timeout: 10000 });
+        await firstOption.click();
+
+        // Click Associate button
+        const associateButton = this.page.getByRole('button', { name: /Associate/i });
+        await expect(associateButton).toBeVisible({ timeout: 10000 });
+        await associateButton.click();
+
+        // Wait for and assert the success toast or alert is visible
+        const successToast = this.page.getByRole('alert', { name: /Project associated successfully|Association successful/i });
+        await expect(successToast).toBeVisible({ timeout: 10000 });
+
+        // Click Save & Close
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await saveAndCloseButton.click();
+
+
     }
 }
