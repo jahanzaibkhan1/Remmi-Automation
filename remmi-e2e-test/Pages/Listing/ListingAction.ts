@@ -6049,4 +6049,27 @@ export class ListingActions {
         await saveAndCloseButton.click();
     }
 
+    // Verify associated project listing leads
+    async verifyAssociatedProjectListingLeads() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing card
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 10000 });
+        await firstCard.click();
+
+        // Open project association modal
+        const projectAssociation = this.page.getByText('Associate Project').first();
+        await expect(projectAssociation).toBeVisible({ timeout: 10000 });
+        const projectAssociateCheckbox = this.page.locator('#projectAssociateCheckbox');
+        await expect(projectAssociateCheckbox).toBeChecked();
+        await this.page.waitForTimeout(1000);
+        // Click Save & Close
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await saveAndCloseButton.click();
+
+
+    }
 }

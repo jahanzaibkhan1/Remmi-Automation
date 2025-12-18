@@ -311,4 +311,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyProjectAssociateWithoutSelection();
   });
 
+  test('Test 48: Verify associated project listing leads', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyAssociatedProjectListingLeads();
+  });
+
 });

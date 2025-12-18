@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.96276899999939">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-18T05:26:26.015Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.336" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 47: Verify closing the project association popup without selecting" classname="Pages\Listing\listingForm.spec.ts" time="31.336">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="61.016736999999964">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-18T06:24:27.364Z" hostname="chromium" tests="1" failures="0" skipped="0" time="53.479" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 48: Verify associated project listing leads" classname="Pages\Listing\listingForm.spec.ts" time="53.479">
 </testcase>
 </testsuite>
 </testsuites>
