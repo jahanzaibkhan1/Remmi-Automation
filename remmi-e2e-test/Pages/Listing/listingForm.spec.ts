@@ -298,5 +298,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.navigateToListings();
     await listingActions.verifyProjectCannotAssociateWithoutSelection();
   });
+  
+  test('Test 46: Verify successful project association', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifySuccessfulProjectAssociation();
+  });
 
 });

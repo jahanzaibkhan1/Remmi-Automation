@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.89724799999967">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-18T05:03:20.738Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.042" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 45: Verify project cannot be associated without selection" classname="Pages\Listing\listingForm.spec.ts" time="48.042">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.35086000000034">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-18T05:16:34.712Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.341" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 46: Verify successful project association" classname="Pages\Listing\listingForm.spec.ts" time="37.341">
 </testcase>
 </testsuite>
 </testsuites>
