@@ -317,4 +317,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyAssociatedProjectListingLeads();
   });
 
+  test('Test 49: Verify buttons in lead, task, and related tabs before saving', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyButtonsInTabsBeforeSave()
+  });
+
 });
