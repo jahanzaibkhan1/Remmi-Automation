@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="45.5701110000005">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-18T07:17:47.190Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.943" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 50: Verify conjunction tabs before saving" classname="Pages\Listing\listingForm.spec.ts" time="32.943">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.025576999999586">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-18T07:29:15.265Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.079" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 51: Verify preview listing" classname="Pages\Listing\listingForm.spec.ts" time="33.079">
 </testcase>
 </testsuite>
 </testsuites>

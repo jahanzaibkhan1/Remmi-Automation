@@ -6188,4 +6188,32 @@ export class ListingActions {
             await this.page.waitForTimeout(500);
         }
     }
+
+    // Verify the preview listing functionality
+    async verifyPreviewListing() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Find the first listing card and open it
+        const firstListingCard = this.page.locator('.s-property').first();
+        await expect(firstListingCard).toBeVisible({ timeout: 10000 });
+        await firstListingCard.click();
+
+        // Click the Preview button (assuming it is a button with text 'Preview')
+        const previewBtn = this.page.getByRole('button', { name: /preview Listing/i }).first();
+        await expect(previewBtn).toBeVisible({ timeout: 5000 });
+        await previewBtn.click({ force: true });
+
+        // Wait for the preview modal or panel/dialog to be visible
+        const previewPanel = this.page.locator('#rightbarwithscroll').first();
+        await expect(previewPanel).toBeVisible({ timeout: 10000 });
+
+        // Optionally close preview if there's a close button/icon
+
+        const closePreview = this.page.locator('.pi.pi-times').first();
+        if (await closePreview.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closePreview.click({ force: true });
+            await this.page.waitForTimeout(500);
+        }
+    }
 }
