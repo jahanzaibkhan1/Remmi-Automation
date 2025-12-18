@@ -1240,7 +1240,7 @@ export class ListingActions {
         console.log('Expanded Card Details (trimmed):', expandedText);
         await this.resetFilters()
 
-        await this.page.waitForTimeout(1000)
+        await this.page.waitForTimeout(2000)
 
     }
 
@@ -1250,6 +1250,8 @@ export class ListingActions {
         await this.switchToGridView();
         const firstCard = this.page.locator('.s-property').first();
         await expect(firstCard).toBeVisible({ timeout: 20000 });
+
+        await this.page.waitForTimeout(2000);
 
         const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
         await chevronDown.click({ force: true });
@@ -1270,7 +1272,7 @@ export class ListingActions {
         const toast = this.page.getByRole('alert', { name: 'Listing successfully deleted' });;
         await expect(toast).toBeVisible({ timeout: 10000 });
         await this.resetFilters();
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(2000);
 
     }
 
@@ -1282,6 +1284,8 @@ export class ListingActions {
         // Expand the first listing card (if needed)
         const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
         await chevronDown.click({ force: true });
+
+        await this.page.waitForTimeout(2000);
 
         // Find and click the edit icon
         const editIcon = this.page.locator('.ml-3.cp.ng-star-inserted').first(); // adjust selector if needed
@@ -1586,7 +1590,7 @@ export class ListingActions {
 
         const cardRows = this.locators.cardViewPropertyRow();
         await expect(cardRows).toBeVisible({ timeout: 30000 });
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(2000);
         // Assuming there is a button or icon to open the contact form in each card row
         const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
         await contactFormBtn.dblclick({ force: true });
@@ -4831,7 +4835,7 @@ export class ListingActions {
         const closeForm = this.page.locator('.pi.pi-times').first();
         await this.page.waitForTimeout(1000);
         await closeForm.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(3000);
     }
 
     // Create a new Property via the Add New button in the grid view
@@ -5022,7 +5026,7 @@ export class ListingActions {
         const listingAddedAlert = this.page.getByRole('alert', { name: 'Listing added successfully' });
         await expect(listingAddedAlert).toBeVisible({ timeout: 10000 });
         await this.page.locator("//p[normalize-space()='Listing']").click();
-        await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(2200);
     }
 
     async withoutPrimaryAgent() {
@@ -5084,7 +5088,7 @@ export class ListingActions {
         ).toBeVisible({ timeout: 5000 });
 
         await saveAndCloseButton.click();
-        await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(2000);
     }
 
     // Selecting "Auction" as the listing type
@@ -5121,7 +5125,7 @@ export class ListingActions {
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
-        await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(2000);
     }
     async selectingForLease() {
         await this.createProperty();
@@ -5158,7 +5162,7 @@ export class ListingActions {
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
 
-        await this.page.waitForTimeout(1200)
+        await this.page.waitForTimeout(2000)
     }
 
     // Adding multiple agents to a listing
@@ -5238,7 +5242,7 @@ export class ListingActions {
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
 
-        await this.page.waitForTimeout(1200)
+        await this.page.waitForTimeout(2000)
 
     }
 
@@ -5269,7 +5273,7 @@ export class ListingActions {
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
 
-        await this.page.waitForTimeout(1200)
+        await this.page.waitForTimeout(2000)
     }
 
     // Searching in feature dropdown by name
@@ -5305,7 +5309,7 @@ export class ListingActions {
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
 
-        await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(2000);
     }
 
     // Closing the feature dropdown by clicking outside it
@@ -5330,7 +5334,7 @@ export class ListingActions {
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
 
-        await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(2000);
     }
 
     // Creating a new listing from search
@@ -5365,7 +5369,7 @@ export class ListingActions {
 
         // Optionally check for success message
         await expect(this.page.getByText('Listing updated successfully', { exact: false })).toBeVisible({ timeout: 7000 });
-        await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(2000);
     }
 
     // Verify toggles functionality in search field selection
@@ -5456,6 +5460,8 @@ export class ListingActions {
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
 
+        await this.page.waitForTimeout(2000);
+
     }
 
     async noImageUploadedScenario() {
@@ -5479,6 +5485,7 @@ export class ListingActions {
         await saveAndCloseButton.scrollIntoViewIfNeeded();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
     }
 
     async uploadunsupportedImageFormat(imagePath: string) {
@@ -5528,6 +5535,7 @@ export class ListingActions {
         await saveAndCloseButton.scrollIntoViewIfNeeded();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
 
     }
 
@@ -5563,6 +5571,7 @@ export class ListingActions {
         await saveAndCloseButton.scrollIntoViewIfNeeded();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
 
     }
 
@@ -5599,7 +5608,7 @@ export class ListingActions {
 
         // Optionally check for success message
         await expect(this.page.getByText('Listing updated successfully', { exact: false })).toBeVisible({ timeout: 7000 });
-        await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(2000);
     }
 
     // Check that a newly saved listing appears in the grid and verify it's the first property in the grid
@@ -5789,6 +5798,7 @@ export class ListingActions {
         // Wait for the first card row to load
         const firstProperty = this.page.locator('.s-property').first();
         await expect(firstProperty).toBeVisible({ timeout: 20000 });
+        await this.page.waitForTimeout(2000);
     }
 
     // Searching for a saved listing
@@ -5824,6 +5834,7 @@ export class ListingActions {
         // Confirm that the listing was opened by checking the heading title is visible in the detailed view
         const detailHeading = this.page.locator('h3.props-bg.cp.mb-1.px-0', { hasText: headingTitle });
         await expect(detailHeading).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(2000);
     }
 
     // Listing should not be visible after deletion
@@ -5896,6 +5907,7 @@ export class ListingActions {
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
         await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
     }
 
     // Verify project dropdown displays all projects
@@ -5929,6 +5941,7 @@ export class ListingActions {
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
         await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
     }
 
     // Verify project cannot be associated without selection
@@ -5966,6 +5979,7 @@ export class ListingActions {
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
         await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
     }
 
     // Verify successful project association
@@ -6012,7 +6026,7 @@ export class ListingActions {
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
         await saveAndCloseButton.click();
-
+        await this.page.waitForTimeout(2000);
 
     }
 
@@ -6047,6 +6061,7 @@ export class ListingActions {
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
         await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
     }
 
     // Verify associated project listing leads
@@ -6069,7 +6084,7 @@ export class ListingActions {
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
         await saveAndCloseButton.click();
-
+        await this.page.waitForTimeout(2000);
 
     }
 
@@ -6111,6 +6126,7 @@ export class ListingActions {
                 await expect(
                     this.page.getByRole('paragraph').filter({ hasText: expectedText })
                 ).toBeVisible({ timeout: 10000 });
+               
             }
         };
 
@@ -6127,7 +6143,7 @@ export class ListingActions {
         if (await closeBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
             await this.page.waitForTimeout(500);
             await closeBtn.click({ force: true });
-            await this.page.waitForTimeout(500);
+            await this.page.waitForTimeout(2000);
         }
     }
 
@@ -6185,7 +6201,7 @@ export class ListingActions {
         if (await closeBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
             await this.page.waitForTimeout(500);
             await closeBtn.click({ force: true });
-            await this.page.waitForTimeout(500);
+            await this.page.waitForTimeout(2000);
         }
     }
 
@@ -6213,7 +6229,7 @@ export class ListingActions {
         const closePreview = this.page.locator('.pi.pi-times').first();
         if (await closePreview.isVisible({ timeout: 2000 }).catch(() => false)) {
             await closePreview.click({ force: true });
-            await this.page.waitForTimeout(500);
+            await this.page.waitForTimeout(2000);
         }
     }
 }
