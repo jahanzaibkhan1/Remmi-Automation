@@ -305,4 +305,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifySuccessfulProjectAssociation();
   });
 
+  test('Test 47: Verify closing the project association popup without selecting', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyProjectAssociateWithoutSelection();
+  });
+
 });
