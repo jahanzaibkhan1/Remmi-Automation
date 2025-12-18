@@ -6072,4 +6072,62 @@ export class ListingActions {
 
 
     }
+
+    // Enhanced: Verifies expected messages in Lead, Task, and Related tabs before saving a listing.
+    async verifyButtonsInTabsBeforeSave() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Ensure at least one card is loaded before proceeding
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 20000 });
+
+        // Open the Add New listing form
+        const addNewBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]").first();
+        await expect(addNewBtn).toBeVisible({ timeout: 5000 });
+        await addNewBtn.dblclick({ force: true });
+
+        // Make sure the form is open
+        const rightBar = this.page.locator('#rightbarwithscroll');
+        await expect(rightBar).toBeVisible({ timeout: 10000 });
+
+        // Tab details for iteration: id and user-facing label (optional for error messages)
+        const tabSelectors = [
+            { id: "#pills-Lead-tab", label: "Lead" },
+            { id: "#pills-Tasks-tab", label: "Tasks" },
+            { id: "#pills-Related-tab", label: "Related" },
+        ];
+        const expectedText = 'Please create the listing';
+
+        // Helper to check for expected message in current tab
+        const expectMessage = async (tabLabel: string) => {
+            // Try multiple ways of locating the message for robustness
+            // 1. Check for <p> with matching text
+            const p = this.page.locator('p', { hasText: expectedText });
+            if (await p.isVisible().catch(() => false)) {
+                await expect(p).toBeVisible({ timeout: 5000 });
+            } else {
+                // 2. Fallback to getByRole; works if using ARIA roles on <p>
+                await expect(
+                    this.page.getByRole('paragraph').filter({ hasText: expectedText })
+                ).toBeVisible({ timeout: 10000 });
+            }
+        };
+
+        // Iterate all relevant tabs and verify the message
+        for (const tab of tabSelectors) {
+            const tabLocator = this.page.locator(tab.id).first();
+            await expect(tabLocator, `Tab "${tab.label}" should be visible`).toBeVisible({ timeout: 5000 });
+            await tabLocator.click();
+            await expectMessage(tab.label);
+        }
+
+        // Optional: close the newly opened form after validation
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await this.page.waitForTimeout(500);
+            await closeBtn.click({ force: true });
+            await this.page.waitForTimeout(500);
+        }
+    }
 }

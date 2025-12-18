@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="61.016736999999964">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-18T06:24:27.364Z" hostname="chromium" tests="1" failures="0" skipped="0" time="53.479" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 48: Verify associated project listing leads" classname="Pages\Listing\listingForm.spec.ts" time="53.479">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.69918200000003">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-18T07:03:30.528Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.113" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 49: Verify buttons in lead, task, and related tabs before saving" classname="Pages\Listing\listingForm.spec.ts" time="29.113">
 </testcase>
 </testsuite>
 </testsuites>
