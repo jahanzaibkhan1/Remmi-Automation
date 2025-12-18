@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.90241899999976">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-17T11:17:12.239Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.195" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 43: Verify project association popup opens" classname="Pages\Listing\listingForm.spec.ts" time="32.195">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.003132000000214">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-18T04:44:39.817Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.072" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 44: Verify project dropdown displays all projects" classname="Pages\Listing\listingForm.spec.ts" time="37.072">
 </testcase>
 </testsuite>
 </testsuites>

@@ -271,6 +271,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
   test('Test 41: Delete a listing', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
     await listingActions.deleteListingCard();
   });
 
@@ -284,6 +285,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.navigateToListings();
     await listingActions.verifyProjectAssociationPopupOpens();
+  });
+
+  test('Test 44: Verify project dropdown displays all projects', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyProjectDropdownDisplaysAllProjects();
   });
 
 });

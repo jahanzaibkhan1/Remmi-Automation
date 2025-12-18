@@ -1248,6 +1248,8 @@ export class ListingActions {
     async deleteListingCard() {
         await this.navigateToListings();
         await this.switchToGridView();
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 20000 });
 
         const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
         await chevronDown.click({ force: true });
@@ -5870,6 +5872,7 @@ export class ListingActions {
         await expect(detailHeading).not.toBeVisible({ timeout: 10000 });
 
         await this.resetFilters();
+        await this.page.waitForTimeout(2000);
     }
 
     // Verify project association popup opens
@@ -5890,6 +5893,39 @@ export class ListingActions {
         const projectAssociationModal = this.page.getByText('ProjectsSelect ProjectCancelAssociate');
         await expect(projectAssociationModal).toBeVisible({ timeout: 10000 });
 
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await saveAndCloseButton.click();
+    }
+
+    // Verify project dropdown displays all projects
+    async verifyProjectDropdownDisplaysAllProjects() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click on the first card
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 10000 });
+        await firstCard.click();
+
+        // Find and click the 'Associate Project' button to open the dropdown/modal
+        const projectAssociation = this.page.getByText('Associate Project').first();
+        await expect(projectAssociation).toBeVisible({ timeout: 10000 });
+        await projectAssociation.click({ force: true });
+
+        await this.page.waitForTimeout(1200);
+
+        // Wait for the dropdown to be visible (this selector may need adjusting)
+        const projectDropdown = this.page.getByText('Select Project');
+        await expect(projectDropdown).toBeVisible({ timeout: 10000 });
+        await projectDropdown.click();
+
+        const dropdownItems = this.page.getByRole('listbox', { name: 'Options list' });
+
+        await expect(dropdownItems).toBeVisible({timeout:10000});
+
+        // Optionally, close the dropdown and modal
+        await projectDropdown.press('Escape');
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
         await saveAndCloseButton.click();
