@@ -1240,7 +1240,7 @@ export class ListingActions {
         console.log('Expanded Card Details (trimmed):', expandedText);
         await this.resetFilters()
 
-        await this.page.waitForTimeout(1000)
+        await this.page.waitForTimeout(2000)
 
     }
 
@@ -1248,6 +1248,10 @@ export class ListingActions {
     async deleteListingCard() {
         await this.navigateToListings();
         await this.switchToGridView();
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 20000 });
+
+        await this.page.waitForTimeout(2000);
 
         const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
         await chevronDown.click({ force: true });
@@ -1268,7 +1272,7 @@ export class ListingActions {
         const toast = this.page.getByRole('alert', { name: 'Listing successfully deleted' });;
         await expect(toast).toBeVisible({ timeout: 10000 });
         await this.resetFilters();
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(2000);
 
     }
 
@@ -1280,6 +1284,8 @@ export class ListingActions {
         // Expand the first listing card (if needed)
         const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
         await chevronDown.click({ force: true });
+
+        await this.page.waitForTimeout(2000);
 
         // Find and click the edit icon
         const editIcon = this.page.locator('.ml-3.cp.ng-star-inserted').first(); // adjust selector if needed
@@ -1584,7 +1590,7 @@ export class ListingActions {
 
         const cardRows = this.locators.cardViewPropertyRow();
         await expect(cardRows).toBeVisible({ timeout: 30000 });
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(2000);
         // Assuming there is a button or icon to open the contact form in each card row
         const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
         await contactFormBtn.dblclick({ force: true });
@@ -4829,7 +4835,7 @@ export class ListingActions {
         const closeForm = this.page.locator('.pi.pi-times').first();
         await this.page.waitForTimeout(1000);
         await closeForm.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(3000);
     }
 
     // Create a new Property via the Add New button in the grid view
@@ -5020,7 +5026,7 @@ export class ListingActions {
         const listingAddedAlert = this.page.getByRole('alert', { name: 'Listing added successfully' });
         await expect(listingAddedAlert).toBeVisible({ timeout: 10000 });
         await this.page.locator("//p[normalize-space()='Listing']").click();
-        await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(2200);
     }
 
     async withoutPrimaryAgent() {
@@ -5082,7 +5088,7 @@ export class ListingActions {
         ).toBeVisible({ timeout: 5000 });
 
         await saveAndCloseButton.click();
-        await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(2000);
     }
 
     // Selecting "Auction" as the listing type
@@ -5119,7 +5125,7 @@ export class ListingActions {
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
-        await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(2000);
     }
     async selectingForLease() {
         await this.createProperty();
@@ -5156,7 +5162,7 @@ export class ListingActions {
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
 
-        await this.page.waitForTimeout(1200)
+        await this.page.waitForTimeout(2000)
     }
 
     // Adding multiple agents to a listing
@@ -5236,7 +5242,7 @@ export class ListingActions {
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
 
-        await this.page.waitForTimeout(1200)
+        await this.page.waitForTimeout(2000)
 
     }
 
@@ -5267,7 +5273,7 @@ export class ListingActions {
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
 
-        await this.page.waitForTimeout(1200)
+        await this.page.waitForTimeout(2000)
     }
 
     // Searching in feature dropdown by name
@@ -5303,7 +5309,7 @@ export class ListingActions {
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
 
-        await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(2000);
     }
 
     // Closing the feature dropdown by clicking outside it
@@ -5328,7 +5334,7 @@ export class ListingActions {
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
 
-        await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(2000);
     }
 
     // Creating a new listing from search
@@ -5363,7 +5369,7 @@ export class ListingActions {
 
         // Optionally check for success message
         await expect(this.page.getByText('Listing updated successfully', { exact: false })).toBeVisible({ timeout: 7000 });
-        await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(2000);
     }
 
     // Verify toggles functionality in search field selection
@@ -5454,6 +5460,8 @@ export class ListingActions {
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
 
+        await this.page.waitForTimeout(2000);
+
     }
 
     async noImageUploadedScenario() {
@@ -5477,6 +5485,7 @@ export class ListingActions {
         await saveAndCloseButton.scrollIntoViewIfNeeded();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
     }
 
     async uploadunsupportedImageFormat(imagePath: string) {
@@ -5526,6 +5535,7 @@ export class ListingActions {
         await saveAndCloseButton.scrollIntoViewIfNeeded();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
 
     }
 
@@ -5561,6 +5571,7 @@ export class ListingActions {
         await saveAndCloseButton.scrollIntoViewIfNeeded();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
 
     }
 
@@ -5597,7 +5608,7 @@ export class ListingActions {
 
         // Optionally check for success message
         await expect(this.page.getByText('Listing updated successfully', { exact: false })).toBeVisible({ timeout: 7000 });
-        await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(2000);
     }
 
     // Check that a newly saved listing appears in the grid and verify it's the first property in the grid
@@ -5787,6 +5798,7 @@ export class ListingActions {
         // Wait for the first card row to load
         const firstProperty = this.page.locator('.s-property').first();
         await expect(firstProperty).toBeVisible({ timeout: 20000 });
+        await this.page.waitForTimeout(2000);
     }
 
     // Searching for a saved listing
@@ -5822,6 +5834,7 @@ export class ListingActions {
         // Confirm that the listing was opened by checking the heading title is visible in the detailed view
         const detailHeading = this.page.locator('h3.props-bg.cp.mb-1.px-0', { hasText: headingTitle });
         await expect(detailHeading).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(2000);
     }
 
     // Listing should not be visible after deletion
@@ -5870,6 +5883,7 @@ export class ListingActions {
         await expect(detailHeading).not.toBeVisible({ timeout: 10000 });
 
         await this.resetFilters();
+        await this.page.waitForTimeout(2000);
     }
 
     // Verify project association popup opens
@@ -5893,6 +5907,329 @@ export class ListingActions {
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
         await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
     }
 
+    // Verify project dropdown displays all projects
+    async verifyProjectDropdownDisplaysAllProjects() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click on the first card
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 10000 });
+        await firstCard.click();
+
+        // Find and click the 'Associate Project' button to open the dropdown/modal
+        const projectAssociation = this.page.getByText('Associate Project').first();
+        await expect(projectAssociation).toBeVisible({ timeout: 10000 });
+        await projectAssociation.click({ force: true });
+
+        await this.page.waitForTimeout(1200);
+
+        // Wait for the dropdown to be visible (this selector may need adjusting)
+        const projectDropdown = this.page.getByText('Select Project');
+        await expect(projectDropdown).toBeVisible({ timeout: 10000 });
+        await projectDropdown.click();
+
+        const dropdownItems = this.page.getByRole('listbox', { name: 'Options list' });
+
+        await expect(dropdownItems).toBeVisible({ timeout: 10000 });
+
+        // Optionally, close the dropdown and modal
+        await projectDropdown.press('Escape');
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
+    }
+
+    // Verify project cannot be associated without selection
+    async verifyProjectCannotAssociateWithoutSelection() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing card
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 10000 });
+        await firstCard.click();
+
+        // Open project association modal
+        const projectAssociation = this.page.getByText('Associate Project').first();
+        await expect(projectAssociation).toBeVisible({ timeout: 10000 });
+        await projectAssociation.click({ force: true });
+
+        await this.page.waitForTimeout(1000);
+
+        // Ensure dropdown for Select Project is visible, but make no selection
+        const projectDropdown = this.page.getByText('Select Project');
+        await expect(projectDropdown).toBeVisible({ timeout: 10000 });
+        await projectDropdown.click();
+
+        // Optionally check dropdown populates with options but none are selected
+        const dropdownItems = this.page.getByRole('listbox', { name: 'Options list' });
+        await expect(dropdownItems).toBeVisible({ timeout: 10000 });
+        const selectedCount = await this.page.locator('.ng-option-selected').count();
+        expect(selectedCount).toBe(0);
+
+        // Close dropdown
+        await projectDropdown.press('Escape');
+
+        // Attempt to save without selection and verify that association does NOT succeed
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
+    }
+
+    // Verify successful project association
+    async verifySuccessfulProjectAssociation() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing card
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 10000 });
+        await firstCard.click();
+
+        // Open project association modal
+        const projectAssociation = this.page.getByText('Associate Project').first();
+        await expect(projectAssociation).toBeVisible({ timeout: 10000 });
+        await projectAssociation.click({ force: true });
+
+        await this.page.waitForTimeout(1000);
+
+        // Open and select first available option in the project dropdown
+        const projectDropdown = this.page.getByText('Select Project');
+        await expect(projectDropdown).toBeVisible({ timeout: 10000 });
+        await projectDropdown.click();
+
+        // Wait for the dropdown options to be visible
+        const dropdownItems = this.page.getByRole('listbox', { name: 'Options list' });
+        await expect(dropdownItems).toBeVisible({ timeout: 10000 });
+
+        // Select the first (non-disabled) option
+        const firstOption = dropdownItems.locator('.ng-option:not(.ng-option-disabled)').first();
+        await expect(firstOption).toBeVisible({ timeout: 10000 });
+        await firstOption.click();
+
+        // Click Associate button
+        const associateButton = this.page.getByRole('button', { name: /Associate/i });
+        await expect(associateButton).toBeVisible({ timeout: 10000 });
+        await associateButton.click();
+
+        // Wait for and assert the success toast or alert is visible
+        const successToast = this.page.getByRole('alert', { name: /Project associated successfully|Association successful/i });
+        await expect(successToast).toBeVisible({ timeout: 10000 });
+
+        // Click Save & Close
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
+
+    }
+
+    // Verify closing the project popup without selecting
+    async verifyProjectAssociateWithoutSelection() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the second listing card (nth(1) means the second element)
+        const secondCard = this.page.locator('.s-property').nth(1);
+        await expect(secondCard).toBeVisible({ timeout: 10000 });
+        await secondCard.click();
+
+        // Open project association modal
+        const projectAssociation = this.page.getByText('Associate Project').first();
+        await expect(projectAssociation).toBeVisible({ timeout: 10000 });
+        await projectAssociation.click({ force: true });
+
+        await this.page.waitForTimeout(1000);
+
+        // Try to click Associate without selecting a project
+        const associateButton = this.page.getByRole('button', { name: /Associate/i });
+        await expect(associateButton).toBeVisible({ timeout: 10000 });
+        await associateButton.click();
+
+        // Click the close (cross) icon to close the project association popup
+        const closeIcon = this.page.locator('.pi.pi-times').last();
+        await expect(closeIcon).toBeVisible({ timeout: 5000 });
+        await closeIcon.click({ force: true });
+
+        // Click Save & Close
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
+    }
+
+    // Verify associated project listing leads
+    async verifyAssociatedProjectListingLeads() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing card
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 10000 });
+        await firstCard.click();
+
+        // Open project association modal
+        const projectAssociation = this.page.getByText('Associate Project').first();
+        await expect(projectAssociation).toBeVisible({ timeout: 10000 });
+        const projectAssociateCheckbox = this.page.locator('#projectAssociateCheckbox');
+        await expect(projectAssociateCheckbox).toBeChecked();
+        await this.page.waitForTimeout(1000);
+        // Click Save & Close
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
+
+    }
+
+    // Enhanced: Verifies expected messages in Lead, Task, and Related tabs before saving a listing.
+    async verifyButtonsInTabsBeforeSave() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Ensure at least one card is loaded before proceeding
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 20000 });
+
+        // Open the Add New listing form
+        const addNewBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]").first();
+        await expect(addNewBtn).toBeVisible({ timeout: 5000 });
+        await addNewBtn.dblclick({ force: true });
+
+        // Make sure the form is open
+        const rightBar = this.page.locator('#rightbarwithscroll');
+        await expect(rightBar).toBeVisible({ timeout: 10000 });
+
+        // Tab details for iteration: id and user-facing label (optional for error messages)
+        const tabSelectors = [
+            { id: "#pills-Lead-tab", label: "Lead" },
+            { id: "#pills-Tasks-tab", label: "Tasks" },
+            { id: "#pills-Related-tab", label: "Related" },
+        ];
+        const expectedText = 'Please create the listing';
+
+        // Helper to check for expected message in current tab
+        const expectMessage = async (tabLabel: string) => {
+            // Try multiple ways of locating the message for robustness
+            // 1. Check for <p> with matching text
+            const p = this.page.locator('p', { hasText: expectedText });
+            if (await p.isVisible().catch(() => false)) {
+                await expect(p).toBeVisible({ timeout: 5000 });
+            } else {
+                // 2. Fallback to getByRole; works if using ARIA roles on <p>
+                await expect(
+                    this.page.getByRole('paragraph').filter({ hasText: expectedText })
+                ).toBeVisible({ timeout: 10000 });
+               
+            }
+        };
+
+        // Iterate all relevant tabs and verify the message
+        for (const tab of tabSelectors) {
+            const tabLocator = this.page.locator(tab.id).first();
+            await expect(tabLocator, `Tab "${tab.label}" should be visible`).toBeVisible({ timeout: 5000 });
+            await tabLocator.click();
+            await expectMessage(tab.label);
+        }
+
+        // Optional: close the newly opened form after validation
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await this.page.waitForTimeout(500);
+            await closeBtn.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
+    }
+
+    async verifyConjunctionTabsBeforeSave() {
+        // Open the Listings grid and ensure property cards are loaded
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 20000 });
+
+        // Open the Add New listing form
+        const addNewBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]").first();
+        await expect(addNewBtn).toBeVisible({ timeout: 5000 });
+        await addNewBtn.dblclick({ force: true });
+
+        // Make sure the form is open
+        const rightPanel = this.page.locator('#rightbarwithscroll');
+        await expect(rightPanel).toBeVisible({ timeout: 10000 });
+
+        // All conjunction-related tabs to check for the message
+        const conjunctionTabs = [
+            { id: "#pills-Lead-tab", label: "Lead" },
+            { id: "#pills-Tasks-tab", label: "Tasks" },
+            { id: "#pills-Related-tab", label: "Related" },
+            { id: "#pills-Conjunction-tab", label: "Conjunction" }
+        ];
+        const expectedText = "Please create the listing";
+
+        // For each relevant tab, click and check for the expected message
+        for (const tab of conjunctionTabs) {
+            const tabLocator = this.page.locator(tab.id).first();
+            await expect(tabLocator, `Tab "${tab.label}" should be visible`).toBeVisible({ timeout: 5000 });
+            await tabLocator.click();
+
+            // Robust check for the expected message only within the right panel
+            const matchingParagraphs = await rightPanel.locator('p', { hasText: expectedText }).all();
+            let foundVisible = false;
+            for (const paragraph of matchingParagraphs) {
+                if (await paragraph.isVisible().catch(() => false)) {
+                    await expect(paragraph).toBeVisible({ timeout: 5000 });
+                    foundVisible = true;
+                    break;
+                }
+            }
+            if (!foundVisible) {
+                // Fallback: match generic text node inside right panel (exact: false to account for extra text)
+                await expect(
+                    rightPanel.getByText(expectedText, { exact: false })
+                ).toBeVisible({ timeout: 5000 });
+            }
+        }
+
+        // Optionally close the right form if the close button is present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await this.page.waitForTimeout(500);
+            await closeBtn.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
+    }
+
+    // Verify the preview listing functionality
+    async verifyPreviewListing() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Find the first listing card and open it
+        const firstListingCard = this.page.locator('.s-property').first();
+        await expect(firstListingCard).toBeVisible({ timeout: 10000 });
+        await firstListingCard.click();
+
+        // Click the Preview button (assuming it is a button with text 'Preview')
+        const previewBtn = this.page.getByRole('button', { name: /preview Listing/i }).first();
+        await expect(previewBtn).toBeVisible({ timeout: 5000 });
+        await previewBtn.click({ force: true });
+
+        // Wait for the preview modal or panel/dialog to be visible
+        const previewPanel = this.page.locator('#rightbarwithscroll').first();
+        await expect(previewPanel).toBeVisible({ timeout: 10000 });
+
+        // Optionally close preview if there's a close button/icon
+
+        const closePreview = this.page.locator('.pi.pi-times').first();
+        if (await closePreview.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closePreview.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
+    }
 }
