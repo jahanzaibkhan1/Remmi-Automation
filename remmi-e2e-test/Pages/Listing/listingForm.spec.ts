@@ -323,4 +323,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyButtonsInTabsBeforeSave()
   });
 
+  test('Test 50: Verify conjunction tabs before saving', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyConjunctionTabsBeforeSave();
+  });
+
 });

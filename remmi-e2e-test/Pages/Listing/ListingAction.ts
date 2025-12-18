@@ -6130,4 +6130,62 @@ export class ListingActions {
             await this.page.waitForTimeout(500);
         }
     }
+
+    async verifyConjunctionTabsBeforeSave() {
+        // Open the Listings grid and ensure property cards are loaded
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 20000 });
+
+        // Open the Add New listing form
+        const addNewBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]").first();
+        await expect(addNewBtn).toBeVisible({ timeout: 5000 });
+        await addNewBtn.dblclick({ force: true });
+
+        // Make sure the form is open
+        const rightPanel = this.page.locator('#rightbarwithscroll');
+        await expect(rightPanel).toBeVisible({ timeout: 10000 });
+
+        // All conjunction-related tabs to check for the message
+        const conjunctionTabs = [
+            { id: "#pills-Lead-tab", label: "Lead" },
+            { id: "#pills-Tasks-tab", label: "Tasks" },
+            { id: "#pills-Related-tab", label: "Related" },
+            { id: "#pills-Conjunction-tab", label: "Conjunction" }
+        ];
+        const expectedText = "Please create the listing";
+
+        // For each relevant tab, click and check for the expected message
+        for (const tab of conjunctionTabs) {
+            const tabLocator = this.page.locator(tab.id).first();
+            await expect(tabLocator, `Tab "${tab.label}" should be visible`).toBeVisible({ timeout: 5000 });
+            await tabLocator.click();
+
+            // Robust check for the expected message only within the right panel
+            const matchingParagraphs = await rightPanel.locator('p', { hasText: expectedText }).all();
+            let foundVisible = false;
+            for (const paragraph of matchingParagraphs) {
+                if (await paragraph.isVisible().catch(() => false)) {
+                    await expect(paragraph).toBeVisible({ timeout: 5000 });
+                    foundVisible = true;
+                    break;
+                }
+            }
+            if (!foundVisible) {
+                // Fallback: match generic text node inside right panel (exact: false to account for extra text)
+                await expect(
+                    rightPanel.getByText(expectedText, { exact: false })
+                ).toBeVisible({ timeout: 5000 });
+            }
+        }
+
+        // Optionally close the right form if the close button is present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await this.page.waitForTimeout(500);
+            await closeBtn.click({ force: true });
+            await this.page.waitForTimeout(500);
+        }
+    }
 }
