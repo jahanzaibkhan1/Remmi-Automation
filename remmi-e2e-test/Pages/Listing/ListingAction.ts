@@ -6015,4 +6015,38 @@ export class ListingActions {
 
 
     }
+
+    // Verify closing the project popup without selecting
+    async verifyProjectAssociateWithoutSelection() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the second listing card (nth(1) means the second element)
+        const secondCard = this.page.locator('.s-property').nth(1);
+        await expect(secondCard).toBeVisible({ timeout: 10000 });
+        await secondCard.click();
+
+        // Open project association modal
+        const projectAssociation = this.page.getByText('Associate Project').first();
+        await expect(projectAssociation).toBeVisible({ timeout: 10000 });
+        await projectAssociation.click({ force: true });
+
+        await this.page.waitForTimeout(1000);
+
+        // Try to click Associate without selecting a project
+        const associateButton = this.page.getByRole('button', { name: /Associate/i });
+        await expect(associateButton).toBeVisible({ timeout: 10000 });
+        await associateButton.click();
+
+        // Click the close (cross) icon to close the project association popup
+        const closeIcon = this.page.locator('.pi.pi-times').last();
+        await expect(closeIcon).toBeVisible({ timeout: 5000 });
+        await closeIcon.click({ force: true });
+
+        // Click Save & Close
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await saveAndCloseButton.click();
+    }
+
 }
