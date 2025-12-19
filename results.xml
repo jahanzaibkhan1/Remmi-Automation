@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.60950500000082">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-19T07:45:07.675Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.533" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 57: Verify image days count in preview" classname="Pages\Listing\listingForm.spec.ts" time="36.533">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.36190799999982">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-19T08:29:43.482Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.281" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 58: Verify sale type display in preview listing" classname="Pages\Listing\listingForm.spec.ts" time="32.281">
 </testcase>
 </testsuite>
 </testsuites>
