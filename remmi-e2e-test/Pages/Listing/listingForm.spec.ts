@@ -335,4 +335,80 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyPreviewListing();
   });
 
+  test('Test 52: Verify admin view button in preview listing', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyAdminViewButtonInPreviewListing();
+  });
+
+  test('Test 53: Verify image and thumbnails in preview listing ', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    const path = require('path');
+    const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+    const images = [
+      path.join(IMAGE_DIR, 'propertyImage.jpg'),
+      path.join(IMAGE_DIR, 'PropertyImage2.jpg')
+    ];
+    await listingActions.uploadMultipleImagesToLibrary(images);
+    await listingActions.verifyImageAndThumbnailsInPreviewListing();
+  });
+
+  test('Test 54: Verify thumbnail selection changes main image', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyThumbnailSelectionChangesMainImage();
+  });
+
+  test('Test 55: Verify listing status display in preview', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.VerifyListingStatusDisplayInPreview();
+  });
+
+  test('Test 56: Verify total images count in preview', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyTotalImagesCountInPreview();
+  });
+
+  test('Test 57: Verify image days count in preview', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyImageDaysCountInPreview();
+  });
+
+  test('Test 58: Verify sale type display in preview listing', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifySaleTypeDisplayInPreviewListing();
+  });
+
+  test('Test 59: Verify all listing details display correctly in preview', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings()
+    // Add listing with agents and details, then check preview details
+    const agentNames = 
+    ['Automation Test',
+      'Hina Agent'];
+    await listingActions.verifyAllListingDetailsInPreview(agentNames);
+  });
+
+  test('Test 60: Verify fields are not editable in preview listing', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyFieldsNotEditableInPreviewListing();
+  });
+
+  test('Test 61: Verify Save button functionality in listing form', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.clickSaveButtonOnListingForm();
+  });
+
+  test('Test 62: Verify Save & Close button functionality in listing form', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.clickSaveAndCloseButtonOnListingForm();
+  });
+
 });
