@@ -383,4 +383,14 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifySaleTypeDisplayInPreviewListing();
   });
 
+  test('Test 59: Verify all listing details display correctly in preview', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings()
+    // Add listing with agents and details, then check preview details
+    const agentNames = 
+    ['Automation Test',
+      'Hina Agent'];
+    await listingActions.verifyAllListingDetailsInPreview(agentNames);
+  });
+
 });
