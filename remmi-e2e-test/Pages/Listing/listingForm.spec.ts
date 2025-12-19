@@ -393,4 +393,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyAllListingDetailsInPreview(agentNames);
   });
 
+  test('Test 60: Verify fields are not editable in preview listing', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyFieldsNotEditableInPreviewListing();
+  });
+
 });

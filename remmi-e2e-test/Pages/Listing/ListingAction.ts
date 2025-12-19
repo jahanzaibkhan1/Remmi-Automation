@@ -6664,4 +6664,44 @@ export class ListingActions {
         await closeBtn.click({ force: true });
         await this.page.waitForTimeout(2000);
     }
+
+    // Verify fields are not editable in preview listing 
+    async verifyFieldsNotEditableInPreviewListing() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Open the preview dialog
+        const previewBtn = this.page.getByRole('button', { name: /Preview Listing/i });
+        await expect(previewBtn).toBeVisible({ timeout: 10000 });
+        await previewBtn.click({ force: true });
+
+        // Wait for preview to open (headline should be visible as a marker)
+        const descriptionLocator = this.page.locator('text=Description').last();
+        await descriptionLocator.scrollIntoViewIfNeeded();
+        await expect(descriptionLocator).toBeVisible({ timeout: 5000 });
+
+        // Verify expected fields/inputs are not editable
+        const headlineInput = this.page.locator('input[formcontrolname="headline"]');
+        const descInput = this.page.locator('textarea[formcontrolname="description"]');
+        const priceInput = this.page.locator('input[name="price"]');
+        const agentDropdown = this.page.locator('div.form-group:has-text("Primary Agent") ng-select input');
+        const featureDropdown = this.page.locator('div:has-text("Features") ng-select');
+
+        // Expect no enabled headline input
+        await expect(headlineInput).toBeHidden();
+        await expect(descInput).toBeHidden();
+        await expect(priceInput).toBeHidden();
+        // Features and agents should not be dropdowns/inputs here
+        await expect(agentDropdown).toBeHidden();
+        // Close preview
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeBtn.click({ force: true });
+        await this.page.waitForTimeout(2000);
+    }
 }
