@@ -405,4 +405,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.clickSaveButtonOnListingForm();
   });
 
+  test('Test 62: Verify Save & Close button functionality in listing form', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.clickSaveAndCloseButtonOnListingForm();
+  });
+
 });

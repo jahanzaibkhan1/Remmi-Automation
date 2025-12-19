@@ -6735,4 +6735,30 @@ export class ListingActions {
         await closeBtn.click({ force: true });
         await this.page.waitForTimeout(1000);
     }
+
+    // Verify Save & Close button functionality
+    async clickSaveAndCloseButtonOnListingForm() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Find the price input (try common selectors)
+        const priceInput = this.page.locator('input[name="price"]').first();
+        await expect(priceInput).toBeVisible({ timeout: 5000 });
+        await priceInput.scrollIntoViewIfNeeded();
+        await priceInput.click();
+        await priceInput.clear();
+        await priceInput.fill('54321');
+
+        // Click the "Save & Close" button
+        const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
+    }
 }
