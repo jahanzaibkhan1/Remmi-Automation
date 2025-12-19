@@ -6394,4 +6394,35 @@ export class ListingActions {
 
         await this.page.waitForTimeout(2000);
     }
+
+    // Verify total images count in preview
+    async verifyTotalImagesCountInPreview() {
+        // Go to listings grid and open first listing
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Open the preview
+        const previewBtn = this.page.getByRole('button', { name: /Preview Listing/i });
+        await expect(previewBtn).toBeVisible({ timeout: 10000 });
+        await previewBtn.click({ force: true });
+
+        // Wait for main image to load and thumbnails to be present
+        const mainImage = this.page.locator('img.main-images').first();
+        await expect(mainImage).toBeVisible({ timeout: 10000 });
+
+        const imageIndex = this.page.locator('#listing-image-index').first();
+
+        await expect(imageIndex).toBeVisible({timeout:20000});
+
+        // Close preview
+        const closeForm = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeForm.click({ force: true });
+
+        await this.page.waitForTimeout(2000);
+    }
 }
