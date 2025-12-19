@@ -6259,4 +6259,81 @@ export class ListingActions {
 
         await this.page.waitForTimeout(2000);
     }
+
+    async uploadMultipleImagesToLibrary(imagePaths: string | string[]) {
+        const images: string[] = Array.isArray(imagePaths) ? imagePaths : [imagePaths];
+    
+        // Navigate to listings
+        await this.navigateToListings();
+        await this.switchToGridView();
+    
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+    
+        // Open Images tab
+        const imagesTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imagesTab).toBeVisible({ timeout: 10000 });
+        await imagesTab.click();
+        await this.page.waitForTimeout(6000);
+    
+        // Open Add → File Upload (Public)
+           // Click "Add" button until "File Upload (Public)" menu option becomes visible
+           const addBtn = this.page.getByRole('button', { name: /Add/i }).first();
+           let fileUploadPublic = this.page.getByRole('menuitem', { name: 'File Upload (Public)' });
+   
+           const maxTries = 5;
+           let tries = 0;
+           // Retry clicking Add until file upload becomes visible or reach maxTries
+           while (!(await fileUploadPublic.isVisible({ timeout: 1000 }).catch(() => false)) && tries < maxTries) {
+               await addBtn.waitFor({ state: 'attached', timeout: 10000 }); // ensure DOM ready
+               await addBtn.click({ force: true });
+               await this.page.waitForTimeout(400); // Small wait for menu to open
+               tries++;
+               // re-acquire locator after menu open attempt
+               fileUploadPublic = this.page.getByRole('menuitem', { name: 'File Upload (Public)' });
+           }
+           await expect(fileUploadPublic).toBeVisible({ timeout: 5000 });
+           await fileUploadPublic.click();
+    
+        // 🔥 Upload all images together
+        const fileInput = this.page.locator('#fileUpload');
+        await fileInput.setInputFiles(images);
+    
+        // Wait for success toast
+        const toast = this.page.locator('text=Added Successfully');
+        await expect(toast).toBeVisible({ timeout: 30000 });
+    
+        // Optional: verify all image names appear
+        for (const imagePath of images) {
+            const imageName = imagePath.split(/[\\/]/).pop();
+            if (imageName) {
+                const uploadedImage = this.page.locator(
+                    `.mt-3.black-text.pb-1.f-12:has-text("${imageName}")`
+                );
+                await expect(uploadedImage).toBeVisible({ timeout: 15000 });
+            }
+        }
+    
+        // Save & Close
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await saveAndCloseButton.click();
+    }
+    // Verify image and thumbnails in preview listing 
+    async verifyImageAndThumbnailsInPreviewListing() {
+        // Go to listings grid and open first listing
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+        // Open the preview
+        const previewBtn = this.page.getByRole('button', { name: /Preview Listing/i });
+        await expect(previewBtn).toBeVisible({ timeout: 6000 });
+        await previewBtn.click({force:true});
+        await expect(this.page.locator('img.main-images')).toBeVisible();
+
+    }
 }

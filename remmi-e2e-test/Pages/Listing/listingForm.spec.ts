@@ -341,4 +341,16 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyAdminViewButtonInPreviewListing();
   });
 
+  test('Test 53: Verify image and thumbnails in preview listing ', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    const path = require('path');
+    const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+    const images = [
+      path.join(IMAGE_DIR, 'propertyImage.jpg'),
+      path.join(IMAGE_DIR, 'PropertyImage2.jpg')
+    ];
+    await listingActions.uploadMultipleImagesToLibrary(images);
+    await listingActions.verifyImageAndThumbnailsInPreviewListing();
+  });
+
 });
