@@ -359,4 +359,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyThumbnailSelectionChangesMainImage();
   });
 
+  test('Test 55: Verify listing status display in preview', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.VerifyListingStatusDisplayInPreview();
+  });
+
 });
