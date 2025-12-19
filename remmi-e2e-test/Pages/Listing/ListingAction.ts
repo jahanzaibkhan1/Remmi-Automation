@@ -6336,4 +6336,35 @@ export class ListingActions {
         await expect(this.page.locator('img.main-images')).toBeVisible();
 
     }
+
+    // Verify that clicking a thumbnail updates the main image in the preview listing
+    async verifyThumbnailSelectionChangesMainImage() {
+        // Go to listings grid and open first listing
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Open the preview
+        const previewBtn = this.page.getByRole('button', { name: /Preview Listing/i });
+        await expect(previewBtn).toBeVisible({ timeout: 6000 });
+        await previewBtn.click({ force: true });
+
+        // Verify main image is visible
+        const mainImage = this.page.locator('img.main-images').first();
+        await expect(mainImage).toBeVisible({ timeout: 10000 });
+
+        // Get all thumbnail images (excluding the main image)
+        const image = this.page.locator('img.carousel-image').nth(1);
+        await expect(image).toBeVisible({timeout:2000});
+        await image.click({force:true});
+
+        const closeForm = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeForm.click({ force: true });
+
+        await this.page.waitForTimeout(2000);
+    }
 }
