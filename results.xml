@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.3785319999978">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-19T11:41:19.458Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.16" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 60: Verify fields are not editable in preview listing" classname="Pages\Listing\listingForm.spec.ts" time="31.16">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="65.83249599999934">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-19T11:49:48.978Z" hostname="chromium" tests="1" failures="0" skipped="0" time="52.342" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 61: Verify Save button functionality in listing form" classname="Pages\Listing\listingForm.spec.ts" time="52.342">
 </testcase>
 </testsuite>
 </testsuites>

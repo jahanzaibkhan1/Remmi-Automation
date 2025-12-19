@@ -399,4 +399,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyFieldsNotEditableInPreviewListing();
   });
 
+  test('Test 61: Verify Save button functionality in listing form', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.clickSaveButtonOnListingForm();
+  });
+
 });
