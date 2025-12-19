@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="54.86773599999957">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-19T07:31:37.098Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.435" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 55: Verify listing status display in preview" classname="Pages\Listing\listingForm.spec.ts" time="47.435">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.071606000000614">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-19T07:39:18.024Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.229" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 56: Verify total images count in preview" classname="Pages\Listing\listingForm.spec.ts" time="40.229">
 </testcase>
 </testsuite>
 </testsuites>
