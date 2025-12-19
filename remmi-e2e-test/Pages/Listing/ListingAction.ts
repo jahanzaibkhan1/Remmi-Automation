@@ -6232,4 +6232,38 @@ export class ListingActions {
             await this.page.waitForTimeout(2000);
         }
     }
+
+    // Verify the "Admin View" button is present and functional in the preview listing modal
+    async verifyAdminViewButtonInPreviewListing() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Find the first listing card and open it
+        const firstListingCard = this.page.locator('.s-property').first();
+        await expect(firstListingCard).toBeVisible({ timeout: 10000 });
+        await firstListingCard.click();
+
+        // Click the Preview button
+        const previewBtn = this.page.getByRole('button', { name: /preview Listing/i }).first();
+        await expect(previewBtn).toBeVisible({ timeout: 10000 });
+        await previewBtn.click({ force: true });
+
+        // Wait for the preview modal/panel
+        const previewPanel = this.page.locator('#rightbarwithscroll').first();
+        await expect(previewPanel).toBeVisible({ timeout: 10000 });
+
+        // Locate the "Admin View" button within the preview area
+        const adminViewBtn = this.page.getByRole('button', { name: /Admin View/i }).first();
+        await expect(adminViewBtn).toBeVisible({ timeout: 10000 });
+
+        // Optional: Click the Admin View button and check for the expected admin UI/modal
+        await adminViewBtn.click({ force: true });
+
+        // Optionally close admin panel and preview panel
+        const closeAdminPanel = this.page.locator('.pi.pi-times').first();
+        if (await closeAdminPanel.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeAdminPanel.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
+    }
 }

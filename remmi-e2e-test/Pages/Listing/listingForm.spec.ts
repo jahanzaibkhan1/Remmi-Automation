@@ -267,6 +267,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.navigateToListings();
     await listingActions.searchForSavedListing();
+    await listingActions.resetFilters();
   });
 
   test('Test 41: Delete a listing', async ({ sessionPage }) => {
@@ -333,6 +334,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.navigateToListings();
     await listingActions.verifyPreviewListing();
+  });
+
+  test('Test 52: Verify admin view button in preview listing', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyAdminViewButtonInPreviewListing();
   });
 
 });
