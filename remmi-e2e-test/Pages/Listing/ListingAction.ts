@@ -3,7 +3,7 @@ import { ListingLocators } from './ListingLocator';
 import { addAbortListener } from 'events';
 import path from 'path';
 import { table } from 'console';
-import { faker, th } from '@faker-js/faker';
+import { en, faker, th } from '@faker-js/faker';
 import { text } from 'stream/consumers';
 
 export class ListingActions {
@@ -6480,6 +6480,188 @@ export class ListingActions {
         const closeForm = this.page.locator('.pi.pi-times').first();
         await this.page.waitForTimeout(1000);
         await closeForm.click({ force: true });
+        await this.page.waitForTimeout(2000);
+    }
+
+    // Verify all listing details display in preview
+    async verifyAllListingDetailsInPreview(agentNames: string[]) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // --- Fill listing details form ---
+        // Agents
+        const agentSelectors = [
+            { selector: 'div.form-group:has-text("Primary Agent") ng-select', name: agentNames[0] },
+            { selector: 'div.form-group:has-text("Secondary Agent") ng-select', name: agentNames[1] }
+        ];
+        for (const agent of agentSelectors) {
+            const agentDropdown = this.page.locator(agent.selector);
+            await expect(agentDropdown).toBeVisible();
+            await agentDropdown.click();
+
+            const agentInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+            await expect(agentInput).toBeVisible({ timeout: 3000 });
+            await agentInput.fill(agent.name);
+
+            const agentOption = this.page.locator(
+                '.ng-dropdown-panel .ng-option',
+                { hasText: agent.name }
+            ).first();
+            await expect(agentOption).toBeVisible({ timeout: 5000 });
+            await agentOption.click();
+        }
+
+        // Date field (assume second input is date field)
+        const dateInput = this.page.locator('input.p-inputtext.p-component').nth(1);
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click({ force: true });
+        const todayCell = this.page.locator('.p-datepicker-today, td[aria-current="date"]'); // Robust selector
+        await expect(todayCell).toBeVisible({ timeout: 5000 });
+        await todayCell.click({ force: true });
+
+        // Price
+        const priceInput = this.page.locator('input[name="price"]').first();
+        await expect(priceInput).toBeVisible({ timeout: 5000 });
+        await priceInput.click();
+        await priceInput.fill('10000');
+
+        // Bedrooms, Bathrooms, Ensuite, Living Areas, Study, Pool, Garage
+        const fieldSets = [
+            { selector: 'input[formcontrolname="beds"], input[name="bedrooms"], input[data-testid="bedrooms"]', value: '2' },
+            { selector: 'input[formcontrolname="baths"], input[name="bathrooms"], input[data-testid="bathrooms"]', value: '1' },
+            { selector: 'input[name="ensuite"], input[data-testid="ensuite"], input[formcontrolname="ensuite"]', value: '1' },
+            { selector: 'input[formcontrolname="living_areas"]', value: '1' },
+            { selector: 'input[formcontrolname="study"], input[name="study"], input[data-testid="study"]', value: '1' },
+            { selector: 'input[formcontrolname="pools"]', value: '1' },
+            { selector: 'input[formcontrolname="garage"]', value: '1' }
+        ];
+
+        for (const field of fieldSets) {
+            const input = this.page.locator(field.selector).first();
+            await expect(input).toBeVisible({ timeout: 5000 });
+            await input.click();
+            await input.fill(field.value);
+        }
+
+        // Carport
+        const carportInput = this.page.locator(
+            'div.col-xl-4:has(p:has-text("Carport")) input[type="number"]'
+        );
+        await expect(carportInput).toBeVisible({ timeout: 5000 });
+        await carportInput.click();
+        await carportInput.fill('1');
+
+        // Open Spaces
+        const openSpacesInput = this.page.locator(
+            'div.col-xl-4:has(p:has-text("Open Spaces")) input[type="number"]'
+        );
+        await expect(openSpacesInput).toBeVisible({ timeout: 5000 });
+        await openSpacesInput.click();
+        await openSpacesInput.fill('2');
+
+        // Land Size
+        const landSizeInput = this.page.locator(
+            'div.col-sm-6:has(p:has-text("Land Size")) input[formcontrolname="land_area"]'
+        );
+        await expect(landSizeInput).toBeVisible({ timeout: 5000 });
+        await landSizeInput.click();
+        await landSizeInput.fill('500');
+
+        // House Size
+        const houseSizeInput = this.page.locator(
+            'input[formcontrolname="building_area"], input[name="building_area"], input[data-testid="house-size"]'
+        ).first();
+        await expect(houseSizeInput).toBeVisible({ timeout: 5000 });
+        await houseSizeInput.click();
+        await houseSizeInput.fill('250');
+
+        // Headline
+        const headlineInput = this.page.locator('input[formcontrolname="heading"], input[name="heading"], input[data-testid="headline"]').first();
+        await expect(headlineInput).toBeVisible({ timeout: 5000 });
+        await headlineInput.click();
+        await headlineInput.fill('Test Headline');
+
+        // Description
+        // Use a more stable and short locator: target the visible textarea/input for description
+        const descriptionInput = this.page.locator(
+            'ckeditor[formcontrolname="description_garax"] .ck-editor__editable'
+          ).first();
+        await expect(descriptionInput).toBeVisible({ timeout: 5000 });
+        await descriptionInput.click({force:true});
+        await descriptionInput.fill('This is a test description.');
+
+        // Features selection
+        const featuresHeading = this.page.locator('div.boxHeadingText:has-text("Features") p');
+        await featuresHeading.scrollIntoViewIfNeeded();
+        await expect(featuresHeading).toBeVisible();
+
+        const featuredropdown = this.page.locator("//span[normalize-space()='Please Select']").first();
+        await expect(featuredropdown).toBeVisible({ timeout: 5000 });
+        await featuredropdown.click();
+
+        const firstFeatureOption = this.page.locator('li.p-element').first();
+        await expect(firstFeatureOption).toBeVisible({ timeout: 5000 });
+        await firstFeatureOption.click({ force: true });
+
+        // Locate the "sort-up" icon
+        const sortUpIcon = this.page.locator('i.fas.fa-sort-up');
+        if (await sortUpIcon.isVisible({ timeout: 5000 }).catch(() => false)) {
+            await sortUpIcon.click();
+        }
+
+        // Save changes
+        const saveButton = this.page.locator('button:has-text("Save")').nth(2);
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+        await saveButton.click();
+        await this.page.waitForTimeout(2000);
+
+        // --- Preview and assertions ---
+        // Open the preview dialog
+        const previewBtn = this.page.getByRole('button', { name: /Preview Listing/i });
+        await expect(previewBtn).toBeVisible({ timeout: 10000 });
+        await previewBtn.scrollIntoViewIfNeeded();
+        await previewBtn.click({ force: true });
+
+      
+        const auctionsLabel = this.page.getByText('Auctions', { exact: true });
+        await auctionsLabel.scrollIntoViewIfNeeded();
+        await expect(auctionsLabel).toBeVisible({ timeout: 3000 });
+
+        // Bedroom, bathroom, car spaces and sizing labels and values
+        await expect(this.page.locator('text=Bedroom').last()).toBeVisible({ timeout: 3000 });
+
+        await expect(this.page.locator('text=Bathroom').last()).toBeVisible({ timeout: 3000 });
+
+        await expect(this.page.locator('text=Car Spaces').last()).toBeVisible({ timeout: 3000 });
+
+        await expect(this.page.locator('text=Land Size').last()).toBeVisible({ timeout: 3000 });
+
+        await expect(this.page.locator('text=House Size').last()).toBeVisible({ timeout: 3000 });
+
+        // Agents - both primary and secondary shown horizontally
+        await expect(this.page.getByText('Automation Test', { exact: true }).last()).toBeVisible({ timeout: 3000 });
+        await expect(this.page.getByText('Hina Agent', { exact: false }).last()).toBeVisible({ timeout: 3000 });
+
+        // Description section
+        await expect(this.page.getByText('Description', { exact: true })).toBeVisible({ timeout: 3000 });
+        await expect(this.page.getByText('Test Headline', { exact: true })).toBeVisible({ timeout: 3000 }); // headline
+        await expect(this.page.getByText('This is a test description.', { exact: true })).toBeVisible({ timeout: 3000 }); // description
+
+        // Features section and first feature selected
+        await expect(this.page.getByText('Features', { exact: true })).toBeVisible({ timeout: 3000 });
+        // Air Conditioning is the selected feature in the image
+        await expect(this.page.getByText('Air Conditioning', { exact: true })).toBeVisible({ timeout: 3000 });
+
+
+        // Close the preview dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeBtn.click({ force: true });
         await this.page.waitForTimeout(2000);
     }
 }
