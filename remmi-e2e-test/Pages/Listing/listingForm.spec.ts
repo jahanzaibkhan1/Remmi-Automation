@@ -371,4 +371,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyTotalImagesCountInPreview();
   });
 
+  test('Test 57: Verify image days count in preview', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyImageDaysCountInPreview();
+  });
+
 });

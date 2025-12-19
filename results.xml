@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.071606000000614">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-19T07:39:18.024Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.229" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 56: Verify total images count in preview" classname="Pages\Listing\listingForm.spec.ts" time="40.229">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.60950500000082">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-19T07:45:07.675Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.533" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 57: Verify image days count in preview" classname="Pages\Listing\listingForm.spec.ts" time="36.533">
 </testcase>
 </testsuite>
 </testsuites>
