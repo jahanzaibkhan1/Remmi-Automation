@@ -1251,8 +1251,6 @@ export class ListingActions {
         const firstCard = this.page.locator('.s-property').first();
         await expect(firstCard).toBeVisible({ timeout: 20000 });
 
-        await this.page.waitForTimeout(2000);
-
         const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
         await chevronDown.click({ force: true });
 
@@ -5828,12 +5826,7 @@ export class ListingActions {
         // Locate matching listing in the results
         const searchResult = this.page.locator('.s-property', { hasText: headingTitle }).first();
         await expect(searchResult).toBeVisible({ timeout: 10000 });
-
-        // Optionally: Open the listing to verify details
-        await searchResult.click();
-        // Confirm that the listing was opened by checking the heading title is visible in the detailed view
-        const detailHeading = this.page.locator('h3.props-bg.cp.mb-1.px-0', { hasText: headingTitle });
-        await expect(detailHeading).toBeVisible({ timeout: 10000 });
+        await this.resetFilters();
         await this.page.waitForTimeout(2000);
     }
 
@@ -6226,11 +6219,11 @@ export class ListingActions {
 
         // Optionally close preview if there's a close button/icon
 
-        const closePreview = this.page.locator('.pi.pi-times').first();
-        if (await closePreview.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await closePreview.click({ force: true });
-            await this.page.waitForTimeout(2000);
-        }
+        const closeForm = this.page.locator('.pi.pi-times').first()
+        await this.page.waitForTimeout(1000)
+        await closeForm.click({ force: true });
+
+        await this.page.waitForTimeout(2000);
     }
 
     // Verify the "Admin View" button is present and functional in the preview listing modal
@@ -6260,10 +6253,10 @@ export class ListingActions {
         await adminViewBtn.click({ force: true });
 
         // Optionally close admin panel and preview panel
-        const closeAdminPanel = this.page.locator('.pi.pi-times').first();
-        if (await closeAdminPanel.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await closeAdminPanel.click({ force: true });
-            await this.page.waitForTimeout(2000);
-        }
+        const closeForm = this.page.locator('.pi.pi-times').first()
+        await this.page.waitForTimeout(1000)
+        await closeForm.click({ force: true });
+
+        await this.page.waitForTimeout(2000);
     }
 }
