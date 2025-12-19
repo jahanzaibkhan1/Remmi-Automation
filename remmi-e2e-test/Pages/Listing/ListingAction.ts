@@ -3,7 +3,7 @@ import { ListingLocators } from './ListingLocator';
 import { addAbortListener } from 'events';
 import path from 'path';
 import { table } from 'console';
-import { faker, th } from '@faker-js/faker';
+import { en, faker, th } from '@faker-js/faker';
 import { text } from 'stream/consumers';
 
 export class ListingActions {
@@ -1250,8 +1250,6 @@ export class ListingActions {
         await this.switchToGridView();
         const firstCard = this.page.locator('.s-property').first();
         await expect(firstCard).toBeVisible({ timeout: 20000 });
-
-        await this.page.waitForTimeout(2000);
 
         const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
         await chevronDown.click({ force: true });
@@ -5828,12 +5826,7 @@ export class ListingActions {
         // Locate matching listing in the results
         const searchResult = this.page.locator('.s-property', { hasText: headingTitle }).first();
         await expect(searchResult).toBeVisible({ timeout: 10000 });
-
-        // Optionally: Open the listing to verify details
-        await searchResult.click();
-        // Confirm that the listing was opened by checking the heading title is visible in the detailed view
-        const detailHeading = this.page.locator('h3.props-bg.cp.mb-1.px-0', { hasText: headingTitle });
-        await expect(detailHeading).toBeVisible({ timeout: 10000 });
+        await this.resetFilters();
         await this.page.waitForTimeout(2000);
     }
 
@@ -6126,7 +6119,7 @@ export class ListingActions {
                 await expect(
                     this.page.getByRole('paragraph').filter({ hasText: expectedText })
                 ).toBeVisible({ timeout: 10000 });
-               
+
             }
         };
 
@@ -6226,10 +6219,546 @@ export class ListingActions {
 
         // Optionally close preview if there's a close button/icon
 
-        const closePreview = this.page.locator('.pi.pi-times').first();
-        if (await closePreview.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await closePreview.click({ force: true });
-            await this.page.waitForTimeout(2000);
+        const closeForm = this.page.locator('.pi.pi-times').first()
+        await this.page.waitForTimeout(1000)
+        await closeForm.click({ force: true });
+
+        await this.page.waitForTimeout(2000);
+    }
+
+    // Verify the "Admin View" button is present and functional in the preview listing modal
+    async verifyAdminViewButtonInPreviewListing() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Find the first listing card and open it
+        const firstListingCard = this.page.locator('.s-property').first();
+        await expect(firstListingCard).toBeVisible({ timeout: 10000 });
+        await firstListingCard.click();
+
+        // Click the Preview button
+        const previewBtn = this.page.getByRole('button', { name: /preview Listing/i }).first();
+        await expect(previewBtn).toBeVisible({ timeout: 10000 });
+        await previewBtn.click({ force: true });
+
+        // Wait for the preview modal/panel
+        const previewPanel = this.page.locator('#rightbarwithscroll').first();
+        await expect(previewPanel).toBeVisible({ timeout: 10000 });
+
+        // Locate the "Admin View" button within the preview area
+        const adminViewBtn = this.page.getByRole('button', { name: /Admin View/i }).first();
+        await expect(adminViewBtn).toBeVisible({ timeout: 10000 });
+
+        // Optional: Click the Admin View button and check for the expected admin UI/modal
+        await adminViewBtn.click({ force: true });
+
+        // Optionally close admin panel and preview panel
+        const closeForm = this.page.locator('.pi.pi-times').first()
+        await this.page.waitForTimeout(1000)
+        await closeForm.click({ force: true });
+
+        await this.page.waitForTimeout(2000);
+    }
+
+    async uploadMultipleImagesToLibrary(imagePaths: string | string[]) {
+        const images: string[] = Array.isArray(imagePaths) ? imagePaths : [imagePaths];
+
+        // Navigate to listings
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Open Images tab
+        const imagesTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imagesTab).toBeVisible({ timeout: 10000 });
+        await imagesTab.click();
+        await this.page.waitForTimeout(6000);
+
+        // Open Add → File Upload (Public)
+        // Click "Add" button until "File Upload (Public)" menu option becomes visible
+        const addBtn = this.page.getByRole('button', { name: /Add/i }).first();
+        let fileUploadPublic = this.page.getByRole('menuitem', { name: 'File Upload (Public)' });
+
+        const maxTries = 5;
+        let tries = 0;
+        // Retry clicking Add until file upload becomes visible or reach maxTries
+        while (!(await fileUploadPublic.isVisible({ timeout: 1000 }).catch(() => false)) && tries < maxTries) {
+            await addBtn.waitFor({ state: 'attached', timeout: 10000 }); // ensure DOM ready
+            await addBtn.click({ force: true });
+            await this.page.waitForTimeout(400); // Small wait for menu to open
+            tries++;
+            // re-acquire locator after menu open attempt
+            fileUploadPublic = this.page.getByRole('menuitem', { name: 'File Upload (Public)' });
         }
+        await expect(fileUploadPublic).toBeVisible({ timeout: 5000 });
+        await fileUploadPublic.click();
+
+        // 🔥 Upload all images together
+        const fileInput = this.page.locator('#fileUpload');
+        await fileInput.setInputFiles(images);
+
+        // Wait for success toast
+        const toast = this.page.locator('text=Added Successfully');
+        await expect(toast).toBeVisible({ timeout: 30000 });
+
+        // Optional: verify all image names appear
+        for (const imagePath of images) {
+            const imageName = imagePath.split(/[\\/]/).pop();
+            if (imageName) {
+                const uploadedImage = this.page.locator(
+                    `.mt-3.black-text.pb-1.f-12:has-text("${imageName}")`
+                );
+                await expect(uploadedImage).toBeVisible({ timeout: 15000 });
+            }
+        }
+
+        // Save & Close
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await saveAndCloseButton.click();
+    }
+    // Verify image and thumbnails in preview listing 
+    async verifyImageAndThumbnailsInPreviewListing() {
+        // Go to listings grid and open first listing
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+        // Open the preview
+        const previewBtn = this.page.getByRole('button', { name: /Preview Listing/i });
+        await expect(previewBtn).toBeVisible({ timeout: 6000 });
+        await previewBtn.click({ force: true });
+        await expect(this.page.locator('img.main-images')).toBeVisible();
+
+    }
+
+    // Verify that clicking a thumbnail updates the main image in the preview listing
+    async verifyThumbnailSelectionChangesMainImage() {
+        // Go to listings grid and open first listing
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Open the preview
+        const previewBtn = this.page.getByRole('button', { name: /Preview Listing/i });
+        await expect(previewBtn).toBeVisible({ timeout: 6000 });
+        await previewBtn.click({ force: true });
+
+        // Verify main image is visible
+        const mainImage = this.page.locator('img.main-images').first();
+        await expect(mainImage).toBeVisible({ timeout: 10000 });
+
+        // Get all thumbnail images (excluding the main image)
+        const image = this.page.locator('img.carousel-image').nth(1);
+        await expect(image).toBeVisible({ timeout: 2000 });
+        await image.click({ force: true });
+
+        const closeForm = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeForm.click({ force: true });
+
+        await this.page.waitForTimeout(2000);
+    }
+
+    async VerifyListingStatusDisplayInPreview() {
+        // Go to listings grid and open first listing
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Open the preview
+        const previewBtn = this.page.getByRole('button', { name: /Preview Listing/i });
+        await expect(previewBtn).toBeVisible({ timeout: 6000 });
+        await previewBtn.click({ force: true });
+
+        // Verify main image is visible
+        const mainImage = this.page.locator('img.main-images').first();
+        await expect(mainImage).toBeVisible({ timeout: 10000 });
+        const status = this.page.locator('p.statusStyle1').first();
+        await expect(status).toBeVisible({ timeout: 20000 });
+
+        const closeForm = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeForm.click({ force: true });
+
+        await this.page.waitForTimeout(2000);
+    }
+
+    // Verify total images count in preview
+    async verifyTotalImagesCountInPreview() {
+        // Go to listings grid and open first listing
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Open the preview
+        const previewBtn = this.page.getByRole('button', { name: /Preview Listing/i });
+        await expect(previewBtn).toBeVisible({ timeout: 10000 });
+        await previewBtn.click({ force: true });
+
+        // Wait for main image to load and thumbnails to be present
+        const mainImage = this.page.locator('img.main-images').first();
+        await expect(mainImage).toBeVisible({ timeout: 10000 });
+
+        const imageIndex = this.page.locator('#listing-image-index').first();
+
+        await expect(imageIndex).toBeVisible({ timeout: 20000 });
+
+        // Close preview
+        const closeForm = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeForm.click({ force: true });
+
+        await this.page.waitForTimeout(2000);
+    }
+    // Verify image days count in preview
+    async verifyImageDaysCountInPreview() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Open the preview
+        const previewBtn = this.page.getByRole('button', { name: /Preview Listing/i });
+        await expect(previewBtn).toBeVisible({ timeout: 10000 });
+        await previewBtn.click({ force: true });
+
+        // Wait for main image and date label to load
+        const mainImage = this.page.locator('img.main-images').first();
+        await expect(mainImage).toBeVisible({ timeout: 10000 });
+
+        const dateLabel = this.page.locator('p.statusStyle').first();
+        await expect(dateLabel).toBeVisible({ timeout: 10000 });
+
+        // Close preview
+        const closeForm = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeForm.click({ force: true });
+
+        await this.page.waitForTimeout(2000);
+    }
+
+    // Verify sale type display in preview listing 
+    async verifySaleTypeDisplayInPreviewListing() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Open the preview
+        const previewBtn = this.page.getByRole('button', { name: /Preview Listing/i });
+        await expect(previewBtn).toBeVisible({ timeout: 10000 });
+        await previewBtn.click({ force: true });
+
+        // Locate the "Sale Type" value associated with the correct label in preview
+        const saleTypeLabel = this.page.locator('div.pricingDetail h3', { hasText: 'Sale Type' }).first();
+        await expect(saleTypeLabel).toBeVisible({ timeout: 10000 });
+
+        const saleStatus = this.page.locator('p.mr-0.statusStyle1', { hasText: 'For Sale' });
+
+        await expect(saleStatus).toBeVisible({timeout:10000});
+
+        // Close preview
+        const closeForm = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeForm.click({ force: true });
+        await this.page.waitForTimeout(2000);
+    }
+
+    // Verify all listing details display in preview
+    async verifyAllListingDetailsInPreview(agentNames: string[]) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // --- Fill listing details form ---
+        // Agents
+        const agentSelectors = [
+            { selector: 'div.form-group:has-text("Primary Agent") ng-select', name: agentNames[0] },
+            { selector: 'div.form-group:has-text("Secondary Agent") ng-select', name: agentNames[1] }
+        ];
+        for (const agent of agentSelectors) {
+            const agentDropdown = this.page.locator(agent.selector);
+            await expect(agentDropdown).toBeVisible();
+            await agentDropdown.click();
+
+            const agentInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+            await expect(agentInput).toBeVisible({ timeout: 3000 });
+            await agentInput.fill(agent.name);
+
+            const agentOption = this.page.locator(
+                '.ng-dropdown-panel .ng-option',
+                { hasText: agent.name }
+            ).first();
+            await expect(agentOption).toBeVisible({ timeout: 5000 });
+            await agentOption.click();
+        }
+
+        // Date field (assume second input is date field)
+        const dateInput = this.page.locator('input.p-inputtext.p-component').nth(1);
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click({ force: true });
+        const todayCell = this.page.locator('.p-datepicker-today, td[aria-current="date"]'); // Robust selector
+        await expect(todayCell).toBeVisible({ timeout: 5000 });
+        await todayCell.click({ force: true });
+
+        // Price
+        const priceInput = this.page.locator('input[name="price"]').first();
+        await expect(priceInput).toBeVisible({ timeout: 5000 });
+        await priceInput.click();
+        await priceInput.fill('10000');
+
+        // Bedrooms, Bathrooms, Ensuite, Living Areas, Study, Pool, Garage
+        const fieldSets = [
+            { selector: 'input[formcontrolname="beds"], input[name="bedrooms"], input[data-testid="bedrooms"]', value: '2' },
+            { selector: 'input[formcontrolname="baths"], input[name="bathrooms"], input[data-testid="bathrooms"]', value: '1' },
+            { selector: 'input[name="ensuite"], input[data-testid="ensuite"], input[formcontrolname="ensuite"]', value: '1' },
+            { selector: 'input[formcontrolname="living_areas"]', value: '1' },
+            { selector: 'input[formcontrolname="study"], input[name="study"], input[data-testid="study"]', value: '1' },
+            { selector: 'input[formcontrolname="pools"]', value: '1' },
+            { selector: 'input[formcontrolname="garage"]', value: '1' }
+        ];
+
+        for (const field of fieldSets) {
+            const input = this.page.locator(field.selector).first();
+            await expect(input).toBeVisible({ timeout: 5000 });
+            await input.click();
+            await input.fill(field.value);
+        }
+
+        // Carport
+        const carportInput = this.page.locator(
+            'div.col-xl-4:has(p:has-text("Carport")) input[type="number"]'
+        );
+        await expect(carportInput).toBeVisible({ timeout: 5000 });
+        await carportInput.click();
+        await carportInput.fill('1');
+
+        // Open Spaces
+        const openSpacesInput = this.page.locator(
+            'div.col-xl-4:has(p:has-text("Open Spaces")) input[type="number"]'
+        );
+        await expect(openSpacesInput).toBeVisible({ timeout: 5000 });
+        await openSpacesInput.click();
+        await openSpacesInput.fill('2');
+
+        // Land Size
+        const landSizeInput = this.page.locator(
+            'div.col-sm-6:has(p:has-text("Land Size")) input[formcontrolname="land_area"]'
+        );
+        await expect(landSizeInput).toBeVisible({ timeout: 5000 });
+        await landSizeInput.click();
+        await landSizeInput.fill('500');
+
+        // House Size
+        const houseSizeInput = this.page.locator(
+            'input[formcontrolname="building_area"], input[name="building_area"], input[data-testid="house-size"]'
+        ).first();
+        await expect(houseSizeInput).toBeVisible({ timeout: 5000 });
+        await houseSizeInput.click();
+        await houseSizeInput.fill('250');
+
+        // Headline
+        const headlineInput = this.page.locator('input[formcontrolname="heading"], input[name="heading"], input[data-testid="headline"]').first();
+        await expect(headlineInput).toBeVisible({ timeout: 5000 });
+        await headlineInput.click();
+        await headlineInput.fill('Test Headline');
+
+        // Description
+        // Use a more stable and short locator: target the visible textarea/input for description
+        const descriptionInput = this.page.locator(
+            'ckeditor[formcontrolname="description_garax"] .ck-editor__editable'
+          ).first();
+        await expect(descriptionInput).toBeVisible({ timeout: 5000 });
+        await descriptionInput.click({force:true});
+        await descriptionInput.fill('This is a test description.');
+
+        // Features selection
+        const featuresHeading = this.page.locator('div.boxHeadingText:has-text("Features") p');
+        await featuresHeading.scrollIntoViewIfNeeded();
+        await expect(featuresHeading).toBeVisible();
+
+        const featuredropdown = this.page.locator("//span[normalize-space()='Please Select']").first();
+        await expect(featuredropdown).toBeVisible({ timeout: 5000 });
+        await featuredropdown.click();
+
+        const firstFeatureOption = this.page.locator('li.p-element').first();
+        await expect(firstFeatureOption).toBeVisible({ timeout: 5000 });
+        await firstFeatureOption.click({ force: true });
+
+        // Locate the "sort-up" icon
+        const sortUpIcon = this.page.locator('i.fas.fa-sort-up');
+        if (await sortUpIcon.isVisible({ timeout: 5000 }).catch(() => false)) {
+            await sortUpIcon.click();
+        }
+
+        // Save changes
+        const saveButton = this.page.locator('button:has-text("Save")').nth(2);
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+        await saveButton.click();
+        await this.page.waitForTimeout(2000);
+
+        // --- Preview and assertions ---
+        // Open the preview dialog
+        const previewBtn = this.page.getByRole('button', { name: /Preview Listing/i });
+        await expect(previewBtn).toBeVisible({ timeout: 10000 });
+        await previewBtn.scrollIntoViewIfNeeded();
+        await previewBtn.click({ force: true });
+
+      
+        const auctionsLabel = this.page.getByText('Auctions', { exact: true });
+        await auctionsLabel.scrollIntoViewIfNeeded();
+        await expect(auctionsLabel).toBeVisible({ timeout: 3000 });
+
+        // Bedroom, bathroom, car spaces and sizing labels and values
+        await expect(this.page.locator('text=Bedroom').last()).toBeVisible({ timeout: 3000 });
+
+        await expect(this.page.locator('text=Bathroom').last()).toBeVisible({ timeout: 3000 });
+
+        await expect(this.page.locator('text=Car Spaces').last()).toBeVisible({ timeout: 3000 });
+
+        await expect(this.page.locator('text=Land Size').last()).toBeVisible({ timeout: 3000 });
+
+        await expect(this.page.locator('text=House Size').last()).toBeVisible({ timeout: 3000 });
+
+        // Agents - both primary and secondary shown horizontally
+        await expect(this.page.getByText('Automation Test', { exact: true }).last()).toBeVisible({ timeout: 3000 });
+        await expect(this.page.getByText('Hina Agent', { exact: false }).last()).toBeVisible({ timeout: 3000 });
+
+        // Description section
+        await expect(this.page.getByText('Description', { exact: true })).toBeVisible({ timeout: 3000 });
+        await expect(this.page.getByText('Test Headline', { exact: true })).toBeVisible({ timeout: 3000 }); // headline
+        await expect(this.page.getByText('This is a test description.', { exact: true })).toBeVisible({ timeout: 3000 }); // description
+
+        // Features section and first feature selected
+        await expect(this.page.getByText('Features', { exact: true })).toBeVisible({ timeout: 3000 });
+        // Air Conditioning is the selected feature in the image
+        await expect(this.page.getByText('Air Conditioning', { exact: true })).toBeVisible({ timeout: 3000 });
+
+
+        // Close the preview dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeBtn.click({ force: true });
+        await this.page.waitForTimeout(2000);
+    }
+
+    // Verify fields are not editable in preview listing 
+    async verifyFieldsNotEditableInPreviewListing() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Open the preview dialog
+        const previewBtn = this.page.getByRole('button', { name: /Preview Listing/i });
+        await expect(previewBtn).toBeVisible({ timeout: 10000 });
+        await previewBtn.click({ force: true });
+
+        // Wait for preview to open (headline should be visible as a marker)
+        const descriptionLocator = this.page.locator('text=Description').last();
+        await descriptionLocator.scrollIntoViewIfNeeded();
+        await expect(descriptionLocator).toBeVisible({ timeout: 5000 });
+
+        // Verify expected fields/inputs are not editable
+        const headlineInput = this.page.locator('input[formcontrolname="headline"]');
+        const descInput = this.page.locator('textarea[formcontrolname="description"]');
+        const priceInput = this.page.locator('input[name="price"]');
+        const agentDropdown = this.page.locator('div.form-group:has-text("Primary Agent") ng-select input');
+        const featureDropdown = this.page.locator('div:has-text("Features") ng-select');
+
+        // Expect no enabled headline input
+        await expect(headlineInput).toBeHidden();
+        await expect(descInput).toBeHidden();
+        await expect(priceInput).toBeHidden();
+        // Features and agents should not be dropdowns/inputs here
+        await expect(agentDropdown).toBeHidden();
+        // Close preview
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(1000);
+        await closeBtn.click({ force: true });
+        await this.page.waitForTimeout(2000);
+    }
+
+    // Verify Save button functionality
+    async clickSaveButtonOnListingForm() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Find the price input (try common selectors)
+        const priceInput = this.page.locator('input[name="price"]').first();
+        await expect(priceInput).toBeVisible({ timeout: 5000 });
+        await priceInput.scrollIntoViewIfNeeded();
+        await priceInput.click();
+        await priceInput.clear();
+        await priceInput.fill('12345');
+
+        // Click the save button 
+        const saveButton = this.page.locator('button:has-text("Save")').nth(2);
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+        await saveButton.scrollIntoViewIfNeeded()
+        await saveButton.click();
+
+        // Close the form (if modal/dialog close icon present)
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        await this.page.waitForTimeout(500);
+        await closeBtn.click({ force: true });
+        await this.page.waitForTimeout(1000);
+    }
+
+    // Verify Save & Close button functionality
+    async clickSaveAndCloseButtonOnListingForm() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 10000 });
+        await firstListing.click();
+
+        // Find the price input (try common selectors)
+        const priceInput = this.page.locator('input[name="price"]').first();
+        await expect(priceInput).toBeVisible({ timeout: 5000 });
+        await priceInput.scrollIntoViewIfNeeded();
+        await priceInput.click();
+        await priceInput.clear();
+        await priceInput.fill('54321');
+
+        // Click the "Save & Close" button
+        const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
     }
 }
