@@ -1,130 +1,90 @@
-import { test } from '@playwright/test';
+import { test as base } from '@playwright/test';
 import { MyProfileActions } from './MyProfileActions';
-import { LoginActions } from '../Login/LoginAction';
-import { LoginUsers } from '../../fixture/test-data';
+import * as path from 'path';
 
-const operationManager = LoginUsers.manager;
-const salesAgent = LoginUsers.sales;
-const admin = LoginUsers.admin;
+const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
+const DASHBOARD_URL = process.env.DASHBOARD_URL || 'https://remmi-app-stage-ui.azurewebsites.net/dashboard';
+
+const test = base.extend<{ sessionPage: any }>({
+  sessionPage: [async ({ browser }, use) => {
+    const context = await browser.newContext({ storageState: managerSessionPath });
+    try {
+      const page = await context.newPage();
+      await page.goto(DASHBOARD_URL);
+      await use(page);
+    } finally {
+      // Optionally close context if desired in cleanup
+    }
+  }, { scope: 'worker' }]
+});
 
 test.describe('My Profile Tests - Remmi E2E', () => {
-  // ---------------------------
-  // TEST 1: Verify profile fields
-  // ---------------------------
-  test('1. Profile fields show data & are non-editable', async ({ page }) => {
-    const login = new LoginActions(page);
-    const profile = new MyProfileActions(page);
+  // 1. Profile fields show data & are non-editable
+  test('1. Profile fields show data & are non-editable', async ({ sessionPage }) => {
+    const profile = new MyProfileActions(sessionPage);
 
-    await login.login(
-        operationManager.email!,
-        operationManager.password!,
-        process.env.E2E_MANAGER_OTP_SECRET!
-      );
     await profile.navigateToProfilePage();
     await profile.verifyAllProfileFields();
   });
 
-  test('2. PIN field allows input and updates profile', async ({ page }) => {
-    const login = new LoginActions(page);
-    const profile = new MyProfileActions(page);
+  // 2. Fields remain non-editable if data missing
+  test('2. Fields remain non-editable if data missing', async ({ sessionPage }) => {
+    const profile = new MyProfileActions(sessionPage);
 
-    await login.login(
-        operationManager.email!,
-        operationManager.password!,
-        process.env.E2E_MANAGER_OTP_SECRET!
-      );
+    await profile.navigateToProfilePage();
+    await profile.verifyAllProfileFields();
+  });
+
+  // 3. PIN field allows input and updates profile
+  test('3. PIN field allows input and updates profile', async ({ sessionPage }) => {
+    const profile = new MyProfileActions(sessionPage);
+
     await profile.navigateToProfilePage();
     await profile.enterPinAndSave('1234');
   });
 
-  test('3. Correct PIN allows private download', async ({ page }) => {
-    const login = new LoginActions(page);
-    const profile = new MyProfileActions(page);
-    
-    await login.login(
-        operationManager.email!,
-        operationManager.password!,
-        process.env.E2E_MANAGER_OTP_SECRET!
-      );
+  // 4. Calendar color selection updates correctly
+  test('4. Calendar color selection updates correctly', async ({ sessionPage }) => {
+    const profile = new MyProfileActions(sessionPage);
+    await profile.navigateToProfilePage();
+    await profile.updateCalendarColor('#c0add5');
+  });
+
+  // 5. Correct PIN allows private download
+  test('5. Correct PIN allows private download', async ({ sessionPage }) => {
+    const profile = new MyProfileActions(sessionPage);
 
     await profile.navigateToLibrary();
     await profile.downloadWithCorrectPin('1234');
   });
 
-  test('4. Fields remain non-editable if data missing', async ({ page }) => {
-    const login = new LoginActions(page);
-    const profile = new MyProfileActions(page);
-  
-    await login.login(
-        operationManager.email!,
-        operationManager.password!,
-        process.env.E2E_MANAGER_OTP_SECRET!
-      );
-
-    await profile.navigateToProfilePage();
-    await profile.verifyAllProfileFields();
-  });
-  test('5. PIN is required for private download', async ({ page }) => {
-    const login = new LoginActions(page);
-    const profile = new MyProfileActions(page);
-
-    await login.login(
-        operationManager.email!,
-        operationManager.password!,
-        process.env.E2E_MANAGER_OTP_SECRET!
-      );
+  // 6. PIN is required for private download (empty PIN case)
+  test('6. PIN is required for private download (empty PIN case)', async ({ sessionPage }) => {
+    const profile = new MyProfileActions(sessionPage);
 
     await profile.navigateToLibrary();
     await profile.downloadWithEmptyPin();
   });
 
-  test('6. Verify PIN is required for private download', async ({ page }) => {
-    const login = new LoginActions(page);
-    const profile = new MyProfileActions(page);
-
-    await login.login(
-        operationManager.email!,
-        operationManager.password!,
-        process.env.E2E_MANAGER_OTP_SECRET!
-      );
+  // 7. PIN is required for private download (validation)
+  test('7. PIN is required for private download (validation)', async ({ sessionPage }) => {
+    const profile = new MyProfileActions(sessionPage);
 
     await profile.navigateToLibrary();
     await profile.verifyPINIsRequired();
   });
 
-  test('7. Calendar color selection updates correctly', async ({ page }) => {
-    const login = new LoginActions(page);
-    const profile = new MyProfileActions(page);
-    await login.login(
-        operationManager.email!,
-        operationManager.password!,
-        process.env.E2E_MANAGER_OTP_SECRET!
-      );
-    await profile.navigateToProfilePage();
-    await profile.updateCalendarColor('#c0add5');
-  });
-
-  test('8. Incorrect PIN prevents private download', async ({ page }) => {
-    const login = new LoginActions(page);
-    const profile = new MyProfileActions(page);
-
-      await login.login(
-        operationManager.email!,
-        operationManager.password!,
-        process.env.E2E_MANAGER_OTP_SECRET!
-      );
+  // 8. Incorrect PIN prevents private download
+  test('8. Incorrect PIN prevents private download', async ({ sessionPage }) => {
+    const profile = new MyProfileActions(sessionPage);
 
     await profile.navigateToLibrary();
     await profile.downloadWithIncorrectPin('1230');
   });
-  // test('9. System does not allow invalid calendar color', async ({ page }) => {
-  //   const login = new LoginActions(page);
-  //   const profile = new MyProfileActions(page);
-  //   await login.login(
-  //       operationManager.email!,
-  //       operationManager.password!,
-  //       process.env.E2E_MANAGER_OTP_SECRET!
-  //     );
+
+  // 9. System does not allow invalid calendar color (commented out by default)
+  // test('9. System does not allow invalid calendar color', async ({ sessionPage }) => {
+  //   const profile = new MyProfileActions(sessionPage);
   //   await profile.navigateToProfilePage();
   //   await profile.tryInvalidCalendarColor('INVALID_COLOR');
   // });

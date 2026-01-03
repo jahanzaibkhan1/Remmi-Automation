@@ -8,25 +8,11 @@ export class MyProfileLocators {
   constructor(private page: Page) { }
 
   // ---------------- Navigation ----------------
-  /**
-   * Returns the locator for the profile icon.
-   * Note: After uploading a profile image, the class or structure may change.
-   * This method attempts to handle both the default and post-upload states.
-   */
   profileIcon(): Locator {
-    // Try the default selector first
-    const possibleIcons = [
-      this.page.locator("div.user-thumbnail-placeholder >> img"),
-      this.page.locator(".user_thumb.ng-star-inserted"),
-      this.page.locator(".pi.pi-angle-down.pl-2"),
-    ];
-    // Return a locator that matches any of the selectors
-    return this.page.locator([
-      "div.user-thumbnail-placeholder >> img",
-      ".user_thumb.ng-star-inserted",
-      ".pi.pi-angle-down.pl-2"
-    ].join(', '));
+    // Returns either the img if it exists, or the div
+    return this.page.locator("div.user-thumbnail-placeholder img, div.user-thumbnail-placeholder").first();
   }
+  
 
   myProfileButton(): Locator {
     return this.page.getByRole('menuitem', { name: 'My Profile' }).locator('a');
