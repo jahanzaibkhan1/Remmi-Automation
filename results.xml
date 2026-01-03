@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.33766400000081">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2025-12-19T11:58:30.251Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.611" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 62: Verify Save &amp; Close button functionality in listing form" classname="Pages\Listing\listingForm.spec.ts" time="35.611">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.76546300000045">
+<testsuite name="Pages\MyProfile\Notifications.spec.ts" timestamp="2026-01-03T10:01:47.662Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.051" errors="0">
+<testcase name="Notifications Tab Tests - Remmi E2E › Test case 1: User clicks ON the button for notification" classname="Pages\MyProfile\Notifications.spec.ts" time="27.051">
 </testcase>
 </testsuite>
 </testsuites>
