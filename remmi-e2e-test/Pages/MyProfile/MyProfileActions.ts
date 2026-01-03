@@ -20,9 +20,24 @@ export class MyProfileActions {
   // --------- PRIVATE HELPERS ---------
   private async clickProfileIcon() {
     const profileIcon = this.locators.profileIcon();
-    await expect(profileIcon).toBeVisible({ timeout: 20000 });
-    await profileIcon.click({ force: true });
+    const myProfileBtn = this.locators.myProfileButton();
+
+    // Wait for profile icon to exist
+    await profileIcon.waitFor({ state: 'visible', timeout: 10000 });
+
+    const maxAttempts = 20;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      await profileIcon.click({ force: true });
+
+      if (await myProfileBtn.isVisible()) {
+        return; 
+      }
+    }
+
+    throw new Error('My Profile button did not appear after multiple fast clicks on the profile icon.');
   }
+
 
   private async clickMyProfileButton() {
     const myProfileBtn = this.locators.myProfileButton();
@@ -412,7 +427,7 @@ export class MyProfileActions {
     // Click the "Select All" checkbox
     await this.page.waitForTimeout(2000);
     await selectAll.click({ force: true });
-    await selectAll.click({force:true})
+    await selectAll.click({ force: true })
   }
 
   /**
@@ -1364,7 +1379,7 @@ export class MyProfileActions {
       }
     });
   }
-  
+
   async SearchForExistingTeam(teamName: string) {
     await test.step('Verify search works for existing team names', async () => {
       await this.NavigateToTeamsTab()
@@ -2019,7 +2034,7 @@ export class MyProfileActions {
 
       // Click Cancel or No button
       const cancelButton = this.page.getByRole('button', { name: /No|Cancel/i }).first();
-      await cancelButton.click({force:true});
+      await cancelButton.click({ force: true });
 
       // Wait for popup to close
       await expect(confirmationPopup).toBeHidden({ timeout: 5000 });
@@ -2049,7 +2064,7 @@ export class MyProfileActions {
 
       // Click on "Yes" button to confirm delete (adjust button text if different)
       const confirmButton = this.page.getByRole('button', { name: /Yes/i }).first();
-      await confirmButton.click({force:true});
+      await confirmButton.click({ force: true });
       console.log('🟢 Confirmed team deletion from dialog.');
 
       // Verify success message
