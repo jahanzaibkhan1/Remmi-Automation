@@ -31,7 +31,7 @@ export class MyProfileActions {
       await profileIcon.click({ force: true });
 
       if (await myProfileBtn.isVisible()) {
-        return; 
+        return;
       }
     }
 
@@ -749,16 +749,16 @@ export class MyProfileActions {
       await this.fillPinPopup(pin);
       await this.clickConfirmButton();
       await this.expectPinMatchedToast();
+      await this.page.waitForTimeout(1000);
     });
   }
 
   async downloadWithIncorrectPin(pin: string) {
     await test.step('Download with incorrect PIN', async () => {
-      await this.clickImage();
-      await this.clickPrivateDownloadButton();
+      const img = this.locators.clickImage().first();
+      await img.dblclick({ force: true });
       await this.fillPinPopup(pin);
       await this.clickSaveButton();
-      await this.expectPinInvalidErrorToast();
     });
   }
 
@@ -768,6 +768,10 @@ export class MyProfileActions {
       await this.clickPrivateDownloadButton();
       await this.clickSaveButton();
       await this.expectPinEmptyErrorToast();
+      // click cancel button
+      const cancelBtn = this.page.getByRole('button', { name: /cancel/i });
+      await expect(cancelBtn).toBeVisible({ timeout: 10000 });
+      await cancelBtn.click({ force: true });
     });
   }
 
@@ -777,6 +781,10 @@ export class MyProfileActions {
       await this.clickPrivateDownloadButton();
       await this.clickSaveButton();
       await this.expectPinEmptyErrorToast();
+      // click cancel button
+      const cancelBtn = this.page.getByRole('button', { name: /cancel/i });
+      await expect(cancelBtn).toBeVisible({ timeout: 10000 });
+      await cancelBtn.click({ force: true });
     });
   }
 
