@@ -811,7 +811,6 @@ export class MyProfileActions {
   async UploadImageProfile(imagePath: string) {
     await test.step('Upload a profile image', async () => {
       await this.goToImagesTab();
-      await this.page.waitForTimeout(2000);
       await this.clickAddProfileImageButton();
       await this.uploadImageFile(imagePath);
       await this.moveImageSlightlyLeft();
@@ -823,7 +822,6 @@ export class MyProfileActions {
   async uploadMultipleImages(imagePath: string) {
     await test.step('Upload multiple images to profile', async () => {
       await this.goToImagesTab();
-      await this.page.waitForTimeout(2000);
       await this.clickAddMoreImagesButton();
       await this.clickLastUploadImageButton();
       await this.setLastFileInput(imagePath);
@@ -835,7 +833,6 @@ export class MyProfileActions {
   async setImageAsDefaultProfile() {
     await test.step('Set uploaded image as default profile', async () => {
       await this.goToImagesTab();
-      await this.page.waitForTimeout(2000);
       await this.clickDefaultProfileCheckbox();
       await this.expectProfileImageVisible();
     });
@@ -844,7 +841,6 @@ export class MyProfileActions {
   async verifyThumbnailsAfterImageUpload(imagePath: string) {
     await test.step('Verify thumbnails appear after image upload', async () => {
       await this.goToImagesTab();
-      await this.page.waitForTimeout(2000);
       await this.clickAddProfileImageButton();
       await this.clickLastUploadImageButton();
       await this.setLastFileInput(imagePath);
@@ -855,7 +851,6 @@ export class MyProfileActions {
   async verifyThumbnailsAreRemoved(imagePath: string) {
     await test.step('Verify thumbnails are removed when clicking cross button', async () => {
       await this.goToImagesTab();
-      await this.page.waitForTimeout(2000);
       await this.clickAddProfileImageButton();
       await this.clickLastUploadImageButton();
       await this.setLastFileInput(imagePath);
@@ -867,7 +862,6 @@ export class MyProfileActions {
   async manageExistingThumbnails(imagePath1: string, imagePath2: string) {
     await test.step('Edit and delete low resolution and agent face thumbnails', async () => {
       await this.goToImagesTab();
-      await this.page.waitForTimeout(2000);
       await this.expectLowResAndAgentFaceThumbnails();
 
       // Edit low resolution thumbnail
@@ -890,7 +884,6 @@ export class MyProfileActions {
   async validateImageResolutionWarning(imagePath: string) {
     await test.step('Verify Resolution warning message displays', async () => {
       await this.goToImagesTab();
-      await this.page.waitForTimeout(2000);
       await this.clickAddMoreImagesButton();
       await this.clickLastUploadImageButton();
       await this.setLastFileInput(imagePath);
@@ -901,7 +894,6 @@ export class MyProfileActions {
   async VerifyInvalidImageFormats(imagePath: string) {
     await test.step('Verify invalid image format alert appears', async () => {
       await this.goToImagesTab();
-      await this.page.waitForTimeout(2000);
       await this.clickAddMoreImagesButton();
       await this.clickLastUploadImageButton();
       await this.setLastFileInput(imagePath);
@@ -913,7 +905,6 @@ export class MyProfileActions {
   async ChangeProfileImage(imagePath: string) {
     await test.step('Change the profile image to the last uploaded image and check the corresponding checkbox', async () => {
       await this.goToImagesTab();
-      await this.page.waitForTimeout(2000);
       await this.clickAddMoreImagesButton();
       await this.clickLastUploadImageButton();
       await this.setLastFileInput(imagePath);
@@ -974,7 +965,6 @@ export class MyProfileActions {
   async VerifyDefaultPlaceholder() {
     await test.step('Verify the default placeholder is visible when no image is uploaded or in the first image slot', async () => {
       await this.goToImagesTab();
-      await this.page.waitForTimeout(2000);
       const placeholders = this.page.locator('[ptooltip="Upload Image"]');
       const count = await placeholders.count();
       expect(count).toBeGreaterThan(0);
@@ -989,7 +979,6 @@ export class MyProfileActions {
   async removeSelectedProfileImage() {
     await test.step('Delete only the image currently set as default profile (checked)', async () => {
       await this.goToImagesTab();
-      await this.page.waitForTimeout(2000);
       // Locate the container holding the checked/default profile checkbox
       const checkedContainer = this.page.locator('.d-flex.align-items-start.mt-2.mr-5.ng-star-inserted')
         .filter({ has: this.page.locator('.p-checkbox.p-checkbox-checked') });
@@ -1025,7 +1014,6 @@ export class MyProfileActions {
   async verifyAgentFaceAspectRatio(imagePath: string) {
     await test.step('Upload image and check AGENT FACE 1:1 aspect ratio', async () => {
       await this.goToImagesTab();
-      await this.page.waitForTimeout(2000);
       await this.clickAddMoreImagesButton();
       await this.clickLastUploadImageButton();
       await this.setLastFileInput(imagePath);
@@ -1038,7 +1026,6 @@ export class MyProfileActions {
   async UploadBrokenImage(imagePath: string) {
     await test.step('Verify Resolution warning message displays', async () => {
       await this.goToImagesTab();
-      await this.page.waitForTimeout(2000);
       await this.clickAddMoreImagesButton();
       await this.clickLastUploadImageButton();
       await this.setLastFileInput(imagePath);
@@ -1050,7 +1037,6 @@ export class MyProfileActions {
   async verifyAllowedImageFileFormats(validImagePaths: string[], invalidImagePaths: string[]) {
     await test.step('Verify system strictly allows only specific image formats and rejects invalid/corrupted ones', async () => {
       await this.goToImagesTab();
-      await this.page.waitForTimeout(2000);
       for (const validPath of validImagePaths) {
         console.log(`🟢 Uploading valid image: ${validPath}`);
         await this.clickAddMoreImagesButton();
@@ -1109,10 +1095,6 @@ export class MyProfileActions {
       await this.clickLastUploadImageButton();
       await this.setLastFileInput(ImagePath);
 
-      // Skip moving the image — offline might break UI
-      // await this.moveImageSlightlyLeft();
-
-      // Click update to trigger upload while offline
       await this.clickUpdateImages();
 
       // Wait for the error toast (No internet connection)
