@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.76546300000045">
-<testsuite name="Pages\MyProfile\Notifications.spec.ts" timestamp="2026-01-03T10:01:47.662Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.051" errors="0">
-<testcase name="Notifications Tab Tests - Remmi E2E › Test case 1: User clicks ON the button for notification" classname="Pages\MyProfile\Notifications.spec.ts" time="27.051">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="27.255476999999956">
+<testsuite name="Pages\MyProfile\SocialSetting.spec.ts" timestamp="2026-01-03T10:06:35.449Z" hostname="chromium" tests="1" failures="0" skipped="0" time="19.775" errors="0">
+<testcase name="Social Settings Tests - Remmi E2E › Test 1: The user can successfully upload social media links and the page updates correctly" classname="Pages\MyProfile\SocialSetting.spec.ts" time="19.775">
 </testcase>
 </testsuite>
 </testsuites>
