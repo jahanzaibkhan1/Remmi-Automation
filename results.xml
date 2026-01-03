@@ -1,6 +1,74 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="27.255476999999956">
-<testsuite name="Pages\MyProfile\SocialSetting.spec.ts" timestamp="2026-01-03T10:06:35.449Z" hostname="chromium" tests="1" failures="0" skipped="0" time="19.775" errors="0">
-<testcase name="Social Settings Tests - Remmi E2E › Test 1: The user can successfully upload social media links and the page updates correctly" classname="Pages\MyProfile\SocialSetting.spec.ts" time="19.775">
+<testsuites id="" name="" tests="8" failures="0" skipped="0" errors="0" time="47.63028399999998">
+<testsuite name="Pages\MyProfile\MyProfileTest.spec.ts" timestamp="2026-01-03T10:44:30.641Z" hostname="chromium" tests="8" failures="0" skipped="0" time="34.674" errors="0">
+<testcase name="My Profile Tests - Remmi E2E › 1. Profile fields show data &amp; are non-editable" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="27.92">
+<system-out>
+<![CDATA[First Name value: "EMPTY"
+First Name non-editable? ✅ Yes
+Last Name value: "EMPTY"
+Last Name non-editable? ✅ Yes
+Email value: "EMPTY"
+Email non-editable? ✅ Yes
+Mobile Number value: "401235678"
+Mobile Number non-editable? ✅ Yes
+Telephone value: "Telephone"
+Telephone non-editable? ✅ Yes
+Job Title value: "EMPTY"
+Job Title non-editable? ✅ Yes
+Biography value: "EMPTY"
+Biography non-editable? ✅ Yes
+Role value: "Operations Manager"
+Role non-editable? ✅ Yes
+Group value: "QA"
+Group non-editable? ✅ Yes
+Office value: "QA Tester"
+Office non-editable? ✅ Yes
+]]>
+</system-out>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 2. Fields remain non-editable if data missing" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="1.17">
+<system-out>
+<![CDATA[First Name value: "Jahanzaib"
+First Name non-editable? ✅ Yes
+Last Name value: "Xenex"
+Last Name non-editable? ✅ Yes
+Email value: "jahanzaib@xenex-media.com.au"
+Email non-editable? ✅ Yes
+Mobile Number value: "401235678"
+Mobile Number non-editable? ✅ Yes
+Telephone value: "Telephone"
+Telephone non-editable? ✅ Yes
+Job Title value: "EMPTY"
+Job Title non-editable? ✅ Yes
+Biography value: "EMPTY"
+Biography non-editable? ✅ Yes
+Role value: "Operations Manager"
+Role non-editable? ✅ Yes
+Group value: "QA"
+Group non-editable? ✅ Yes
+Office value: "QA Tester"
+Office non-editable? ✅ Yes
+]]>
+</system-out>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 3. PIN field allows input and updates profile" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0.439">
+<system-out>
+<![CDATA[🟢 Clicked Update button
+]]>
+</system-out>
+<system-err>
+<![CDATA[⚠️ No toast visible — may auto-save or reload silently
+]]>
+</system-err>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 4. Calendar color selection updates correctly" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0.487">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 5. Correct PIN allows private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="3">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 6. PIN is required for private download (empty PIN case)" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0.688">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 7. PIN is required for private download (validation)" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0.559">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 8. Incorrect PIN prevents private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0.411">
 </testcase>
 </testsuite>
 </testsuites>
