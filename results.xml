@@ -1,64 +1,64 @@
-<testsuites id="" name="" tests="24" failures="0" skipped="0" errors="0" time="97.48755399999953">
-<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2026-01-04T08:56:23.544Z" hostname="chromium" tests="24" failures="0" skipped="0" time="89.001" errors="0">
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 1: Verify that the Association tab opens successfully" classname="Pages\MyProfile\Association.spec.ts" time="21.131">
+<testsuites id="" name="" tests="24" failures="0" skipped="0" errors="0" time="99.14390399999999">
+<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2026-01-04T10:29:31.950Z" hostname="chromium" tests="24" failures="0" skipped="0" time="93.658" errors="0">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 1: Verify that the Association tab opens successfully" classname="Pages\MyProfile\Association.spec.ts" time="27.533">
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 2: Verify the search functionality in the Association tab" classname="Pages\MyProfile\Association.spec.ts" time="0.835">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 2: Verify the search functionality in the Association tab" classname="Pages\MyProfile\Association.spec.ts" time="0.447">
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 3: Verify search with no matching project" classname="Pages\MyProfile\Association.spec.ts" time="1.022">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 3: Verify search with no matching project" classname="Pages\MyProfile\Association.spec.ts" time="0.349">
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 4: Verify that Add Project dropdown opens successfully" classname="Pages\MyProfile\Association.spec.ts" time="0.394">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 4: Verify that Add Project dropdown opens successfully" classname="Pages\MyProfile\Association.spec.ts" time="0.476">
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 5: Verify the search option inside Add Project dropdown" classname="Pages\MyProfile\Association.spec.ts" time="0.774">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 5: Verify the search option inside Add Project dropdown" classname="Pages\MyProfile\Association.spec.ts" time="0.334">
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 6: Verify single project selection from dropdown" classname="Pages\MyProfile\Association.spec.ts" time="0.568">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 6: Verify single project selection from dropdown" classname="Pages\MyProfile\Association.spec.ts" time="0.427">
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 7: Verify multiple project selection from dropdown" classname="Pages\MyProfile\Association.spec.ts" time="0.912">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 7: Verify multiple project selection from dropdown" classname="Pages\MyProfile\Association.spec.ts" time="0.619">
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 8: Verify the “Select All” functionality" classname="Pages\MyProfile\Association.spec.ts" time="7.92">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 8: Verify the “Select All” functionality" classname="Pages\MyProfile\Association.spec.ts" time="7.778">
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 9: Verify the “Deselect All” functionality" classname="Pages\MyProfile\Association.spec.ts" time="3.241">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 9: Verify the “Deselect All” functionality" classname="Pages\MyProfile\Association.spec.ts" time="3.114">
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 10: Verify removing a project tag before adding" classname="Pages\MyProfile\Association.spec.ts" time="0.8">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 10: Verify removing a project tag before adding" classname="Pages\MyProfile\Association.spec.ts" time="0.478">
 <system-out>
 <![CDATA[Project "Hina's Project" is NOT visible in the association table.
 ]]>
 </system-out>
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 11: Verify adding multiple projects at once" classname="Pages\MyProfile\Association.spec.ts" time="1.353">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 11: Verify adding multiple projects at once" classname="Pages\MyProfile\Association.spec.ts" time="1.304">
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 12: Verify that previously added projects are not duplicated" classname="Pages\MyProfile\Association.spec.ts" time="5.553">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 12: Verify that previously added projects are not duplicated" classname="Pages\MyProfile\Association.spec.ts" time="5.289">
 <system-out>
-<![CDATA[Associated projects before: [ [32m'askari center'[39m, [32m"Hina's Project"[39m ]
+<![CDATA[Associated projects before: []
 ]]>
 </system-out>
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 13: Verify adding when list is initially empty" classname="Pages\MyProfile\Association.spec.ts" time="6.986">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 13: Verify adding when list is initially empty" classname="Pages\MyProfile\Association.spec.ts" time="6.555">
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 14: Verify the sort functionality" classname="Pages\MyProfile\Association.spec.ts" time="5.027">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 14: Verify the sort functionality" classname="Pages\MyProfile\Association.spec.ts" time="4.849">
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 15: Verify delete icon under Action column" classname="Pages\MyProfile\Association.spec.ts" time="4.787">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 15: Verify delete icon under Action column" classname="Pages\MyProfile\Association.spec.ts" time="4.674">
 <system-out>
 <![CDATA[✅ Verified project "RA Test" not present after deletion.
 ]]>
 </system-out>
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 16: Verify project delete funcationality" classname="Pages\MyProfile\Association.spec.ts" time="3.231">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 16: Verify project delete funcationality" classname="Pages\MyProfile\Association.spec.ts" time="3.158">
 <system-out>
 <![CDATA[✅ Verified project "new tester projecter" not present after deletion.
 ]]>
 </system-out>
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 17: Verify checkbox beside each project" classname="Pages\MyProfile\Association.spec.ts" time="4.772">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 17: Verify checkbox beside each project" classname="Pages\MyProfile\Association.spec.ts" time="4.031">
 <system-out>
 <![CDATA[✅ Verified all 8 project checkboxes selected after clicking Select All checkbox.
 ]]>
 </system-out>
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 18: Verify multiple checkbox selection" classname="Pages\MyProfile\Association.spec.ts" time="1.911">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 18: Verify multiple checkbox selection" classname="Pages\MyProfile\Association.spec.ts" time="1.859">
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 19: Verify Select All checkbox selection" classname="Pages\MyProfile\Association.spec.ts" time="2.393">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 19: Verify Select All checkbox selection" classname="Pages\MyProfile\Association.spec.ts" time="2.351">
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 20: Verify bulk delete functionality" classname="Pages\MyProfile\Association.spec.ts" time="4.78">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 20: Verify bulk delete functionality" classname="Pages\MyProfile\Association.spec.ts" time="4.374">
 <system-out>
 <![CDATA[🧾 Projects BEFORE delete: [
   [32m'New Staging Project'[39m,
@@ -83,7 +83,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 21: Verify UI update after deletion" classname="Pages\MyProfile\Association.spec.ts" time="3.906">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 21: Verify UI update after deletion" classname="Pages\MyProfile\Association.spec.ts" time="4.075">
 <system-out>
 <![CDATA[🧾 Projects BEFORE action: [ [32m'New Staging Project'[39m, [32m'New Matrix Project'[39m ]
 🧾 Projects AFTER delete: [ [32m'New Matrix Project'[39m ]
@@ -92,11 +92,11 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 22: Verify that deleted projects can be re-added" classname="Pages\MyProfile\Association.spec.ts" time="1.074">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 22: Verify that deleted projects can be re-added" classname="Pages\MyProfile\Association.spec.ts" time="1">
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 23: Verify empty list message" classname="Pages\MyProfile\Association.spec.ts" time="4.061">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 23: Verify empty list message" classname="Pages\MyProfile\Association.spec.ts" time="5.912">
 </testcase>
-<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 24: Try adding project without selecting any" classname="Pages\MyProfile\Association.spec.ts" time="1.57">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 24: Try adding project without selecting any" classname="Pages\MyProfile\Association.spec.ts" time="2.672">
 </testcase>
 </testsuite>
 </testsuites>

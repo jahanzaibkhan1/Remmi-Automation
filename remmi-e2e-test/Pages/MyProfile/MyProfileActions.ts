@@ -3337,8 +3337,11 @@ export class MyProfileActions {
 
   async verifyAddProjectwithoutDropdownOption() {
     await test.step('Try adding project without selecting any', async () => {
+      await this.page.waitForTimeout(2000);
+      await this.navigateToProfilePage();
       await this.AssociationsTab();
       await this.clickAddProjectButton();
+      await this.fillSearchProjectInput('')
       await this.clickAddButton();
     });
   }

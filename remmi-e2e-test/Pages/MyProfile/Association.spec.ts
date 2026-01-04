@@ -162,7 +162,6 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
 
     test('Test 24: Try adding project without selecting any', async ({ sessionPage }) => {
       const profile = new MyProfileActions(sessionPage);
-      await profile.navigateToProfilePage();
       await profile.verifyAddProjectwithoutDropdownOption();
     });
 
