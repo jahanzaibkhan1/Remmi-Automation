@@ -1180,7 +1180,7 @@ export class MyProfileActions {
     } else {
       await this.openUserDropdown();
       await this.searchforUserName(userName);
-      const userOption = this.locators.selectuserFromDropdown(userName);
+      const userOption = this.locators.selectuserFromDropdown(userName).first();
       await expect(userOption).toBeVisible({ timeout: 10000 });
       await userOption.click({ force: true });
       console.log(`🟢 Selected user: ${userName}`);
@@ -1203,8 +1203,10 @@ export class MyProfileActions {
       await searchBox.fill(userName);
       await this.page.waitForTimeout(3000); // wait for dropdown results
       await this.selectUserFromDropdown(userName);
+      await searchBox.clear();
       console.log(`${userName} selected for access.`);
     }
+    
     await this.SaveButton();
     await this.SaveButton();
     await this.calendarUpdateToast();
