@@ -216,7 +216,7 @@ export class MyProfileLocators {
     return this.page.locator('div').filter({ hasText: /^Select$/ }).last()
   }
   SearchUserName(): Locator {
-    return this.page.getByRole('textbox', { name: 'Type to search' })
+    return this.page.getByRole('textbox', { name: 'search' }).last()
   }
   selectuserFromDropdown(userName: string): Locator {
     return this.page.locator(`li:has-text("${userName}") div.checkbox__checkmark`);
