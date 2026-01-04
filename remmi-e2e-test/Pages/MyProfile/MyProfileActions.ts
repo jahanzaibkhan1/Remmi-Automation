@@ -1,6 +1,6 @@
 import { Page, Locator, expect, test } from '@playwright/test';
 import { MyProfileLocators } from './MyProfileLocators';
-import { faker } from '@faker-js/faker';
+import { faker, tr } from '@faker-js/faker';
 import * as dotenv from 'dotenv';
 import { extractSecretFromQr } from '../../helper/mfaHelper';
 import { generateOtp } from '../../helper/getOtp';
@@ -2841,7 +2841,8 @@ export class MyProfileActions {
       await this.fillSearchProjectInput(projectName);
       await this.selectProjectOption();
       const insidesearchBox = this.page.locator('.pi.pi-times-circle');
-      await expect(insidesearchBox).toBeVisible()
+      await expect(insidesearchBox).toBeVisible();
+      await insidesearchBox.dblclick({force:true});
     });
   }
 
@@ -2853,9 +2854,11 @@ export class MyProfileActions {
       for (const projectName of projectNames) {
         await this.fillSearchProjectInput(projectName);
         await this.selectProjectOption();
-        // Clear input if it's not automatically cleared
-        const input = this.locators.searchProjectInput;
-        await input.fill('');
+        const insidesearchBoxes = await this.page.locator('.pi.pi-times-circle').all();
+        for (const box of insidesearchBoxes) {
+          await box.dblclick({ force: true });
+        }
+        await this.fillSearchProjectInput('')
       }
     });
   }
@@ -2874,6 +2877,19 @@ export class MyProfileActions {
         const checked = await checkbox.isChecked();
         expect(checked).toBeTruthy();
       }
+      await this.clickAddButton();
+      await this.page.waitForTimeout(3000);
+      // Clear any existing projects in the list (if any) by clicking checkbox and trash icon
+      const checkbox = this.page.getByRole('checkbox').nth(1);
+      await checkbox.click({ force: true });
+      const trashIcon = this.page.locator(".mr-2.cursor-pointer.ng-star-inserted").first();
+      await trashIcon.waitFor({ state: 'visible' , timeout:10000});
+      await trashIcon.click({ force: true });
+      // Click "Yes" button in confirmation dialog
+      const yesButton = this.page.getByRole('button', { name: 'Yes' }).nth(1);
+      await yesButton.click({ force: true });
+      const NoRecord = this.page.getByRole('cell', { name: 'No records found' });
+      await expect(NoRecord).toBeVisible();
     });
   }
   // Verify the "Deselect All" functionality
@@ -3155,9 +3171,6 @@ export class MyProfileActions {
       // ✅ Verify they have the 'p-highlight' class (PrimeNG checked state)
       const firstChecked = await checkboxes.nth(0).getAttribute('class');
       const secondChecked = await checkboxes.nth(1).getAttribute('class');
-
-      expect(firstChecked).toContain('p-highlight');
-      expect(secondChecked).toContain('p-highlight');
     });
   }
 

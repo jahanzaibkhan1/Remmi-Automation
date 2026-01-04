@@ -390,7 +390,7 @@ export class MyProfileLocators {
     return this.page.getByText('Add project');
   }
   get searchProjectInput() {
-    return this.page.locator("input[placeholder='Type to search']");
+    return this.page.getByRole('tabpanel', { name: 'Associations' }).getByPlaceholder('Search', { exact: true });
   }
   get searchProjectOption() {
     // More general for future-proofing
