@@ -1,53 +1,102 @@
-<testsuites id="" name="" tests="15" failures="0" skipped="0" errors="0" time="84.50360199999996">
-<testsuite name="Pages\MyProfile\MyProfileImagesTest.spec.ts" timestamp="2026-01-03T12:04:47.749Z" hostname="chromium" tests="15" failures="0" skipped="0" time="76.458" errors="0">
-<testcase name="My Profile Tests - Remmi E2E › Test 1: User can upload a profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="21.316">
+<testsuites id="" name="" tests="24" failures="0" skipped="0" errors="0" time="97.48755399999953">
+<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2026-01-04T08:56:23.544Z" hostname="chromium" tests="24" failures="0" skipped="0" time="89.001" errors="0">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 1: Verify that the Association tab opens successfully" classname="Pages\MyProfile\Association.spec.ts" time="21.131">
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 2: User can open the upload multiple images flow" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="1.885">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 2: Verify the search functionality in the Association tab" classname="Pages\MyProfile\Association.spec.ts" time="0.835">
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 3: Verify selected image is set as the profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0.579">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 3: Verify search with no matching project" classname="Pages\MyProfile\Association.spec.ts" time="1.022">
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 4: Verify thumbnails appear after image upload" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="2.35">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 4: Verify that Add Project dropdown opens successfully" classname="Pages\MyProfile\Association.spec.ts" time="0.394">
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 5: Verify thumbnails are removed when clicking cross button" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="4.452">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 5: Verify the search option inside Add Project dropdown" classname="Pages\MyProfile\Association.spec.ts" time="0.774">
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 6: User can edit and delete low resolution and agent face thumbnails" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="3.601">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 6: Verify single project selection from dropdown" classname="Pages\MyProfile\Association.spec.ts" time="0.568">
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 7: Verify system shows a warning when low resolution image is too small" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="1.251">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 7: Verify multiple project selection from dropdown" classname="Pages\MyProfile\Association.spec.ts" time="0.912">
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 8: Verify invalid image formats cannot be uploaded" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="1.172">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 8: Verify the “Select All” functionality" classname="Pages\MyProfile\Association.spec.ts" time="7.92">
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 9: Verify system allows changing profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="2.165">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 9: Verify the “Deselect All” functionality" classname="Pages\MyProfile\Association.spec.ts" time="3.241">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 10: Verify removing a project tag before adding" classname="Pages\MyProfile\Association.spec.ts" time="0.8">
 <system-out>
-<![CDATA[☑️ Last visible checkbox clicked successfully
+<![CDATA[Project "Hina's Project" is NOT visible in the association table.
 ]]>
 </system-out>
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 10: Verified profile image persists after reload" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="17.337">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 11: Verify adding multiple projects at once" classname="Pages\MyProfile\Association.spec.ts" time="1.353">
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 11: Verify the default placeholder is visible when no image is uploaded" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0.551">
-</testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 12: Verify user can remove the selected profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="1.467">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 12: Verify that previously added projects are not duplicated" classname="Pages\MyProfile\Association.spec.ts" time="5.553">
 <system-out>
-<![CDATA[✅ Default profile image deleted successfully.
+<![CDATA[Associated projects before: [ [32m'askari center'[39m, [32m"Hina's Project"[39m ]
 ]]>
 </system-out>
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 13: Verify correct aspect ratio is maintained for uploaded images" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="4.719">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 13: Verify adding when list is initially empty" classname="Pages\MyProfile\Association.spec.ts" time="6.986">
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 14: Verify system does not allow uploading broken/corrupt image files" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="1.2">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 14: Verify the sort functionality" classname="Pages\MyProfile\Association.spec.ts" time="5.027">
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 15: Verify system allows only specific file formats (e.g., JPG, PNG)" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="12.413">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 15: Verify delete icon under Action column" classname="Pages\MyProfile\Association.spec.ts" time="4.787">
 <system-out>
-<![CDATA[🟢 Uploading valid image: E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Images\Profile.jpg
-✅ Toast appeared with message:  images updated successfully 
-🟢 Uploading valid image: E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Images\premium.png
-✅ Toast appeared with message:  images updated successfully 
-🔴 Uploading invalid or corrupted image: E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Images\invalidImage.webp
-✅ Invalid/Corrupted image correctly rejected with message: "Unsupported file format! Please upload a valid image"
-🔴 Uploading invalid or corrupted image: E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Images\broken_image.jpg
-✅ Invalid/Corrupted image correctly rejected with message: "Corrupted image file! Please upload a valid image"
+<![CDATA[✅ Verified project "RA Test" not present after deletion.
 ]]>
 </system-out>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 16: Verify project delete funcationality" classname="Pages\MyProfile\Association.spec.ts" time="3.231">
+<system-out>
+<![CDATA[✅ Verified project "new tester projecter" not present after deletion.
+]]>
+</system-out>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 17: Verify checkbox beside each project" classname="Pages\MyProfile\Association.spec.ts" time="4.772">
+<system-out>
+<![CDATA[✅ Verified all 8 project checkboxes selected after clicking Select All checkbox.
+]]>
+</system-out>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 18: Verify multiple checkbox selection" classname="Pages\MyProfile\Association.spec.ts" time="1.911">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 19: Verify Select All checkbox selection" classname="Pages\MyProfile\Association.spec.ts" time="2.393">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 20: Verify bulk delete functionality" classname="Pages\MyProfile\Association.spec.ts" time="4.78">
+<system-out>
+<![CDATA[🧾 Projects BEFORE delete: [
+  [32m'New Staging Project'[39m,
+  [32m'New Matrix Project'[39m,
+  [32m'New'[39m,
+  [32m'lahore centre'[39m,
+  [32m"Hina's Project"[39m,
+  [32m'askari center'[39m,
+  [32m'Al kabir heights'[39m,
+  [32m'Al kabir heights'[39m
+]
+🧾 Projects AFTER delete: [ [32m'New Staging Project'[39m, [32m'New Matrix Project'[39m ]
+🗑️ Deleted Projects: [
+  [32m'New'[39m,
+  [32m'lahore centre'[39m,
+  [32m"Hina's Project"[39m,
+  [32m'askari center'[39m,
+  [32m'Al kabir heights'[39m,
+  [32m'Al kabir heights'[39m
+]
+✅ Successfully verified bulk delete of 6 project(s).
+]]>
+</system-out>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 21: Verify UI update after deletion" classname="Pages\MyProfile\Association.spec.ts" time="3.906">
+<system-out>
+<![CDATA[🧾 Projects BEFORE action: [ [32m'New Staging Project'[39m, [32m'New Matrix Project'[39m ]
+🧾 Projects AFTER delete: [ [32m'New Matrix Project'[39m ]
+🗑️ Deleted Project(s): [ [32m'New Staging Project'[39m ]
+✅ Successfully deleted 1 project(s).
+]]>
+</system-out>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 22: Verify that deleted projects can be re-added" classname="Pages\MyProfile\Association.spec.ts" time="1.074">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 23: Verify empty list message" classname="Pages\MyProfile\Association.spec.ts" time="4.061">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 24: Try adding project without selecting any" classname="Pages\MyProfile\Association.spec.ts" time="1.57">
 </testcase>
 </testsuite>
 </testsuites>
