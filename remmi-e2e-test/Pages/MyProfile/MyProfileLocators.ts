@@ -316,7 +316,7 @@ export class MyProfileLocators {
   }
   
   SelectTeamMemberSearchInput(): Locator {
-    return this.page.locator("input[placeholder='Type to search']");
+    return this.page.locator('input[placeholder="Search"]').last();
   }
   
   SelectTeamMemberOption(): Locator {
