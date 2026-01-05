@@ -1,51 +1,42 @@
-<testsuites id="" name="" tests="15" failures="0" skipped="0" errors="0" time="84.50360199999996">
-<testsuite name="Pages\MyProfile\MyProfileImagesTest.spec.ts" timestamp="2026-01-03T12:04:47.749Z" hostname="chromium" tests="15" failures="0" skipped="0" time="76.458" errors="0">
-<testcase name="My Profile Tests - Remmi E2E › Test 1: User can upload a profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="21.316">
-</testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 2: User can open the upload multiple images flow" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="1.885">
-</testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 3: Verify selected image is set as the profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0.579">
-</testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 4: Verify thumbnails appear after image upload" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="2.35">
-</testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 5: Verify thumbnails are removed when clicking cross button" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="4.452">
-</testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 6: User can edit and delete low resolution and agent face thumbnails" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="3.601">
-</testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 7: Verify system shows a warning when low resolution image is too small" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="1.251">
-</testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 8: Verify invalid image formats cannot be uploaded" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="1.172">
-</testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 9: Verify system allows changing profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="2.165">
+<testsuites id="" name="" tests="5" failures="0" skipped="0" errors="0" time="95.09875899999962">
+<testsuite name="Pages\MyProfile\profileAccess.spec.ts" timestamp="2026-01-04T11:03:29.238Z" hostname="chromium" tests="5" failures="0" skipped="0" time="85.696" errors="0">
+<testcase name="Access Tab Tests - Remmi E2E › Test case 2: The user can successfully select a user from Access tab" classname="Pages\MyProfile\profileAccess.spec.ts" time="59.557">
 <system-out>
-<![CDATA[☑️ Last visible checkbox clicked successfully
+<![CDATA[ℹ️ User "Dawood Ahmad" is already selected — clicking Save only.
+]]>
+</system-out>
+<system-err>
+<![CDATA[Calendar update toast message did not appear within timeout period
+]]>
+</system-err>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 4: Verify multiple users can be granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="11.11">
+<system-out>
+<![CDATA[Hina Agent selected for access.
+Hina Tahir selected for access.
+Calendar access updated toast message appeared
+Hina Agent verified in granted access list.
+Hina Tahir verified in granted access list.
 ]]>
 </system-out>
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 10: Verified profile image persists after reload" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="17.337">
-</testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 11: Verify the default placeholder is visible when no image is uploaded" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0.551">
-</testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 12: Verify user can remove the selected profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="1.467">
+<testcase name="Access Tab Tests - Remmi E2E › Test 6: Verify user can remove granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="3.109">
 <system-out>
-<![CDATA[✅ Default profile image deleted successfully.
+<![CDATA[Calendar access updated toast message appeared
 ]]>
 </system-out>
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 13: Verify correct aspect ratio is maintained for uploaded images" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="4.719">
-</testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 14: Verify system does not allow uploading broken/corrupt image files" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="1.2">
-</testcase>
-<testcase name="My Profile Tests - Remmi E2E › Test 15: Verify system allows only specific file formats (e.g., JPG, PNG)" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="12.413">
+<testcase name="Access Tab Tests - Remmi E2E › Test 7: Verify that selecting Select All grants access to all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="5.601">
 <system-out>
-<![CDATA[🟢 Uploading valid image: E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Images\Profile.jpg
-✅ Toast appeared with message:  images updated successfully 
-🟢 Uploading valid image: E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Images\premium.png
-✅ Toast appeared with message:  images updated successfully 
-🔴 Uploading invalid or corrupted image: E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Images\invalidImage.webp
-✅ Invalid/Corrupted image correctly rejected with message: "Unsupported file format! Please upload a valid image"
-🔴 Uploading invalid or corrupted image: E:\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Images\broken_image.jpg
-✅ Invalid/Corrupted image correctly rejected with message: "Corrupted image file! Please upload a valid image"
+<![CDATA[Calendar access updated toast message appeared
+All users selected and saved.
+]]>
+</system-out>
+</testcase>
+<testcase name="Access Tab Tests - Remmi E2E › Test 8: Verify that selecting Deselect All removes access from all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="6.319">
+<system-out>
+<![CDATA[Calendar access updated toast message appeared
+All users deselected and saved.
 ]]>
 </system-out>
 </testcase>

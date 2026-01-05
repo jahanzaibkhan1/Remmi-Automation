@@ -1,346 +1,168 @@
-import { test } from '@playwright/test';
+import { test as base } from '@playwright/test';
 import { MyProfileActions } from './MyProfileActions';
-import { LoginActions } from '../Login/LoginAction';
-import { LoginUsers } from '../../fixture/test-data';
+import * as path from 'path';
 
-const OprationManager = LoginUsers.manager;
-const salesAgent = LoginUsers.sales;
-const admin = LoginUsers.admin;
+const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
+const DASHBOARD_URL = process.env.DASHBOARD_URL || 'https://remmi-app-stage-ui.azurewebsites.net/dashboard';
+
+const test = base.extend<{ sessionPage: any }>({
+  sessionPage: [async ({ browser }, use) => {
+    const context = await browser.newContext({ storageState: managerSessionPath });
+    try {
+      const page = await context.newPage();
+      await page.goto(DASHBOARD_URL);
+      await use(page);
+    } finally {
+      // Optionally close context if desired in cleanup
+    }
+  }, { scope: 'worker' }]
+});
+
 
 
 test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
 
-    test('Test 1: Verify that the Association tab opens successfully', async ({ page }) => {
-      const login = new LoginActions(page);
-      const profile = new MyProfileActions(page);
-  
-      await login.login(
-        OprationManager.email!,
-        OprationManager.password!,
-        process.env.E2E_MANAGER_OTP_SECRET!
-      );
-  
+    test('Test 1: Verify that the Association tab opens successfully', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
       await profile.navigateToProfilePage();
-      await profile.verifyAssociationTabOpensSuccessfully()
+      await profile.verifyAssociationTabOpensSuccessfully();
     });
 
-    test('Test 2: Verify the search functionality in the Association tab', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
-    
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
-    
-        await profile.navigateToProfilePage();
-        await profile.verifyAssociationTabSearchFunctionality("Hina's Project")
-      });
+    test('Test 2: Verify the search functionality in the Association tab', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifyAssociationTabSearchFunctionality("Hina's Project");
+    });
 
-      test('Test 3: Verify search with no matching project', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
-    
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
-    
-        await profile.navigateToProfilePage();
-        await profile.verifyAssociationTabSearchNoResults("asdfg")
-      });
+    test('Test 3: Verify search with no matching project', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifyAssociationTabSearchNoResults("asdfg");
+    });
 
-      test('Test 4: Verify that Add Project dropdown opens successfully', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
-    
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
-    
-        await profile.navigateToProfilePage();
-        await profile.verifyAddProjectDropdownOpensSuccessfully()
-      });
+    test('Test 4: Verify that Add Project dropdown opens successfully', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifyAddProjectDropdownOpensSuccessfully();
+    });
 
-      test('Test 5: Verify the search option inside Add Project dropdown', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
-    
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
-    
-        await profile.navigateToProfilePage();
-        await profile.verifySearchOptionInAddProjectDropdown("Hina's Project")
-      });
-      
-      test('Test 6: Verify single project selection from dropdown', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
-    
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
-    
-        await profile.navigateToProfilePage();
-        await profile.verifySingleProjectSelectionFromDropdown("Hina's Project")
-      });
+    test('Test 5: Verify the search option inside Add Project dropdown', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifySearchOptionInAddProjectDropdown("Hina's Project");
+    });
 
-      test('Test 7: Verify multiple project selection from dropdown', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
+    test('Test 6: Verify single project selection from dropdown', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifySingleProjectSelectionFromDropdown("Hina's Project");
+    });
 
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
+    test('Test 7: Verify multiple project selection from dropdown', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifyMultipleProjectSelectionFromDropdown(["Hina's Project", "askari center"]);
+    });
 
-        await profile.navigateToProfilePage();
-        await profile.verifyMultipleProjectSelectionFromDropdown(["Hina's Project", "askari center"]);
-      });
+    test('Test 8: Verify the “Select All” functionality', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifySelectAllFunctionality();
+    });
 
-      test('Test 8: Verify the “Select All” functionality', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
+    test('Test 9: Verify the “Deselect All” functionality', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifyDeselectAllFunctionality();
+    });
 
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
+    test('Test 10: Verify removing a project tag before adding', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifyRemoveProjectTagBeforeAdding("Hina's Project");
+    });
 
-        await profile.navigateToProfilePage();
-        await profile.verifySelectAllFunctionality();
-      });
+    test('Test 11: Verify adding multiple projects at once', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifyMultipleProjectSelection(["Hina's Project", "askari center"]);
+    });
 
-      test('Test 9: Verify the “Deselect All” functionality', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
+    test('Test 12: Verify that previously added projects are not duplicated', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifyPreviouslyAddedProjectsAreNotDuplicated();
+    });
 
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
+    test('Test 13: Verify adding when list is initially empty', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifyInitialProjectSelection();
+    });
 
-        await profile.navigateToProfilePage();
-        await profile.verifyDeselectAllFunctionality();
-      });
+    test('Test 14: Verify the sort functionality', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifyAssocitionSortingList();
+    });
 
-      test('Test 10: Verify removing a project tag before adding', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
+    test('Test 15: Verify delete icon under Action column', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifyDeleteIconInActionColumn();
+    });
 
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
+    test('Test 16: Verify project delete funcationality', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifyProjectDeleteFunctionality();
+    });
 
-        await profile.navigateToProfilePage();
-        await profile.verifyRemoveProjectTagBeforeAdding("Hina's Project");
-      });
+    test('Test 17: Verify checkbox beside each project', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifyCheckboxBesideEachProject();
+    });
 
-      test('Test 11: Verify adding multiple projects at once', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
+    test('Test 18: Verify multiple checkbox selection', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifyMultipleCheckboxSelection();
+    });
 
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
+    test('Test 19: Verify Select All checkbox selection', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifySelectAllCheckbox();
+    });
 
-        await profile.navigateToProfilePage();
-        await profile.verifyMultipleProjectSelection(["Hina's Project", "askari center"]);
-      });
+    test('Test 20: Verify bulk delete functionality', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifyBulkDeleteFunctionality();
+    });
 
-      test('Test 12: Verify that previously added projects are not duplicated', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
+    test('Test 21: Verify UI update after deletion', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifyUIUpdateAfterDeletion();
+    });
 
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
+    test('Test 22: Verify that deleted projects can be re-added', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifyDeletedProjectsCanBeReadded("New Staging Project");
+    });
 
-        await profile.navigateToProfilePage();
-        await profile.verifyPreviouslyAddedProjectsAreNotDuplicated();
-      });
+    test('Test 23: Verify empty list message', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.navigateToProfilePage();
+      await profile.verifyEmptyListMessage("New Staging Project");
+    });
 
-      test('Test 13: Verify adding when list is initially empty', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
+    test('Test 24: Try adding project without selecting any', async ({ sessionPage }) => {
+      const profile = new MyProfileActions(sessionPage);
+      await profile.verifyAddProjectwithoutDropdownOption();
+    });
 
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
-
-        await profile.navigateToProfilePage();
-        await profile.verifyInitialProjectSelection();
-      });
-
-      test('Test 14: Verify the sort functionality', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
-
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
-
-        await profile.navigateToProfilePage();
-        await profile.verifyAssocitionSortingList();
-      });
-
-      test('Test 15: Verify delete icon under Action column', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
-
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
-
-        await profile.navigateToProfilePage();
-        await profile.verifyDeleteIconInActionColumn();
-      });
-
-      test('Test 16: Verify project delete funcationality', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
-
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
-
-        await profile.navigateToProfilePage();
-        await profile.verifyProjectDeleteFunctionality();
-      });
-
-      test('Test 17: Verify checkbox beside each project', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
-
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
-
-        await profile.navigateToProfilePage();
-        await profile.verifyCheckboxBesideEachProject();
-      });
-
-      test('Test 18: Verify multiple checkbox selection', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
-
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
-
-        await profile.navigateToProfilePage();
-        await profile.verifyMultipleCheckboxSelection();
-      });
-
-      test('Test 19: Verify Select All checkbox selection', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
-
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
-
-        await profile.navigateToProfilePage();
-        await profile.verifySelectAllCheckbox();
-      });
-
-      
-      test('Test 20: Verify bulk delete functionality', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
-
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
-
-        await profile.navigateToProfilePage();
-        await profile.verifyBulkDeleteFunctionality();
-      });
-
-      test('Test 21: Verify UI update after deletion', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
-
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
-
-        await profile.navigateToProfilePage();
-        await profile.verifyUIUpdateAfterDeletion();
-      });
-
-      test('Test 22: Verify that deleted projects can be re-added', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
-    
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
-    
-        await profile.navigateToProfilePage();
-        await profile.verifyDeletedProjectsCanBeReadded("New Staging Project")
-      });
-
-      test('Test 23: Verify empty list message', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
-        await login.login(
-            OprationManager.email!,
-            OprationManager.password!,
-            process.env.E2E_MANAGER_OTP_SECRET!
-          );
-        await profile.navigateToProfilePage();
-        await profile.verifyEmptyListMessage("New Staging Project")
-      });
-
-      test('Test 24: Try adding project without selecting any', async ({ page }) => {
-        const login = new LoginActions(page);
-        const profile = new MyProfileActions(page);
-        await login.login(
-          OprationManager.email!,
-          OprationManager.password!,
-          process.env.E2E_MANAGER_OTP_SECRET!
-        );
-      
-        await profile.navigateToProfilePage();
-        await profile.verifyAddProjectwithoutDropdownOption()
-      });
-})
+});
