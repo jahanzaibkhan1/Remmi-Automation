@@ -425,6 +425,12 @@ test('Test 68: Verify correct error message for missing listing type', async ({ 
   await listingActions.resetFilters();
 });
 
+test("Test 69: Verify 'Sold' status popup appears when selecting 'Sold' in listing status dropdown", async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.verifySoldStatusPopupAppears();
+  await listingActions.resetFilters();
+});
+
 });
 
 
