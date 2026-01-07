@@ -442,6 +442,12 @@ test("Test 71: Verify 'Sold' status popup contains correct fields", async ({ ses
   await listingActions.resetFilters();
 });
 
+test("Test 72: Verify 'Sold' status popup can be closed without saving changes", async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.verifySoldStatusPopupCanBeClosedWithoutSaving();
+  await listingActions.resetFilters();
+});
+
 });
 
 
