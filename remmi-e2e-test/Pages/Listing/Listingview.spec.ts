@@ -407,6 +407,12 @@ test('Test 65: Check for duplicate Property Address values in the table', async 
   await listingActions.resetFilters();
 });
 
+test('Test 66: Verify Save & Close button functionality on listing form', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.verifySaveAndCloseButtonFunctionality();
+  await listingActions.resetFilters();
+});
+
 });
 
 
