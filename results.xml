@@ -1,44 +1,6 @@
-<testsuites id="" name="" tests="5" failures="0" skipped="0" errors="0" time="95.09875899999962">
-<testsuite name="Pages\MyProfile\profileAccess.spec.ts" timestamp="2026-01-04T11:03:29.238Z" hostname="chromium" tests="5" failures="0" skipped="0" time="85.696" errors="0">
-<testcase name="Access Tab Tests - Remmi E2E › Test case 2: The user can successfully select a user from Access tab" classname="Pages\MyProfile\profileAccess.spec.ts" time="59.557">
-<system-out>
-<![CDATA[ℹ️ User "Dawood Ahmad" is already selected — clicking Save only.
-]]>
-</system-out>
-<system-err>
-<![CDATA[Calendar update toast message did not appear within timeout period
-]]>
-</system-err>
-</testcase>
-<testcase name="Access Tab Tests - Remmi E2E › Test 4: Verify multiple users can be granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="11.11">
-<system-out>
-<![CDATA[Hina Agent selected for access.
-Hina Tahir selected for access.
-Calendar access updated toast message appeared
-Hina Agent verified in granted access list.
-Hina Tahir verified in granted access list.
-]]>
-</system-out>
-</testcase>
-<testcase name="Access Tab Tests - Remmi E2E › Test 6: Verify user can remove granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="3.109">
-<system-out>
-<![CDATA[Calendar access updated toast message appeared
-]]>
-</system-out>
-</testcase>
-<testcase name="Access Tab Tests - Remmi E2E › Test 7: Verify that selecting Select All grants access to all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="5.601">
-<system-out>
-<![CDATA[Calendar access updated toast message appeared
-All users selected and saved.
-]]>
-</system-out>
-</testcase>
-<testcase name="Access Tab Tests - Remmi E2E › Test 8: Verify that selecting Deselect All removes access from all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="6.319">
-<system-out>
-<![CDATA[Calendar access updated toast message appeared
-All users deselected and saved.
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.18676300000027">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2026-01-07T11:21:34.592Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.202" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 72: Verify &apos;Sold&apos; status popup can be closed without saving changes" classname="Pages\Listing\Listingview.spec.ts" time="30.202">
 </testcase>
 </testsuite>
 </testsuites>

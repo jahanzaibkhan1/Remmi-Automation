@@ -6761,4 +6761,204 @@ export class ListingActions {
         await saveAndCloseButton.click();
         await this.page.waitForTimeout(2000);
     }
+
+    async verifySaveAndCloseButtonFunctionality() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 30000 });
+        await firstListing.click();
+
+        // Click the "Save & Close" button
+        const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+
+        // Optionally, add a wait or verification after closing
+        await this.page.waitForTimeout(1200);
+    }
+
+    // Verify correct error message for missing property type
+    async verifyMissingPropertyTypeError() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click "Add New Listing" button (adjust selector as needed), and wait for form
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]");
+        await expect(contactFormBtn).toBeVisible({ timeout: 10000 });
+        await contactFormBtn.dblclick({ force: true });
+        await expect(this.page.locator('#rightbarwithscroll')).toBeVisible({ timeout: 10000 });
+
+        // Try to save without selecting property type
+        const saveButton = this.page.getByRole('button', { name: /^Save$/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+        await saveButton.click();
+
+        // Expect correct error message for missing property type (adjust selector/message as needed)
+        const errorMessage = this.page.getByText(/Required fields must be filled in/i);
+        await expect(errorMessage).toBeVisible({ timeout: 5000 });
+
+        // Press Escape to close the error dialog or form
+        await this.page.keyboard.press('Escape');
+        
+    }
+
+    // Verify correct error message for missing listing type
+    async verifyMissingListingTypeError() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click "Add New Listing" button and wait for the form to open
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]");
+        await expect(contactFormBtn).toBeVisible({ timeout: 10000 });
+        await contactFormBtn.dblclick({ force: true });
+        await expect(this.page.locator('#rightbarwithscroll')).toBeVisible({ timeout: 10000 });
+
+        // Attempt to save without selecting listing type
+        const saveButton = this.page.getByRole('button', { name: /^Save$/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+        await saveButton.click();
+
+        // Assert the correct error message for missing listing type
+        const errorMessage = this.page.getByText(/Required fields must be filled in/i);
+        await expect(errorMessage).toBeVisible({ timeout: 5000 });
+
+        // Close the error dialog or form
+        await this.page.keyboard.press('Escape');
+    }
+
+    // Verify if the 'Sold' status popup appears when selecting 'Sold' in the listing status dropdown.
+    async verifySoldStatusPopupAppears() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 30000 });
+        // Open add new listing form
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]").first();
+        await expect(contactFormBtn).toBeVisible({ timeout: 10000 });
+        await contactFormBtn.dblclick({ force: true });
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Open the status dropdown (identify dropdown for 'Listing Status')
+        const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input')
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 })
+        await listingStatusDropdown.click();
+        // Correct way to access the search input for a native ng-select dropdown:
+        const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
+        await listingStatusSearchInput.fill('Sold');
+        await this.page.waitForTimeout(500);
+        const soldOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Sold' }).first();
+        await expect(soldOption).toBeVisible({ timeout: 5000 });
+        await soldOption.click();
+
+        const soldPopup = this.page.getByText('Listing Sold × Date SoldSold');
+        await expect(soldPopup).toBeVisible({ timeout: 5000 });
+
+        const closeBtn = this.page.getByRole('button', { name: 'Close', exact: true });
+        await expect(closeBtn).toBeVisible({ timeout: 10000 });
+        await closeBtn.click({ force: true });
+        await this.page.waitForTimeout(1000);
+        // Press Escape to close the dialog or any remaining overlays
+        await this.page.keyboard.press('Escape');
+    }
+
+    // Verify that a newly created listing appears at the top of the grid view after creation
+    async verifyListingAppearsAtTopAfterCreation() {
+        await this.verifyListingAppearsInGrid();
+    }
+
+    // Verify if the 'Sold' status popup contains the correct fields.
+    async verifySoldStatusPopupFields() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 20000 });
+
+        // Open add new listing form
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]").first();
+        await expect(contactFormBtn).toBeVisible({ timeout: 10000 });
+        await contactFormBtn.dblclick({ force: true });
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Open the status dropdown (Listing Status)
+        const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input');
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
+        await listingStatusDropdown.click();
+
+        // Type "Sold" and select from dropdown
+        const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
+        await listingStatusSearchInput.fill('Sold');
+        await this.page.waitForTimeout(500);
+        const soldOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Sold' }).first();
+        await expect(soldOption).toBeVisible({ timeout: 5000 });
+        await soldOption.click();
+
+        // Assert popup appears
+        const soldPopup = this.page.getByText('Listing Sold × Date SoldSold');
+        await expect(soldPopup).toBeVisible({ timeout: 5000 });
+
+        // "Date Sold" input field (can be role-based or using improved selector)
+        const dateSoldInput = this.page.getByText('Date Sold').first();
+        await expect(dateSoldInput).toBeVisible({ timeout: 3000 });
+
+        // "Sold Price" field using a stable text or label query
+        const soldPriceInput = this.page.getByText(/Sold Price/i).first();
+        await expect(soldPriceInput).toBeVisible({ timeout: 3000 });
+
+        // disclose price
+        const disclosePriceCheckbox = this.page.getByText('Disclose Price');
+        await expect(disclosePriceCheckbox).toBeVisible({ timeout: 3000 });
+        // Close the popup
+        const closeBtn = this.page.getByRole('button', { name: 'Close', exact: true });
+        await expect(closeBtn).toBeVisible({ timeout: 10000 });
+        await closeBtn.click({ force: true });
+        await this.page.waitForTimeout(1000);
+        await this.page.keyboard.press('Escape');
+    }
+    /**
+     * Verify that the 'Sold' status popup can be closed without saving changes.
+     */
+    async verifySoldStatusPopupCanBeClosedWithoutSaving() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing's add form
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]").first();
+        await expect(contactFormBtn).toBeVisible({ timeout: 10000 });
+        await contactFormBtn.dblclick({ force: true });
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Open the status dropdown (Listing Status)
+        const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input');
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
+        await listingStatusDropdown.click();
+
+        // Type "Sold" and select from dropdown
+        const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
+        await listingStatusSearchInput.fill('Sold');
+        await this.page.waitForTimeout(500);
+        const soldOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Sold' }).first();
+        await expect(soldOption).toBeVisible({ timeout: 5000 });
+        await soldOption.click();
+
+        // Wait for popup
+        const soldPopup = this.page.getByText('Listing Sold × Date SoldSold');
+        await expect(soldPopup).toBeVisible({ timeout: 5000 });
+
+        // Attempt to close: click "Close" button
+        const closeBtn = this.page.getByRole('button', { name: 'Close', exact: true });
+        await expect(closeBtn).toBeVisible({ timeout: 10000 });
+        await closeBtn.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        // Verify the popup is closed (should not be visible)
+        await expect(soldPopup).not.toBeVisible({ timeout: 3000 });
+
+        await this.page.keyboard.press('Escape');
+    }
 }
