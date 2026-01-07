@@ -419,6 +419,12 @@ test('Test 67: Verify correct error message for missing property type', async ({
   await listingActions.resetFilters();
 });
 
+test('Test 68: Verify correct error message for missing listing type', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.verifyMissingListingTypeError();
+  await listingActions.resetFilters();
+});
+
 });
 
 
