@@ -6864,4 +6864,9 @@ export class ListingActions {
         // Press Escape to close the dialog or any remaining overlays
         await this.page.keyboard.press('Escape');
     }
+
+    // Verify that a newly created listing appears at the top of the grid view after creation
+    async verifyListingAppearsAtTopAfterCreation() {
+        await this.verifyListingAppearsInGrid();
+    }
 }

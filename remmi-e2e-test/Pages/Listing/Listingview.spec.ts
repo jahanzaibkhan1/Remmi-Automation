@@ -431,6 +431,11 @@ test("Test 69: Verify 'Sold' status popup appears when selecting 'Sold' in listi
   await listingActions.resetFilters();
 });
 
+test("Test 70: Verify listing appears at the top of the grid after creation", async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.verifyListingAppearsAtTopAfterCreation();
+});
+
 });
 
 
