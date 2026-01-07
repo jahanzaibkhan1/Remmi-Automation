@@ -6779,4 +6779,29 @@ export class ListingActions {
         // Optionally, add a wait or verification after closing
         await this.page.waitForTimeout(1200);
     }
+
+    // Verify correct error message for missing property type
+    async verifyMissingPropertyTypeError() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click "Add New Listing" button (adjust selector as needed), and wait for form
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]");
+        await expect(contactFormBtn).toBeVisible({ timeout: 10000 });
+        await contactFormBtn.dblclick({ force: true });
+        await expect(this.page.locator('#rightbarwithscroll')).toBeVisible({ timeout: 10000 });
+
+        // Try to save without selecting property type
+        const saveButton = this.page.getByRole('button', { name: /^Save$/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+        await saveButton.click();
+
+        // Expect correct error message for missing property type (adjust selector/message as needed)
+        const errorMessage = this.page.getByText(/Required fields must be filled in/i);
+        await expect(errorMessage).toBeVisible({ timeout: 5000 });
+
+        // Press Escape to close the error dialog or form
+        await this.page.keyboard.press('Escape');
+        
+    }
 }
