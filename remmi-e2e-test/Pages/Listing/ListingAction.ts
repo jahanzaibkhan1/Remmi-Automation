@@ -6761,4 +6761,22 @@ export class ListingActions {
         await saveAndCloseButton.click();
         await this.page.waitForTimeout(2000);
     }
+
+    async verifySaveAndCloseButtonFunctionality() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 30000 });
+        await firstListing.click();
+
+        // Click the "Save & Close" button
+        const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+
+        // Optionally, add a wait or verification after closing
+        await this.page.waitForTimeout(1200);
+    }
 }
