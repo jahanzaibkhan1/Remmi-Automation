@@ -13,22 +13,22 @@ export class ContactLocators {
     return this.page.locator("//re-multiselect[@placeholder='Contact Type']//div[@class='tags']");
   }
   SearchContactType(): Locator{
-    return this.page.getByRole('textbox', { name: 'Type to search' })
+    return this.page.locator('re-multiselect[placeholder="Contact Type"] input[placeholder="Search"]');
   }
   SelectOption(): Locator{
     return this.page.locator("//li[@class='p-element ng-star-inserted']").first();
   }
   SelectAllTypes(): Locator{
-    return this.page.locator("//label[@class='checkbox select_all style-d']")
+    return this.page.locator('.checkbox__checkmark').first();
   }
   DeSelectAllTypes(): Locator {
-    return this.page.locator("//label[@class='checkbox select_all style-d']")
+    return this.page.locator('.checkbox__checkmark').first()
   }
   CompanyType():Locator{
     return this.page.locator("//span[normalize-space()='Company Type']")
   }
   SearchCompanyType(): Locator{
-    return this.page.getByRole('textbox', { name: 'Type to search' })
+    return this.page.locator('input[placeholder="Search"]').last();
   }
   SelectCompanyOption(): Locator{
     return this.page.locator("//li[@class='p-element ng-star-inserted']").first();
@@ -52,7 +52,7 @@ export class ContactLocators {
     return this.page.locator('#keywordInput');
   }
   restoreContactIcon():Locator{
-    return this.page.locator('img[ptooltip="Restore Contact"][src*="undo_solid.svg"]')
+    return this.page.locator('.d-flex.align-items-center.gap-3 > img').first();
   }
   PlusButton():Locator{
     return this.page.locator('i.pi.pi-plus');
