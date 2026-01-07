@@ -6804,4 +6804,28 @@ export class ListingActions {
         await this.page.keyboard.press('Escape');
         
     }
+
+    // Verify correct error message for missing listing type
+    async verifyMissingListingTypeError() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click "Add New Listing" button and wait for the form to open
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]");
+        await expect(contactFormBtn).toBeVisible({ timeout: 10000 });
+        await contactFormBtn.dblclick({ force: true });
+        await expect(this.page.locator('#rightbarwithscroll')).toBeVisible({ timeout: 10000 });
+
+        // Attempt to save without selecting listing type
+        const saveButton = this.page.getByRole('button', { name: /^Save$/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+        await saveButton.click();
+
+        // Assert the correct error message for missing listing type
+        const errorMessage = this.page.getByText(/Required fields must be filled in/i);
+        await expect(errorMessage).toBeVisible({ timeout: 5000 });
+
+        // Close the error dialog or form
+        await this.page.keyboard.press('Escape');
+    }
 }
