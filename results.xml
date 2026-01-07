@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="57.005683999996634">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2026-01-07T09:06:16.984Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.499" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 66: Verify Save &amp; Close button functionality on listing form" classname="Pages\Listing\Listingview.spec.ts" time="48.499">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.843188000001014">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2026-01-07T09:49:06.240Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.978" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 67: Verify correct error message for missing property type" classname="Pages\Listing\Listingview.spec.ts" time="29.978">
 </testcase>
 </testsuite>
 </testsuites>

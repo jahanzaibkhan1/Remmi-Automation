@@ -413,6 +413,12 @@ test('Test 66: Verify Save & Close button functionality on listing form', async 
   await listingActions.resetFilters();
 });
 
+test('Test 67: Verify correct error message for missing property type', async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.verifyMissingPropertyTypeError();
+  await listingActions.resetFilters();
+});
+
 });
 
 
