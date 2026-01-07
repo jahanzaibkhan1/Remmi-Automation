@@ -6869,4 +6869,54 @@ export class ListingActions {
     async verifyListingAppearsAtTopAfterCreation() {
         await this.verifyListingAppearsInGrid();
     }
+
+    // Verify if the 'Sold' status popup contains the correct fields.
+    async verifySoldStatusPopupFields() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 20000 });
+
+        // Open add new listing form
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]").first();
+        await expect(contactFormBtn).toBeVisible({ timeout: 10000 });
+        await contactFormBtn.dblclick({ force: true });
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Open the status dropdown (Listing Status)
+        const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input');
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
+        await listingStatusDropdown.click();
+
+        // Type "Sold" and select from dropdown
+        const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
+        await listingStatusSearchInput.fill('Sold');
+        await this.page.waitForTimeout(500);
+        const soldOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Sold' }).first();
+        await expect(soldOption).toBeVisible({ timeout: 5000 });
+        await soldOption.click();
+
+        // Assert popup appears
+        const soldPopup = this.page.getByText('Listing Sold × Date SoldSold');
+        await expect(soldPopup).toBeVisible({ timeout: 5000 });
+
+        // "Date Sold" input field (can be role-based or using improved selector)
+        const dateSoldInput = this.page.getByText('Date Sold').first();
+        await expect(dateSoldInput).toBeVisible({ timeout: 3000 });
+
+        // "Sold Price" field using a stable text or label query
+        const soldPriceInput = this.page.getByText(/Sold Price/i).first();
+        await expect(soldPriceInput).toBeVisible({ timeout: 3000 });
+
+        // disclose price
+        const disclosePriceCheckbox = this.page.getByText('Disclose Price');
+        await expect(disclosePriceCheckbox).toBeVisible({ timeout: 3000 });
+        // Close the popup
+        const closeBtn = this.page.getByRole('button', { name: 'Close', exact: true });
+        await expect(closeBtn).toBeVisible({ timeout: 10000 });
+        await closeBtn.click({ force: true });
+        await this.page.waitForTimeout(1000);
+        await this.page.keyboard.press('Escape');
+    }
 }

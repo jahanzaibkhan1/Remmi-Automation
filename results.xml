@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="65.63745699999853">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2026-01-07T11:03:27.071Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.924" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 70: Verify listing appears at the top of the grid after creation" classname="Pages\Listing\Listingview.spec.ts" time="58.924">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.0736950000003">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2026-01-07T11:18:41.869Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.104" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 71: Verify &apos;Sold&apos; status popup contains correct fields" classname="Pages\Listing\Listingview.spec.ts" time="34.104">
 </testcase>
 </testsuite>
 </testsuites>
