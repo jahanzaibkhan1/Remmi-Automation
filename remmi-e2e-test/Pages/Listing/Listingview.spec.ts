@@ -436,6 +436,12 @@ test("Test 70: Verify listing appears at the top of the grid after creation", as
   await listingActions.verifyListingAppearsAtTopAfterCreation();
 });
 
+test("Test 71: Verify 'Sold' status popup contains correct fields", async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.verifySoldStatusPopupFields();
+  await listingActions.resetFilters();
+});
+
 });
 
 
