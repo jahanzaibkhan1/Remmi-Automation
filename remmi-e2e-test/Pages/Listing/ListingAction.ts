@@ -6828,4 +6828,40 @@ export class ListingActions {
         // Close the error dialog or form
         await this.page.keyboard.press('Escape');
     }
+
+    // Verify if the 'Sold' status popup appears when selecting 'Sold' in the listing status dropdown.
+    async verifySoldStatusPopupAppears() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const firstListing = this.page.locator('.s-property').first();
+        await expect(firstListing).toBeVisible({ timeout: 30000 });
+        // Open add new listing form
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]").first();
+        await expect(contactFormBtn).toBeVisible({ timeout: 10000 });
+        await contactFormBtn.dblclick({ force: true });
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Open the status dropdown (identify dropdown for 'Listing Status')
+        const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input')
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 })
+        await listingStatusDropdown.click();
+        // Correct way to access the search input for a native ng-select dropdown:
+        const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
+        await listingStatusSearchInput.fill('Sold');
+        await this.page.waitForTimeout(500);
+        const soldOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Sold' }).first();
+        await expect(soldOption).toBeVisible({ timeout: 5000 });
+        await soldOption.click();
+
+        const soldPopup = this.page.getByText('Listing Sold × Date SoldSold');
+        await expect(soldPopup).toBeVisible({ timeout: 5000 });
+
+        const closeBtn = this.page.getByRole('button', { name: 'Close', exact: true });
+        await expect(closeBtn).toBeVisible({ timeout: 10000 });
+        await closeBtn.click({ force: true });
+        await this.page.waitForTimeout(1000);
+        // Press Escape to close the dialog or any remaining overlays
+        await this.page.keyboard.press('Escape');
+    }
 }
