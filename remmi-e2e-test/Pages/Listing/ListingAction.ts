@@ -6919,4 +6919,46 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
         await this.page.keyboard.press('Escape');
     }
+    /**
+     * Verify that the 'Sold' status popup can be closed without saving changes.
+     */
+    async verifySoldStatusPopupCanBeClosedWithoutSaving() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing's add form
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]").first();
+        await expect(contactFormBtn).toBeVisible({ timeout: 10000 });
+        await contactFormBtn.dblclick({ force: true });
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Open the status dropdown (Listing Status)
+        const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input');
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
+        await listingStatusDropdown.click();
+
+        // Type "Sold" and select from dropdown
+        const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
+        await listingStatusSearchInput.fill('Sold');
+        await this.page.waitForTimeout(500);
+        const soldOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Sold' }).first();
+        await expect(soldOption).toBeVisible({ timeout: 5000 });
+        await soldOption.click();
+
+        // Wait for popup
+        const soldPopup = this.page.getByText('Listing Sold × Date SoldSold');
+        await expect(soldPopup).toBeVisible({ timeout: 5000 });
+
+        // Attempt to close: click "Close" button
+        const closeBtn = this.page.getByRole('button', { name: 'Close', exact: true });
+        await expect(closeBtn).toBeVisible({ timeout: 10000 });
+        await closeBtn.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        // Verify the popup is closed (should not be visible)
+        await expect(soldPopup).not.toBeVisible({ timeout: 3000 });
+
+        await this.page.keyboard.press('Escape');
+    }
 }
