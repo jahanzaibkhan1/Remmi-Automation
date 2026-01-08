@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.092433000000195">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2026-01-08T05:21:00.413Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.11" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 75: Verify if clicking &apos;Save &amp; Close&apos; saves the details and closes the popup" classname="Pages\Listing\Listingview.spec.ts" time="24.11">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.13919099999964">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2026-01-08T06:14:01.633Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.397" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 73: Verify if listing disappears from grid/list view after changing status to &apos;Sold&apos;" classname="Pages\Listing\listingForm.spec.ts" time="28.397">
 </testcase>
 </testsuite>
 </testsuites>

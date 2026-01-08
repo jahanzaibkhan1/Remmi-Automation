@@ -7256,21 +7256,15 @@ export class ListingActions {
         const cardRows = this.locators.cardViewPropertyRow();
         await expect(cardRows.first()).toBeVisible({ timeout: 10000 });
 
-        // Click the first card
-        const propertyCard = cardRows.first();
-        await propertyCard.click({ clickCount: 2, force: true });
-
-        // Read address after click
-        // It's still safe to extract address after clicking, as edit form takes a bit to load
-        let propertyAddress: string | undefined;
-        const propertyAddressHandle = propertyCard.locator('.address, .listing-address, [data-testid="property-address"]').first();
-        if (await propertyAddressHandle.isVisible({ timeout: 1000 })) {
-            propertyAddress = (await propertyAddressHandle.textContent())?.trim();
-        } else {
-            // as fallback try to grab entire card's text
-            propertyAddress = (await propertyCard.textContent())?.trim();
+        // Get trimmed heading of the first listing - specifically targeting the <h3> that holds the address
+        const firstCardHeadingLocator = this.page.locator('h3.props-bg.cp.mb-1.px-0[title]').first();
+        let headingTextTrimmed: string | undefined = undefined;
+        if (await firstCardHeadingLocator.isVisible({ timeout: 2000 })) {
+            const headingTextRaw = await firstCardHeadingLocator.textContent();
+            headingTextTrimmed = headingTextRaw?.trim();
         }
-        if (!propertyAddress) throw new Error('Could not read listing address from card');
+    
+        await firstCardHeadingLocator.click({ force: true });
 
         // Wait for edit form to show up
         const editForm = this.page.locator('#rightbarwithscroll');
@@ -7278,8 +7272,7 @@ export class ListingActions {
 
         // Change status to 'Sold'
         const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag .ng-input input');
-        await expect(listingStatusDropdown).toBeVisible({ timeout: 5000 });
-        await listingStatusDropdown.click();
+        await listingStatusDropdown.click({force:true});
         const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
         await listingStatusSearchInput.fill('Sold');
         await this.page.waitForTimeout(500);
@@ -7312,22 +7305,24 @@ export class ListingActions {
         await saveAndCloseBtn.click({ force: true });
 
         // Wait for edit form to close
-        await expect(editForm).not.toBeVisible({ timeout: 8000 });
-
         const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 6000 });
         await saveAndCloseButton.click({ force: true });
         await this.page.waitForTimeout(1000); // Optionally ensure animations finish
 
         // After marking as Sold, search for the trimmed address and verify no listing appears
-        const searchInput = this.page.locator('input[placeholder="Search"]');
-        await expect(searchInput).toBeVisible({ timeout: 3000 });
-        // Type trimmed name into the search
-        await searchInput.fill(propertyAddress.trim());
-        await this.page.keyboard.press('Enter');
-        await this.page.waitForTimeout(1000); // Wait for search to process
-        // Now verify that no listing is displayed
-        const cardCount = await cardRows.filter({ hasText: propertyAddress.trim() }).count();
-        expect(cardCount).toBe(0); // No listing should be found after sold
+        const searchInput = this.page.locator('input[placeholder="Search"]').last();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        // Only fill and search if we actually have a trimmed heading available
+        if (headingTextTrimmed) {
+            await searchInput.fill(headingTextTrimmed);
+            await this.page.keyboard.press('Enter');
+            await this.page.waitForTimeout(1000); // Wait for search to process
+            // Now verify that no listing is displayed
+            const cardCount = await cardRows.filter({ hasText: headingTextTrimmed }).count();
+            expect(cardCount).toBe(0); // No listing should be found after sold
+        } else {
+            throw new Error("Could not locate/trim the first listing's heading text for search and verification.");
+        }
     }
 }

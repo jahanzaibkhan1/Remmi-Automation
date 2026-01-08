@@ -411,7 +411,6 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.clickSaveAndCloseButtonOnListingForm();
   });
 
-  
 test('Test 63: Verify Save & Close button functionality on listing form', async ({ sessionPage }) => {
   const listingActions = new ListingActions(sessionPage);
   await listingActions.verifySaveAndCloseButtonFunctionality();
@@ -468,6 +467,12 @@ test("Test 71: Verify if updating 'Date Sold' and 'Sold Price' reflects the corr
 test("Test 72: Verify if clicking 'Save & Close' saves the details and closes the popup", async ({ sessionPage }) => {
   const listingActions = new ListingActions(sessionPage);
   await listingActions.verifySoldStatusPopupSavesWithValidInputs();
+  await listingActions.resetFilters();
+});
+
+test("Test 73: Verify if listing disappears from grid/list view after changing status to 'Sold'", async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.verifyListingDisappearsAfterMarkingSold();
   await listingActions.resetFilters();
 });
 
