@@ -476,4 +476,10 @@ test("Test 73: Verify if listing disappears from grid/list view after changing s
   await listingActions.resetFilters();
 });
 
+test("Test 74: Verify if invalid data in 'Sold Price' field (e.g., letters) is handled correctly.", async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.verifyInvalidSoldPriceInput();
+  await listingActions.resetFilters();
+});
+
 });
