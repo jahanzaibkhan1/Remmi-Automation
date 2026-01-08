@@ -7421,4 +7421,56 @@ export class ListingActions {
 
         await this.page.keyboard.press('Escape');
     }
+
+    // Verify if the 'Disclose Price' checkbox can be selected/deselected.
+    async verifyDisclosePriceCheckboxFunctionality() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing's add form
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]").first();
+        await expect(contactFormBtn).toBeVisible({ timeout: 10000 });
+        await contactFormBtn.dblclick({ force: true });
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Open the status dropdown (Listing Status)
+        const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input');
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
+        await listingStatusDropdown.click();
+
+        // Type "Sold" and select from dropdown
+        const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
+        await listingStatusSearchInput.fill('Sold');
+        await this.page.waitForTimeout(500);
+        const soldOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Sold' }).first();
+        await expect(soldOption).toBeVisible({ timeout: 5000 });
+        await soldOption.click();
+
+        // Wait for popup
+        const soldPopup = this.page.getByText('Listing Sold × Date SoldSold');
+        await expect(soldPopup).toBeVisible({ timeout: 5000 });
+
+        // Locate the Disclose Price checkbox
+        const discloseCheckbox = this.page.locator('.p-element.mb-2 > .p-checkbox > .p-checkbox-box');
+        await discloseCheckbox.waitFor({ state: 'visible', timeout: 10000 });
+        // Click to toggle
+        await discloseCheckbox.click();
+        await this.page.waitForTimeout(500);
+    
+        // Click again to toggle back
+        await discloseCheckbox.click();
+        await this.page.waitForTimeout(500);
+
+        // Close the popup by clicking "Save & Close"
+        const saveAndCloseBtn = this.page.getByRole('button', { name: /Save & Close/i }).last();
+        await expect(saveAndCloseBtn).toBeVisible({ timeout: 10000 });
+        await saveAndCloseBtn.click({ force: true });
+
+        // Wait until the Sold popup is closed
+        await expect(soldPopup).not.toBeVisible({ timeout: 10000 });
+
+        // Press Escape to close any overlays/popups
+        await this.page.keyboard.press('Escape');
+    }
 }

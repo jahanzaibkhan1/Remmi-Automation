@@ -482,4 +482,10 @@ test("Test 74: Verify if invalid data in 'Sold Price' field (e.g., letters) is h
   await listingActions.resetFilters();
 });
 
+test("Test 75: Verify if the 'Disclose Price' checkbox can be selected/deselected.", async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.verifyDisclosePriceCheckboxFunctionality();
+  await listingActions.resetFilters();
+});
+
 });
