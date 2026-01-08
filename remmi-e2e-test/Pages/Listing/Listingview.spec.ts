@@ -454,7 +454,14 @@ test("Test 73: Verify 'Sold' status popup saves data correctly with valid inputs
   await listingActions.resetFilters();
 });
 
+test("Test 74: Verify if updating 'Date Sold' and 'Sold Price' reflects the correct changes.", async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.updateSoldDetailsAndVerify();
+  await listingActions.resetFilters();
 });
+
+});
+
 
 
 
