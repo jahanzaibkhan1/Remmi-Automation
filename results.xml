@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.18676300000027">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2026-01-07T11:21:34.592Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.202" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 72: Verify &apos;Sold&apos; status popup can be closed without saving changes" classname="Pages\Listing\Listingview.spec.ts" time="30.202">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.07418599999999">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2026-01-08T04:24:20.134Z" hostname="chromium" tests="1" failures="0" skipped="0" time="26.98" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 73: Verify &apos;Sold&apos; status popup saves data correctly with valid inputs" classname="Pages\Listing\Listingview.spec.ts" time="26.98">
 </testcase>
 </testsuite>
 </testsuites>

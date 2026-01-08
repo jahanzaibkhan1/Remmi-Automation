@@ -448,6 +448,12 @@ test("Test 72: Verify 'Sold' status popup can be closed without saving changes",
   await listingActions.resetFilters();
 });
 
+test("Test 73: Verify 'Sold' status popup saves data correctly with valid inputs", async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.verifySoldStatusPopupSavesWithValidInputs();
+  await listingActions.resetFilters();
+});
+
 });
 
 
