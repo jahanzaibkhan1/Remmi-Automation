@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.01015100000007">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2026-01-08T07:12:54.639Z" hostname="chromium" tests="1" failures="0" skipped="0" time="52.342" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 74: Verify if invalid data in &apos;Sold Price&apos; field (e.g., letters) is handled correctly." classname="Pages\Listing\listingForm.spec.ts" time="52.342">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="52.707427000000145">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2026-01-08T08:05:16.105Z" hostname="chromium" tests="1" failures="0" skipped="0" time="43.769" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 75: Verify if the &apos;Disclose Price&apos; checkbox can be selected/deselected." classname="Pages\Listing\listingForm.spec.ts" time="43.769">
 </testcase>
 </testsuite>
 </testsuites>
