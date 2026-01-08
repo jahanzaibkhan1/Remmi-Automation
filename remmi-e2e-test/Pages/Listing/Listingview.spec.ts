@@ -460,6 +460,12 @@ test("Test 74: Verify if updating 'Date Sold' and 'Sold Price' reflects the corr
   await listingActions.resetFilters();
 });
 
+test("Test 75: Verify if clicking 'Save & Close' saves the details and closes the popup", async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.verifySoldStatusPopupSavesWithValidInputs();
+  await listingActions.resetFilters();
+});
+
 });
 
 

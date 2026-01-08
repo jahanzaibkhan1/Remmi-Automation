@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.36992599999998">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2026-01-08T05:16:40.359Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.626" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 74: Verify if updating &apos;Date Sold&apos; and &apos;Sold Price&apos; reflects the correct changes." classname="Pages\Listing\Listingview.spec.ts" time="28.626">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.092433000000195">
+<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2026-01-08T05:21:00.413Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.11" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 75: Verify if clicking &apos;Save &amp; Close&apos; saves the details and closes the popup" classname="Pages\Listing\Listingview.spec.ts" time="24.11">
 </testcase>
 </testsuite>
 </testsuites>
