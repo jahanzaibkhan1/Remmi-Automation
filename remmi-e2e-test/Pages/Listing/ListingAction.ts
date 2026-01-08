@@ -7244,4 +7244,90 @@ export class ListingActions {
         // Cleanup: close overlays
         await this.page.keyboard.press('Escape');
     }
+
+    /**
+     * Verify if the listing disappears from grid/list view after changing status to 'Sold'.
+     */
+    async verifyListingDisappearsAfterMarkingSold() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Wait for card rows to load
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 10000 });
+
+        // Click the first card
+        const propertyCard = cardRows.first();
+        await propertyCard.click({ clickCount: 2, force: true });
+
+        // Read address after click
+        // It's still safe to extract address after clicking, as edit form takes a bit to load
+        let propertyAddress: string | undefined;
+        const propertyAddressHandle = propertyCard.locator('.address, .listing-address, [data-testid="property-address"]').first();
+        if (await propertyAddressHandle.isVisible({ timeout: 1000 })) {
+            propertyAddress = (await propertyAddressHandle.textContent())?.trim();
+        } else {
+            // as fallback try to grab entire card's text
+            propertyAddress = (await propertyCard.textContent())?.trim();
+        }
+        if (!propertyAddress) throw new Error('Could not read listing address from card');
+
+        // Wait for edit form to show up
+        const editForm = this.page.locator('#rightbarwithscroll');
+        await expect(editForm).toBeVisible({ timeout: 8000 });
+
+        // Change status to 'Sold'
+        const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag .ng-input input');
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 5000 });
+        await listingStatusDropdown.click();
+        const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
+        await listingStatusSearchInput.fill('Sold');
+        await this.page.waitForTimeout(500);
+        const soldOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Sold' }).first();
+        await expect(soldOption).toBeVisible({ timeout: 3000 });
+        await soldOption.click();
+
+        // Fill in required Sold data
+        const soldPopup = this.page.getByText('Listing Sold × Date SoldSold');
+        await expect(soldPopup).toBeVisible({ timeout: 5000 });
+
+        const dateSoldInput = this.page.locator('p-calendar[formcontrolname="soldDate"] input');
+        await dateSoldInput.click();
+        // Select today or first available cell
+        const todayButton = this.page.locator('.p-datepicker-today, .today, td[aria-current="date"]');
+        if (await todayButton.first().isVisible({ timeout: 3000 })) {
+            await todayButton.first().click();
+        } else {
+            const dateCell = this.page.locator('.p-datepicker-calendar td:not(.p-datepicker-other-month)').first();
+            await expect(dateCell).toBeVisible({ timeout: 1500 });
+            await dateCell.click();
+        }
+        const priceInput = soldPopup.locator('input[formcontrolname="soldPrice"], input[name="soldPrice"]');
+        await expect(priceInput.first()).toBeVisible({ timeout: 3000 });
+        await priceInput.first().fill('10000');
+
+        // Click Save & Close on the popup
+        const saveAndCloseBtn = this.page.getByRole('button', { name: /Save & Close/i }).last();
+        await expect(saveAndCloseBtn).toBeVisible({ timeout: 6000 });
+        await saveAndCloseBtn.click({ force: true });
+
+        // Wait for edit form to close
+        await expect(editForm).not.toBeVisible({ timeout: 8000 });
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 6000 });
+        await saveAndCloseButton.click({ force: true });
+        await this.page.waitForTimeout(1000); // Optionally ensure animations finish
+
+        // After marking as Sold, search for the trimmed address and verify no listing appears
+        const searchInput = this.page.locator('input[placeholder="Search"]');
+        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        // Type trimmed name into the search
+        await searchInput.fill(propertyAddress.trim());
+        await this.page.keyboard.press('Enter');
+        await this.page.waitForTimeout(1000); // Wait for search to process
+        // Now verify that no listing is displayed
+        const cardCount = await cardRows.filter({ hasText: propertyAddress.trim() }).count();
+        expect(cardCount).toBe(0); // No listing should be found after sold
+    }
 }
