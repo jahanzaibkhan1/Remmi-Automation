@@ -500,4 +500,10 @@ test("Test 77:Verify if listings marked as 'Sold' do not appear in active search
   await listingActions.resetFilters();
 });
 
+test("Test 78: Verify if navigating away from the form without saving discards changes.", async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.verifyFormDoesNotSaveOnNavigateAway();
+  await listingActions.resetFilters();
+});
+
 });
