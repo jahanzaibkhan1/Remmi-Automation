@@ -494,4 +494,10 @@ test("Test 76: Verify if selecting 'Disclose Price' correctly reflects in the sa
   await listingActions.resetFilters();
 });
 
+test("Test 77:Verify if listings marked as 'Sold' do not appear in active searches.", async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.verifyListingDisappearsAfterMarkingSold();
+  await listingActions.resetFilters();
+});
+
 });
