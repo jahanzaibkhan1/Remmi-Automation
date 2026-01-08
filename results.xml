@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="45.148899000000206">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2026-01-08T10:26:45.544Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.404" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 76: Verify if selecting &apos;Disclose Price&apos; correctly reflects in the saved listing details." classname="Pages\Listing\listingForm.spec.ts" time="37.404">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.84969900000095">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2026-01-08T10:30:58.524Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.475" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 77:Verify if listings marked as &apos;Sold&apos; do not appear in active searches." classname="Pages\Listing\listingForm.spec.ts" time="41.475">
 </testcase>
 </testsuite>
 </testsuites>
