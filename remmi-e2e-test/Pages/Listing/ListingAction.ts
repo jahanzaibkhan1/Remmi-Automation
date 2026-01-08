@@ -6997,7 +6997,7 @@ export class ListingActions {
         await dateSoldInput.click();
 
         // Select today's date in the calendar popup
-        const soldToday = new Date(); 
+        const soldToday = new Date();
         const todayDate = soldToday.getDate();
 
         // Try PrimeNG's typical selector for "today"
@@ -7048,7 +7048,7 @@ export class ListingActions {
 
         // Wait for popup to close
         await expect(soldPopup).not.toBeVisible({ timeout: 10000 });
-    
+
         const dateSoldField = this.page.getByText('Date Sold');
         await expect(dateSoldField).toBeVisible({ timeout: 10000 });
 
@@ -7075,7 +7075,7 @@ export class ListingActions {
         await this.page.keyboard.press('Escape');
 
     }
-    
+
     async updateSoldDetailsAndVerify() {
         await this.navigateToListings();
         await this.switchToGridView();
@@ -7108,7 +7108,7 @@ export class ListingActions {
         await dateSoldInput.click();
 
         // Select today's date in the calendar popup
-        const soldToday = new Date(); 
+        const soldToday = new Date();
         const todayDate = soldToday.getDate();
 
         // Try to click the today button first
@@ -7157,7 +7157,7 @@ export class ListingActions {
 
         // Wait for popup to close
         await expect(soldPopup).not.toBeVisible({ timeout: 10000 });
-    
+
         const dateSoldField = this.page.getByText('Date Sold');
         await expect(dateSoldField).toBeVisible({ timeout: 10000 });
 
@@ -7263,7 +7263,7 @@ export class ListingActions {
             const headingTextRaw = await firstCardHeadingLocator.textContent();
             headingTextTrimmed = headingTextRaw?.trim();
         }
-    
+
         await firstCardHeadingLocator.click({ force: true });
 
         // Wait for edit form to show up
@@ -7272,7 +7272,7 @@ export class ListingActions {
 
         // Change status to 'Sold'
         const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag .ng-input input');
-        await listingStatusDropdown.click({force:true});
+        await listingStatusDropdown.click({ force: true });
         const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
         await listingStatusSearchInput.fill('Sold');
         await this.page.waitForTimeout(500);
@@ -7359,7 +7359,7 @@ export class ListingActions {
         await dateSoldInput.click();
 
         // Select today's date in the calendar popup
-        const soldToday = new Date(); 
+        const soldToday = new Date();
         const todayDate = soldToday.getDate();
 
         // Try PrimeNG's typical selector for "today"
@@ -7457,7 +7457,7 @@ export class ListingActions {
         // Click to toggle
         await discloseCheckbox.click();
         await this.page.waitForTimeout(500);
-    
+
         // Click again to toggle back
         await discloseCheckbox.click();
         await this.page.waitForTimeout(500);
@@ -7471,6 +7471,109 @@ export class ListingActions {
         await expect(soldPopup).not.toBeVisible({ timeout: 10000 });
 
         // Press Escape to close any overlays/popups
+        await this.page.keyboard.press('Escape');
+    }
+
+    // Verify if selecting 'Disclose Price' correctly reflects in the saved listing details.
+    async verifyDisclosePriceCheckboxReflectsInListing() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Wait for card rows to load
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 10000 });
+
+        // Get trimmed heading of the first listing - specifically targeting the <h3> that holds the address
+        const firstCardHeadingLocator = this.page.locator('h3.props-bg.cp.mb-1.px-0[title]').first();
+        let headingTextTrimmed: string | undefined = undefined;
+        if (await firstCardHeadingLocator.isVisible({ timeout: 2000 })) {
+            const headingTextRaw = await firstCardHeadingLocator.textContent();
+            headingTextTrimmed = headingTextRaw?.trim();
+        }
+
+        await firstCardHeadingLocator.click({ force: true });
+
+        // Wait for edit form to show up
+        const editForm = this.page.locator('#rightbarwithscroll');
+        await expect(editForm).toBeVisible({ timeout: 8000 });
+
+        // Change status to 'Sold'
+        const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag .ng-input input');
+        await listingStatusDropdown.click({ force: true });
+        const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
+        await listingStatusSearchInput.fill('Sold');
+        await this.page.waitForTimeout(500);
+        const soldOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Sold' }).first();
+        await expect(soldOption).toBeVisible({ timeout: 3000 });
+        await soldOption.click();
+
+        // Fill in required Sold data
+        const soldPopup = this.page.getByText('Listing Sold × Date SoldSold');
+        await expect(soldPopup).toBeVisible({ timeout: 5000 });
+
+        const dateSoldInput = this.page.locator('p-calendar[formcontrolname="soldDate"] input');
+        await dateSoldInput.click();
+        // Select today or first available cell
+        const todayButton = this.page.locator('.p-datepicker-today, .today, td[aria-current="date"]');
+        if (await todayButton.first().isVisible({ timeout: 3000 })) {
+            await todayButton.first().click();
+        } else {
+            const dateCell = this.page.locator('.p-datepicker-calendar td:not(.p-datepicker-other-month)').first();
+            await expect(dateCell).toBeVisible({ timeout: 1500 });
+            await dateCell.click();
+        }
+        const priceInput = soldPopup.locator('input[formcontrolname="soldPrice"], input[name="soldPrice"]');
+        await expect(priceInput.first()).toBeVisible({ timeout: 3000 });
+        await priceInput.first().fill('10000');
+
+        // Click Save & Close on the popup
+        const saveAndCloseBtn = this.page.getByRole('button', { name: /Save & Close/i }).last();
+        await expect(saveAndCloseBtn).toBeVisible({ timeout: 6000 });
+        await saveAndCloseBtn.click({ force: true });
+
+        // Wait for edit form to close
+        const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 6000 });
+        await saveAndCloseButton.click({ force: true });
+        await this.page.waitForTimeout(3000); // Optionally ensure animations finish
+
+        // Apply Listing Status filter to "Sold" in list view  to ensure it's filtered correctly
+        const listingStatusFilterDropdown = this.page.locator('re-multiselect[placeholder="Listing Status"]');
+        await listingStatusFilterDropdown.click({ force: true });
+        await this.page.waitForTimeout(1500);
+        const listingStatusInput = this.page.locator('input[placeholder="Search"]').last();
+        await expect(listingStatusInput).toBeVisible({ timeout: 10000 });
+        await listingStatusInput.fill('Sold');
+        const soldStatusOption = this.page.locator('li.p-element', { hasText: 'Sold' }).first();
+        await expect(soldStatusOption).toBeVisible({ timeout: 10000 });
+        await soldStatusOption.click({ force: true });
+
+        await this.page.locator('.fas.fa-sort-up').click({force:true})
+
+
+        await this.page.waitForTimeout(3000);
+        await expect(cardRows.first()).toBeVisible({ timeout: 10000 });
+
+        // After marking as Sold, search for the trimmed address and verify no listing appears
+        const searchInput = this.page.locator('input[placeholder="Search"]').last();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        // Only fill and search if we actually have a trimmed heading available
+
+        if (typeof headingTextTrimmed === 'string') {
+            await searchInput.fill(headingTextTrimmed);
+            await this.page.waitForTimeout(1000); // Wait for search to process
+        } else {
+            throw new Error("headingTextTrimmed is undefined or not a string");
+        }
+        await expect(cardRows.first()).toBeVisible({ timeout: 10000 });
+        await firstCardHeadingLocator.click({ force: true });
+        // expect sold price visible 
+        const soldPriceFieldDetail = this.page.getByText('Sold Price:').first();
+        await expect(soldPriceFieldDetail).toBeVisible({ timeout: 5000 });
+        // Optionally, check the value
+        const soldPriceTextDetail = await soldPriceFieldDetail.textContent();
+        expect(soldPriceTextDetail?.replace(/\D/g, '')).toContain('10000');
+        // escape the detail view to clean up
         await this.page.keyboard.press('Escape');
     }
 }

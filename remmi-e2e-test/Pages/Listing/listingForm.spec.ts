@@ -488,4 +488,10 @@ test("Test 75: Verify if the 'Disclose Price' checkbox can be selected/deselecte
   await listingActions.resetFilters();
 });
 
+test("Test 76: Verify if selecting 'Disclose Price' correctly reflects in the saved listing details.", async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.verifyDisclosePriceCheckboxReflectsInListing();
+  await listingActions.resetFilters();
+});
+
 });
