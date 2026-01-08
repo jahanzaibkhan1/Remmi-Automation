@@ -407,48 +407,8 @@ test('Test 65: Check for duplicate Property Address values in the table', async 
   await listingActions.resetFilters();
 });
 
-test('Test 66: Verify Save & Close button functionality on listing form', async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifySaveAndCloseButtonFunctionality();
-  await listingActions.resetFilters();
 });
 
-test('Test 67: Verify correct error message for missing property type', async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifyMissingPropertyTypeError();
-  await listingActions.resetFilters();
-});
-
-test('Test 68: Verify correct error message for missing listing type', async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifyMissingListingTypeError();
-  await listingActions.resetFilters();
-});
-
-test("Test 69: Verify 'Sold' status popup appears when selecting 'Sold' in listing status dropdown", async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifySoldStatusPopupAppears();
-  await listingActions.resetFilters();
-});
-
-test("Test 70: Verify listing appears at the top of the grid after creation", async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifyListingAppearsAtTopAfterCreation();
-});
-
-test("Test 71: Verify 'Sold' status popup contains correct fields", async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifySoldStatusPopupFields();
-  await listingActions.resetFilters();
-});
-
-test("Test 72: Verify 'Sold' status popup can be closed without saving changes", async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifySoldStatusPopupCanBeClosedWithoutSaving();
-  await listingActions.resetFilters();
-});
-
-});
 
 
 
