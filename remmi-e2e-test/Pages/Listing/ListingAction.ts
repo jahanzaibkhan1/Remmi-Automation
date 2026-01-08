@@ -7576,4 +7576,126 @@ export class ListingActions {
         // escape the detail view to clean up
         await this.page.keyboard.press('Escape');
     }
+    /**
+     * Verify if navigating away from the form without saving discards changes.
+     */
+    async verifyFormDoesNotSaveOnNavigateAway() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing for editing
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 10000 });
+
+        // Open first listing's add form
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]").first();
+        await expect(contactFormBtn).toBeVisible({ timeout: 10000 });
+        await contactFormBtn.dblclick({ force: true });
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Open the status dropdown (Listing Status)
+        const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input');
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
+        await listingStatusDropdown.click();
+
+        // Type "Sold" and select from dropdown
+        const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
+        await listingStatusSearchInput.fill('Sold');
+        await this.page.waitForTimeout(500);
+        const soldOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Sold' }).first();
+        await expect(soldOption).toBeVisible({ timeout: 5000 });
+        await soldOption.click();
+
+        // Wait for popup
+        const soldPopup = this.page.getByText('Listing Sold × Date SoldSold');
+        await expect(soldPopup).toBeVisible({ timeout: 5000 });
+
+        const dateSoldInput = this.page.locator('p-calendar[formcontrolname="soldDate"] input');
+        await dateSoldInput.click();
+
+        // Select today's date in the calendar popup
+        const soldToday = new Date();
+        const todayDate = soldToday.getDate();
+
+        // Try PrimeNG's typical selector for "today"
+        const todayButton = this.page.locator('.p-datepicker-today, .today, td[aria-current="date"]');
+        if (await todayButton.first().isVisible({ timeout: 3000 })) {
+            await todayButton.first().click();
+        } else {
+            // Fallback 1: Try by aria-label for "Today"
+            const calendarCellWithAriaToday = this.page.locator('td[aria-label="Today"]');
+            if (await calendarCellWithAriaToday.first().isVisible({ timeout: 1500 })) {
+                await calendarCellWithAriaToday.first().click();
+            } else {
+                // Fallback 2: Try by exact date: Build expected aria-label (long format)
+                const ariaLabelOptions = [
+                    soldToday.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+                    soldToday.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }),
+                    soldToday.toISOString().slice(0, 10), // YYYY-MM-DD
+                ];
+                let clicked = false;
+                for (const label of ariaLabelOptions) {
+                    const cell = this.page.locator(`td[aria-label*="${label}"]`).first();
+                    if (await cell.isVisible({ timeout: 500 })) {
+                        await cell.click();
+                        clicked = true;
+                        break;
+                    }
+                }
+                if (!clicked) {
+                    // Final fallback: pick day cell with correct number (avoids "other month" days)
+                    const cell = this.page.locator(
+                        '.p-datepicker-calendar td:not(.p-datepicker-other-month)',
+                        { hasText: String(todayDate) }
+                    ).first();
+                    await expect(cell).toBeVisible({ timeout: 1500 });
+                    await cell.click();
+                }
+            }
+        }
+
+        const priceInput = this.page.locator('input[formcontrolname="soldPrice"], input[name="soldPrice"]').first();
+        await expect(priceInput).toBeVisible({ timeout: 5000 });
+        await priceInput.fill('1234');
+
+        // Click Save on the popup
+        const saveAndCloseBtn = this.page.getByRole('button', { name: /Save & Close/i }).last();
+        await expect(saveAndCloseBtn).toBeVisible({ timeout: 10000 });
+        await saveAndCloseBtn.click({ force: true });
+
+        // Wait for popup to close
+        await expect(soldPopup).not.toBeVisible({ timeout: 10000 });
+        
+        // Click on the "stream Stream" tab by role
+        const streamTab = this.page.getByRole('tab', { name: 'stream Stream' });
+        await expect(streamTab).toBeVisible({ timeout: 5000 });
+        await streamTab.click({ force: true });
+
+        const dateSoldField = this.page.getByText('Date Sold');
+        await expect(dateSoldField).toBeVisible({ timeout: 10000 });
+
+        // Grab values for assertions
+        const dateSoldText = await dateSoldField.textContent();
+        const soldPriceField = this.page.getByText('Sold Price:');
+        const soldPriceText = await soldPriceField.textContent();
+        const disclosePriceField = this.page.getByText('Disclose Price');
+        const disclosePriceText = await disclosePriceField.textContent();
+
+        // 1. Assert "Date Sold" matches today's date in correct format (MM/DD/YYYY)
+        // Use the same soldToday variable
+        const pad = (n: number) => n.toString().padStart(2, "0");
+        const formattedDate = `${pad(soldToday.getDate())}/${pad(soldToday.getMonth() + 1)}/${soldToday.getFullYear()}`;
+        expect(dateSoldText).toContain(formattedDate);
+
+        // 2. Assert "Sold Price" matches the filled price (formatted with thousands separator)
+        expect(soldPriceText?.replace(/\s/g, '')).toMatch(/SoldPrice:1234/);
+
+        // 3. Assert "Disclose Price" is "No" after save
+        expect(disclosePriceText).toMatch(/Disclose Price:\s*No/);
+
+        // Press Escape to close any potential remaining overlays
+        await this.page.keyboard.press('Escape');
+
+    }
 }

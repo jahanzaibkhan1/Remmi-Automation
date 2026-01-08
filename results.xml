@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.84969900000095">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2026-01-08T10:30:58.524Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.475" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 77:Verify if listings marked as &apos;Sold&apos; do not appear in active searches." classname="Pages\Listing\listingForm.spec.ts" time="41.475">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.648872999999675">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2026-01-08T10:50:01.252Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.535" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 78: Verify if navigating away from the form without saving discards changes." classname="Pages\Listing\listingForm.spec.ts" time="31.535">
 </testcase>
 </testsuite>
 </testsuites>
