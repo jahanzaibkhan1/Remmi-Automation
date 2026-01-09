@@ -34,4 +34,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyAddButtonOptionsInImageTab();
   });
 
+  test("Test 4: Verify that clicking Folder opens the 'New Folder' popup", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyFolderOptionOpensNewFolderPopup();
+  });
+
 });
