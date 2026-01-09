@@ -7903,18 +7903,18 @@ export class ListingActions {
         const editForm = this.page.locator('#rightbarwithscroll');
         await expect(editForm).toBeVisible({ timeout: 8000 });
 
-       // Open the status dropdown (Listing Status)
-       const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input');
-       await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
-       await listingStatusDropdown.click();
+        // Open the status dropdown (Listing Status)
+        const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input');
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
+        await listingStatusDropdown.click();
 
-       // Type "Sold" and select from dropdown
-       const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
-       await listingStatusSearchInput.fill('For Sale');
-       await this.page.waitForTimeout(500);
-       const soldOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'For Sale' }).first();
-       await expect(soldOption).toBeVisible({ timeout: 5000 });
-       await soldOption.click();
+        // Type "Sold" and select from dropdown
+        const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
+        await listingStatusSearchInput.fill('For Sale');
+        await this.page.waitForTimeout(500);
+        const soldOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'For Sale' }).first();
+        await expect(soldOption).toBeVisible({ timeout: 5000 });
+        await soldOption.click();
 
         // Save changes
         const saveAndClose = this.page.getByRole('button', { name: /Save & Close/i }).first();
@@ -7964,5 +7964,30 @@ export class ListingActions {
             }
             expect(foundForSale).toBe(true);
         }
+    }
+
+    // Verify that the image tab contains a search field
+    async verifyImageTabHasSearchField() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        // Wait for all listing cards to load and click the first card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Wait for the image tab to be visible and click it (adjust selector if needed)
+        const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
+        await imageTab.waitFor({ state: 'visible', timeout: 10000 });
+        await imageTab.click();
+
+        const imageTabSearchField = this.page.getByRole('tabpanel', { name: 'gavel Images' }).getByPlaceholder('Search');
+        await imageTabSearchField.waitFor({ state: 'visible', timeout: 10000 });
+
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormIcon.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
+
     }
 }

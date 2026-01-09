@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.69952600000054">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2026-01-09T08:31:22.046Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.351" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 79: Verify if undoing &apos;Sold&apos; status brings the contact back to grid/list view." classname="Pages\Listing\listingForm.spec.ts" time="41.351">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.744654999997465">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-09T09:24:56.172Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.023" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Open listing form" classname="Pages\Listing\listingImages.spec.ts" time="45.023">
 </testcase>
 </testsuite>
 </testsuites>
