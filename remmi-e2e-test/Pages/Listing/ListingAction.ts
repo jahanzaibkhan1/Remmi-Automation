@@ -8160,4 +8160,81 @@ export class ListingActions {
             await this.page.waitForTimeout(2000);
         }
     }
+
+    /**
+     * Verifies that the 'New Folder' popup contains a required name field.
+     */
+    async verifyNewFolderPopupHasRequiredNameField() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Wait for all listing cards to load and click the first card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
+        await imageTab.waitFor({ state: 'visible', timeout: 10000 });
+        await imageTab.click();
+
+        await this.page.waitForTimeout(6000);
+
+        let addButton;
+        try {
+            // Try finding button by visible text "Add"
+            addButton = await this.page.locator('button', { hasText: 'Add' }).first();
+            await expect(addButton).toBeVisible({ timeout: 5000 });
+        } catch (e) {
+            // Fallback: try common aria-label or icon button (adjust as needed for your app)
+            addButton = this.page.locator('button[aria-label="Add"]').first();
+            if (!(await addButton.isVisible({ timeout: 2000 }).catch(() => false))) {
+                // Try fallback by icon (commonly used: plus icon, etc.)
+                addButton = this.page.locator('button:has(svg[role="img"])').first();
+            }
+            await expect(addButton).toBeVisible({ timeout: 5000 });
+        }
+
+        // Click "Add" button repeatedly until all required options are visible or a limit is reached
+        const folderOption = this.page.getByRole('menuitem', { name: 'Folder' }).first();
+        const publicOption = this.page.locator('a').filter({ hasText: 'File Upload (Public)' });
+        const privateOption = this.page.locator('a').filter({ hasText: 'File Upload (Private)' });
+
+        let attempts = 0;
+        const maxAttempts = 10;
+        while (attempts < maxAttempts) {
+            await addButton.click();
+            try {
+                await Promise.all([
+                    expect(folderOption).toBeVisible({ timeout: 2000 }),
+                    expect(publicOption).toBeVisible({ timeout: 2000 }),
+                    expect(privateOption).toBeVisible({ timeout: 2000 })
+                ]);
+                break; // All options are visible, exit loop
+            } catch (e) {
+                // Options not visible yet, try clicking again
+                attempts++;
+                if (attempts >= maxAttempts) throw new Error('Add button options did not appear after multiple clicks.');
+                await this.page.waitForTimeout(500);
+            }
+        }
+ 
+        await folderOption.click();
+
+        const newFolderDialog = this.page.locator('.p-dialog-content');
+        await expect(newFolderDialog).toBeVisible({ timeout: 10000 });
+
+        // Click the "Cancel" button in the folder creation dialog
+        const createButton = this.page.getByRole('button', { name: 'Create' }).first();
+        await expect(createButton).toBeVisible({ timeout: 3000 });
+        await createButton.click();
+        // Check for "Name is required!" validation message after trying to create a folder with no name
+        const nameRequiredMsg = this.page.getByText('Name is required!').first();
+        await expect(nameRequiredMsg).toBeVisible({ timeout: 3000 });
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormIcon.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
+    }
 }

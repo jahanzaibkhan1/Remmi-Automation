@@ -39,4 +39,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyFolderOptionOpensNewFolderPopup();
   });
 
+  test("Test 5: Verify that the 'New Folder' popup contains a required name field", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyNewFolderPopupHasRequiredNameField();
+  });
+
 });
