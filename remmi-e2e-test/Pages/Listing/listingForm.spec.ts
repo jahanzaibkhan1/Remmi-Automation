@@ -505,4 +505,10 @@ test("Test 78: Verify if navigating away from the form without saving discards c
   await listingActions.resetFilters();
 });
 
+test("Test 79: Verify if undoing 'Sold' status brings the contact back to grid/list view.", async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.verifyUndoSoldStatusBringsListingBack();
+  await listingActions.resetFilters();
+});
+
 });

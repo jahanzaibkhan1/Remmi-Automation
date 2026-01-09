@@ -7858,4 +7858,111 @@ export class ListingActions {
         }
 
     }
+
+    async verifyUndoSoldStatusBringsListingBack() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Filter by "Sold" status
+        const initialCardRows = this.locators.cardViewPropertyRow();
+        await expect(initialCardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        const statusDropdown = this.locators.listingStatusDropdown();
+        await expect(statusDropdown).toBeVisible();
+        await statusDropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        const statusSearchBox = this.locators.listingStatusSearchInput();
+        await expect(statusSearchBox).toBeVisible();
+        await statusSearchBox.fill('Sold');
+        await this.page.waitForTimeout(1200);
+
+        // Click the "Sold" option after search
+        const soldOption1 = this.locators.listingStatusOption('Sold');
+        await expect(soldOption1).toBeVisible({ timeout: 5000 });
+        await soldOption1.click({ force: true });
+
+        await statusDropdown.click();
+
+        await this.page.waitForTimeout(3000);
+        // Filtered card rows for "Sold"
+        const soldCardRows = this.locators.cardViewPropertyRow();
+        await expect(soldCardRows.first()).toBeVisible({ timeout: 10000 });
+
+        // Get and click the heading of the first card
+        const firstCardHeading = this.page.locator('h3.props-bg.cp.mb-1.px-0[title]').first();
+        let headingTextTrimmed: string | undefined = undefined;
+        if (await firstCardHeading.isVisible({ timeout: 2000 })) {
+            const headingTextRaw = await firstCardHeading.textContent();
+            headingTextTrimmed = headingTextRaw?.trim();
+        }
+        await firstCardHeading.click({ force: true });
+
+        // Wait for edit form to load
+        const editForm = this.page.locator('#rightbarwithscroll');
+        await expect(editForm).toBeVisible({ timeout: 8000 });
+
+       // Open the status dropdown (Listing Status)
+       const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input');
+       await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
+       await listingStatusDropdown.click();
+
+       // Type "Sold" and select from dropdown
+       const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
+       await listingStatusSearchInput.fill('For Sale');
+       await this.page.waitForTimeout(500);
+       const soldOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'For Sale' }).first();
+       await expect(soldOption).toBeVisible({ timeout: 5000 });
+       await soldOption.click();
+
+        // Save changes
+        const saveAndClose = this.page.getByRole('button', { name: /Save & Close/i }).first();
+        await expect(saveAndClose).toBeVisible({ timeout: 10000 });
+        await saveAndClose.click({ force: true });
+
+        await this.page.waitForTimeout(2000);
+        // Click the Reset button (reset filters)
+        const resetButton = this.page.getByRole('button', { name: /reset/i });
+        await expect(resetButton).toBeVisible({ timeout: 5000 });
+        await expect(resetButton).toBeEnabled();
+        await resetButton.click({ force: true });
+        await this.page.waitForTimeout(2000);
+        // Search for the updated status and verify card displays new status
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 10000 });
+
+        // Search in the search box field for the previously stored heading (if available), otherwise search for "For Sale"
+        const searchInput = this.page.locator('input[placeholder="Search"]').last(); // Adjust selector if needed
+        await expect(searchInput).toBeVisible({ timeout: 5000 });
+
+        if (headingTextTrimmed) {
+            await searchInput.fill('');
+            await searchInput.fill(headingTextTrimmed);
+            await this.page.waitForTimeout(1000);
+
+            // After search, ensure the specific card with the heading appears and has "For Sale" status
+            const matchingCard = cardRows.filter({ has: this.page.locator(`h3[title="${headingTextTrimmed}"]`) }).first();
+            await expect(matchingCard).toBeVisible({ timeout: 10000 });
+
+            const cardText = (await matchingCard.innerText()).toLowerCase();
+            expect(cardText.includes('for sale')).toBe(true);
+        } else {
+            // If no heading stored, search for "For Sale" in search box and expect at least one result
+            await searchInput.fill('');
+            await searchInput.fill('For Sale');
+            await this.page.waitForTimeout(1000);
+
+            const count = await cardRows.count();
+            let foundForSale = false;
+            for (let i = 0; i < count; i++) {
+                const cardText = (await cardRows.nth(i).innerText()).toLowerCase();
+                if (cardText.includes('for sale')) {
+                    foundForSale = true;
+                    break;
+                }
+            }
+            expect(foundForSale).toBe(true);
+        }
+    }
 }
