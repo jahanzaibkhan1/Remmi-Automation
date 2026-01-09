@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.025721999999135">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-09T09:51:06.834Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.15" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify that the Floor Plan folder is displayed upon opening the image tab" classname="Pages\Listing\listingImages.spec.ts" time="40.15">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.831555999998">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-09T10:53:37.379Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.51" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that the Add button provides options for folder, public file upload, and private file upload" classname="Pages\Listing\listingImages.spec.ts" time="39.51">
 </testcase>
 </testsuite>
 </testsuites>

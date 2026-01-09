@@ -8019,4 +8019,53 @@ export class ListingActions {
             await this.page.waitForTimeout(2000);
         }
     }
+
+    // Verify that the Add button provides options for folder, public file upload, and private file upload
+    async verifyAddButtonOptionsInImageTab() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Wait for all listing cards to load and click the first card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
+        await imageTab.waitFor({ state: 'visible', timeout: 10000 });
+        await imageTab.click();
+
+       await this.page.waitForTimeout(6000);
+ 
+        let addButton;
+        try {
+            // Try finding button by visible text "Add"
+            addButton = await this.page.locator('button', { hasText: 'Add' }).first();
+            await expect(addButton).toBeVisible({ timeout: 5000 });
+        } catch (e) {
+            // Fallback: try common aria-label or icon button (adjust as needed for your app)
+            addButton = this.page.locator('button[aria-label="Add"]').first();
+            if (!(await addButton.isVisible({ timeout: 2000 }).catch(() => false))) {
+                // Try fallback by icon (commonly used: plus icon, etc.)
+                addButton = this.page.locator('button:has(svg[role="img"])').first();
+            }
+            await expect(addButton).toBeVisible({ timeout: 5000 });
+        }
+        await addButton.scrollIntoViewIfNeeded();
+        await addButton.click();
+        const folderOption = this.page.locator('a').filter({ hasText: 'Folder' });
+        const publicOption = this.page.locator('a').filter({ hasText: 'File Upload (Public)' });
+        const privateOption = this.page.locator('a').filter({ hasText: 'File Upload (Private)' });
+        await expect(folderOption).toBeVisible({ timeout: 10000 });
+        await expect(publicOption).toBeVisible({ timeout: 10000 });
+        await expect(privateOption).toBeVisible({ timeout: 10000 });
+
+        // Optionally, you can close any open dialogs/menus here if needed
+        // For example, click outside or close the modal if needed
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormIcon.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
+    }
 }
