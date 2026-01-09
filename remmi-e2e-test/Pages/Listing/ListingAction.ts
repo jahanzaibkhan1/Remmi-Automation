@@ -7990,4 +7990,33 @@ export class ListingActions {
         }
 
     }
+
+    // Verify that the Floor Plan folder is displayed upon opening the image tab
+    async verifyFloorPlanFolderVisibleInImageTab() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Wait for all listing cards to load and click the first card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Wait for the image tab to be visible and click it (adjust selector if needed)
+        const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
+        await imageTab.waitFor({ state: 'visible', timeout: 10000 });
+        await imageTab.click();
+
+        // Wait for the Floor Plan folder/item to be visible within the image tab panel
+        // You may need to update selector based on your app's actual structure
+        const imageTabPanel = this.page.getByRole('tabpanel', { name: 'gavel Images' });
+        const floorPlanFolder = this.page.getByText('Floorplans');
+        await expect(floorPlanFolder).toBeVisible({ timeout: 10000 });
+
+        // Optionally, close the modal/tab after check
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormIcon.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
+    }
 }
