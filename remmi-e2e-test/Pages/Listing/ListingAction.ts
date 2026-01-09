@@ -8322,4 +8322,105 @@ export class ListingActions {
             await this.page.waitForTimeout(2000);
         }
     }
+
+    async createNewFolderInImagesTab() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
+        await imageTab.waitFor({ state: 'visible', timeout: 10000 });
+        await imageTab.click();
+
+        await this.page.waitForTimeout(6000);
+
+        // Find the Add button robustly
+        let addButton;
+        try {
+            addButton = await this.page.locator('button', { hasText: 'Add' }).first();
+            await expect(addButton).toBeVisible({ timeout: 5000 });
+        } catch {
+            addButton = this.page.locator('button[aria-label="Add"]').first();
+            if (!(await addButton.isVisible({ timeout: 2000 }).catch(() => false))) {
+                addButton = this.page.locator('button:has(svg[role="img"])').first();
+            }
+            await expect(addButton).toBeVisible({ timeout: 5000 });
+        }
+
+        // Ensure options become visible after clicking
+        const folderOption = this.page.getByRole('menuitem', { name: 'Folder' }).first();
+        const publicOption = this.page.locator('a').filter({ hasText: 'File Upload (Public)' });
+        const privateOption = this.page.locator('a').filter({ hasText: 'File Upload (Private)' });
+
+        let attempts = 0;
+        const maxAttempts = 10;
+        while (attempts < maxAttempts) {
+            await addButton.click();
+            try {
+                await Promise.all([
+                    expect(folderOption).toBeVisible({ timeout: 2000 }),
+                    expect(publicOption).toBeVisible({ timeout: 2000 }),
+                    expect(privateOption).toBeVisible({ timeout: 2000 })
+                ]);
+                break;
+            } catch {
+                attempts++;
+                if (attempts >= maxAttempts) throw new Error('Add button options did not appear after multiple clicks.');
+                await this.page.waitForTimeout(500);
+            }
+        }
+
+        // Click Folder
+        await folderOption.click();
+
+        // Wait for the New Folder dialog to appear
+        const newFolderDialog = this.page.locator('.p-dialog-content');
+        await expect(newFolderDialog).toBeVisible({ timeout: 10000 });
+
+        // Find the text input for folder name and enter a random name
+        // Try standard selectors first, fall back to any detected input
+        const folderNameInput =
+            this.page.getByRole('textbox', { name: /name/i }) // aria-label or accessible name
+            .first();
+
+        let inputLocated = false;
+        try {
+            await expect(folderNameInput).toBeVisible({ timeout: 2000 });
+            inputLocated = true;
+        } catch {
+            // fallback: search for input inside dialog
+            const anyInput = newFolderDialog.locator('input').first();
+            await expect(anyInput).toBeVisible({ timeout: 2000 });
+            inputLocated = true;
+        }
+
+        // Enter the folder name in the visible input
+        if (inputLocated) {
+            try {
+                await folderNameInput.fill('Automation Folder');
+            } catch {
+                // fallback
+                const fallbackInput = newFolderDialog.locator('input').first();
+                await fallbackInput.fill('Automation');
+            }
+        }
+
+        // Click Create button
+        const createButton = this.page.getByRole('button', { name: /create/i }).first();
+        await expect(createButton).toBeVisible({ timeout: 3000 });
+        await createButton.click();
+
+        // Verify new folder appears in folder list in images tab
+        // Try exact match first, fallback to partial/substring match
+        let createdFolderLocator = this.page.locator(`.folder-label, .folder-row, .p-tree .p-treenode .p-treenode-label`).filter({ hasText: 'Automation' });
+        if (!(await createdFolderLocator.isVisible({ timeout: 5000 }).catch(() => false))) {
+            createdFolderLocator = this.page.getByText('Automation', { exact: false });
+        }
+        await expect(createdFolderLocator).toBeVisible({ timeout: 10000 });
+    }
 }
