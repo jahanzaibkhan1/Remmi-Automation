@@ -20,8 +20,12 @@ const test = base.extend<{ sessionPage: any }>({
 
 test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
-  test('Test 1: Open listing form', async ({ sessionPage }) => {
+  test('Test 1: Verify that the image tab contains a search field', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyImageTabHasSearchField();
+  });
+  test('Test 2: Verify that the Floor Plan folder is displayed upon opening the image tab', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyFloorPlanFolderVisibleInImageTab();
   });
 });

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.744654999997465">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-09T09:24:56.172Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.023" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Open listing form" classname="Pages\Listing\listingImages.spec.ts" time="45.023">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.025721999999135">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-09T09:51:06.834Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.15" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify that the Floor Plan folder is displayed upon opening the image tab" classname="Pages\Listing\listingImages.spec.ts" time="40.15">
 </testcase>
 </testsuite>
 </testsuites>
