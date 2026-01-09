@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.98358199999854">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-09T11:08:10.124Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.123" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that the Add button provides options for folder, public file upload, and private file upload" classname="Pages\Listing\listingImages.spec.ts" time="38.123">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="69.64588699999824">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-09T11:56:06.203Z" hostname="chromium" tests="1" failures="0" skipped="0" time="59.452" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that clicking Folder opens the &apos;New Folder&apos; popup" classname="Pages\Listing\listingImages.spec.ts" time="59.452">
 </testcase>
 </testsuite>
 </testsuites>
