@@ -426,7 +426,6 @@ test('Test 64: Verify correct error message for missing property type', async ({
 test('Test 65: Verify correct error message for missing listing type', async ({ sessionPage }) => {
   const listingActions = new ListingActions(sessionPage);
   await listingActions.verifyMissingListingTypeError();
-  await listingActions.resetFilters();
 });
 
 test("Test 66: Verify 'Sold' status popup appears when selecting 'Sold' in listing status dropdown", async ({ sessionPage }) => {
@@ -503,6 +502,12 @@ test("Test 77:Verify if listings marked as 'Sold' do not appear in active search
 test("Test 78: Verify if navigating away from the form without saving discards changes.", async ({ sessionPage }) => {
   const listingActions = new ListingActions(sessionPage);
   await listingActions.verifyFormDoesNotSaveOnNavigateAway();
+  await listingActions.resetFilters();
+});
+
+test("Test 79: Verify if undoing 'Sold' status brings the contact back to grid/list view.", async ({ sessionPage }) => {
+  const listingActions = new ListingActions(sessionPage);
+  await listingActions.verifyUndoSoldStatusBringsListingBack();
   await listingActions.resetFilters();
 });
 
