@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.8871109999977">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-09T12:02:43.808Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.298" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that the &apos;New Folder&apos; popup contains a required name field" classname="Pages\Listing\listingImages.spec.ts" time="41.298">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.41478500000015">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-09T12:10:57.732Z" hostname="chromium" tests="1" failures="0" skipped="0" time="57.337" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that the &apos;New Folder&apos; popup has cross, cancel, and create buttons" classname="Pages\Listing\listingImages.spec.ts" time="57.337">
 </testcase>
 </testsuite>
 </testsuites>

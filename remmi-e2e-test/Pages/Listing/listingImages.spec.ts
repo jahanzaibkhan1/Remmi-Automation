@@ -44,4 +44,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyNewFolderPopupHasRequiredNameField();
   });
 
+  test("Test 6: Verify that the 'New Folder' popup has cross, cancel, and create buttons", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyNewFolderPopupHasButtons();
+  });
+
 });
