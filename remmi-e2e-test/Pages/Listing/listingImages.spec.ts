@@ -49,4 +49,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyNewFolderPopupHasButtons();
   });
 
+  test("Test 7: Verify that clicking 'Create' without entering a name does not create a folder", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyNewFolderPopupHasRequiredNameField();
+  });
+
 });
