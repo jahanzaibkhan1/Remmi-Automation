@@ -8036,7 +8036,7 @@ export class ListingActions {
         await imageTab.click();
 
        await this.page.waitForTimeout(6000);
- 
+
         let addButton;
         try {
             // Try finding button by visible text "Add"
@@ -8051,14 +8051,30 @@ export class ListingActions {
             }
             await expect(addButton).toBeVisible({ timeout: 5000 });
         }
-        await addButton.scrollIntoViewIfNeeded();
-        await addButton.click();
+
+        // Click "Add" button repeatedly until all required options are visible or a limit is reached
         const folderOption = this.page.locator('a').filter({ hasText: 'Folder' });
         const publicOption = this.page.locator('a').filter({ hasText: 'File Upload (Public)' });
         const privateOption = this.page.locator('a').filter({ hasText: 'File Upload (Private)' });
-        await expect(folderOption).toBeVisible({ timeout: 10000 });
-        await expect(publicOption).toBeVisible({ timeout: 10000 });
-        await expect(privateOption).toBeVisible({ timeout: 10000 });
+
+        let attempts = 0;
+        const maxAttempts = 5;
+        while (attempts < maxAttempts) {
+            await addButton.click();
+            try {
+                await Promise.all([
+                    expect(folderOption).toBeVisible({ timeout: 2000 }),
+                    expect(publicOption).toBeVisible({ timeout: 2000 }),
+                    expect(privateOption).toBeVisible({ timeout: 2000 })
+                ]);
+                break; // All options are visible, exit loop
+            } catch (e) {
+                // Options not visible yet, try clicking again
+                attempts++;
+                if (attempts >= maxAttempts) throw new Error('Add button options did not appear after multiple clicks.');
+                await this.page.waitForTimeout(500);
+            }
+        }
 
         // Optionally, you can close any open dialogs/menus here if needed
         // For example, click outside or close the modal if needed
