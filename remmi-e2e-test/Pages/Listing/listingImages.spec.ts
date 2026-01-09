@@ -28,4 +28,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyFloorPlanFolderVisibleInImageTab();
   });
+
+  test('Test 3: Verify that the Add button provides options for folder, public file upload, and private file upload', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyAddButtonOptionsInImageTab();
+  });
+
 });
