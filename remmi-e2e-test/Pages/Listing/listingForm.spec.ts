@@ -426,7 +426,6 @@ test('Test 64: Verify correct error message for missing property type', async ({
 test('Test 65: Verify correct error message for missing listing type', async ({ sessionPage }) => {
   const listingActions = new ListingActions(sessionPage);
   await listingActions.verifyMissingListingTypeError();
-  await listingActions.resetFilters();
 });
 
 test("Test 66: Verify 'Sold' status popup appears when selecting 'Sold' in listing status dropdown", async ({ sessionPage }) => {
