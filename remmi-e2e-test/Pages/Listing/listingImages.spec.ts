@@ -54,4 +54,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyNewFolderPopupHasRequiredNameField();
   });
 
+  test("Test 8: Verify that entering a name and clicking Create successfully creates a folder", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.createNewFolderInImagesTab();
+  });
+
 });
