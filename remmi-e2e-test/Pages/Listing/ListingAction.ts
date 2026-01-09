@@ -5392,7 +5392,7 @@ export class ListingActions {
 
 
     async uploadImagesToLibrary(imagePath: string) {
-        // Navigate to Listing grid view
+        // Navigate to Listing grid view and switch
         await this.navigateToListings();
         await this.switchToGridView();
 
@@ -5407,37 +5407,58 @@ export class ListingActions {
         await imagesTab.click();
 
         await this.page.waitForTimeout(6000);
-        // Click "Add" button until "File Upload (Public)" menu option becomes visible
-        const addBtn = this.page.getByRole('button', { name: /Add/i }).first();
-        let fileUploadPublic = this.page.getByRole('menuitem', { name: 'File Upload (Public)' });
 
-        const maxTries = 5;
-        let tries = 0;
-        // Retry clicking Add until file upload becomes visible or reach maxTries
-        while (!(await fileUploadPublic.isVisible({ timeout: 1000 }).catch(() => false)) && tries < maxTries) {
-            await addBtn.waitFor({ state: 'attached', timeout: 10000 }); // ensure DOM ready
-            await addBtn.click({ force: true });
-            await this.page.waitForTimeout(400); // Small wait for menu to open
-            tries++;
-            // re-acquire locator after menu open attempt
-            fileUploadPublic = this.page.getByRole('menuitem', { name: 'File Upload (Public)' });
+        // Open the File Upload (Public) menu item via Add button with improved handling
+        const addButton = this.page.getByRole('button', { name: ' Add' }).first();
+        const fileUploadMenuName = 'File Upload (Public)';
+        let fileUploadMenu = this.page.getByRole('menuitem', { name: fileUploadMenuName });
+
+        let attempt = 0;
+        const maxAttempts = 5;
+        let isVisible = false;
+        while (!isVisible && attempt < maxAttempts) {
+            await addButton.waitFor({ state: 'visible', timeout: 10000 });
+
+            // Defensive: scroll into view and hover
+            const addHandle = await addButton.elementHandle();
+            if (addHandle) {
+                // Scroll to the Add button using JS
+                await this.page.evaluate((el) => {
+                    el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+                }, addHandle);
+            }
+            await addButton.hover();
+            await this.page.waitForTimeout(150);
+
+            // Attempt click
+            await addButton.click({ force: true });
+            await this.page.waitForTimeout(600);
+
+            // Refetch menu item after click
+            fileUploadMenu = this.page.getByRole('menuitem', { name: fileUploadMenuName });
+
+            try {
+                isVisible = await fileUploadMenu.isVisible({ timeout: 1500 });
+            } catch {
+                isVisible = false;
+            }
+            attempt++;
         }
-        await expect(fileUploadPublic).toBeVisible({ timeout: 5000 });
-        await fileUploadPublic.click();
 
-        // Wait for hidden input to appear
+        await expect(fileUploadMenu).toBeVisible({ timeout: 5000 });
+        await fileUploadMenu.click();
+
+        // Select file input and upload
         const fileInput = this.page.locator('#fileUpload');
-
-        // Upload the file
         await fileInput.setInputFiles(imagePath);
 
-        // Wait for "Added Successfully" toast
-        const toast = this.page.locator('text=Added Successfully');
-        await expect(toast).toBeVisible({ timeout: 30000 });
+        // Wait for toast
+        const toastMsg = this.page.locator('text=Added Successfully');
+        await expect(toastMsg).toBeVisible({ timeout: 30000 });
 
         await this.page.waitForTimeout(3000);
 
-        // image name should be visible 
+        // Check image presence
         const imageName = imagePath.split(/[\\/]/).pop();
         if (imageName) {
             // Primary: check by <p> text containing the file name
@@ -5453,13 +5474,13 @@ export class ListingActions {
             }
         }
 
-        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
-        await saveAndCloseButton.scrollIntoViewIfNeeded();
-        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
-        await saveAndCloseButton.click();
+        // Save & Close
+        const saveAndClose = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndClose.scrollIntoViewIfNeeded();
+        await expect(saveAndClose).toBeVisible({ timeout: 5000 });
+        await saveAndClose.click();
 
         await this.page.waitForTimeout(2000);
-
     }
 
     async noImageUploadedScenario() {
@@ -5502,23 +5523,46 @@ export class ListingActions {
         await imagesTab.click();
 
         await this.page.waitForTimeout(6000);
-        // Click "Add" button until "File Upload (Public)" menu option becomes visible
-        const addBtn = this.page.getByRole('button', { name: /Add/i }).first();
-        let fileUploadPublic = this.page.getByRole('menuitem', { name: 'File Upload (Public)' });
+        // Open the File Upload (Public) menu item via Add button with improved handling
+        const addButton = this.page.getByRole('button', { name: ' Add' }).first();
+        const fileUploadMenuName = 'File Upload (Public)';
+        let fileUploadMenu = this.page.getByRole('menuitem', { name: fileUploadMenuName });
 
-        const maxTries = 5;
-        let tries = 0;
-        // Retry clicking Add until file upload becomes visible or reach maxTries
-        while (!(await fileUploadPublic.isVisible({ timeout: 1000 }).catch(() => false)) && tries < maxTries) {
-            await addBtn.waitFor({ state: 'attached', timeout: 10000 }); // ensure DOM ready
-            await addBtn.click({ force: true });
-            await this.page.waitForTimeout(400); // Small wait for menu to open
-            tries++;
-            // re-acquire locator after menu open attempt
-            fileUploadPublic = this.page.getByRole('menuitem', { name: 'File Upload (Public)' });
+        let attempt = 0;
+        const maxAttempts = 5;
+        let isVisible = false;
+        while (!isVisible && attempt < maxAttempts) {
+            await addButton.waitFor({ state: 'visible', timeout: 10000 });
+
+            // Defensive: scroll into view and hover
+            const addHandle = await addButton.elementHandle();
+            if (addHandle) {
+                // Scroll to the Add button using JS
+                await this.page.evaluate((el) => {
+                    el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+                }, addHandle);
+            }
+            await addButton.hover();
+            await this.page.waitForTimeout(150);
+
+            // Attempt click
+            await addButton.click({ force: true });
+            await this.page.waitForTimeout(600);
+
+            // Refetch menu item after click
+            fileUploadMenu = this.page.getByRole('menuitem', { name: fileUploadMenuName });
+
+            try {
+                isVisible = await fileUploadMenu.isVisible({ timeout: 1500 });
+            } catch {
+                isVisible = false;
+            }
+            attempt++;
         }
-        await expect(fileUploadPublic).toBeVisible({ timeout: 5000 });
-        await fileUploadPublic.click();
+
+        await expect(fileUploadMenu).toBeVisible({ timeout: 5000 });
+        await fileUploadMenu.click();
+
 
         // Wait for hidden input to appear
         const fileInput = this.page.locator('#fileUpload');
@@ -6277,24 +6321,45 @@ export class ListingActions {
         await imagesTab.click();
         await this.page.waitForTimeout(6000);
 
-        // Open Add → File Upload (Public)
-        // Click "Add" button until "File Upload (Public)" menu option becomes visible
-        const addBtn = this.page.getByRole('button', { name: /Add/i }).first();
-        let fileUploadPublic = this.page.getByRole('menuitem', { name: 'File Upload (Public)' });
+        // Open the File Upload (Public) menu item via Add button with improved handling
+        const addButton = this.page.getByRole('button', { name: ' Add' }).first();
+        const fileUploadMenuName = 'File Upload (Public)';
+        let fileUploadMenu = this.page.getByRole('menuitem', { name: fileUploadMenuName });
 
-        const maxTries = 5;
-        let tries = 0;
-        // Retry clicking Add until file upload becomes visible or reach maxTries
-        while (!(await fileUploadPublic.isVisible({ timeout: 1000 }).catch(() => false)) && tries < maxTries) {
-            await addBtn.waitFor({ state: 'attached', timeout: 10000 }); // ensure DOM ready
-            await addBtn.click({ force: true });
-            await this.page.waitForTimeout(400); // Small wait for menu to open
-            tries++;
-            // re-acquire locator after menu open attempt
-            fileUploadPublic = this.page.getByRole('menuitem', { name: 'File Upload (Public)' });
+        let attempt = 0;
+        const maxAttempts = 5;
+        let isVisible = false;
+        while (!isVisible && attempt < maxAttempts) {
+            await addButton.waitFor({ state: 'visible', timeout: 10000 });
+
+            // Defensive: scroll into view and hover
+            const addHandle = await addButton.elementHandle();
+            if (addHandle) {
+                // Scroll to the Add button using JS
+                await this.page.evaluate((el) => {
+                    el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+                }, addHandle);
+            }
+            await addButton.hover();
+            await this.page.waitForTimeout(150);
+
+            // Attempt click
+            await addButton.click({ force: true });
+            await this.page.waitForTimeout(600);
+
+            // Refetch menu item after click
+            fileUploadMenu = this.page.getByRole('menuitem', { name: fileUploadMenuName });
+
+            try {
+                isVisible = await fileUploadMenu.isVisible({ timeout: 1500 });
+            } catch {
+                isVisible = false;
+            }
+            attempt++;
         }
-        await expect(fileUploadPublic).toBeVisible({ timeout: 5000 });
-        await fileUploadPublic.click();
+
+        await expect(fileUploadMenu).toBeVisible({ timeout: 5000 });
+        await fileUploadMenu.click();
 
         // 🔥 Upload all images together
         const fileInput = this.page.locator('#fileUpload');
@@ -6472,7 +6537,7 @@ export class ListingActions {
         const saleTypeLabel = this.page.locator('div.pricingDetail h3', { hasText: 'Sale Type' }).first();
         await expect(saleTypeLabel).toBeVisible({ timeout: 10000 });
 
-        const saleStatus = this.page.locator('p.mr-0.statusStyle1', { hasText: 'For Sale' });
+        const saleStatus = this.page.locator('p.mr-0.statusStyle1', { hasText: 'For Lease' });
 
         await expect(saleStatus).toBeVisible({ timeout: 10000 });
 
@@ -6489,7 +6554,7 @@ export class ListingActions {
         await this.switchToGridView();
 
         // Click the first listing card
-        const firstListing = this.page.locator('.s-property').first();
+        const firstListing = this.page.locator('.s-property').nth(1);
         await expect(firstListing).toBeVisible({ timeout: 10000 });
         await firstListing.click();
 
@@ -6671,7 +6736,7 @@ export class ListingActions {
         await this.switchToGridView();
 
         // Open the first listing
-        const firstListing = this.page.locator('.s-property').first();
+        const firstListing = this.page.locator('.s-property').nth(1);
         await expect(firstListing).toBeVisible({ timeout: 10000 });
         await firstListing.click();
 
@@ -6801,7 +6866,13 @@ export class ListingActions {
         await expect(errorMessage).toBeVisible({ timeout: 5000 });
 
         // Press Escape to close the error dialog or form
-        await this.page.keyboard.press('Escape');
+        await this.page.waitForTimeout(1000);
+        // Also ensure pop-up form is closed if [x] icon is present
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormIcon.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
 
     }
 
@@ -6825,8 +6896,13 @@ export class ListingActions {
         const errorMessage = this.page.getByText(/Required fields must be filled in/i);
         await expect(errorMessage).toBeVisible({ timeout: 5000 });
 
-        // Close the error dialog or form
-        await this.page.keyboard.press('Escape');
+        await this.page.waitForTimeout(1000);
+        // Also ensure pop-up form is closed if [x] icon is present
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormIcon.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
     }
 
     // Verify if the 'Sold' status popup appears when selecting 'Sold' in the listing status dropdown.
@@ -6861,8 +6937,14 @@ export class ListingActions {
         await expect(closeBtn).toBeVisible({ timeout: 10000 });
         await closeBtn.click({ force: true });
         await this.page.waitForTimeout(1000);
-        // Press Escape to close the dialog or any remaining overlays
-        await this.page.keyboard.press('Escape');
+        // Verify the popup is closed (should not be visible)
+        await this.page.waitForTimeout(1000);
+        // Also ensure pop-up form is closed if [x] icon is present
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormIcon.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
     }
 
     // Verify that a newly created listing appears at the top of the grid view after creation
@@ -6917,7 +6999,14 @@ export class ListingActions {
         await expect(closeBtn).toBeVisible({ timeout: 10000 });
         await closeBtn.click({ force: true });
         await this.page.waitForTimeout(1000);
-        await this.page.keyboard.press('Escape');
+
+        await this.page.waitForTimeout(1000);
+        // Also ensure pop-up form is closed if [x] icon is present
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormIcon.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
     }
     /**
      * Verify that the 'Sold' status popup can be closed without saving changes.
@@ -6958,8 +7047,14 @@ export class ListingActions {
 
         // Verify the popup is closed (should not be visible)
         await expect(soldPopup).not.toBeVisible({ timeout: 3000 });
+        await this.page.waitForTimeout(1000);
+        // Also ensure pop-up form is closed if [x] icon is present
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormIcon.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
 
-        await this.page.keyboard.press('Escape');
     }
 
     /**
@@ -7071,8 +7166,13 @@ export class ListingActions {
         // 3. Assert "Disclose Price" is "No" after save
         expect(disclosePriceText).toMatch(/Disclose Price:\s*No/);
 
-        // Press Escape to close any potential remaining overlays
-        await this.page.keyboard.press('Escape');
+        await this.page.waitForTimeout(1000);
+        // Also ensure pop-up form is closed if [x] icon is present
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormIcon.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
 
     }
 
@@ -7240,9 +7340,13 @@ export class ListingActions {
         const disclosePriceFieldAfter = this.page.getByText('Disclose Price').first();
         const disclosePriceTextAfter = await disclosePriceFieldAfter.textContent();
         expect(disclosePriceTextAfter).toMatch(/Disclose Price:\s*No/);
-
-        // Cleanup: close overlays
-        await this.page.keyboard.press('Escape');
+        await this.page.waitForTimeout(1000);
+        // Also ensure pop-up form is closed if [x] icon is present
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormIcon.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
     }
 
     /**
@@ -7269,6 +7373,17 @@ export class ListingActions {
         // Wait for edit form to show up
         const editForm = this.page.locator('#rightbarwithscroll');
         await expect(editForm).toBeVisible({ timeout: 8000 });
+
+        // Open Listing Type dropdown, search and select option
+        const listingTypeDropdown = this.page.locator('ng-select[formcontrolname="listingType"], ng-select[formcontrolname="listing_type"]');
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 10000 });
+        await listingTypeDropdown.click();
+        const listingTypeSearchInput = listingTypeDropdown.locator('input[type="text"]');
+        await expect(listingTypeSearchInput).toBeVisible({ timeout: 2000 });
+        await listingTypeSearchInput.fill('Auction');
+        await this.page.waitForTimeout(500); // Let options update if needed
+        const listingTypeOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Auction' }).first();
+        await listingTypeOption.click();
 
         // Change status to 'Sold'
         const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag .ng-input input');
@@ -7416,10 +7531,17 @@ export class ListingActions {
         await expect(saveAndCloseBtn).toBeVisible({ timeout: 10000 });
         await saveAndCloseBtn.click({ force: true });
 
-        // Wait for popup to close
         await expect(soldPopup).not.toBeVisible({ timeout: 10000 });
 
-        await this.page.keyboard.press('Escape');
+        // Verify the popup is closed (should not be visible)
+        await expect(soldPopup).not.toBeVisible({ timeout: 3000 });
+        await this.page.waitForTimeout(1000);
+        // Also ensure pop-up form is closed if [x] icon is present
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormIcon.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
     }
 
     // Verify if the 'Disclose Price' checkbox can be selected/deselected.
@@ -7469,9 +7591,13 @@ export class ListingActions {
 
         // Wait until the Sold popup is closed
         await expect(soldPopup).not.toBeVisible({ timeout: 10000 });
-
-        // Press Escape to close any overlays/popups
-        await this.page.keyboard.press('Escape');
+        await this.page.waitForTimeout(1000);
+        // Also ensure pop-up form is closed if [x] icon is present
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormIcon.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
     }
 
     // Verify if selecting 'Disclose Price' correctly reflects in the saved listing details.
@@ -7496,6 +7622,17 @@ export class ListingActions {
         // Wait for edit form to show up
         const editForm = this.page.locator('#rightbarwithscroll');
         await expect(editForm).toBeVisible({ timeout: 8000 });
+
+        // Open Listing Type dropdown, search and select option
+        const listingTypeDropdown = this.page.locator('ng-select[formcontrolname="listingType"], ng-select[formcontrolname="listing_type"]');
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 10000 });
+        await listingTypeDropdown.click();
+        const listingTypeSearchInput = listingTypeDropdown.locator('input[type="text"]');
+        await expect(listingTypeSearchInput).toBeVisible({ timeout: 2000 });
+        await listingTypeSearchInput.fill('Auction');
+        await this.page.waitForTimeout(500); // Let options update if needed
+        const listingTypeOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Auction' }).first();
+        await listingTypeOption.click();
 
         // Change status to 'Sold'
         const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag .ng-input input');
@@ -7548,7 +7685,7 @@ export class ListingActions {
         await expect(soldStatusOption).toBeVisible({ timeout: 10000 });
         await soldStatusOption.click({ force: true });
 
-        await this.page.locator('.fas.fa-sort-up').click({force:true})
+        await this.page.locator('.fas.fa-sort-up').click({ force: true })
 
 
         await this.page.waitForTimeout(3000);
@@ -7574,7 +7711,13 @@ export class ListingActions {
         const soldPriceTextDetail = await soldPriceFieldDetail.textContent();
         expect(soldPriceTextDetail?.replace(/\D/g, '')).toContain('10000');
         // escape the detail view to clean up
-        await this.page.keyboard.press('Escape');
+        await this.page.waitForTimeout(1000);
+        // Also ensure pop-up form is closed if [x] icon is present
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormIcon.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
     }
     /**
      * Verify if navigating away from the form without saving discards changes.
@@ -7594,6 +7737,16 @@ export class ListingActions {
         const contactForm = this.page.locator('#rightbarwithscroll');
         await expect(contactForm).toBeVisible({ timeout: 10000 });
 
+        // Open Listing Type dropdown, search and select option
+        const listingTypeDropdown = this.page.locator('ng-select[formcontrolname="listingType"], ng-select[formcontrolname="listing_type"]');
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 10000 });
+        await listingTypeDropdown.click();
+        const listingTypeSearchInput = listingTypeDropdown.locator('input[type="text"]');
+        await expect(listingTypeSearchInput).toBeVisible({ timeout: 2000 });
+        await listingTypeSearchInput.fill('Auction');
+        await this.page.waitForTimeout(500); // Let options update if needed
+        const listingTypeOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Auction' }).first();
+        await listingTypeOption.click();
         // Open the status dropdown (Listing Status)
         const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input');
         await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
@@ -7666,7 +7819,7 @@ export class ListingActions {
 
         // Wait for popup to close
         await expect(soldPopup).not.toBeVisible({ timeout: 10000 });
-        
+
         // Click on the "stream Stream" tab by role
         const streamTab = this.page.getByRole('tab', { name: 'stream Stream' });
         await expect(streamTab).toBeVisible({ timeout: 5000 });
@@ -7694,8 +7847,15 @@ export class ListingActions {
         // 3. Assert "Disclose Price" is "No" after save
         expect(disclosePriceText).toMatch(/Disclose Price:\s*No/);
 
-        // Press Escape to close any potential remaining overlays
-        await this.page.keyboard.press('Escape');
+        // Verify the popup is closed (should not be visible)
+        await expect(soldPopup).not.toBeVisible({ timeout: 3000 });
+        await this.page.waitForTimeout(1000);
+        // Also ensure pop-up form is closed if [x] icon is present
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormIcon.click({ force: true });
+            await this.page.waitForTimeout(2000);
+        }
 
     }
 }
