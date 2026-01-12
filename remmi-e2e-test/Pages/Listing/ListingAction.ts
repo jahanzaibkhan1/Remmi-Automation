@@ -8535,4 +8535,61 @@ export class ListingActions {
         await closeFormIcon.click({ force: true });
         await this.page.waitForTimeout(1500);
     }
+
+    // Verify that entering an incorrect PIN prevents file download
+    async verifyPrivateFileUploadInvalidPinBlocksDownload() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first property card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Ensure Floorplans folder is visible
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
+
+        await this.page.waitForTimeout(1500);
+
+        // Attempt to download a private image to trigger PIN entry
+        const downloadLocator = this.page.locator('img.img-hub2[src*="PropertyImage"]').last();
+        await downloadLocator.click();
+
+        const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
+        await expect(downloadIcon).toBeVisible({ timeout: 5000 });
+        await downloadIcon.click();
+
+        // Wait for File Access (PIN entry) dialog to appear
+        const fileAccessDialog = this.page.locator('text=File Access').first();
+        if (await fileAccessDialog.isVisible({ timeout: 3000 }).catch(() => false)) {
+            // Enter an incorrect PIN
+            const pinInput = this.page.locator('input[placeholder="PIN"]');
+            await expect(pinInput).toBeVisible({ timeout: 5000 });
+            await pinInput.fill('9999'); // Use a clearly incorrect PIN
+            const saveButton = this.page.getByRole('button', { name: 'Save' });
+            await expect(saveButton).toBeEnabled({ timeout: 3000 });
+            await saveButton.click();
+
+            // Expect an error or that the dialog remains visible (download NOT allowed)
+            // Check for error message (adjust selector based on UI)
+            const pinErrorMsg = this.page.locator('text=Invalid PIN');
+            await expect(pinErrorMsg).toBeVisible({ timeout: 5000 });
+            
+            const cancelButton = this.page.getByRole('button', { name: /Cancel/i });
+            await expect(cancelButton).toBeVisible({ timeout: 3000 });
+            await cancelButton.click();
+        }
+        await this.page.waitForTimeout(1000);
+
+        // Close the dialog or form
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1500);        
+    }
 }
