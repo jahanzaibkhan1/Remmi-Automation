@@ -8580,7 +8580,7 @@ export class ListingActions {
             // Check for error message (adjust selector based on UI)
             const pinErrorMsg = this.page.locator('text=Invalid PIN');
             await expect(pinErrorMsg).toBeVisible({ timeout: 5000 });
-            
+
             const cancelButton = this.page.getByRole('button', { name: /Cancel/i });
             await expect(cancelButton).toBeVisible({ timeout: 3000 });
             await cancelButton.click();
@@ -8590,6 +8590,50 @@ export class ListingActions {
         // Close the dialog or form
         const closeFormIcon = this.page.locator('.pi.pi-times').first();
         await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1500);        
+        await this.page.waitForTimeout(1500);
+    }
+
+    // Verify that double clicking a file opens the File Preview popup
+    async verifyDoubleClickOpensFilePreview() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first property card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Ensure Floorplans folder is visible
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
+
+        await this.page.waitForTimeout(1500);
+        // Wait for the file/images area to be visible
+        const fileThumbnail = this.page.locator('img.img-hub2[src*="PropertyImage"]').first();
+        await expect(fileThumbnail).toBeVisible({ timeout: 10000 });
+
+        // Double-click the file thumbnail
+        await fileThumbnail.dblclick();
+
+        // Wait for the File Preview popup/dialog to appear
+        const previewDialog = this.page.locator('text=File Preview').first();
+        await expect(previewDialog).toBeVisible({ timeout: 5000 });
+
+        // Verify that the close (cross) icon is visible in the preview dialog
+        const crossIcon = this.page.getByRole('dialog').getByRole('button').filter({ hasText: /^$/ });
+        await expect(crossIcon).toBeVisible({ timeout: 3000 });
+
+        await crossIcon.click();
+
+        // Optionally close the preview dialog (if there's a close button)
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
+        }
     }
 }
