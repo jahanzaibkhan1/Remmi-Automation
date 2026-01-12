@@ -59,4 +59,60 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.createNewFolderInImagesTab();
   });
 
+  test("Test 9: Verify that clicking Public File Upload allows file uploads", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    // Use an image path within your repo's PropertyImages folder for this test file
+    const path = require('path');
+    const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+    const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+    await listingActions.verifyPublicFileUploadAllowsUploadingFile(imagePath);
+  });
+
+  test("Test 10: Verify that Public File Upload allows downloading files", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    // Use an image path within your repo's PropertyImages folder for this test file
+    const path = require('path');
+    const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+    const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+    await listingActions.verifyPublicFileUploadAllowsDownload(imagePath);
+  });
+
+  test("Test 11: Verify that Private File Upload asks for a PIN before downloading", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    const path = require('path');
+    const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+    const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+    await listingActions.uploadPrivateImage(imagePath);
+  });
+
+  test("Test 12: Verify that entering the correct PIN allows file download", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyPrivateFileUploadAllowsDownload();
+  });
+
+  test("Test 13: Verify that entering an incorrect PIN prevents file download", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyPrivateFileUploadInvalidPinBlocksDownload();
+  });
+
+  test("Test 14: Verify that double clicking a file opens the File Preview popup", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyDoubleClickOpensFilePreview();
+  });
+
+  test("Test 15: Verify that the total number of files is displayed next to the search field", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyFileCountDisplayedNextToSearch();
+  });
+
+  test("Test 16: Verify that right clicking a folder shows options for Share, Rename, Make a Copy, and Remove", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyFolderContextMenuOptions();
+  });
+
+  test("Test 17: Verify that clicking Remove deletes the folder", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyRemoveFolderDeletesFolder();
+  });
+
 });
