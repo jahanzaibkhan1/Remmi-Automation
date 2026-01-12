@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.50897499999963">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-12T10:28:54.587Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.163" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify that entering the correct PIN allows file download for Private Upload" classname="Pages\Listing\listingImages.spec.ts" time="37.163">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.507622999999676">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-12T10:48:31.877Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.166" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that entering an incorrect PIN prevents file download" classname="Pages\Listing\listingImages.spec.ts" time="42.166">
 </testcase>
 </testsuite>
 </testsuites>
