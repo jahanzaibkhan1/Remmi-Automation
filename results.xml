@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.11410599999875">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-12T10:55:31.359Z" hostname="chromium" tests="1" failures="0" skipped="0" time="52.442" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that double clicking a file opens the File Preview popup" classname="Pages\Listing\listingImages.spec.ts" time="52.442">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.088916000001134">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-12T11:07:42.731Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.478" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that the total number of files is displayed next to the search field" classname="Pages\Listing\listingImages.spec.ts" time="38.478">
+<system-out>
+<![CDATA[File count label text: 2 Files
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>

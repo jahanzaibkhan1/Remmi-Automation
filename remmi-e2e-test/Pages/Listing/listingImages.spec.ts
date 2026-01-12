@@ -99,4 +99,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyDoubleClickOpensFilePreview();
   });
+
+  test("Test 15: Verify that the total number of files is displayed next to the search field", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyFileCountDisplayedNextToSearch();
+  });
 });
