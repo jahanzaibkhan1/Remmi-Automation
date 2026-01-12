@@ -1,6 +1,100 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="58.09854899999872">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-12T11:44:44.222Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.406" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify that clicking Remove deletes the folder" classname="Pages\Listing\listingImages.spec.ts" time="45.406">
+<testsuites id="" name="" tests="17" failures="1" skipped="16" errors="0" time="72.45285400000215">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-12T12:19:31.190Z" hostname="chromium" tests="17" failures="1" skipped="16" time="60.679" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that the image tab contains a search field" classname="Pages\Listing\listingImages.spec.ts" time="60.142">
+<failure message="listingImages.spec.ts:23:3 Test 1: Verify that the image tab contains a search field" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Listing\listingImages.spec.ts:23:3 › Listing side Menu Tests - Remmi E2E › Test 1: Verify that the image tab contains a search field 
+
+    Test timeout of 60000ms exceeded while setting up "sessionPage".
+
+    Error: page.goto: Target page, context or browser has been closed
+
+      11 |     try {
+      12 |       const page = await context.newPage();
+    > 13 |       await page.goto(DASHBOARD_URL);
+         |                  ^
+      14 |       await use(page);
+      15 |     } finally {
+      16 |
+        at Object._test.test.extend.sessionPage.scope (E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\listingImages.spec.ts:13:18)
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Listing-listingImage-621cd-tab-contains-a-search-field-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Listing-listingImage-621cd-tab-contains-a-search-field-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Listing-listingImage-621cd-tab-contains-a-search-field-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Listing-listingImage-621cd-tab-contains-a-search-field-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify that the Floor Plan folder is displayed upon opening the image tab" classname="Pages\Listing\listingImages.spec.ts" time="0.537">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that the Add button provides options for folder, public file upload, and private file upload" classname="Pages\Listing\listingImages.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that clicking Folder opens the &apos;New Folder&apos; popup" classname="Pages\Listing\listingImages.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that the &apos;New Folder&apos; popup contains a required name field" classname="Pages\Listing\listingImages.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that the &apos;New Folder&apos; popup has cross, cancel, and create buttons" classname="Pages\Listing\listingImages.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that clicking &apos;Create&apos; without entering a name does not create a folder" classname="Pages\Listing\listingImages.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that entering a name and clicking Create successfully creates a folder" classname="Pages\Listing\listingImages.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify that clicking Public File Upload allows file uploads" classname="Pages\Listing\listingImages.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that Public File Upload allows downloading files" classname="Pages\Listing\listingImages.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify that Private File Upload asks for a PIN before downloading" classname="Pages\Listing\listingImages.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify that entering the correct PIN allows file download" classname="Pages\Listing\listingImages.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that entering an incorrect PIN prevents file download" classname="Pages\Listing\listingImages.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that double clicking a file opens the File Preview popup" classname="Pages\Listing\listingImages.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that the total number of files is displayed next to the search field" classname="Pages\Listing\listingImages.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that right clicking a folder shows options for Share, Rename, Make a Copy, and Remove" classname="Pages\Listing\listingImages.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify that clicking Remove deletes the folder" classname="Pages\Listing\listingImages.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
 </testsuites>

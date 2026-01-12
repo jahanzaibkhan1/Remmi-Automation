@@ -8331,7 +8331,7 @@ export class ListingActions {
         // Check image name visibility within the .lib-file area
         const imageName = filePath.split(/[\\/]/).pop();
         if (imageName) {
-            const imageNameInLibFile = this.page.locator(`.lib-file :text("${imageName}")`);
+            const imageNameInLibFile = this.page.locator(`.lib-file :text("${imageName}")`).first();
             await expect(imageNameInLibFile).toBeVisible({ timeout: 20000 });
         }
 
@@ -8449,7 +8449,7 @@ export class ListingActions {
         // Check image name visibility within the .lib-file area
         const imageName = filePath.split(/[\\/]/).pop();
         if (imageName) {
-            const imageNameInLibFile = this.page.locator(`.lib-file :text("${imageName}")`);
+            const imageNameInLibFile = this.page.locator(`.lib-file :text("${imageName}")`).first();
             await expect(imageNameInLibFile).toBeVisible({ timeout: 20000 });
         }
 
