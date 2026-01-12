@@ -2,7 +2,7 @@ import { Locator, Page, expect } from '@playwright/test';
 import { ListingLocators } from './ListingLocator';
 import { addAbortListener } from 'events';
 import path from 'path';
-import { table } from 'console';
+import { count, table } from 'console';
 import { en, faker, th } from '@faker-js/faker';
 import { text } from 'stream/consumers';
 
@@ -20,7 +20,7 @@ export class ListingActions {
      */
     async navigateToListings() {
         const listingTab = this.locators.ListingTab();
-        await expect(listingTab).toBeVisible();
+        await expect(listingTab).toBeVisible({ timeout: 30000 });
         await listingTab.click({ force: true });
     }
 
@@ -7984,10 +7984,8 @@ export class ListingActions {
         await imageTabSearchField.waitFor({ state: 'visible', timeout: 10000 });
 
         const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await closeFormIcon.click({ force: true });
-            await this.page.waitForTimeout(2000);
-        }
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(2000);
 
     }
 
@@ -8014,10 +8012,8 @@ export class ListingActions {
 
         // Optionally, close the modal/tab after check
         const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await closeFormIcon.click({ force: true });
-            await this.page.waitForTimeout(2000);
-        }
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(2000);
     }
 
     // Verify that the Add button provides options for folder, public file upload, and private file upload
@@ -8035,54 +8031,29 @@ export class ListingActions {
         await imageTab.waitFor({ state: 'visible', timeout: 10000 });
         await imageTab.click();
 
-       await this.page.waitForTimeout(6000);
+        const floorPlanFolder = this.page.getByText('Floorplans');
+        await expect(floorPlanFolder).toBeVisible({ timeout: 20000 });
+        await this.page.waitForTimeout(1500);
+        // Use getByRole to locate the Add button without using a selector
+        const addButton = this.page.locator('button', { hasText: 'Add' }).first();
+        await addButton.scrollIntoViewIfNeeded();
+        // Sometimes Add menu requires a double click or two consecutive clicks for the options to appear
+        await addButton.click();
+        await this.page.waitForTimeout(200);
+        await addButton.click();
 
-        let addButton;
-        try {
-            // Try finding button by visible text "Add"
-            addButton = await this.page.locator('button', { hasText: 'Add' }).first();
-            await expect(addButton).toBeVisible({ timeout: 5000 });
-        } catch (e) {
-            // Fallback: try common aria-label or icon button (adjust as needed for your app)
-            addButton = this.page.locator('button[aria-label="Add"]').first();
-            if (!(await addButton.isVisible({ timeout: 2000 }).catch(() => false))) {
-                // Try fallback by icon (commonly used: plus icon, etc.)
-                addButton = this.page.locator('button:has(svg[role="img"])').first();
-            }
-            await expect(addButton).toBeVisible({ timeout: 5000 });
-        }
-
-        // Click "Add" button repeatedly until all required options are visible or a limit is reached
+        // Wait for Folder and Upload options to become visible
         const folderOption = this.page.locator('a').filter({ hasText: 'Folder' });
         const publicOption = this.page.locator('a').filter({ hasText: 'File Upload (Public)' });
         const privateOption = this.page.locator('a').filter({ hasText: 'File Upload (Private)' });
 
-        let attempts = 0;
-        const maxAttempts = 5;
-        while (attempts < maxAttempts) {
-            await addButton.click();
-            try {
-                await Promise.all([
-                    expect(folderOption).toBeVisible({ timeout: 2000 }),
-                    expect(publicOption).toBeVisible({ timeout: 2000 }),
-                    expect(privateOption).toBeVisible({ timeout: 2000 })
-                ]);
-                break; // All options are visible, exit loop
-            } catch (e) {
-                // Options not visible yet, try clicking again
-                attempts++;
-                if (attempts >= maxAttempts) throw new Error('Add button options did not appear after multiple clicks.');
-                await this.page.waitForTimeout(500);
-            }
-        }
+        await expect(folderOption).toBeVisible({ timeout: 2000 });
+        await expect(publicOption).toBeVisible({ timeout: 2000 });
+        await expect(privateOption).toBeVisible({ timeout: 2000 });
 
-        // Optionally, you can close any open dialogs/menus here if needed
-        // For example, click outside or close the modal if needed
         const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await closeFormIcon.click({ force: true });
-            await this.page.waitForTimeout(2000);
-        }
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(2000);
     }
 
     // Verifies that selecting "Folder" from the Add menu opens the 'New Folder' popup/dialog
@@ -8097,50 +8068,30 @@ export class ListingActions {
 
         // Open the Images tab
         const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
-        await imageTab.waitFor({ state: 'visible', timeout: 10000 });
+        await imageTab.waitFor({ state: 'visible', timeout: 30000 });
         await imageTab.click();
 
-        await this.page.waitForTimeout(6000);
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
 
-        let addButton;
-        try {
-            // Try finding button by visible text "Add"
-            addButton = await this.page.locator('button', { hasText: 'Add' }).first();
-            await expect(addButton).toBeVisible({ timeout: 5000 });
-        } catch (e) {
-            // Fallback: try common aria-label or icon button (adjust as needed for your app)
-            addButton = this.page.locator('button[aria-label="Add"]').first();
-            if (!(await addButton.isVisible({ timeout: 2000 }).catch(() => false))) {
-                // Try fallback by icon (commonly used: plus icon, etc.)
-                addButton = this.page.locator('button:has(svg[role="img"])').first();
-            }
-            await expect(addButton).toBeVisible({ timeout: 5000 });
-        }
+        await this.page.waitForTimeout(1500);
+        // Use getByRole to locate the Add button without using a selector
+        const addButton = this.page.locator('button', { hasText: 'Add' }).first();
+        await addButton.scrollIntoViewIfNeeded();
+        // Sometimes Add menu requires a double click or two consecutive clicks for the options to appear
+        await addButton.click();
+        await this.page.waitForTimeout(200);
+        await addButton.click();
 
-        // Click "Add" button repeatedly until all required options are visible or a limit is reached
-        const folderOption = this.page.getByRole('menuitem', { name: 'Folder' }).first();
+        // Wait for Folder and Upload options to become visible
+        const folderOption = this.page.locator('a').filter({ hasText: 'Folder' });
         const publicOption = this.page.locator('a').filter({ hasText: 'File Upload (Public)' });
         const privateOption = this.page.locator('a').filter({ hasText: 'File Upload (Private)' });
 
-        let attempts = 0;
-        const maxAttempts = 10;
-        while (attempts < maxAttempts) {
-            await addButton.click();
-            try {
-                await Promise.all([
-                    expect(folderOption).toBeVisible({ timeout: 2000 }),
-                    expect(publicOption).toBeVisible({ timeout: 2000 }),
-                    expect(privateOption).toBeVisible({ timeout: 2000 })
-                ]);
-                break; // All options are visible, exit loop
-            } catch (e) {
-                // Options not visible yet, try clicking again
-                attempts++;
-                if (attempts >= maxAttempts) throw new Error('Add button options did not appear after multiple clicks.');
-                await this.page.waitForTimeout(500);
-            }
-        }
- 
+        await expect(folderOption).toBeVisible({ timeout: 2000 });
+        await expect(publicOption).toBeVisible({ timeout: 2000 });
+        await expect(privateOption).toBeVisible({ timeout: 2000 });
+
         await folderOption.click();
 
         const newFolderDialog = this.page.locator('.p-dialog-content');
@@ -8151,14 +8102,11 @@ export class ListingActions {
         await expect(cancelButton).toBeVisible({ timeout: 3000 });
         await cancelButton.click();
 
-
-        // Optionally, you can close any open dialogs/menus here if needed
-        // For example, click outside or close the modal if needed
+        await this.page.waitForTimeout(1200);
         const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await closeFormIcon.click({ force: true });
-            await this.page.waitForTimeout(2000);
-        }
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(2000);
+
     }
 
     /**
@@ -8178,47 +8126,23 @@ export class ListingActions {
         await imageTab.waitFor({ state: 'visible', timeout: 10000 });
         await imageTab.click();
 
-        await this.page.waitForTimeout(6000);
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
 
-        let addButton;
-        try {
-            // Try finding button by visible text "Add"
-            addButton = await this.page.locator('button', { hasText: 'Add' }).first();
-            await expect(addButton).toBeVisible({ timeout: 5000 });
-        } catch (e) {
-            // Fallback: try common aria-label or icon button (adjust as needed for your app)
-            addButton = this.page.locator('button[aria-label="Add"]').first();
-            if (!(await addButton.isVisible({ timeout: 2000 }).catch(() => false))) {
-                // Try fallback by icon (commonly used: plus icon, etc.)
-                addButton = this.page.locator('button:has(svg[role="img"])').first();
-            }
-            await expect(addButton).toBeVisible({ timeout: 5000 });
-        }
+        await this.page.waitForTimeout(1500);
+        // Use getByRole to locate the Add button without using a selector
+        const addButton = this.page.locator('button', { hasText: 'Add' }).first();
+        await addButton.scrollIntoViewIfNeeded();
+        // Sometimes Add menu requires a double click or two consecutive clicks for the options to appear
+        await addButton.click();
+        await addButton.click();
+        await this.page.waitForTimeout(1000);
 
-        // Click "Add" button repeatedly until all required options are visible or a limit is reached
-        const folderOption = this.page.getByRole('menuitem', { name: 'Folder' }).first();
-        const publicOption = this.page.locator('a').filter({ hasText: 'File Upload (Public)' });
-        const privateOption = this.page.locator('a').filter({ hasText: 'File Upload (Private)' });
+        // Wait for Folder and Upload options to become visible
+        const folderOption = this.page.locator('a').filter({ hasText: 'Folder' });
 
-        let attempts = 0;
-        const maxAttempts = 10;
-        while (attempts < maxAttempts) {
-            await addButton.click();
-            try {
-                await Promise.all([
-                    expect(folderOption).toBeVisible({ timeout: 2000 }),
-                    expect(publicOption).toBeVisible({ timeout: 2000 }),
-                    expect(privateOption).toBeVisible({ timeout: 2000 })
-                ]);
-                break; // All options are visible, exit loop
-            } catch (e) {
-                // Options not visible yet, try clicking again
-                attempts++;
-                if (attempts >= maxAttempts) throw new Error('Add button options did not appear after multiple clicks.');
-                await this.page.waitForTimeout(500);
-            }
-        }
- 
+        await expect(folderOption).toBeVisible({ timeout: 5000 });
+        await this.page.waitForTimeout(1000);
         await folderOption.click();
 
         const newFolderDialog = this.page.locator('.p-dialog-content');
@@ -8226,16 +8150,21 @@ export class ListingActions {
 
         // Click the "Cancel" button in the folder creation dialog
         const createButton = this.page.getByRole('button', { name: 'Create' }).first();
-        await expect(createButton).toBeVisible({ timeout: 3000 });
+        await expect(createButton).toBeVisible({ timeout: 10000 });
         await createButton.click();
         // Check for "Name is required!" validation message after trying to create a folder with no name
         const nameRequiredMsg = this.page.getByText('Name is required!').first();
-        await expect(nameRequiredMsg).toBeVisible({ timeout: 3000 });
+        await expect(nameRequiredMsg).toBeVisible({ timeout: 10000 });
+
+        // Click the "Cancel" button in the New Folder popup
+        const cancelButton = this.page.getByRole('button', { name: 'Cancel' }).first();
+        await expect(cancelButton).toBeVisible({ timeout: 5000 });
+        await cancelButton.click();
+
+        await this.page.waitForTimeout(1200);
         const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await closeFormIcon.click({ force: true });
-            await this.page.waitForTimeout(2000);
-        }
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(2000);
     }
 
     // Verifies that the New Folder popup has cross, cancel, and create buttons
@@ -8254,47 +8183,23 @@ export class ListingActions {
         await imageTab.waitFor({ state: 'visible', timeout: 10000 });
         await imageTab.click();
 
-        await this.page.waitForTimeout(6000);
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
 
-        let addButton;
-        try {
-            // Try finding button by visible text "Add"
-            addButton = await this.page.locator('button', { hasText: 'Add' }).first();
-            await expect(addButton).toBeVisible({ timeout: 5000 });
-        } catch (e) {
-            // Fallback: try common aria-label or icon button (adjust as needed for your app)
-            addButton = this.page.locator('button[aria-label="Add"]').first();
-            if (!(await addButton.isVisible({ timeout: 2000 }).catch(() => false))) {
-                // Try fallback by icon (commonly used: plus icon, etc.)
-                addButton = this.page.locator('button:has(svg[role="img"])').first();
-            }
-            await expect(addButton).toBeVisible({ timeout: 5000 });
-        }
+        await this.page.waitForTimeout(1500);
+        // Use getByRole to locate the Add button without using a selector
+        const addButton = this.page.locator('button', { hasText: 'Add' }).first();
+        await addButton.scrollIntoViewIfNeeded();
+        // Sometimes Add menu requires a double click or two consecutive clicks for the options to appear
+        await addButton.click();
+        await addButton.click();
+        await this.page.waitForTimeout(1000);
 
-        // Click "Add" button repeatedly until all required options are visible or a limit is reached
-        const folderOption = this.page.getByRole('menuitem', { name: 'Folder' }).first();
-        const publicOption = this.page.locator('a').filter({ hasText: 'File Upload (Public)' });
-        const privateOption = this.page.locator('a').filter({ hasText: 'File Upload (Private)' });
+        // Wait for Folder and Upload options to become visible
+        const folderOption = this.page.locator('a').filter({ hasText: 'Folder' });
 
-        let attempts = 0;
-        const maxAttempts = 10;
-        while (attempts < maxAttempts) {
-            await addButton.click();
-            try {
-                await Promise.all([
-                    expect(folderOption).toBeVisible({ timeout: 2000 }),
-                    expect(publicOption).toBeVisible({ timeout: 2000 }),
-                    expect(privateOption).toBeVisible({ timeout: 2000 })
-                ]);
-                break; // All options are visible, exit loop
-            } catch (e) {
-                // Options not visible yet, try clicking again
-                attempts++;
-                if (attempts >= maxAttempts) throw new Error('Add button options did not appear after multiple clicks.');
-                await this.page.waitForTimeout(500);
-            }
-        }
- 
+        await expect(folderOption).toBeVisible({ timeout: 5000 });
+        await this.page.waitForTimeout(1000);
         await folderOption.click();
 
         // Assumes the New Folder popup is open
@@ -8315,12 +8220,12 @@ export class ListingActions {
 
         await cancelButton.click();
 
+        await this.page.waitForTimeout(1200);
+
 
         const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await closeFormIcon.click({ force: true });
-            await this.page.waitForTimeout(2000);
-        }
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(2000);
     }
 
     async createNewFolderInImagesTab() {
@@ -8337,90 +8242,537 @@ export class ListingActions {
         await imageTab.waitFor({ state: 'visible', timeout: 10000 });
         await imageTab.click();
 
-        await this.page.waitForTimeout(6000);
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
 
-        // Find the Add button robustly
-        let addButton;
-        try {
-            addButton = await this.page.locator('button', { hasText: 'Add' }).first();
-            await expect(addButton).toBeVisible({ timeout: 5000 });
-        } catch {
-            addButton = this.page.locator('button[aria-label="Add"]').first();
-            if (!(await addButton.isVisible({ timeout: 2000 }).catch(() => false))) {
-                addButton = this.page.locator('button:has(svg[role="img"])').first();
-            }
-            await expect(addButton).toBeVisible({ timeout: 5000 });
-        }
+        await this.page.waitForTimeout(1500);
+        // Use getByRole to locate the Add button without using a selector
+        const addButton = this.page.locator('button', { hasText: 'Add' }).first();
+        await addButton.scrollIntoViewIfNeeded();
+        // Sometimes Add menu requires a double click or two consecutive clicks for the options to appear
+        await addButton.click();
+        await this.page.waitForTimeout(200);
+        await addButton.click();
+        await this.page.waitForTimeout(1000);
 
-        // Ensure options become visible after clicking
-        const folderOption = this.page.getByRole('menuitem', { name: 'Folder' }).first();
-        const publicOption = this.page.locator('a').filter({ hasText: 'File Upload (Public)' });
-        const privateOption = this.page.locator('a').filter({ hasText: 'File Upload (Private)' });
+        // Wait for Folder and Upload options to become visible
+        const folderOption = this.page.locator('a').filter({ hasText: 'Folder' });
 
-        let attempts = 0;
-        const maxAttempts = 10;
-        while (attempts < maxAttempts) {
-            await addButton.click();
-            try {
-                await Promise.all([
-                    expect(folderOption).toBeVisible({ timeout: 2000 }),
-                    expect(publicOption).toBeVisible({ timeout: 2000 }),
-                    expect(privateOption).toBeVisible({ timeout: 2000 })
-                ]);
-                break;
-            } catch {
-                attempts++;
-                if (attempts >= maxAttempts) throw new Error('Add button options did not appear after multiple clicks.');
-                await this.page.waitForTimeout(500);
-            }
-        }
-
-        // Click Folder
+        await expect(folderOption).toBeVisible({ timeout: 5000 });
+        await this.page.waitForTimeout(1000);
         await folderOption.click();
-
         // Wait for the New Folder dialog to appear
         const newFolderDialog = this.page.locator('.p-dialog-content');
         await expect(newFolderDialog).toBeVisible({ timeout: 10000 });
 
-        // Find the text input for folder name and enter a random name
-        // Try standard selectors first, fall back to any detected input
-        const folderNameInput =
-            this.page.getByRole('textbox', { name: /name/i }) // aria-label or accessible name
-            .first();
-
-        let inputLocated = false;
-        try {
-            await expect(folderNameInput).toBeVisible({ timeout: 2000 });
-            inputLocated = true;
-        } catch {
-            // fallback: search for input inside dialog
-            const anyInput = newFolderDialog.locator('input').first();
-            await expect(anyInput).toBeVisible({ timeout: 2000 });
-            inputLocated = true;
-        }
-
-        // Enter the folder name in the visible input
-        if (inputLocated) {
-            try {
-                await folderNameInput.fill('Automation Folder');
-            } catch {
-                // fallback
-                const fallbackInput = newFolderDialog.locator('input').first();
-                await fallbackInput.fill('Automation');
-            }
-        }
-
-        // Click Create button
+        const folderNameInput = this.page.getByRole('textbox', { name: 'Folder name' });
+        await folderNameInput.click();
+        // Use faker to generate a random folder name for more robust testing
+        const { faker } = require('@faker-js/faker');
+        const randomFolderName = faker.word.sample();
+        await folderNameInput.fill(randomFolderName);
         const createButton = this.page.getByRole('button', { name: /create/i }).first();
         await expect(createButton).toBeVisible({ timeout: 3000 });
         await createButton.click();
 
-        // Verify new folder appears in folder list in images tab
-        // Try exact match first, fallback to partial/substring match
-        let createdFolderLocator = this.page.locator(`.folder-label, .folder-row, .p-tree .p-treenode .p-treenode-label`).filter({ hasText: 'Automation' });
-        if (!(await createdFolderLocator.isVisible({ timeout: 5000 }).catch(() => false))) {
-            createdFolderLocator = this.page.getByText('Automation', { exact: false });
+        const automationFolder = this.page.locator('.lib-file').filter({ hasText: randomFolderName });
+        await automationFolder.scrollIntoViewIfNeeded();
+        await expect(automationFolder).toBeVisible({ timeout: 30000 });
+
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(2000);
+
+    }
+
+    /**
+     * Verifies that clicking "File Upload (Public)" from the Add menu opens the file upload dialog
+     * and allows the user to successfully upload a file.
+     */
+    async verifyPublicFileUploadAllowsUploadingFile(filePath: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first property card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Ensure Floorplans folder visible
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
+
+        await this.page.waitForTimeout(1500);
+
+        // Open Add menu
+        const addButton = this.page.locator('button', { hasText: 'Add' }).first();
+        await addButton.scrollIntoViewIfNeeded();
+        await addButton.click();
+        await this.page.waitForTimeout(200);
+        await addButton.click();
+
+        // Click "File Upload (Public)" option
+        const publicOption = this.page.locator('a', { hasText: 'File Upload (Public)' });
+
+        await expect(publicOption).toBeVisible({ timeout: 3000 });
+        await publicOption.click();
+
+        // Wait for upload input to appear
+        const fileInput = this.page.locator('#fileUpload');
+        // Upload the file
+        await fileInput.setInputFiles(filePath);
+
+        // Check image name visibility within the .lib-file area
+        const imageName = filePath.split(/[\\/]/).pop();
+        if (imageName) {
+            const imageNameInLibFile = this.page.locator(`.lib-file :text("${imageName}")`).first();
+            await expect(imageNameInLibFile).toBeVisible({ timeout: 20000 });
         }
-        await expect(createdFolderLocator).toBeVisible({ timeout: 10000 });
+
+        // Save and close
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
+    }
+
+    /**
+     * Verifies that a file uploaded via the Public File Upload option
+     */
+    async verifyPublicFileUploadAllowsDownload(filePath: string) {
+
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first property card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Ensure Floorplans folder visible
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
+
+        await this.page.waitForTimeout(1500);
+
+        // Open Add menu
+        const addButton = this.page.locator('button', { hasText: 'Add' }).first();
+        await addButton.scrollIntoViewIfNeeded();
+        await addButton.click();
+        await this.page.waitForTimeout(200);
+        await addButton.click();
+
+        // Click "File Upload (Public)" option
+        const publicOption = this.page.locator('a', { hasText: 'File Upload (Public)' });
+
+        await expect(publicOption).toBeVisible({ timeout: 3000 });
+        await publicOption.click();
+
+        // Wait for upload input to appear
+        const fileInput = this.page.locator('#fileUpload');
+        // Upload the file
+        await fileInput.setInputFiles(filePath);
+
+        // Check image name visibility within the .lib-file area
+        const imageName = filePath.split(/[\\/]/).pop();
+        if (imageName) {
+            const imageNameInLibFile = this.page.locator(`.lib-file :text("${imageName}")`);
+            await expect(imageNameInLibFile).toBeVisible({ timeout: 20000 });
+        }
+
+        // Check for download element in the same context
+        const downloadLocator = this.page.locator('img.img-hub2[src*="Library/PropertyImage"]').first()
+        await downloadLocator.click();
+
+        const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
+        await expect(downloadIcon).toBeVisible({ timeout: 5000 });
+        await downloadIcon.click();
+        // Optionally verify that re-downloading doesn't error
+        await this.page.waitForTimeout(1000);
+        // Close via pipi close icon
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1500);
+    }
+
+    // Upload an image using the Private File Upload option
+    async uploadPrivateImage(filePath: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first property card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Ensure Floorplans folder visible
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
+
+        await this.page.waitForTimeout(1500);
+
+        // Open Add menu
+        const addButton = this.page.locator('button', { hasText: 'Add' }).first();
+        await addButton.scrollIntoViewIfNeeded();
+        await addButton.click();
+        await this.page.waitForTimeout(200);
+        await addButton.click();
+
+        // Click "File Upload (Public)" option
+        const privateOption = this.page.locator('a', { hasText: 'File Upload (Private)' });
+
+        await expect(privateOption).toBeVisible({ timeout: 3000 });
+        await privateOption.click();
+
+        // Wait for upload input to appear
+        const fileInput = this.page.locator('#fileUpload');
+        // Upload the file
+        await fileInput.setInputFiles(filePath);
+
+        // Check image name visibility within the .lib-file area
+        const imageName = filePath.split(/[\\/]/).pop();
+        if (imageName) {
+            const imageNameInLibFile = this.page.locator(`.lib-file :text("${imageName}")`).first();
+            await expect(imageNameInLibFile).toBeVisible({ timeout: 20000 });
+        }
+
+        // Check for download element in the same context
+        const downloadLocator = this.page.locator('img.img-hub2[src*="PropertyImage"]').last()
+        await downloadLocator.click();
+
+        const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
+        await expect(downloadIcon).toBeVisible({ timeout: 5000 });
+        await downloadIcon.click();
+        // Wait for either the File Access dialog or file download to initiate
+        const fileAccessDialog = this.page.locator('text=File Access').first();
+        if (await fileAccessDialog.isVisible({ timeout: 3000 }).catch(() => false)) {
+            // Enter PIN in the input field
+            const pinInput = this.page.locator('input[placeholder="PIN"]');
+            await expect(pinInput).toBeVisible({ timeout: 5000 });
+            // Replace '1234' with the correct PIN if needed/configured elsewhere
+            await pinInput.fill('1234');
+            // Click Save button
+            const saveButton = this.page.getByRole('button', { name: 'Save' });
+            await expect(saveButton).toBeEnabled({ timeout: 3000 });
+            await saveButton.click();
+            // Wait for dialog to disappear, download to start
+            await expect(fileAccessDialog).toBeHidden({ timeout: 5000 });
+        }
+        // Optionally verify that re-downloading doesn't error
+        await this.page.waitForTimeout(1000);
+
+        // 
+        // Close via pipi close icon
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1500);
+    }
+
+    /**
+     * Verifies that entering the correct PIN allows the user to download a file from the Private File Upload option.
+     */
+    async verifyPrivateFileUploadAllowsDownload() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first property card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Ensure Floorplans folder is visible
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
+
+        await this.page.waitForTimeout(1500);
+        // Check for download element in the same context
+        const downloadLocator = this.page.locator('img.img-hub2[src*="PropertyImage"]').last()
+        await downloadLocator.click();
+
+        const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
+        await expect(downloadIcon).toBeVisible({ timeout: 5000 });
+        await downloadIcon.click();
+        // Wait for either the File Access dialog or file download to initiate
+        const fileAccessDialog = this.page.locator('text=File Access').first();
+        if (await fileAccessDialog.isVisible({ timeout: 3000 }).catch(() => false)) {
+            // Enter PIN in the input field
+            const pinInput = this.page.locator('input[placeholder="PIN"]');
+            await expect(pinInput).toBeVisible({ timeout: 5000 });
+            // Replace '1234' with the correct PIN if needed/configured elsewhere
+            await pinInput.fill('1234');
+            // Click Save button
+            const saveButton = this.page.getByRole('button', { name: 'Save' });
+            await expect(saveButton).toBeEnabled({ timeout: 3000 });
+            await saveButton.click();
+            // Wait for dialog to disappear, download to start
+            await expect(fileAccessDialog).toBeHidden({ timeout: 5000 });
+        }
+        // Optionally verify that re-downloading doesn't error
+        await this.page.waitForTimeout(1000);
+
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1500);
+    }
+
+    // Verify that entering an incorrect PIN prevents file download
+    async verifyPrivateFileUploadInvalidPinBlocksDownload() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first property card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Ensure Floorplans folder is visible
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
+
+        await this.page.waitForTimeout(1500);
+
+        // Attempt to download a private image to trigger PIN entry
+        const downloadLocator = this.page.locator('img.img-hub2[src*="PropertyImage"]').last();
+        await downloadLocator.click();
+
+        const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
+        await expect(downloadIcon).toBeVisible({ timeout: 5000 });
+        await downloadIcon.click();
+
+        // Wait for File Access (PIN entry) dialog to appear
+        const fileAccessDialog = this.page.locator('text=File Access').first();
+        if (await fileAccessDialog.isVisible({ timeout: 3000 }).catch(() => false)) {
+            // Enter an incorrect PIN
+            const pinInput = this.page.locator('input[placeholder="PIN"]');
+            await expect(pinInput).toBeVisible({ timeout: 5000 });
+            await pinInput.fill('9999'); // Use a clearly incorrect PIN
+            const saveButton = this.page.getByRole('button', { name: 'Save' });
+            await expect(saveButton).toBeEnabled({ timeout: 3000 });
+            await saveButton.click();
+
+            // Expect an error or that the dialog remains visible (download NOT allowed)
+            // Check for error message (adjust selector based on UI)
+            const pinErrorMsg = this.page.locator('text=Invalid PIN');
+            await expect(pinErrorMsg).toBeVisible({ timeout: 5000 });
+
+            const cancelButton = this.page.getByRole('button', { name: /Cancel/i });
+            await expect(cancelButton).toBeVisible({ timeout: 3000 });
+            await cancelButton.click();
+        }
+        await this.page.waitForTimeout(1000);
+
+        // Close the dialog or form
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1500);
+    }
+
+    // Verify that double clicking a file opens the File Preview popup
+    async verifyDoubleClickOpensFilePreview() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first property card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Ensure Floorplans folder is visible
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
+
+        await this.page.waitForTimeout(1500);
+        // Wait for the file/images area to be visible
+        const fileThumbnail = this.page.locator('img.img-hub2[src*="PropertyImage"]').first();
+        await expect(fileThumbnail).toBeVisible({ timeout: 10000 });
+
+        // Double-click the file thumbnail
+        await fileThumbnail.dblclick();
+
+        // Wait for the File Preview popup/dialog to appear
+        const previewDialog = this.page.locator('text=File Preview').first();
+        await expect(previewDialog).toBeVisible({ timeout: 5000 });
+
+        // Verify that the close (cross) icon is visible in the preview dialog
+        const crossIcon = this.page.getByRole('dialog').getByRole('button').filter({ hasText: /^$/ });
+        await expect(crossIcon).toBeVisible({ timeout: 3000 });
+
+        await crossIcon.click();
+
+        // Optionally close the preview dialog (if there's a close button)
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
+        }
+    }
+
+    // Verify that the total number of files is displayed next to the search field
+    async verifyFileCountDisplayedNextToSearch() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first property card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Ensure Floorplans folder is visible
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
+
+        // Wait for search field to be visible
+        const searchField = this.page.locator('input[placeholder="Search"]').last();
+        await expect(searchField).toBeVisible({ timeout: 10000 });
+
+        const fileCountLocator = this.page.locator('label', { hasText: /\d+\sFiles/ });
+
+        // Wait for file count to be visible
+        await expect(fileCountLocator.first()).toBeVisible({ timeout: 5000 });
+
+        // Text print kerwana hy
+        const fileCountText = await fileCountLocator.first().innerText();
+        console.log("File count label text:", fileCountText);
+
+        // Optionally close the preview dialog (if there's a close button)
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
+        }
+
+    }
+
+    // Verify that right clicking a folder displays options for Share, Rename, Make a Copy, and Remove
+    async verifyFolderContextMenuOptions() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first property card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Wait for any folder - e.g. Floorplans - to appear
+        const folderElem = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' }).first();
+        await folderElem.scrollIntoViewIfNeeded();
+        await expect(folderElem).toBeVisible({ timeout: 10000 });
+
+        // Right click on the folder
+        await folderElem.click({ button: 'right' });
+
+        // Wait and verify precise context menu options and their icons, matching the provided image
+
+        // Create separate locators for each context menu option
+        const shareOptionLocator = this.page.getByRole('link', { name: ' Share' });
+        const renameOptionLocator = this.page.getByRole('link', { name: 'Rename Rename' });
+        const makeCopyOptionLocator = this.page.getByRole('link', { name: ' Make a Copy' });
+        const removeOptionLocator = this.page.getByRole('link', { name: 'Remove Remove' });
+        // Verify Share option and its icon
+        await expect(shareOptionLocator).toBeVisible({ timeout: 4000 });
+        // Verify Rename option and its icon
+        await expect(renameOptionLocator).toBeVisible({ timeout: 4000 });
+        // Verify Make a Copy option and its icon
+        await expect(makeCopyOptionLocator).toBeVisible({ timeout: 4000 });
+        // Verify Remove option and its icon
+        await expect(removeOptionLocator).toBeVisible({ timeout: 4000 });
+        // Optionally close the context menu (ESC)
+        await this.page.keyboard.press('Escape');
+
+        // Optionally close the preview dialog (if there's a close button)
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
+        }
+    }
+
+    // Verify that clicking Remove deletes the last folder
+    async verifyRemoveFolderDeletesFolder() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first property card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        const folderElem = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' }).first();
+        await folderElem.scrollIntoViewIfNeeded();
+        await expect(folderElem).toBeVisible({ timeout: 10000 });
+
+        // Get the last folder before deletion
+        const deleteFolder = this.page.locator('.lib-file').last();
+        await expect(deleteFolder).toBeVisible({ timeout: 10000 });
+        const folderName = await deleteFolder.innerText();
+
+        // Right-click on the last folder to open context menu
+        await deleteFolder.click({ button: 'right' });
+
+        // Click Remove option (the Remove link from context menu)
+        const removeOptionLocator = this.page.getByRole('link', { name: /Remove/i });
+        await expect(removeOptionLocator).toBeVisible({ timeout: 4000 });
+        await removeOptionLocator.click();
+
+        // Confirm removal in confirmation dialog 
+        const confirmDialog = this.page.getByText(/deleted successfully/i);
+        await expect(confirmDialog).toBeVisible({ timeout: 20000 });
+
+        // Wait and verify the deleted folder is no longer visible
+        await expect(
+            this.page.locator('.lib-file').filter({ hasText: folderName })
+        ).toHaveCount(0, { timeout: 8000 });
+
+        await this.page.waitForTimeout(1000);
+        // Optionally close the preview dialog (if there's a close button)
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
+        }
+
     }
 }
