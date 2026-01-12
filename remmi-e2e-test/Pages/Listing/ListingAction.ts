@@ -8327,12 +8327,12 @@ export class ListingActions {
         // Upload the file
         await fileInput.setInputFiles(filePath);
 
-       // Check image name visibility within the .lib-file area
-       const imageName = filePath.split(/[\\/]/).pop();
-       if (imageName) {
-           const imageNameInLibFile = this.page.locator(`.lib-file :text("${imageName}")`);
-           await expect(imageNameInLibFile).toBeVisible({ timeout: 20000 });
-       }
+        // Check image name visibility within the .lib-file area
+        const imageName = filePath.split(/[\\/]/).pop();
+        if (imageName) {
+            const imageNameInLibFile = this.page.locator(`.lib-file :text("${imageName}")`);
+            await expect(imageNameInLibFile).toBeVisible({ timeout: 20000 });
+        }
 
         // Save and close
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
@@ -8340,5 +8340,69 @@ export class ListingActions {
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
         await saveAndCloseButton.click();
         await this.page.waitForTimeout(2000);
+    }
+
+    /**
+     * Verifies that a file uploaded via the Public File Upload option
+     */
+    async verifyPublicFileUploadAllowsDownload(filePath: string) {
+
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first property card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Ensure Floorplans folder visible
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
+
+        await this.page.waitForTimeout(1500);
+
+        // Open Add menu
+        const addButton = this.page.locator('button', { hasText: 'Add' }).first();
+        await addButton.scrollIntoViewIfNeeded();
+        await addButton.click();
+        await this.page.waitForTimeout(200);
+        await addButton.click();
+
+        // Click "File Upload (Public)" option
+        const publicOption = this.page.locator('a', { hasText: 'File Upload (Public)' });
+
+        await expect(publicOption).toBeVisible({ timeout: 3000 });
+        await publicOption.click();
+
+        // Wait for upload input to appear
+        const fileInput = this.page.locator('#fileUpload');
+        // Upload the file
+        await fileInput.setInputFiles(filePath);
+
+        // Check image name visibility within the .lib-file area
+        const imageName = filePath.split(/[\\/]/).pop();
+        if (imageName) {
+            const imageNameInLibFile = this.page.locator(`.lib-file :text("${imageName}")`);
+            await expect(imageNameInLibFile).toBeVisible({ timeout: 20000 });
+        }
+
+        // Check for download element in the same context
+        const downloadLocator = this.page.locator('img.img-hub2[src*="Library/PropertyImage"]').first()
+        await downloadLocator.click();
+
+        const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
+        await expect(downloadIcon).toBeVisible({ timeout: 5000 });
+        await downloadIcon.click();
+        // Optionally verify that re-downloading doesn't error
+        await this.page.waitForTimeout(1000);
+        // Close via pipi close icon
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1500);
     }
 }
