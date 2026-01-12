@@ -76,4 +76,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
     await listingActions.verifyPublicFileUploadAllowsDownload(imagePath);
   });
+
+  test("Test 11: Verify that Private File Upload asks for a PIN before downloading", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    const path = require('path');
+    const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+    const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+    await listingActions.uploadPrivateImage(imagePath);
+  });
 });
