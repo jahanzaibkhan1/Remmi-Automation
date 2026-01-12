@@ -8636,4 +8636,44 @@ export class ListingActions {
             await closePreviewButton.click({ force: true });
         }
     }
+
+    // Verify that the total number of files is displayed next to the search field
+    async verifyFileCountDisplayedNextToSearch() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first property card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Ensure Floorplans folder is visible
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
+
+        // Wait for search field to be visible
+        const searchField = this.page.locator('input[placeholder="Search"]').last();
+        await expect(searchField).toBeVisible({ timeout: 10000 });
+
+        const fileCountLocator = this.page.locator('label', { hasText: /\d+\sFiles/ });
+
+        // Wait for file count to be visible
+        await expect(fileCountLocator.first()).toBeVisible({ timeout: 5000 });
+
+        // Text print kerwana hy
+        const fileCountText = await fileCountLocator.first().innerText();
+        console.log("File count label text:", fileCountText);
+
+        // Optionally close the preview dialog (if there's a close button)
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
+        }
+
+    }
 }
