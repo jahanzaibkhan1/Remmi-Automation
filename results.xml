@@ -1,20 +1,6 @@
-<testsuites id="" name="" tests="8" failures="0" skipped="0" errors="0" time="151.10526900000033">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-12T08:06:59.900Z" hostname="chromium" tests="8" failures="0" skipped="0" time="141.389" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that the image tab contains a search field" classname="Pages\Listing\listingImages.spec.ts" time="41.694">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify that the Floor Plan folder is displayed upon opening the image tab" classname="Pages\Listing\listingImages.spec.ts" time="5.584">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that the Add button provides options for folder, public file upload, and private file upload" classname="Pages\Listing\listingImages.spec.ts" time="9.357">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that clicking Folder opens the &apos;New Folder&apos; popup" classname="Pages\Listing\listingImages.spec.ts" time="11.224">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that the &apos;New Folder&apos; popup contains a required name field" classname="Pages\Listing\listingImages.spec.ts" time="28.677">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that the &apos;New Folder&apos; popup has cross, cancel, and create buttons" classname="Pages\Listing\listingImages.spec.ts" time="11.748">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that clicking &apos;Create&apos; without entering a name does not create a folder" classname="Pages\Listing\listingImages.spec.ts" time="12.186">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that entering a name and clicking Create successfully creates a folder" classname="Pages\Listing\listingImages.spec.ts" time="20.919">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.687650000000374">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-12T08:59:41.768Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.854" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify that clicking Public File Upload allows file uploads" classname="Pages\Listing\listingImages.spec.ts" time="40.854">
 </testcase>
 </testsuite>
 </testsuites>
