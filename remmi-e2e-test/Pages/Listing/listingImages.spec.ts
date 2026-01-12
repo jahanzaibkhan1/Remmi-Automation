@@ -104,4 +104,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyFileCountDisplayedNextToSearch();
   });
+
+  test("Test 16: Verify that right clicking a folder shows options for Share, Rename, Make a Copy, and Remove", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyFolderContextMenuOptions();
+  });
+
 });
