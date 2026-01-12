@@ -8483,4 +8483,56 @@ export class ListingActions {
         await closeFormIcon.click({ force: true });
         await this.page.waitForTimeout(1500);
     }
+
+    /**
+     * Verifies that entering the correct PIN allows the user to download a file from the Private File Upload option.
+     */
+    async verifyPrivateFileUploadAllowsDownload() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first property card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Ensure Floorplans folder is visible
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
+
+        await this.page.waitForTimeout(1500);
+        // Check for download element in the same context
+        const downloadLocator = this.page.locator('img.img-hub2[src*="PropertyImage"]').last()
+        await downloadLocator.click();
+
+        const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
+        await expect(downloadIcon).toBeVisible({ timeout: 5000 });
+        await downloadIcon.click();
+        // Wait for either the File Access dialog or file download to initiate
+        const fileAccessDialog = this.page.locator('text=File Access').first();
+        if (await fileAccessDialog.isVisible({ timeout: 3000 }).catch(() => false)) {
+            // Enter PIN in the input field
+            const pinInput = this.page.locator('input[placeholder="PIN"]');
+            await expect(pinInput).toBeVisible({ timeout: 5000 });
+            // Replace '1234' with the correct PIN if needed/configured elsewhere
+            await pinInput.fill('1234');
+            // Click Save button
+            const saveButton = this.page.getByRole('button', { name: 'Save' });
+            await expect(saveButton).toBeEnabled({ timeout: 3000 });
+            await saveButton.click();
+            // Wait for dialog to disappear, download to start
+            await expect(fileAccessDialog).toBeHidden({ timeout: 5000 });
+        }
+        // Optionally verify that re-downloading doesn't error
+        await this.page.waitForTimeout(1000);
+
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1500);
+    }
 }

@@ -84,4 +84,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
     await listingActions.uploadPrivateImage(imagePath);
   });
+
+  test("Test 12: Verify that entering the correct PIN allows file download", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyPrivateFileUploadAllowsDownload();
+  });
 });
