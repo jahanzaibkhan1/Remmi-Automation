@@ -8251,6 +8251,7 @@ export class ListingActions {
         await addButton.scrollIntoViewIfNeeded();
         // Sometimes Add menu requires a double click or two consecutive clicks for the options to appear
         await addButton.click();
+        await this.page.waitForTimeout(200);
         await addButton.click();
         await this.page.waitForTimeout(1000);
 
@@ -8723,5 +8724,55 @@ export class ListingActions {
         if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
             await closePreviewButton.click({ force: true });
         }
+    }
+
+    // Verify that clicking Remove deletes the last folder
+    async verifyRemoveFolderDeletesFolder() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first property card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        const folderElem = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' }).first();
+        await folderElem.scrollIntoViewIfNeeded();
+        await expect(folderElem).toBeVisible({ timeout: 10000 });
+
+        // Get the last folder before deletion
+        const deleteFolder = this.page.locator('.lib-file').last();
+        await expect(deleteFolder).toBeVisible({ timeout: 10000 });
+        const folderName = await deleteFolder.innerText();
+
+        // Right-click on the last folder to open context menu
+        await deleteFolder.click({ button: 'right' });
+
+        // Click Remove option (the Remove link from context menu)
+        const removeOptionLocator = this.page.getByRole('link', { name: /Remove/i });
+        await expect(removeOptionLocator).toBeVisible({ timeout: 4000 });
+        await removeOptionLocator.click();
+
+        // Confirm removal in confirmation dialog 
+        const confirmDialog = this.page.getByText(/deleted successfully/i);
+        await expect(confirmDialog).toBeVisible({ timeout: 20000 });
+
+        // Wait and verify the deleted folder is no longer visible
+        await expect(
+            this.page.locator('.lib-file').filter({ hasText: folderName })
+        ).toHaveCount(0, { timeout: 8000 });
+
+        await this.page.waitForTimeout(1000);
+        // Optionally close the preview dialog (if there's a close button)
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
+        }
+
     }
 }
