@@ -8676,4 +8676,52 @@ export class ListingActions {
         }
 
     }
+
+    // Verify that right clicking a folder displays options for Share, Rename, Make a Copy, and Remove
+    async verifyFolderContextMenuOptions() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first property card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Wait for any folder - e.g. Floorplans - to appear
+        const folderElem = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' }).first();
+        await folderElem.scrollIntoViewIfNeeded();
+        await expect(folderElem).toBeVisible({ timeout: 10000 });
+
+        // Right click on the folder
+        await folderElem.click({ button: 'right' });
+
+        // Wait and verify precise context menu options and their icons, matching the provided image
+
+        // Create separate locators for each context menu option
+        const shareOptionLocator = this.page.getByRole('link', { name: ' Share' });
+        const renameOptionLocator = this.page.getByRole('link', { name: 'Rename Rename' });
+        const makeCopyOptionLocator = this.page.getByRole('link', { name: ' Make a Copy' });
+        const removeOptionLocator = this.page.getByRole('link', { name: 'Remove Remove' });
+        // Verify Share option and its icon
+        await expect(shareOptionLocator).toBeVisible({ timeout: 4000 });
+        // Verify Rename option and its icon
+        await expect(renameOptionLocator).toBeVisible({ timeout: 4000 });
+        // Verify Make a Copy option and its icon
+        await expect(makeCopyOptionLocator).toBeVisible({ timeout: 4000 });
+        // Verify Remove option and its icon
+        await expect(removeOptionLocator).toBeVisible({ timeout: 4000 });
+        // Optionally close the context menu (ESC)
+        await this.page.keyboard.press('Escape');
+
+        // Optionally close the preview dialog (if there's a close button)
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
+        }
+    }
 }

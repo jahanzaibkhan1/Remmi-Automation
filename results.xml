@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.088916000001134">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-12T11:07:42.731Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.478" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that the total number of files is displayed next to the search field" classname="Pages\Listing\listingImages.spec.ts" time="38.478">
-<system-out>
-<![CDATA[File count label text: 2 Files
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.925447000000624">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-12T11:17:43.534Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.76" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that right clicking a folder shows options for Share, Rename, Make a Copy, and Remove" classname="Pages\Listing\listingImages.spec.ts" time="42.76">
 </testcase>
 </testsuite>
 </testsuites>
