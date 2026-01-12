@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.687650000000374">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-12T08:59:41.768Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.854" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify that clicking Public File Upload allows file uploads" classname="Pages\Listing\listingImages.spec.ts" time="40.854">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="61.58924199999869">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-12T09:47:33.967Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.688" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that Public File Upload allows downloading files" classname="Pages\Listing\listingImages.spec.ts" time="54.688">
 </testcase>
 </testsuite>
 </testsuites>
