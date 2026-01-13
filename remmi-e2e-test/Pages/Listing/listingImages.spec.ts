@@ -130,4 +130,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyShareOptionOpensSharePopup();
   });
 
+  test("Test 21:  Verify that clicking rename open the popup ", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.renamePopupopen();
+  });
+
 });
