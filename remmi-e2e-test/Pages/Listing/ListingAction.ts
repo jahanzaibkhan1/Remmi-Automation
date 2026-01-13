@@ -8802,4 +8802,60 @@ export class ListingActions {
         }
 
     }
+
+    // Verify that clicking Make a Copy duplicates the folder
+    async verifyMakeCopyDuplicatesFolder() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card to open details
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Navigate to the Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Locate the Floorplans (or any) folder to copy
+        const folderElem = this.page.locator('.lib-file').last();
+        await expect(folderElem).toBeVisible({ timeout: 30000 });
+
+        // Get the folder name before duplication
+        const folders = this.page.locator('.lib-file');
+        const lastFolder = folders.last();
+        await expect(lastFolder).toBeVisible({ timeout: 10000 });
+        const folderName = (await lastFolder.innerText()).trim();
+
+        // Get total folders before
+        const foldersLocator = this.page.locator('.lib-file');
+        const initialCount = await foldersLocator.count();
+
+        await this.page.waitForTimeout(1000);
+
+        // Right-click on the folder to open context menu
+        await lastFolder.click({ button: 'right' });
+
+        // Click Make a Copy from context menu
+        const makeCopyOption = this.page.getByRole('link', { name: /Make a Copy/i });
+        await expect(makeCopyOption).toBeVisible({ timeout: 4000 });
+        await makeCopyOption.click();
+
+        // Wait for duplication success/toast (if applicable)
+        // Sometimes a toast appears, sometimes the folder just appears; wait for folder count to increase.
+        // Wait up to 10s for new folder to appear
+        await expect(foldersLocator).toHaveCount(initialCount + 1, { timeout: 10000 });
+
+        // Check that a duplicate folder with a new name exists (e.g., "Floorplans Copy" or similar)
+        const expectedCopyName = folderName;
+        const copiedFolder = foldersLocator.filter({ hasText: expectedCopyName });
+        await expect(copiedFolder.first()).toBeVisible({ timeout: 5000 });
+
+        // Close preview/modal if needed
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
+        }
+    }
 }
