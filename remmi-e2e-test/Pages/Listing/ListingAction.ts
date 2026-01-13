@@ -5676,6 +5676,7 @@ export class ListingActions {
 
         const contactForm = this.page.locator('#rightbarwithscroll');
         await expect(contactForm).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
         const propertyAddressSearchInput = contactForm.getByRole('textbox', { name: 'Search' });
         await expect(propertyAddressSearchInput).toBeVisible({ timeout: 5000 });
 
@@ -6400,6 +6401,13 @@ export class ListingActions {
         await previewBtn.click({ force: true });
         await expect(this.page.locator('img.main-images')).toBeVisible();
 
+        await this.page.waitForTimeout(1200);
+
+        // Close the preview modal
+        const closeIcon = this.page.locator('.pi.pi-times').first();
+        await closeIcon.click({ force: true });
+        await this.page.waitForTimeout(1500);
+
     }
 
     // Verify that clicking a thumbnail updates the main image in the preview listing
@@ -6416,6 +6424,8 @@ export class ListingActions {
         const previewBtn = this.page.getByRole('button', { name: /Preview Listing/i });
         await expect(previewBtn).toBeVisible({ timeout: 6000 });
         await previewBtn.click({ force: true });
+
+        await this.page.waitForTimeout(1200);
 
         // Verify main image is visible
         const mainImage = this.page.locator('img.main-images').first();
@@ -6887,6 +6897,8 @@ export class ListingActions {
         await contactFormBtn.dblclick({ force: true });
         await expect(this.page.locator('#rightbarwithscroll')).toBeVisible({ timeout: 10000 });
 
+        await this.page.waitForTimeout(1200);
+
         // Attempt to save without selecting listing type
         const saveButton = this.page.getByRole('button', { name: /^Save$/i }).first();
         await expect(saveButton).toBeVisible({ timeout: 5000 });
@@ -7136,6 +7148,8 @@ export class ListingActions {
         await expect(priceInput).toBeVisible({ timeout: 5000 });
         await priceInput.fill('1234');
 
+        await this.page.waitForTimeout(1200);
+
         // Click Save on the popup
         const saveAndCloseBtn = this.page.getByRole('button', { name: /Save & Close/i }).last();
         await expect(saveAndCloseBtn).toBeVisible({ timeout: 10000 });
@@ -7186,6 +7200,8 @@ export class ListingActions {
         await contactFormBtn.dblclick({ force: true });
         const contactForm = this.page.locator('#rightbarwithscroll');
         await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        await this.page.waitForTimeout(1200);
 
         // Open the status dropdown (Listing Status)
         const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input');
@@ -7249,6 +7265,8 @@ export class ListingActions {
         const priceInput = this.page.locator('input[formcontrolname="soldPrice"], input[name="soldPrice"]').first();
         await expect(priceInput).toBeVisible({ timeout: 5000 });
         await priceInput.fill('1234');
+
+        await this.page.waitForTimeout(1200);
 
         // Click Save on the popup
         const saveAndCloseBtn = this.page.getByRole('button', { name: /Save & Close/i }).last();
@@ -7419,6 +7437,8 @@ export class ListingActions {
         await expect(saveAndCloseBtn).toBeVisible({ timeout: 6000 });
         await saveAndCloseBtn.click({ force: true });
 
+        await this.page.waitForTimeout(1200);
+
         // Wait for edit form to close
         const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 6000 });
@@ -7524,6 +7544,8 @@ export class ListingActions {
         // After entering non-numeric, it should auto-clear (invalid input)
         await expect(priceInput).toHaveValue('', { timeout: 1000 });
 
+        await this.page.waitForTimeout(1200);
+
         // Now ready for next steps (e.g., fill valid value later)
 
         // Click Save on the popup
@@ -7588,6 +7610,8 @@ export class ListingActions {
         const saveAndCloseBtn = this.page.getByRole('button', { name: /Save & Close/i }).last();
         await expect(saveAndCloseBtn).toBeVisible({ timeout: 10000 });
         await saveAndCloseBtn.click({ force: true });
+
+        await this.page.waitForTimeout(1200);
 
         // Wait until the Sold popup is closed
         await expect(soldPopup).not.toBeVisible({ timeout: 10000 });
@@ -7667,6 +7691,9 @@ export class ListingActions {
         const saveAndCloseBtn = this.page.getByRole('button', { name: /Save & Close/i }).last();
         await expect(saveAndCloseBtn).toBeVisible({ timeout: 6000 });
         await saveAndCloseBtn.click({ force: true });
+
+        await this.page.waitForTimeout(1200);
+
 
         // Wait for edit form to close
         const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
