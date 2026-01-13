@@ -8914,4 +8914,48 @@ export class ListingActions {
             await closePreviewButton.click({ force: true });
         }
     }
+
+    // Verify that clicking Share opens the Share popup
+    async verifyShareOptionOpensSharePopup() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Wait for all listing cards to load and click the first card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Find a folder to share
+        const foldersLocator = this.page.locator('.lib-file');
+        const folderToShare = foldersLocator.first();
+        await expect(folderToShare).toBeVisible({ timeout: 30000 });
+
+        // Right-click to open context menu
+        await folderToShare.click({ button: 'right' });
+
+        // Click Share in the context menu
+        const shareOption = this.page.getByRole('link', { name: /Share/i });
+        await expect(shareOption).toBeVisible({ timeout: 5000 });
+        await shareOption.click();
+
+        // Check that the Share popup appears
+        const sharePopup = this.page.getByRole('dialog').filter({ hasText: /Share/ });
+        await expect(sharePopup).toBeVisible({ timeout: 10000 });
+
+        // Click cancel button in the Share popup
+        const cancelButton = this.page.getByRole('button', { name: /Cancel/i }).first();
+        await expect(cancelButton).toBeVisible({ timeout: 5000 });
+        await cancelButton.click();
+
+        // Optionally, cleanup: close the Share popup
+        const closeShareButton = this.page.locator('.pi.pi-times').first();
+        if (await closeShareButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeShareButton.click({ force: true });
+        }
+    }
 }
