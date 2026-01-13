@@ -785,6 +785,7 @@ export class MyProfileActions {
       const cancelBtn = this.page.getByRole('button', { name: /cancel/i });
       await expect(cancelBtn).toBeVisible({ timeout: 10000 });
       await cancelBtn.click({ force: true });
+      await this.page.waitForTimeout(1200);
     });
   }
 
@@ -899,6 +900,7 @@ export class MyProfileActions {
       await this.setLastFileInput(imagePath);
       const error = this.locators.InvalidImageFormatsError();
       await expect(error).toBeVisible();
+      await this.page.waitForTimeout(1200);
     });
   }
 
@@ -919,6 +921,7 @@ export class MyProfileActions {
       await lastCheckbox.click({ force: true });
       console.log('☑️ Last visible checkbox clicked successfully');
       await this.clickUpdateImages();
+      await this.page.waitForTimeout(1200);
     });
   }
 
@@ -958,6 +961,8 @@ export class MyProfileActions {
 
       await this.page.reload();
       await this.expectProfileImageVisible();
+
+      await this.page.waitForTimeout(1200);
     });
   }
 
