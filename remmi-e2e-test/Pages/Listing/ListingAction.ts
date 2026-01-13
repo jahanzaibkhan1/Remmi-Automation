@@ -8825,6 +8825,7 @@ export class ListingActions {
         // Get the folder name before duplication
         const folders = this.page.locator('.lib-file');
         const lastFolder = folders.last();
+        await lastFolder.scrollIntoViewIfNeeded();
         await expect(lastFolder).toBeVisible({ timeout: 10000 });
         const folderName = (await lastFolder.innerText()).trim();
 
@@ -8842,19 +8843,74 @@ export class ListingActions {
         await expect(makeCopyOption).toBeVisible({ timeout: 4000 });
         await makeCopyOption.click();
 
-        // Wait for duplication success/toast (if applicable)
-        // Sometimes a toast appears, sometimes the folder just appears; wait for folder count to increase.
-        // Wait up to 10s for new folder to appear
-        await expect(foldersLocator).toHaveCount(initialCount + 1, { timeout: 10000 });
-
-        // Check that a duplicate folder with a new name exists (e.g., "Floorplans Copy" or similar)
-        const expectedCopyName = folderName;
-        const copiedFolder = foldersLocator.filter({ hasText: expectedCopyName });
-        await expect(copiedFolder.first()).toBeVisible({ timeout: 5000 });
+        // Check for duplicate folder with "Copy of [name]"
+        const copyName = `Copy of ${folderName}`;
+        const copiedFolder = foldersLocator.filter({ hasText: copyName }).first();
+        await copiedFolder.scrollIntoViewIfNeeded();
+        expect(await copiedFolder.isVisible({ timeout: 20000 }).catch(() => false)).toBe(true);
 
         // Close preview/modal if needed
         const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
         if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that entering a name and clicking Rename changes the folder name.
+     */
+    async verifyRenameFolderChangesName() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Find a folder to rename
+        const foldersLocator = this.page.locator('.lib-file');
+        const folderToRename = foldersLocator.last();
+        await expect(folderToRename).toBeVisible({ timeout: 10000 });
+
+        // Get original folder name
+        const originalFolderName = (await folderToRename.innerText()).trim();
+
+        // Generate new folder name
+        const newFolderName = `${originalFolderName}-Renamed`;
+
+        // Right-click to open context menu
+        await folderToRename.click({ button: 'right' });
+        const renameOption = this.page.getByRole('link', { name: /Rename/i });
+        await expect(renameOption).toBeVisible({ timeout: 4000 });
+        await renameOption.click();
+
+        // A modal/dialog appears; input the new folder name
+        const renameInput = this.page.locator('//input[@type="text" and @required]');
+        await expect(renameInput).toBeVisible({ timeout: 4000 });
+        await renameInput.clear();
+        await renameInput.fill(newFolderName);
+
+        // Click Rename or Save button
+        const confirmRenameButton = this.page.getByRole('button', { name: /Rename|Save/i }).first();
+        await expect(confirmRenameButton).toBeVisible({ timeout: 4000 });
+        await confirmRenameButton.click();
+
+        // Wait for possible toast/message, allow time for UI to update
+        await this.page.waitForTimeout(1000);
+
+        // Ensure new folder name appears
+        const renamedFolder = foldersLocator.filter({ hasText: newFolderName }).first();
+        await expect(renamedFolder).toBeVisible({ timeout: 20000 });
+
+        // Optionally, cleanup: revert name or just close form
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 2000 }).catch(() => false)) {
             await closePreviewButton.click({ force: true });
         }
     }
