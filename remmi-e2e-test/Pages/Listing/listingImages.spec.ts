@@ -119,4 +119,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyMakeCopyDuplicatesFolder();
   });
+
+  test("Test 19: Verify that entering a name and clicking Rename changes the folder name", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyRenameFolderChangesName();
+  });
+
 });
