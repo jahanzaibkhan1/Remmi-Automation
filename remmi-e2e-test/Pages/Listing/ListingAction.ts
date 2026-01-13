@@ -8958,4 +8958,53 @@ export class ListingActions {
             await closeShareButton.click({ force: true });
         }
     }
+
+    async renamePopupopen(){
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Find a folder to rename
+        const foldersLocator = this.page.locator('.lib-file');
+        const folderToRename = foldersLocator.last();
+        await expect(folderToRename).toBeVisible({ timeout: 10000 });
+
+        // Get original folder name
+        const originalFolderName = (await folderToRename.innerText()).trim();
+
+        // Generate new folder name
+        const newFolderName = `${originalFolderName}-Renamed`;
+
+        // Right-click to open context menu
+        await folderToRename.click({ button: 'right' });
+        const renameOption = this.page.getByRole('link', { name: /Rename/i });
+        await expect(renameOption).toBeVisible({ timeout: 4000 });
+        await renameOption.click();
+
+        // A modal/dialog appears; input the new folder name
+        const rename = this.page.getByText('Rename').first();
+        await expect(rename).toBeVisible({ timeout: 4000 });
+       
+        // click cancel
+        const cancelBtn = this.page.getByRole('button', { name: /Cancel/i }).first();
+        await expect(cancelBtn).toBeVisible({ timeout: 3000 });
+        await cancelBtn.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Optionally, cleanup: revert name or just close form
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
+        }
+    }
 }
