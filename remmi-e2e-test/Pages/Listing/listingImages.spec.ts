@@ -115,4 +115,24 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyRemoveFolderDeletesFolder();
   });
 
+  test("Test 18: Verify that clicking Make a Copy duplicates the folder", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyMakeCopyDuplicatesFolder();
+  });
+
+  test("Test 19: Verify that entering a name and clicking Rename changes the folder name", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyRenameFolderChangesName();
+  });
+
+  test("Test 20: Verify that clicking Share opens the Share popup", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyShareOptionOpensSharePopup();
+  });
+
+  test("Test 21:  Verify that clicking rename open the popup ", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.renamePopupopen();
+  });
+
 });

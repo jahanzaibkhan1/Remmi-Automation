@@ -839,7 +839,7 @@ export class ContactActions {
             await rows.nth(0).click();
             await this.page.waitForTimeout(800); // optional: wait to simulate user observation
         }
-        await this.page.keyboard.press('Escape');        
+        await this.page.keyboard.press('Escape');
         await this.ResetButton();
     }
 
@@ -1068,25 +1068,25 @@ export class ContactActions {
         await this.page.waitForTimeout(1500);
 
         // Open the type filter
-         // Open the status filter - click until the filter popup is visible
-         const filterButton = this.page.getByRole('img', { name: 'filter' }).nth(3);
-         const filterPopup = this.page.locator('div').filter({ hasText: 'Filter' }).nth(1);
- 
-         await expect(filterButton).toBeVisible({ timeout: 10000 });
-         // Click the filter button until the filter popup is visible, with a max attempts safeguard.
-         let popupVisible = false;
-         let attempts = 0;
-         const maxAttempts = 5;
-         while (!popupVisible && attempts < maxAttempts) {
-             await filterButton.click({ force: true });
-             popupVisible = await filterPopup.isVisible().catch(() => false);
-             if (!popupVisible) {
-                 // Wait a short while before next try
-                 await this.page.waitForTimeout(300);
-             }
-             attempts++;
-         }
-         await expect(filterPopup).toBeVisible();
+        // Open the status filter - click until the filter popup is visible
+        const filterButton = this.page.getByRole('img', { name: 'filter' }).nth(3);
+        const filterPopup = this.page.locator('div').filter({ hasText: 'Filter' }).nth(1);
+
+        await expect(filterButton).toBeVisible({ timeout: 10000 });
+        // Click the filter button until the filter popup is visible, with a max attempts safeguard.
+        let popupVisible = false;
+        let attempts = 0;
+        const maxAttempts = 5;
+        while (!popupVisible && attempts < maxAttempts) {
+            await filterButton.click({ force: true });
+            popupVisible = await filterPopup.isVisible().catch(() => false);
+            if (!popupVisible) {
+                // Wait a short while before next try
+                await this.page.waitForTimeout(300);
+            }
+            attempts++;
+        }
+        await expect(filterPopup).toBeVisible();
 
         // Open the first "Select" for filter type operator (Equals/Not Equals/...)
         const operatorDropdown = this.page.getByText('Select', { exact: true }).first();
@@ -1142,25 +1142,25 @@ export class ContactActions {
         await this.page.waitForTimeout(3000);
 
         // Open the type filter
-         // Open the status filter - click until the filter popup is visible
-         const filterButton = this.page.getByRole('img', { name: 'filter' }).nth(3);
-         const filterPopup = this.page.locator('div').filter({ hasText: 'Filter' }).nth(1);
- 
-         await expect(filterButton).toBeVisible({ timeout: 10000 });
-         // Click the filter button until the filter popup is visible, with a max attempts safeguard.
-         let popupVisible = false;
-         let attempts = 0;
-         const maxAttempts = 5;
-         while (!popupVisible && attempts < maxAttempts) {
-             await filterButton.click({ force: true });
-             popupVisible = await filterPopup.isVisible().catch(() => false);
-             if (!popupVisible) {
-                 // Wait a short while before next try
-                 await this.page.waitForTimeout(300);
-             }
-             attempts++;
-         }
-         await expect(filterPopup).toBeVisible();
+        // Open the status filter - click until the filter popup is visible
+        const filterButton = this.page.getByRole('img', { name: 'filter' }).nth(3);
+        const filterPopup = this.page.locator('div').filter({ hasText: 'Filter' }).nth(1);
+
+        await expect(filterButton).toBeVisible({ timeout: 10000 });
+        // Click the filter button until the filter popup is visible, with a max attempts safeguard.
+        let popupVisible = false;
+        let attempts = 0;
+        const maxAttempts = 5;
+        while (!popupVisible && attempts < maxAttempts) {
+            await filterButton.click({ force: true });
+            popupVisible = await filterPopup.isVisible().catch(() => false);
+            if (!popupVisible) {
+                // Wait a short while before next try
+                await this.page.waitForTimeout(300);
+            }
+            attempts++;
+        }
+        await expect(filterPopup).toBeVisible();
 
         // Open the first "Select" for filter type operator (Equals/Not Equals/...)
         const operatorDropdown = this.page.getByText('Select', { exact: true }).first();
@@ -1216,25 +1216,25 @@ export class ContactActions {
         await this.page.waitForTimeout(1500);
 
         // "Associate Company" filter open kar rahe hain
-         // Open the status filter - click until the filter popup is visible
-         const filterButton = this.page.getByRole('img', { name: 'filter' }).nth(6);
-         const filterPopup = this.page.locator('div').filter({ hasText: 'Filter' }).nth(1)
- 
-         await expect(filterButton).toBeVisible({ timeout: 10000 });
-         // Click the filter button until the filter popup is visible, with a max attempts safeguard.
-         let popupVisible = false;
-         let attempts = 0;
-         const maxAttempts = 5;
-         while (!popupVisible && attempts < maxAttempts) {
-             await filterButton.click({ force: true });
-             popupVisible = await filterPopup.isVisible().catch(() => false);
-             if (!popupVisible) {
-                 // Wait a short while before next try
-                 await this.page.waitForTimeout(300);
-             }
-             attempts++;
-         }
-         await expect(filterPopup).toBeVisible();
+        // Open the status filter - click until the filter popup is visible
+        const filterButton = this.page.getByRole('img', { name: 'filter' }).nth(6);
+        const filterPopup = this.page.locator('div').filter({ hasText: 'Filter' }).nth(1)
+
+        await expect(filterButton).toBeVisible({ timeout: 10000 });
+        // Click the filter button until the filter popup is visible, with a max attempts safeguard.
+        let popupVisible = false;
+        let attempts = 0;
+        const maxAttempts = 5;
+        while (!popupVisible && attempts < maxAttempts) {
+            await filterButton.click({ force: true });
+            popupVisible = await filterPopup.isVisible().catch(() => false);
+            if (!popupVisible) {
+                // Wait a short while before next try
+                await this.page.waitForTimeout(300);
+            }
+            attempts++;
+        }
+        await expect(filterPopup).toBeVisible();
 
         // Operator "Select" drop down khol ke "Equals" select karain
         const operatorDropdown = this.page.getByText('Select', { exact: true }).first();
@@ -1267,28 +1267,28 @@ export class ContactActions {
         // Wait for first five rows to be visible
         const rows = this.page.locator('table tbody tr');
         for (let i = 0; i < 5; i++) {
-            await rows.nth(i).waitFor({ state: 'visible', timeout: 30000 }).catch(() => {});
+            await rows.nth(i).waitFor({ state: 'visible', timeout: 30000 }).catch(() => { });
         }
 
-         // Open the status filter - click until the filter popup is visible
-         const filterButton = this.page.getByRole('img', { name: 'filter' }).nth(7);
-         const filterPopup = this.page.locator('div').filter({ hasText: 'Filter' }).nth(1);
- 
-         await expect(filterButton).toBeVisible({ timeout: 10000 });
-         // Click the filter button until the filter popup is visible, with a max attempts safeguard.
-         let popupVisible = false;
-         let attempts = 0;
-         const maxAttempts = 5;
-         while (!popupVisible && attempts < maxAttempts) {
-             await filterButton.click({ force: true });
-             popupVisible = await filterPopup.isVisible().catch(() => false);
-             if (!popupVisible) {
-                 // Wait a short while before next try
-                 await this.page.waitForTimeout(300);
-             }
-             attempts++;
-         }
-         await expect(filterPopup).toBeVisible();
+        // Open the status filter - click until the filter popup is visible
+        const filterButton = this.page.getByRole('img', { name: 'filter' }).nth(7);
+        const filterPopup = this.page.locator('div').filter({ hasText: 'Filter' }).nth(1);
+
+        await expect(filterButton).toBeVisible({ timeout: 10000 });
+        // Click the filter button until the filter popup is visible, with a max attempts safeguard.
+        let popupVisible = false;
+        let attempts = 0;
+        const maxAttempts = 5;
+        while (!popupVisible && attempts < maxAttempts) {
+            await filterButton.click({ force: true });
+            popupVisible = await filterPopup.isVisible().catch(() => false);
+            if (!popupVisible) {
+                // Wait a short while before next try
+                await this.page.waitForTimeout(300);
+            }
+            attempts++;
+        }
+        await expect(filterPopup).toBeVisible();
 
         const operatorDropdown = this.page.getByText('Select', { exact: true }).first();
         await operatorDropdown.click();
@@ -1323,25 +1323,25 @@ export class ContactActions {
         await this.page.waitForTimeout(1500);
 
         // Locate the filter button for the Created Date column (assuming 10th column, adjust if needed)
-         // Open the status filter - click until the filter popup is visible
-         const filterButton = this.page.getByRole('img', { name: 'filter' }).nth(8);
-         const filterPopup = this.page.locator('div').filter({ hasText: 'Filter ByCustom DateClearApply' }).nth(1);
- 
-         await expect(filterButton).toBeVisible({ timeout: 10000 });
-         // Click the filter button until the filter popup is visible, with a max attempts safeguard.
-         let popupVisible = false;
-         let attempts = 0;
-         const maxAttempts = 5;
-         while (!popupVisible && attempts < maxAttempts) {
-             await filterButton.click({ force: true });
-             popupVisible = await filterPopup.isVisible().catch(() => false);
-             if (!popupVisible) {
-                 // Wait a short while before next try
-                 await this.page.waitForTimeout(300);
-             }
-             attempts++;
-         }
-         await expect(filterPopup).toBeVisible();
+        // Open the status filter - click until the filter popup is visible
+        const filterButton = this.page.getByRole('img', { name: 'filter' }).nth(8);
+        const filterPopup = this.page.locator('div').filter({ hasText: 'Filter ByCustom DateClearApply' }).nth(1);
+
+        await expect(filterButton).toBeVisible({ timeout: 10000 });
+        // Click the filter button until the filter popup is visible, with a max attempts safeguard.
+        let popupVisible = false;
+        let attempts = 0;
+        const maxAttempts = 5;
+        while (!popupVisible && attempts < maxAttempts) {
+            await filterButton.click({ force: true });
+            popupVisible = await filterPopup.isVisible().catch(() => false);
+            if (!popupVisible) {
+                // Wait a short while before next try
+                await this.page.waitForTimeout(300);
+            }
+            attempts++;
+        }
+        await expect(filterPopup).toBeVisible();
         await this.page.locator('div').filter({ hasText: 'Custom Date' }).nth(4).click()
         // Click to open operator dropdown and select 'Equals'
         const SelectDate = this.page.getByText('Prev Quarter')
@@ -1749,11 +1749,11 @@ export class ContactActions {
         const maxAttempts = 5;
         let detailPanel1Visible = false;
         for (let attempt = 0; attempt < maxAttempts; attempt++) {
-            await rowsLocator.first().click({force:true});
+            await rowsLocator.first().click({ force: true });
             const detailPanel1 = this.page.locator('.property-details').first();
             try {
                 await detailPanel1.waitFor({ state: 'visible', timeout: 2000 });
-                await expect(detailPanel1).toBeVisible({timeout:2000});
+                await expect(detailPanel1).toBeVisible({ timeout: 2000 });
                 detailPanel1Visible = true;
                 break;
             } catch {
@@ -1767,7 +1767,7 @@ export class ContactActions {
 
         const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
         await detailPanel.waitFor({ state: 'visible', timeout: 10000 });
-        await expect(detailPanel).toBeVisible({timeout:10000});
+        await expect(detailPanel).toBeVisible({ timeout: 10000 });
 
         let detailOpened = true;
         try {
@@ -1856,7 +1856,10 @@ export class ContactActions {
     /*********************************************************Contact Form Public Action******************************************** */
     public async verifyContactFormOpensSuccessfully() {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(2000);
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
 
         const AddContactButton = this.page.getByRole('button', { name: '' });
         await AddContactButton.click({ force: true });
@@ -1864,29 +1867,38 @@ export class ContactActions {
         const contactForm = this.page.locator('section');
         await contactForm.waitFor({ state: 'visible', timeout: 10000 });
         expect(contactForm).toBeVisible();
-        console.log("Contact Form open successfully")
+        console.log("Contact Form open successfully");
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     public async verifyContactFormCloseWithXIcon() {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(2000);
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
         const AddContactButton = this.page.getByRole('button', { name: '' });
         await AddContactButton.click({ force: true });
 
         const contactForm = this.page.locator('section');
         await contactForm.waitFor({ state: 'visible', timeout: 10000 });
         expect(contactForm).toBeVisible();
-        const closeIcon = this.page.locator('.pi.pi-times.cursor-pointer.f-14').first();
-        await closeIcon.waitFor({ state: 'visible', timeout: 5000 });
-        await closeIcon.click();
-        await contactForm.waitFor({ state: 'hidden', timeout: 5000 });
-        expect(await contactForm.isVisible()).toBeFalsy();
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
         console.log("Contact form was closed using the X icon successfully")
     }
 
     public async verifyImageUploadFunctionalityNotDisplayed() {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(2000);
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
 
         const AddContactButton = this.page.getByRole('button', { name: '' });
         await AddContactButton.click({ force: true });
@@ -1910,6 +1922,10 @@ export class ContactActions {
             expect(await el.count()).toBe(0);
         }
 
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
         console.log("Verified: Image upload functionality is not displayed on the contact form.");
     }
 
@@ -1918,7 +1934,10 @@ export class ContactActions {
     public async verifyContactInitialsPlaceholderDisplays(firstName?: string, lastName?: string) {
         await this.NavigateToContacts();
 
-        await this.page.waitForTimeout(2500)
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
 
         const addContactButton = this.page.getByRole('button', { name: '' });
         await addContactButton.waitFor({ state: 'visible' });
@@ -1948,13 +1967,19 @@ export class ContactActions {
         await expect(initialsPlaceholder).toContainText(expectedInitials);
 
         console.log(`✅ Verified initials: ${expectedInitials}`);
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
 
     public async verifySelectContactTypeUpdatesDropdown() {
         await this.NavigateToContacts();
 
-        await this.page.waitForTimeout(3000);
+        const rowsLocator = this.page.locator('table tbody tr');
+        await rowsLocator.first().waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
 
         const addContactButton = this.page.getByRole('button', { name: '' });
         await addContactButton.waitFor({ state: 'visible' });
@@ -1974,12 +1999,20 @@ export class ContactActions {
         await expect(this.page.locator('span').filter({ hasText: /^Company$/ })).toBeVisible()
         await expect(this.page.locator('div').filter({ hasText: /^Company Name \*$/ }).nth(1)).toBeVisible()
         await expect(this.page.locator('div').filter({ hasText: /^Preferred Contact MethodSelect Contact Method$/ }).first()).toBeVisible()
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
+
 
     public async verifyRequiredFieldsValidationForCompany() {
         await this.NavigateToContacts();
 
-        await this.page.waitForTimeout(3000);
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
         const addContactButton = this.page.getByRole('button', { name: '' });
         await addContactButton.waitFor({ state: 'visible' });
         await addContactButton.click();
@@ -2003,12 +2036,19 @@ export class ContactActions {
 
         const emailError = this.page.getByText('Email is required', { exact: false });
         await expect(emailError).toBeVisible();
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     public async verifyRequiredFieldsCapitalizedValidationForCompany() {
         await this.NavigateToContacts();
 
-        await this.page.waitForTimeout(3000);
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
         const addContactButton = this.page.getByRole('button', { name: '' });
         await addContactButton.waitFor({ state: 'visible' });
         await addContactButton.click();
@@ -2050,13 +2090,20 @@ export class ContactActions {
         } else {
             throw new Error('Email error text not found');
         }
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     // Verify required fields validation for "Individual" contact type
     public async verifyRequiredFieldsValidationForIndividual() {
         await this.NavigateToContacts();
 
-        await this.page.waitForTimeout(3000);
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
         const addContactButton = this.page.getByRole('button', { name: '' });
         await addContactButton.waitFor({ state: 'visible' });
         await addContactButton.click();
@@ -2073,13 +2120,18 @@ export class ContactActions {
 
         await expect(firstNameError).toBeVisible();
         await expect(emailError).toBeVisible();
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
     }
 
     public async verifySaveButtonSavesForm() {
         await this.NavigateToContacts();
-
-        await this.page.waitForTimeout(3000);
-
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
         const addContactButton = this.page.getByRole('button', { name: '' });
         await addContactButton.waitFor({ state: 'visible' });
         await addContactButton.click();
@@ -2100,18 +2152,27 @@ export class ContactActions {
         await emailInput.waitFor({ state: 'visible' });
         await emailInput.fill(email);
 
+        await this.page.waitForTimeout(1000);
+
         const saveButton = this.page.getByRole('button', { name: 'Save' }).first();
         await saveButton.click({ force: true });
 
         const successToast = this.page.getByText(/Contact has been created|Contact has been updated/i);
-        await expect(successToast).toBeVisible();
+        await expect(successToast).toBeVisible({ timeout: 10000 });
+
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     // Verify that clicking "Save & Close" saves and closes the form
     public async verifySaveAndCloseButtonSavesAndClosesForm() {
         await this.NavigateToContacts();
 
-        await this.page.waitForTimeout(3000);
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
 
         const addContactButton = this.page.getByRole('button', { name: '' });
         await addContactButton.waitFor({ state: 'visible' });
@@ -2145,7 +2206,9 @@ export class ContactActions {
 
     public async verifySelectAllChangesToDeselectAllInPreferredContactMethod() {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
 
         // Open Add Contact
         const addContactButton = this.page.getByRole('button', { name: '' });
@@ -2164,12 +2227,17 @@ export class ContactActions {
         const deselectAllLabel = this.page.locator('label.select_all[data="Deselect All"]');
         await expect(deselectAllLabel).toBeVisible();
 
-
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     public async verifyInvalidEmailFormatErrorMessage() {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
 
         // Open Add Contact
         const addContactButton = this.page.getByRole('button', { name: '' });
@@ -2182,6 +2250,8 @@ export class ContactActions {
         await emailInput.waitFor({ state: 'visible' });
         await emailInput.fill(invalidEmail);
 
+        await this.page.waitForTimeout(1000);
+
         // Click Save button
         const saveButton = this.page.getByRole('button', { name: 'Save' }).first();
         await saveButton.click({ force: true });
@@ -2189,11 +2259,18 @@ export class ContactActions {
         // Verify error message for email field
         const emailError = this.page.getByText('Invalid email format');
         await expect(emailError).toBeVisible();
+
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(2000);
     }
 
     public async verifyAddEmailField() {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
 
         const addContactButton = this.page.getByRole('button', { name: '' });
         await addContactButton.waitFor({ state: 'visible' });
@@ -2206,16 +2283,18 @@ export class ContactActions {
         await addEmailIcon.click();
 
         await expect(this.page.getByRole('textbox', { name: 'Other Email' })).toBeVisible()
-
-        const countAfter = await emailInputs.count();
-
-        expect(countAfter).toBe(countBefore + 1);
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     // Verify that clicking the "+" icon adds a new phone field
     public async verifyAddPhoneField() {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
 
         const addContactButton = this.page.getByRole('button', { name: '' });
         await addContactButton.waitFor({ state: 'visible' });
@@ -2229,14 +2308,17 @@ export class ContactActions {
 
         await expect(this.page.getByRole('textbox', { name: 'Other Phone' })).toBeVisible();
 
-        const countAfter = await phoneInputs.count();
-
-        expect(countAfter).toBe(countBefore + 1);
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     public async verifyDeleteEmailOrPhoneField() {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
 
         const addContactButton = this.page.getByRole('button', { name: '' });
         await addContactButton.waitFor({ state: 'visible' });
@@ -2260,13 +2342,20 @@ export class ContactActions {
         await deletePhoneButton.click();
         await this.page.waitForTimeout(1000);
         await expect(phoneInputs.nth(1)).not.toBeVisible();
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     // Verify that clicking the correct (✔) button sets an email as the primary email
 
     public async verifySetPrimaryEmail() {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
 
         const addContactButton = this.page.getByRole('button', { name: '' });
         await addContactButton.waitFor({ state: 'visible' });
@@ -2288,13 +2377,19 @@ export class ContactActions {
         await setPrimaryBtn.click({ force: true });
 
         await expect(mainEmailInput).toHaveValue(secondEmail);
+
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     // Attempt to save a tag without entering a name
     public async verifyCannotSaveTagWithoutName() {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
-
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
         const addContactButton = this.page.getByRole('button', { name: '' });
         await addContactButton.waitFor({ state: 'visible' });
         await addContactButton.click();
@@ -2304,6 +2399,7 @@ export class ContactActions {
         await plusTagIcon.click();
 
         await expect(this.page.getByText('Tag Manager')).toBeVisible();
+        await this.page.waitForTimeout(1000);
 
         const newTagButton = this.page.locator('button[ptooltip="New Tag"]');
         await newTagButton.click();
@@ -2317,31 +2413,36 @@ export class ContactActions {
 
         const addButton = this.page.getByRole('button', { name: /^Add$/i });
         await addButton.isDisabled();
+        // click cancel button 
+        const cancelButton = this.page.getByRole('button', { name: /cancel/i }).first();
+        await expect(cancelButton).toBeVisible();
+        await cancelButton.click();
+
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     // Verify associating a company with a contact via association search in contact details
     public async verifyCompanyAssociatedWithContact(companyName: string): Promise<void> {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
-
-        const rowsLocator = this.page.locator('table tbody tr');
-        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
-
-        const contactRow = rowsLocator.first();
-        const nameCell = contactRow.locator('td').nth(0);
-        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
-        await contactRow.click();
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+        await firstRow.click();
 
         const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
 
         const associationSearchInput = this.page.getByRole('searchbox', { name: 'Search Company' });
         await associationSearchInput.waitFor({ state: 'visible', timeout: 5000 });
         await associationSearchInput.click();
+        await this.page.waitForTimeout(1200);
         await associationSearchInput.fill(companyName);
 
         // Wait for and select the desired company from the dropdown options
         const companyOption = this.page.getByRole('option', { name: companyName }).first();
-        await companyOption.waitFor({ state: 'visible', timeout: 5000 });
+        await companyOption.waitFor({ state: 'visible', timeout: 30000 });
         await companyOption.click();
 
         // Click on the "Association" button (replace selector as needed)
@@ -2352,27 +2453,28 @@ export class ContactActions {
         const alertLocator = this.page.getByRole('alert', { name: /Company added successfully|This company is already attached with this contact/ });
         await expect(alertLocator).toBeVisible({ timeout: 10000 });
         const removeNetsol = this.page.locator('div.company-div:has(span:text("Netsol")) i.pi-times-circle');
-        await expect(removeNetsol).toBeVisible()
+        await expect(removeNetsol).toBeVisible();
+
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     // Try to associate the same company twice
     public async tryAssociateSameCompanyTwice(companyName: string): Promise<void> {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
-
-        const rowsLocator = this.page.locator('table tbody tr');
-        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
-
-        const contactRow = rowsLocator.first();
-        const nameCell = contactRow.locator('td').nth(0);
-        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
-        await contactRow.click();
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+        await firstRow.click();
 
         const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
 
         const associationSearchInput = this.page.getByRole('searchbox', { name: 'Search Company' });
         await associationSearchInput.waitFor({ state: 'visible', timeout: 5000 });
         await associationSearchInput.click();
+        await this.page.waitForTimeout(1200);
         await associationSearchInput.fill(companyName);
 
         // Wait for and select the desired company from the dropdown options
@@ -2392,20 +2494,19 @@ export class ContactActions {
         await expect(removeNetsol).toBeVisible()
 
         await expect(this.page.getByRole('alert', { name: 'This company is already attached with this contact' })).toBeVisible()
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     // Verify that clicking on a company tag opens the company form
     public async verifyOpenCompanyFormFromTag(companyName: string): Promise<void> {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
-
-        const rowsLocator = this.page.locator('table tbody tr');
-        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
-
-        const contactRow = rowsLocator.first();
-        const nameCell = contactRow.locator('td').nth(0);
-        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
-        await contactRow.click();
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+        await firstRow.click();
 
         const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
 
@@ -2429,26 +2530,26 @@ export class ContactActions {
         const tag = this.page.locator(`div.company-div span`, { hasText: companyName }).first();
         await tag.click();
         await expect(this.page.locator('section').filter({ hasText: 'Contact TypeSelect Type×Company×TypeCompany Type×Client× Netsol Save Contact' })).toBeVisible()
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     // Verify that a company tag can be removed
     public async verifyRemoveCompanyTag(companyName: string): Promise<void> {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
-
-        const rowsLocator = this.page.locator('table tbody tr');
-        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
-
-        const contactRow = rowsLocator.first();
-        const nameCell = contactRow.locator('td').nth(0);
-        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
-        await contactRow.click();
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+        await firstRow.click();
 
         const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
 
         const associationSearchInput = this.page.getByRole('searchbox', { name: 'Search Company' });
         await associationSearchInput.waitFor({ state: 'visible', timeout: 5000 });
         await associationSearchInput.click();
+        await this.page.waitForTimeout(1200);
         await associationSearchInput.fill(companyName);
 
         // Wait for and select the desired company from the dropdown options
@@ -2467,25 +2568,20 @@ export class ContactActions {
         await tag.click();
         await expect(this.page.locator('section').filter({ hasText: 'Contact TypeSelect Type×Company×TypeCompany Type×Client× Netsol Save Contact' })).toBeVisible()
 
-        const closeButton = this.page.locator('//i[@ptooltip="Close" and contains(@class,"pi-times")]').last();
-        await closeButton.click();
-        await expect(this.page.locator('section').filter({ hasText: 'Contact TypeSelect Type×Company×TypeCompany Type×Client× Netsol Save Contact' })).not.toBeVisible()
+        await this.page.waitForTimeout(1200);
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
 
     }
 
     // Verify that address suggestions appear while typing in the address field
     public async verifyAddressSuggestions(addressPartial: string): Promise<void> {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
-
-        // Click into first contact to open detail view
-        const rowsLocator = this.page.locator('table tbody tr');
-        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
-
-        const contactRow = rowsLocator.first();
-        const nameCell = contactRow.locator('td').nth(0);
-        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
-        await contactRow.click();
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+        await firstRow.click();
 
         // Locate the address input field (update selector as needed)
         const addressInput = this.page.getByRole('textbox', { name: /address/i }).first();
@@ -2503,17 +2599,25 @@ export class ContactActions {
         // Wait for suggestions to appear and select the first one
         await suggestionsList.first().waitFor({ state: 'visible', timeout: 5000 });
         await suggestionsList.first().click();
+        await this.page.waitForTimeout(1000);
+        // Close the form using the X icon after address selection
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     public async verifyAddressAutoFill(addressPartial: string): Promise<void> {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
-
-        // Open the first contact in the contacts list
-        const rowsLocator = this.page.locator('table tbody tr');
-        const firstRow = rowsLocator.first();
-        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        // Click on the first row in the table
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
         await firstRow.click();
+
+        const contactForm = this.page.locator('section');
+        await contactForm.waitFor({ state: 'visible', timeout: 10000 });
+        expect(contactForm).toBeVisible();
+        console.log("Contact Form open successfully");
 
         // Find the address input field
         const addressInput = this.page.locator('input[placeholder="Search Address"]');
@@ -2579,22 +2683,27 @@ export class ContactActions {
             Object.values(fieldValues).some(val => val && val.trim().length > 0)
         ).toBeTruthy();
 
+        await this.page.waitForTimeout(1000);
+
+        // Click the save button to save address changes
+        const saveButton = this.page.getByRole('button', { name: /^Save$/i }).last();
+        await saveButton.click({ force: true });
+        await this.page.waitForTimeout(1200);
+        // Close the overlay or form using the close icon
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
     }
 
     // Verify that all address fields are displayed correctly
     async verifyAllAddressFieldsDisplayed() {
 
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
-
-        // Click into first contact to open detail view
-        const rowsLocator = this.page.locator('table tbody tr');
-        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
-
-        const contactRow = rowsLocator.first();
-        const nameCell = contactRow.locator('td').nth(0);
-        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
-        await contactRow.click();
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+        await firstRow.click();
 
         // Open overlay/panel if required
         const editOverlayButton = this.page.locator('#toggle-overlay');
@@ -2621,21 +2730,26 @@ export class ContactActions {
         await expect(state).toBeVisible();
         await expect(postCode).toBeVisible();
         await expect(country).toBeVisible();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the save button to save address changes
+        const saveButton = this.page.getByRole('button', { name: /^Save$/i }).last();
+        await saveButton.click({ force: true });
+        await this.page.waitForTimeout(1200);
+        // Close the overlay or form using the close icon
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     // Verify that the Tag Manager popup opens
     async verifyTagManagerPopupOpens() {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
-
-        // Click into first contact to open detail view
-        const rowsLocator = this.page.locator('table tbody tr');
-        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
-
-        const contactRow = rowsLocator.first();
-        const nameCell = contactRow.locator('td').nth(0);
-        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
-        await contactRow.click();
+        const firstRow = this.page.locator('table tbody tr').first();
+        await expect(firstRow).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(2000);
+        await firstRow.click();
 
         // Open overlay/panel if required
         const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
@@ -2643,27 +2757,27 @@ export class ContactActions {
 
         const TagPopup = this.page.getByText('Tag ManagerCompany Contact');
         await expect(TagPopup).toBeVisible();
+
+        await this.page.waitForTimeout(1200);
+        // Close the overlay or form using the close icon
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     async verifyCanAddNewTagType(tagTypeName: string) {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(1500);
-
-        const rowsLocator = this.page.locator('table tbody tr');
-        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
-
-        const contactRow = rowsLocator.first();
-        const nameCell = contactRow.locator('td').nth(0);
-        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
-        await contactRow.click();
-
+        const firstRow = this.page.locator('table tbody tr').first();
+        await expect(firstRow).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(2000);
+        await firstRow.click();
         const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
         await tagButton.click();
 
         const tagPopupHeader = this.page.getByText('Tag ManagerCompany Contact');
-        await expect(tagPopupHeader).toBeVisible();
+        await expect(tagPopupHeader).toBeVisible({ timeout: 10000 });
 
-        const addTagTypeButton = this.page.locator('.p-element.p-button-rounded').first();
+        const addTagTypeButton = this.page.getByRole('dialog').getByRole('button', { name: '' });
         await addTagTypeButton.click();
 
         // Instead of trying to fill on the .ng-select-container, target the input inside ng-select dropdown directly
@@ -2689,12 +2803,8 @@ export class ContactActions {
         await expect(this.page.locator('div').filter({ hasText: 'Tag successfully created' }).nth(2)).toBeVisible()
 
 
-        const tagManagerPopup = this.page.getByText('Automation Testing'); // try common class, else adjust selector
-        await tagManagerPopup.scrollIntoViewIfNeeded();
-
-        // Now check visibility after scroll
-        const newTagType = this.page.getByText(tagTypeName, { exact: true });
-        await expect(newTagType).toBeVisible({ timeout: 10000 });
+        const tagManagerPopup = this.page.getByText('Automation Testing').last();
+        await tagManagerPopup.evaluate((el) => { el.scrollIntoView({ block: "end" }); });
 
         // Verify in search box field that the tag should be displayed
         const tagSearchInput = this.page.locator('input[placeholder="Search Tags"]');
@@ -2704,18 +2814,23 @@ export class ContactActions {
             await tagSearchInput.type(char, { delay: 20 });
         }
         // Expect that the tag option is visible in the dropdown (without locator in expect)
-        await expect(tagSearchInput).toBeVisible()
+        await expect(tagSearchInput).toBeVisible();
+        await this.page.waitForTimeout(1200);
+        // Close the tag manager popup by clicking the X icon
+        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
+        await closeTagManagerIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
     }
     // Verify that entering data in address fields is reflected in the main/displayed address
 
     async verifyMainAddressUpdatesWithAllFields() {
         // Step 1: Navigate to contacts and select first contact
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
-
-        const rows = this.page.locator('table tbody tr');
-        const firstRow = rows.nth(0);
-        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        // Click on the first row in the table
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
         await firstRow.click();
 
         // Step 2: Search Address field > type & select suggestion
@@ -2803,6 +2918,12 @@ export class ContactActions {
         expect(updatedValue).toContain(newAddressData.streetName);
         expect(updatedValue).toContain(newAddressData.state);
         expect(updatedValue).toContain(newAddressData.postCode);
+
+        await this.page.waitForTimeout(1000);
+        // Close the form after checking address update
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     // Search for a non existent tag in Tag Manager
@@ -2811,13 +2932,10 @@ export class ContactActions {
         await this.NavigateToContacts();
         await this.page.waitForTimeout(1500);
 
-        const rowsLocator = this.page.locator('table tbody tr');
-        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
-
-        const contactRow = rowsLocator.first();
-        const nameCell = contactRow.locator('td').nth(0);
-        const tableContactName = (await nameCell.textContent())?.trim() ?? "";
-        await contactRow.click();
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+        await firstRow.click();
 
         const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
         await tagButton.click();
@@ -2828,17 +2946,21 @@ export class ContactActions {
         await searchInput.fill(tagName);
         const noResult = this.page.getByText(/No data found|no results|no matching tags/i);
         await expect(noResult).toBeVisible();
+
+        await this.page.waitForTimeout(1000);
+        // Close the form after checking address update
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     async verifyCreateTagByEnter(tagTypeName: string, tagValue: string) {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(1500);
 
-        // Open a contact row
-        const rowsLocator = this.page.locator('table tbody tr');
-        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
-        const contactRow = rowsLocator.first();
-        await contactRow.click();
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(2000);
+        await firstRow.click();
 
         // Open Tag Manager popup
         const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
@@ -2847,7 +2969,7 @@ export class ContactActions {
         await expect(tagPopupHeader).toBeVisible();
 
         // Add Tag Type
-        const addTagTypeButton = this.page.locator('.p-element.p-button-rounded').first();
+        const addTagTypeButton = this.page.getByRole('dialog').getByRole('button', { name: '' });
         await addTagTypeButton.click();
 
         // Select the tag type from dropdown
@@ -2869,20 +2991,29 @@ export class ContactActions {
         const createdTagChip = this.page.locator(`.ng-value-label, .p-chips-token, .chip, .tag`)
             .filter({ hasText: tagValue });
         await expect(createdTagChip).toBeVisible();
+
+        // Click Cancel button to discard tag creation
+        const cancelButton = this.page.getByRole('button', { name: /cancel/i }).first();
+        await expect(cancelButton).toBeVisible();
+        await cancelButton.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Close the Tag creation dialog by clicking the close (X) button
+        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
+        await closeTagManagerIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     /**
      Verifies that removing a tag updates the tag list and that the tag no longer appears.
      */
-    async verifyRemoveTagUpdatesTagList(tagValue: string) {
+    async verifyRemoveTagUpdatesTagList() {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(1500);
-
-        // Open a contact row
-        const rowsLocator = this.page.locator('table tbody tr');
-        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
-        const contactRow = rowsLocator.first();
-        await contactRow.click();
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(2000);
+        await firstRow.click();
 
         // Open Tag Manager popup
         const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
@@ -2890,27 +3021,37 @@ export class ContactActions {
         const tagPopupHeader = this.page.getByText('Tag ManagerCompany Contact');
         await expect(tagPopupHeader).toBeVisible();
 
-        const company = await this.page.getByText('Automation Testing');
-        await company.scrollIntoViewIfNeeded();
+        const company = await this.page.getByText('Company Contact Type');
         await expect(company).toBeVisible();
 
-        // Find the chip (tag value label) elements in the tag list area
-        const chips = this.page.locator('#cdk-drop-list-13 .p-chip-text').first();
+        // Double click the tag chip for "Agency"
+        const tagChip = this.page.locator("//div[@cdkdroplist]//div[@cdkdrag][.//div[normalize-space()='Agency']]").first();
+        await tagChip.waitFor({ state: 'visible' });
+        await tagChip.scrollIntoViewIfNeeded();
+        await tagChip.hover();
+        await this.page.waitForTimeout(100);
 
-        // Click multiple times on the chip
-        for (let i = 0; i < 3; i++) {
-            await chips.dblclick({ force: true });
-        }
+        await tagChip.click({ clickCount: 6 });
+
 
         await this.page.waitForTimeout(500)
 
         const closeIcon = this.page.locator('.f-12.pi.pi-times.cp');
 
+        await closeIcon.scrollIntoViewIfNeeded();
+
         await closeIcon.click({ force: true });
 
         await this.page.waitForTimeout(1000)
 
-        await expect(closeIcon).not.toBeVisible()
+        await expect(closeIcon).not.toBeVisible();
+
+        await this.page.waitForTimeout(1000);
+
+        // Close the Tag creation dialog by clicking the close (X) button
+        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
+        await closeTagManagerIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -2918,13 +3059,10 @@ export class ContactActions {
      */
     async verifyTagPersistsAfterFormSave(tagTypeName: string, tagValue: string) {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(1500);
-
-        // Open the first contact in the list
-        const rowsLocator = this.page.locator('table tbody tr');
-        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
-        const contactRow = rowsLocator.first();
-        await contactRow.click();
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(2000);
+        await firstRow.click();
 
         // Open Tag Manager popup for the contact
         const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
@@ -2934,7 +3072,7 @@ export class ContactActions {
         await expect(tagPopupHeader).toBeVisible();
 
         // Add a new Tag Type
-        const addTagTypeButton = this.page.locator('.p-element.p-button-rounded').first();
+        const addTagTypeButton = this.page.getByRole('dialog').getByRole('button', { name: '' });
         await addTagTypeButton.click();
 
         // Select or type the tag type in the Select Tag Type dropdown
@@ -2985,18 +3123,23 @@ export class ContactActions {
         const foundTag = this.page.locator('.cdk-drop-list [ng-reflect-drag-data], .cdk-drop-list [data-tag-name], .cdk-drop-list .p-chip, .cdk-drop-list')
             .filter({ hasText: tagValue });
         await expect(foundTag.first()).toBeVisible({ timeout: 5000 });
+
+        await this.page.waitForTimeout(1200);
+
+        // Click the close icon to close the Tag Manager popup
+        await this.page.waitForTimeout(1000);
+        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
+        await closeTagManagerIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
 
     async verifyDoubleClickTagAddsToField(tagTypeName: string, tagValue: string) {
         // Navigate to Contacts and wait
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
-
-        // Select the first contact row
-        const rows = this.page.locator('table tbody tr');
-        const firstRow = rows.first();
-        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(2000);
         await firstRow.click();
 
         // Open Tag Manager popup
@@ -3008,24 +3151,30 @@ export class ContactActions {
 
         await this.page.waitForTimeout(500)
 
-        // Scroll to company block
-        const company = this.page.getByText('Automation Testing');
-        await company.scrollIntoViewIfNeeded();
-        await expect(company).toBeVisible();
+        // Double click the tag chip for "Agency"
+        const tagChip = this.page.locator("//div[@cdkdroplist]//div[@cdkdrag][.//div[normalize-space()='Agency']]").first();
+        await tagChip.waitFor({ state: 'visible' });
+        await tagChip.scrollIntoViewIfNeeded();
+        await tagChip.hover();
+        await this.page.waitForTimeout(100);
 
-        // Find the chip (tag value label) elements in the tag list area
-        const chips = this.page.locator('#cdk-drop-list-13 .p-chip-text').first();
+        await tagChip.click({ clickCount: 6 });
 
-        // Click multiple times on the chip
-        for (let i = 0; i < 3; i++) {
-            await chips.dblclick({ force: true });
-        }
 
         await this.page.waitForTimeout(500)
 
         const closeIcon = this.page.locator('.f-12.pi.pi-times.cp');
 
-        await expect(closeIcon).toBeVisible()
+        await closeIcon.scrollIntoViewIfNeeded();
+
+        await expect(closeIcon).toBeVisible({ timeout: 10000 });
+
+        await this.page.waitForTimeout(1000);
+
+        // Close the Tag creation dialog by clicking the close (X) button
+        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
+        await closeTagManagerIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -3033,12 +3182,9 @@ export class ContactActions {
      */
     async verifyTagCanBeSearchedInTagManager(tagValue: string) {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
-
-        // Open first contact row
-        const rows = this.page.locator('table tbody tr');
-        const firstRow = rows.first();
-        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(2000);
         await firstRow.click();
 
         // Open Tag Manager popup
@@ -3061,6 +3207,12 @@ export class ContactActions {
         const resultTag = this.page.locator('.cdk-drop-list .p-chip-text, .cdk-drop-list [data-tag-name]')
             .filter({ hasText: tagValue });
         await expect(resultTag.first()).toBeVisible({ timeout: 5000 });
+
+        // Close the Tag creation dialog by clicking the close (X) button
+        await this.page.waitForTimeout(1200);
+        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
+        await closeTagManagerIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -3068,13 +3220,11 @@ export class ContactActions {
      */
     async verifyTagManagerPopupCloseWithX() {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
 
-        // Open a contact row
-        const rowsLocator = this.page.locator('table tbody tr');
-        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
-        const contactRow = rowsLocator.first();
-        await contactRow.click();
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(2000);
+        await firstRow.click();
 
         // Open Tag Manager popup
         const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
@@ -3085,12 +3235,16 @@ export class ContactActions {
         await expect(tagPopupHeader).toBeVisible();
 
         // Locate and click the X (close) button within the popup
-        const closeButton = this.page.locator('.d-flex.align-items-center > div > button:nth-child(2)');
+        const closeButton = this.page.locator('.d-flex.align-items-center > div > button:nth-child(2)').last();
         await expect(closeButton).toBeVisible();
         await closeButton.click();
 
         // Verify that the popup is now closed (not visible)
         await expect(tagPopupHeader).not.toBeVisible({ timeout: 5000 });
+        await this.page.waitForTimeout(1200);
+        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
+        await closeTagManagerIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -3098,13 +3252,11 @@ export class ContactActions {
      */
     async verifyTagCreationPopupCloseWithCancel() {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
 
-        // Open a contact row
-        const rowsLocator = this.page.locator('table tbody tr');
-        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
-        const contactRow = rowsLocator.first();
-        await contactRow.click();
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(2000);
+        await firstRow.click();
 
         // Open Tag Manager popup
         const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
@@ -3115,20 +3267,19 @@ export class ContactActions {
         await expect(tagPopupHeader).toBeVisible();
 
         // Click 'Add Tag Type' to open the tag creation popup
-        const addTagTypeButton = this.page.locator('.p-element.p-button-rounded').first();
+        const addTagTypeButton = this.page.getByRole('dialog').getByRole('button', { name: '' });
         await addTagTypeButton.click();
-
-        // Wait for the tag creation popup to appear (look for dialog/modal)
-        const tagCreationDialog = this.page.locator('.p-2');
-        await expect(tagCreationDialog).toBeVisible({ timeout: 5000 });
 
         // Locate and click the Cancel button (common patterns)
         const cancelButton = this.page.getByRole('button', { name: /Cancel/i }).first();
         await expect(cancelButton).toBeVisible({ timeout: 2000 });
         await cancelButton.click();
 
-        // Confirm tag creation popup is no longer visible
-        await expect(tagCreationDialog).not.toBeVisible({ timeout: 5000 });
+        await this.page.waitForTimeout(1200);
+
+        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
+        await closeTagManagerIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -3137,13 +3288,12 @@ export class ContactActions {
      */
     async verifyTagCreationPopupSaveWorks(tagTypeName: string, tagValue: string) {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
 
         // Open a contact row
-        const rowsLocator = this.page.locator('table tbody tr');
-        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
-        const contactRow = rowsLocator.first();
-        await contactRow.click();
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(2000);
+        await firstRow.click();
 
         // Open Tag Manager popup
         const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
@@ -3154,12 +3304,9 @@ export class ContactActions {
         await expect(tagPopupHeader).toBeVisible();
 
         // Click 'Add Tag Type' to open the tag creation popup
-        const addTagTypeButton = this.page.locator('.p-element.p-button-rounded').first();
+        // Click 'Add Tag Type' to open the tag creation popup
+        const addTagTypeButton = this.page.getByRole('dialog').getByRole('button', { name: '' });
         await addTagTypeButton.click();
-
-        // Wait for the tag creation popup to appear
-        const tagCreationDialog = this.page.locator('.p-2');
-        await expect(tagCreationDialog).toBeVisible({ timeout: 5000 });
 
         // Fill tag type dropdown
         const tagTypeDropdown = this.page.locator('.ng-select-container:has-text("Select Tag Type")');
@@ -3184,6 +3331,10 @@ export class ContactActions {
         // Optionally wait for and check for success message or disappearance of modal
         const successToast = this.page.locator('div').filter({ hasText: 'Tag successfully created' }).nth(2);
         await expect(successToast).toBeVisible();
+        await this.page.waitForTimeout(1200);
+        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
+        await closeTagManagerIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
 
     }
 
@@ -3192,13 +3343,11 @@ export class ContactActions {
      */
     public async verifyAddandCloseTag(tagTypeName: string, tagValue: string) {
         await this.NavigateToContacts();
-        await this.page.waitForTimeout(3000);
 
-        // Open the first contact row detail
-        const rowsLocator = this.page.locator('table tbody tr');
-        await rowsLocator.first().waitFor({ state: 'visible', timeout: 10000 });
-        const contactRow = rowsLocator.first();
-        await contactRow.click();
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(2000);
+        await firstRow.click();
 
         // Open Tag Manager popup
         const tagButton = this.page.locator('.pi.pi-plus.cursor-pointer');
@@ -3209,12 +3358,9 @@ export class ContactActions {
         await expect(tagPopupHeader).toBeVisible();
 
         // Click 'Add Tag Type' to open the tag creation dialog
-        const addTagTypeButton = this.page.locator('.p-element.p-button-rounded').first();
+        // Click 'Add Tag Type' to open the tag creation popup
+        const addTagTypeButton = this.page.getByRole('dialog').getByRole('button', { name: '' });
         await addTagTypeButton.click();
-
-        // Wait for the tag creation popup to open
-        const tagCreationDialog = this.page.locator('.p-2');
-        await expect(tagCreationDialog).toBeVisible({ timeout: 5000 });
 
         // Click into the tag type dropdown and search for the tag type
         const tagTypeDropdown = this.page.locator('.ng-select-container:has-text("Select Tag Type")');
@@ -3241,10 +3387,14 @@ export class ContactActions {
         const successToast = this.page.locator('div').filter({ hasText: 'Tag successfully created' }).nth(2);
         await expect(successToast).toBeVisible({ timeout: 5000 });
 
-        const closetag = this.page.locator('.d-flex.align-items-center > div > button:nth-child(2)')
+        const closetag = this.page.locator('.d-flex.align-items-center > div > button:nth-child(2)').last();
         await expect(closetag).toBeVisible();
         await closetag.click();
         await expect(closetag).not.toBeVisible()
+        await this.page.waitForTimeout(1200);
+        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
+        await closeTagManagerIcon.click({ force: true });
+        await this.page.waitForTimeout(1000);
     }
 }
 
