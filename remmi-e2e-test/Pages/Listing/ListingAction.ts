@@ -9146,11 +9146,12 @@ export class ListingActions {
             `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
         );
 
-        await dayLocator.first().waitFor({ state: "visible", timeout: 3000 });
+        await dayLocator.first().waitFor({ state: "visible", timeout: 5000 });
         await dayLocator.first().click({ force: true });
 
         const startTimeSelect = this.page.getByRole('combobox').nth(4);
         await startTimeSelect.click();
+        await this.page.waitForTimeout(1000);
         // Select the 6th option (index 5) from the dropdown
         const startTimeOption = this.page.getByText('5', { exact: true });
         await expect(startTimeOption).toBeVisible({ timeout: 2000 });
@@ -9187,7 +9188,54 @@ export class ListingActions {
         const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
         await expect(inspectionsTab).toBeVisible({ timeout: 20000 });
         await inspectionsTab.click();
+        await this.page.waitForTimeout(1000);
 
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await legalTab.click();
+        await this.page.waitForTimeout(1000);
+        await inspectionsTab.click();
+
+        const deleteLink = this.page.getByRole('link', { name: 'delete' }).first();
+        await deleteLink.scrollIntoViewIfNeeded()
+        await deleteLink.click();
+
+        // Wait for the "event removed successfully" success message
+        const removeSuccessAlert = this.page.getByText('event removed successfully');
+        await expect(removeSuccessAlert).toBeVisible({ timeout: 5000 });
+
+        await this.page.waitForTimeout(2000);
+
+        // Optionally, close modal/form
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that deleting an inspection from the inspection tab removes it from the calendar.
+     * This will delete the first inspection, then check that it's no longer present in the list.
+     */
+    async verifyDeleteInspectionRemovesFromCalendar() {
+        await this.addValidInspectionAndVerifySuccess();
+        await this.switchToGridView();
+
+        
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to the Inspections tab
+        const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
+        await expect(inspectionsTab).toBeVisible({ timeout: 20000 });
+        await inspectionsTab.click();
+        await this.page.waitForTimeout(1000);
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await legalTab.click();
+        await this.page.waitForTimeout(1000);
+        await inspectionsTab.click();
+        await this.page.waitForTimeout(1000);
         const deleteLink = this.page.getByRole('link', { name: 'delete' }).first();
         await deleteLink.click();
 
@@ -9195,10 +9243,26 @@ export class ListingActions {
         const removeSuccessAlert = this.page.getByText('event removed successfully');
         await expect(removeSuccessAlert).toBeVisible({ timeout: 5000 });
 
-        // Optionally, close modal/form
-        const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await closeBtn.click({ force: true });
+        // Click Calendar tab
+        const calendarTab = this.page.getByRole('tab', { name: /Calendar/i });
+        await calendarTab.scrollIntoViewIfNeeded();
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Scroll the FullCalendar time grid scroller to top
+        const scroller = this.page.locator('.fc-scroller').nth(2);
+        await scroller.evaluate((el: HTMLElement) => { el.scrollTop = 0; });
+
+        // Look for the specific event "Remmi: Open Home" in the timegrid calendar
+        const event = this.page.locator('.fc-timegrid-event', { hasText: 'Remmi: Open Home' });
+        await expect(event).toHaveCount(0);
+        
+        // Close modal or preview if present after calendar validation
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
         }
+
     }
 }
