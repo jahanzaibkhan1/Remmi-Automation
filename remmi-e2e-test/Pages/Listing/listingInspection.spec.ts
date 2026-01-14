@@ -45,4 +45,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyDeleteInspectionRemovesFromCalendar();
     });
+
+    test('Test 6: Verify inspection is visible in the calendar tab after adding', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyInspectionVisibleInCalendarTab();
+    });
 });    
