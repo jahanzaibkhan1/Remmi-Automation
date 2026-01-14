@@ -1,47 +1,6 @@
-<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="73.61548699999973">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-13T12:11:54.898Z" hostname="chromium" tests="1" failures="1" skipped="0" time="48.811" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify that entering a name and clicking Rename changes the folder name" classname="Pages\Listing\listingImages.spec.ts" time="48.811">
-<failure message="listingImages.spec.ts:123:3 Test 19: Verify that entering a name and clicking Rename changes the folder name" type="FAILURE">
-<![CDATA[  [chromium] › Pages\Listing\listingImages.spec.ts:123:3 › Listing side Menu Tests - Remmi E2E › Test 19: Verify that entering a name and clicking Rename changes the folder name 
-
-    Error: expect(locator).toBeVisible() failed
-
-    Locator: locator('.lib-file').last()
-    Expected: visible
-    Timeout: 10000ms
-    Error: element(s) not found
-
-    Call log:
-      - Expect "toBeVisible" with timeout 10000ms
-      - waiting for locator('.lib-file').last()
-
-
-       at Pages\Listing\ListingAction.ts:8879
-
-      8877 |         const foldersLocator = this.page.locator('.lib-file');
-      8878 |         const folderToRename = foldersLocator.last();
-    > 8879 |         await expect(folderToRename).toBeVisible({ timeout: 10000 });
-           |                                      ^
-      8880 |
-      8881 |         // Get original folder name
-      8882 |         const originalFolderName = (await folderToRename.innerText()).trim();
-        at ListingActions.verifyRenameFolderChangesName (E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\ListingAction.ts:8879:38)
-        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\listingImages.spec.ts:125:5
-
-    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ..\test-results\Pages-Listing-listingImage-8aed6-ame-changes-the-folder-name-chromium\test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Error Context: ..\test-results\Pages-Listing-listingImage-8aed6-ame-changes-the-folder-name-chromium\error-context.md
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|test-results\Pages-Listing-listingImage-8aed6-ame-changes-the-folder-name-chromium\test-failed-1.png]]
-
-[[ATTACHMENT|test-results\Pages-Listing-listingImage-8aed6-ame-changes-the-folder-name-chromium\error-context.md]]
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.019467000000176">
+<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-14T12:40:43.398Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.958" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that clicking on an inspection in the calendar opens a popup" classname="Pages\Listing\listingInspection.spec.ts" time="38.958">
 </testcase>
 </testsuite>
 </testsuites>
