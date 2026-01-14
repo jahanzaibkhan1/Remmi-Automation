@@ -9007,4 +9007,60 @@ export class ListingActions {
         }
         
     }
+
+    /**
+     * Verify required fields validation in the new listing form.
+     * This will attempt to save the form without filling required fields and check for error messages.
+     */
+    async verifyRequiredFieldsValidation() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        const primaryAgent = this.page.locator(
+            'div.form-group:has-text("Primary Agent") ng-select'
+        );
+
+        await primaryAgent.scrollIntoViewIfNeeded();
+        await primaryAgent.click();
+
+        const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(primaryInput).toBeVisible({ timeout: 3000 });
+        await primaryInput.fill('Jahanzaib Xenex');
+
+        const primaryOption = this.page.locator(
+            '.ng-dropdown-panel .ng-option',
+            { hasText: 'Jahanzaib Xenex' }
+        ).first();
+        await expect(primaryOption).toBeVisible({ timeout: 5000 });
+        await primaryOption.click();
+
+        await this.page.waitForTimeout(1000);
+        // Attempt to save/continue without filling fields
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 3000 });
+        await saveButton.click();
+
+        // Click on the 'Inspections' tab to trigger validation messages for required fields
+        const inspectionTab = this.page.getByRole('tab', { name: /Inspections/i }).first();
+        await expect(inspectionTab).toBeVisible({ timeout: 5000 });
+        await inspectionTab.click();
+
+        // Click the 'Add' button in the Inspections tab
+        const addButton = this.page.getByRole('button', { name: /Add/i }).first();
+        await expect(addButton).toBeVisible({ timeout: 3000 });
+        await addButton.click();
+
+        // Wait for potential validation/error messages to appear
+        const requiredFieldError = this.page.getByRole('alert', { name: 'Start time must be before end' });
+        await expect(requiredFieldError).toBeVisible({ timeout: 5000 });
+
+        // Close the form after test
+        const closeFormBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeFormBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormBtn.click({ force: true });
+        }
+    }
 }
