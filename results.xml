@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.75344299999997">
-<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-14T11:40:26.169Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.074" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify deletion of an inspection from the inspection tab" classname="Pages\Listing\listingInspection.spec.ts" time="37.074">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.40177200000174">
+<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-14T12:21:17.731Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.925" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that deleting an inspection from the inspection tab removes it from the calendar" classname="Pages\Listing\listingInspection.spec.ts" time="48.925">
 </testcase>
 </testsuite>
 </testsuites>
