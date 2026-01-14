@@ -50,4 +50,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyInspectionVisibleInCalendarTab();
     });
+
+    test('Test 7: Verify that clicking on an inspection in the calendar opens a popup', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyInspectionClickOpensPopup();
+    });
 });    

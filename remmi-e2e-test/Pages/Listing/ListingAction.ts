@@ -9292,13 +9292,54 @@ export class ListingActions {
         }
 
         // Look for the specific event "Remmi: Open Home" in the calendar timegrid
-        const event = this.page.locator('.fc-timegrid-event', { hasText: 'Remmi: Open Home' });
+        const event = this.page.locator('.fc-timegrid-event', { hasText: 'Remmi: Open Home' }).first();
         await expect(event).toBeVisible({ timeout: 5000 });
 
         // Close modal or preview if present after validation
         const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
         if (await closePreviewButton.isVisible({ timeout: 2000 }).catch(() => false)) {
             await closePreviewButton.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that clicking on an inspection event in the calendar opens a popup/modal with inspection details.
+     * Assumes there is an event called "Remmi: Open Home" visible on the calendar.
+     */
+    async verifyInspectionClickOpensPopup() {
+        await this.switchToGridView();
+
+        // Open the first listing card to access its tabs
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to the Calendar tab
+        const calendarTab = this.page.getByRole('tab', { name: /Calendar/i });
+        await calendarTab.scrollIntoViewIfNeeded();
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Scroll FullCalendar time grid scroller to top (if present)
+        const scroller = this.page.locator('.fc-scroller').nth(2);
+        if (await scroller.count().then(c => c > 0)) {
+            await scroller.evaluate((el: HTMLElement) => { el.scrollTop = 0; });
+        }
+
+        // Locate the "Remmi: Open Home" event and click it
+        const event = this.page.locator('.fc-timegrid-event', { hasText: 'Remmi: Open Home' }).first();
+        await expect(event).toBeVisible({ timeout: 5000 });
+        await event.click({ force: true });
+
+        // Assert that the popup/modal opens (it should be a dialog or a detail popup)
+        const popup = this.page.locator('.p-dialog-content').first();
+        await expect(popup).toBeVisible({ timeout: 5000 });
+
+        // Optionally, close the popup/modal
+        const closeButton = popup.locator('.pi.pi-times, button[aria-label="Close"], .p-dialog-header-close').first();
+        if (await closeButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await closeButton.click({ force: true });
         }
     }
 }

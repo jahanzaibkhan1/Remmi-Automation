@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.34912700000033">
-<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-14T12:27:29.562Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.245" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify inspection is visible in the calendar tab after adding" classname="Pages\Listing\listingInspection.spec.ts" time="47.245">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.019467000000176">
+<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-14T12:40:43.398Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.958" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that clicking on an inspection in the calendar opens a popup" classname="Pages\Listing\listingInspection.spec.ts" time="38.958">
 </testcase>
 </testsuite>
 </testsuites>
