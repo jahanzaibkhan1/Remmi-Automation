@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.93034499999974">
-<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-14T10:34:26.440Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.604" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that the inspection tab is hidden before listing  is saved" classname="Pages\Listing\listingInspection.spec.ts" time="36.604">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.050924000000585">
+<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-14T11:02:23.766Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.039" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify required fields validation in new listing form" classname="Pages\Listing\listingInspection.spec.ts" time="30.039">
 </testcase>
 </testsuite>
 </testsuites>

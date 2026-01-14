@@ -25,4 +25,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyInspectionTabHiddenBeforeSave();
     });
+
+    test('Test 2: Verify required fields validation', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyRequiredFieldsValidation();
+    });
 });    
