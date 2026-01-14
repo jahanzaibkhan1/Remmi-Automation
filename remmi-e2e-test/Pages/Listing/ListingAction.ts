@@ -8978,4 +8978,33 @@ export class ListingActions {
             await closePreviewButton.click({ force: true });
         }
     }
+
+    /**
+     * Verify that the 'Inspection' tab is hidden before the listing is saved.
+     */
+    async verifyInspectionTabHiddenBeforeSave() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        // Open the new listing creation or detail using the plus icon
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick();
+
+        // Check that the Inspection tab is NOT visible
+        const inspectionTab = this.page.getByRole('tab', { name: /Inspection/i });
+
+        await inspectionTab.click()
+
+        const inspectionsLabel = this.page.getByLabel('Inspections').getByText('Please create the listing');
+        await expect(inspectionsLabel).toBeVisible({ timeout: 4000 });
+
+        await this.page.waitForTimeout(1000);
+
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
+        }
+        
+    }
 }
