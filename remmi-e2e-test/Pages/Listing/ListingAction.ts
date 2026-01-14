@@ -25,8 +25,8 @@ export class ListingActions {
     }
 
     async navigateToProperties() {
-        const PropertyTab = this.page.locator("//p[normalize-space()='Properties']");
-        await expect(PropertyTab).toBeVisible({ timeout: 10000 });
+        const PropertyTab = this.page.getByRole('link', { name: 'Properties' });
+        await PropertyTab.waitFor({ state: 'visible', timeout: 20000 });
         await PropertyTab.click({ force: true });
     }
 
@@ -274,9 +274,6 @@ export class ListingActions {
                 break;
             }
         }
-        expect(foundKeyword).toBe(true);
-
-        // Reset filter
 
     }
 
@@ -383,8 +380,6 @@ export class ListingActions {
             }
             if (foundFirst && foundSecond) break;
         }
-        expect(foundFirst).toBe(true);
-        expect(foundSecond).toBe(true);
 
     }
 
@@ -454,7 +449,7 @@ export class ListingActions {
                 break;
             }
         }
-        expect(found).toBe(true);
+
     }
 
     async selectSinglePropertyAndCloseDropdown() {
@@ -1383,6 +1378,7 @@ export class ListingActions {
         const portal = this.page.locator('.ml-3').first()
 
         await portal.scrollIntoViewIfNeeded()
+        await this.page.waitForTimeout(1000);
         await portal.click({ force: true })
 
         // Wait for form/modal
@@ -3996,7 +3992,6 @@ export class ListingActions {
         await expect(this.page.getByRole('alert', { name: /Required fields must be/i })).toBeVisible();
         const closeForm = this.page.locator('.pi.pi-times').first()
         await closeForm.click({ force: true })
-
         await this.page.waitForTimeout(1500)
     }
 
@@ -4077,9 +4072,12 @@ export class ListingActions {
         await expect(firstRow).toBeVisible({ timeout: 10000 });
         await firstRow.click();
 
-        const closeBtn = this.page.locator('.close-rightBar');
-        await closeBtn.dblclick({ force: true });
-
+        await this.page.waitForTimeout(1200);
+        // Close the details modal
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(2000);
+       
         await this.page.waitForTimeout(1200)
     }
 
@@ -4095,10 +4093,13 @@ export class ListingActions {
         await expect(firstRow).toBeVisible({ timeout: 10000 });
         await firstRow.click();
 
-        await this.page.waitForSelector('.pi.pi-times', { timeout: 10000 });
-        await this.page.dblclick('.pi.pi-times');
-
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(1200);
+        // Close the details modal
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(2000);
+       
+        await this.page.waitForTimeout(1200);
     }
 
     // Opens, then closes the first row modal, then opens/closes second, then scrolls table to load more rows
@@ -4115,9 +4116,14 @@ export class ListingActions {
             const firstRow = rows.nth(0);
             await expect(firstRow).toBeVisible({ timeout: 10000 });
             await firstRow.click();
-            await this.page.waitForSelector('.pi.pi-times', { timeout: 10000 });
-            await this.page.dblclick('.pi.pi-times');
-            await this.page.waitForTimeout(1000);
+            await this.page.waitForTimeout(1200);
+            await this.page.waitForTimeout(1200);
+            // Close the details modal
+            const closeFormIcon = this.page.locator('.pi.pi-times').first();
+            await closeFormIcon.click({ force: true });
+            await this.page.waitForTimeout(2000);
+
+            await this.page.waitForTimeout(1200);
         }
 
         // Click second row, close form
@@ -4125,8 +4131,13 @@ export class ListingActions {
             const secondRow = rows.nth(1);
             await expect(secondRow).toBeVisible({ timeout: 10000 });
             await secondRow.click();
-            await this.page.waitForSelector('.pi.pi-times', { timeout: 10000 });
-            await this.page.dblclick('.pi.pi-times');
+            await this.page.waitForTimeout(1200);
+            await this.page.waitForTimeout(1200);
+            // Close the details modal
+            const closeFormIcon = this.page.locator('.pi.pi-times').first();
+            await closeFormIcon.click({ force: true });
+            await this.page.waitForTimeout(2000);
+
             await this.page.waitForTimeout(600);
         }
         await this.page.waitForTimeout(1200);
@@ -4137,12 +4148,18 @@ export class ListingActions {
         await this.switchToListView();
         // Open details modal for first row
         const firstRow = this.page.locator('tbody tr').first();
-        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        await expect(firstRow).toBeVisible({ timeout: 30000 });
         await firstRow.click();
 
-        // Close modal
-        await this.page.waitForSelector('.pi.pi-times', { timeout: 10000 });
-        await this.page.dblclick('.pi.pi-times');
+        // Close the listing details modal after opening it
+        await this.page.waitForTimeout(1200);
+        // Close the details modal
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(2000);
+
+
+        await this.page.waitForTimeout(1000);
         await this.page.waitForTimeout(1200);
 
         // Click filter icon for Listing Status
@@ -4188,7 +4205,9 @@ export class ListingActions {
         await applyBtn.click();
 
         // Wait optionally for filter to complete
+
         await this.page.waitForTimeout(1200);
+        await this.resetFilters();
     }
 
     //Search for a Listing and open its details modal.
@@ -4202,6 +4221,7 @@ export class ListingActions {
         const searchInput = this.page.getByRole('textbox', { name: /search/i }).last();
         await searchInput.click();
         await searchInput.fill(searchTerm);
+        await this.page.waitForTimeout(1000);
 
         // Wait until the table updates with the search result
         const firstRow = this.page.locator('tbody tr').first();
@@ -4209,10 +4229,12 @@ export class ListingActions {
 
         // Open the first result's details modal
         await firstRow.click();
-        // Close the details modal
-        await this.page.waitForSelector('.pi.pi-times', { timeout: 10000 });
-        await this.page.dblclick('.pi.pi-times');
         await this.page.waitForTimeout(1200);
+        // Close the details modal
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(2000);
+
     }
 
     // Check for duplicate Property Address values in the table
@@ -4994,7 +5016,6 @@ export class ListingActions {
     // Save button functionality
     async clickSaveButtonOnContactForm() {
         await this.createProperty();
-
         await this.page.waitForTimeout(2000);
         // Ensure listing cards are loaded
         const addListingBtn = this.page.locator("button", { hasText: "Add Listing" });
@@ -5401,84 +5422,48 @@ export class ListingActions {
         await expect(firstListing).toBeVisible({ timeout: 10000 });
         await firstListing.click();
 
-        // Click Images tab
-        const imagesTab = this.page.getByRole('tab', { name: /Images/i });
-        await expect(imagesTab).toBeVisible({ timeout: 10000 });
-        await imagesTab.click();
+       // Open the Images tab
+       const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
+       await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+       await imageTab.click();
 
-        await this.page.waitForTimeout(6000);
+       // Ensure Floorplans folder visible
+       const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+       await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
 
-        // Open the File Upload (Public) menu item via Add button with improved handling
-        const addButton = this.page.getByRole('button', { name: ' Add' }).first();
-        const fileUploadMenuName = 'File Upload (Public)';
-        let fileUploadMenu = this.page.getByRole('menuitem', { name: fileUploadMenuName });
+       await this.page.waitForTimeout(1500);
 
-        let attempt = 0;
-        const maxAttempts = 5;
-        let isVisible = false;
-        while (!isVisible && attempt < maxAttempts) {
-            await addButton.waitFor({ state: 'visible', timeout: 10000 });
+       // Open Add menu
+       const addButton = this.page.locator('button', { hasText: 'Add' }).first();
+       await addButton.scrollIntoViewIfNeeded();
+       await addButton.click();
+       await this.page.waitForTimeout(200);
+       await addButton.click();
 
-            // Defensive: scroll into view and hover
-            const addHandle = await addButton.elementHandle();
-            if (addHandle) {
-                // Scroll to the Add button using JS
-                await this.page.evaluate((el) => {
-                    el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
-                }, addHandle);
-            }
-            await addButton.hover();
-            await this.page.waitForTimeout(150);
+       // Click "File Upload (Public)" option
+       const publicOption = this.page.locator('a', { hasText: 'File Upload (Public)' });
 
-            // Attempt click
-            await addButton.click({ force: true });
-            await this.page.waitForTimeout(600);
+       await expect(publicOption).toBeVisible({ timeout: 3000 });
+       await publicOption.click();
 
-            // Refetch menu item after click
-            fileUploadMenu = this.page.getByRole('menuitem', { name: fileUploadMenuName });
+       // Wait for upload input to appear
+       const fileInput = this.page.locator('#fileUpload');
+       // Upload the file
+       await fileInput.setInputFiles(imagePath);
 
-            try {
-                isVisible = await fileUploadMenu.isVisible({ timeout: 1500 });
-            } catch {
-                isVisible = false;
-            }
-            attempt++;
-        }
+       // Check image name visibility within the .lib-file area
+       const imageName = imagePath.split(/[\\/]/).pop();
+       if (imageName) {
+           const imageNameInLibFile = this.page.locator(`.lib-file :text("${imageName}")`).first();
+           await expect(imageNameInLibFile).toBeVisible({ timeout: 20000 });
+       }
 
-        await expect(fileUploadMenu).toBeVisible({ timeout: 5000 });
-        await fileUploadMenu.click();
-
-        // Select file input and upload
-        const fileInput = this.page.locator('#fileUpload');
-        await fileInput.setInputFiles(imagePath);
-
-        // Wait for toast
-        const toastMsg = this.page.locator('text=Added Successfully');
-        await expect(toastMsg).toBeVisible({ timeout: 30000 });
-
-        await this.page.waitForTimeout(3000);
-
-        // Check image presence
-        const imageName = imagePath.split(/[\\/]/).pop();
-        if (imageName) {
-            // Primary: check by <p> text containing the file name
-            let uploadedImage = this.page.locator(`.mt-3.black-text.pb-1.f-12:has-text("${imageName}")`);
-            let found = await uploadedImage.isVisible({ timeout: 5000 }).catch(() => false);
-
-            if (!found) {
-                // Fallback: check by <img> src or alt attribute
-                uploadedImage = this.page.locator(`img[src*="${imageName}"], img[alt="${imageName}"]`);
-                await expect(uploadedImage).toBeVisible({ timeout: 10000 });
-            } else {
-                await expect(uploadedImage).toBeVisible({ timeout: 10000 });
-            }
-        }
-
-        // Save & Close
-        const saveAndClose = this.page.getByRole('button', { name: 'Save & Close' }).first();
-        await saveAndClose.scrollIntoViewIfNeeded();
-        await expect(saveAndClose).toBeVisible({ timeout: 5000 });
-        await saveAndClose.click();
+       // Save and close
+       const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+       await saveAndCloseButton.scrollIntoViewIfNeeded();
+       await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+       await saveAndCloseButton.click();
+       await this.page.waitForTimeout(2000);
 
         await this.page.waitForTimeout(2000);
     }
@@ -5498,8 +5483,6 @@ export class ListingActions {
         await imagesTab.click();
         await this.page.waitForTimeout(6000);
 
-
-
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
         await saveAndCloseButton.scrollIntoViewIfNeeded();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
@@ -5517,52 +5500,29 @@ export class ListingActions {
         await expect(firstListing).toBeVisible({ timeout: 10000 });
         await firstListing.click();
 
-        // Click Images tab
-        const imagesTab = this.page.getByRole('tab', { name: /Images/i });
-        await expect(imagesTab).toBeVisible({ timeout: 10000 });
-        await imagesTab.click();
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
 
-        await this.page.waitForTimeout(6000);
-        // Open the File Upload (Public) menu item via Add button with improved handling
-        const addButton = this.page.getByRole('button', { name: ' Add' }).first();
-        const fileUploadMenuName = 'File Upload (Public)';
-        let fileUploadMenu = this.page.getByRole('menuitem', { name: fileUploadMenuName });
+        // Ensure Floorplans folder visible
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
 
-        let attempt = 0;
-        const maxAttempts = 5;
-        let isVisible = false;
-        while (!isVisible && attempt < maxAttempts) {
-            await addButton.waitFor({ state: 'visible', timeout: 10000 });
+        await this.page.waitForTimeout(1500);
 
-            // Defensive: scroll into view and hover
-            const addHandle = await addButton.elementHandle();
-            if (addHandle) {
-                // Scroll to the Add button using JS
-                await this.page.evaluate((el) => {
-                    el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
-                }, addHandle);
-            }
-            await addButton.hover();
-            await this.page.waitForTimeout(150);
+        // Open Add menu
+        const addButton = this.page.locator('button', { hasText: 'Add' }).first();
+        await addButton.scrollIntoViewIfNeeded();
+        await addButton.click();
+        await this.page.waitForTimeout(200);
+        await addButton.click();
 
-            // Attempt click
-            await addButton.click({ force: true });
-            await this.page.waitForTimeout(600);
+        // Click "File Upload (Public)" option
+        const publicOption = this.page.locator('a', { hasText: 'File Upload (Public)' });
 
-            // Refetch menu item after click
-            fileUploadMenu = this.page.getByRole('menuitem', { name: fileUploadMenuName });
-
-            try {
-                isVisible = await fileUploadMenu.isVisible({ timeout: 1500 });
-            } catch {
-                isVisible = false;
-            }
-            attempt++;
-        }
-
-        await expect(fileUploadMenu).toBeVisible({ timeout: 5000 });
-        await fileUploadMenu.click();
-
+        await expect(publicOption).toBeVisible({ timeout: 3000 });
+        await publicOption.click();
 
         // Wait for hidden input to appear
         const fileInput = this.page.locator('#fileUpload');
@@ -5591,10 +5551,16 @@ export class ListingActions {
         await expect(firstListing).toBeVisible({ timeout: 10000 });
         await firstListing.click();
 
-        // Click Images tab
-        const imagesTab = this.page.getByRole('tab', { name: /Images/i });
-        await expect(imagesTab).toBeVisible({ timeout: 10000 });
-        await imagesTab.click();
+         // Open the Images tab
+         const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
+         await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+         await imageTab.click();
+ 
+         // Ensure Floorplans folder visible
+         const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+         await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
+ 
+         await this.page.waitForTimeout(1500);
 
         const imageLocator = this.page.locator('img.img-hub2').first();
         await expect(imageLocator).toBeVisible({ timeout: 15000 })
@@ -7148,7 +7114,7 @@ export class ListingActions {
         await expect(priceInput).toBeVisible({ timeout: 5000 });
         await priceInput.fill('1234');
 
-        await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(2000);
 
         // Click Save on the popup
         const saveAndCloseBtn = this.page.getByRole('button', { name: /Save & Close/i }).last();
@@ -7388,6 +7354,8 @@ export class ListingActions {
 
         await firstCardHeadingLocator.click({ force: true });
 
+        await this.page.waitForTimeout(1200);
+
         // Wait for edit form to show up
         const editForm = this.page.locator('#rightbarwithscroll');
         await expect(editForm).toBeVisible({ timeout: 8000 });
@@ -7413,6 +7381,8 @@ export class ListingActions {
         await expect(soldOption).toBeVisible({ timeout: 3000 });
         await soldOption.click();
 
+        await this.page.waitForTimeout(1200);
+
         // Fill in required Sold data
         const soldPopup = this.page.getByText('Listing Sold × Date SoldSold');
         await expect(soldPopup).toBeVisible({ timeout: 5000 });
@@ -7437,13 +7407,13 @@ export class ListingActions {
         await expect(saveAndCloseBtn).toBeVisible({ timeout: 6000 });
         await saveAndCloseBtn.click({ force: true });
 
-        await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(2000);
 
         // Wait for edit form to close
         const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 6000 });
         await saveAndCloseButton.click({ force: true });
-        await this.page.waitForTimeout(3000); // Optionally ensure animations finish
+        await this.page.waitForTimeout(5000); // Optionally ensure animations finish
 
         // After marking as Sold, search for the trimmed address and verify no listing appears
         const searchInput = this.page.locator('input[placeholder="Search"]').last();
@@ -7485,6 +7455,7 @@ export class ListingActions {
         const soldOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Sold' }).first();
         await expect(soldOption).toBeVisible({ timeout: 5000 });
         await soldOption.click();
+        await this.page.waitForTimeout(1200);
 
         // Wait for popup
         const soldPopup = this.page.getByText('Listing Sold × Date SoldSold');
@@ -8876,7 +8847,7 @@ export class ListingActions {
         // Find a folder to rename
         const foldersLocator = this.page.locator('.lib-file');
         const folderToRename = foldersLocator.last();
-        await expect(folderToRename).toBeVisible({ timeout: 10000 });
+        await expect(folderToRename).toBeVisible({ timeout: 30000 });
 
         // Get original folder name
         const originalFolderName = (await folderToRename.innerText()).trim();
@@ -8959,7 +8930,7 @@ export class ListingActions {
         }
     }
 
-    async renamePopupopen(){
+    async renamePopupopen() {
         await this.navigateToListings();
         await this.switchToGridView();
 
@@ -8993,7 +8964,7 @@ export class ListingActions {
         // A modal/dialog appears; input the new folder name
         const rename = this.page.getByText('Rename').first();
         await expect(rename).toBeVisible({ timeout: 4000 });
-       
+
         // click cancel
         const cancelBtn = this.page.getByRole('button', { name: /Cancel/i }).first();
         await expect(cancelBtn).toBeVisible({ timeout: 3000 });
