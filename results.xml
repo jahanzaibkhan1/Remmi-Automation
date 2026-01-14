@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.050924000000585">
-<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-14T11:02:23.766Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.039" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify required fields validation in new listing form" classname="Pages\Listing\listingInspection.spec.ts" time="30.039">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.023461000000125">
+<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-14T11:35:18.486Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.925" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify successful addition of an inspection" classname="Pages\Listing\listingInspection.spec.ts" time="34.925">
 </testcase>
 </testsuite>
 </testsuites>
