@@ -9170,4 +9170,35 @@ export class ListingActions {
             await closeFormBtn.click({ force: true });
         }
     }
+
+    /**
+     * Verify deletion of an inspection from the inspection tab
+     */
+    async verifyDeleteInspectionFromTab() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to the Inspections tab
+        const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
+        await expect(inspectionsTab).toBeVisible({ timeout: 20000 });
+        await inspectionsTab.click();
+
+        const deleteLink = this.page.getByRole('link', { name: 'delete' }).first();
+        await deleteLink.click();
+
+        // Wait for the "event removed successfully" success message
+        const removeSuccessAlert = this.page.getByText('event removed successfully');
+        await expect(removeSuccessAlert).toBeVisible({ timeout: 5000 });
+
+        // Optionally, close modal/form
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
 }

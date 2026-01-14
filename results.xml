@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.023461000000125">
-<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-14T11:35:18.486Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.925" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify successful addition of an inspection" classname="Pages\Listing\listingInspection.spec.ts" time="34.925">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.75344299999997">
+<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-14T11:40:26.169Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.074" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify deletion of an inspection from the inspection tab" classname="Pages\Listing\listingInspection.spec.ts" time="37.074">
 </testcase>
 </testsuite>
 </testsuites>
