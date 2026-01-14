@@ -9265,4 +9265,40 @@ export class ListingActions {
         }
 
     }
+
+    /**
+     * Verify that the inspection is visible in the calendar tab.
+     * Assumes an inspection has been added successfully beforehand.
+     */
+    async verifyInspectionVisibleInCalendarTab() {
+        await this.switchToGridView();
+        await this.addValidInspectionAndVerifySuccess();
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to the Calendar tab
+        const calendarTab = this.page.getByRole('tab', { name: /Calendar/i });
+        await calendarTab.scrollIntoViewIfNeeded();
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Scroll FullCalendar time grid scroller to top (if present)
+        const scroller = this.page.locator('.fc-scroller').nth(2);
+        if (await scroller.count().then(c => c > 0)) {
+            await scroller.evaluate((el: HTMLElement) => { el.scrollTop = 0; });
+        }
+
+        // Look for the specific event "Remmi: Open Home" in the calendar timegrid
+        const event = this.page.locator('.fc-timegrid-event', { hasText: 'Remmi: Open Home' });
+        await expect(event).toBeVisible({ timeout: 5000 });
+
+        // Close modal or preview if present after validation
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
+        }
+    }
 }

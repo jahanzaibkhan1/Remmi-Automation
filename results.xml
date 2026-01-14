@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.40177200000174">
-<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-14T12:21:17.731Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.925" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that deleting an inspection from the inspection tab removes it from the calendar" classname="Pages\Listing\listingInspection.spec.ts" time="48.925">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.34912700000033">
+<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-14T12:27:29.562Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.245" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify inspection is visible in the calendar tab after adding" classname="Pages\Listing\listingInspection.spec.ts" time="47.245">
 </testcase>
 </testsuite>
 </testsuites>
