@@ -30,4 +30,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyRequiredFieldsValidation();
     });
+
+    test('Test 3: Verify successful addition of an inspection', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.addValidInspectionAndVerifySuccess();
+    });
 });    
