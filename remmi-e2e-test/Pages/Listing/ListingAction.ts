@@ -9209,6 +9209,8 @@ export class ListingActions {
         const removeSuccessAlert = this.page.getByText('event removed successfully');
         await expect(removeSuccessAlert).toBeVisible({ timeout: 5000 });
 
+        await expect(deleteLink).not.toBeVisible();
+
         await this.page.waitForTimeout(2000);
 
         // Optionally, close modal/form
