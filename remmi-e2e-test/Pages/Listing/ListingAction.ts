@@ -9005,7 +9005,8 @@ export class ListingActions {
         if (await closePreviewButton.isVisible({ timeout: 2000 }).catch(() => false)) {
             await closePreviewButton.click({ force: true });
         }
-        
+        await this.page.waitForTimeout(1500);
+
     }
 
     /**
@@ -9062,6 +9063,8 @@ export class ListingActions {
         if (await closeFormBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
             await closeFormBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1500);
+
     }
 
     /**
@@ -9170,6 +9173,7 @@ export class ListingActions {
         if (await closeFormBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
             await closeFormBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1500);
     }
 
     /**
@@ -9212,6 +9216,8 @@ export class ListingActions {
         if (await closeBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1500);
+
     }
 
     /**
@@ -9220,6 +9226,7 @@ export class ListingActions {
      */
     async verifyDeleteInspectionRemovesFromCalendar() {
         await this.addValidInspectionAndVerifySuccess();
+        await this.page.waitForTimeout(1200);
         await this.switchToGridView();
 
         
@@ -9265,6 +9272,7 @@ export class ListingActions {
         if (await closePreviewButton.isVisible({ timeout: 2000 }).catch(() => false)) {
             await closePreviewButton.click({ force: true });
         }
+        await this.page.waitForTimeout(1500);
 
     }
 
@@ -9275,6 +9283,8 @@ export class ListingActions {
     async verifyInspectionVisibleInCalendarTab() {
         await this.switchToGridView();
         await this.addValidInspectionAndVerifySuccess();
+
+        await this.page.waitForTimeout(1000);
         // Open the first listing card
         const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
@@ -9302,6 +9312,7 @@ export class ListingActions {
         if (await closePreviewButton.isVisible({ timeout: 2000 }).catch(() => false)) {
             await closePreviewButton.click({ force: true });
         }
+        await this.page.waitForTimeout(1500);
     }
 
     /**
@@ -9338,11 +9349,13 @@ export class ListingActions {
         const popup = this.page.locator('.p-dialog-content').first();
         await expect(popup).toBeVisible({ timeout: 5000 });
 
-        // Optionally, close the popup/modal
-        const closeButton = popup.locator('.pi.pi-times, button[aria-label="Close"], .p-dialog-header-close').first();
-        if (await closeButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-            await closeButton.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1500);
     }
 
     /**
@@ -9408,5 +9421,6 @@ export class ListingActions {
         if (await closeBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1500);
     }
 }
