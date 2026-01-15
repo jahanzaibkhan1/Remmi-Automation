@@ -77,4 +77,8 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyInspectionExpandCollapse();
     });
 
+    test('Test 12: Verify adding multiple inspections on different dates', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyAddMultipleInspectionsDifferentDates();
+    });
 });    

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.97193500000052">
-<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-15T05:27:53.155Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.871" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify inspection portion expand/collapse functionality" classname="Pages\Listing\listingInspection.spec.ts" time="32.871">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.32314300000016">
+<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-15T05:50:59.005Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.416" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify adding multiple inspections on different dates" classname="Pages\Listing\listingInspection.spec.ts" time="36.416">
 </testcase>
 </testsuite>
 </testsuites>
