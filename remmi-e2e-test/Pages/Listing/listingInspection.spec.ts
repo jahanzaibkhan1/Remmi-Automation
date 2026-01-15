@@ -55,9 +55,16 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyInspectionClickOpensPopup();
     });
-    
+
     test('Test 8: Verify deleting an inspection from the calendar removes it from all relevant places', async ({ sessionPage }) => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyInspectionRemovesFromCalendar();
     });
+
+    test('Test 9: Verify deletion of an inspection from the inspection portion', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.addValidInspectionAndVerifySuccess();
+      await listingActions.verifyDeleteInspectionFromTab();
+    });
+
 });    
