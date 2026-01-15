@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.26675999999978">
-<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-15T04:45:06.994Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.207" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify deletion of an inspection from the inspection portion" classname="Pages\Listing\listingInspection.spec.ts" time="46.207">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.89013499999977">
+<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-15T05:02:39.565Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.257" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that an inspection with a past date cannot be added" classname="Pages\Listing\listingInspection.spec.ts" time="35.257">
 </testcase>
 </testsuite>
 </testsuites>
