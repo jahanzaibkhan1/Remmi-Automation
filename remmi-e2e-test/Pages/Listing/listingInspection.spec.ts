@@ -86,4 +86,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyAddMultipleInspectionsSameDateDifferentTimes();
     });
+
+    test('Test 14: Verify deleting all inspections removes them from all views', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyDeleteAllInspectionsRemovesFromAllViews();
+    });
 });    
