@@ -1,6 +1,20 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.67526099999994">
-<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-15T04:12:14.260Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.721" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify deleting an inspection from the calendar removes it from all relevant places" classname="Pages\Listing\listingInspection.spec.ts" time="33.721">
+<testsuites id="" name="" tests="8" failures="0" skipped="0" errors="0" time="114.6610589999999">
+<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-15T04:32:24.298Z" hostname="chromium" tests="8" failures="0" skipped="0" time="107.545" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that the inspection tab is hidden before listing  is saved" classname="Pages\Listing\listingInspection.spec.ts" time="32.116">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify required fields validation" classname="Pages\Listing\listingInspection.spec.ts" time="5.885">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify successful addition of an inspection" classname="Pages\Listing\listingInspection.spec.ts" time="8.669">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify deletion of an inspection from the inspection tab" classname="Pages\Listing\listingInspection.spec.ts" time="10.805">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that deleting an inspection from the inspection tab removes it from the calendar" classname="Pages\Listing\listingInspection.spec.ts" time="19.33">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify inspection is visible in the calendar tab after adding" classname="Pages\Listing\listingInspection.spec.ts" time="15.348">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that clicking on an inspection in the calendar opens a popup" classname="Pages\Listing\listingInspection.spec.ts" time="5.605">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify deleting an inspection from the calendar removes it from all relevant places" classname="Pages\Listing\listingInspection.spec.ts" time="9.787">
 </testcase>
 </testsuite>
 </testsuites>
