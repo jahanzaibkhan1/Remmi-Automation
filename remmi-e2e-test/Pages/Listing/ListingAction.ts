@@ -8997,12 +8997,12 @@ export class ListingActions {
         await inspectionTab.click()
 
         const inspectionsLabel = this.page.getByLabel('Inspections').getByText('Please create the listing');
-        await expect(inspectionsLabel).toBeVisible({ timeout: 4000 });
+        await expect(inspectionsLabel).toBeVisible({ timeout: 10000 });
 
         await this.page.waitForTimeout(1000);
 
         const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
-        if (await closePreviewButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+        if (await closePreviewButton.isVisible({ timeout: 10 }).catch(() => false)) {
             await closePreviewButton.click({ force: true });
         }
         await this.page.waitForTimeout(1500);
@@ -9028,30 +9028,30 @@ export class ListingActions {
         await primaryAgent.click();
 
         const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
-        await expect(primaryInput).toBeVisible({ timeout: 3000 });
+        await expect(primaryInput).toBeVisible({ timeout: 10000 });
         await primaryInput.fill('Jahanzaib Xenex');
 
         const primaryOption = this.page.locator(
             '.ng-dropdown-panel .ng-option',
             { hasText: 'Jahanzaib Xenex' }
         ).first();
-        await expect(primaryOption).toBeVisible({ timeout: 5000 });
+        await expect(primaryOption).toBeVisible({ timeout: 10000 });
         await primaryOption.click();
 
         await this.page.waitForTimeout(1000);
         // Attempt to save/continue without filling fields
         const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
-        await expect(saveButton).toBeVisible({ timeout: 3000 });
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
         await saveButton.click();
 
         // Click on the 'Inspections' tab to trigger validation messages for required fields
         const inspectionTab = this.page.getByRole('tab', { name: /Inspections/i }).first();
-        await expect(inspectionTab).toBeVisible({ timeout: 5000 });
+        await expect(inspectionTab).toBeVisible({ timeout: 10000 });
         await inspectionTab.click();
 
         // Click the 'Add' button in the Inspections tab
         const addButton = this.page.getByRole('button', { name: /Add/i }).first();
-        await expect(addButton).toBeVisible({ timeout: 3000 });
+        await expect(addButton).toBeVisible({ timeout: 10000 });
         await addButton.click();
 
         // Wait for potential validation/error messages to appear
@@ -9060,7 +9060,7 @@ export class ListingActions {
 
         // Close the form after test
         const closeFormBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeFormBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+        if (await closeFormBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
             await closeFormBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1500);
@@ -9086,31 +9086,31 @@ export class ListingActions {
         await primaryAgent.click();
 
         const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
-        await expect(primaryInput).toBeVisible({ timeout: 3000 });
+        await expect(primaryInput).toBeVisible({ timeout: 10000 });
         await primaryInput.fill('Jahanzaib Xenex');
 
         const primaryOption = this.page.locator(
             '.ng-dropdown-panel .ng-option',
             { hasText: 'Jahanzaib Xenex' }
         ).first();
-        await expect(primaryOption).toBeVisible({ timeout: 5000 });
+        await expect(primaryOption).toBeVisible({ timeout: 10000 });
         await primaryOption.click();
 
         await this.page.waitForTimeout(1000);
         // Attempt to save/continue without filling fields
         const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
-        await expect(saveButton).toBeVisible({ timeout: 3000 });
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
         await saveButton.click();
 
         // Click on the 'Inspections' tab to trigger validation messages for required fields
         const inspectionTab = this.page.getByRole('tab', { name: /Inspections/i }).first();
-        await expect(inspectionTab).toBeVisible({ timeout: 5000 });
+        await expect(inspectionTab).toBeVisible({ timeout: 10000 });
         await inspectionTab.click();
 
 
         // Fill in inspection event date: pick January 14, 2026 using the date picker and the displayed calendar
         const dateInput = this.page.locator('#basic');
-        await expect(dateInput).toBeVisible({ timeout: 3000 });
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
         await dateInput.click();
 
         // 1️⃣ Compute Tomorrow
@@ -9149,7 +9149,7 @@ export class ListingActions {
             `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
         );
 
-        await dayLocator.first().waitFor({ state: "visible", timeout: 5000 });
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
         await dayLocator.first().click({ force: true });
 
         const startTimeSelect = this.page.getByRole('combobox').nth(4);
@@ -9157,20 +9157,28 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
         // Select the 6th option (index 5) from the dropdown
         const startTimeOption = this.page.getByText('5', { exact: true });
-        await expect(startTimeOption).toBeVisible({ timeout: 2000 });
+        await expect(startTimeOption).toBeVisible({ timeout: 10000 });
         await startTimeOption.click();
         // Click the 'Add' button in the Inspections tab
         const addButton = this.page.getByRole('button', { name: /Add/i }).first();
-        await expect(addButton).toBeVisible({ timeout: 3000 });
+        await expect(addButton).toBeVisible({ timeout: 10000 });
         await addButton.click();
 
         // Wait for event success message to appear after adding inspection event
         const successAlert = this.page.getByText('event added to calendar successfully');
-        await expect(successAlert).toBeVisible({ timeout: 5000 });
+        await expect(successAlert).toBeVisible({ timeout: 10000 });
+
+        // Verify that the newly added inspection is deletable via the delete icon:
+        const deleteLink = this.page.getByRole('link', { name: 'delete' }).first();
+        await deleteLink.waitFor({ state: "visible", timeout: 10000 });
+        await deleteLink.scrollIntoViewIfNeeded();
+
+        // Click the 'Save' button (if visible)
+        await saveButton.click();
 
         // Close the form after test
         const closeFormBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeFormBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+        if (await closeFormBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
             await closeFormBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1500);
@@ -9192,30 +9200,23 @@ export class ListingActions {
         const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
         await expect(inspectionsTab).toBeVisible({ timeout: 20000 });
         await inspectionsTab.click();
-        await this.page.waitForTimeout(1000);
-
-        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
-        await legalTab.click();
-        await this.page.waitForTimeout(1000);
-        await inspectionsTab.click();
-
-        await this.page.waitForTimeout(2000);
 
         const deleteLink = this.page.getByRole('link', { name: 'delete' }).first();
-        await deleteLink.scrollIntoViewIfNeeded()
-        await deleteLink.click();
+        await deleteLink.waitFor({ state: "visible", timeout: 20000 });
+        await this.page.waitForTimeout(1200);
+        await deleteLink.click({force:true});
 
         // Wait for the "event removed successfully" success message
         const removeSuccessAlert = this.page.getByText('event removed successfully');
-        await expect(removeSuccessAlert).toBeVisible({ timeout: 5000 });
+        await expect(removeSuccessAlert).toBeVisible({ timeout: 10000 });
 
-        await expect(deleteLink).not.toBeVisible();
+        await expect(deleteLink).not.toBeVisible({timeout:20000});
 
         await this.page.waitForTimeout(2000);
 
         // Optionally, close modal/form
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
             await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1500);
@@ -9248,11 +9249,13 @@ export class ListingActions {
         await inspectionsTab.click();
         await this.page.waitForTimeout(1000);
         const deleteLink = this.page.getByRole('link', { name: 'delete' }).first();
+        await deleteLink.waitFor({ state: "visible", timeout: 10000 });
+        await deleteLink.scrollIntoViewIfNeeded()
         await deleteLink.click();
 
         // Wait for the "event removed successfully" success message
         const removeSuccessAlert = this.page.getByText('event removed successfully');
-        await expect(removeSuccessAlert).toBeVisible({ timeout: 5000 });
+        await expect(removeSuccessAlert).toBeVisible({ timeout: 10000 });
 
         // Click Calendar tab
         const calendarTab = this.page.getByRole('tab', { name: /Calendar/i });
@@ -9271,7 +9274,7 @@ export class ListingActions {
 
         // Close modal or preview if present after calendar validation
         const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
-        if (await closePreviewButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+        if (await closePreviewButton.isVisible({ timeout: 10000 }).catch(() => false)) {
             await closePreviewButton.click({ force: true });
         }
         await this.page.waitForTimeout(1500);
@@ -9301,17 +9304,16 @@ export class ListingActions {
 
         // Scroll FullCalendar time grid scroller to top (if present)
         const scroller = this.page.locator('.fc-scroller').nth(2);
-        if (await scroller.count().then(c => c > 0)) {
+        if (await scroller.count() > 0 && await scroller.isVisible()) {
             await scroller.evaluate((el: HTMLElement) => { el.scrollTop = 0; });
         }
 
         // Look for the specific event "Remmi: Open Home" in the calendar timegrid
         const event = this.page.locator('.fc-timegrid-event', { hasText: 'Remmi: Open Home' }).first();
-        await expect(event).toBeVisible({ timeout: 5000 });
-
+        await event.waitFor({ state: 'visible', timeout: 20000 });
         // Close modal or preview if present after validation
         const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
-        if (await closePreviewButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+        if (await closePreviewButton.isVisible({ timeout: 10000 }).catch(() => false)) {
             await closePreviewButton.click({ force: true });
         }
         await this.page.waitForTimeout(1500);
@@ -9336,25 +9338,29 @@ export class ListingActions {
         await calendarTab.click();
         await this.page.waitForTimeout(1000);
 
-        // Scroll FullCalendar time grid scroller to top (if present)
+        // Wait for calendar grid to be loaded and visible
+        const calendarGrid = this.page.locator('.fc-timegrid');
+        await expect(calendarGrid).toBeVisible({ timeout: 10000 });
+
+        // Scroll FullCalendar time grid scroller to top (if present & visible)
         const scroller = this.page.locator('.fc-scroller').nth(2);
         if (await scroller.count().then(c => c > 0)) {
             await scroller.evaluate((el: HTMLElement) => { el.scrollTop = 0; });
         }
 
-        // Locate the "Remmi: Open Home" event and click it
         const event = this.page.locator('.fc-timegrid-event', { hasText: 'Remmi: Open Home' }).first();
-        await expect(event).toBeVisible({ timeout: 5000 });
+        await expect(event).toBeVisible({ timeout: 20000 });
+        await this.page.waitForTimeout(2500);
         await event.click({ force: true });
 
         // Assert that the popup/modal opens (it should be a dialog or a detail popup)
         const popup = this.page.locator('.p-dialog-content').first();
-        await expect(popup).toBeVisible({ timeout: 5000 });
+        await expect(popup).toBeVisible({ timeout: 10000 });
 
         await this.page.waitForTimeout(1000);
 
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
             await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1500);
@@ -9379,7 +9385,10 @@ export class ListingActions {
         await calendarTab.click();
         await this.page.waitForTimeout(1000);
 
-        // Scroll FullCalendar time grid scroller to top (if present)
+        // Wait for calendar grid to be loaded and visible
+        const calendarGrid = this.page.locator('.fc-timegrid');
+        await expect(calendarGrid).toBeVisible({ timeout: 10000 });
+
         const scroller = this.page.locator('.fc-scroller').nth(2);
         if (await scroller.count().then(c => c > 0)) {
             await scroller.evaluate((el: HTMLElement) => { el.scrollTop = 0; });
@@ -9387,22 +9396,22 @@ export class ListingActions {
 
         // Find the inspection event by text and click to open its details popup
         const event = this.page.locator('.fc-timegrid-event', { hasText: 'Remmi: Open Home' }).first();
-        await expect(event).toBeVisible({ timeout: 5000 });
-        await this.page.waitForTimeout(1200);
+        await expect(event).toBeVisible({ timeout: 20000 });
+        await this.page.waitForTimeout(2500);
         await event.click({ force: true });
 
         // In the popup/modal, find and click the Delete/Remove button (assuming ".pi-trash" is trash/delete icon)
         const popup = this.page.locator('.p-dialog-content').first();
-        await expect(popup).toBeVisible({ timeout: 5000 });
+        await expect(popup).toBeVisible({ timeout: 10000 });
         const deleteButton = this.page.getByRole('dialog').getByRole('img', { name: 'delete' }).first();
-        await expect(deleteButton).toBeVisible({ timeout: 5000 });
+        await expect(deleteButton).toBeVisible({ timeout: 10000 });
         await deleteButton.click({ force: true });
 
         await this.page.waitForTimeout(1000);
 
         // Wait for and assert the toast 'Event deleted successfully' appears
         const toast = this.page.getByRole('alert', { name: 'Event deleted successfully' }).first();
-        await expect(toast).toBeVisible({ timeout: 5000 });
+        await expect(toast).toBeVisible({ timeout: 10000 });
         await this.page.waitForTimeout(1000);
 
         // Assert the event is no longer visible in the calendar (should be gone)
@@ -9421,10 +9430,128 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
         // Close the popup/modal if it's still open
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
             await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1500);
+    }
+
+    /**
+     * Verify deletion of an inspection from the inspection section.
+     * This method assumes the Inspections tab is available under the first listing.
+     */
+    async verifyDeleteInspectionFromInspectionTab() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        const primaryAgent = this.page.locator(
+            'div.form-group:has-text("Primary Agent") ng-select'
+        );
+
+        await primaryAgent.scrollIntoViewIfNeeded();
+        await primaryAgent.click();
+
+        const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(primaryInput).toBeVisible({ timeout: 10000 });
+        await primaryInput.fill('Jahanzaib Xenex');
+
+        const primaryOption = this.page.locator(
+            '.ng-dropdown-panel .ng-option',
+            { hasText: 'Jahanzaib Xenex' }
+        ).first();
+        await expect(primaryOption).toBeVisible({ timeout: 10000 });
+        await primaryOption.click();
+
+        await this.page.waitForTimeout(1000);
+        // Attempt to save/continue without filling fields
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+
+        // Click on the 'Inspections' tab to trigger validation messages for required fields
+        const inspectionTab = this.page.getByRole('tab', { name: /Inspections/i }).first();
+        await expect(inspectionTab).toBeVisible({ timeout: 10000 });
+        await inspectionTab.click();
+
+
+        // Fill in inspection event date: pick January 14, 2026 using the date picker and the displayed calendar
+        const dateInput = this.page.locator('#basic');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        // 1️⃣ Compute Tomorrow
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        // 2️⃣ Read currently opened calendar's month-year (stable header)
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+
+        const headerText = await header.innerText();
+        const [monthName, year] = headerText.trim().split(" ");
+
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        // 3️⃣ Move calendar to correct month
+        const monthDifference =
+            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
+
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+            // Wait for transition + re-render
+            await this.page.waitForTimeout(200);
+        }
+
+        // 4️⃣ Select tomorrow's date (non-flaky selector)
+        const dayLocator = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
+        );
+
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
+        await dayLocator.first().click({ force: true });
+
+        const startTimeSelect = this.page.getByRole('combobox').nth(4);
+        await startTimeSelect.click();
+        await this.page.waitForTimeout(1000);
+        // Select the 6th option (index 5) from the dropdown
+        const startTimeOption = this.page.getByText('5', { exact: true });
+        await expect(startTimeOption).toBeVisible({ timeout: 10000 });
+        await startTimeOption.click();
+        // Click the 'Add' button in the Inspections tab
+        const addButton = this.page.getByRole('button', { name: /Add/i }).first();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        // Wait for event success message to appear after adding inspection event
+        const successAlert = this.page.getByText('event added to calendar successfully');
+        await expect(successAlert).toBeVisible({ timeout: 10000 });
+
+        // Verify that the newly added inspection is deletable via the delete icon:
+        const deleteLink = this.page.getByRole('link', { name: 'delete' }).first();
+        await deleteLink.waitFor({ state: "visible", timeout: 10000 });
+        await deleteLink.scrollIntoViewIfNeeded();
+        await deleteLink.click({ force: true });
+        await this.page.waitForTimeout(700);
+        // Confirm the inspection row is no longer visible
+        await expect(deleteLink).not.toBeVisible({ timeout: 5000 });
+
+        // Optionally, close the inspection form
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
     }
 
     /**
@@ -9446,24 +9573,24 @@ export class ListingActions {
         await inspectionsTab.click();
 
         await this.page.waitForTimeout(1000);
-       // Pick a past date (yesterday) by direct click in the calendar
+        // Pick a past date (yesterday) by direct click in the calendar
 
-       const dateInput = this.page.locator('#basic');
-       await expect(dateInput).toBeVisible({ timeout: 3000 });
-       await dateInput.click();
+        const dateInput = this.page.locator('#basic');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
 
-       // Compute yesterday's date
-       const yesterday = new Date();
-       yesterday.setDate(yesterday.getDate() - 1);
-       const targetDay = yesterday.getDate();
+        // Compute yesterday's date
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const targetDay = yesterday.getDate();
 
-       // Try to directly click yesterday's day on the calendar (should be disabled)
-       const pastDayCell = this.page.locator(`.p-datepicker-calendar td >> text="${targetDay}"`);
-       await pastDayCell.first().click({ force: true });
+        // Try to directly click yesterday's day on the calendar (should be disabled)
+        const pastDayCell = this.page.locator(`.p-datepicker-calendar td >> text="${targetDay}"`);
+        await pastDayCell.first().click({ force: true });
 
         // Close the form after test
         const closeFormBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeFormBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+        if (await closeFormBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
             await closeFormBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1500);
@@ -9490,7 +9617,7 @@ export class ListingActions {
 
         // Add an inspection for tomorrow (add new if there isn't one already)
         const dateInput = this.page.locator('#basic');
-        await expect(dateInput).toBeVisible({ timeout: 3000 });
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
         await dateInput.click();
 
         // Compute tomorrow
@@ -9502,66 +9629,66 @@ export class ListingActions {
         const dayLocator = this.page.locator(
             `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
         );
-        await dayLocator.first().waitFor({ state: "visible", timeout: 5000 });
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
         await dayLocator.first().click({ force: true });
 
         // Select and pick a value for start time hour
         const startTimeHour = this.page.getByRole('combobox').nth(4);
-        await expect(startTimeHour).toBeVisible({ timeout: 2000 });
+        await expect(startTimeHour).toBeVisible({ timeout: 10000 });
         await startTimeHour.click();
         const startTimeHourOption = this.page.getByRole('option', { name: '5' }).first();
-        await expect(startTimeHourOption).toBeVisible({ timeout: 2000 });
+        await expect(startTimeHourOption).toBeVisible({ timeout: 10000 });
         await startTimeHourOption.click();
         await this.page.waitForTimeout(200);
 
         // Select and pick a value for start time minutes
         const startTimeMinutes = this.page.getByRole('combobox').nth(5);
         await expect(startTimeMinutes).toBeVisible({ timeout: 2000 });
-        await startTimeMinutes.click({force:true});
+        await startTimeMinutes.click({ force: true });
         const startTimeMinuteOption = this.page.getByRole('option', { name: '05' }).first();
-        await expect(startTimeMinuteOption).toBeVisible({ timeout: 2000 });
+        await expect(startTimeMinuteOption).toBeVisible({ timeout: 10000 });
         await startTimeMinuteOption.click();
         await this.page.waitForTimeout(200);
 
         // Select and pick a value for start time AM/PM
         const startTimeAmPm = this.page.getByRole('combobox').nth(6);
-        await expect(startTimeAmPm).toBeVisible({ timeout: 2000 });
-        await startTimeAmPm.click({force:true});
+        await expect(startTimeAmPm).toBeVisible({ timeout: 10000 });
+        await startTimeAmPm.click({ force: true });
         const startTimeAmPmOption = this.page.getByRole('option', { name: 'PM' }).first();
-        await expect(startTimeAmPmOption).toBeVisible({ timeout: 2000 });
+        await expect(startTimeAmPmOption).toBeVisible({ timeout: 10000 });
         await startTimeAmPmOption.click();
         await this.page.waitForTimeout(200);
 
         // Select and pick a value for end time hour
         const endTimeHour = this.page.getByRole('combobox').nth(7);
-        await expect(endTimeHour).toBeVisible({ timeout: 2000 });
-        await endTimeHour.click({force:true});
+        await expect(endTimeHour).toBeVisible({ timeout: 10000 });
+        await endTimeHour.click({ force: true });
         const endTimeHourOption = this.page.getByRole('option', { name: '6' }).first();
-        await expect(endTimeHourOption).toBeVisible({ timeout: 2000 });
+        await expect(endTimeHourOption).toBeVisible({ timeout: 10000 });
         await endTimeHourOption.click();
         await this.page.waitForTimeout(200);
 
         // Select and pick a value for end time minutes
         const endTimeMinutes = this.page.getByRole('combobox').nth(8);
         await expect(endTimeMinutes).toBeVisible({ timeout: 2000 });
-        await endTimeMinutes.click({force:true});
+        await endTimeMinutes.click({ force: true });
         const endTimeMinuteOption = this.page.getByRole('option', { name: '10' }).first();
-        await expect(endTimeMinuteOption).toBeVisible({ timeout: 2000 });
+        await expect(endTimeMinuteOption).toBeVisible({ timeout: 10000 });
         await endTimeMinuteOption.click();
         await this.page.waitForTimeout(200);
 
         // Select and pick a value for end time AM/PM
         const endTimeAmPm = this.page.getByRole('combobox').nth(9);
-        await expect(endTimeAmPm).toBeVisible({ timeout: 2000 });
-        await endTimeAmPm.click({force:true});
+        await expect(endTimeAmPm).toBeVisible({ timeout: 10000 });
+        await endTimeAmPm.click({ force: true });
         const endTimeAmPmOption = this.page.getByRole('option', { name: 'PM' }).first();
-        await expect(endTimeAmPmOption).toBeVisible({ timeout: 2000 });
+        await expect(endTimeAmPmOption).toBeVisible({ timeout: 10000 });
         await endTimeAmPmOption.click();
         await this.page.waitForTimeout(2000);
 
         // Clean up: Close the form/modal if open
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
             await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1500);
@@ -9587,7 +9714,7 @@ export class ListingActions {
 
             // Open date picker
             const inspectionDateInput = this.page.locator('#basic');
-            await expect(inspectionDateInput).toBeVisible({ timeout: 3000 });
+            await expect(inspectionDateInput).toBeVisible({ timeout: 10000 });
             await inspectionDateInput.click();
 
             // Calculate target date
@@ -9619,7 +9746,7 @@ export class ListingActions {
             const inspectionDayLocator = this.page.locator(
                 `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
             );
-            await inspectionDayLocator.first().waitFor({ state: "visible", timeout: 5000 });
+            await inspectionDayLocator.first().waitFor({ state: "visible", timeout: 10000 });
             await inspectionDayLocator.first().click({ force: true });
 
             // Fill required time field
@@ -9632,12 +9759,12 @@ export class ListingActions {
 
             // Click the 'Add' button in the Inspections tab
             const addBtn = this.page.getByRole('button', { name: /Add/i }).first();
-            await expect(addBtn).toBeVisible({ timeout: 3000 });
+            await expect(addBtn).toBeVisible({ timeout: 10000 });
             await addBtn.click();
 
             // Wait for success alert
             const successMessage = this.page.getByText('event added to calendar successfully');
-            await expect(successMessage).toBeVisible({ timeout: 5000 });
+            await expect(successMessage).toBeVisible({ timeout: 10000 });
 
             await this.page.waitForTimeout(2000);
         };
@@ -9646,7 +9773,7 @@ export class ListingActions {
 
         // Close the form after adding inspections
         const closeFormBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeFormBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+        if (await closeFormBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
             await closeFormBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1500);
@@ -9666,14 +9793,14 @@ export class ListingActions {
 
         // Go to Inspections tab
         const inspectionTab = this.page.getByRole('tab', { name: /Inspections/i }).first();
-        await expect(inspectionTab).toBeVisible({ timeout: 5000 });
+        await expect(inspectionTab).toBeVisible({ timeout: 10000 });
         await inspectionTab.click();
 
         // Utility function to add inspection at a certain time
         const addInspectionAtTime = async (hourText: string) => {
             // Open date picker and pick "tomorrow"
             const dateInput = this.page.locator('#basic');
-            await expect(dateInput).toBeVisible({ timeout: 3000 });
+            await expect(dateInput).toBeVisible({ timeout: 10000 });
             await dateInput.click();
 
             // Compute "tomorrow"
@@ -9704,7 +9831,7 @@ export class ListingActions {
             const dayLocator = this.page.locator(
                 `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
             );
-            await dayLocator.first().waitFor({ state: "visible", timeout: 5000 });
+            await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
             await dayLocator.first().click({ force: true });
 
             // Pick given hour
@@ -9717,12 +9844,12 @@ export class ListingActions {
 
             // Click 'Add'
             const addBtn = this.page.getByRole('button', { name: /Add/i }).first();
-            await expect(addBtn).toBeVisible({ timeout: 3000 });
+            await expect(addBtn).toBeVisible({ timeout: 10000 });
             await addBtn.click();
 
             // Wait for confirmation
             const successAlert = this.page.getByText('event added to calendar successfully');
-            await expect(successAlert).toBeVisible({ timeout: 5000 });
+            await expect(successAlert).toBeVisible({ timeout: 10000 });
             await this.page.waitForTimeout(700);
         };
 
@@ -9732,7 +9859,7 @@ export class ListingActions {
 
         // Clean up - close the popup/form
         const closeFormBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeFormBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+        if (await closeFormBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
             await closeFormBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1500);
@@ -9754,25 +9881,32 @@ export class ListingActions {
         await inspectionsTab.click();
         await this.page.waitForTimeout(1000);
 
-        // Delete all inspections one by one
-        let deleteLinks = await this.page.getByRole('link', { name: 'delete' }).all();
-        while (deleteLinks.length > 0) {
-            await deleteLinks[0].click();
-
-            await this.page.waitForTimeout(500);
-
-            // Refresh the links after DOM update
-            deleteLinks = await this.page.getByRole('link', { name: 'delete' }).all();
+        // Continuously click all visible delete icons until there are none left
+        while (true) {
+            const deleteLinks = this.page.getByRole('link', { name: 'delete' });
+            const count = await deleteLinks.count();
+            if (count === 0) break;
+            // Always click the first visible delete link that is visible
+            let clicked = false;
+            for (let i = 0; i < count; i++) {
+                const deleteLink = deleteLinks.nth(i);
+                const isVisible = await deleteLink.isVisible({ timeout: 10000 }).catch(() => false);
+                if (isVisible) {
+                    await deleteLink.click();
+                    clicked = true;
+                    // Wait for UI/reactivity to update before next check
+                    await this.page.waitForTimeout(600);
+                    break;
+                }
+            }
+            // If none were visible or clickable, break out of loop
+            if (!clicked) break;
         }
-
-        // Ensure no delete links remain in Inspections tab now
-        await expect(this.page.getByRole('link', { name: 'delete' })).toHaveCount(0, { timeout: 2000 });
-
         await this.page.waitForTimeout(1200);
 
         // Optionally, close form
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
             await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1500);

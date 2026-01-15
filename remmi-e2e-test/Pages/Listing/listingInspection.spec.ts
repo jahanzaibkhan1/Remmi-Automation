@@ -63,8 +63,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
     test('Test 9: Verify deletion of an inspection from the inspection portion', async ({ sessionPage }) => {
       const listingActions = new ListingActions(sessionPage);
-      await listingActions.addValidInspectionAndVerifySuccess();
-      await listingActions.verifyDeleteInspectionFromTab();
+      await listingActions.verifyDeleteInspectionFromInspectionTab();
     });
 
     test('Test 10: Verify that an inspection with a past date cannot be added', async ({ sessionPage }) => {
