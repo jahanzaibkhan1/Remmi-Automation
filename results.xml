@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.019467000000176">
-<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-14T12:40:43.398Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.958" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that clicking on an inspection in the calendar opens a popup" classname="Pages\Listing\listingInspection.spec.ts" time="38.958">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.67526099999994">
+<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-15T04:12:14.260Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.721" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify deleting an inspection from the calendar removes it from all relevant places" classname="Pages\Listing\listingInspection.spec.ts" time="33.721">
 </testcase>
 </testsuite>
 </testsuites>
