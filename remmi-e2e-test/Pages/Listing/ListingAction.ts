@@ -9565,4 +9565,89 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(1500);
     }
+
+    async verifyAddMultipleInspectionsDifferentDates() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Helper to add a single inspection by offsetting days
+        const addInspection = async (daysFromToday: number) => {
+            // Go to Inspections tab
+            const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
+            if (await inspectionsTab.isVisible({ timeout: 10000 }).catch(() => false)) {
+                await inspectionsTab.click();
+                await this.page.waitForTimeout(500);
+            }
+
+            // Open date picker
+            const inspectionDateInput = this.page.locator('#basic');
+            await expect(inspectionDateInput).toBeVisible({ timeout: 3000 });
+            await inspectionDateInput.click();
+
+            // Calculate target date
+            const d = new Date();
+            d.setDate(d.getDate() + daysFromToday);
+            const targetDay = d.getDate();
+            const targetMonth = d.getMonth();
+            const targetYear = d.getFullYear();
+
+            // Read calendar header to get visible month/year
+            const calendarHeader = this.page.locator(".p-datepicker-title");
+            await expect(calendarHeader).toBeVisible();
+            const calendarHeaderText = await calendarHeader.innerText();
+            const [monthName, visibleYear] = calendarHeaderText.trim().split(" ");
+            const visibleMonthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+            const monthDiff = (targetYear - parseInt(visibleYear)) * 12 + (targetMonth - visibleMonthIndex);
+
+            // Move to required month/year
+            for (let i = 0; i < Math.abs(monthDiff); i++) {
+                if (monthDiff > 0) {
+                    await this.page.locator(".p-datepicker-next").click();
+                } else {
+                    await this.page.locator(".p-datepicker-prev").click();
+                }
+                await this.page.waitForTimeout(200);
+            }
+
+            // Pick the correct day
+            const inspectionDayLocator = this.page.locator(
+                `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
+            );
+            await inspectionDayLocator.first().waitFor({ state: "visible", timeout: 5000 });
+            await inspectionDayLocator.first().click({ force: true });
+
+            // Fill required time field
+            const startTimeCombo = this.page.getByRole('combobox').nth(4);
+            await startTimeCombo.click();
+            await this.page.waitForTimeout(500);
+            const startTimeTimeOption = this.page.getByText('5', { exact: true });
+            await expect(startTimeTimeOption).toBeVisible({ timeout: 2000 });
+            await startTimeTimeOption.click();
+
+            // Click the 'Add' button in the Inspections tab
+            const addBtn = this.page.getByRole('button', { name: /Add/i }).first();
+            await expect(addBtn).toBeVisible({ timeout: 3000 });
+            await addBtn.click();
+
+            // Wait for success alert
+            const successMessage = this.page.getByText('event added to calendar successfully');
+            await expect(successMessage).toBeVisible({ timeout: 5000 });
+
+            await this.page.waitForTimeout(2000);
+        };
+        await addInspection(1);
+        await addInspection(2);
+
+        // Close the form after adding inspections
+        const closeFormBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeFormBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1500);
+    }
 }
