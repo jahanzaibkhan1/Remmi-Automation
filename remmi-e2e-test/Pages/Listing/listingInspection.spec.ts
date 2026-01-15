@@ -55,4 +55,39 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyInspectionClickOpensPopup();
     });
+
+    test('Test 8: Verify deleting an inspection from the calendar removes it from all relevant places', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyInspectionRemovesFromCalendar();
+    });
+
+    test('Test 9: Verify deletion of an inspection from the inspection portion', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyDeleteInspectionFromInspectionTab();
+    });
+
+    test('Test 10: Verify that an inspection with a past date cannot be added', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyInspectionCannotAddPastDate();
+    });
+
+    test('Test 11: Verify inspection portion expand/collapse functionality', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyInspectionExpandCollapse();
+    });
+
+    test('Test 12: Verify adding multiple inspections on different dates', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyAddMultipleInspectionsDifferentDates();
+    });
+
+    test('Test 13: Verify adding multiple inspections on the same date but different times', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyAddMultipleInspectionsSameDateDifferentTimes();
+    });
+
+    test('Test 14: Verify deleting all inspections removes them from all views', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyDeleteAllInspectionsRemovesFromAllViews();
+    });
 });    
