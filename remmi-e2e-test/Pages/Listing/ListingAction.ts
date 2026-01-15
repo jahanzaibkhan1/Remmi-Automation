@@ -9650,4 +9650,90 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(1500);
     }
+
+    /**
+     * Verify adding multiple inspections on the same date but different times
+     */
+    async verifyAddMultipleInspectionsSameDateDifferentTimes() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to Inspections tab
+        const inspectionTab = this.page.getByRole('tab', { name: /Inspections/i }).first();
+        await expect(inspectionTab).toBeVisible({ timeout: 5000 });
+        await inspectionTab.click();
+
+        // Utility function to add inspection at a certain time
+        const addInspectionAtTime = async (hourText: string) => {
+            // Open date picker and pick "tomorrow"
+            const dateInput = this.page.locator('#basic');
+            await expect(dateInput).toBeVisible({ timeout: 3000 });
+            await dateInput.click();
+
+            // Compute "tomorrow"
+            const t = new Date();
+            t.setDate(t.getDate() + 1);
+            const targetDay = t.getDate();
+            const targetMonth = t.getMonth();
+            const targetYear = t.getFullYear();
+
+            // Read calendar header and go to correct month
+            const header = this.page.locator(".p-datepicker-title");
+            await expect(header).toBeVisible();
+
+            const headerText = await header.innerText();
+            const [monthName, yearStr] = headerText.trim().split(" ");
+            const visibleMonthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+            const monthDiff = (targetYear - parseInt(yearStr)) * 12 + (targetMonth - visibleMonthIndex);
+            for (let i = 0; i < Math.abs(monthDiff); i++) {
+                if (monthDiff > 0) {
+                    await this.page.locator(".p-datepicker-next").click();
+                } else {
+                    await this.page.locator(".p-datepicker-prev").click();
+                }
+                await this.page.waitForTimeout(200);
+            }
+
+            // Pick the correct day
+            const dayLocator = this.page.locator(
+                `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
+            );
+            await dayLocator.first().waitFor({ state: "visible", timeout: 5000 });
+            await dayLocator.first().click({ force: true });
+
+            // Pick given hour
+            const startTimeCombo = this.page.getByRole('combobox').nth(4);
+            await startTimeCombo.click();
+            await this.page.waitForTimeout(500);
+            const option = this.page.getByText(hourText, { exact: true });
+            await expect(option).toBeVisible({ timeout: 2000 });
+            await option.click();
+
+            // Click 'Add'
+            const addBtn = this.page.getByRole('button', { name: /Add/i }).first();
+            await expect(addBtn).toBeVisible({ timeout: 3000 });
+            await addBtn.click();
+
+            // Wait for confirmation
+            const successAlert = this.page.getByText('event added to calendar successfully');
+            await expect(successAlert).toBeVisible({ timeout: 5000 });
+            await this.page.waitForTimeout(700);
+        };
+
+        // Add two inspections on the same date but different times
+        await addInspectionAtTime("3");
+        await addInspectionAtTime("4");
+
+        // Clean up - close the popup/form
+        const closeFormBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeFormBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1500);
+    }
 }
