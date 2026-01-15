@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.929917999999596">
-<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-15T06:06:35.114Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.375" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify adding multiple inspections on the same date but different times" classname="Pages\Listing\listingInspection.spec.ts" time="51.375">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="66.03580800000019">
+<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-15T06:48:23.436Z" hostname="chromium" tests="1" failures="0" skipped="0" time="52.515" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify deleting all inspections removes them from all views" classname="Pages\Listing\listingInspection.spec.ts" time="52.515">
 </testcase>
 </testsuite>
 </testsuites>

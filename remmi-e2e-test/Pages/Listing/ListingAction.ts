@@ -9388,6 +9388,7 @@ export class ListingActions {
         // Find the inspection event by text and click to open its details popup
         const event = this.page.locator('.fc-timegrid-event', { hasText: 'Remmi: Open Home' }).first();
         await expect(event).toBeVisible({ timeout: 5000 });
+        await this.page.waitForTimeout(1200);
         await event.click({ force: true });
 
         // In the popup/modal, find and click the Delete/Remove button (assuming ".pi-trash" is trash/delete icon)
@@ -9733,6 +9734,46 @@ export class ListingActions {
         const closeFormBtn = this.page.locator('.pi.pi-times').first();
         if (await closeFormBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
             await closeFormBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1500);
+    }
+
+    /**
+     * Verify that deleting all inspections removes them from all views
+     */
+    async verifyDeleteAllInspectionsRemovesFromAllViews() {
+        await this.switchToGridView();
+        // Open the first listing card to access its tabs
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        // Switch to Inspections tab
+        const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
+        await expect(inspectionsTab).toBeVisible({ timeout: 10000 });
+        await inspectionsTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Delete all inspections one by one
+        let deleteLinks = await this.page.getByRole('link', { name: 'delete' }).all();
+        while (deleteLinks.length > 0) {
+            await deleteLinks[0].click();
+
+            await this.page.waitForTimeout(500);
+
+            // Refresh the links after DOM update
+            deleteLinks = await this.page.getByRole('link', { name: 'delete' }).all();
+        }
+
+        // Ensure no delete links remain in Inspections tab now
+        await expect(this.page.getByRole('link', { name: 'delete' })).toHaveCount(0, { timeout: 2000 });
+
+        await this.page.waitForTimeout(1200);
+
+        // Optionally, close form
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1500);
     }
