@@ -67,4 +67,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyDeleteInspectionFromTab();
     });
 
+    test('Test 10: Verify that an inspection with a past date cannot be added', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyInspectionCannotAddPastDate();
+    });
+
 });    

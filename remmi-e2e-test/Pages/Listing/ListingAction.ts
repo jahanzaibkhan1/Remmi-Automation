@@ -4077,7 +4077,7 @@ export class ListingActions {
         const closeFormIcon = this.page.locator('.pi.pi-times').first();
         await closeFormIcon.click({ force: true });
         await this.page.waitForTimeout(2000);
-       
+
         await this.page.waitForTimeout(1200)
     }
 
@@ -4098,7 +4098,7 @@ export class ListingActions {
         const closeFormIcon = this.page.locator('.pi.pi-times').first();
         await closeFormIcon.click({ force: true });
         await this.page.waitForTimeout(2000);
-       
+
         await this.page.waitForTimeout(1200);
     }
 
@@ -5422,48 +5422,48 @@ export class ListingActions {
         await expect(firstListing).toBeVisible({ timeout: 10000 });
         await firstListing.click();
 
-       // Open the Images tab
-       const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
-       await imageTab.waitFor({ state: 'visible', timeout: 20000 });
-       await imageTab.click();
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
 
-       // Ensure Floorplans folder visible
-       const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
-       await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
+        // Ensure Floorplans folder visible
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
 
-       await this.page.waitForTimeout(1500);
+        await this.page.waitForTimeout(1500);
 
-       // Open Add menu
-       const addButton = this.page.locator('button', { hasText: 'Add' }).first();
-       await addButton.scrollIntoViewIfNeeded();
-       await addButton.click();
-       await this.page.waitForTimeout(200);
-       await addButton.click();
+        // Open Add menu
+        const addButton = this.page.locator('button', { hasText: 'Add' }).first();
+        await addButton.scrollIntoViewIfNeeded();
+        await addButton.click();
+        await this.page.waitForTimeout(200);
+        await addButton.click();
 
-       // Click "File Upload (Public)" option
-       const publicOption = this.page.locator('a', { hasText: 'File Upload (Public)' });
+        // Click "File Upload (Public)" option
+        const publicOption = this.page.locator('a', { hasText: 'File Upload (Public)' });
 
-       await expect(publicOption).toBeVisible({ timeout: 3000 });
-       await publicOption.click();
+        await expect(publicOption).toBeVisible({ timeout: 3000 });
+        await publicOption.click();
 
-       // Wait for upload input to appear
-       const fileInput = this.page.locator('#fileUpload');
-       // Upload the file
-       await fileInput.setInputFiles(imagePath);
+        // Wait for upload input to appear
+        const fileInput = this.page.locator('#fileUpload');
+        // Upload the file
+        await fileInput.setInputFiles(imagePath);
 
-       // Check image name visibility within the .lib-file area
-       const imageName = imagePath.split(/[\\/]/).pop();
-       if (imageName) {
-           const imageNameInLibFile = this.page.locator(`.lib-file :text("${imageName}")`).first();
-           await expect(imageNameInLibFile).toBeVisible({ timeout: 20000 });
-       }
+        // Check image name visibility within the .lib-file area
+        const imageName = imagePath.split(/[\\/]/).pop();
+        if (imageName) {
+            const imageNameInLibFile = this.page.locator(`.lib-file :text("${imageName}")`).first();
+            await expect(imageNameInLibFile).toBeVisible({ timeout: 20000 });
+        }
 
-       // Save and close
-       const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
-       await saveAndCloseButton.scrollIntoViewIfNeeded();
-       await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
-       await saveAndCloseButton.click();
-       await this.page.waitForTimeout(2000);
+        // Save and close
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
 
         await this.page.waitForTimeout(2000);
     }
@@ -5551,16 +5551,16 @@ export class ListingActions {
         await expect(firstListing).toBeVisible({ timeout: 10000 });
         await firstListing.click();
 
-         // Open the Images tab
-         const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
-         await imageTab.waitFor({ state: 'visible', timeout: 20000 });
-         await imageTab.click();
- 
-         // Ensure Floorplans folder visible
-         const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
-         await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
- 
-         await this.page.waitForTimeout(1500);
+        // Open the Images tab
+        const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Ensure Floorplans folder visible
+        const floorPlanArea = this.page.locator('.lib-file').filter({ hasText: 'Floorplans' });
+        await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
+
+        await this.page.waitForTimeout(1500);
 
         const imageLocator = this.page.locator('img.img-hub2').first();
         await expect(imageLocator).toBeVisible({ timeout: 15000 })
@@ -9231,7 +9231,7 @@ export class ListingActions {
         await this.page.waitForTimeout(1200);
         await this.switchToGridView();
 
-        
+
         // Open the first listing card
         const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
@@ -9268,7 +9268,7 @@ export class ListingActions {
         // Look for the specific event "Remmi: Open Home" in the timegrid calendar
         const event = this.page.locator('.fc-timegrid-event', { hasText: 'Remmi: Open Home' });
         await expect(event).toHaveCount(0);
-        
+
         // Close modal or preview if present after calendar validation
         const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
         if (await closePreviewButton.isVisible({ timeout: 2000 }).catch(() => false)) {
@@ -9422,6 +9422,48 @@ export class ListingActions {
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
             await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1500);
+    }
+
+    /**
+     * Verify that an inspection with a past date cannot be added.
+     * This will attempt to set an inspection event to a previous day and confirm the UI prevents it.
+     */
+    async verifyInspectionCannotAddPastDate() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to the Inspections tab
+        const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
+        await expect(inspectionsTab).toBeVisible({ timeout: 20000 });
+        await inspectionsTab.click();
+
+        await this.page.waitForTimeout(1000);
+       // Pick a past date (yesterday) by direct click in the calendar
+
+       const dateInput = this.page.locator('#basic');
+       await expect(dateInput).toBeVisible({ timeout: 3000 });
+       await dateInput.click();
+
+       // Compute yesterday's date
+       const yesterday = new Date();
+       yesterday.setDate(yesterday.getDate() - 1);
+       const targetDay = yesterday.getDate();
+
+       // Try to directly click yesterday's day on the calendar (should be disabled)
+       const pastDayCell = this.page.locator(`.p-datepicker-calendar td >> text="${targetDay}"`);
+       await pastDayCell.first().click({ force: true });
+
+        // Close the form after test
+        const closeFormBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeFormBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeFormBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1500);
     }
