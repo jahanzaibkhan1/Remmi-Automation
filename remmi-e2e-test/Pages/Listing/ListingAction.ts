@@ -9195,6 +9195,8 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
         await inspectionsTab.click();
 
+        await this.page.waitForTimeout(2000);
+
         const deleteLink = this.page.getByRole('link', { name: 'delete' }).first();
         await deleteLink.scrollIntoViewIfNeeded()
         await deleteLink.click();
@@ -9340,6 +9342,71 @@ export class ListingActions {
         const closeButton = popup.locator('.pi.pi-times, button[aria-label="Close"], .p-dialog-header-close').first();
         if (await closeButton.isVisible({ timeout: 3000 }).catch(() => false)) {
             await closeButton.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that deleting an inspection from the Calendar view removes it from all relevant places.
+     * Finds the "Remmi: Open Home" inspection event on the calendar, deletes it, and asserts removal.
+     */
+    async verifyInspectionRemovesFromCalendar() {
+        await this.switchToGridView();
+
+        // Open the first listing card to access its tabs
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to the Calendar tab
+        const calendarTab = this.page.getByRole('tab', { name: /Calendar/i });
+        await calendarTab.scrollIntoViewIfNeeded();
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Scroll FullCalendar time grid scroller to top (if present)
+        const scroller = this.page.locator('.fc-scroller').nth(2);
+        if (await scroller.count().then(c => c > 0)) {
+            await scroller.evaluate((el: HTMLElement) => { el.scrollTop = 0; });
+        }
+
+        // Find the inspection event by text and click to open its details popup
+        const event = this.page.locator('.fc-timegrid-event', { hasText: 'Remmi: Open Home' }).first();
+        await expect(event).toBeVisible({ timeout: 5000 });
+        await event.click({ force: true });
+
+        // In the popup/modal, find and click the Delete/Remove button (assuming ".pi-trash" is trash/delete icon)
+        const popup = this.page.locator('.p-dialog-content').first();
+        await expect(popup).toBeVisible({ timeout: 5000 });
+        const deleteButton = this.page.getByRole('dialog').getByRole('img', { name: 'delete' }).first();
+        await expect(deleteButton).toBeVisible({ timeout: 5000 });
+        await deleteButton.click({ force: true });
+
+        await this.page.waitForTimeout(1000);
+
+        // Wait for and assert the toast 'Event deleted successfully' appears
+        const toast = this.page.getByRole('alert', { name: 'Event deleted successfully' }).first();
+        await expect(toast).toBeVisible({ timeout: 5000 });
+        await this.page.waitForTimeout(1000);
+
+        // Assert the event is no longer visible in the calendar (should be gone)
+        await expect(
+            this.page.locator('.fc-timegrid-event', { hasText: 'Remmi: Open Home' })
+        ).toHaveCount(0, { timeout: 5000 });
+
+        // Optionally, check Inspection tab (if you want to ensure deletion from everywhere)
+        const inspectionTab = this.page.getByRole('tab', { name: /Inspection/i });
+        await inspectionTab.scrollIntoViewIfNeeded();
+        await inspectionTab.click();
+        await this.page.waitForTimeout(500);
+        const deleteLink = this.page.getByRole('link', { name: 'delete' }).first();
+        // Ensure that the delete link is no longer visible (i.e., deleted)
+        await expect(deleteLink).not.toBeVisible();
+        await this.page.waitForTimeout(1000);
+        // Close the popup/modal if it's still open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
         }
     }
 }
