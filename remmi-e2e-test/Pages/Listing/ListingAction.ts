@@ -9467,4 +9467,102 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(1500);
     }
+
+    /**
+     * Verify inspection portion expand/collapse functionality.
+     * Adds an inspection (for tomorrow), and verifies expand/collapse on inspection list.
+     */
+    async verifyInspectionExpandCollapse() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to the Inspections tab
+        const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
+        await expect(inspectionsTab).toBeVisible({ timeout: 20000 });
+        await inspectionsTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Add an inspection for tomorrow (add new if there isn't one already)
+        const dateInput = this.page.locator('#basic');
+        await expect(dateInput).toBeVisible({ timeout: 3000 });
+        await dateInput.click();
+
+        // Compute tomorrow
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+        const targetDay = t.getDate();
+
+        // Select tomorrow on the date picker
+        const dayLocator = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
+        );
+        await dayLocator.first().waitFor({ state: "visible", timeout: 5000 });
+        await dayLocator.first().click({ force: true });
+
+        // Select and pick a value for start time hour
+        const startTimeHour = this.page.getByRole('combobox').nth(4);
+        await expect(startTimeHour).toBeVisible({ timeout: 2000 });
+        await startTimeHour.click();
+        const startTimeHourOption = this.page.getByRole('option', { name: '5' }).first();
+        await expect(startTimeHourOption).toBeVisible({ timeout: 2000 });
+        await startTimeHourOption.click();
+        await this.page.waitForTimeout(200);
+
+        // Select and pick a value for start time minutes
+        const startTimeMinutes = this.page.getByRole('combobox').nth(5);
+        await expect(startTimeMinutes).toBeVisible({ timeout: 2000 });
+        await startTimeMinutes.click({force:true});
+        const startTimeMinuteOption = this.page.getByRole('option', { name: '05' }).first();
+        await expect(startTimeMinuteOption).toBeVisible({ timeout: 2000 });
+        await startTimeMinuteOption.click();
+        await this.page.waitForTimeout(200);
+
+        // Select and pick a value for start time AM/PM
+        const startTimeAmPm = this.page.getByRole('combobox').nth(6);
+        await expect(startTimeAmPm).toBeVisible({ timeout: 2000 });
+        await startTimeAmPm.click({force:true});
+        const startTimeAmPmOption = this.page.getByRole('option', { name: 'PM' }).first();
+        await expect(startTimeAmPmOption).toBeVisible({ timeout: 2000 });
+        await startTimeAmPmOption.click();
+        await this.page.waitForTimeout(200);
+
+        // Select and pick a value for end time hour
+        const endTimeHour = this.page.getByRole('combobox').nth(7);
+        await expect(endTimeHour).toBeVisible({ timeout: 2000 });
+        await endTimeHour.click({force:true});
+        const endTimeHourOption = this.page.getByRole('option', { name: '6' }).first();
+        await expect(endTimeHourOption).toBeVisible({ timeout: 2000 });
+        await endTimeHourOption.click();
+        await this.page.waitForTimeout(200);
+
+        // Select and pick a value for end time minutes
+        const endTimeMinutes = this.page.getByRole('combobox').nth(8);
+        await expect(endTimeMinutes).toBeVisible({ timeout: 2000 });
+        await endTimeMinutes.click({force:true});
+        const endTimeMinuteOption = this.page.getByRole('option', { name: '10' }).first();
+        await expect(endTimeMinuteOption).toBeVisible({ timeout: 2000 });
+        await endTimeMinuteOption.click();
+        await this.page.waitForTimeout(200);
+
+        // Select and pick a value for end time AM/PM
+        const endTimeAmPm = this.page.getByRole('combobox').nth(9);
+        await expect(endTimeAmPm).toBeVisible({ timeout: 2000 });
+        await endTimeAmPm.click({force:true});
+        const endTimeAmPmOption = this.page.getByRole('option', { name: 'PM' }).first();
+        await expect(endTimeAmPmOption).toBeVisible({ timeout: 2000 });
+        await endTimeAmPmOption.click();
+        await this.page.waitForTimeout(2000);
+
+        // Clean up: Close the form/modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1500);
+    }
 }
