@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.32314300000016">
-<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-15T05:50:59.005Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.416" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify adding multiple inspections on different dates" classname="Pages\Listing\listingInspection.spec.ts" time="36.416">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.929917999999596">
+<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-15T06:06:35.114Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.375" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify adding multiple inspections on the same date but different times" classname="Pages\Listing\listingInspection.spec.ts" time="51.375">
 </testcase>
 </testsuite>
 </testsuites>
