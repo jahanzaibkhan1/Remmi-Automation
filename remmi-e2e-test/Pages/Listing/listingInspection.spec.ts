@@ -72,4 +72,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyInspectionCannotAddPastDate();
     });
 
+    test('Test 11: Verify inspection portion expand/collapse functionality', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyInspectionExpandCollapse();
+    });
+
 });    
