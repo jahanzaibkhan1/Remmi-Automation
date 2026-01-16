@@ -35,5 +35,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyContractPopupSellerFieldAutoPopulates();
     });
+    
+    test('Test 4: Verify that the listing dropdown auto selects the primary listing for the contract popup', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyContractPopupListingDropdownAutoPopulate();
+    });
 
 });
