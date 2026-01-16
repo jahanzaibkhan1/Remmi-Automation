@@ -10340,4 +10340,58 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(1200);
     }
+
+    /**
+     * Verify that the listing dropdown in the contract popup auto-populates with the selected listing.
+     */
+    async verifyContractPopupListingDropdownAutoPopulates() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card, extract and trim its address text
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeAttached({ timeout: 30000 });
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+
+        // Grab the heading before clicking (it may change)
+        const listingHeading = this.page.locator('h3.props-bg.cp.mb-1.px-0').first();
+        await expect(listingHeading).toBeVisible({ timeout: 10000 });
+        const expectedAddress = (await listingHeading.textContent() || '').replace(/\s+/g, ' ').trim();
+
+        await firstCardRow.click();
+
+        // Go to the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+        await this.page.waitForTimeout(800);
+
+        // Click the Add button in the Legal tab to open the contract popup
+        const addButton = this.page.getByLabel('Legal').getByRole('button', { name: '', exact: true }).first();
+        await expect(addButton).toBeAttached({ timeout: 10000 });
+        await addButton.click();
+
+        // Wait for the contract popup panel to be visible
+        const contractPanel = this.page.locator('#Contract_1 #rightbarwithscroll');
+        await expect(contractPanel).toBeVisible({ timeout: 10000 });
+
+        // Find the Listing dropdown inside the contract popup
+        const listingDropdown = this.page.locator('div.task-contact:has-text("Listing") ng-select');
+        await expect(listingDropdown).toBeVisible({ timeout: 10000 });
+
+        // Verify that the dropdown auto-populates with the trimmed value of the heading
+        const selectedOption = listingDropdown.locator('.ng-value-label');
+        await expect(selectedOption).toBeVisible({ timeout: 10000 });
+        const selectedText = (await selectedOption.textContent() || '').replace(/\s+/g, ' ').trim();
+
+        // Directly compare the heading text and dropdown selected text
+        expect(selectedText).toBe(expectedAddress);
+
+        // Close the contract popup dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
 }

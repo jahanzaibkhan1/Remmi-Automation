@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="52.64244699999969">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-16T05:53:38.821Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.009" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that clicking the Add button in the Legal tab opens the contract popup in a new tab" classname="Pages\Listing\listingLegal.spec.ts" time="42.009">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.35757499999926">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-16T06:22:14.516Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.464" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify that the listing dropdown auto populates the selected listing in the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="42.464">
 </testcase>
 </testsuite>
 </testsuites>
