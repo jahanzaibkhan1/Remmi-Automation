@@ -31,4 +31,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyContractPopupListingDropdownAutoPopulates();
     });
 
+    test('Test 3: Verify that the Seller field auto populates in the contract popup', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyContractPopupSellerFieldAutoPopulates();
+    });
+
 });

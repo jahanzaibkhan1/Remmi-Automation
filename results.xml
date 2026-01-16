@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.35757499999926">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-16T06:22:14.516Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.464" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify that the listing dropdown auto populates the selected listing in the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="42.464">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.86323000000045">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-16T06:55:20.474Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.913" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that the Seller field auto populates in the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="40.913">
+<system-out>
+<![CDATA[Owner is: Automation Testing
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
