@@ -90,4 +90,35 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyDeleteAllInspectionsRemovesFromAllViews();
     });
+
+    test('Test 15: Verify that deleting an inspection from the calendar does not affect other inspections', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyDeleteInspectionFromCalendarDoesNotAffectOthers();
+    });
+
+    test('Test 16: Verify that start time must be before end time when adding an inspection', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyStartTimeMustBeBeforeEndTime();
+    });
+
+    test('Test 17: Verify duplicate inspections can be added on the same listing', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyDuplicateInspectionsCanBeAdded();
+    });
+
+    test('Test 18: Verify system does not accept invalid date formats', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyInspectionCannotAddPastDate();
+    });
+
+    test('Test 19: Verify system does not accept invalid time formats', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyStartTimeMustBeBeforeEndTime();
+    });
+
+    test('Test 20: Verify correct error message when only some fields are filled', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyRequiredFieldsValidation();
+    });
+
 });    
