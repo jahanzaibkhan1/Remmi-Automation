@@ -105,4 +105,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyDuplicateInspectionsCanBeAdded();
     });
+
+    test('Test 18: Verify system does not accept invalid date formats', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyInspectionCannotAddPastDate();
+    });
 });    
