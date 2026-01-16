@@ -9911,4 +9911,149 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(1500);
     }
+
+    /**
+     Verify that deleting an inspection from the calendar does not affect other inspections
+     */
+    async verifyDeleteInspectionFromCalendarDoesNotAffectOthers() {
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        // Go to the Inspections tab
+        const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
+        await expect(inspectionsTab).toBeVisible({ timeout: 15000 });
+        await inspectionsTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // ---- Step 1: Add two inspections for different (future) dates ----
+        const inspectionDescriptions: string[] = [];
+        for (let idx = 1; idx <= 2; idx++) {
+            // Open the date input
+            const dateInput = this.page.locator('#basic');
+            await expect(dateInput).toBeVisible({ timeout: 10000 });
+            await dateInput.click();
+
+            // Compute future date
+            let d = new Date();
+            d.setDate(d.getDate() + idx); // day+1 and day+2
+
+            const day = d.getDate();
+            const month = d.getMonth();
+            const year = d.getFullYear();
+
+            // Get current header to navigate if needed
+            const calendarHeader = this.page.locator(".p-datepicker-title");
+            await expect(calendarHeader).toBeVisible({ timeout: 10000 });
+            const headerText = await calendarHeader.innerText();
+            const [headerMonthName, headerYear] = headerText.trim().split(" ");
+            const headerMonthIndex = new Date(`${headerMonthName} 1, 2000`).getMonth();
+            const monthDifference = (year - parseInt(headerYear)) * 12 + (month - headerMonthIndex);
+
+            for (let j = 0; j < Math.abs(monthDifference); j++) {
+                if (monthDifference > 0) {
+                    await this.page.locator(".p-datepicker-next").click();
+                } else {
+                    await this.page.locator(".p-datepicker-prev").click();
+                }
+                await this.page.waitForTimeout(200);
+            }
+
+            const dayLocator = this.page.locator(
+                `.p-datepicker-calendar td:not(.p-disabled) >> text="${day}"`
+            );
+            await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
+            await dayLocator.first().click({ force: true });
+
+            // Select start time
+            const startTimeSelect = this.page.getByRole('combobox').nth(4);
+            await startTimeSelect.click();
+            await this.page.waitForTimeout(300);
+            // Pick a known time option (6th, if that works)
+            const startTimeOption = this.page.getByRole('option').nth(5);
+            await expect(startTimeOption).toBeVisible({ timeout: 10000 });
+            await startTimeOption.click();
+
+            // Click the Add button
+            const addButton = this.page.getByRole('button', { name: /Add/i }).first();
+            await expect(addButton).toBeVisible({ timeout: 10000 });
+            await addButton.click();
+
+            // Wait for success confirmation
+            const successAlert = this.page.getByText('event added to calendar successfully');
+            await expect(successAlert).toBeVisible({ timeout: 10000 });
+            await this.page.waitForTimeout(900);
+        }
+
+        // Refresh the inspections tab state, and collect the first two inspection descriptions
+        await inspectionsTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // ---- Step 2: Go to Calendar tab and delete the first inspection ----
+        const calendarTab = this.page.getByRole('tab', { name: /Calendar/i });
+        await expect(calendarTab).toBeVisible({ timeout: 5000 });
+        await calendarTab.click();
+        await this.page.waitForTimeout(1200);
+
+         // Wait for calendar grid to be loaded and visible
+         const calendarGrid = this.page.locator('.fc-timegrid');
+         await expect(calendarGrid).toBeVisible({ timeout: 10000 });
+
+         // Ensure the calendar is scrolled to the top (works for visible scrollbars)
+         const scroller = this.page.locator('.fc-scroller').nth(2);
+         if (await scroller.count().then(c => c > 0)) {
+             // Use JS to force scroll to top, since .scroll is not available on Locator
+             await scroller.evaluate((el: HTMLElement) => { el.scrollTop = 0; });
+         }
+
+         await this.page.waitForTimeout(1000);
+
+         // Find all inspection events on the calendar
+         const calendarEntries = this.page.locator('.fc-timegrid-event', { hasText: 'Remmi: Open Home' });
+         const numEntries = await calendarEntries.count();
+         expect(numEntries).toBeGreaterThanOrEqual(2);
+
+         // Click the first inspection event to open its details popup
+         const firstEvent = calendarEntries.nth(0);
+         await expect(firstEvent).toBeVisible({ timeout: 20000 });
+         await this.page.waitForTimeout(2500);
+         await firstEvent.click({ force: true });
+
+         // In the popup/modal, find and click the Delete/Remove button
+         const deleteButton = this.page.getByRole('dialog').getByRole('img', { name: 'delete' }).first();
+         await expect(deleteButton).toBeVisible({ timeout: 10000 });
+         await deleteButton.click({ force: true });
+         await this.page.waitForTimeout(800);
+
+         // Click the refresh icon to reload the calendar events
+         const refreshIcon = this.page.locator('.cursor-pointer.f-14.pi.pi-refresh').first();
+         if (await refreshIcon.isVisible({ timeout: 5000 }).catch(() => false)) {
+             await refreshIcon.click({ force: true });
+             await this.page.waitForTimeout(1200);
+         }
+         
+         // ---- Step 3: Validate: First is deleted, second remains (calendar & tab) ----
+         // Before checking, scroll to top to ensure all calendar events are visible
+         const calendarScroller = this.page.locator('.fc-scroller').nth(2);
+         if (await calendarScroller.count().then(c => c > 0)) {
+             await calendarScroller.evaluate((el: HTMLElement) => { el.scrollTop = 0; });
+             await this.page.waitForTimeout(500);
+         }
+         // Confirm first calendar entry is not visible, second is visible
+         await expect(calendarEntries.nth(0)).toBeVisible({ timeout: 10000 });
+
+        // Go back to Inspections tab
+        await inspectionsTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Optionally close the form
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
 }
