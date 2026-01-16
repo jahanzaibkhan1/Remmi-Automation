@@ -90,4 +90,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyDeleteAllInspectionsRemovesFromAllViews();
     });
+
+    test('Verify that deleting an inspection from the calendar does not affect other inspections', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyDeleteInspectionFromCalendarDoesNotAffectOthers();
+    });
 });    
