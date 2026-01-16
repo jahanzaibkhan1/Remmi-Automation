@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.85547800000012">
-<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-16T05:25:21.458Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.44" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify system does not accept invalid time formats" classname="Pages\Listing\listingInspection.spec.ts" time="34.44">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.147422000000255">
+<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-16T05:27:41.714Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.867" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Verify correct error message when only some fields are filled" classname="Pages\Listing\listingInspection.spec.ts" time="39.867">
 </testcase>
 </testsuite>
 </testsuites>
