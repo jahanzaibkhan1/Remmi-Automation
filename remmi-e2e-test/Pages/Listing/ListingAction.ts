@@ -9337,7 +9337,6 @@ export class ListingActions {
 
         const deleteLink = this.page.getByRole('link', { name: 'delete' }).first();
         await deleteLink.waitFor({ state: "visible", timeout: 10000 });
-        await deleteLink.scrollIntoViewIfNeeded()
         await deleteLink.click();
 
         // Wait for the "event removed successfully" success message
