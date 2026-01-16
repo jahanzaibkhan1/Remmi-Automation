@@ -100,4 +100,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyStartTimeMustBeBeforeEndTime();
     });
+
+    test('Test 17: Verify duplicate inspections can be added on the same listing', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyDuplicateInspectionsCanBeAdded();
+    });
 });    
