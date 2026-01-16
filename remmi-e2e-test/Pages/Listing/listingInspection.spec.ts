@@ -91,8 +91,13 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyDeleteAllInspectionsRemovesFromAllViews();
     });
 
-    test('Verify that deleting an inspection from the calendar does not affect other inspections', async ({ sessionPage }) => {
+    test('Test 15: Verify that deleting an inspection from the calendar does not affect other inspections', async ({ sessionPage }) => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyDeleteInspectionFromCalendarDoesNotAffectOthers();
+    });
+
+    test('Test 16: Verify that start time must be before end time when adding an inspection', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyStartTimeMustBeBeforeEndTime();
     });
 });    

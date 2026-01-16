@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.08374600000004">
-<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-16T04:18:10.397Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.365" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Verify that deleting an inspection from the calendar does not affect other inspections" classname="Pages\Listing\listingInspection.spec.ts" time="44.365">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.49171700000018">
+<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-16T04:33:22.492Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.331" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that start time must be before end time when adding an inspection" classname="Pages\Listing\listingInspection.spec.ts" time="27.331">
 </testcase>
 </testsuite>
 </testsuites>
