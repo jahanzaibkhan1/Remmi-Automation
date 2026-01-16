@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="36.240242999999786">
-<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-16T05:23:53.005Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.862" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Verify system does not accept invalid date formats" classname="Pages\Listing\listingInspection.spec.ts" time="29.862">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.85547800000012">
+<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-16T05:25:21.458Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.44" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify system does not accept invalid time formats" classname="Pages\Listing\listingInspection.spec.ts" time="34.44">
 </testcase>
 </testsuite>
 </testsuites>
