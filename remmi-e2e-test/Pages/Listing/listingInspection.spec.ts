@@ -116,4 +116,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyStartTimeMustBeBeforeEndTime();
     });
 
+    test('Test 20: Verify correct error message when only some fields are filled', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyRequiredFieldsValidation();
+    });
+
 });    
