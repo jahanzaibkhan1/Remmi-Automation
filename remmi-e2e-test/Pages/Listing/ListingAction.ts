@@ -9403,17 +9403,17 @@ export class ListingActions {
             }
         }
 
-         // Robustly wait for the "Remmi: Open Home" event to appear and be attached (no arbitrary waits)
-         const eventLocator = this.page.locator('.fc-timegrid-event', { hasText: 'Remmi: Open Home' }).first();
-         await expect(eventLocator).toBeAttached({ timeout: 20000 });
-         await expect(eventLocator).toBeVisible({ timeout: 20000 });
+        // Robustly wait for the "Remmi: Open Home" event to appear and be attached (no arbitrary waits)
+        const eventLocator = this.page.locator('.fc-timegrid-event', { hasText: 'Remmi: Open Home' }).first();
+        await expect(eventLocator).toBeAttached({ timeout: 20000 });
+        await expect(eventLocator).toBeVisible({ timeout: 20000 });
 
         // Close modal or preview if present after validation
         const closePreviewButton = this.page.locator('.pi.pi-times').first();
         if (await closePreviewButton.isVisible({ timeout: 5000 }).catch(() => false)) {
             await closePreviewButton.click({ force: true });
             // Wait for it to disappear to ensure next actions are not affected
-            await expect(closePreviewButton).not.toBeVisible({ timeout: 5000 }).catch(() => {});
+            await expect(closePreviewButton).not.toBeVisible({ timeout: 5000 }).catch(() => { });
         }
     }
 
@@ -10109,52 +10109,52 @@ export class ListingActions {
         await calendarTab.click();
         await this.page.waitForTimeout(1200);
 
-         // Wait for calendar grid to be loaded and visible
-         const calendarGrid = this.page.locator('.fc-timegrid');
-         await expect(calendarGrid).toBeVisible({ timeout: 10000 });
+        // Wait for calendar grid to be loaded and visible
+        const calendarGrid = this.page.locator('.fc-timegrid');
+        await expect(calendarGrid).toBeVisible({ timeout: 10000 });
 
-         // Ensure the calendar is scrolled to the top (works for visible scrollbars)
-         const scroller = this.page.locator('.fc-scroller').nth(2);
-         if (await scroller.count().then(c => c > 0)) {
-             // Use JS to force scroll to top, since .scroll is not available on Locator
-             await scroller.evaluate((el: HTMLElement) => { el.scrollTop = 0; });
-         }
+        // Ensure the calendar is scrolled to the top (works for visible scrollbars)
+        const scroller = this.page.locator('.fc-scroller').nth(2);
+        if (await scroller.count().then(c => c > 0)) {
+            // Use JS to force scroll to top, since .scroll is not available on Locator
+            await scroller.evaluate((el: HTMLElement) => { el.scrollTop = 0; });
+        }
 
-         await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(1000);
 
-         // Find all inspection events on the calendar
-         const calendarEntries = this.page.locator('.fc-timegrid-event', { hasText: 'Remmi: Open Home' });
-         const numEntries = await calendarEntries.count();
-         expect(numEntries).toBeGreaterThanOrEqual(2);
+        // Find all inspection events on the calendar
+        const calendarEntries = this.page.locator('.fc-timegrid-event', { hasText: 'Remmi: Open Home' });
+        const numEntries = await calendarEntries.count();
+        expect(numEntries).toBeGreaterThanOrEqual(2);
 
-         // Click the first inspection event to open its details popup
-         const firstEvent = calendarEntries.nth(0);
-         await expect(firstEvent).toBeVisible({ timeout: 20000 });
-         await this.page.waitForTimeout(2500);
-         await firstEvent.click({ force: true });
+        // Click the first inspection event to open its details popup
+        const firstEvent = calendarEntries.nth(0);
+        await expect(firstEvent).toBeVisible({ timeout: 20000 });
+        await this.page.waitForTimeout(2500);
+        await firstEvent.click({ force: true });
 
-         // In the popup/modal, find and click the Delete/Remove button
-         const deleteButton = this.page.getByRole('dialog').getByRole('img', { name: 'delete' }).first();
-         await expect(deleteButton).toBeVisible({ timeout: 10000 });
-         await deleteButton.click({ force: true });
-         await this.page.waitForTimeout(800);
+        // In the popup/modal, find and click the Delete/Remove button
+        const deleteButton = this.page.getByRole('dialog').getByRole('img', { name: 'delete' }).first();
+        await expect(deleteButton).toBeVisible({ timeout: 10000 });
+        await deleteButton.click({ force: true });
+        await this.page.waitForTimeout(800);
 
-         // Click the refresh icon to reload the calendar events
-         const refreshIcon = this.page.locator('.cursor-pointer.f-14.pi.pi-refresh').first();
-         if (await refreshIcon.isVisible({ timeout: 5000 }).catch(() => false)) {
-             await refreshIcon.click({ force: true });
-             await this.page.waitForTimeout(1200);
-         }
-         
-         // ---- Step 3: Validate: First is deleted, second remains (calendar & tab) ----
-         // Before checking, scroll to top to ensure all calendar events are visible
-         const calendarScroller = this.page.locator('.fc-scroller').nth(2);
-         if (await calendarScroller.count().then(c => c > 0)) {
-             await calendarScroller.evaluate((el: HTMLElement) => { el.scrollTop = 0; });
-             await this.page.waitForTimeout(500);
-         }
-         // Confirm first calendar entry is not visible, second is visible
-         await expect(calendarEntries.nth(0)).toBeVisible({ timeout: 10000 });
+        // Click the refresh icon to reload the calendar events
+        const refreshIcon = this.page.locator('.cursor-pointer.f-14.pi.pi-refresh').first();
+        if (await refreshIcon.isVisible({ timeout: 5000 }).catch(() => false)) {
+            await refreshIcon.click({ force: true });
+            await this.page.waitForTimeout(1200);
+        }
+
+        // ---- Step 3: Validate: First is deleted, second remains (calendar & tab) ----
+        // Before checking, scroll to top to ensure all calendar events are visible
+        const calendarScroller = this.page.locator('.fc-scroller').nth(2);
+        if (await calendarScroller.count().then(c => c > 0)) {
+            await calendarScroller.evaluate((el: HTMLElement) => { el.scrollTop = 0; });
+            await this.page.waitForTimeout(500);
+        }
+        // Confirm first calendar entry is not visible, second is visible
+        await expect(calendarEntries.nth(0)).toBeVisible({ timeout: 10000 });
 
         // Go back to Inspections tab
         await inspectionsTab.click();
@@ -10216,7 +10216,7 @@ export class ListingActions {
 
         // Select End time (earlier)
         const endTimeSelect = allComboboxes.nth(7);
-        await endTimeSelect.click({force:true});
+        await endTimeSelect.click({ force: true });
         await this.page.waitForTimeout(500);
         const earlyEndOption = this.page.getByText('4', { exact: true }).first();
         await earlyEndOption.click();
@@ -10303,7 +10303,7 @@ export class ListingActions {
             await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1200);
-        
+
     }
 
     /**
@@ -10329,7 +10329,7 @@ export class ListingActions {
         const addButton = this.page.getByLabel('Legal').getByRole('button', { name: '', exact: true }).first();
         await expect(addButton).toBeAttached({ timeout: 10000 });
         await addButton.click();
-       
+
         // Wait for the contract panel to be visible in the popup
         const contractPanel = this.page.locator('#Contract_1 #rightbarwithscroll');
         await expect(contractPanel).toBeVisible({ timeout: 10000 });
@@ -10386,6 +10386,51 @@ export class ListingActions {
 
         // Directly compare the heading text and dropdown selected text
         expect(selectedText).toBe(expectedAddress);
+
+        // Close the contract popup dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    // Verify that the Seller field auto-populates in the contract popup
+    async verifyContractPopupSellerFieldAutoPopulates() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card, extract the Seller text from card details
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeAttached({ timeout: 30000 });
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+
+        await firstCardRow.click();
+
+        // Go to the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+        await this.page.waitForTimeout(800);
+
+        // Click the Add button in the Legal tab to open the contract popup
+        const addButton = this.page.getByLabel('Legal').getByRole('button', { name: '', exact: true }).first();
+        await expect(addButton).toBeAttached({ timeout: 10000 });
+        await addButton.click();
+
+        // Wait for the contract popup panel to be visible
+        const contractPanel = this.page.locator('#Contract_1 #rightbarwithscroll');
+        await expect(contractPanel).toBeVisible({ timeout: 10000 });
+
+        // Find the Seller field in the contract popup and wait for it to be in 'visible' state
+        const sellerFormField = this.page.locator('div.selected_one > p.cursor-pointer').last();
+        await expect(sellerFormField).toBeAttached({ timeout: 10000 });
+
+        // Get the value, trim it, and log it
+        const sellerText = (await sellerFormField.textContent() || '').trim();
+        console.log(`Owner is: ${sellerText}`);
+
+        await expect(sellerText.length).toBeGreaterThan(0);
 
         // Close the contract popup dialog
         const closeBtn = this.page.locator('.pi.pi-times').first();
