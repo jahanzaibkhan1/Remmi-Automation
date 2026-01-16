@@ -10056,4 +10056,74 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(1200);
     }
+
+    /**
+     * Verify that the start time must be before the end time when adding an inspection.
+     * This test selects a start time that is after or the same as the end time and expects a validation error.
+     */
+    async verifyStartTimeMustBeBeforeEndTime() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to the Inspections tab
+        const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
+        await expect(inspectionsTab).toBeVisible({ timeout: 20000 });
+        await inspectionsTab.click();
+
+        await this.page.waitForTimeout(900);
+
+        // Open date picker and select tomorrow
+        const dateInput = this.page.locator('#basic');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+        const targetDay = t.getDate();
+
+        // Select tomorrow's date (works assuming calendar is on correct month/year)
+        const dayLocator = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
+        );
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
+        await dayLocator.first().click({ force: true });
+
+        // Simulate selecting a start time later than end time
+        // (e.g., Start time: 7:00 PM, End time: 6:00 PM)
+        const allComboboxes = this.page.getByRole('combobox');
+        // Select Start time (later)
+        const startTimeSelect = allComboboxes.nth(4);
+        await startTimeSelect.click();
+        await this.page.waitForTimeout(500);
+        const lateStartOption = this.page.getByText('5', { exact: true }).first();
+        await lateStartOption.click();
+
+        // Select End time (earlier)
+        const endTimeSelect = allComboboxes.nth(7);
+        await endTimeSelect.click({force:true});
+        await this.page.waitForTimeout(500);
+        const earlyEndOption = this.page.getByText('4', { exact: true }).first();
+        await earlyEndOption.click();
+
+        // Click 'Add' to submit
+        const addButton = this.page.getByRole('button', { name: /Add/i }).first();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        // Expect a validation error popup or message
+        const timeErrorAlert = this.page.getByRole('alert', { name: 'Start time must be before end' });
+        await expect(timeErrorAlert).toBeVisible({ timeout: 10000 });
+
+        // Optionally close the form if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
 }
