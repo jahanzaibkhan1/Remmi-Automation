@@ -10305,4 +10305,39 @@ export class ListingActions {
         await this.page.waitForTimeout(1200);
         
     }
+
+    /**
+     * Test that clicking the Add button in the Legal tab opens the contract popup in a new tab.
+     */
+    async verifyAddButtonInLegalTabOpensContractPopup() {
+
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card robustly (ensure attached & visible before clicking)
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeAttached({ timeout: 30000 }); // More robust: attached before visible
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to the Legal tab on the listing details page
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+        await this.page.waitForTimeout(800);
+
+        const addButton = this.page.getByLabel('Legal').getByRole('button', { name: '', exact: true }).first();
+        await expect(addButton).toBeAttached({ timeout: 10000 });
+        await addButton.click();
+       
+        // Wait for the contract panel to be visible in the popup
+        const contractPanel = this.page.locator('#Contract_1 #rightbarwithscroll');
+        await expect(contractPanel).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
 }
