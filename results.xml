@@ -1,6 +1,44 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.147422000000255">
-<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-16T05:27:41.714Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.867" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Verify correct error message when only some fields are filled" classname="Pages\Listing\listingInspection.spec.ts" time="39.867">
+<testsuites id="" name="" tests="20" failures="0" skipped="0" errors="0" time="216.80398700000003">
+<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-01-16T05:35:36.381Z" hostname="chromium" tests="20" failures="0" skipped="0" time="212.59" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that the inspection tab is hidden before listing  is saved" classname="Pages\Listing\listingInspection.spec.ts" time="31.898">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify required fields validation" classname="Pages\Listing\listingInspection.spec.ts" time="5.556">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify successful addition of an inspection" classname="Pages\Listing\listingInspection.spec.ts" time="8.053">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify deletion of an inspection from the inspection tab" classname="Pages\Listing\listingInspection.spec.ts" time="13.668">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that deleting an inspection from the inspection tab removes it from the calendar" classname="Pages\Listing\listingInspection.spec.ts" time="9.956">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify inspection is visible in the calendar tab after adding" classname="Pages\Listing\listingInspection.spec.ts" time="20.28">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that clicking on an inspection in the calendar opens a popup" classname="Pages\Listing\listingInspection.spec.ts" time="3.402">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify deleting an inspection from the calendar removes it from all relevant places" classname="Pages\Listing\listingInspection.spec.ts" time="12.431">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify deletion of an inspection from the inspection portion" classname="Pages\Listing\listingInspection.spec.ts" time="9.635">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that an inspection with a past date cannot be added" classname="Pages\Listing\listingInspection.spec.ts" time="4.386">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify inspection portion expand/collapse functionality" classname="Pages\Listing\listingInspection.spec.ts" time="9.599">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify adding multiple inspections on different dates" classname="Pages\Listing\listingInspection.spec.ts" time="12.014">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify adding multiple inspections on the same date but different times" classname="Pages\Listing\listingInspection.spec.ts" time="8.12">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify deleting all inspections removes them from all views" classname="Pages\Listing\listingInspection.spec.ts" time="9.277">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that deleting an inspection from the calendar does not affect other inspections" classname="Pages\Listing\listingInspection.spec.ts" time="19.911">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that start time must be before end time when adding an inspection" classname="Pages\Listing\listingInspection.spec.ts" time="5.921">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify duplicate inspections can be added on the same listing" classname="Pages\Listing\listingInspection.spec.ts" time="10.448">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Verify system does not accept invalid date formats" classname="Pages\Listing\listingInspection.spec.ts" time="5.925">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify system does not accept invalid time formats" classname="Pages\Listing\listingInspection.spec.ts" time="6.13">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Verify correct error message when only some fields are filled" classname="Pages\Listing\listingInspection.spec.ts" time="5.98">
 </testcase>
 </testsuite>
 </testsuites>
