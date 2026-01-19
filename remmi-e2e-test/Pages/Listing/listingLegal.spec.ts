@@ -41,4 +41,55 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyContractPopupListingDropdownAutoPopulate();
     });
 
+    test('Test 5: Verify that the Managing Contact dropdown auto selects the primary Contact for the contact', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyManagingContactDropdownAutoSelectsPrimaryContact();
+    });
+
+    test('Test 6: Verify that no field is marked as required in the contract popup', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyNoRequiredFieldsInContractPopup()
+    });
+
+    test('Test 7: Verify that the contract is displayed in the Legal tab after saving the contract popup', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyContractDisplayedAfterSaving();
+    });
+
+    test('Test 8: Verify that the contract status displays Purchaser, Offer Price, Offer Date, Selling Contact, etc.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyContractStatusDropdownOptions();
+    });
+
+    test('Test 9: Verify that clicking the checkbox in the Legal tab shows a dropdown with Present, Accept, and Decline buttons', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyLegalTabCheckboxRevealsDropdown();
+    });
+
+    test('Test 10: Verify that clicking the Accept button updates the Offer Status to "Accepted"', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyAcceptButtonUpdatesOfferStatus();
+    });
+
+    test('Test 11: Verify that clicking the Decline button updates the Offer Status to "Declined"', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyDeclineButtonUpdatesOfferStatus();
+    });
+
+    test('Test 12: Verify that the Offer Status can be updated multiple times in the Legal tab', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyOfferStatusCanBeUpdatedMultipleTimes();
+    });
+
+    test('Test 13: Verify that the Offer Status is retained correctly after refreshing the page', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyOfferStatusIsRetainedAfterRefresh();
+    });
+
+    test('Test 14: Verify that clicking on the "Selling Agreement Start Date" field opens a calendar for selecting a date', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySellingAgreementStartDateCalendarOpens();
+    });
+
+
 });
