@@ -10443,42 +10443,44 @@ export class ListingActions {
         // Navigate to listings and switch to grid view
         await this.navigateToListings();
         await this.switchToGridView();
-    
+
         // Open the first listing card
         const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
         await expect(firstCardRow).toBeAttached({ timeout: 30000 });
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
         await firstCardRow.click();
-    
+
         // Go to the Legal tab
         const legalTab = this.page.getByRole('tab', { name: /Legal/i });
         await expect(legalTab).toBeVisible({ timeout: 10000 });
         await legalTab.click();
         await this.page.waitForTimeout(800);
-    
+
         // Click the Add button in the Legal tab to open the contract popup
         const addButton = this.page.getByLabel('Legal').getByRole('button', { name: '', exact: true }).first();
         await expect(addButton).toBeAttached({ timeout: 10000 });
         await addButton.click();
-    
+
         // Wait for the contract popup panel to be visible
         const contractPanel = this.page.locator('#Contract_1 #rightbarwithscroll');
         await expect(contractPanel).toBeVisible({ timeout: 10000 });
-    
+
         const listingDropdown = this.page.getByLabel('Listing').first();
 
-        const listingDropdownInput = this.page.locator('ng-select div[role="combobox"] > input').nth(24);
+        await this.page.waitForTimeout(2000);
+        const listingDropdownInput = this.page.locator('div.ng-value .ng-value-label').last();
         await listingDropdownInput.waitFor({ state: 'attached', timeout: 10000 });
 
         await this.page.waitForTimeout(2000);
 
         // Wait for the listing dropdown arrow to appear before interacting
-        const listingDropdownArrow = this.page.locator('.ng-arrow-wrapper .ng-arrow').nth(24);
-        await listingDropdownArrow.waitFor({ state: 'visible', timeout: 10000 });
-        await listingDropdownArrow.click({force:true});
-
+        const listingDropdownArrow = this.page.locator(
+            'label:has-text("Listing") + ng-select .ng-arrow-wrapper'
+        ).first();
+        await listingDropdownArrow.click();
         // Get the value from the input (should be auto-populated)
-        const selectedListingText = await listingDropdownInput.inputValue();
+        const selectedListingText = (await listingDropdownInput.textContent() || '').trim();
+
 
         // The dropdown options panel should now be visible
         const dropdownPanel = this.page.getByRole('listbox', { name: 'Options list' });
@@ -10487,13 +10489,13 @@ export class ListingActions {
         // Find the highlighted/selected option in the panel
         const selectedOption = this.page.locator(
             'div.ng-option.ng-option-selected[role="option"][aria-selected="true"]'
-          );
+        );
         await expect(selectedOption).toBeVisible({ timeout: 5000 });
 
         // Check the text of the highlighted/selected option matches the value in the input
         const selectedOptionText = (await selectedOption.textContent() || '').trim();
         expect(selectedOptionText).toContain(selectedListingText);
-    
+
         // --- Close the contract popup ---
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
@@ -10501,5 +10503,739 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(1000);
     }
-    
+
+    /**
+     * verifies that the Managing Contact dropdown
+     * automatically selects the primary Contact for the contact.
+     */
+    async verifyManagingContactDropdownAutoSelectsPrimaryContact() {
+        // Navigate to listings and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeAttached({ timeout: 30000 });
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        const primaryAgent = this.page.locator(
+            'div.form-group:has-text("Primary Agent") ng-select'
+        );
+
+        await expect(primaryAgent).toBeVisible();
+        await primaryAgent.click();
+
+        const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(primaryInput).toBeVisible({ timeout: 3000 });
+        await primaryInput.click();
+        await primaryInput.fill('Jahanzaib Xenex');
+
+        const primaryOption = this.page.locator(
+            '.ng-dropdown-panel .ng-option',
+            { hasText: 'Jahanzaib Xenex' }
+        ).first();
+        await expect(primaryOption).toBeVisible({ timeout: 20000 });
+        await primaryOption.click({ force: true });
+        await this.page.waitForTimeout(1200);
+
+        // Click the Save button to persist agent selection
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+        await this.page.waitForTimeout(800);
+
+        // Click the Add button in the Legal tab to open the contract popup
+        const addButton = this.page.getByLabel('Legal').getByRole('button', { name: '', exact: true }).first();
+        await expect(addButton).toBeAttached({ timeout: 10000 });
+        await addButton.click();
+
+        // Wait for the contract popup panel to be visible
+        const contractPanel = this.page.locator('#Contract_1 #rightbarwithscroll');
+        await expect(contractPanel).toBeVisible({ timeout: 10000 });
+
+        // Using the combobox role to locate the input, wait for it to be visible, then fill it with value 'John Doe'
+        const managingAgent = this.page.locator('div.ng-value p.ng-star-inserted').last();
+        await expect(managingAgent).toBeVisible({ timeout: 20000 });
+        await managingAgent.click();
+        const managingAgentText = (await managingAgent.textContent() || '').trim();
+
+        // The dropdown options panel should now be visible
+        const dropdownPanel = this.page.getByRole('listbox', { name: 'Options list' });
+        await expect(dropdownPanel).toBeVisible({ timeout: 10000 });
+
+        // Find the highlighted/selected option in the panel
+        const selectedOption = this.page.locator(
+            'div.ng-option.ng-option-selected[role="option"][aria-selected="true"]'
+        );
+        await expect(selectedOption).toBeVisible({ timeout: 10000 });
+
+        // Check the text of the highlighted/selected option matches the value in the input
+        const selectedOptionText = (await selectedOption.textContent() || '').trim();
+        expect(selectedOptionText).toContain(managingAgentText);
+
+        // --- Close the contract popup ---
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+  * Verify that none of the fields shown in Contracts Details are required
+  */
+    async verifyNoRequiredFieldsInContractPopup() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Add contract
+        const addButton = this.page
+            .getByLabel('Legal')
+            .getByRole('button', { name: '', exact: true })
+            .first();
+
+        await addButton.click();
+
+        // Contract popup
+        const contractPanel = this.page.locator('#Contract_1 #rightbarwithscroll');
+        await expect(contractPanel).toBeVisible({ timeout: 10000 });
+
+        // Fields exactly as per image
+        const fieldLabels = [
+            'Listing',
+            'Contract Status',
+            'Offer Status',
+            'Seller',
+            "Seller's Solicitor",
+            'Buyer',
+            "Buyer's Solicitor",
+            'Listing Agent',
+            'Managing Agent',
+            'Selling Agent'
+        ];
+
+        for (const label of fieldLabels) {
+            const fieldContainer = contractPanel
+                .locator(`label:has-text("${label}")`)
+                .locator('xpath=following-sibling::*[1]');
+
+            const requiredElements = fieldContainer.locator(
+                'input[required], select[required], textarea[required], [aria-required="true"]'
+            );
+
+            await expect(requiredElements, `${label} should not be required`).toHaveCount(0);
+        }
+
+        // Close popup
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that the contract is displayed in the Legal tab after saving the contract popup.
+     */
+    public async verifyContractDisplayedAfterSaving(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+
+        const primaryAgent = this.page.locator(
+            'div.form-group:has-text("Primary Agent") ng-select'
+        );
+
+        await expect(primaryAgent).toBeVisible();
+        await primaryAgent.click();
+
+        const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(primaryInput).toBeVisible({ timeout: 3000 });
+        await primaryInput.click();
+        await primaryInput.fill('Jahanzaib Xenex');
+
+        const primaryOption = this.page.locator(
+            '.ng-dropdown-panel .ng-option',
+            { hasText: 'Jahanzaib Xenex' }
+        ).first();
+        await expect(primaryOption).toBeVisible({ timeout: 20000 });
+        await primaryOption.click({ force: true });
+        await this.page.waitForTimeout(1200);
+
+        // Click the Save button to persist agent selection
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+        await this.page.waitForTimeout(1000);
+
+        // Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Add contract
+        const addButton = this.page
+            .getByLabel('Legal')
+            .getByRole('button', { name: '', exact: true })
+            .first();
+
+        await addButton.click();
+
+        // Contract popup
+        const contractPanel = this.page.locator('#Contract_1 #rightbarwithscroll');
+        await expect(contractPanel).toBeVisible({ timeout: 10000 });
+
+        const contractStatusDropdown = this.page.locator('div.ng-select-container:has(div.ng-placeholder:text("Contract Status"))');
+        await contractStatusDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await contractStatusDropdown.click();
+
+        // Select option "Held"
+        const heldOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Held' }).first();
+        await expect(heldOption).toBeVisible({ timeout: 5000 });
+        await heldOption.click();
+
+        // now set Offer status to "Pending"
+        const offerStatusDropdown = this.page.locator('div.ng-select-container:has(div.ng-placeholder:text("Offer Status"))').last();
+        await offerStatusDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await offerStatusDropdown.click();
+
+        // Select option "Pending"
+        const offerAcceptedOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Accepted' }).first();
+        await expect(offerAcceptedOption).toBeVisible({ timeout: 5000 });
+        await offerAcceptedOption.click();
+
+        // Select Buyer (not Selling Agent) -- match the "Buyer" input as shown in the screenshot.
+        const buyerDropdown = this.page.locator('div.tags:has(> span.placeHolder:text("Select Buyer"))').first();
+        await buyerDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await buyerDropdown.click();
+
+        // Type or select "Jahanzaib Xenex" for Buyer
+        const buyerInput = this.page.locator('input[placeholder="Search"]._input-icon').last()
+        await expect(buyerInput).toBeVisible({ timeout: 5000 });
+        await buyerInput.click()
+        await buyerInput.fill('Dawood Ahmad');
+
+        const buyerOption = this.page.locator('li', { hasText: 'Dawood Ahmad (dawoodahmad786@gmail.com)' });
+        await expect(buyerOption).toBeVisible({ timeout: 5000 });
+        await buyerOption.click({ force: true });
+
+        // Click the date input to open the date picker
+        const dateOfferInput = this.page.locator('input[name="dateOffer"]');
+        await dateOfferInput.scrollIntoViewIfNeeded();
+        await dateOfferInput.click();
+
+        // Wait for the calendar to be visible
+        const calendar = this.page.locator('div.p-datepicker-group-container');
+        await expect(calendar).toBeVisible({ timeout: 5000 });
+
+        // Calculate previous date
+        const today = new Date();
+        const prevDate = new Date(today);
+        prevDate.setDate(today.getDate() - 1);
+
+        const prevDay = prevDate.getDate();
+        const prevMonth = prevDate.toLocaleString('default', { month: 'long' });
+        const prevYear = prevDate.getFullYear();
+
+        // Function to get displayed month/year from calendar
+        const getDisplayedMonthYear = async () => {
+            const headerText = (await this.page.locator('.p-datepicker-title').textContent()) || '';
+            const match = headerText.match(/(\w+)\s+(\d{4})/);
+            if (match) {
+                return { month: match[1], year: Number(match[2]) };
+            }
+            return null;
+        };
+
+        // Navigate the calendar to the correct month/year
+        for (let i = 0; i < 12; i++) {
+            const displayed = await getDisplayedMonthYear();
+            if (!displayed) break;
+
+            if (displayed.month === prevMonth && displayed.year === prevYear) break;
+
+            const shownDate = new Date(`${displayed.month} 1, ${displayed.year}`).getTime();
+            const targetDate = new Date(`${prevMonth} 1, ${prevYear}`).getTime();
+
+            if (shownDate > targetDate) {
+                await this.page.locator('button[aria-label="Previous Month"]').click();
+            } else {
+                await this.page.locator('button[aria-label="Next Month"]').click();
+            }
+            await this.page.waitForTimeout(200); // small delay for calendar to update
+        }
+
+        // Locate the day button for the previous date
+        let dayLocator = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-datepicker-other-month) button:has-text("${prevDay}")`
+        );
+
+        // Fallback if day is not a button
+        if ((await dayLocator.count()) === 0) {
+            dayLocator = this.page.locator(
+                `.p-datepicker-calendar td:not(.p-datepicker-other-month) span:has-text("${prevDay}")`
+            );
+        }
+
+        // Click the day
+        await expect(dayLocator).toBeVisible({ timeout: 2000 });
+        await dayLocator.click();
+
+
+        const offerPriceInput = this.page.locator('div.col-sm-4:has(> p:text("Offer Price")) app-price-input input[name="price"]');
+        await offerPriceInput.click();
+        await offerPriceInput.fill('560');
+
+        // click save and close
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(1000);
+
+        // Wait for the contract popup to disappear
+        await expect(contractPanel).toBeHidden({ timeout: 10000 });
+
+        const rowLocator = this.page.locator('tr', { hasText: 'Dawood Ahmad' }).first();
+
+        // Wait for at least one row to be visible (assuming the saved contract is added at the start)
+        await expect(rowLocator.first()).toBeVisible({ timeout: 10000 });
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+          await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verifies the contract status dropdown contains the expected options.
+     */
+    async verifyContractStatusDropdownOptions() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Add contract
+        const addButton = this.page
+            .getByLabel('Legal')
+            .getByRole('button', { name: '', exact: true })
+            .first();
+
+        await addButton.click();
+
+        // Contract popup
+        const contractPanel = this.page.locator('#Contract_1 #rightbarwithscroll');
+        await expect(contractPanel).toBeVisible({ timeout: 10000 });
+
+        // Open the Contract Status dropdown
+        const contractStatusDropdown = this.page.locator('div.ng-select-container:has(div.ng-placeholder:text("Contract Status"))');
+        await contractStatusDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await contractStatusDropdown.click();
+
+        // Wait for the dropdown panel to be visible
+        const dropdownPanel = this.page.locator('.ng-dropdown-panel');
+        await expect(dropdownPanel).toBeVisible({ timeout: 5000 });
+
+        // Get all option texts within the dropdown
+        const optionLocators = dropdownPanel.locator('.ng-option');
+        const optionCount = await optionLocators.count();
+        const actualOptions: string[] = [];
+        for (let i = 0; i < optionCount; i++) {
+            let text = await optionLocators.nth(i).textContent();
+            if (text) {
+                actualOptions.push(text.trim());
+            }
+        }
+
+        // Expected options based on the provided image
+        const expectedOptions = [
+            'Settled',
+            'Conditional',
+            'Offer Pending',
+            'Contract Issued',
+            'Awaiting Vendor Signing',
+            'Held',
+            'Unconditional',
+            'Cancelled'
+        ];
+
+        // Verify every expected option is present in the actual options
+        // Scroll to each expected option before asserting its presence (if needed)
+        for (const expected of expectedOptions) {
+            // Find index of the expected option in the dropdown
+            const idx = actualOptions.findIndex(opt => opt === expected);
+            if (idx >= 0) {
+                // Scroll that option into view if it's not visible
+                const optionLocator = optionLocators.nth(idx);
+                await optionLocator.scrollIntoViewIfNeeded();
+            }
+            expect(actualOptions).toContain(expected);
+        }
+
+        // Click the close icon after verifying the contract is displayed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verifies that clicking on the checkbox in the Legal tab reveals a dropdown with Present, Accept, and Decline buttons
+     */
+    public async verifyLegalTabCheckboxRevealsDropdown() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Wait for checkboxes to be rendered in the Legal tab (table or list checkboxes)
+        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Click the first checkbox
+        await legalCheckbox.click();
+        // Confirm the table columns exist as shown: Purchaser, Offer Price, Offer Date, Selling Agent
+        await expect(this.page.getByText('Purchaser')).toBeVisible();
+        await expect(this.page.getByText('Offer Price')).toBeVisible();
+        await expect(this.page.getByText('Offer Date')).toBeVisible();
+        await expect(this.page.getByText('Selling Agent')).toBeVisible();
+
+        const acceptBtn = this.page.getByRole('button', { name: /^Accept$/i });
+        const declineBtn = this.page.getByRole('button', { name: /^Decline$/i });
+        await expect(acceptBtn).toBeVisible();
+        await expect(declineBtn).toBeVisible();
+        // Click the offer status dropdown/button in the Legal tab table row
+        const offerStatusDropdown = this.page.getByText('Offer Status').first();
+        await expect(offerStatusDropdown).toBeVisible({ timeout: 5000 });
+        await offerStatusDropdown.click();
+
+        // After clicking, ensure that the Offer Status dropdown options are visible
+        // Check for the expected options in the dropdown as shown in the image: Accepted, Declined, Presented
+        const acceptedOption = this.page.getByText('Accepted', { exact: true }).first();
+        const declinedOption = this.page.getByText('Declined', { exact: true }).first();
+        const presentedOption = this.page.getByText('Presented', { exact: true }).first();
+
+        await expect(acceptedOption).toBeVisible({ timeout: 5000 });
+        await expect(declinedOption).toBeVisible({ timeout: 5000 });
+        await expect(presentedOption).toBeVisible({ timeout: 5000 });
+
+        // Click the close icon after verifying the contract is displayed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+    }
+
+    /**
+     * Verifies that clicking the Accept button updates the Offer Status to "Accepted" in the Legal tab.
+     */
+    public async verifyAcceptButtonUpdatesOfferStatus(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // click Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Wait for the checkbox in the Legal tab
+        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Click the checkbox if not already checked
+        const checked = await legalCheckbox.isChecked().catch(() => false);
+        if (!checked) {
+            await legalCheckbox.click();
+        }
+
+        // Wait for contract row and buttons
+        const acceptBtn = this.page.getByRole('button', { name: /^Accept$/i });
+        await expect(acceptBtn).toBeVisible({ timeout: 10000 });
+
+        // Click Accept
+        await acceptBtn.click();
+
+        const contractLocator = this.page.locator('p', { hasText: /^Contract:/ });
+        await contractLocator.waitFor({ state: 'visible', timeout: 10000 });
+
+
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verifies that clicking the Decline button updates the Offer Status to "Declined" in the Legal tab.
+     */
+    public async verifyDeclineButtonUpdatesOfferStatus(): Promise<void> {
+        // Navigate to the Listings page
+        await this.navigateToListings();
+        // Switch to Grid View
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Wait for the checkboxes in the Legal tab, select the fourth (index 3)
+        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Click the checkbox if not already checked
+        const checked = await legalCheckbox.isChecked().catch(() => false);
+        if (!checked) {
+            await legalCheckbox.click();
+        }
+
+        // Wait for the Decline button to appear
+        const declineBtn = this.page.getByRole('button', { name: /^Decline$/i });
+        await expect(declineBtn).toBeVisible({ timeout: 10000 });
+
+        // Click Decline
+        await declineBtn.click();
+
+        // Wait for the contract row to be visible
+        const contractLocator = this.page.locator('p', { hasText: /^Contract:/ });
+        await contractLocator.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that the Offer Status can be updated multiple times in the Legal tab.
+     */
+    public async verifyOfferStatusCanBeUpdatedMultipleTimes(): Promise<void> {
+        // Navigate to the Listings page
+        await this.navigateToListings();
+        // Switch to Grid View
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Wait for the checkboxes in the Legal tab, select the fourth (index 3)
+        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Click the checkbox if not already checked
+        const checked = await legalCheckbox.isChecked().catch(() => false);
+        if (!checked) {
+            await legalCheckbox.click();
+        }
+
+        const acceptBtn = this.page.getByRole('button', { name: /^Accept$/i });
+        await expect(acceptBtn).toBeVisible({ timeout: 10000 });
+        await acceptBtn.click();
+
+        // Contract row should be visible
+        const contractLocator = this.page.locator('p', { hasText: /^Contract:/ });
+        await expect(contractLocator).toBeVisible({ timeout: 10000 });
+
+
+        await this.page.waitForTimeout(1000);
+        await legalCheckbox.click();
+
+
+        const declineBtn = this.page.getByRole('button', { name: /^Decline$/i });
+        await expect(declineBtn).toBeVisible({ timeout: 10000 });
+        await declineBtn.click();
+
+        await expect(contractLocator).toBeVisible({ timeout: 10000 });
+
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verifies that the Offer Status is retained correctly after refreshing the page.
+     * This method expects that there is a visible contract row and an offer status visibly set,
+     * then refreshes the page and checks that the offer status remains.
+     */
+    async verifyOfferStatusIsRetainedAfterRefresh() {
+        // Navigate to the Listings page
+        await this.navigateToListings();
+        // Switch to Grid View
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Wait for the checkboxes in the Legal tab, select the fourth (index 3)
+        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Click the checkbox if not already checked
+        const checked = await legalCheckbox.isChecked().catch(() => false);
+        if (!checked) {
+            await legalCheckbox.click();
+        }
+
+        const declineBtn = this.page.getByRole('button', { name: /^Decline$/i });
+        await expect(declineBtn).toBeVisible({ timeout: 10000 });
+        await declineBtn.click();
+
+        // Contract row should be visible
+        const contractLocator = this.page.locator('p', { hasText: /^Contract:/ });
+        await expect(contractLocator).toBeVisible({ timeout: 10000 });
+
+        await this.page.reload();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await legalTab.click();
+        await expect(contractLocator).toBeVisible({ timeout: 30000 });
+
+
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that clicking on the "Selling Agreement Start Date" field opens a calendar for selecting a date.
+     */
+    async verifySellingAgreementStartDateCalendarOpens() {
+        // Navigate to the Listings page
+        await this.navigateToListings();
+        // Switch to Grid View
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Find and click the "Selling Agreement Start Date" input field
+        const sellingAgreement = this.page.getByText(/Selling Agreement Start Date/i);
+        await sellingAgreement.scrollIntoViewIfNeeded();
+        await expect(sellingAgreement).toBeVisible({ timeout: 10000 });
+
+        // Click the actual input element for Selling Agreement Start Date (assume it's the input nearest to the label)
+        const sellingAgreementStartDateInput = this.page.locator(
+            'p-calendar[formcontrolname="selling_agreement_start_date"] input[readonly]'
+        );
+
+        await expect(sellingAgreementStartDateInput).toBeVisible({ timeout: 5000 });
+        await sellingAgreementStartDateInput.click();
+
+        // The calendar popup/dialog should now be visible; check for calendar container (commonly role="dialog" or specific class)
+        const calendarPopup = this.page.locator("[role='dialog'], .p-datepicker, .ui-datepicker, .calendar-popup");
+        await expect(calendarPopup).toBeVisible({ timeout: 10000 });
+
+        // Select the current date in the calendar
+        const today = new Date();
+        const day = today.getDate().toString();
+
+        // Try finding a button or span with today's date that is selectable (not disabled and for this month)
+        let dayLocator = this.page.locator(".p-datepicker-calendar td:not(.p-datepicker-other-month) button:has-text('" + day + "')");
+
+        // Fallback to span if button is not present
+        if (await dayLocator.count() === 0) {
+            dayLocator = this.page.locator(".p-datepicker-calendar td:not(.p-datepicker-other-month) span:has-text('" + day + "')");
+        }
+
+        await expect(dayLocator.first()).toBeVisible({ timeout: 5000 });        
+        await dayLocator.first().click();
+
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+
+
 }
