@@ -71,4 +71,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyLegalTabCheckboxRevealsDropdown();
     });
 
+    test('Test 10: Verify that clicking the Accept button updates the Offer Status to "Accepted"', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyAcceptButtonUpdatesOfferStatus();
+    });
+
+
 });

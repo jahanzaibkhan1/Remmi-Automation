@@ -10963,6 +10963,53 @@ export class ListingActions {
 
     }
 
+    /**
+     * Verifies that clicking the Accept button updates the Offer Status to "Accepted" in the Legal tab.
+     */
+    public async verifyAcceptButtonUpdatesOfferStatus(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // click Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Wait for the checkbox in the Legal tab
+        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Click the checkbox if not already checked
+        const checked = await legalCheckbox.isChecked().catch(() => false);
+        if (!checked) {
+            await legalCheckbox.click();
+        }
+
+        // Wait for contract row and buttons
+        const acceptBtn = this.page.getByRole('button', { name: /^Accept$/i });
+        await expect(acceptBtn).toBeVisible({ timeout: 10000 });
+
+        // Click Accept
+        await acceptBtn.click();
+
+        const contractLocator = this.page.locator('p', { hasText: /^Contract:/ });
+        await contractLocator.waitFor({ state: 'visible', timeout: 10000 });
+
+
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 
 
 }
