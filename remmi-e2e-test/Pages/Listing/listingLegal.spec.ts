@@ -61,4 +61,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       }
     });
 
+    test('Test 8: Verify that the contract status displays Purchaser, Offer Price, Offer Date, Selling Contact, etc.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyContractStatusDropdownOptions();
+    });
+
 });
