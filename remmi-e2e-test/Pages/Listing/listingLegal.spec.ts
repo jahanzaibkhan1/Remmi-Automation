@@ -46,4 +46,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyManagingContactDropdownAutoSelectsPrimaryContact();
     });
 
+    test('Test 6: Verify that no field is marked as required in the contract popup', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyNoRequiredFieldsInContractPopup()
+    });
+
 });
