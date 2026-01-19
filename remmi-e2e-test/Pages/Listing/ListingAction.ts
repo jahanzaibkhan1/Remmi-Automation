@@ -10905,6 +10905,64 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verifies that clicking on the checkbox in the Legal tab reveals a dropdown with Present, Accept, and Decline buttons
+     */
+    public async verifyLegalTabCheckboxRevealsDropdown() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Wait for checkboxes to be rendered in the Legal tab (table or list checkboxes)
+        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Click the first checkbox
+        await legalCheckbox.click();
+        // Confirm the table columns exist as shown: Purchaser, Offer Price, Offer Date, Selling Agent
+        await expect(this.page.getByText('Purchaser')).toBeVisible();
+        await expect(this.page.getByText('Offer Price')).toBeVisible();
+        await expect(this.page.getByText('Offer Date')).toBeVisible();
+        await expect(this.page.getByText('Selling Agent')).toBeVisible();
+
+        const acceptBtn = this.page.getByRole('button', { name: /^Accept$/i });
+        const declineBtn = this.page.getByRole('button', { name: /^Decline$/i });
+        await expect(acceptBtn).toBeVisible();
+        await expect(declineBtn).toBeVisible();
+        // Click the offer status dropdown/button in the Legal tab table row
+        const offerStatusDropdown = this.page.getByText('Offer Status').first();
+        await expect(offerStatusDropdown).toBeVisible({ timeout: 5000 });
+        await offerStatusDropdown.click();
+
+        // After clicking, ensure that the Offer Status dropdown options are visible
+        // Check for the expected options in the dropdown as shown in the image: Accepted, Declined, Presented
+        const acceptedOption = this.page.getByText('Accepted', { exact: true }).first();
+        const declinedOption = this.page.getByText('Declined', { exact: true }).first();
+        const presentedOption = this.page.getByText('Presented', { exact: true }).first();
+
+        await expect(acceptedOption).toBeVisible({ timeout: 5000 });
+        await expect(declinedOption).toBeVisible({ timeout: 5000 });
+        await expect(presentedOption).toBeVisible({ timeout: 5000 });
+
+        // Click the close icon after verifying the contract is displayed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+    }
+
 
 
 }

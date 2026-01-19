@@ -66,4 +66,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyContractStatusDropdownOptions();
     });
 
+    test('Test 9: Verify that clicking the checkbox in the Legal tab shows a dropdown with Present, Accept, and Decline buttons', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyLegalTabCheckboxRevealsDropdown();
+    });
+
 });
