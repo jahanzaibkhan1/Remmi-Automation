@@ -81,5 +81,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyDeclineButtonUpdatesOfferStatus();
     });
 
+    test('Test 12: Verify that the Offer Status can be updated multiple times in the Legal tab', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyOfferStatusCanBeUpdatedMultipleTimes();
+    });
+
 
 });
