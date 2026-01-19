@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="65.75580299999937">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-16T07:42:23.795Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.494" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that the listing dropdown auto selects the primary listing for the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="58.494">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.97844800000033">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-19T04:30:53.901Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.278" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that the Managing Contact dropdown auto selects the primary Contact for the contact" classname="Pages\Listing\listingLegal.spec.ts" time="40.278">
 </testcase>
 </testsuite>
 </testsuites>
