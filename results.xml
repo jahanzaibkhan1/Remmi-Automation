@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.379241000000384">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-19T07:41:10.772Z" hostname="chromium" tests="1" failures="0" skipped="0" time="56.078" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that no field is marked as required in the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="56.078">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="71.69749400000275">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-19T10:22:28.920Z" hostname="chromium" tests="1" failures="0" skipped="0" time="57.201" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that the contract is displayed in the Legal tab after saving the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="57.201">
 </testcase>
 </testsuite>
 </testsuites>
