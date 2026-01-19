@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.459686999998986">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-19T11:38:48.316Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.994" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that the Offer Status is retained correctly after refreshing the page" classname="Pages\Listing\listingLegal.spec.ts" time="46.994">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.11753400000185">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-19T11:50:40.604Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.537" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that clicking on the &quot;Selling Agreement Start Date&quot; field opens a calendar for selecting a date" classname="Pages\Listing\listingLegal.spec.ts" time="38.537">
 </testcase>
 </testsuite>
 </testsuites>
