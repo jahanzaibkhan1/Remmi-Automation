@@ -54,11 +54,6 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     test('Test 7: Verify that the contract is displayed in the Legal tab after saving the contract popup', async ({ sessionPage }) => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyContractDisplayedAfterSaving();
-      // Click the close icon after verifying the contract is displayed
-      const closeBtn = sessionPage.locator('.pi.pi-times').first();
-      if (await closeBtn.isVisible().catch(() => false)) {
-        await closeBtn.click({ force: true });
-      }
     });
 
     test('Test 8: Verify that the contract status displays Purchaser, Offer Price, Offer Date, Selling Contact, etc.', async ({ sessionPage }) => {
