@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.951060000002386">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-19T11:27:31.922Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.587" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify that the Offer Status can be updated multiple times in the Legal tab" classname="Pages\Listing\listingLegal.spec.ts" time="47.587">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.459686999998986">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-19T11:38:48.316Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.994" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that the Offer Status is retained correctly after refreshing the page" classname="Pages\Listing\listingLegal.spec.ts" time="46.994">
 </testcase>
 </testsuite>
 </testsuites>

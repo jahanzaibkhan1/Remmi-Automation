@@ -11090,7 +11090,6 @@ export class ListingActions {
             await legalCheckbox.click();
         }
 
-        // Pehli dafa Accept karo
         const acceptBtn = this.page.getByRole('button', { name: /^Accept$/i });
         await expect(acceptBtn).toBeVisible({ timeout: 10000 });
         await acceptBtn.click();
@@ -11099,16 +11098,71 @@ export class ListingActions {
         const contractLocator = this.page.locator('p', { hasText: /^Contract:/ });
         await expect(contractLocator).toBeVisible({ timeout: 10000 });
 
-        // Thoda ruk jao
+        
         await this.page.waitForTimeout(1000);
         await legalCheckbox.click();
 
-        // Dossri daffa Decline karo
+        
         const declineBtn = this.page.getByRole('button', { name: /^Decline$/i });
         await expect(declineBtn).toBeVisible({ timeout: 10000 });
         await declineBtn.click();
 
         await expect(contractLocator).toBeVisible({ timeout: 10000 });
+
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verifies that the Offer Status is retained correctly after refreshing the page.
+     * This method expects that there is a visible contract row and an offer status visibly set,
+     * then refreshes the page and checks that the offer status remains.
+     */
+    async verifyOfferStatusIsRetainedAfterRefresh() {
+        // Navigate to the Listings page
+        await this.navigateToListings();
+        // Switch to Grid View
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Wait for the checkboxes in the Legal tab, select the fourth (index 3)
+        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Click the checkbox if not already checked
+        const checked = await legalCheckbox.isChecked().catch(() => false);
+        if (!checked) {
+            await legalCheckbox.click();
+        }
+
+        const acceptBtn = this.page.getByRole('button', { name: /^Accept$/i });
+        await expect(acceptBtn).toBeVisible({ timeout: 10000 });
+        await acceptBtn.click();
+
+        // Contract row should be visible
+        const contractLocator = this.page.locator('p', { hasText: /^Contract:/ });
+        await expect(contractLocator).toBeVisible({ timeout: 10000 });
+
+        await this.page.reload();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await legalTab.click();
+        await expect(contractLocator).toBeVisible({ timeout: 30000 });
+
 
         // Optionally close the popup if present
         const closeBtn = this.page.locator('.pi.pi-times').first();
