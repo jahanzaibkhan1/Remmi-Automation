@@ -41,4 +41,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyContractPopupListingDropdownAutoPopulate();
     });
 
+    test('Test 5: Verify that the Managing Contact dropdown auto selects the primary Contact for the contact', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyManagingContactDropdownAutoSelectsPrimaryContact();
+    });
+
 });

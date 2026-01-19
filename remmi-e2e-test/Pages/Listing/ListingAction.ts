@@ -10443,28 +10443,28 @@ export class ListingActions {
         // Navigate to listings and switch to grid view
         await this.navigateToListings();
         await this.switchToGridView();
-    
+
         // Open the first listing card
         const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
         await expect(firstCardRow).toBeAttached({ timeout: 30000 });
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
         await firstCardRow.click();
-    
+
         // Go to the Legal tab
         const legalTab = this.page.getByRole('tab', { name: /Legal/i });
         await expect(legalTab).toBeVisible({ timeout: 10000 });
         await legalTab.click();
         await this.page.waitForTimeout(800);
-    
+
         // Click the Add button in the Legal tab to open the contract popup
         const addButton = this.page.getByLabel('Legal').getByRole('button', { name: '', exact: true }).first();
         await expect(addButton).toBeAttached({ timeout: 10000 });
         await addButton.click();
-    
+
         // Wait for the contract popup panel to be visible
         const contractPanel = this.page.locator('#Contract_1 #rightbarwithscroll');
         await expect(contractPanel).toBeVisible({ timeout: 10000 });
-    
+
         const listingDropdown = this.page.getByLabel('Listing').first();
 
         const listingDropdownInput = this.page.locator('ng-select div[role="combobox"] > input').nth(24);
@@ -10475,7 +10475,7 @@ export class ListingActions {
         // Wait for the listing dropdown arrow to appear before interacting
         const listingDropdownArrow = this.page.locator('.ng-arrow-wrapper .ng-arrow').nth(24);
         await listingDropdownArrow.waitFor({ state: 'visible', timeout: 10000 });
-        await listingDropdownArrow.click({force:true});
+        await listingDropdownArrow.click({ force: true });
 
         // Get the value from the input (should be auto-populated)
         const selectedListingText = await listingDropdownInput.inputValue();
@@ -10487,13 +10487,13 @@ export class ListingActions {
         // Find the highlighted/selected option in the panel
         const selectedOption = this.page.locator(
             'div.ng-option.ng-option-selected[role="option"][aria-selected="true"]'
-          );
+        );
         await expect(selectedOption).toBeVisible({ timeout: 5000 });
 
         // Check the text of the highlighted/selected option matches the value in the input
         const selectedOptionText = (await selectedOption.textContent() || '').trim();
         expect(selectedOptionText).toContain(selectedListingText);
-    
+
         // --- Close the contract popup ---
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
@@ -10501,5 +10501,63 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(1000);
     }
-    
+
+    /**
+     * verifies that the Managing Contact dropdown
+     * automatically selects the primary Contact for the contact.
+     */
+    async verifyManagingContactDropdownAutoSelectsPrimaryContact() {
+        // Navigate to listings and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeAttached({ timeout: 30000 });
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+        await this.page.waitForTimeout(800);
+
+        // Click the Add button in the Legal tab to open the contract popup
+        const addButton = this.page.getByLabel('Legal').getByRole('button', { name: '', exact: true }).first();
+        await expect(addButton).toBeAttached({ timeout: 10000 });
+        await addButton.click();
+
+        // Wait for the contract popup panel to be visible
+        const contractPanel = this.page.locator('#Contract_1 #rightbarwithscroll');
+        await expect(contractPanel).toBeVisible({ timeout: 10000 });
+
+        // Using the combobox role to locate the input, wait for it to be visible, then fill it with value 'John Doe'
+        const managingAgent = this.page.locator('div[role="combobox"] input[type="text"]').nth(28);
+        await expect(managingAgent).toBeVisible({ timeout: 10000 });
+        await managingAgent.click();
+        const managingAgentText = await managingAgent.inputValue();
+
+          // The dropdown options panel should now be visible
+          const dropdownPanel = this.page.getByRole('listbox', { name: 'Options list' });
+          await expect(dropdownPanel).toBeVisible({ timeout: 5000 });
+  
+          // Find the highlighted/selected option in the panel
+          const selectedOption = this.page.locator(
+              'div.ng-option.ng-option-selected[role="option"][aria-selected="true"]'
+          );
+          await expect(selectedOption).toBeVisible({ timeout: 5000 });
+  
+          // Check the text of the highlighted/selected option matches the value in the input
+          const selectedOptionText = (await selectedOption.textContent() || '').trim();
+          expect(selectedOptionText).toContain(managingAgentText);
+  
+          // --- Close the contract popup ---
+          const closeBtn = this.page.locator('.pi.pi-times').first();
+          if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+              await closeBtn.click({ force: true });
+          }
+          await this.page.waitForTimeout(1000);
+    }
+
 }
