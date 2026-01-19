@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.46352999999747">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-19T10:58:15.541Z" hostname="chromium" tests="1" failures="0" skipped="0" time="53.486" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify that clicking the checkbox in the Legal tab shows a dropdown with Present, Accept, and Decline buttons" classname="Pages\Listing\listingLegal.spec.ts" time="53.486">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.99986400000006">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-19T11:05:36.660Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.228" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that clicking the Accept button updates the Offer Status to &quot;Accepted&quot;" classname="Pages\Listing\listingLegal.spec.ts" time="35.228">
 </testcase>
 </testsuite>
 </testsuites>
