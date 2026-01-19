@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="71.69749400000275">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-19T10:22:28.920Z" hostname="chromium" tests="1" failures="0" skipped="0" time="57.201" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that the contract is displayed in the Legal tab after saving the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="57.201">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.72608500000089">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-19T10:37:34.896Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.907" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that the contract status displays Purchaser, Offer Price, Offer Date, Selling Contact, etc." classname="Pages\Listing\listingLegal.spec.ts" time="31.907">
 </testcase>
 </testsuite>
 </testsuites>

@@ -10816,10 +10816,93 @@ export class ListingActions {
         // Wait for the contract popup to disappear
         await expect(contractPanel).toBeHidden({ timeout: 10000 });
 
-        const rowLocator =this.page.locator('tr', { hasText: 'Dawood Ahmad' }).first();
+        const rowLocator = this.page.locator('tr', { hasText: 'Dawood Ahmad' }).first();
 
         // Wait for at least one row to be visible (assuming the saved contract is added at the start)
         await expect(rowLocator.first()).toBeVisible({ timeout: 10000 });
+    }
+
+    /**
+     * Verifies the contract status dropdown contains the expected options.
+     */
+    async verifyContractStatusDropdownOptions() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Add contract
+        const addButton = this.page
+            .getByLabel('Legal')
+            .getByRole('button', { name: '', exact: true })
+            .first();
+
+        await addButton.click();
+
+        // Contract popup
+        const contractPanel = this.page.locator('#Contract_1 #rightbarwithscroll');
+        await expect(contractPanel).toBeVisible({ timeout: 10000 });
+
+        // Open the Contract Status dropdown
+        const contractStatusDropdown = this.page.locator('div.ng-select-container:has(div.ng-placeholder:text("Contract Status"))');
+        await contractStatusDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await contractStatusDropdown.click();
+
+        // Wait for the dropdown panel to be visible
+        const dropdownPanel = this.page.locator('.ng-dropdown-panel');
+        await expect(dropdownPanel).toBeVisible({ timeout: 5000 });
+
+        // Get all option texts within the dropdown
+        const optionLocators = dropdownPanel.locator('.ng-option');
+        const optionCount = await optionLocators.count();
+        const actualOptions: string[] = [];
+        for (let i = 0; i < optionCount; i++) {
+            let text = await optionLocators.nth(i).textContent();
+            if (text) {
+                actualOptions.push(text.trim());
+            }
+        }
+
+        // Expected options based on the provided image
+        const expectedOptions = [
+            'Settled',
+            'Conditional',
+            'Offer Pending',
+            'Contract Issued',
+            'Awaiting Vendor Signing',
+            'Held',
+            'Unconditional',
+            'Cancelled'
+        ];
+
+        // Verify every expected option is present in the actual options
+        // Scroll to each expected option before asserting its presence (if needed)
+        for (const expected of expectedOptions) {
+            // Find index of the expected option in the dropdown
+            const idx = actualOptions.findIndex(opt => opt === expected);
+            if (idx >= 0) {
+                // Scroll that option into view if it's not visible
+                const optionLocator = optionLocators.nth(idx);
+                await optionLocator.scrollIntoViewIfNeeded();
+            }
+            expect(actualOptions).toContain(expected);
+        }
+
+        // Click the close icon after verifying the contract is displayed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
     }
 
 
