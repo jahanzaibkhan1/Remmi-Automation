@@ -51,4 +51,14 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyNoRequiredFieldsInContractPopup()
     });
 
+    test('Test 7: Verify that the contract is displayed in the Legal tab after saving the contract popup', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyContractDisplayedAfterSaving();
+      // Click the close icon after verifying the contract is displayed
+      const closeBtn = sessionPage.locator('.pi.pi-times').first();
+      if (await closeBtn.isVisible().catch(() => false)) {
+        await closeBtn.click({ force: true });
+      }
+    });
+
 });

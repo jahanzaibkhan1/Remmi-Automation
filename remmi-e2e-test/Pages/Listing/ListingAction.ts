@@ -10650,6 +10650,178 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verify that the contract is displayed in the Legal tab after saving the contract popup.
+     */
+    public async verifyContractDisplayedAfterSaving(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+
+        const primaryAgent = this.page.locator(
+            'div.form-group:has-text("Primary Agent") ng-select'
+        );
+
+        await expect(primaryAgent).toBeVisible();
+        await primaryAgent.click();
+
+        const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(primaryInput).toBeVisible({ timeout: 3000 });
+        await primaryInput.click();
+        await primaryInput.fill('Jahanzaib Xenex');
+
+        const primaryOption = this.page.locator(
+            '.ng-dropdown-panel .ng-option',
+            { hasText: 'Jahanzaib Xenex' }
+        ).first();
+        await expect(primaryOption).toBeVisible({ timeout: 20000 });
+        await primaryOption.click({ force: true });
+        await this.page.waitForTimeout(1200);
+
+        // Click the Save button to persist agent selection
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+        await this.page.waitForTimeout(1000);
+
+        // Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Add contract
+        const addButton = this.page
+            .getByLabel('Legal')
+            .getByRole('button', { name: '', exact: true })
+            .first();
+
+        await addButton.click();
+
+        // Contract popup
+        const contractPanel = this.page.locator('#Contract_1 #rightbarwithscroll');
+        await expect(contractPanel).toBeVisible({ timeout: 10000 });
+
+        const contractStatusDropdown = this.page.locator('div.ng-select-container:has(div.ng-placeholder:text("Contract Status"))');
+        await contractStatusDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await contractStatusDropdown.click();
+
+        // Select option "Held"
+        const heldOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Held' }).first();
+        await expect(heldOption).toBeVisible({ timeout: 5000 });
+        await heldOption.click();
+
+        // now set Offer status to "Pending"
+        const offerStatusDropdown = this.page.locator('div.ng-select-container:has(div.ng-placeholder:text("Offer Status"))').last();
+        await offerStatusDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await offerStatusDropdown.click();
+
+        // Select option "Pending"
+        const offerAcceptedOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Accepted' }).first();
+        await expect(offerAcceptedOption).toBeVisible({ timeout: 5000 });
+        await offerAcceptedOption.click();
+
+        // Select Buyer (not Selling Agent) -- match the "Buyer" input as shown in the screenshot.
+        const buyerDropdown = this.page.locator('div.tags:has(> span.placeHolder:text("Select Buyer"))').first();
+        await buyerDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await buyerDropdown.click();
+
+        // Type or select "Jahanzaib Xenex" for Buyer
+        const buyerInput = this.page.locator('input[placeholder="Search"]._input-icon').last()
+        await expect(buyerInput).toBeVisible({ timeout: 5000 });
+        await buyerInput.click()
+        await buyerInput.fill('Dawood Ahmad');
+
+        const buyerOption = this.page.locator('li', { hasText: 'Dawood Ahmad (dawoodahmad786@gmail.com)' });
+        await expect(buyerOption).toBeVisible({ timeout: 5000 });
+        await buyerOption.click({ force: true });
+
+        // Click the date input to open the date picker
+        const dateOfferInput = this.page.locator('input[name="dateOffer"]');
+        await dateOfferInput.scrollIntoViewIfNeeded();
+        await dateOfferInput.click();
+
+        // Wait for the calendar to be visible
+        const calendar = this.page.locator('div.p-datepicker-group-container');
+        await expect(calendar).toBeVisible({ timeout: 5000 });
+
+        // Calculate previous date
+        const today = new Date();
+        const prevDate = new Date(today);
+        prevDate.setDate(today.getDate() - 1);
+
+        const prevDay = prevDate.getDate();
+        const prevMonth = prevDate.toLocaleString('default', { month: 'long' });
+        const prevYear = prevDate.getFullYear();
+
+        // Function to get displayed month/year from calendar
+        const getDisplayedMonthYear = async () => {
+            const headerText = (await this.page.locator('.p-datepicker-title').textContent()) || '';
+            const match = headerText.match(/(\w+)\s+(\d{4})/);
+            if (match) {
+                return { month: match[1], year: Number(match[2]) };
+            }
+            return null;
+        };
+
+        // Navigate the calendar to the correct month/year
+        for (let i = 0; i < 12; i++) {
+            const displayed = await getDisplayedMonthYear();
+            if (!displayed) break;
+
+            if (displayed.month === prevMonth && displayed.year === prevYear) break;
+
+            const shownDate = new Date(`${displayed.month} 1, ${displayed.year}`).getTime();
+            const targetDate = new Date(`${prevMonth} 1, ${prevYear}`).getTime();
+
+            if (shownDate > targetDate) {
+                await this.page.locator('button[aria-label="Previous Month"]').click();
+            } else {
+                await this.page.locator('button[aria-label="Next Month"]').click();
+            }
+            await this.page.waitForTimeout(200); // small delay for calendar to update
+        }
+
+        // Locate the day button for the previous date
+        let dayLocator = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-datepicker-other-month) button:has-text("${prevDay}")`
+        );
+
+        // Fallback if day is not a button
+        if ((await dayLocator.count()) === 0) {
+            dayLocator = this.page.locator(
+                `.p-datepicker-calendar td:not(.p-datepicker-other-month) span:has-text("${prevDay}")`
+            );
+        }
+
+        // Click the day
+        await expect(dayLocator).toBeVisible({ timeout: 2000 });
+        await dayLocator.click();
+
+
+        const offerPriceInput = this.page.locator('div.col-sm-4:has(> p:text("Offer Price")) app-price-input input[name="price"]');
+        await offerPriceInput.click();
+        await offerPriceInput.fill('560');
+
+        // click save and close
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(1000);
+
+        // Wait for the contract popup to disappear
+        await expect(contractPanel).toBeHidden({ timeout: 10000 });
+
+        const rowLocator =this.page.locator('tr', { hasText: 'Dawood Ahmad' }).first();
+
+        // Wait for at least one row to be visible (assuming the saved contract is added at the start)
+        await expect(rowLocator.first()).toBeVisible({ timeout: 10000 });
+    }
+
 
 
 }
