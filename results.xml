@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.97844800000033">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-19T04:30:53.901Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.278" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that the Managing Contact dropdown auto selects the primary Contact for the contact" classname="Pages\Listing\listingLegal.spec.ts" time="40.278">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.379241000000384">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-19T07:41:10.772Z" hostname="chromium" tests="1" failures="0" skipped="0" time="56.078" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that no field is marked as required in the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="56.078">
 </testcase>
 </testsuite>
 </testsuites>
