@@ -91,5 +91,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyOfferStatusIsRetainedAfterRefresh();
     });
 
+    test('Test 14: Verify that clicking on the "Selling Agreement Start Date" field opens a calendar for selecting a date', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySellingAgreementStartDateCalendarOpens();
+    });
+
 
 });
