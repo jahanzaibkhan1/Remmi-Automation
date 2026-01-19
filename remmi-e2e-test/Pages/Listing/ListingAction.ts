@@ -10820,6 +10820,11 @@ export class ListingActions {
 
         // Wait for at least one row to be visible (assuming the saved contract is added at the start)
         await expect(rowLocator.first()).toBeVisible({ timeout: 10000 });
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+          await closeBtn.click({ force: true });
+        }
     }
 
     /**
@@ -11149,9 +11154,9 @@ export class ListingActions {
             await legalCheckbox.click();
         }
 
-        const acceptBtn = this.page.getByRole('button', { name: /^Accept$/i });
-        await expect(acceptBtn).toBeVisible({ timeout: 10000 });
-        await acceptBtn.click();
+        const declineBtn = this.page.getByRole('button', { name: /^Decline$/i });
+        await expect(declineBtn).toBeVisible({ timeout: 10000 });
+        await declineBtn.click();
 
         // Contract row should be visible
         const contractLocator = this.page.locator('p', { hasText: /^Contract:/ });
