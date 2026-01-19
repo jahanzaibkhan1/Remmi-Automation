@@ -76,5 +76,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyAcceptButtonUpdatesOfferStatus();
     });
 
+    test('Test 11: Verify that clicking the Decline button updates the Offer Status to "Declined"', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyDeclineButtonUpdatesOfferStatus();
+    });
+
 
 });

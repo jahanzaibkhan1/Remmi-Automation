@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.99986400000006">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-19T11:05:36.660Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.228" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that clicking the Accept button updates the Offer Status to &quot;Accepted&quot;" classname="Pages\Listing\listingLegal.spec.ts" time="35.228">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.63317500000075">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-19T11:08:36.098Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.923" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify that clicking the Decline button updates the Offer Status to &quot;Declined&quot;" classname="Pages\Listing\listingLegal.spec.ts" time="47.923">
 </testcase>
 </testsuite>
 </testsuites>

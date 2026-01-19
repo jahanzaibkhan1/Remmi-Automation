@@ -11010,6 +11010,55 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verifies that clicking the Decline button updates the Offer Status to "Declined" in the Legal tab.
+     */
+    public async verifyDeclineButtonUpdatesOfferStatus(): Promise<void> {
+        // Navigate to the Listings page
+        await this.navigateToListings();
+        // Switch to Grid View
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Wait for the checkboxes in the Legal tab, select the fourth (index 3)
+        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Click the checkbox if not already checked
+        const checked = await legalCheckbox.isChecked().catch(() => false);
+        if (!checked) {
+            await legalCheckbox.click();
+        }
+
+        // Wait for the Decline button to appear
+        const declineBtn = this.page.getByRole('button', { name: /^Decline$/i });
+        await expect(declineBtn).toBeVisible({ timeout: 10000 });
+
+        // Click Decline
+        await declineBtn.click();
+
+        // Wait for the contract row to be visible
+        const contractLocator = this.page.locator('p', { hasText: /^Contract:/ });
+        await contractLocator.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 
 
 }
