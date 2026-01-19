@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.72608500000089">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-19T10:37:34.896Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.907" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that the contract status displays Purchaser, Offer Price, Offer Date, Selling Contact, etc." classname="Pages\Listing\listingLegal.spec.ts" time="31.907">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.46352999999747">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-19T10:58:15.541Z" hostname="chromium" tests="1" failures="0" skipped="0" time="53.486" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify that clicking the checkbox in the Legal tab shows a dropdown with Present, Accept, and Decline buttons" classname="Pages\Listing\listingLegal.spec.ts" time="53.486">
 </testcase>
 </testsuite>
 </testsuites>
