@@ -91,5 +91,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifySellingAgreementStartDateCalendarOpens();
     });
 
+    test('Test 15: Verify that clicking the Present button opens the Present Contract popup', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyPresentButtonOpensPresentContractPopup();
+    });
 
 });
