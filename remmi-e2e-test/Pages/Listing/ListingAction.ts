@@ -11154,20 +11154,32 @@ export class ListingActions {
             await legalCheckbox.click();
         }
 
-        const declineBtn = this.page.getByRole('button', { name: /^Decline$/i });
-        await expect(declineBtn).toBeVisible({ timeout: 10000 });
-        await declineBtn.click();
+        const acceptBtn = this.page.getByRole('button', { name: /^Accept$/i });
+        await expect(acceptBtn).toBeVisible({ timeout: 10000 });
+        await acceptBtn.click();
 
         // Contract row should be visible
         const contractLocator = this.page.locator('p', { hasText: /^Contract:/ });
         await expect(contractLocator).toBeVisible({ timeout: 10000 });
 
+
+        await this.page.waitForTimeout(1000);
+        await legalCheckbox.click();
+
+
+        const declineBtn = this.page.getByRole('button', { name: /^Decline$/i });
+        await expect(declineBtn).toBeVisible({ timeout: 10000 });
+        await declineBtn.click();
+
+        await expect(contractLocator).toBeVisible({ timeout: 10000 });
+
         await this.page.reload();
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
         await firstCardRow.click();
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
         await legalTab.click();
-        await expect(contractLocator).toBeVisible({ timeout: 30000 });
 
+        await expect(contractLocator).toBeVisible({ timeout: 30000 });
 
         // Optionally close the popup if present
         const closeBtn = this.page.locator('.pi.pi-times').first();
