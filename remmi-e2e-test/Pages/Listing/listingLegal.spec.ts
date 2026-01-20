@@ -91,5 +91,24 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifySellingAgreementStartDateCalendarOpens();
     });
 
+    test('Test 15: Verify that clicking the Present button opens the Present Contract popup', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyPresentButtonOpensPresentContractPopup();
+    });
+
+    test('Test 16: Verify that closing the Present Contract popup does not change the Offer Status', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyPresentButtonOpensPresentContractPopup();
+    });
+
+    test('Test 17: Verify that clicking on the "Selling Agreement End Date" field opens a calendar for selecting a date', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySellingAgreementEndDateCalendarOpens();
+    });
+
+    test('Test 18: Verify that the "Agreed Marketing Spend" field accepts numeric input', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyAgreedMarketingSpendFieldAcceptsNumericInput();
+    });
 
 });
