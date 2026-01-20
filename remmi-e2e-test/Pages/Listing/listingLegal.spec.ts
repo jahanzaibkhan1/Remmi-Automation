@@ -100,5 +100,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyPresentButtonOpensPresentContractPopup();
     });
-    
+
+    test('Test 17: Verify that clicking on the "Selling Agreement End Date" field opens a calendar for selecting a date', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySellingAgreementEndDateCalendarOpens();
+    });
+
 });
