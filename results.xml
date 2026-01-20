@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.45825399999693">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-20T10:54:18.028Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.266" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that clicking the Present button opens the Present Contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="32.266">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.02085799999907">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-20T11:33:26.682Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.127" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify that clicking on the &quot;Selling Agreement End Date&quot; field opens a calendar for selecting a date" classname="Pages\Listing\listingLegal.spec.ts" time="28.127">
 </testcase>
 </testsuite>
 </testsuites>

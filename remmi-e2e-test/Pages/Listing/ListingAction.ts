@@ -11296,5 +11296,65 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verify that clicking on the "Selling Agreement End Date" field opens a calendar for selecting a date.
+     */
+    public async verifySellingAgreementEndDateCalendarOpens(): Promise<void> {
+        // Navigate to the Listings page
+        await this.navigateToListings();
+        // Switch to Grid View
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Find and click the "Selling Agreement Start Date" input field
+        const sellingAgreement = this.page.getByText(/Selling Agreement End Date/i);
+        await sellingAgreement.scrollIntoViewIfNeeded();
+        await expect(sellingAgreement).toBeVisible({ timeout: 10000 });
+
+        // Click the actual input element for Selling Agreement Start Date (assume it's the input nearest to the label)
+        const sellingAgreementEndDateInput = this.page.locator(
+            'p-calendar[formcontrolname="selling_agreement_end_date"] input[readonly]'
+        );
+
+        await expect(sellingAgreementEndDateInput).toBeVisible({ timeout: 5000 });
+        await sellingAgreementEndDateInput.click();
+
+        // The calendar popup/dialog should now be visible; check for calendar container (commonly role="dialog" or specific class)
+        const calendarPopup = this.page.locator("[role='dialog'], .p-datepicker, .ui-datepicker, .calendar-popup");
+        await expect(calendarPopup).toBeVisible({ timeout: 10000 });
+
+        // Select the current date in the calendar
+        const today = new Date();
+        const day = today.getDate().toString();
+
+        // Try finding a button or span with today's date that is selectable (not disabled and for this month)
+        let dayLocator = this.page.locator(".p-datepicker-calendar td:not(.p-datepicker-other-month) button:has-text('" + day + "')");
+
+        // Fallback to span if button is not present
+        if (await dayLocator.count() === 0) {
+            dayLocator = this.page.locator(".p-datepicker-calendar td:not(.p-datepicker-other-month) span:has-text('" + day + "')");
+        }
+
+        await expect(dayLocator.first()).toBeVisible({ timeout: 5000 });        
+        await dayLocator.first().click();
+
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 
 }
