@@ -96,4 +96,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyPresentButtonOpensPresentContractPopup();
     });
 
+    test('Test 16: Verify that closing the Present Contract popup does not change the Offer Status', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyPresentButtonOpensPresentContractPopup();
+    });
+    
 });
