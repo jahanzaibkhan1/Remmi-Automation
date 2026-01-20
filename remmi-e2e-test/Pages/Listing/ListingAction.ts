@@ -10823,7 +10823,7 @@ export class ListingActions {
 
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
-          await closeBtn.click({ force: true });
+            await closeBtn.click({ force: true });
         }
     }
 
@@ -11238,7 +11238,7 @@ export class ListingActions {
             dayLocator = this.page.locator(".p-datepicker-calendar td:not(.p-datepicker-other-month) span:has-text('" + day + "')");
         }
 
-        await expect(dayLocator.first()).toBeVisible({ timeout: 5000 });        
+        await expect(dayLocator.first()).toBeVisible({ timeout: 5000 });
         await dayLocator.first().click();
 
         // Optionally close the popup if present
@@ -11346,8 +11346,55 @@ export class ListingActions {
             dayLocator = this.page.locator(".p-datepicker-calendar td:not(.p-datepicker-other-month) span:has-text('" + day + "')");
         }
 
-        await expect(dayLocator.first()).toBeVisible({ timeout: 5000 });        
+        await expect(dayLocator.first()).toBeVisible({ timeout: 5000 });
         await dayLocator.first().click();
+
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that the "Agreed Marketing Spend" field accepts numeric input.
+     */
+    async verifyAgreedMarketingSpendFieldAcceptsNumericInput() {
+        // Navigate to the Listings page
+        await this.navigateToListings();
+        // Switch to Grid View
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Find the "Agreed Marketing Spend" input (by label or placeholder)
+        const spendLabel = this.page.getByText(/Agreed Marketing Spend/i);
+        await spendLabel.scrollIntoViewIfNeeded();
+        await expect(spendLabel).toBeVisible({ timeout: 10000 });
+
+        // Get the input related to the label (assuming it's the next input field)
+        const spendInput = this.page.locator(
+            'label:has-text("Agreed") + app-price-input input[name="price"]'
+        );
+        await expect(spendInput).toBeVisible({ timeout: 5000 });
+
+        await spendInput.click();
+
+        // Enter a valid numeric value
+        const numericValue = '15000';
+
+        // Assert that the field contains the numeric value
+        await expect(spendInput).toHaveValue(numericValue);
 
         // Optionally close the popup if present
         const closeBtn = this.page.locator('.pi.pi-times').first();

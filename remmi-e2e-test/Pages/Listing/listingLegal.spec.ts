@@ -106,4 +106,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifySellingAgreementEndDateCalendarOpens();
     });
 
+    test('Test 18: Verify that the "Agreed Marketing Spend" field accepts numeric input', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyAgreedMarketingSpendFieldAcceptsNumericInput();
+    });
+
 });
