@@ -11248,6 +11248,53 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verify that clicking the Present button opens the Present Contract popup.
+     */
+    public async verifyPresentButtonOpensPresentContractPopup(): Promise<void> {
+        // Navigate to the Listings page and switch to Grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Wait for at least one row in the table body to be present and visible, ensuring table has loaded
+        await this.page.waitForSelector('tbody tr', { state: 'visible', timeout: 10000 });
+        const row = this.page.locator('tbody tr').first();
+        await expect(row).toBeVisible({ timeout: 5000 });
+        await row.click();
+
+
+        // Wait for Present button (can be "Present" or "Present Offer") to appear and scroll into view if needed
+        const presentBtn = this.page.getByRole('button', { name: /^Present(\sOffer)?$/i });
+        await presentBtn.scrollIntoViewIfNeeded();
+        await expect(presentBtn).toBeVisible({ timeout: 10000 });
+        await presentBtn.click();
+
+        // The Present Contract popup/dialog should now be visible
+        const presentPopup = this.page.getByText('Present Offer × ToAutomation');
+        await expect(presentPopup).toBeVisible({ timeout: 10000 });
+
+        // Click the Cancel button
+        const cancelBtn = this.page.getByRole('button', { name: /Cancel/i }).last();
+        await expect(cancelBtn).toBeVisible({ timeout: 10000 });
+        await cancelBtn.click();
+
+        // Optionally close the Present Contract popup if possible
+        const closeBtn = presentPopup.locator('.pi.pi-times');
+        if (await closeBtn.first().isVisible().catch(() => false)) {
+            await closeBtn.first().click({ force: true });
+        }
+    }
 
 
 }
