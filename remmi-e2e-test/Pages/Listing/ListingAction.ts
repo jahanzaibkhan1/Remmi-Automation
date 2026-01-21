@@ -11840,7 +11840,7 @@ export class ListingActions {
         await expect(contactDropdownPanel.first()).toBeVisible({ timeout: 10000 });
         await contactDropdownPanel.first().click();
 
-        const selectedValue = this.page.locator('.ng-value-label').last()
+        const selectedValue = this.page.locator('div.ng-value > div.d-flex.align-items-center.cursor-pointer');
 
         // Check it exists / is visible
         await expect(selectedValue).toBeVisible();
