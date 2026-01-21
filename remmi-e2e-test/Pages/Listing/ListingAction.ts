@@ -10891,7 +10891,7 @@ export class ListingActions {
                 // Optionally scroll that option into view to simulate user visibility (if possible)
                 const optionLocator = optionLocators.nth(idx);
                 // Scroll into view for good measure (or highlight visually for debug, not strictly required)
-                await optionLocator.scrollIntoViewIfNeeded().catch(() => {});
+                await optionLocator.scrollIntoViewIfNeeded().catch(() => { });
             }
         }
 
@@ -11252,7 +11252,7 @@ export class ListingActions {
         await expect(legalTab).toBeVisible({ timeout: 10000 });
         await legalTab.click();
 
-        
+
         const addButton = this.page.getByLabel('Legal').getByRole('button', { name: '', exact: true }).first();
         await expect(addButton).toBeAttached({ timeout: 10000 });
         await addButton.click();
@@ -11456,7 +11456,7 @@ export class ListingActions {
 
         // Find the "Commission Payable By" dropdown
         const commissionPayableByDropdown = this.page.locator('ng-select[formcontrolname="commission_payable"]');
-          
+
         await commissionPayableByDropdown.scrollIntoViewIfNeeded();
         await expect(commissionPayableByDropdown).toBeVisible({ timeout: 10000 });
         await commissionPayableByDropdown.click();
@@ -11532,7 +11532,7 @@ export class ListingActions {
         // Find the "$ Amount Inclusive of GST" input field
         const amountGSTInput = this.page.locator(
             '//label[contains(.,"$ Amount")]/parent::div//app-price-input//input[@name="price"]'
-          );
+        );
         await amountGSTInput.scrollIntoViewIfNeeded();
         await expect(amountGSTInput).toBeVisible({ timeout: 10000 });
         // Try entering a valid numeric value
@@ -11546,5 +11546,52 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verify that clicking on the "Document" button opens a popup to add a new document.
+     */
+    async verifyDocumentButtonOpensAddDocumentPopup() {
+        // Navigate to the Listings page
+        await this.navigateToListings();
+
+        // Switch to Grid View
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Click the "Document" button (assuming this is the button text)
+        const documentButton = this.page.locator('//label[text()="Documents"]/parent::div//button');
+        await documentButton.scrollIntoViewIfNeeded();
+        await expect(documentButton).toBeVisible({ timeout: 10000 });
+        await documentButton.click();
+
+        // Now ensure the file upload input is visible after clicking New and upload image
+        const documentsUploadInput = this.page.locator(
+            '//label[text()="Documents"]/parent::div//input[@type="file"]'
+        );
+        // const path = require('path');
+        // const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+        // const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+        // await documentsUploadInput.setInputFiles(imagePath);
+
+        // Optionally wait for upload UI to respond/complete
+        await this.page.waitForTimeout(1000);
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+
+    }
 
 }

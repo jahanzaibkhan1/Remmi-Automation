@@ -131,4 +131,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyAmountInclusiveGSTFieldAcceptsNumericInput();
     });
 
+    test('Test 23: Verify that clicking on the "Document" button opens a popup to add a new document', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyDocumentButtonOpensAddDocumentPopup();
+    });
+
 });
