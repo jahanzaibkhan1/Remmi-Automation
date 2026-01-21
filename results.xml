@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.67448500000313">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-21T08:22:36.643Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.076" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify that the &quot;Marketing Payable By&quot; dropdown allows selection" classname="Pages\Listing\listingLegal.spec.ts" time="27.076">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.08243799999729">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-21T08:44:07.026Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.153" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Verify that the &quot;Commission Payable By&quot; dropdown allows selection" classname="Pages\Listing\listingLegal.spec.ts" time="34.153">
 </testcase>
 </testsuite>
 </testsuites>

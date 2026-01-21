@@ -11433,5 +11433,45 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verify that the "Commission Payable By" dropdown allows selection.
+     */
+    async verifyCommissionPayableByDropdownAllowsSelection() {
+        // Navigate to the Listings page
+        await this.navigateToListings();
+        // Switch to Grid View
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Find the "Commission Payable By" dropdown
+        const commissionPayableByDropdown = this.page.locator('ng-select[formcontrolname="commission_payable"]');
+          
+        await commissionPayableByDropdown.scrollIntoViewIfNeeded();
+        await expect(commissionPayableByDropdown).toBeVisible({ timeout: 10000 });
+        await commissionPayableByDropdown.click();
+
+        // Adjust according to actual option name if different
+        const optionToSelect = this.page.getByRole('option', { name: /At conditional/i });
+        await expect(optionToSelect).toBeVisible({ timeout: 10000 });
+        await optionToSelect.click();
+
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 
 }
