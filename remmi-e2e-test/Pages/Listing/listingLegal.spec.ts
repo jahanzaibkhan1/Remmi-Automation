@@ -111,4 +111,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyAgreedMarketingSpendFieldAcceptsNumericInput();
     });
 
+    test('Test 19: Verify that the "Marketing Payable By" dropdown allows selection', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyMarketingPayableByDropdownAllowsSelection();
+    });
+
 });
