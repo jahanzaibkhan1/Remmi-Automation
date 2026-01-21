@@ -161,4 +161,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyLegalNameDropdownOpensOwnerInNewTab();
     });
 
+    test('Test 29: Verify that clicking the selected company in the "Solicitor" dropdown opens the company\'s details in a new tab', async ({ sessionPage, context }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySolicitorDropdownOpensCompanyInNewTab();
+    });
+
 });
