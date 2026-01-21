@@ -126,6 +126,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyCommissionInclusiveGSTFieldAcceptsPercentageInput();
     });
 
-    // 
+    test('Test 22: Verify that the "$ Amount Inclusive of GST" field accepts numeric input', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyAmountInclusiveGSTFieldAcceptsNumericInput();
+    });
 
 });
