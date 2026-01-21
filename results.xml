@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.026466000001875">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-21T11:02:50.223Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.407" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Verify that selecting a company from the &quot;Solicitor&quot; dropdown populates the &quot;Solicitor&apos;s Contact&quot; dropdown with relevant contacts" classname="Pages\Listing\listingLegal.spec.ts" time="24.407">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.98461400000006">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-21T11:23:19.154Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.149" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Verify that clicking the selected name in the &quot;Legal Name&quot; dropdown opens the owner&apos;s details in a new tab" classname="Pages\Listing\listingLegal.spec.ts" time="25.149">
 </testcase>
 </testsuite>
 </testsuites>

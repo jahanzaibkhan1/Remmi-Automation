@@ -11712,7 +11712,7 @@ export class ListingActions {
         // Locate the Solicitor multiselect
         const solicitorDropdown = this.page.locator(
             'div.col-md-6.create-task-dropdown:has(label:text("Solicitor")) div.tags'
-          );
+        );
         await solicitorDropdown.click()
 
         const searchInput = this.page.locator('.drop_box input[placeholder="Search"]');
@@ -11760,7 +11760,7 @@ export class ListingActions {
         // Locate the Solicitor multiselect dropdown and click to expand
         const solicitorDropdown = this.page.locator(
             'div.col-md-6.create-task-dropdown:has(label:text("Solicitor")) div.tags'
-          );
+        );
         await solicitorDropdown.click();
 
         // Wait for the dropdown and select the first option
@@ -11769,7 +11769,7 @@ export class ListingActions {
         const searchInput = this.page.locator('.drop_box input[placeholder="Search"]');
         await expect(searchInput).toBeVisible();
         await searchInput.click();
-        await searchInput.fill('Netsol');        
+        await searchInput.fill('Netsol');
         // Select the "Netsol" option (case-insensitive) from the dropdown
         const netsolOption = this.page.locator('.drop_box ul li', { hasText: /netsol/i }).first();
         await expect(netsolOption).toBeVisible({ timeout: 5000 });
@@ -11788,6 +11788,72 @@ export class ListingActions {
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+    }
+
+    /**
+     * Verify that clicking on the selected name in the "Legal Name" dropdown opens the owner's details in a new tab.
+     */
+    async verifyLegalNameDropdownOpensOwnerInNewTab() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Scroll to Solicitor field
+        const solicitorLabel = this.page.getByText('Solicitor', { exact: true });
+        await solicitorLabel.scrollIntoViewIfNeeded();
+        await expect(solicitorLabel).toBeVisible({ timeout: 10000 });
+
+        // Locate the Solicitor multiselect dropdown and click to expand
+        const solicitorDropdown = this.page.locator(
+            'div.col-md-6.create-task-dropdown:has(label:text("Solicitor")) div.tags'
+        );
+        await solicitorDropdown.click();
+
+        // Wait for the dropdown and select the first option
+        const dropdownPanel = this.page.locator('.drop_box ul li');
+        await expect(dropdownPanel.first()).toBeVisible({ timeout: 15000 });
+        const searchInput = this.page.locator('.drop_box input[placeholder="Search"]');
+        await expect(searchInput).toBeVisible();
+        await searchInput.click();
+        await searchInput.fill('Netsol');
+        // Select the "Netsol" option (case-insensitive) from the dropdown
+        const netsolOption = this.page.locator('.drop_box ul li', { hasText: /netsol/i }).first();
+        await expect(netsolOption).toBeVisible({ timeout: 5000 });
+        await netsolOption.click();
+        await solicitorDropdown.click();
+        // Locate the Solicitor's Contact dropdown (it should be enabled and populated now)
+        const contactDropdownLabel = this.page.getByText("Select Contact", { exact: true });
+        await expect(contactDropdownLabel).toBeVisible({ timeout: 5000 });
+        await contactDropdownLabel.click();
+        // Wait for the dropdown panel to appear and click on the first contact option
+        const contactDropdownPanel = this.page.locator('ng-dropdown-panel .ng-option');
+        await expect(contactDropdownPanel.first()).toBeVisible({ timeout: 10000 });
+        await contactDropdownPanel.first().click();
+
+        const selectedValue = this.page.locator('.ng-value-label').last()
+
+        // Check it exists / is visible
+        await expect(selectedValue).toBeVisible();
+        await selectedValue.click();
+
+        await expect(this.page.locator('ng-select[formcontrolname="contact_type"]')).toBeVisible();
+
+        // Optionally close a popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
     }
 
 

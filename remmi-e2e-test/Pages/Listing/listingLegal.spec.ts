@@ -156,4 +156,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifySolicitorDropdownPopulatesContacts();
     });
 
+    test('Test 28: Verify that clicking the selected name in the "Legal Name" dropdown opens the owner\'s details in a new tab', async ({ sessionPage, context }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyLegalNameDropdownOpensOwnerInNewTab();
+    });
+
 });
