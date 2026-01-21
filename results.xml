@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="27.264377000000326">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-21T08:52:19.672Z" hostname="chromium" tests="1" failures="0" skipped="0" time="19.252" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Verify that the &quot;Commission % Inclusive of GST&quot; field accepts percentage input" classname="Pages\Listing\listingLegal.spec.ts" time="19.252">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.12444900000095">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-21T09:38:12.498Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.919" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Verify that clicking on the &quot;Document&quot; button opens a popup to add a new document" classname="Pages\Listing\listingLegal.spec.ts" time="48.919">
 </testcase>
 </testsuite>
 </testsuites>
