@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.427843000002206">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-21T09:54:14.950Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.534" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Verify that the &quot;Property Legal Details&quot; section displays fields for Lot, On Subdivision, Title Reference, and Legal Address, and none of the fields are required" classname="Pages\Listing\listingLegal.spec.ts" time="34.534">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="36.68773099999875">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-21T10:04:18.489Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.875" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Verify that the &quot;Legal Name&quot; dropdown auto-populates with the property owner&apos;s name and allows creating a new contact" classname="Pages\Listing\listingLegal.spec.ts" time="30.875">
+<system-out>
+<![CDATA[Legal Dropdown Name : Automation Testing
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
