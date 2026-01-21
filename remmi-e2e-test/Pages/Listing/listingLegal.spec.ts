@@ -111,4 +111,59 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyAgreedMarketingSpendFieldAcceptsNumericInput();
     });
 
+    test('Test 19: Verify that the "Marketing Payable By" dropdown allows selection', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyMarketingPayableByDropdownAllowsSelection();
+    });
+
+    test('Test 20: Verify that the "Commission Payable By" dropdown allows selection', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyCommissionPayableByDropdownAllowsSelection();
+    });
+
+    test('Test 21: Verify that the "Commission % Inclusive of GST" field accepts percentage input', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyCommissionInclusiveGSTFieldAcceptsPercentageInput();
+    });
+
+    test('Test 22: Verify that the "$ Amount Inclusive of GST" field accepts numeric input', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyAmountInclusiveGSTFieldAcceptsNumericInput();
+    });
+
+    test('Test 23: Verify that clicking on the "Document" button opens a popup to add a new document', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyDocumentButtonOpensAddDocumentPopup();
+    });
+
+    test('Test 24: Verify that the "Property Legal Details" section displays fields for Lot, On Subdivision, Title Reference, and Legal Address, and none of the fields are required', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyPropertyLegalDetailsFieldsNotRequired();
+    });
+
+    test('Test 25: Verify that the "Legal Name" dropdown auto-populates with the property owner\'s name and allows creating a new contact', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyLegalNameDropdownAutoPopulatesAndAllowsNewContact();
+    });
+
+    test('Test 26: Verify that the "Solicitor" dropdown allows selecting a company and creating a new company', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySolicitorDropdownAllowsSelectAndCreate();
+    });
+
+    test('Test 27: Verify that selecting a company from the "Solicitor" dropdown populates the "Solicitor\'s Contact" dropdown with relevant contacts', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySolicitorDropdownPopulatesContacts();
+    });
+
+    test('Test 28: Verify that clicking the selected name in the "Legal Name" dropdown opens the owner\'s details in a new tab', async ({ sessionPage, context }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyLegalNameDropdownOpensOwnerInNewTab();
+    });
+
+    test('Test 29: Verify that clicking the selected company in the "Solicitor" dropdown opens the company\'s details in a new tab', async ({ sessionPage, context }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySolicitorDropdownOpensCompanyInNewTab();
+    });
+
 });

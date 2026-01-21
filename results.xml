@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.02085799999907">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-20T11:33:26.682Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.127" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify that clicking on the &quot;Selling Agreement End Date&quot; field opens a calendar for selecting a date" classname="Pages\Listing\listingLegal.spec.ts" time="28.127">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.239372999999674">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-21T11:36:32.051Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.495" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 29: Verify that clicking the selected company in the &quot;Solicitor&quot; dropdown opens the company&apos;s details in a new tab" classname="Pages\Listing\listingLegal.spec.ts" time="31.495">
 </testcase>
 </testsuite>
 </testsuites>
