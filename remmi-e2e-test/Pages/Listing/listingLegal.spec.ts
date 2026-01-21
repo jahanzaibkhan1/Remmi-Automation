@@ -136,4 +136,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyDocumentButtonOpensAddDocumentPopup();
     });
 
+    test('Test 24: Verify that the "Property Legal Details" section displays fields for Lot, On Subdivision, Title Reference, and Legal Address, and none of the fields are required', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyPropertyLegalDetailsFieldsNotRequired();
+    });
+
 });
