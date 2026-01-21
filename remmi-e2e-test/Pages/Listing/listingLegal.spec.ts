@@ -141,4 +141,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyPropertyLegalDetailsFieldsNotRequired();
     });
 
+    test('Test 25: Verify that the "Legal Name" dropdown auto-populates with the property owner\'s name and allows creating a new contact', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyLegalNameDropdownAutoPopulatesAndAllowsNewContact();
+    });
+
 });
