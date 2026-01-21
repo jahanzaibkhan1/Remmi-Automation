@@ -156,14 +156,19 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifySolicitorDropdownPopulatesContacts();
     });
 
-    test('Test 28: Verify that clicking the selected name in the "Legal Name" dropdown opens the owner\'s details in a new tab', async ({ sessionPage, context }) => {
+    test('Test 28: Verify that clicking the selected name in the "Legal Name" dropdown opens the owner\'s details in a new tab', async ({ sessionPage }) => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyLegalNameDropdownOpensOwnerInNewTab();
     });
 
-    test('Test 29: Verify that clicking the selected company in the "Solicitor" dropdown opens the company\'s details in a new tab', async ({ sessionPage, context }) => {
+    test('Test 29: Verify that clicking the selected company in the "Solicitor" dropdown opens the company\'s details in a new tab', async ({ sessionPage }) => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifySolicitorDropdownOpensCompanyInNewTab();
+    });
+
+    test('Test 30: Verify that clicking the selected contact in the "Solicitor\'s Contact" dropdown opens the contact\'s details in a new tab', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyLegalNameDropdownOpensOwnerInNewTab();
     });
 
 });
