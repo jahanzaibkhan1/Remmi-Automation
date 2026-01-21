@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="36.68773099999875">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-21T10:04:18.489Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.875" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Verify that the &quot;Legal Name&quot; dropdown auto-populates with the property owner&apos;s name and allows creating a new contact" classname="Pages\Listing\listingLegal.spec.ts" time="30.875">
-<system-out>
-<![CDATA[Legal Dropdown Name : Automation Testing
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.28346999999881">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-01-21T10:39:43.998Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.589" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 26: Verify that the &quot;Solicitor&quot; dropdown allows selecting a company and creating a new company" classname="Pages\Listing\listingLegal.spec.ts" time="39.589">
 </testcase>
 </testsuite>
 </testsuites>

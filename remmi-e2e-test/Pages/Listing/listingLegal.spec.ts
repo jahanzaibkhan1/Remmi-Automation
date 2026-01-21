@@ -146,4 +146,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyLegalNameDropdownAutoPopulatesAndAllowsNewContact();
     });
 
+    test('Test 26: Verify that the "Solicitor" dropdown allows selecting a company and creating a new company', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySolicitorDropdownAllowsSelectAndCreate();
+    });
+
 });
