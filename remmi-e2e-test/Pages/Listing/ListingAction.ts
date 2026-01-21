@@ -11594,4 +11594,60 @@ export class ListingActions {
 
     }
 
+    /**
+     * Verify that none of the "Property Legal Details" fields (Lot, On Subdivision,
+     * Title Reference, and Legal Address) are marked as required.
+     */
+    async verifyPropertyLegalDetailsFieldsNotRequired() {
+        // Navigate & open listing
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        const propertyLegalDetailsSection = this.page.getByText('Property Legal Details');
+        await propertyLegalDetailsSection.scrollIntoViewIfNeeded();
+        await expect(propertyLegalDetailsSection).toBeVisible({ timeout: 10000 });
+
+        // Check that none of the fields in Property Legal Details are required
+        const fields = [
+            { label: "Lot", control: "lot" },
+            { label: "On Subdivision", control: "subdivision" },
+            { label: "Title Reference", control: "titleref" },
+            { label: "Legal Address", control: "legaladdress" }
+        ];
+
+        for (const { label, control } of fields) {
+            // Get the input
+            const inputLocator = this.page.locator(`input[formcontrolname="${control}"]`);
+            await expect(inputLocator).toBeVisible({ timeout: 5000 });
+
+            // The input should not have "required" or aria-required attributes
+            const isRequired = await inputLocator.getAttribute('required');
+            const ariaRequired = await inputLocator.getAttribute('aria-required');
+            expect(isRequired, `${label} field should not have 'required' attribute`).not.toBeTruthy();
+            expect(ariaRequired, `${label} field should not have 'aria-required' attribute`).not.toBe("true");
+
+            // The label should not show a required asterisk '*'
+            // Find the label associated with the input
+            const labelLocator = inputLocator.locator('xpath=ancestor::div[contains(@class,"col-md")]/label');
+            const labelText = await labelLocator.textContent();
+            expect(labelText, `${label} label should not show a required asterisk`).not.toMatch(/\*/);
+        }
+
+        // Optionally close a popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+    
+
 }
