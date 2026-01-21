@@ -121,4 +121,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyCommissionPayableByDropdownAllowsSelection();
     });
 
+    test('Test 21: Verify that the "Commission % Inclusive of GST" field accepts percentage input', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyCommissionInclusiveGSTFieldAcceptsPercentageInput();
+    });
+
 });
