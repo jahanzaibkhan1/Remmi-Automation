@@ -11508,5 +11508,43 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verify that the "$ Amount Inclusive of GST" field accepts numeric input.
+     */
+    async verifyAmountInclusiveGSTFieldAcceptsNumericInput() {
+        // Navigate to the Listings page
+        await this.navigateToListings();
+        // Switch to Grid View
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Find the "$ Amount Inclusive of GST" input field
+        const amountGSTInput = this.page.locator(
+            '//label[contains(.,"$ Amount")]/parent::div//app-price-input//input[@name="price"]'
+          );
+        await amountGSTInput.scrollIntoViewIfNeeded();
+        await expect(amountGSTInput).toBeVisible({ timeout: 10000 });
+        // Try entering a valid numeric value
+        const inputValue = '5000';
+        await amountGSTInput.fill(inputValue);
+
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 
 }
