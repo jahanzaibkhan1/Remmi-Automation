@@ -11686,5 +11686,52 @@ export class ListingActions {
 
     }
 
+    /**
+    * Verify that the "Solicitor" dropdown allows selecting an existing company and creating a new company.
+    */
+    async verifySolicitorDropdownAllowsSelectAndCreate() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Scroll to Solicitor field
+        const solicitorLabel = await this.page.getByText('Solicitor', { exact: true });
+        await solicitorLabel.scrollIntoViewIfNeeded();
+        await expect(solicitorLabel).toBeVisible({ timeout: 10000 });
+
+        // Locate the Solicitor multiselect
+        const solicitorDropdown = this.page.locator('div').filter({ hasText: /^Select Company$/ }).nth(1);
+        await solicitorDropdown.click()
+
+        const searchInput = this.page.locator('.drop_box input[placeholder="Search"]');
+        await expect(searchInput).toBeVisible();
+        // Wait for the dropdown panel to appear
+        const dropdownPanel = this.page.locator('.drop_box ul li');
+        await expect(dropdownPanel.first()).toBeVisible({ timeout: 15000 });
+        // Click the first option itself, not the checkbox
+        await dropdownPanel.first().click();
+
+        const createNewBtn = this.page.locator('.drop_box p.cursor-pointer', { hasText: 'Create New' }).first();
+        await expect(createNewBtn).toBeVisible({timeout:10000});
+        await createNewBtn.click();
+
+        // Optionally close a popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+
 
 }
