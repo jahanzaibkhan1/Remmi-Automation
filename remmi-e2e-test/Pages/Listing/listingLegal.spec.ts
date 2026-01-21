@@ -151,4 +151,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifySolicitorDropdownAllowsSelectAndCreate();
     });
 
+    test('Test 27: Verify that selecting a company from the "Solicitor" dropdown populates the "Solicitor\'s Contact" dropdown with relevant contacts', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySolicitorDropdownPopulatesContacts();
+    });
+
 });
