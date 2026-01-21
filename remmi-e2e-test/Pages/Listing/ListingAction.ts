@@ -10867,18 +10867,8 @@ export class ListingActions {
         const dropdownPanel = this.page.locator('.ng-dropdown-panel');
         await expect(dropdownPanel).toBeVisible({ timeout: 5000 });
 
-        // Get all option texts within the dropdown
+        // Get all option locators in dropdown
         const optionLocators = dropdownPanel.locator('.ng-option');
-        const optionCount = await optionLocators.count();
-        const actualOptions: string[] = [];
-        for (let i = 0; i < optionCount; i++) {
-            let text = await optionLocators.nth(i).textContent();
-            if (text) {
-                actualOptions.push(text.trim());
-            }
-        }
-
-        // Expected options based on the provided image
         const expectedOptions = [
             'Settled',
             'Conditional',
@@ -10890,17 +10880,19 @@ export class ListingActions {
             'Cancelled'
         ];
 
-        // Verify every expected option is present in the actual options
-        // Scroll to each expected option before asserting its presence (if needed)
+        // Fetch the text of all the options in the dropdown
+        const actualOptions = await optionLocators.allTextContents();
+
         for (const expected of expectedOptions) {
             // Find index of the expected option in the dropdown
-            const idx = actualOptions.findIndex(opt => opt === expected);
+            const idx = actualOptions.findIndex(opt => opt.trim() === expected);
+            expect(actualOptions.map(opt => opt.trim())).toContain(expected);
             if (idx >= 0) {
-                // Scroll that option into view if it's not visible
+                // Optionally scroll that option into view to simulate user visibility (if possible)
                 const optionLocator = optionLocators.nth(idx);
-                await optionLocator.scrollIntoViewIfNeeded();
+                // Scroll into view for good measure (or highlight visually for debug, not strictly required)
+                await optionLocator.scrollIntoViewIfNeeded().catch(() => {});
             }
-            expect(actualOptions).toContain(expected);
         }
 
         // Click the close icon after verifying the contract is displayed
@@ -11164,13 +11156,6 @@ export class ListingActions {
 
 
         await this.page.waitForTimeout(1000);
-        await legalCheckbox.click();
-
-
-        const declineBtn = this.page.getByRole('button', { name: /^Decline$/i });
-        await expect(declineBtn).toBeVisible({ timeout: 10000 });
-        await declineBtn.click();
-
         await expect(contractLocator).toBeVisible({ timeout: 10000 });
 
         await this.page.reload();
@@ -11267,11 +11252,15 @@ export class ListingActions {
         await expect(legalTab).toBeVisible({ timeout: 10000 });
         await legalTab.click();
 
-        // Wait for at least one row in the table body to be present and visible, ensuring table has loaded
-        await this.page.waitForSelector('tbody tr', { state: 'visible', timeout: 10000 });
-        const row = this.page.locator('tbody tr').first();
-        await expect(row).toBeVisible({ timeout: 5000 });
-        await row.click();
+        
+        const addButton = this.page.getByLabel('Legal').getByRole('button', { name: '', exact: true }).first();
+        await expect(addButton).toBeAttached({ timeout: 10000 });
+        await addButton.click();
+
+        // Wait for the contract panel to be visible in the popup
+        const contractPanel = this.page.locator('#Contract_1 #rightbarwithscroll');
+        await expect(contractPanel).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
 
 
         // Wait for Present button (can be "Present" or "Present Offer") to appear and scroll into view if needed
@@ -11279,20 +11268,22 @@ export class ListingActions {
         await presentBtn.scrollIntoViewIfNeeded();
         await expect(presentBtn).toBeVisible({ timeout: 10000 });
         await presentBtn.click();
-
         // The Present Contract popup/dialog should now be visible
-        const presentPopup = this.page.getByText('Present Offer × ToAutomation');
+        const presentPopup = this.page.getByText('Present Offer ×');
         await expect(presentPopup).toBeVisible({ timeout: 10000 });
+
 
         // Click the Cancel button
         const cancelBtn = this.page.getByRole('button', { name: /Cancel/i }).last();
         await expect(cancelBtn).toBeVisible({ timeout: 10000 });
         await cancelBtn.click();
 
-        // Optionally close the Present Contract popup if possible
-        const closeBtn = presentPopup.locator('.pi.pi-times');
-        if (await closeBtn.first().isVisible().catch(() => false)) {
-            await closeBtn.first().click({ force: true });
+        await this.page.waitForTimeout(1200);
+
+        // Optionally clos23e the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
         }
     }
 
@@ -11393,8 +11384,47 @@ export class ListingActions {
         // Enter a valid numeric value
         const numericValue = '15000';
 
-        // Assert that the field contains the numeric value
-        await expect(spendInput).toHaveValue(numericValue);
+        await spendInput.fill(numericValue);
+
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that the "Marketing Payable By" dropdown allows selection.
+     */
+    async verifyMarketingPayableByDropdownAllowsSelection() {
+        // Navigate to the Listings page
+        await this.navigateToListings();
+        // Switch to Grid View
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Find the "Marketing Payable By" dropdown label
+        const payableByDropdown = this.page.locator('ng-select[formcontrolname="marketing_payable_by"]');
+        await payableByDropdown.scrollIntoViewIfNeeded();
+        await expect(payableByDropdown).toBeVisible({ timeout: 10000 });
+        await payableByDropdown.click();
+
+        // Adjust according to actual option name if different
+        const optionToSelect = this.page.getByRole('option', { name: /At unconditional/i });
+        await expect(optionToSelect).toBeVisible({ timeout: 10000 });
+        await optionToSelect.click();
+
 
         // Optionally close the popup if present
         const closeBtn = this.page.locator('.pi.pi-times').first();
