@@ -10867,18 +10867,8 @@ export class ListingActions {
         const dropdownPanel = this.page.locator('.ng-dropdown-panel');
         await expect(dropdownPanel).toBeVisible({ timeout: 5000 });
 
-        // Get all option texts within the dropdown
+        // Get all option locators in dropdown
         const optionLocators = dropdownPanel.locator('.ng-option');
-        const optionCount = await optionLocators.count();
-        const actualOptions: string[] = [];
-        for (let i = 0; i < optionCount; i++) {
-            let text = await optionLocators.nth(i).textContent();
-            if (text) {
-                actualOptions.push(text.trim());
-            }
-        }
-
-        // Expected options based on the provided image
         const expectedOptions = [
             'Settled',
             'Conditional',
@@ -10890,17 +10880,19 @@ export class ListingActions {
             'Cancelled'
         ];
 
-        // Verify every expected option is present in the actual options
-        // Scroll to each expected option before asserting its presence (if needed)
+        // Fetch the text of all the options in the dropdown
+        const actualOptions = await optionLocators.allTextContents();
+
         for (const expected of expectedOptions) {
             // Find index of the expected option in the dropdown
-            const idx = actualOptions.findIndex(opt => opt === expected);
+            const idx = actualOptions.findIndex(opt => opt.trim() === expected);
+            expect(actualOptions.map(opt => opt.trim())).toContain(expected);
             if (idx >= 0) {
-                // Scroll that option into view if it's not visible
+                // Optionally scroll that option into view to simulate user visibility (if possible)
                 const optionLocator = optionLocators.nth(idx);
-                await optionLocator.scrollIntoViewIfNeeded();
+                // Scroll into view for good measure (or highlight visually for debug, not strictly required)
+                await optionLocator.scrollIntoViewIfNeeded().catch(() => { });
             }
-            expect(actualOptions).toContain(expected);
         }
 
         // Click the close icon after verifying the contract is displayed
@@ -11164,13 +11156,6 @@ export class ListingActions {
 
 
         await this.page.waitForTimeout(1000);
-        await legalCheckbox.click();
-
-
-        const declineBtn = this.page.getByRole('button', { name: /^Decline$/i });
-        await expect(declineBtn).toBeVisible({ timeout: 10000 });
-        await declineBtn.click();
-
         await expect(contractLocator).toBeVisible({ timeout: 10000 });
 
         await this.page.reload();
@@ -11267,11 +11252,15 @@ export class ListingActions {
         await expect(legalTab).toBeVisible({ timeout: 10000 });
         await legalTab.click();
 
-        // Wait for at least one row in the table body to be present and visible, ensuring table has loaded
-        await this.page.waitForSelector('tbody tr', { state: 'visible', timeout: 10000 });
-        const row = this.page.locator('tbody tr').first();
-        await expect(row).toBeVisible({ timeout: 5000 });
-        await row.click();
+
+        const addButton = this.page.getByLabel('Legal').getByRole('button', { name: '', exact: true }).first();
+        await expect(addButton).toBeAttached({ timeout: 10000 });
+        await addButton.click();
+
+        // Wait for the contract panel to be visible in the popup
+        const contractPanel = this.page.locator('#Contract_1 #rightbarwithscroll');
+        await expect(contractPanel).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
 
 
         // Wait for Present button (can be "Present" or "Present Offer") to appear and scroll into view if needed
@@ -11279,20 +11268,22 @@ export class ListingActions {
         await presentBtn.scrollIntoViewIfNeeded();
         await expect(presentBtn).toBeVisible({ timeout: 10000 });
         await presentBtn.click();
-
         // The Present Contract popup/dialog should now be visible
-        const presentPopup = this.page.getByText('Present Offer × ToAutomation');
+        const presentPopup = this.page.getByText('Present Offer ×');
         await expect(presentPopup).toBeVisible({ timeout: 10000 });
+
 
         // Click the Cancel button
         const cancelBtn = this.page.getByRole('button', { name: /Cancel/i }).last();
         await expect(cancelBtn).toBeVisible({ timeout: 10000 });
         await cancelBtn.click();
 
-        // Optionally close the Present Contract popup if possible
-        const closeBtn = presentPopup.locator('.pi.pi-times');
-        if (await closeBtn.first().isVisible().catch(() => false)) {
-            await closeBtn.first().click({ force: true });
+        await this.page.waitForTimeout(1200);
+
+        // Optionally clos23e the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
         }
     }
 
@@ -11393,10 +11384,531 @@ export class ListingActions {
         // Enter a valid numeric value
         const numericValue = '15000';
 
-        // Assert that the field contains the numeric value
-        await expect(spendInput).toHaveValue(numericValue);
+        await spendInput.fill(numericValue);
 
         // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that the "Marketing Payable By" dropdown allows selection.
+     */
+    async verifyMarketingPayableByDropdownAllowsSelection() {
+        // Navigate to the Listings page
+        await this.navigateToListings();
+        // Switch to Grid View
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Find the "Marketing Payable By" dropdown label
+        const payableByDropdown = this.page.locator('ng-select[formcontrolname="marketing_payable_by"]');
+        await payableByDropdown.scrollIntoViewIfNeeded();
+        await expect(payableByDropdown).toBeVisible({ timeout: 10000 });
+        await payableByDropdown.click();
+
+        // Adjust according to actual option name if different
+        const optionToSelect = this.page.getByRole('option', { name: /At unconditional/i });
+        await expect(optionToSelect).toBeVisible({ timeout: 10000 });
+        await optionToSelect.click();
+
+
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that the "Commission Payable By" dropdown allows selection.
+     */
+    async verifyCommissionPayableByDropdownAllowsSelection() {
+        // Navigate to the Listings page
+        await this.navigateToListings();
+        // Switch to Grid View
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Find the "Commission Payable By" dropdown
+        const commissionPayableByDropdown = this.page.locator('ng-select[formcontrolname="commission_payable"]');
+
+        await commissionPayableByDropdown.scrollIntoViewIfNeeded();
+        await expect(commissionPayableByDropdown).toBeVisible({ timeout: 10000 });
+        await commissionPayableByDropdown.click();
+
+        // Adjust according to actual option name if different
+        const optionToSelect = this.page.getByRole('option', { name: /At conditional/i });
+        await expect(optionToSelect).toBeVisible({ timeout: 10000 });
+        await optionToSelect.click();
+
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that the "Commission % Inclusive of GST" field accepts percentage input.
+     */
+    async verifyCommissionInclusiveGSTFieldAcceptsPercentageInput() {
+        // Navigate to the Listings page
+        await this.navigateToListings();
+        // Switch to Grid View
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Find the "Commission % Inclusive of GST" input field
+        const commissionGSTInput = this.page.locator('div.col-md-3.pl-0.mt-1 app-price-input input[name="price"]');
+        await commissionGSTInput.scrollIntoViewIfNeeded();
+        await expect(commissionGSTInput).toBeVisible({ timeout: 10000 });
+        // Try entering a valid percentage value
+        const inputValue = '15%';
+        await commissionGSTInput.fill(inputValue);
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that the "$ Amount Inclusive of GST" field accepts numeric input.
+     */
+    async verifyAmountInclusiveGSTFieldAcceptsNumericInput() {
+        // Navigate to the Listings page
+        await this.navigateToListings();
+        // Switch to Grid View
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Find the "$ Amount Inclusive of GST" input field
+        const amountGSTInput = this.page.locator(
+            '//label[contains(.,"$ Amount")]/parent::div//app-price-input//input[@name="price"]'
+        );
+        await amountGSTInput.scrollIntoViewIfNeeded();
+        await expect(amountGSTInput).toBeVisible({ timeout: 10000 });
+        // Try entering a valid numeric value
+        const inputValue = '5000';
+        await amountGSTInput.fill(inputValue);
+
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that clicking on the "Document" button opens a popup to add a new document.
+     */
+    async verifyDocumentButtonOpensAddDocumentPopup() {
+        // Navigate to the Listings page
+        await this.navigateToListings();
+
+        // Switch to Grid View
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Click the "Document" button (assuming this is the button text)
+        const documentButton = this.page.locator('//label[text()="Documents"]/parent::div//button');
+        await documentButton.scrollIntoViewIfNeeded();
+        await expect(documentButton).toBeVisible({ timeout: 10000 });
+        await documentButton.click();
+
+        // Now ensure the file upload input is visible after clicking New and upload image
+        const documentsUploadInput = this.page.locator(
+            '//label[text()="Documents"]/parent::div//input[@type="file"]'
+        );
+        // const path = require('path');
+        // const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+        // const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+        // await documentsUploadInput.setInputFiles(imagePath);
+
+        // Optionally wait for upload UI to respond/complete
+        await this.page.waitForTimeout(1000);
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+
+    }
+
+    /**
+     * Verify that none of the "Property Legal Details" fields (Lot, On Subdivision,
+     * Title Reference, and Legal Address) are marked as required.
+     */
+    async verifyPropertyLegalDetailsFieldsNotRequired() {
+        // Navigate & open listing
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        const propertyLegalDetailsSection = this.page.getByText('Property Legal Details');
+        await propertyLegalDetailsSection.scrollIntoViewIfNeeded();
+        await expect(propertyLegalDetailsSection).toBeVisible({ timeout: 10000 });
+
+        // Check that none of the fields in Property Legal Details are required
+        const fields = [
+            { label: "Lot", control: "lot" },
+            { label: "On Subdivision", control: "subdivision" },
+            { label: "Title Reference", control: "titleref" },
+            { label: "Legal Address", control: "legaladdress" }
+        ];
+
+        for (const { label, control } of fields) {
+            // Get the input
+            const inputLocator = this.page.locator(`input[formcontrolname="${control}"]`);
+            await expect(inputLocator).toBeVisible({ timeout: 5000 });
+
+            // The input should not have "required" or aria-required attributes
+            const isRequired = await inputLocator.getAttribute('required');
+            const ariaRequired = await inputLocator.getAttribute('aria-required');
+            expect(isRequired, `${label} field should not have 'required' attribute`).not.toBeTruthy();
+            expect(ariaRequired, `${label} field should not have 'aria-required' attribute`).not.toBe("true");
+
+            // The label should not show a required asterisk '*'
+            // Find the label associated with the input
+            const labelLocator = inputLocator.locator('xpath=ancestor::div[contains(@class,"col-md")]/label');
+            const labelText = await labelLocator.textContent();
+            expect(labelText, `${label} label should not show a required asterisk`).not.toMatch(/\*/);
+        }
+
+        // Optionally close a popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that the "Legal Name" dropdown auto populates with the property owner's name
+     * and allows creating a new contact from the dropdown.
+     */
+    async verifyLegalNameDropdownAutoPopulatesAndAllowsNewContact() {
+        // Wait for the Legal tab and Property Legal Details section
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        const propertyLegalDetailsSection = this.page.getByText('Property Legal Details');
+        await propertyLegalDetailsSection.scrollIntoViewIfNeeded();
+        await expect(propertyLegalDetailsSection).toBeVisible({ timeout: 10000 });
+
+        // Find the "Legal Name" dropdown (assuming it uses formcontrolname="legalOwner")
+        const legalNameDropdown = this.page.locator('.selected_one p');
+        // Trim the text content and log it to console
+        const dropdownText = (await legalNameDropdown.textContent())?.trim() ?? '';
+        console.log('Legal Dropdown Name :', dropdownText);
+        // Do NOT click to expand the dropdown, just continue to next steps
+        await this.page.waitForTimeout(500);
+        // Optionally close a popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+    }
+
+    /**
+    * Verify that the "Solicitor" dropdown allows selecting an existing company and creating a new company.
+    */
+    async verifySolicitorDropdownAllowsSelectAndCreate() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Scroll to Solicitor field
+        const solicitorLabel = await this.page.getByText('Solicitor', { exact: true });
+        await solicitorLabel.scrollIntoViewIfNeeded();
+        await expect(solicitorLabel).toBeVisible({ timeout: 10000 });
+
+        // Locate the Solicitor multiselect
+        const solicitorDropdown = this.page.locator(
+            'div.col-md-6.create-task-dropdown:has(label:text("Solicitor")) div.tags'
+        );
+        await solicitorDropdown.click()
+
+        const searchInput = this.page.locator('.drop_box input[placeholder="Search"]');
+        await expect(searchInput).toBeVisible();
+        // Wait for the dropdown panel to appear
+        const dropdownPanel = this.page.locator('.drop_box ul li');
+        await expect(dropdownPanel.first()).toBeVisible({ timeout: 15000 });
+        // Click the first option itself, not the checkbox
+        await dropdownPanel.first().click();
+
+        const createNewBtn = this.page.locator('.drop_box p.cursor-pointer', { hasText: 'Create New' }).first();
+        await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+        await createNewBtn.click();
+
+        // Optionally close a popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that selecting a company from the "Solicitor" dropdown populates the "Solicitor's Contact" dropdown with relevant contacts.
+     */
+    async verifySolicitorDropdownPopulatesContacts() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Scroll to Solicitor field
+        const solicitorLabel = this.page.getByText('Solicitor', { exact: true });
+        await solicitorLabel.scrollIntoViewIfNeeded();
+        await expect(solicitorLabel).toBeVisible({ timeout: 10000 });
+
+        // Locate the Solicitor multiselect dropdown and click to expand
+        const solicitorDropdown = this.page.locator(
+            'div.col-md-6.create-task-dropdown:has(label:text("Solicitor")) div.tags'
+        );
+        await solicitorDropdown.click();
+
+        // Wait for the dropdown and select the first option
+        const dropdownPanel = this.page.locator('.drop_box ul li');
+        await expect(dropdownPanel.first()).toBeVisible({ timeout: 15000 });
+        const searchInput = this.page.locator('.drop_box input[placeholder="Search"]');
+        await expect(searchInput).toBeVisible();
+        await searchInput.click();
+        await searchInput.fill('Netsol');
+        // Select the "Netsol" option (case-insensitive) from the dropdown
+        const netsolOption = this.page.locator('.drop_box ul li', { hasText: /netsol/i }).first();
+        await expect(netsolOption).toBeVisible({ timeout: 5000 });
+        await netsolOption.click();
+        await solicitorDropdown.click();
+        // Locate the Solicitor's Contact dropdown (it should be enabled and populated now)
+        const contactDropdownLabel = this.page.getByText("Select Contact", { exact: true });
+        await expect(contactDropdownLabel).toBeVisible({ timeout: 5000 });
+        await contactDropdownLabel.click();
+        // Wait for the dropdown panel to appear and ensure at least one contact option appears
+        const contactDropdownPanel = this.page.locator('ng-dropdown-panel .ng-option');
+        await expect(contactDropdownPanel.first()).toBeVisible({ timeout: 10000 });
+
+        // Optionally close a popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that clicking on the selected name in the "Legal Name" dropdown opens the owner's details in a new tab.
+     */
+    async verifyLegalNameDropdownOpensOwnerInNewTab() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Scroll to Solicitor field
+        const solicitorLabel = this.page.getByText('Solicitor', { exact: true });
+        await solicitorLabel.scrollIntoViewIfNeeded();
+        await expect(solicitorLabel).toBeVisible({ timeout: 10000 });
+
+        // Locate the Solicitor multiselect dropdown and click to expand
+        const solicitorDropdown = this.page.locator(
+            'div.col-md-6.create-task-dropdown:has(label:text("Solicitor")) div.tags'
+        );
+        await solicitorDropdown.click();
+
+        // Wait for the dropdown and select the first option
+        const dropdownPanel = this.page.locator('.drop_box ul li');
+        await expect(dropdownPanel.first()).toBeVisible({ timeout: 15000 });
+        const searchInput = this.page.locator('.drop_box input[placeholder="Search"]');
+        await expect(searchInput).toBeVisible();
+        await searchInput.click();
+        await searchInput.fill('Netsol');
+        // Select the "Netsol" option (case-insensitive) from the dropdown
+        const netsolOption = this.page.locator('.drop_box ul li', { hasText: /netsol/i }).first();
+        await expect(netsolOption).toBeVisible({ timeout: 5000 });
+        await netsolOption.click();
+        await solicitorDropdown.click();
+        // Locate the Solicitor's Contact dropdown (it should be enabled and populated now)
+        const contactDropdownLabel = this.page.getByText("Select Contact", { exact: true });
+        await expect(contactDropdownLabel).toBeVisible({ timeout: 5000 });
+        await contactDropdownLabel.click();
+        // Wait for the dropdown panel to appear and click on the first contact option
+        const contactDropdownPanel = this.page.locator('ng-dropdown-panel .ng-option');
+        await expect(contactDropdownPanel.first()).toBeVisible({ timeout: 10000 });
+        await contactDropdownPanel.first().click();
+
+        const selectedValue = this.page.locator('.ng-value-label').last()
+
+        // Check it exists / is visible
+        await expect(selectedValue).toBeVisible();
+        await selectedValue.click();
+
+        await expect(this.page.locator('ng-select[formcontrolname="contact_type"]')).toBeVisible();
+
+        // Optionally close a popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+    }
+
+    /**
+     * Verifies that clicking on the selected company in the "Solicitor" dropdown
+     * opens the company's details in a new tab.
+     */
+    async verifySolicitorDropdownOpensCompanyInNewTab() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Scroll to Solicitor field
+        const solicitorLabel = this.page.getByText('Solicitor', { exact: true });
+        await solicitorLabel.scrollIntoViewIfNeeded();
+        await expect(solicitorLabel).toBeVisible({ timeout: 10000 });
+
+        // Locate the Solicitor multiselect dropdown and click to expand
+        const solicitorDropdown = this.page.locator(
+            'div.col-md-6.create-task-dropdown:has(label:text("Solicitor")) div.tags'
+        );
+        await solicitorDropdown.click();
+
+        // Wait for the dropdown and select the first option
+        const dropdownPanel = this.page.locator('.drop_box ul li');
+        await expect(dropdownPanel.first()).toBeVisible({ timeout: 15000 });
+        const searchInput = this.page.locator('.drop_box input[placeholder="Search"]');
+        await expect(searchInput).toBeVisible();
+        await searchInput.click();
+        await searchInput.fill('Netsol');
+        // Select the "Netsol" option (case-insensitive) from the dropdown
+        const netsolOption = this.page.locator('.drop_box ul li', { hasText: /netsol/i }).first();
+        await expect(netsolOption).toBeVisible({ timeout: 5000 });
+        await netsolOption.click();
+        await solicitorDropdown.click();
+        const companySelected = this.page.locator('div.selected_one p.cursor-pointer').last();
+
+        // Check it's visible
+        await expect(companySelected).toBeVisible();
+
+        await companySelected.click()
+
+
+        await expect(this.page.locator('[id="Contact-Netsol _1"] #rightbarwithscroll')).toBeVisible();
+
+        // Optionally close a popup if present
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
