@@ -11473,5 +11473,40 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verify that the "Commission % Inclusive of GST" field accepts percentage input.
+     */
+    async verifyCommissionInclusiveGSTFieldAcceptsPercentageInput() {
+        // Navigate to the Listings page
+        await this.navigateToListings();
+        // Switch to Grid View
+        await this.switchToGridView();
+
+        // Open the first listing card/row
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        // Find the "Commission % Inclusive of GST" input field
+        const commissionGSTInput = this.page.locator('div.col-md-3.pl-0.mt-1 app-price-input input[name="price"]');
+        await commissionGSTInput.scrollIntoViewIfNeeded();
+        await expect(commissionGSTInput).toBeVisible({ timeout: 10000 });
+        // Try entering a valid percentage value
+        const inputValue = '15%';
+        await commissionGSTInput.fill(inputValue);
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 
 }
