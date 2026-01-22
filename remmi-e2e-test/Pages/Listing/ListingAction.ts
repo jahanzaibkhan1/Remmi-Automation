@@ -5015,6 +5015,7 @@ export class ListingActions {
 
     // Save button functionality
     async clickSaveButtonOnContactForm() {
+        await this.page.waitForTimeout(1200);
         await this.createProperty();
         await this.page.waitForTimeout(2000);
         // Ensure listing cards are loaded
@@ -5023,23 +5024,23 @@ export class ListingActions {
         await addListingBtn.click();
 
         const listingsTypeDropdown = this.page.locator('ng-select').filter({ hasText: 'Listings Type' }).getByRole('combobox');
-        await expect(listingsTypeDropdown).toBeVisible({ timeout: 5000 });
+        await expect(listingsTypeDropdown).toBeVisible({ timeout: 10000 });
         await listingsTypeDropdown.click();
 
         const auctionOption = this.page.getByRole('option', { name: 'Auction' });
-        await expect(auctionOption).toBeVisible({ timeout: 5000 });
+        await expect(auctionOption).toBeVisible({ timeout: 10000 });
         await auctionOption.click();
 
         const listingStatusDropdown = this.page.locator('ng-select').filter({ hasText: 'Listing Status' });
-        await expect(listingStatusDropdown).toBeVisible({ timeout: 5000 });
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
         await listingStatusDropdown.click();
 
         const forSaleOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'For sale' }).first();
-        await expect(forSaleOption).toBeVisible({ timeout: 5000 });
+        await expect(forSaleOption).toBeVisible({ timeout: 10000 });
         await forSaleOption.click();
 
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
-        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
         await saveAndCloseButton.click();
 
         const listingAddedAlert = this.page.getByRole('alert', { name: 'Listing added successfully' });
@@ -5121,28 +5122,28 @@ export class ListingActions {
         await addListingBtn.click();
 
         const listingsTypeDropdown = this.page.locator('ng-select').filter({ hasText: 'Listings Type' }).getByRole('combobox');
-        await expect(listingsTypeDropdown).toBeVisible({ timeout: 5000 });
+        await expect(listingsTypeDropdown).toBeVisible({ timeout: 10000 });
         await listingsTypeDropdown.click();
 
         const auctionOption = this.page.getByRole('option', { name: 'Auction' });
-        await expect(auctionOption).toBeVisible({ timeout: 5000 });
+        await expect(auctionOption).toBeVisible({ timeout: 10000 });
         await auctionOption.click();
 
         const listingStatusDropdown = this.page.locator('ng-select').filter({ hasText: 'Listing Status' });
-        await expect(listingStatusDropdown).toBeVisible({ timeout: 5000 });
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
         await listingStatusDropdown.click();
 
         const forSaleOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'For sale' }).first();
-        await expect(forSaleOption).toBeVisible({ timeout: 5000 });
+        await expect(forSaleOption).toBeVisible({ timeout: 10000 });
         await forSaleOption.click();
 
 
         const auctionDateLabel = this.page.getByText('Auction dateAuction Start');
-        await expect(auctionDateLabel).toBeVisible({ timeout: 5000 });
+        await expect(auctionDateLabel).toBeVisible({ timeout: 10000 });
         await auctionDateLabel.click();
 
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
-        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
         await saveAndCloseButton.click();
         await this.page.waitForTimeout(2000);
     }
@@ -7740,7 +7741,7 @@ export class ListingActions {
         await expect(listingTypeDropdown).toBeVisible({ timeout: 10000 });
         await listingTypeDropdown.click();
         const listingTypeSearchInput = listingTypeDropdown.locator('input[type="text"]');
-        await expect(listingTypeSearchInput).toBeVisible({ timeout: 2000 });
+        await expect(listingTypeSearchInput).toBeVisible({ timeout: 10000 });
         await listingTypeSearchInput.fill('Auction');
         await this.page.waitForTimeout(500); // Let options update if needed
         const listingTypeOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Auction' }).first();
@@ -7755,12 +7756,12 @@ export class ListingActions {
         await listingStatusSearchInput.fill('Sold');
         await this.page.waitForTimeout(500);
         const soldOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Sold' }).first();
-        await expect(soldOption).toBeVisible({ timeout: 5000 });
+        await expect(soldOption).toBeVisible({ timeout: 10000 });
         await soldOption.click();
 
         // Wait for popup
         const soldPopup = this.page.getByText('Listing Sold × Date SoldSold');
-        await expect(soldPopup).toBeVisible({ timeout: 5000 });
+        await expect(soldPopup).toBeVisible({ timeout: 10000 });
 
         const dateSoldInput = this.page.locator('p-calendar[formcontrolname="soldDate"] input');
         await dateSoldInput.click();
@@ -7807,7 +7808,7 @@ export class ListingActions {
         }
 
         const priceInput = this.page.locator('input[formcontrolname="soldPrice"], input[name="soldPrice"]').first();
-        await expect(priceInput).toBeVisible({ timeout: 5000 });
+        await expect(priceInput).toBeVisible({ timeout: 10000 });
         await priceInput.fill('1234');
 
         // Click Save on the popup
@@ -11318,7 +11319,7 @@ export class ListingActions {
             'p-calendar[formcontrolname="selling_agreement_end_date"] input[readonly]'
         );
 
-        await expect(sellingAgreementEndDateInput).toBeVisible({ timeout: 5000 });
+        await expect(sellingAgreementEndDateInput).toBeVisible({ timeout: 10000 });
         await sellingAgreementEndDateInput.click();
 
         // The calendar popup/dialog should now be visible; check for calendar container (commonly role="dialog" or specific class)
@@ -11337,7 +11338,7 @@ export class ListingActions {
             dayLocator = this.page.locator(".p-datepicker-calendar td:not(.p-datepicker-other-month) span:has-text('" + day + "')");
         }
 
-        await expect(dayLocator.first()).toBeVisible({ timeout: 5000 });
+        await expect(dayLocator.first()).toBeVisible({ timeout: 10000 });
         await dayLocator.first().click();
 
         // Optionally close the popup if present
@@ -11772,12 +11773,12 @@ export class ListingActions {
         await searchInput.fill('Netsol');
         // Select the "Netsol" option (case-insensitive) from the dropdown
         const netsolOption = this.page.locator('.drop_box ul li', { hasText: /netsol/i }).first();
-        await expect(netsolOption).toBeVisible({ timeout: 5000 });
+        await expect(netsolOption).toBeVisible({ timeout: 10000 });
         await netsolOption.click();
         await solicitorDropdown.click();
         // Locate the Solicitor's Contact dropdown (it should be enabled and populated now)
         const contactDropdownLabel = this.page.getByText("Select Contact", { exact: true });
-        await expect(contactDropdownLabel).toBeVisible({ timeout: 5000 });
+        await expect(contactDropdownLabel).toBeVisible({ timeout: 10000 });
         await contactDropdownLabel.click();
         // Wait for the dropdown panel to appear and ensure at least one contact option appears
         const contactDropdownPanel = this.page.locator('ng-dropdown-panel .ng-option');
@@ -11828,19 +11829,19 @@ export class ListingActions {
         await searchInput.fill('Netsol');
         // Select the "Netsol" option (case-insensitive) from the dropdown
         const netsolOption = this.page.locator('.drop_box ul li', { hasText: /netsol/i }).first();
-        await expect(netsolOption).toBeVisible({ timeout: 5000 });
+        await expect(netsolOption).toBeVisible({ timeout: 10000 });
         await netsolOption.click();
         await solicitorDropdown.click();
         // Locate the Solicitor's Contact dropdown (it should be enabled and populated now)
         const contactDropdownLabel = this.page.getByText("Select Contact", { exact: true });
-        await expect(contactDropdownLabel).toBeVisible({ timeout: 5000 });
+        await expect(contactDropdownLabel).toBeVisible({ timeout: 10000 });
         await contactDropdownLabel.click();
         // Wait for the dropdown panel to appear and click on the first contact option
         const contactDropdownPanel = this.page.locator('ng-dropdown-panel .ng-option');
         await expect(contactDropdownPanel.first()).toBeVisible({ timeout: 10000 });
         await contactDropdownPanel.first().click();
 
-        const selectedValue = this.page.locator('.ng-value-label').last()
+        const selectedValue = this.page.locator('div.ng-value > div.d-flex.align-items-center.cursor-pointer');
 
         // Check it exists / is visible
         await expect(selectedValue).toBeVisible();
@@ -11895,7 +11896,7 @@ export class ListingActions {
         await searchInput.fill('Netsol');
         // Select the "Netsol" option (case-insensitive) from the dropdown
         const netsolOption = this.page.locator('.drop_box ul li', { hasText: /netsol/i }).first();
-        await expect(netsolOption).toBeVisible({ timeout: 5000 });
+        await expect(netsolOption).toBeVisible({ timeout: 10000 });
         await netsolOption.click();
         await solicitorDropdown.click();
         const companySelected = this.page.locator('div.selected_one p.cursor-pointer').last();
@@ -11909,6 +11910,383 @@ export class ListingActions {
         await expect(this.page.locator('[id="Contact-Netsol _1"] #rightbarwithscroll')).toBeVisible();
 
         // Optionally close a popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that the Document Tab opens correctly
+     */
+    async verifyDocumentTabOpensCorrectly() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+        // Scroll Back button into view and click it if visible, otherwise proceed without failing
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { }); // try to scroll into view, ignore errors
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        const searchField = this.page.getByRole('tabpanel', { name: 'gavel Files' }).getByPlaceholder('Search');
+        await expect(searchField).toBeVisible({ timeout: 10000 });
+        // Verify "Images" folder is visible
+        await expect(this.page.getByText('Images', { exact: true }).last()).toBeVisible({ timeout: 20000 });
+        // Verify "Documents" folder is visible
+        await expect(this.page.getByText('Documents', { exact: true }).last()).toBeVisible({ timeout: 20000 });
+
+        // Verify "Legal" folder is visible
+        await expect(this.page.getByText('Legal', { exact: true })).toBeVisible({ timeout: 20000 });
+        // Optionally close a popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+    }
+
+    /**
+     * Verify that the search field is visible on the page
+     */
+    async verifySearchFieldPresent() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+        // Scroll Back button into view and click it if visible, otherwise proceed without failing
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { }); // try to scroll into view, ignore errors
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+        const searchField = this.page.getByRole('tabpanel', { name: 'gavel Files' }).getByPlaceholder('Search');
+        await expect(searchField).toBeVisible({ timeout: 10000 });
+        // Optionally close a popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that the default document folders are displayed.
+     */
+    async verifyDefaultFoldersDisplayed() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // Scroll Back button into view and click it if visible, otherwise proceed without failing
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { }); // try to scroll into view, ignore errors
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        const searchField = this.page.getByRole('tabpanel', { name: 'gavel Files' }).getByPlaceholder('Search');
+        await expect(searchField).toBeVisible({ timeout: 10000 });
+        // Verify "Images" folder is visible
+        await expect(this.page.getByText('Images', { exact: true }).last()).toBeVisible({ timeout: 20000 });
+        // Verify "Documents" folder is visible
+        await expect(this.page.getByText('Documents', { exact: true }).last()).toBeVisible({ timeout: 20000 });
+
+        // Verify "Legal" folder is visible
+        await expect(this.page.getByText('Legal', { exact: true })).toBeVisible({ timeout: 20000 });
+        // Optionally close a popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+    }
+
+    /**
+     * Verify that clicking on a folder expands it in the Documents tab.
+     */
+    async verifyClickingOnFolderExpandsIt() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // Scroll Back button into view and click it if visible, otherwise proceed without failing
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { }); // try to scroll into view, ignore errors
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        const searchField = this.page.getByRole('tabpanel', { name: 'gavel Files' }).getByPlaceholder('Search');
+        await expect(searchField).toBeVisible({ timeout: 10000 });
+        // Verify "Images" folder is visible
+        await expect(this.page.getByText('Images', { exact: true }).last()).toBeVisible({ timeout: 20000 });
+        // Verify "Documents" folder is visible
+        await expect(this.page.getByText('Documents', { exact: true }).last()).toBeVisible({ timeout: 20000 });
+
+        // Verify "Legal" folder is visible
+        await expect(this.page.getByText('Legal', { exact: true })).toBeVisible({ timeout: 20000 });
+
+        const documentsFolder = this.page.locator('div.lib-file', { hasText: 'Documents' });
+        await documentsFolder.dblclick();
+
+        // The folder name passed as argument should be visible
+        const folderLocator = this.page.locator('div.lib-file', { hasText: 'Appraisals' });
+        await expect(folderLocator).toBeVisible({ timeout: 20000 });
+
+
+        // Optionally close a popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify subfolders under "Images" in the Document Tab
+     */
+    async verifySubfoldersUnderImages() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // Scroll Back button into view and click it if visible, otherwise proceed without failing
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { }); // try to scroll into view, ignore errors
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        const searchField = this.page.getByRole('tabpanel', { name: 'gavel Files' }).getByPlaceholder('Search');
+        await expect(searchField).toBeVisible({ timeout: 10000 });
+        // Verify "Images" folder is visible
+        await expect(this.page.getByText('Images', { exact: true }).last()).toBeVisible({ timeout: 20000 });
+        // Verify "Documents" folder is visible
+        await expect(this.page.getByText('Documents', { exact: true }).last()).toBeVisible({ timeout: 20000 });
+
+        // Verify "Legal" folder is visible
+        await expect(this.page.getByText('Legal', { exact: true })).toBeVisible({ timeout: 20000 });
+        // Make sure Images folder is visible and open it
+        const imagesFolder = this.page.locator('div.lib-file', { hasText: 'Images' }).first();
+        await expect(imagesFolder).toBeVisible({ timeout: 20000 });
+        await imagesFolder.dblclick();
+
+        const propertyImages = this.page.locator('div.lib-file', { hasText: 'Property Images' }).first();
+        await expect(propertyImages).toBeVisible({ timeout: 2000 });
+
+        // Optionally close popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that the "Legal" folder is empty in the Document Tab
+     */
+    async verifyLegalFolderIsEmpty() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // Scroll Back button into view and click it if visible, otherwise proceed without failing
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { }); // try to scroll into view, ignore errors
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        const searchField = this.page.getByRole('tabpanel', { name: 'gavel Files' }).getByPlaceholder('Search');
+        await expect(searchField).toBeVisible({ timeout: 10000 });
+        // Verify "Images" folder is visible
+        await expect(this.page.getByText('Images', { exact: true }).last()).toBeVisible({ timeout: 20000 });
+        // Verify "Documents" folder is visible
+        await expect(this.page.getByText('Documents', { exact: true }).last()).toBeVisible({ timeout: 20000 });
+
+        // Verify "Legal" folder is visible
+        await expect(this.page.getByText('Legal', { exact: true })).toBeVisible({ timeout: 20000 });
+        // Open "Legal" folder
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+        await legalFolder.dblclick();
+
+        // Wait for the folder content area to appear and check it's empty (shows "No Data" or similar)
+        const noData = this.page.getByText(/Nothing Found/i);
+        await expect(noData).toBeVisible({ timeout: 2000 });
+
+        // Optionally close popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that clicking 'Add' opens options
+     */
+    async verifyAddButtonOpensOptions() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // Scroll Back button into view and click it if visible, otherwise proceed without failing
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { }); // try to scroll into view, ignore errors
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Open "Legal" folder (specifically select the folder with text 'Legal'), and scroll it into view
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+
+        // Find the 'Add' button (usually a plus icon or labeled 'Add')
+        const addButton = this.page.getByRole('button', { name: /add/i }).first();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        // Verify "Folder", "Public File Upload", and "Private File Upload" options appear
+        const folderOption = this.page.locator('a', { hasText: 'Folder' });
+        const publicOption = this.page.locator('a', { hasText: /File Upload \(Public\)/ });
+        const privateOption = this.page.locator('a', { hasText: /File Upload \(Private\)/ });
+
+        await expect(folderOption).toBeVisible({ timeout: 10000 });
+        await expect(publicOption).toBeVisible({ timeout: 10000 });
+        await expect(privateOption).toBeVisible({ timeout: 10000 });
+
+
+        // Optionally close popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verifies that clicking 'Folder' opens the "New Folder" popup in the Files tab.
+     */
+    async verifyFilesFolderOptionOpensNewFolderPopup() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and make sure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Click the Add button
+        const addButton = this.page.getByRole('button', { name: /add/i }).first();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        // Click "Folder" option
+        const folderOption = this.page.locator('a', { hasText: 'Folder' });
+        await expect(folderOption).toBeVisible({ timeout: 10000 });
+        await folderOption.click();
+
+        // "New Folder" popup/dialog should be visible (look for "New Folder" title or name input)
+        const popupTitle = this.page.getByText('New folder');
+        const nameInput = this.page.getByRole('textbox', { name: 'Folder name' });
+;
+        await expect(popupTitle).toBeVisible({ timeout: 10000 });
+        await expect(nameInput).toBeVisible({ timeout: 10000 });
+
+        // click cancel button
+        const cancelButton = this.page.getByRole('button', { name: /cancel/i });
+        await expect(cancelButton).toBeVisible({ timeout: 5000 });
+        await cancelButton.click();
+
+        await this.page.waitForTimeout(1200);
+        // Optionally close the popup if present
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });

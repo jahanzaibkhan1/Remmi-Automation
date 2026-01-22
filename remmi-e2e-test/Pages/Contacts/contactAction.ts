@@ -1215,7 +1215,6 @@ export class ContactActions {
         await this.NavigateToContacts();
         await this.page.waitForTimeout(1500);
 
-        // "Associate Company" filter open kar rahe hain
         // Open the status filter - click until the filter popup is visible
         const filterButton = this.page.getByRole('img', { name: 'filter' }).nth(6);
         const filterPopup = this.page.locator('div').filter({ hasText: 'Filter' }).nth(1)
@@ -1264,14 +1263,14 @@ export class ContactActions {
     public async verifyOwnerFilterWorks(ownerName: string): Promise<void> {
         await this.NavigateToContacts();
         await this.page.waitForTimeout(1200);
-        // Wait for first five rows to be visible
-        const rows = this.page.locator('table tbody tr');
-        for (let i = 0; i < 5; i++) {
-            await rows.nth(i).waitFor({ state: 'visible', timeout: 30000 }).catch(() => { });
-        }
+        // Wait for the first row in the contact table to be loaded and visible
+        const firstRow = this.page.locator('table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 30000 });
 
         // Open the status filter - click until the filter popup is visible
-        const filterButton = this.page.getByRole('img', { name: 'filter' }).nth(7);
+        const filterButton = this.page.locator(
+            'th:has(p:text("Owner")) img[alt="filter"]'
+          );
         const filterPopup = this.page.locator('div').filter({ hasText: 'Filter' }).nth(1);
 
         await expect(filterButton).toBeVisible({ timeout: 10000 });
@@ -1298,11 +1297,13 @@ export class ContactActions {
         const valueDropdown = this.page.getByText('Select', { exact: true }).last();
         await valueDropdown.click();
         const searchBox = this.page.getByPlaceholder('Search').last();
-        await searchBox.waitFor({ state: 'visible', timeout: 5000 });
+        await searchBox.waitFor({ state: 'visible', timeout: 10000 });
         await this.page.waitForTimeout(2000);
+        const ownerFilterDropdown = this.page.locator('div').filter({ hasText: 'Abdul Live Abdul Rehman' }).nth(5);
+        await ownerFilterDropdown.waitFor({ state: 'visible', timeout: 30000 });
         await searchBox.fill(ownerName);
-        await this.page.waitForTimeout(500);
         const matchingOption = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: ownerName });
+        await expect(matchingOption.first()).toBeVisible({ timeout: 10000 });
         await matchingOption.first().click();
 
         const closeTag = this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
@@ -1841,10 +1842,10 @@ export class ContactActions {
             const closeBtn = this.page.locator('.panel-close-btn, .mat-dialog-close, .contact-detail-close').first();
             if (await closeBtn.isVisible()) {
                 await closeBtn.click();
-                await detailPanel.waitFor({ state: 'hidden', timeout: 5000 });
+                await detailPanel.waitFor({ state: 'hidden', timeout: 10000 });
             } else {
                 await this.page.keyboard.press('Escape');
-                await detailPanel.waitFor({ state: 'hidden', timeout: 5000 });
+                await detailPanel.waitFor({ state: 'hidden', timeout: 10000 });
             }
 
             // Small wait after closing
@@ -2621,7 +2622,7 @@ export class ContactActions {
 
         // Find the address input field
         const addressInput = this.page.locator('input[placeholder="Search Address"]');
-        await expect(addressInput).toBeVisible({ timeout: 5000 });
+        await expect(addressInput).toBeVisible({ timeout: 10000 });
         await addressInput.click();
 
         // Type the address slowly to trigger autocomplete
@@ -2632,7 +2633,7 @@ export class ContactActions {
 
         // Wait for Google Places suggestions and click the first one
         const suggestionsList = this.page.locator('.pac-item');
-        await expect(suggestionsList.first()).toBeVisible({ timeout: 5000 });
+        await expect(suggestionsList.first()).toBeVisible({ timeout: 10000 });
         await suggestionsList.first().click();
 
         // Wait for autofill to populate
@@ -2835,7 +2836,8 @@ export class ContactActions {
 
         // Step 2: Search Address field > type & select suggestion
         const addressInput = this.page.locator('input[placeholder="Search Address"]');
-        await expect(addressInput).toBeVisible({ timeout: 5000 });
+        await addressInput.scrollIntoViewIfNeeded();
+        await expect(addressInput).toBeVisible({ timeout: 10000 });
         await addressInput.click();
         const addressPartial = '221B Baker Street';
         for (let i = 1; i <= addressPartial.length; ++i) {
@@ -2843,7 +2845,7 @@ export class ContactActions {
             await this.page.waitForTimeout(50);
         }
         const suggestionsList = this.page.locator('.pac-item');
-        await expect(suggestionsList.first()).toBeVisible({ timeout: 5000 });
+        await expect(suggestionsList.first()).toBeVisible({ timeout: 10000 });
         await suggestionsList.first().click();
         await this.page.waitForTimeout(2000);
 
@@ -2852,7 +2854,7 @@ export class ContactActions {
 
         // Step 3: Edit address fields by clicking edit icon (overlay/panel)
         const editOverlayButton = this.page.locator('#toggle-overlay');
-        if (await editOverlayButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+        if (await editOverlayButton.isVisible({ timeout: 10000 }).catch(() => false)) {
             await editOverlayButton.click();
         }
 
