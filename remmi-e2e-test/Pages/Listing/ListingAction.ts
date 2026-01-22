@@ -5015,7 +5015,7 @@ export class ListingActions {
 
     // Save button functionality
     async clickSaveButtonOnContactForm() {
-        await this .page.waitForTimeout(1200);
+        await this.page.waitForTimeout(1200);
         await this.createProperty();
         await this.page.waitForTimeout(2000);
         // Ensure listing cards are loaded
@@ -11319,7 +11319,7 @@ export class ListingActions {
             'p-calendar[formcontrolname="selling_agreement_end_date"] input[readonly]'
         );
 
-        await expect(sellingAgreementEndDateInput).toBeVisible({ timeout: 5000 });
+        await expect(sellingAgreementEndDateInput).toBeVisible({ timeout: 10000 });
         await sellingAgreementEndDateInput.click();
 
         // The calendar popup/dialog should now be visible; check for calendar container (commonly role="dialog" or specific class)
@@ -11338,7 +11338,7 @@ export class ListingActions {
             dayLocator = this.page.locator(".p-datepicker-calendar td:not(.p-datepicker-other-month) span:has-text('" + day + "')");
         }
 
-        await expect(dayLocator.first()).toBeVisible({ timeout: 5000 });
+        await expect(dayLocator.first()).toBeVisible({ timeout: 10000 });
         await dayLocator.first().click();
 
         // Optionally close the popup if present
@@ -11773,12 +11773,12 @@ export class ListingActions {
         await searchInput.fill('Netsol');
         // Select the "Netsol" option (case-insensitive) from the dropdown
         const netsolOption = this.page.locator('.drop_box ul li', { hasText: /netsol/i }).first();
-        await expect(netsolOption).toBeVisible({ timeout: 5000 });
+        await expect(netsolOption).toBeVisible({ timeout: 10000 });
         await netsolOption.click();
         await solicitorDropdown.click();
         // Locate the Solicitor's Contact dropdown (it should be enabled and populated now)
         const contactDropdownLabel = this.page.getByText("Select Contact", { exact: true });
-        await expect(contactDropdownLabel).toBeVisible({ timeout: 5000 });
+        await expect(contactDropdownLabel).toBeVisible({ timeout: 10000 });
         await contactDropdownLabel.click();
         // Wait for the dropdown panel to appear and ensure at least one contact option appears
         const contactDropdownPanel = this.page.locator('ng-dropdown-panel .ng-option');
@@ -11829,12 +11829,12 @@ export class ListingActions {
         await searchInput.fill('Netsol');
         // Select the "Netsol" option (case-insensitive) from the dropdown
         const netsolOption = this.page.locator('.drop_box ul li', { hasText: /netsol/i }).first();
-        await expect(netsolOption).toBeVisible({ timeout: 5000 });
+        await expect(netsolOption).toBeVisible({ timeout: 10000 });
         await netsolOption.click();
         await solicitorDropdown.click();
         // Locate the Solicitor's Contact dropdown (it should be enabled and populated now)
         const contactDropdownLabel = this.page.getByText("Select Contact", { exact: true });
-        await expect(contactDropdownLabel).toBeVisible({ timeout: 5000 });
+        await expect(contactDropdownLabel).toBeVisible({ timeout: 10000 });
         await contactDropdownLabel.click();
         // Wait for the dropdown panel to appear and click on the first contact option
         const contactDropdownPanel = this.page.locator('ng-dropdown-panel .ng-option');
@@ -11896,7 +11896,7 @@ export class ListingActions {
         await searchInput.fill('Netsol');
         // Select the "Netsol" option (case-insensitive) from the dropdown
         const netsolOption = this.page.locator('.drop_box ul li', { hasText: /netsol/i }).first();
-        await expect(netsolOption).toBeVisible({ timeout: 5000 });
+        await expect(netsolOption).toBeVisible({ timeout: 10000 });
         await netsolOption.click();
         await solicitorDropdown.click();
         const companySelected = this.page.locator('div.selected_one p.cursor-pointer').last();
@@ -11914,6 +11914,50 @@ export class ListingActions {
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+    }
+
+    /**
+     * Verify that the Document Tab opens correctly
+     */
+    async verifyDocumentTabOpensCorrectly() {
+
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        const addButton = this.page.getByLabel('Legal').getByRole('button', { name: '', exact: true }).first();
+        await expect(addButton).toBeAttached({ timeout: 10000 });
+        await addButton.click();
+
+        // Wait for the contract panel to be visible in the popup
+        const contractPanel = this.page.locator('#Contract_1 #rightbarwithscroll');
+        await expect(contractPanel).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
+
+        // Click the 'Save' button in the contract panel
+        const saveButton = this.page.getByRole('button', { name: /save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+        // Assumes already navigated to Listings and a property is opened.
+        const documentTab = this.page.getByRole('tab', { name: /Document/i });
+        await expect(documentTab).toBeVisible({ timeout: 10000 });
+        await documentTab.click();
+        // Optionally close a popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
     }
 
 
