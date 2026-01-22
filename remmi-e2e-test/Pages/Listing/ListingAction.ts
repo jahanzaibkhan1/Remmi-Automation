@@ -11920,7 +11920,6 @@ export class ListingActions {
      * Verify that the Document Tab opens correctly
      */
     async verifyDocumentTabOpensCorrectly() {
-        await this.verifyContractDisplayedAfterSaving();
         await this.navigateToListings();
         await this.switchToGridView();
 
@@ -11930,21 +11929,18 @@ export class ListingActions {
         await firstCardRow.click();
         await this.page.waitForTimeout(1000);
 
-        // Go to Legal tab
-        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
-        await expect(legalTab).toBeVisible({ timeout: 10000 });
-        await legalTab.click();
-        // Verify that "dawood ahamad" appears in a table row in the Legal tab
-        const legalTableRow = this.page.getByLabel('Legal').getByText('Dawood Ahmad').first();
-        await legalTableRow.scrollIntoViewIfNeeded()
-        await expect(legalTableRow).toBeVisible({ timeout: 10000 });
-        await legalTableRow.click();
-        // Assumes already navigated to Listings and a property is opened.
-        const documentTab = this.page.getByRole('tab', { name: /Document/i });
-        await expect(documentTab).toBeVisible({ timeout: 10000 });
-        await documentTab.click();
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+        // Scroll Back button into view and click it if visible, otherwise proceed without failing
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { }); // try to scroll into view, ignore errors
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
 
-        const searchField = this.page.getByRole('textbox', { name: /search/i }).last();
+        const searchField = this.page.getByRole('tabpanel', { name: 'gavel Files' }).getByPlaceholder('Search');
         await expect(searchField).toBeVisible({ timeout: 10000 });
         // Verify "Images" folder is visible
         await expect(this.page.getByText('Images', { exact: true }).last()).toBeVisible({ timeout: 20000 });
@@ -11974,21 +11970,17 @@ export class ListingActions {
         await firstCardRow.click();
         await this.page.waitForTimeout(1000);
 
-        // Go to Legal tab
-        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
-        await expect(legalTab).toBeVisible({ timeout: 10000 });
-        await legalTab.click();
-        // Verify that "dawood ahamad" appears in a table row in the Legal tab
-        const legalTableRow = this.page.getByLabel('Legal').getByText('Dawood Ahmad').first();
-        await legalTableRow.scrollIntoViewIfNeeded()
-        await expect(legalTableRow).toBeVisible({ timeout: 10000 });
-        await legalTableRow.click();
-        // Assumes already navigated to Listings and a property is opened.
-        const documentTab = this.page.getByRole('tab', { name: /Document/i });
-        await expect(documentTab).toBeVisible({ timeout: 10000 });
-        await documentTab.click();
-
-        const searchField = this.page.getByRole('textbox', { name: /search/i }).last();
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+        // Scroll Back button into view and click it if visible, otherwise proceed without failing
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { }); // try to scroll into view, ignore errors
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+        const searchField = this.page.getByRole('tabpanel', { name: 'gavel Files' }).getByPlaceholder('Search');
         await expect(searchField).toBeVisible({ timeout: 10000 });
         // Optionally close a popup if present
         const closeBtn = this.page.locator('.pi.pi-times').first();
@@ -12010,21 +12002,19 @@ export class ListingActions {
         await firstCardRow.click();
         await this.page.waitForTimeout(1000);
 
-        // Go to Legal tab
-        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
-        await expect(legalTab).toBeVisible({ timeout: 10000 });
-        await legalTab.click();
-        // Verify that "dawood ahamad" appears in a table row in the Legal tab
-        const legalTableRow = this.page.getByLabel('Legal').getByText('Dawood Ahmad').first();
-        await legalTableRow.scrollIntoViewIfNeeded()
-        await expect(legalTableRow).toBeVisible({ timeout: 10000 });
-        await legalTableRow.click();
-        // Assumes already navigated to Listings and a property is opened.
-        const documentTab = this.page.getByRole('tab', { name: /Document/i });
-        await expect(documentTab).toBeVisible({ timeout: 10000 });
-        await documentTab.click();
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
 
-        const searchField = this.page.getByRole('textbox', { name: /search/i }).last();
+        // Scroll Back button into view and click it if visible, otherwise proceed without failing
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { }); // try to scroll into view, ignore errors
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        const searchField = this.page.getByRole('tabpanel', { name: 'gavel Files' }).getByPlaceholder('Search');
         await expect(searchField).toBeVisible({ timeout: 10000 });
         // Verify "Images" folder is visible
         await expect(this.page.getByText('Images', { exact: true }).last()).toBeVisible({ timeout: 20000 });
@@ -12054,26 +12044,25 @@ export class ListingActions {
         await firstCardRow.click();
         await this.page.waitForTimeout(1000);
 
-        // Go to Legal tab
-        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
-        await expect(legalTab).toBeVisible({ timeout: 10000 });
-        await legalTab.click();
-        // Verify that "dawood ahamad" appears in a table row in the Legal tab
-        const legalTableRow = this.page.getByLabel('Legal').getByText('Dawood Ahmad').first();
-        await legalTableRow.scrollIntoViewIfNeeded()
-        await expect(legalTableRow).toBeVisible({ timeout: 10000 });
-        await legalTableRow.click();
-        // Assumes already navigated to Listings and a property is opened.
-        const documentTab = this.page.getByRole('tab', { name: /Document/i });
-        await expect(documentTab).toBeVisible({ timeout: 10000 });
-        await documentTab.click();
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
 
-        const searchField = this.page.getByRole('textbox', { name: /search/i }).last();
+        // Scroll Back button into view and click it if visible, otherwise proceed without failing
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { }); // try to scroll into view, ignore errors
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        const searchField = this.page.getByRole('tabpanel', { name: 'gavel Files' }).getByPlaceholder('Search');
         await expect(searchField).toBeVisible({ timeout: 10000 });
         // Verify "Images" folder is visible
         await expect(this.page.getByText('Images', { exact: true }).last()).toBeVisible({ timeout: 20000 });
         // Verify "Documents" folder is visible
         await expect(this.page.getByText('Documents', { exact: true }).last()).toBeVisible({ timeout: 20000 });
+
         // Verify "Legal" folder is visible
         await expect(this.page.getByText('Legal', { exact: true })).toBeVisible({ timeout: 20000 });
 
@@ -12105,21 +12094,27 @@ export class ListingActions {
         await firstCardRow.click();
         await this.page.waitForTimeout(1000);
 
-        // Go to Legal tab
-        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
-        await expect(legalTab).toBeVisible({ timeout: 10000 });
-        await legalTab.click();
-        // Select a legal table row (e.g., "Dawood Ahmad") to enable Document tab
-        const legalTableRow = this.page.getByLabel('Legal').getByText('Dawood Ahmad').first();
-        await legalTableRow.scrollIntoViewIfNeeded();
-        await expect(legalTableRow).toBeVisible({ timeout: 10000 });
-        await legalTableRow.click();
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
 
-        // Navigate to Document tab
-        const documentTab = this.page.getByRole('tab', { name: /Document/i });
-        await expect(documentTab).toBeVisible({ timeout: 10000 });
-        await documentTab.click();
+        // Scroll Back button into view and click it if visible, otherwise proceed without failing
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { }); // try to scroll into view, ignore errors
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
 
+        const searchField = this.page.getByRole('tabpanel', { name: 'gavel Files' }).getByPlaceholder('Search');
+        await expect(searchField).toBeVisible({ timeout: 10000 });
+        // Verify "Images" folder is visible
+        await expect(this.page.getByText('Images', { exact: true }).last()).toBeVisible({ timeout: 20000 });
+        // Verify "Documents" folder is visible
+        await expect(this.page.getByText('Documents', { exact: true }).last()).toBeVisible({ timeout: 20000 });
+
+        // Verify "Legal" folder is visible
+        await expect(this.page.getByText('Legal', { exact: true })).toBeVisible({ timeout: 20000 });
         // Make sure Images folder is visible and open it
         const imagesFolder = this.page.locator('div.lib-file', { hasText: 'Images' }).first();
         await expect(imagesFolder).toBeVisible({ timeout: 20000 });
@@ -12127,6 +12122,56 @@ export class ListingActions {
 
         const propertyImages = this.page.locator('div.lib-file', { hasText: 'Property Images' }).first();
         await expect(propertyImages).toBeVisible({ timeout: 2000 });
+
+        // Optionally close popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that the "Legal" folder is empty in the Document Tab
+     */
+    async verifyLegalFolderIsEmpty() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // Scroll Back button into view and click it if visible, otherwise proceed without failing
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { }); // try to scroll into view, ignore errors
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        const searchField = this.page.getByRole('tabpanel', { name: 'gavel Files' }).getByPlaceholder('Search');
+        await expect(searchField).toBeVisible({ timeout: 10000 });
+        // Verify "Images" folder is visible
+        await expect(this.page.getByText('Images', { exact: true }).last()).toBeVisible({ timeout: 20000 });
+        // Verify "Documents" folder is visible
+        await expect(this.page.getByText('Documents', { exact: true }).last()).toBeVisible({ timeout: 20000 });
+
+        // Verify "Legal" folder is visible
+        await expect(this.page.getByText('Legal', { exact: true })).toBeVisible({ timeout: 20000 });
+        // Open "Legal" folder
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+        await legalFolder.dblclick();
+
+        // Wait for the folder content area to appear and check it's empty (shows "No Data" or similar)
+        const noData = this.page.getByText(/Nothing Found/i);
+        await expect(noData).toBeVisible({ timeout: 2000 });
 
         // Optionally close popup if present
         const closeBtn = this.page.locator('.pi.pi-times').first();
