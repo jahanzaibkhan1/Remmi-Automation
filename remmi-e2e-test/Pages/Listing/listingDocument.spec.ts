@@ -40,4 +40,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyClickingOnFolderExpandsIt();
   });
 
+  test('Test 5: Verify subfolders under "Document in the Document Tab', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyClickingOnFolderExpandsIt();
+  });
+  
 });
