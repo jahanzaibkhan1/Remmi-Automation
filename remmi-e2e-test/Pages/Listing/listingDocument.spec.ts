@@ -24,4 +24,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyDocumentTabOpensCorrectly();
   });
+
+  test('Test 2: Verify the presence of search field in the Document Tab', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifySearchFieldPresent();
+  });
+
 });

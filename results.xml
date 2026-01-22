@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="62.69064299999923">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-22T06:44:11.878Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.417" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that the Document Tab opens correctly" classname="Pages\Listing\listingDocument.spec.ts" time="55.417">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.62592500000075">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-22T08:04:49.853Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.812" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify the presence of search field in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="29.812">
 </testcase>
 </testsuite>
 </testsuites>

@@ -11952,12 +11952,61 @@ export class ListingActions {
         const documentTab = this.page.getByRole('tab', { name: /Document/i });
         await expect(documentTab).toBeVisible({ timeout: 10000 });
         await documentTab.click();
+
+        const searchField = this.page.getByRole('textbox', { name: /search/i }).last();
+        await expect(searchField).toBeVisible({ timeout: 10000 });
         // Optionally close a popup if present
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
 
+    }
+
+    /**
+     * Verify that the search field is visible on the page
+     */
+    async verifySearchFieldPresent() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+
+        const addButton = this.page.getByLabel('Legal').getByRole('button', { name: '', exact: true }).first();
+        await expect(addButton).toBeAttached({ timeout: 10000 });
+        await addButton.click();
+
+        // Wait for the contract panel to be visible in the popup
+        const contractPanel = this.page.locator('#Contract_1 #rightbarwithscroll');
+        await expect(contractPanel).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
+
+        // Click the 'Save' button in the contract panel
+        const saveButton = this.page.getByRole('button', { name: /save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+        // Assumes already navigated to Listings and a property is opened.
+        const documentTab = this.page.getByRole('tab', { name: /Document/i });
+        await expect(documentTab).toBeVisible({ timeout: 10000 });
+        await documentTab.click();
+
+        const searchField = this.page.getByRole('textbox', { name: /search/i }).last();
+        await expect(searchField).toBeVisible({ timeout: 10000 });
+
+        // Optionally close a popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
     }
 
 
