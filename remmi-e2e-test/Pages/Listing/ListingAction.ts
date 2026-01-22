@@ -12092,5 +12092,48 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verify subfolders under "Images" in the Document Tab
+     */
+    async verifySubfoldersUnderImages() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Legal tab
+        const legalTab = this.page.getByRole('tab', { name: /Legal/i });
+        await expect(legalTab).toBeVisible({ timeout: 10000 });
+        await legalTab.click();
+        // Select a legal table row (e.g., "Dawood Ahmad") to enable Document tab
+        const legalTableRow = this.page.getByLabel('Legal').getByText('Dawood Ahmad').first();
+        await legalTableRow.scrollIntoViewIfNeeded();
+        await expect(legalTableRow).toBeVisible({ timeout: 10000 });
+        await legalTableRow.click();
+
+        // Navigate to Document tab
+        const documentTab = this.page.getByRole('tab', { name: /Document/i });
+        await expect(documentTab).toBeVisible({ timeout: 10000 });
+        await documentTab.click();
+
+        // Make sure Images folder is visible and open it
+        const imagesFolder = this.page.locator('div.lib-file', { hasText: 'Images' }).first();
+        await expect(imagesFolder).toBeVisible({ timeout: 20000 });
+        await imagesFolder.dblclick();
+
+        const propertyImages = this.page.locator('div.lib-file', { hasText: 'Property Images' }).first();
+        await expect(propertyImages).toBeVisible({ timeout: 2000 });
+
+        // Optionally close popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 
 }

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.130732999999076">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-22T10:01:12.699Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.282" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify subfolders under &quot;Document in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="31.282">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.59483600000292">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-22T10:05:30.691Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.4" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify subfolders under &quot;Images&quot; in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="33.4">
 </testcase>
 </testsuite>
 </testsuites>
