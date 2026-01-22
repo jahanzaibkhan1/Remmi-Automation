@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.59483600000292">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-22T10:05:30.691Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.4" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify subfolders under &quot;Images&quot; in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="33.4">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="66.53767700000107">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-22T11:07:04.250Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.769" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that the &quot;Legal&quot; folder is empty in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="54.769">
 </testcase>
 </testsuite>
 </testsuites>

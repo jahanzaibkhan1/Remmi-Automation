@@ -50,4 +50,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifySubfoldersUnderImages();
     });
 
+    test('Test 7: Verify that the "Legal" folder is empty in the Document Tab', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyLegalFolderIsEmpty();
+    });
+
 });
