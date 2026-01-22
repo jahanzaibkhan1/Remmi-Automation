@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.006998999997975">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-22T09:57:05.064Z" hostname="chromium" tests="1" failures="0" skipped="0" time="43.433" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that clicking on a folder expands it in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="43.433">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.130732999999076">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-22T10:01:12.699Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.282" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify subfolders under &quot;Document in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="31.282">
 </testcase>
 </testsuite>
 </testsuites>
