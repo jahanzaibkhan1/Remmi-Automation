@@ -12180,5 +12180,58 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verify that clicking 'Add' opens options
+     */
+    async verifyAddButtonOpensOptions() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // Scroll Back button into view and click it if visible, otherwise proceed without failing
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { }); // try to scroll into view, ignore errors
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Open "Legal" folder (specifically select the folder with text 'Legal'), and scroll it into view
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+
+        // Find the 'Add' button (usually a plus icon or labeled 'Add')
+        const addButton = this.page.getByRole('button', { name: /add/i }).first();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        // Verify "Folder", "Public File Upload", and "Private File Upload" options appear
+        const folderOption = this.page.locator('a', { hasText: 'Folder' });
+        const publicOption = this.page.locator('a', { hasText: /File Upload \(Public\)/ });
+        const privateOption = this.page.locator('a', { hasText: /File Upload \(Private\)/ });
+
+        await expect(folderOption).toBeVisible({ timeout: 10000 });
+        await expect(publicOption).toBeVisible({ timeout: 10000 });
+        await expect(privateOption).toBeVisible({ timeout: 10000 });
+
+
+        // Optionally close popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 
 }

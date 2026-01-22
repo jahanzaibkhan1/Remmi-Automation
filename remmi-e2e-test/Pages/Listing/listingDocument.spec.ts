@@ -55,4 +55,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyLegalFolderIsEmpty();
     });
 
+    test('Test 8: Verify that clicking Add opens options in the Document Tab', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyAddButtonOpensOptions();
+    });
+
 });

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="66.53767700000107">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-22T11:07:04.250Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.769" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that the &quot;Legal&quot; folder is empty in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="54.769">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="80.25767100000009">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-22T11:27:12.642Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.824" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that clicking Add opens options in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="45.824">
 </testcase>
 </testsuite>
 </testsuites>
