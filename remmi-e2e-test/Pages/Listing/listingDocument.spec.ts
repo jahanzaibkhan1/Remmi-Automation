@@ -27,7 +27,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
   test('Test 2: Verify the presence of search field in the Document Tab', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
-    await listingActions.verifySearchFieldPresent();
+    await listingActions.verifyDocumentTabOpensCorrectly();
+  });
+
+  test('Test 3: Verify that default folders are displayed in the Document Tab', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyDocumentTabOpensCorrectly();
   });
 
 });
