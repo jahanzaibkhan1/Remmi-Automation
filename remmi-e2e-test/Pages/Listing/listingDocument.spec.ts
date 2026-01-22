@@ -60,4 +60,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyAddButtonOpensOptions();
     });
 
+    test('Test 9: Verify that clicking "Folder" opens the "New Folder" popup in the Document Tab', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyFilesFolderOptionOpensNewFolderPopup();
+    });
+
 });
