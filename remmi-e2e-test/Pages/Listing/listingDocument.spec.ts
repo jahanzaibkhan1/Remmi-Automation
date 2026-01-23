@@ -118,4 +118,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyDoubleClickOpenFilePreview();
     });
 
+    test('Test 19: Verify right clicking a folder shows context menu options', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyFolderContextMenuOption();
+    });
+
 });
