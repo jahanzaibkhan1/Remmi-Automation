@@ -12801,6 +12801,62 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verify that right clicking a folder shows options for Share, Rename, Make a Copy, and Remove
+     */
+    public async verifyFolderContextMenuOption(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first property card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => {});
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and make sure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Find the "Legal" folder (or any folder) and make sure it's visible
+        const folder = this.page.locator('div.lib-file').first();
+        await folder.scrollIntoViewIfNeeded();
+        await expect(folder).toBeVisible({ timeout: 20000 });
+        // Right-click the folder to open context menu
+        await folder.click({ button: 'right' });
+        await this.page.waitForTimeout(1000);
+
+        // Check for Share, Rename, Make a Copy, Remove options in context menu
+        const shareOption = this.page.getByText(/Share/i);
+        const renameOption = this.page.getByText(/Rename/i);
+        const makeCopyOption = this.page.getByText(/Make a Copy/i);
+        const removeOption = this.page.getByText(/Remove/i);
+
+        await expect(shareOption).toBeVisible({ timeout: 3000 });
+        await expect(renameOption).toBeVisible({ timeout: 3000 });
+        await expect(makeCopyOption).toBeVisible({ timeout: 3000 });
+        await expect(removeOption).toBeVisible({ timeout: 3000 });
+
+        // Optionally close the dialog again using ".pi.pi-times" icon if still open
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
+        }
+
+    }
+
 
 
 }
