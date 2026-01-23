@@ -84,6 +84,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyPublicFileUploadAllowUploadingFile(imagePath);
     });
 
+
     test('Test 13: Verify that clicking "Private File Upload" allows uploading a file', async ({ sessionPage }) => {
         const listingActions = new ListingActions(sessionPage);
         // Use an image path within your repo's PropertyImages folder for this test file
