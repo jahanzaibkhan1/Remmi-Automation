@@ -12579,8 +12579,14 @@ export class ListingActions {
         if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
             await backButton.click();
         }
-        // Check for download element in the same context
-        const downloadLocator = this.page.locator('img.img-hub2[src*="propertyImage"]').last()
+         // Find the "Legal" folder and make sure it's visible
+         const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+         await legalFolder.scrollIntoViewIfNeeded();
+         await expect(legalFolder).toBeVisible({ timeout: 20000 });
+ 
+        // Scroll to the download element (the last private image) and click it
+        const downloadLocator = this.page.locator('img.img-hub2[src*="propertyImage"]').last();
+        await downloadLocator.scrollIntoViewIfNeeded();
         await downloadLocator.click();
 
         const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
@@ -12624,16 +12630,22 @@ export class ListingActions {
         const filesTab = this.page.getByRole('tab', { name: /Files/i });
         await expect(filesTab).toBeVisible({ timeout: 10000 });
         await filesTab.click();
-
         // Optionally, click back if Back button appears (in subfolder etc)
         const backButton = this.page.getByRole('link', { name: ' Back' });
-        await backButton.scrollIntoViewIfNeeded().catch(() => {});
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
         if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
             await backButton.click();
         }
 
+        // Find the "Legal" folder and make sure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+
         // Try to download a private file (simulate by finding file with padlock or propertyImage)
         const privateFileLocator = this.page.locator('img.img-hub2[src*="propertyImage"]').last();
+        await privateFileLocator.scrollIntoViewIfNeeded();
         await expect(privateFileLocator).toBeVisible({ timeout: 10000 });
         await privateFileLocator.click();
 
@@ -12651,7 +12663,7 @@ export class ListingActions {
         await saveButton.click();
 
         const pinError = this.page.getByText('Please enter PIN first');
-        await expect(pinError).toBeVisible({timeout:10000});
+        await expect(pinError).toBeVisible({ timeout: 10000 });
         await this.page.waitForTimeout(1000);
 
         // Click the cancel button in the PIN dialog
@@ -12659,7 +12671,7 @@ export class ListingActions {
         await expect(cancelButton).toBeVisible({ timeout: 5000 });
         await cancelButton.click();
         await this.page.waitForTimeout(1000);
-        
+
         // Save and close form
         const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
         await saveAndCloseButton.scrollIntoViewIfNeeded();
@@ -12690,8 +12702,16 @@ export class ListingActions {
         if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
             await backButton.click();
         }
-        // Check for download element in the same context
-        const downloadLocator = this.page.locator('img.img-hub2[src*="propertyImage"]').last()
+
+        // Find the "Legal" folder and make sure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Check for download element in the same context and scroll into view
+        const downloadLocator = this.page.locator('img.img-hub2[src*="propertyImage"]').last();
+        await downloadLocator.scrollIntoViewIfNeeded();
+        await expect(downloadLocator).toBeVisible({timeout:20000});
         await downloadLocator.click();
 
         const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
@@ -12726,5 +12746,62 @@ export class ListingActions {
         await saveAndCloseButton.click();
         await this.page.waitForTimeout(2000);
     }
+    // Verify double clicking a file opens preview
+    async verifyDoubleClickOpenFilePreview() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, click it if visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and make sure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Wait for the file/images area to be visible and scroll to it
+        const fileThumbnail = this.page.locator('img.img-hub2[src*="PropertyImage2"]').first();
+        await fileThumbnail.scrollIntoViewIfNeeded();
+        await expect(fileThumbnail).toBeVisible({ timeout: 20000 });
+
+        // Double-click the file thumbnail
+        await fileThumbnail.dblclick();
+
+        // Wait for the File Preview popup/dialog to appear
+        const previewDialog = this.page.locator('text=File Preview').first();
+        await expect(previewDialog).toBeVisible({ timeout: 5000 });
+
+        // Try to close using cross icon inside the dialog first
+        const dialogLocator = this.page.getByRole('dialog');
+        await expect(dialogLocator).toBeVisible({timeout:10000});
+        const crossIconLocator = this.page.getByRole('dialog').getByRole('button').filter({ hasText: /^$/ });
+        if (await crossIconLocator.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await crossIconLocator.click();
+        }
+
+        // Optionally close the dialog again using ".pi.pi-times" icon if still open
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
+        }
+    }
+
+
+
 }
 
