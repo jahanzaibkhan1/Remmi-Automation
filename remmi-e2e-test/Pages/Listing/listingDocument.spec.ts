@@ -75,6 +75,13 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyNewFolderPopupHasRequireNameField();
     });
 
-   
+    test('Test 12: Verify that clicking "Public File Upload" allows uploading a file', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        // Use an image path within your repo's PropertyImages folder for this test file
+        const path = require('path');
+        const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+        const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+        await listingActions.verifyPublicFileUploadAllowUploadingFile(imagePath);
+    });
 
 });
