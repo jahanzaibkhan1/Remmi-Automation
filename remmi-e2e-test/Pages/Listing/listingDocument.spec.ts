@@ -13,7 +13,7 @@ const test = base.extend<{ sessionPage: any }>({
             await page.goto(DASHBOARD_URL);
             await use(page);
         } finally {
-            await context.close();
+
         }
     }, { scope: 'worker' }]
 });
