@@ -12667,5 +12667,64 @@ export class ListingActions {
         await saveAndCloseButton.click();
         await this.page.waitForTimeout(2000);
     }
+
+    // Verify that entering incorrect PIN prevents download
+    async verifyPrivateFileUploadInvalidPin() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, click it if visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+        // Check for download element in the same context
+        const downloadLocator = this.page.locator('img.img-hub2[src*="propertyImage"]').last()
+        await downloadLocator.click();
+
+        const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
+        await expect(downloadIcon).toBeVisible({ timeout: 5000 });
+        await downloadIcon.click();
+
+        // Enter PIN in the input field
+        const pinInput = this.page.locator('input[placeholder="PIN"]');
+        await expect(pinInput).toBeVisible({ timeout: 5000 });
+        // Replace '1234' with the correct PIN if needed/configured elsewhere
+        await pinInput.fill('12');
+        // Click Save button
+        const saveButton = this.page.getByLabel('Files').getByRole('button', { name: 'Save' });
+        await saveButton.click();
+        // Optionally verify that re-downloading doesn't error
+        await this.page.waitForTimeout(1000);
+
+        // get error for invalid pin using getByText
+        const errorMessage = await this.page.getByText(/invalid pin/i);
+        await expect(errorMessage).toBeVisible({ timeout: 5000 });
+
+        // Click the cancel button in the PIN dialog
+        const cancelButton = this.page.getByRole('button', { name: /Cancel/i }).first();
+        await expect(cancelButton).toBeVisible({ timeout: 5000 });
+        await cancelButton.click();
+        await this.page.waitForTimeout(1000);
+
+        // Save and close
+        const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
+    }
 }
 
