@@ -12712,10 +12712,6 @@ export class ListingActions {
         const downloadLocator = this.page.locator('img.img-hub2[src*="propertyImage"]').last();
         await downloadLocator.scrollIntoViewIfNeeded();
         await expect(downloadLocator).toBeVisible({timeout:20000});
-<<<<<<< HEAD
-        // Check for download element in the same context
-=======
->>>>>>> d20df2b (Verify double clicking a file opens preview)
         await downloadLocator.click();
 
         const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
@@ -12805,7 +12801,6 @@ export class ListingActions {
         }
     }
 
-<<<<<<< HEAD
     /**
      * Verify that right clicking a folder shows options for Share, Rename, Make a Copy, and Remove
      */
@@ -12861,9 +12856,6 @@ export class ListingActions {
         }
 
     }
-=======
-
->>>>>>> d20df2b (Verify double clicking a file opens preview)
 
 }
 
