@@ -93,5 +93,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.uploadsPrivateImage(imagePath);
     });
 
+    test('Test 14: Verify that entering the correct PIN allows file download', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyPrivateFileUploadAllowDownload();
+    });
 
 });
