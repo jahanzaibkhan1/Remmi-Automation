@@ -64,7 +64,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyFilesFolderOptionOpensNewFolderPopup();
     });
-
+    
     test('Test 10: Verify that creating a folder with a valid name works', async ({ sessionPage }) => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.createNewFolderInFilesTab();
@@ -83,7 +83,6 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
         await listingActions.verifyPublicFileUploadAllowUploadingFile(imagePath);
     });
-
 
     test('Test 13: Verify that clicking "Private File Upload" allows uploading a file', async ({ sessionPage }) => {
         const listingActions = new ListingActions(sessionPage);
@@ -123,5 +122,4 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyFolderContextMenuOption();
     });
-
 });
