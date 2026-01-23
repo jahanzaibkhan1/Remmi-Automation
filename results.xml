@@ -1,8 +1,0 @@
-<testsuites id="" name="" tests="2" failures="0" skipped="0" errors="0" time="152.1200179999983">
-  <testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-23T08:35:30.725Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.759" errors="0">
-    <testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify right clicking a folder shows context menu options" classname="Pages\Listing\listingDocument.spec.ts" time="55.759" />
-  </testsuite>
-  <testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-22T11:43:47.921Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.481" errors="0">
-    <testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify that clicking &quot;Folder&quot; opens the &quot;New Folder&quot; popup in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="55.481" />
-  </testsuite>
-</testsuites>

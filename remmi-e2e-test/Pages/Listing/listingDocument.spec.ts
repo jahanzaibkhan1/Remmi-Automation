@@ -113,6 +113,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyDoubleClickOpenFilePreview();
     });
 
+<<<<<<< HEAD
     test('Test 18: Verify that file preview has a close button', async ({ sessionPage }) => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyDoubleClickOpenFilePreview();
@@ -122,4 +123,6 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyFolderContextMenuOption();
     });
+=======
+>>>>>>> d20df2b (Verify double clicking a file opens preview)
 });
