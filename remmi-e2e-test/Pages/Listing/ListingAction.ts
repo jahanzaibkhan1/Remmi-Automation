@@ -12712,6 +12712,7 @@ export class ListingActions {
         const downloadLocator = this.page.locator('img.img-hub2[src*="propertyImage"]').last();
         await downloadLocator.scrollIntoViewIfNeeded();
         await expect(downloadLocator).toBeVisible({timeout:20000});
+        // Check for download element in the same context
         await downloadLocator.click();
 
         const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
@@ -12856,8 +12857,6 @@ export class ListingActions {
         }
 
     }
-
-
 
 }
 
