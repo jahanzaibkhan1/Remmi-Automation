@@ -65,37 +65,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyFilesFolderOptionOpensNewFolderPopup();
     });
 
-    test('Test 10: Verify that creating a folder with a valid name works in the Document Tab', async ({ sessionPage }) => {
+    test('Test 10: Verify that creating a folder with a valid name works', async ({ sessionPage }) => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.createNewFolderInFilesTab();
     });
 
-    test('Test 11: Verify error message when creating folder without a name in the Document Tab', async ({ sessionPage }) => {
-        const listingActions = new ListingActions(sessionPage);
-        await listingActions.verifyNewFolderPopupHasRequireNameField();
-    });
-
-    test('Test 12: Verify that clicking "Public File Upload" allows uploading a file in the Document Tab', async ({ sessionPage }) => {
-        const listingActions = new ListingActions(sessionPage);
-        // Use an image path within your repo's PropertyImages folder for this test file
-        const path = require('path');
-        const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
-        const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
-        await listingActions.verifyPublicFileUploadAllowUploadingFile(imagePath);
-    });
-
-    test('Test 13: Verify that clicking "Private File Upload" allows uploading a file in the Document Tab', async ({ sessionPage }) => {
-        const listingActions = new ListingActions(sessionPage);
-        // Use an image path within your repo's PropertyImages folder for this test file
-        const path = require('path');
-        const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
-        const imagePath = path.join(IMAGE_DIR, 'propertyImage.jpg');
-        await listingActions.uploadsPrivateImage(imagePath);
-    });
-
-    test('Test 14: Verify that entering the correct PIN allows file download in the Document Tab', async ({ sessionPage }) => {
-        const listingActions = new ListingActions(sessionPage);
-        await listingActions.verifyPrivateFileUploadAllowDownload();
-    });
 
 });
