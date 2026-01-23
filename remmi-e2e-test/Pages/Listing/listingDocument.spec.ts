@@ -108,4 +108,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyPrivateFileUploadInvalidPin();
     });
 
+    test('Test 17: Verify double clicking a file opens preview', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyDoubleClickOpenFilePreview();
+    });
+
 });
