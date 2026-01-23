@@ -1298,7 +1298,7 @@ export class ContactActions {
         await valueDropdown.click();
         const searchBox = this.page.getByPlaceholder('Search').last();
         await searchBox.waitFor({ state: 'visible', timeout: 10000 });
-        await this.page.waitForTimeout(4000);
+        await this.page.waitForTimeout(2000);
         const ownerFilterDropdown = this.page.locator('div').filter({ hasText: 'Abdul Live Abdul Rehman' }).nth(5);
         await ownerFilterDropdown.waitFor({ state: 'visible', timeout: 30000 });
         await searchBox.fill(ownerName);
