@@ -12271,12 +12271,10 @@ export class ListingActions {
         // Click "Folder" option
         const folderOption = this.page.locator('a', { hasText: 'Folder' });
         await expect(folderOption).toBeVisible({ timeout: 10000 });
-        await this.page.waitForTimeout(1200);
-        await folderOption.click({ force: true });
-
         // "New Folder" popup/dialog should be visible (look for "New Folder" title or name input)
         const popupTitle = this.page.getByText('New folder');
         const nameInput = this.page.getByRole('textbox', { name: 'Folder name' });
+
         await expect(popupTitle).toBeVisible({ timeout: 10000 });
         await expect(nameInput).toBeVisible({ timeout: 10000 });
 
@@ -12857,7 +12855,4 @@ export class ListingActions {
 
     }
 
-
-
 }
-
