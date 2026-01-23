@@ -12271,12 +12271,10 @@ export class ListingActions {
         // Click "Folder" option
         const folderOption = this.page.locator('a', { hasText: 'Folder' });
         await expect(folderOption).toBeVisible({ timeout: 10000 });
-        await folderOption.click();
-
         // "New Folder" popup/dialog should be visible (look for "New Folder" title or name input)
         const popupTitle = this.page.getByText('New folder');
         const nameInput = this.page.getByRole('textbox', { name: 'Folder name' });
-;
+
         await expect(popupTitle).toBeVisible({ timeout: 10000 });
         await expect(nameInput).toBeVisible({ timeout: 10000 });
 
@@ -12292,6 +12290,571 @@ export class ListingActions {
             await closeBtn.click({ force: true });
         }
     }
+
+    // Verify that creating a folder with a valid name works using faker for random folder names
+    public async createNewFolderInFilesTab(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and make sure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Click the Add button
+        const addButton = this.page.getByRole('button', { name: /add/i }).first();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+        await this.page.waitForTimeout(1000);
+
+        // Click "Folder" option
+        const folderOption = this.page.locator('a', { hasText: 'Folder' });
+        await expect(folderOption).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
+        await folderOption.click({ force: true });
+
+
+        // "New Folder" popup/dialog should be visible (look for "New Folder" title or name input)
+        const popupTitle = this.page.getByText('New folder');
+        const nameInput = this.page.getByRole('textbox', { name: 'Folder name' });
+        await expect(popupTitle).toBeVisible({ timeout: 10000 });
+        await expect(nameInput).toBeVisible({ timeout: 10000 });
+
+        // Use faker to generate a random folder name for more robust testing
+        const { faker } = require('@faker-js/faker');
+        const randomFolderName = faker.word.sample();
+
+        // Type folder name and submit
+        await nameInput.click();
+        await nameInput.fill(randomFolderName);
+
+        const createButton = this.page.getByRole('button', { name: /create/i });
+        await expect(createButton).toBeVisible({ timeout: 5000 });
+        await createButton.click();
+
+        // Wait for the first matching folder to appear in the list
+        const newFolder = this.page.locator('div.lib-file', { hasText: randomFolderName }).first();
+        await newFolder.scrollIntoViewIfNeeded();
+        await expect(newFolder).toBeVisible({ timeout: 20000 });
+
+        await this.page.waitForTimeout(1200);
+        // Optionally close the popup if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        await closeBtn.click({ force: true });
+    }
+
+    // Verify error message when creating folder without a name
+    public async verifyNewFolderPopupHasRequireNameField(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and make sure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Click the Add button
+        const addButton = this.page.getByRole('button', { name: /add/i }).first();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        // Click "Folder" option
+        const folderOption = this.page.locator('a', { hasText: 'Folder' });
+        await expect(folderOption).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
+        await folderOption.click({ force: true });
+
+
+        // "New Folder" popup/dialog should be visible (look for "New Folder" title or name input)
+        const popupTitle = this.page.getByText('New folder');
+        const nameInput = this.page.getByRole('textbox', { name: 'Folder name' });
+        await expect(popupTitle).toBeVisible({ timeout: 10000 });
+        await expect(nameInput).toBeVisible({ timeout: 10000 });
+
+        const createButton = this.page.getByRole('button', { name: /create/i });
+        await expect(createButton).toBeVisible({ timeout: 5000 });
+        await createButton.click();
+
+        // Verify error or validation message appears
+        const errorMsg = this.page.getByText(/Name is required!/i);
+        await expect(errorMsg).toBeVisible({ timeout: 5000 });
+        // click cancel button
+        const cancelButton = this.page.getByRole('button', { name: /cancel/i });
+        await expect(cancelButton).toBeVisible({ timeout: 5000 });
+        await cancelButton.click();
+
+        await this.page.waitForTimeout(1200);
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that clicking 'Public File Upload' allows uploading a file.
+     * @param {string} filePath - Absolute path to the file to upload.
+     */
+    public async verifyPublicFileUploadAllowUploadingFile(filePath: string): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and make sure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Click the Add button
+        const addButton = this.page.getByRole('button', { name: /add/i }).first();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        // Click "File Upload (Public)" option
+        const publicOption = this.page.locator('a', { hasText: 'File Upload (Public)' });
+
+        await expect(publicOption).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
+        await publicOption.click();
+
+        // Wait for upload input to appear
+        const fileInput = this.page.locator('#fileUpload');
+        // Upload the file
+        await fileInput.setInputFiles(filePath);
+
+        // Check image name visibility within the .lib-file area
+        const imageName = filePath.split(/[\\/]/).pop();
+        if (imageName) {
+            const imageNameInLibFile = this.page.locator(`.lib-file :text("${imageName}")`).first();
+            await imageNameInLibFile.scrollIntoViewIfNeeded();
+            await expect(imageNameInLibFile.first()).toBeVisible({ timeout: 20000 });
+        }
+
+        // click save and close
+        const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
+    }
+
+    /**
+     * Verify that clicking 'Private File Upload' allows uploading a file.
+     */
+    async uploadsPrivateImage(filePath: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and make sure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Click the Add button
+        const addButton = this.page.getByRole('button', { name: /add/i }).first();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        // Scroll to and click "File Upload (Private)" option
+        const privateOption = this.page.locator('a', { hasText: 'File Upload (Private)' });
+        await privateOption.scrollIntoViewIfNeeded();
+        await expect(privateOption).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
+        await privateOption.click();
+
+        // Wait for upload input to appear and upload the file
+        const fileInput = this.page.locator('#fileUpload');
+        await fileInput.setInputFiles(filePath);
+
+        // Scroll to the file name in the .lib-file area and check its visibility
+        const fileName = filePath.split(/[\\/]/).pop();
+        if (fileName) {
+            const fileNameInLibFile = this.page.locator(`.lib-file :text("${fileName}")`).first();
+            await fileNameInLibFile.scrollIntoViewIfNeeded();
+            await expect(fileNameInLibFile.first()).toBeVisible({ timeout: 20000 });
+        }
+
+        // Save and close
+        const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
+    }
+
+    /**
+     * Verify that entering the correct PIN allows file download in the Files tab
+     */
+    public async verifyPrivateFileUploadAllowDownload(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, click it if visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+         // Find the "Legal" folder and make sure it's visible
+         const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+         await legalFolder.scrollIntoViewIfNeeded();
+         await expect(legalFolder).toBeVisible({ timeout: 20000 });
+ 
+        // Scroll to the download element (the last private image) and click it
+        const downloadLocator = this.page.locator('img.img-hub2[src*="propertyImage"]').last();
+        await downloadLocator.scrollIntoViewIfNeeded();
+        await downloadLocator.click();
+
+        const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
+        await expect(downloadIcon).toBeVisible({ timeout: 5000 });
+        await downloadIcon.click();
+
+        // Enter PIN in the input field
+        const pinInput = this.page.locator('input[placeholder="PIN"]');
+        await expect(pinInput).toBeVisible({ timeout: 5000 });
+        // Replace '1234' with the correct PIN if needed/configured elsewhere
+        await pinInput.fill('1234');
+        // Click Save button
+        const saveButton = this.page.getByLabel('Files').getByRole('button', { name: 'Save' });
+        await saveButton.click();
+        // Optionally verify that re-downloading doesn't error
+        await this.page.waitForTimeout(1000);
+
+        // Save and close
+        const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
+
+    }
+
+    /**
+     * Verifies that downloading a private file requires entering a PIN.
+     */
+    public async verifyPrivateFileRequiresPinForDownload(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+        await this.page.waitForTimeout(1000);
+
+        // Navigate to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+        // Optionally, click back if Back button appears (in subfolder etc)
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and make sure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+
+        // Try to download a private file (simulate by finding file with padlock or propertyImage)
+        const privateFileLocator = this.page.locator('img.img-hub2[src*="propertyImage"]').last();
+        await privateFileLocator.scrollIntoViewIfNeeded();
+        await expect(privateFileLocator).toBeVisible({ timeout: 10000 });
+        await privateFileLocator.click();
+
+        const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
+        await expect(downloadIcon).toBeVisible({ timeout: 5000 });
+        await downloadIcon.click();
+
+        // Assert that PIN input appears
+        const pinInput = this.page.locator('input[placeholder="PIN"]');
+        await expect(pinInput).toBeVisible({ timeout: 5000 });
+
+        // Negative test: Try clicking save without PIN, expect error or indication
+        const saveButton = this.page.getByLabel('Files').getByRole('button', { name: 'Save' });
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+        await saveButton.click();
+
+        const pinError = this.page.getByText('Please enter PIN first');
+        await expect(pinError).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+
+        // Click the cancel button in the PIN dialog
+        const cancelButton = this.page.getByRole('button', { name: /Cancel/i }).first();
+        await expect(cancelButton).toBeVisible({ timeout: 5000 });
+        await cancelButton.click();
+        await this.page.waitForTimeout(1000);
+
+        // Save and close form
+        const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
+    }
+
+    // Verify that entering incorrect PIN prevents download
+    async verifyPrivateFileUploadInvalidPin() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, click it if visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and make sure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Check for download element in the same context and scroll into view
+        const downloadLocator = this.page.locator('img.img-hub2[src*="propertyImage"]').last();
+        await downloadLocator.scrollIntoViewIfNeeded();
+        await expect(downloadLocator).toBeVisible({timeout:20000});
+        await downloadLocator.click();
+
+        const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
+        await expect(downloadIcon).toBeVisible({ timeout: 5000 });
+        await downloadIcon.click();
+
+        // Enter PIN in the input field
+        const pinInput = this.page.locator('input[placeholder="PIN"]');
+        await expect(pinInput).toBeVisible({ timeout: 5000 });
+        // Replace '1234' with the correct PIN if needed/configured elsewhere
+        await pinInput.fill('12');
+        // Click Save button
+        const saveButton = this.page.getByLabel('Files').getByRole('button', { name: 'Save' });
+        await saveButton.click();
+        // Optionally verify that re-downloading doesn't error
+        await this.page.waitForTimeout(1000);
+
+        // get error for invalid pin using getByText
+        const errorMessage = await this.page.getByText(/invalid pin/i);
+        await expect(errorMessage).toBeVisible({ timeout: 5000 });
+
+        // Click the cancel button in the PIN dialog
+        const cancelButton = this.page.getByRole('button', { name: /Cancel/i }).first();
+        await expect(cancelButton).toBeVisible({ timeout: 5000 });
+        await cancelButton.click();
+        await this.page.waitForTimeout(1000);
+
+        // Save and close
+        const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
+    }
+    // Verify double clicking a file opens preview
+    async verifyDoubleClickOpenFilePreview() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, click it if visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and make sure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Wait for the file/images area to be visible and scroll to it
+        const fileThumbnail = this.page.locator('img.img-hub2[src*="PropertyImage2"]').first();
+        await fileThumbnail.scrollIntoViewIfNeeded();
+        await expect(fileThumbnail).toBeVisible({ timeout: 20000 });
+
+        // Double-click the file thumbnail
+        await fileThumbnail.dblclick();
+
+        // Wait for the File Preview popup/dialog to appear
+        const previewDialog = this.page.locator('text=File Preview').first();
+        await expect(previewDialog).toBeVisible({ timeout: 5000 });
+
+        // Try to close using cross icon inside the dialog first
+        const dialogLocator = this.page.getByRole('dialog');
+        await expect(dialogLocator).toBeVisible({timeout:10000});
+        const crossIconLocator = this.page.getByRole('dialog').getByRole('button').filter({ hasText: /^$/ });
+        if (await crossIconLocator.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await crossIconLocator.click();
+        }
+
+        // Optionally close the dialog again using ".pi.pi-times" icon if still open
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify that right clicking a folder shows options for Share, Rename, Make a Copy, and Remove
+     */
+    public async verifyFolderContextMenuOption(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first property card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => {});
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and make sure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Find the "Legal" folder (or any folder) and make sure it's visible
+        const folder = this.page.locator('div.lib-file').first();
+        await folder.scrollIntoViewIfNeeded();
+        await expect(folder).toBeVisible({ timeout: 20000 });
+        // Right-click the folder to open context menu
+        await folder.click({ button: 'right' });
+        await this.page.waitForTimeout(1000);
+
+        // Check for Share, Rename, Make a Copy, Remove options in context menu
+        const shareOption = this.page.getByText(/Share/i);
+        const renameOption = this.page.getByText(/Rename/i);
+        const makeCopyOption = this.page.getByText(/Make a Copy/i);
+        const removeOption = this.page.getByText(/Remove/i);
+
+        await expect(shareOption).toBeVisible({ timeout: 3000 });
+        await expect(renameOption).toBeVisible({ timeout: 3000 });
+        await expect(makeCopyOption).toBeVisible({ timeout: 3000 });
+        await expect(removeOption).toBeVisible({ timeout: 3000 });
+
+        // Optionally close the dialog again using ".pi.pi-times" icon if still open
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
+        }
+
+    }
+
 
 
 }
