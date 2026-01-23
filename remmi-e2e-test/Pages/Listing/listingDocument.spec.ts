@@ -113,4 +113,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyDoubleClickOpenFilePreview();
     });
 
+    test('Test 18: Verify that file preview has a close button', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyDoubleClickOpenFilePreview();
+    });
+
 });
