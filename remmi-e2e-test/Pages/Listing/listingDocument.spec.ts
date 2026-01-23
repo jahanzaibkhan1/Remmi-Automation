@@ -13,7 +13,7 @@ const test = base.extend<{ sessionPage: any }>({
             await page.goto(DASHBOARD_URL);
             await use(page);
         } finally {
-
+            await context.close();
         }
     }, { scope: 'worker' }]
 });
@@ -40,7 +40,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyClickingOnFolderExpandsIt();
     });
 
-    test('Test 5: Verify subfolders under "Document in the Document Tab', async ({ sessionPage }) => {
+    test('Test 5: Verify subfolders under "Documents" in the Document Tab', async ({ sessionPage }) => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyClickingOnFolderExpandsIt();
     });
@@ -64,7 +64,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyFilesFolderOptionOpensNewFolderPopup();
     });
-
+    
     test('Test 10: Verify that creating a folder with a valid name works', async ({ sessionPage }) => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.createNewFolderInFilesTab();
@@ -78,7 +78,6 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     test('Test 12: Verify that clicking "Public File Upload" allows uploading a file', async ({ sessionPage }) => {
         const listingActions = new ListingActions(sessionPage);
         // Use an image path within your repo's PropertyImages folder for this test file
-        const path = require('path');
         const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
         const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
         await listingActions.verifyPublicFileUploadAllowUploadingFile(imagePath);
@@ -87,7 +86,6 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     test('Test 13: Verify that clicking "Private File Upload" allows uploading a file', async ({ sessionPage }) => {
         const listingActions = new ListingActions(sessionPage);
         // Use an image path within your repo's PropertyImages folder for this test file
-        const path = require('path');
         const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
         const imagePath = path.join(IMAGE_DIR, 'propertyImage.jpg');
         await listingActions.uploadsPrivateImage(imagePath);
@@ -122,5 +120,4 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyFolderContextMenuOption();
     });
-
 });
