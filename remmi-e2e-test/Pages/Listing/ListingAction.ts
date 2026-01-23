@@ -12606,5 +12606,66 @@ export class ListingActions {
         await this.page.waitForTimeout(2000);
 
     }
+
+    /**
+     * Verifies that downloading a private file requires entering a PIN.
+     */
+    public async verifyPrivateFileRequiresPinForDownload(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+        await this.page.waitForTimeout(1000);
+
+        // Navigate to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // Optionally, click back if Back button appears (in subfolder etc)
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => {});
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Try to download a private file (simulate by finding file with padlock or propertyImage)
+        const privateFileLocator = this.page.locator('img.img-hub2[src*="propertyImage"]').last();
+        await expect(privateFileLocator).toBeVisible({ timeout: 10000 });
+        await privateFileLocator.click();
+
+        const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
+        await expect(downloadIcon).toBeVisible({ timeout: 5000 });
+        await downloadIcon.click();
+
+        // Assert that PIN input appears
+        const pinInput = this.page.locator('input[placeholder="PIN"]');
+        await expect(pinInput).toBeVisible({ timeout: 5000 });
+
+        // Negative test: Try clicking save without PIN, expect error or indication
+        const saveButton = this.page.getByLabel('Files').getByRole('button', { name: 'Save' });
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+        await saveButton.click();
+
+        const pinError = this.page.getByText('Please enter PIN first');
+        await expect(pinError).toBeVisible({timeout:10000});
+        await this.page.waitForTimeout(1000);
+
+        // Click the cancel button in the PIN dialog
+        const cancelButton = this.page.getByRole('button', { name: /Cancel/i }).first();
+        await expect(cancelButton).toBeVisible({ timeout: 5000 });
+        await cancelButton.click();
+        await this.page.waitForTimeout(1000);
+        
+        // Save and close form
+        const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
+    }
 }
 

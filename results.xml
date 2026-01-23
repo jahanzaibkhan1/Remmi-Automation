@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="61.227641999999996">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-23T06:32:29.624Z" hostname="chromium" tests="1" failures="0" skipped="0" time="50.801" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that entering the correct PIN allows file download in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="50.801">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="69.88972999999999">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-23T07:27:44.957Z" hostname="chromium" tests="1" failures="0" skipped="0" time="53.517" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that downloading a private file requires entering a PIN" classname="Pages\Listing\listingDocument.spec.ts" time="53.517">
 </testcase>
 </testsuite>
 </testsuites>
