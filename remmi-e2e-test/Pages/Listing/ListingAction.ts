@@ -12267,10 +12267,13 @@ export class ListingActions {
         const addButton = this.page.getByRole('button', { name: /add/i }).first();
         await expect(addButton).toBeVisible({ timeout: 10000 });
         await addButton.click();
+        await this.page.waitForTimeout(1000);
 
         // Click "Folder" option
         const folderOption = this.page.locator('a', { hasText: 'Folder' });
         await expect(folderOption).toBeVisible({ timeout: 10000 });
+        await folderOption.click({force: true});
+        await this.page.waitForTimeout(1000);
         // "New Folder" popup/dialog should be visible (look for "New Folder" title or name input)
         const popupTitle = this.page.getByText('New folder');
         const nameInput = this.page.getByRole('textbox', { name: 'Folder name' });
