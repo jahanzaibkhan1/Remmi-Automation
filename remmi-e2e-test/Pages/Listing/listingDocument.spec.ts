@@ -120,4 +120,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyFolderContextMenuOption();
     });
+
+    test('Test 20: Verify that clicking "Remove" deletes a folder in the Files tab', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyRemoveFolderDeletesIt();
+    });
+    
 });
