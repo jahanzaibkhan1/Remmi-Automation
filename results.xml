@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.50732200000016">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-26T12:32:25.099Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.904" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Verify that clicking a file shows action options" classname="Pages\Listing\listingDocument.spec.ts" time="31.904">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="54.58602000000002">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-26T12:41:03.893Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.368" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Verify clicking &quot;Get Link&quot; opens link popup" classname="Pages\Listing\listingDocument.spec.ts" time="48.368">
 </testcase>
 </testsuite>
 </testsuites>
