@@ -12795,11 +12795,10 @@ export class ListingActions {
             await crossIconLocator.click();
         }
 
+        await this.page.waitForTimeout(1200);
         // Optionally close the dialog again using ".pi.pi-times" icon if still open
         const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
-        if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-            await closePreviewButton.click({ force: true });
-        }
+        await closePreviewButton.click({ force: true });
     }
 
     /**
@@ -12856,6 +12855,62 @@ export class ListingActions {
             await closePreviewButton.click({ force: true });
         }
 
+    }
+
+    /**
+     * Verify that clicking 'Remove' deletes a folder in the Files tab.
+     */
+    public async verifyRemoveFolderDeletesIt(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => {});
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+        await this.page.waitForTimeout(1200);
+
+        // Find and trim the folder name text (remove whitespace)
+        const folders = this.page.locator('div.lib-file').nth(3);
+        await folders.scrollIntoViewIfNeeded();
+        await expect(folders).toBeVisible({ timeout: 15000 });
+        const folderName = (await folders.textContent())?.trim();
+
+        // Right-click the folder and select 'Remove'
+        await folders.click({ button: 'right' });
+        await this.page.waitForTimeout(600);
+
+        const removeOption = this.page.getByText(/Remove/i).first();
+        await expect(removeOption).toBeVisible({ timeout: 5000 });
+        await removeOption.click();
+
+        // Wait a moment for deletion to process
+        await this.page.waitForTimeout(1200);
+
+        // Verify the folder no longer remains in the list
+        if (folderName) {
+            const folderList = this.page.locator('div.lib-file', { hasText: folderName });
+            await expect(folderList).toHaveCount(0, { timeout: 20000 });
+        }
+
+        // Optionally close any open popups
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
     }
 
 }
