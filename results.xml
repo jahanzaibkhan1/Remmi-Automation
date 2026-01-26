@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="59.78384200000018">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-26T07:50:19.283Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.13" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Verify that clicking &quot;Remove&quot; deletes a folder in the Files tab" classname="Pages\Listing\listingDocument.spec.ts" time="54.13">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="68.10646299999952">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-26T08:35:40.087Z" hostname="chromium" tests="1" failures="0" skipped="0" time="56.441" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Verify that clicking &quot;Rename&quot; opens rename popup" classname="Pages\Listing\listingDocument.spec.ts" time="56.441">
 </testcase>
 </testsuite>
 </testsuites>
