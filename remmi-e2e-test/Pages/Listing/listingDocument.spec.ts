@@ -131,4 +131,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyMakeACopyDuplicatesFolder();
     });
 
+    test('Test 22: Verify that clicking "Rename" opens rename popup', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyRenameFolderOpensPopup();
+    });
+
 });

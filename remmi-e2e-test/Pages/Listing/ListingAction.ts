@@ -13017,4 +13017,61 @@ export class ListingActions {
         }
     }
 
+    // Verify that clicking 'Rename' opens rename popup
+    public async verifyRenameFolderOpensPopup(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the first folder in the Files tab
+        const folder = this.page.locator('div.lib-file').last();
+        await folder.scrollIntoViewIfNeeded();
+        await expect(folder).toBeVisible({ timeout: 20000 });
+
+        // Right-click the folder to open context menu
+        await folder.click({ button: "right" });
+        await this.page.waitForTimeout(600);
+
+        // Find and click 'Rename' in the context menu
+        const renameOption = this.page.getByText('Rename').first();
+        await expect(renameOption).toBeVisible({ timeout: 10000 });
+        await renameOption.click();
+
+        // After clicking 'Rename', a rename popup should appear (usually a dialog with input)
+        const renameDialog = this.page.getByText('Rename').first();
+        const nameInput = this.page.locator('input[type="text"][required]');
+        await expect(renameDialog).toBeVisible({ timeout: 10000 });
+        await expect(nameInput).toBeVisible({ timeout: 10000 });
+
+        // Click cancel button in the rename popup
+        const cancelButton = this.page.getByRole('button', { name: /cancel/i }).first();
+        await expect(cancelButton).toBeVisible({ timeout: 5000 });
+        await cancelButton.click();
+
+        await this.page.waitForTimeout(1200);
+
+        // Optionally close the popup
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 }
