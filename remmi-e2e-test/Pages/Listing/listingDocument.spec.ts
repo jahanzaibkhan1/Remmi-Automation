@@ -146,4 +146,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyShareFolderRequiresSelectingStaffOrTeam();
     });
 
+    test('Test 25: Verify that selecting staff or team member enables "Share" button', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyShareFolderRequireSelectingStaffOrTeam();
+    });
+
 });
