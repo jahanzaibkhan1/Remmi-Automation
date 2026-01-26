@@ -125,5 +125,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyRemoveFolderDeletesIt();
     });
-    
+
+    test('Test 21: Verify that clicking "Make a Copy" duplicates the folder in the Files tab', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyMakeACopyDuplicatesFolder();
+    });
+
 });

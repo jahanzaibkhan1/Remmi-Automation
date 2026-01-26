@@ -12913,4 +12913,108 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verify that clicking 'Make a Copy' duplicates the folder in the Files tab
+     */
+    public async verifyMakeACopyDuplicatesFolder(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and make sure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Click the Add button
+        const addButton = this.page.getByRole('button', { name: /add/i }).first();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+        await this.page.waitForTimeout(1000);
+
+        // Click "Folder" option
+        const folderOption = this.page.locator('a', { hasText: 'Folder' });
+        await expect(folderOption).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
+        await folderOption.click({ force: true });
+
+
+        // "New Folder" popup/dialog should be visible (look for "New Folder" title or name input)
+        const popupTitle = this.page.getByText('New folder');
+        const nameInput = this.page.getByRole('textbox', { name: 'Folder name' });
+        await expect(popupTitle).toBeVisible({ timeout: 10000 });
+        await expect(nameInput).toBeVisible({ timeout: 10000 });
+
+        // Use faker to generate a random folder name for more robust testing
+        const { faker } = require('@faker-js/faker');
+        const randomFolderName = faker.word.sample();
+
+        // Type folder name and submit
+        await nameInput.click();
+        await nameInput.fill(randomFolderName);
+
+        const createButton = this.page.getByRole('button', { name: /create/i });
+        await expect(createButton).toBeVisible({ timeout: 5000 });
+        await createButton.click();
+
+        // Wait for the first matching folder to appear in the list
+        const newFolder = this.page.locator('div.lib-file', { hasText: randomFolderName }).first();
+        await newFolder.scrollIntoViewIfNeeded();
+        await expect(newFolder).toBeVisible({ timeout: 20000 });
+
+        await this.page.waitForTimeout(1200);
+
+        const folders = this.page.locator('div.lib-file').last();
+        await folders.scrollIntoViewIfNeeded();
+        await expect(folders).toBeVisible({ timeout: 15000 });
+        const originalFolderName = (await folders.textContent())?.trim();
+
+        // Right-click the folder and select 'Make a Copy'
+        await folders.click({ button: 'right' });
+        await this.page.waitForTimeout(600);
+
+        // Look for the 'Make a Copy' context option
+        const copyOption = this.page.getByText(/Make a Copy/i).first();
+        await expect(copyOption).toBeVisible({ timeout: 5000 });
+        await copyOption.click();
+
+        // Wait for the duplicate folder to appear (usually 'Copy of <folderName>' or similar)
+        let copiedFolderName = '';
+        if (originalFolderName) {
+            // Try both 'Copy of <name>' and '<name> - Copy'
+            copiedFolderName = `Copy of ${originalFolderName}`;
+            let copiedFolder = this.page.locator('div.lib-file', { hasText: copiedFolderName }).first();
+            try {
+                await expect(copiedFolder).toBeVisible({ timeout: 20000 });
+            } catch {
+                copiedFolderName = `${originalFolderName} - Copy`;
+                copiedFolder = this.page.locator('div.lib-file', { hasText: copiedFolderName }).first();
+                await expect(copiedFolder).toBeVisible({ timeout: 20000 });
+            }
+        }
+
+        // Optionally close any open popups
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 }
