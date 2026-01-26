@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="67.56601700000093">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-26T11:21:27.928Z" hostname="chromium" tests="1" failures="0" skipped="0" time="53.259" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Verify that renaming a folder updates its name" classname="Pages\Listing\listingDocument.spec.ts" time="53.259">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.16945699999854">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-26T11:43:03.090Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.727" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Verify that sharing a folder requires selecting staff or team member" classname="Pages\Listing\listingDocument.spec.ts" time="40.727">
 </testcase>
 </testsuite>
 </testsuites>

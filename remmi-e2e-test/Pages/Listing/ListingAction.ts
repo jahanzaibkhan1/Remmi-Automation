@@ -13151,4 +13151,66 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verify that sharing a folder requires selecting a staff/team member before proceeding.
+     */
+    public async verifyShareFolderRequiresSelectingStaffOrTeam(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and make sure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Right-click the Legal folder to open context menu
+        await legalFolder.click({ button: 'right' });
+        await this.page.waitForTimeout(500);
+
+        // Click Share in context menu
+        const shareOption = this.page.getByText(/Share/i).first();
+        await expect(shareOption).toBeVisible({ timeout: 6000 });
+        await shareOption.click({ force: true });
+
+        // Should see "Share" dialog appear (look for some label/input inside it)
+        const shareDialogTitle = this.page.getByText('Share with people');
+        await expect(shareDialogTitle).toBeVisible({ timeout: 10000 });
+
+        // Try clicking 'Share' button with nobody selected (should be disabled)
+        const shareButton = this.page.getByRole('button', { name: /^Share$/i }).last();
+        await expect(shareButton).toBeVisible({ timeout: 6000 });
+        await expect(shareButton).toBeDisabled();
+        const errMsg = this.page.getByText(/At least one staff or team must be selected/i);
+        await expect(errMsg).toBeVisible({ timeout: 6000 });
+
+        // Click the "Cancel" button to close the share dialog
+        const cancelBtn = this.page.getByRole('button', { name: /^Cancel$/i }).first();
+        await expect(cancelBtn).toBeVisible({ timeout: 5000 });
+        await cancelBtn.click();
+
+        // Optionally close the dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 }
