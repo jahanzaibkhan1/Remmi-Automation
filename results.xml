@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.893227000000074">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-26T12:13:09.451Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.063" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 26: Verify that shared staff/team appear with profile image" classname="Pages\Listing\listingDocument.spec.ts" time="38.063">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.50732200000016">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-26T12:32:25.099Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.904" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Verify that clicking a file shows action options" classname="Pages\Listing\listingDocument.spec.ts" time="31.904">
 </testcase>
 </testsuite>
 </testsuites>
