@@ -13074,4 +13074,81 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verify that renaming a folder in the Files tab updates its name.
+     */
+    public async verifyRenameFolderUpdatesName(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the last folder in the Files tab (to minimize risk of conflicting with system folders)
+        const folder = this.page.locator('div.lib-file').last();
+        await folder.scrollIntoViewIfNeeded();
+        await expect(folder).toBeVisible({ timeout: 20000 });
+        const origName = (await folder.textContent())?.trim();
+
+        // Use a unique, random rename string to ensure uniqueness and avoid stale cache/UI issues
+        const { faker } = require('@faker-js/faker');
+        const newFolderName = `Renamed-${faker.string.alphanumeric(6)}`;
+
+        // Right-click the folder to open context menu
+        await folder.click({ button: "right" });
+        await this.page.waitForTimeout(750);
+
+        // Find and click 'Rename' in the context menu
+        const renameOption = this.page.getByText('Rename').first();
+        await expect(renameOption).toBeVisible({ timeout: 10000 });
+        await renameOption.click({ force: true });
+
+        const nameInput = this.page.locator('input[type="text"][required]');
+        await expect(nameInput).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(500);
+
+        // Clear the input in a robust way before filling
+        await nameInput.click();
+        await this.page.waitForTimeout(200);
+        for (const char of newFolderName) {
+            await nameInput.type(char, { delay: 20 }); // 120ms per character
+        }
+
+        // Click the "Rename" button
+        const renameBtn = this.page.getByRole('button', { name: /^Rename$/i }).first();
+        await expect(renameBtn).toBeVisible({ timeout: 5000 });
+        await renameBtn.click({ force: true });
+
+        // Verify the success toast "Name changed successfully" appears
+        const successToast = this.page.getByRole('alert', { name: 'Name change successfully' })
+        await expect(successToast).toBeVisible({ timeout: 10000 });
+        
+
+        // Wait for the folder tile to update—retrying for potential debounce/network delay
+        const renamedFolder = this.page.locator('div.lib-file', { hasText: newFolderName }).first();
+        await renamedFolder.scrollIntoViewIfNeeded();
+        await expect(renamedFolder).toBeVisible({ timeout: 25000 }); // increased for async propagation
+
+        // Optionally close any open popups
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 }

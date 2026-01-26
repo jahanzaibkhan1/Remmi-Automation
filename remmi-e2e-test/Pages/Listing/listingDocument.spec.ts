@@ -136,4 +136,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyRenameFolderOpensPopup();
     });
 
+    test('Test 23: Verify that renaming a folder updates its name', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyRenameFolderUpdatesName();
+    });
+
 });
