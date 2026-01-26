@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.16945699999854">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-26T11:43:03.090Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.727" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Verify that sharing a folder requires selecting staff or team member" classname="Pages\Listing\listingDocument.spec.ts" time="40.727">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.384127">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-26T12:01:47.844Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.636" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Verify that selecting staff or team member enables &quot;Share&quot; button" classname="Pages\Listing\listingDocument.spec.ts" time="46.636">
 </testcase>
 </testsuite>
 </testsuites>

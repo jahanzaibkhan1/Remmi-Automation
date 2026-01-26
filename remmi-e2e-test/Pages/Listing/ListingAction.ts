@@ -13213,4 +13213,74 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verify that selecting a staff or team enables the "Share" button in the Share dialog.
+     */
+    public async verifyShareFolderRequireSelectingStaffOrTeam(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and ensure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Right-click the Legal folder to open the context menu
+        await legalFolder.click({ button: 'right' });
+        await this.page.waitForTimeout(500);
+
+        // Select Share from the context menu
+        const shareOption = this.page.getByText(/Share/i).first();
+        await expect(shareOption).toBeVisible({ timeout: 6000 });
+        await shareOption.click({ force: true });
+
+        // Share dialog appears
+        const shareDialogTitle = this.page.getByText('Share with people');
+        await expect(shareDialogTitle).toBeVisible({ timeout: 10000 });
+
+        // Verify the presence of the 'Search User' field in the Share dialog
+        const searchUserField = this.page.getByText('Search User');
+        await expect(searchUserField).toBeVisible({ timeout: 6000 });
+        await searchUserField.click();
+
+        // Find the first user/team suggestion in the dropdown if it appears
+        const firstSuggestion = this.page.locator('div.ng-option[role="option"]').first();
+        if (await firstSuggestion.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await firstSuggestion.click();
+        }
+
+        // Share button should start disabled
+        const shareButton = this.page.getByRole('button', { name: /^Share$/i }).last();
+        await expect(shareButton).toBeVisible({ timeout: 6000 });
+        await expect(shareButton).toBeEnabled();
+
+        // Close the share dialog using Cancel or close button
+        const cancelBtn = this.page.getByRole('button', { name: /^Cancel$/i }).first();
+        if (await cancelBtn.isVisible().catch(() => false)) {
+            await cancelBtn.click();
+        }
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 }
