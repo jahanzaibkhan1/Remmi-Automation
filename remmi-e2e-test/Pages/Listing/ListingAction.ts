@@ -13425,4 +13425,57 @@ export class ListingActions {
 
     }
 
+    // Verify clicking ‘Get Link’ opens link popup
+    async verifyGetLinkOpensLinkPopup() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and ensure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Find the image file to use for right click (adjust the file name if needed)
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' });
+        await expect(imageFile).toBeVisible({ timeout: 10000 });
+        await imageFile.click({ button: 'right' });
+
+        // Wait for the context menu and click "Get Link"
+        const getLinkOption = this.page.locator('#folderOptionsList ul.folders li:has(i.pi.pi-link) a', { hasText: 'Get Link' });
+        await expect(getLinkOption).toBeVisible({ timeout: 2000 });
+        await getLinkOption.click();
+
+        // Assert that the link popup/dialog appears
+        // Typical selectors to check: dialog, modal, 'Copy Link' or input containing link...
+        const linkPopup = this.page.locator('[role="dialog"], .p-dialog, .modal:has-text("Get Link")');
+        await expect(linkPopup).toBeVisible({ timeout: 7000 });
+
+        // Locate the cross (close) icon in the link popup dialog
+        const crossIcon = this.page.locator('button.p-dialog-header-close')
+        await expect(crossIcon.first()).toBeVisible();
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 }
