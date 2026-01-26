@@ -120,4 +120,50 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyFolderContextMenuOption();
     });
+
+    test('Test 20: Verify that clicking "Remove" deletes a folder in the Files tab', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyRemoveFolderDeletesIt();
+    });
+
+    test('Test 21: Verify that clicking "Make a Copy" duplicates the folder in the Files tab', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyMakeACopyDuplicatesFolder();
+    });
+
+    test('Test 22: Verify that clicking "Rename" opens rename popup', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyRenameFolderOpensPopup();
+    });
+
+    test('Test 23: Verify that renaming a folder updates its name', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyRenameFolderUpdatesName();
+    });
+
+    test('Test 24: Verify that sharing a folder requires selecting staff or team member', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyShareFolderRequiresSelectingStaffOrTeam();
+    });
+
+    test('Test 25: Verify that selecting staff or team member enables "Share" button', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyShareFolderRequireSelectingStaffOrTeam();
+    });
+
+    test('Test 26: Verify that shared staff/team appear with profile image', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifySharedStaffTeamHasProfileImage();
+    });
+
+    test('Test 27: Verify that clicking a file shows action options', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyImageFileShowsActionOptions();
+    });
+
+    test('Test 28: Verify clicking "Get Link" opens link popup', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyGetLinkOpensLinkPopup();
+    });
+
 });
