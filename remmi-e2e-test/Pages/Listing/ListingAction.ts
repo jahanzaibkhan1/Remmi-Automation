@@ -12272,7 +12272,7 @@ export class ListingActions {
         // Click "Folder" option
         const folderOption = this.page.locator('a', { hasText: 'Folder' });
         await expect(folderOption).toBeVisible({ timeout: 10000 });
-        await folderOption.click({force: true});
+        await folderOption.click({ force: true });
         await this.page.waitForTimeout(1000);
         // "New Folder" popup/dialog should be visible (look for "New Folder" title or name input)
         const popupTitle = this.page.getByText('New folder');
@@ -12580,11 +12580,11 @@ export class ListingActions {
         if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
             await backButton.click();
         }
-         // Find the "Legal" folder and make sure it's visible
-         const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
-         await legalFolder.scrollIntoViewIfNeeded();
-         await expect(legalFolder).toBeVisible({ timeout: 20000 });
- 
+        // Find the "Legal" folder and make sure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
         // Scroll to the download element (the last private image) and click it
         const downloadLocator = this.page.locator('img.img-hub2[src*="propertyImage"]').last();
         await downloadLocator.scrollIntoViewIfNeeded();
@@ -12712,7 +12712,7 @@ export class ListingActions {
         // Check for download element in the same context and scroll into view
         const downloadLocator = this.page.locator('img.img-hub2[src*="propertyImage"]').last();
         await downloadLocator.scrollIntoViewIfNeeded();
-        await expect(downloadLocator).toBeVisible({timeout:20000});
+        await expect(downloadLocator).toBeVisible({ timeout: 20000 });
         await downloadLocator.click();
 
         const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
@@ -12789,7 +12789,7 @@ export class ListingActions {
 
         // Try to close using cross icon inside the dialog first
         const dialogLocator = this.page.getByRole('dialog');
-        await expect(dialogLocator).toBeVisible({timeout:10000});
+        await expect(dialogLocator).toBeVisible({ timeout: 10000 });
         const crossIconLocator = this.page.getByRole('dialog').getByRole('button').filter({ hasText: /^$/ });
         if (await crossIconLocator.isVisible({ timeout: 3000 }).catch(() => false)) {
             await crossIconLocator.click();
@@ -12820,7 +12820,7 @@ export class ListingActions {
 
         // If there's a Back button, try to click it if visible
         const backButton = this.page.getByRole('link', { name: ' Back' });
-        await backButton.scrollIntoViewIfNeeded().catch(() => {});
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
         if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
             await backButton.click();
         }
@@ -12877,7 +12877,7 @@ export class ListingActions {
 
         // If there's a Back button, try to click it if it's visible
         const backButton = this.page.getByRole('link', { name: ' Back' });
-        await backButton.scrollIntoViewIfNeeded().catch(() => {});
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
         if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
             await backButton.click();
         }
@@ -13137,7 +13137,7 @@ export class ListingActions {
         // Verify the success toast "Name changed successfully" appears
         const successToast = this.page.getByRole('alert', { name: 'Name change successfully' })
         await expect(successToast).toBeVisible({ timeout: 10000 });
-        
+
 
         // Wait for the folder tile to update—retrying for potential debounce/network delay
         const renamedFolder = this.page.locator('div.lib-file', { hasText: newFolderName }).first();
@@ -13277,6 +13277,81 @@ export class ListingActions {
         if (await cancelBtn.isVisible().catch(() => false)) {
             await cancelBtn.click();
         }
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    // Verify that shared staff/team appear with profile image
+    async verifySharedStaffTeamHasProfileImage() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and ensure it's visible
+        const legalFolder = this.page.locator('div.lib-file').last();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Right-click the Legal folder to open the context menu
+        await legalFolder.click({ button: 'right' });
+        await this.page.waitForTimeout(500);
+
+        // Select Share from the context menu
+        const shareOption = this.page.getByText(/Share/i).first();
+        await expect(shareOption).toBeVisible({ timeout: 6000 });
+        await shareOption.click({ force: true });
+
+        // Share dialog appears
+        const shareDialogTitle = this.page.getByText('Share with people');
+        await expect(shareDialogTitle).toBeVisible({ timeout: 10000 });
+
+        // Verify the presence of the 'Search User' field in the Share dialog
+        const searchUserField = this.page.locator('div.ng-value-container:has-text("Search User") div.ng-input input');
+        await expect(searchUserField).toBeVisible({ timeout: 6000 });
+        await searchUserField.click();
+
+        // Find the first user/team suggestion in the dropdown if it appears
+        const firstSuggestion = this.page.locator('div.ng-option[role="option"]').first();
+        if (await firstSuggestion.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await firstSuggestion.click();
+        }
+
+        // Share button should start disabled
+        const shareButton = this.page.getByRole('button', { name: /^Share$/i }).last();
+        await expect(shareButton).toBeVisible({ timeout: 6000 });
+        await expect(shareButton).toBeEnabled();
+        await shareButton.click();
+
+        // Verify success message for data shared successfully
+        const successToast = this.page.getByText(/Data shared Successfully/i);
+        await expect(successToast).toBeVisible({ timeout: 7000 });
+
+        // Click the users icon inside the last folder (if present and visible)
+        const lastFolder = this.page.locator('div.lib-file').last();
+        const usersIconInLastFolder = lastFolder.locator('i.fa.fa-users.f-12.p-1');
+        if (await usersIconInLastFolder.isVisible().catch(() => false)) {
+            await usersIconInLastFolder.click({ force: true });
+        }
+
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });

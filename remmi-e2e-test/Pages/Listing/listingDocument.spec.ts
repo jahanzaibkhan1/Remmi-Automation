@@ -151,4 +151,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyShareFolderRequireSelectingStaffOrTeam();
     });
 
+    test('Test 26: Verify that shared staff/team appear with profile image', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifySharedStaffTeamHasProfileImage();
+    });
+
 });
