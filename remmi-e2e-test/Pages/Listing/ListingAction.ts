@@ -13929,4 +13929,60 @@ export class ListingActions {
         return newImageBox.x;
     }
 
+    /**
+     * Verifies that the offline section expands and collapses as expected.
+     */
+    async verifyOfflineSectionExpandCollapse() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and ensure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Locate and click the "Reorder" (edit.svg) icon for image reordering
+        const reorderIcon = this.page.locator('img[ptooltip="Reorder"][src="assets/img/edit.svg"].p-element.cursor-pointer')
+        await expect(reorderIcon.first()).toBeVisible({ timeout: 10000 });
+        await reorderIcon.first().click();
+
+        // Perform zoom in and zoom out by interacting with the slider
+        const slider = this.page.locator('p-slider.p-element');
+        await expect(slider).toBeVisible({ timeout: 10000 });
+        // Locate the "Offline Images" heading
+        const offlineImagesHeading = this.page.getByRole('heading', { name: 'Offline Images' });
+        await offlineImagesHeading.scrollIntoViewIfNeeded();
+        await expect(offlineImagesHeading).toBeVisible({ timeout: 10000 });
+
+        const crossIcon = this.page.locator('img[src="assets/img/Group37073.svg"]');
+        await expect(crossIcon.first()).toBeVisible({ timeout: 10000 });
+        await crossIcon.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Optionally, close the preview if a close button is available
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 }

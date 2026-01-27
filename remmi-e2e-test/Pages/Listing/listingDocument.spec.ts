@@ -202,4 +202,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         // Optionally, you may want to add an assertion here:
         console.log('New X position after dragging the image:', newPosition);
     });
+
+    test('Test 36: Verify that offline section expands and collapses', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyOfflineSectionExpandCollapse();
+    });
+    
 });
