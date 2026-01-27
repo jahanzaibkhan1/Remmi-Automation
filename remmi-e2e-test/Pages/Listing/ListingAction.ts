@@ -13506,4 +13506,66 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verify clicking "Get Path" opens the path popup dialog.
+     */
+    public async verifyGetPathOpensPathPopup(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => {});
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and ensure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Find the image file to use for right click (adjust the file name if needed)
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' });
+        await expect(imageFile).toBeVisible({ timeout: 10000 });
+        await imageFile.click({ button: 'right' });
+
+        // Right-click the folder to open context menu
+        await imageFile.click({ button: 'right' });
+
+        await this.page.waitForTimeout(1000);
+
+        // Wait for the context menu and click "Get Path"
+        const getPathOption = this.page.locator('a:has(i.pi.pi-directions):has-text("Get Path")').first();
+        await getPathOption.click();
+        await this.page.waitForTimeout(1000);
+
+        // Assert that the path popup/dialog appears
+        const pathPopup = this.page.locator('.p-dialog:has-text("Get Path")');
+        await expect(pathPopup).toBeVisible({ timeout: 10000 });
+
+        // Locate the cross (close) icon in the path popup dialog
+        const crossIcon = this.page.locator('button.p-dialog-header-close');
+        await expect(crossIcon.first()).toBeVisible();
+
+        await this.page.waitForTimeout(1000);
+
+        // Optionally close the popup
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 }
