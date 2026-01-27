@@ -181,4 +181,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyDownloadFile();
     });
 
+    test('Test 32: Verify clicking "Edit" opens image in preview', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyEditOpensImageInPreview();
+    });
+
 });
