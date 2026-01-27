@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.913506000000055">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-27T05:11:32.036Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.635" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that the Document Tab opens correctly" classname="Pages\Listing\listingDocument.spec.ts" time="36.635">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.46216699999943">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-27T07:14:51.659Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.23" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 29: Verify clicking &quot;Get Path&quot; opens path popup" classname="Pages\Listing\listingDocument.spec.ts" time="42.23">
 </testcase>
 </testsuite>
 </testsuites>
