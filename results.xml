@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="62.753294000000224">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-27T08:18:29.150Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.454" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 32: Verify clicking &quot;Edit&quot; opens image in preview" classname="Pages\Listing\listingDocument.spec.ts" time="51.454">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="67.24816399999987">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-27T10:51:38.112Z" hostname="chromium" tests="1" failures="0" skipped="0" time="59.449" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 33: Verify that image zoom in/out works" classname="Pages\Listing\listingDocument.spec.ts" time="59.449">
 </testcase>
 </testsuite>
 </testsuites>
