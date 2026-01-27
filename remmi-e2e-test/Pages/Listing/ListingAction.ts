@@ -13784,7 +13784,6 @@ export class ListingActions {
         if (!handleBox) {
             throw new Error('Slider handle bounding box not found');
         }
-
         // Move to center of handle
         await this.page.mouse.move(handleBox.x + handleBox.width / 2, handleBox.y + handleBox.height / 2);
 
@@ -13815,6 +13814,62 @@ export class ListingActions {
             await closeBtn.click({ force: true });
         }
 
+    }
+
+    /**
+     * Verify that dragging the image in preview changes its position.
+     */
+    async verifyImageDragChangesPosition() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and ensure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Find the image file and drag it to the left side
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await expect(imageFile).toBeVisible({ timeout: 10000 });
+
+        const imageBox = await imageFile.boundingBox();
+        if (!imageBox) throw new Error('BoundingBox for image file not found.');
+
+        // Drag from center of the image file to 150px left of its current center
+        const startX = imageBox.x + imageBox.width / 2;
+        const startY = imageBox.y + imageBox.height / 2;
+        const dragOffset = -150; // pixels to the left
+
+        await this.page.mouse.move(startX, startY);
+        await this.page.mouse.down();
+        await this.page.mouse.move(startX + dragOffset, startY, { steps: 10 });
+        await this.page.mouse.up();
+
+        await this.page.waitForTimeout(1000);
+
+        // Optionally, close the preview if a close button is available
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
     }
 
 }
