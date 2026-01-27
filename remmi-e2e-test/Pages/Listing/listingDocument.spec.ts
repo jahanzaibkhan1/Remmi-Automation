@@ -171,4 +171,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyGetPathOpensPathPopup();
     });
 
+    test('Test 30: Verify clicking "Preview" opens the file', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyPreviewOptionOpensFile();
+    });
+
 });
