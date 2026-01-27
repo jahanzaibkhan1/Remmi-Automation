@@ -13872,4 +13872,61 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verifies that the edited image position is reflected in the document tab after dragging.
+     * Returns the new X position of the image after drag for assertion.
+     */
+    async verifyEditedImagePositionReflectsInDocumentTab(): Promise<number> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // Try to click the Back button if visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => {});
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Ensure the "Legal" folder is visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Find the target image file
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await expect(imageFile).toBeVisible({ timeout: 10000 });
+
+        const imageBox = await imageFile.boundingBox();
+        if (!imageBox) throw new Error('BoundingBox for image file not found.');
+
+        // Simulate dragging the image to the left by 150px
+        const startX = imageBox.x + imageBox.width / 2;
+        const startY = imageBox.y + imageBox.height / 2;
+        const dragOffset = -150;
+
+        await this.page.mouse.move(startX, startY);
+        await this.page.mouse.down();
+        await this.page.mouse.move(startX + dragOffset, startY, { steps: 10 });
+        await this.page.mouse.up();
+
+        await this.page.waitForTimeout(1000);
+
+        // Re-fetch the bounding box after drag to check the new position
+        const newImageBox = await imageFile.boundingBox();
+        if (!newImageBox) throw new Error('Could not get bounding box for image after drag.');
+
+        return newImageBox.x;
+    }
+
 }
