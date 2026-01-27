@@ -176,4 +176,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyPreviewOptionOpensFile();
     });
 
+    test('Test 31: Verify clicking "Download" downloads the file', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyDownloadFile();
+    });
+
 });
