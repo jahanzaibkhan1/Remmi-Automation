@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="54.58602000000002">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-26T12:41:03.893Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.368" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Verify clicking &quot;Get Link&quot; opens link popup" classname="Pages\Listing\listingDocument.spec.ts" time="48.368">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="70.14239000000002">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-27T11:19:27.101Z" hostname="chromium" tests="1" failures="0" skipped="0" time="56.334" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 35: Verify that edited image position reflects in the document tab" classname="Pages\Listing\listingDocument.spec.ts" time="56.334">
+<system-out>
+<![CDATA[New X position after dragging the image: [33m302.265625[39m
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
