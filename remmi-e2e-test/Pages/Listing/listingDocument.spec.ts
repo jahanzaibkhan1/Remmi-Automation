@@ -191,4 +191,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyImageZoomInOutWorks();
     });
 
+    test('Test 34: Verify that dragging image in preview changes its position', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyImageDragChangesPosition();
+    });
+
 });
