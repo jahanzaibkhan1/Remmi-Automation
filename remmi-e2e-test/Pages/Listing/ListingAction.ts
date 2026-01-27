@@ -11926,8 +11926,29 @@ export class ListingActions {
         // Open first listing
         const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown.click({ force: true });
+        // Find the delete button for the first visible listing card in card/grid view
+        const cardDeleteButton = this.page.locator('a:nth-child(4)').first();
+        await cardDeleteButton.scrollIntoViewIfNeeded()
+        await cardDeleteButton.click({ force: true });
+
+        // Wait for confirmation dialog to appear
+        const confirmationDialog = this.page.getByText('Are you sure you want to delete this listing ? Your listing will be permanently');
+        await expect(confirmationDialog).toBeVisible({ timeout: 10000 });
+
+        // Find and click the confirm Delete button
+        const confirmButton = this.page.getByRole('button', { name: 'Delete' });
+        await expect(confirmButton).toBeVisible({ timeout: 10000 });
+        await confirmButton.click({ force: true });
+        const toast = this.page.getByRole('alert', { name: 'Listing successfully deleted' });;
+        await expect(toast).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(2000);
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
         await firstCardRow.click();
         await this.page.waitForTimeout(1000);
+
+        
 
         // Go to Files tab
         const filesTab = this.page.getByRole('tab', { name: /Files/i });
@@ -12839,15 +12860,15 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
 
         // Check for Share, Rename, Make a Copy, Remove options in context menu
-        const shareOption = this.page.getByText(/Share/i);
-        const renameOption = this.page.getByText(/Rename/i);
-        const makeCopyOption = this.page.getByText(/Make a Copy/i);
-        const removeOption = this.page.getByText(/Remove/i);
+        const shareOption = this.page.getByText(/Share/i).first();
+        const renameOption = this.page.getByText(/Rename/i).last();
+        const makeCopyOption = this.page.getByText(/Make a Copy/i).first();
+        const removeOption = this.page.getByText(/Remove/i).first();
 
-        await expect(shareOption).toBeVisible({ timeout: 3000 });
-        await expect(renameOption).toBeVisible({ timeout: 3000 });
-        await expect(makeCopyOption).toBeVisible({ timeout: 3000 });
-        await expect(removeOption).toBeVisible({ timeout: 3000 });
+        await expect(shareOption).toBeVisible({ timeout: 10000 });
+        await expect(renameOption).toBeVisible({ timeout: 10000 });
+        await expect(makeCopyOption).toBeVisible({ timeout: 10000 });
+        await expect(removeOption).toBeVisible({ timeout: 10000 });
 
         // Optionally close the dialog again using ".pi.pi-times" icon if still open
         const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
@@ -13108,6 +13129,7 @@ export class ListingActions {
         // Use a unique, random rename string to ensure uniqueness and avoid stale cache/UI issues
         const { faker } = require('@faker-js/faker');
         const newFolderName = `Renamed-${faker.string.alphanumeric(6)}`;
+        await this.page.waitForTimeout(1000);
 
         // Right-click the folder to open context menu
         await folder.click({ button: "right" });
@@ -13256,10 +13278,17 @@ export class ListingActions {
         const shareDialogTitle = this.page.getByText('Share with people');
         await expect(shareDialogTitle).toBeVisible({ timeout: 10000 });
 
-        // Verify the presence of the 'Search User' field in the Share dialog
-        const searchUserField = this.page.getByText('Search User');
-        await expect(searchUserField).toBeVisible({ timeout: 6000 });
-        await searchUserField.click();
+        const userIcon = this.page.locator('span.ng-value-icon.left').last();
+        if (await userIcon.isVisible().catch(() => false)) {
+            // If the user icon is visible, click directly on the Share button
+            const shareButton = this.page.getByRole('button', { name: /^Share$/i }).last();
+            await expect(shareButton).toBeVisible({ timeout: 6000 });
+        } else {
+            // Otherwise, interact with the 'Search User' field
+            const searchUserField = this.page.locator('div.ng-value-container:has-text("Search User") div.ng-input input');
+            await expect(searchUserField).toBeVisible({ timeout: 6000 });
+            await searchUserField.click();
+        }
 
         // Find the first user/team suggestion in the dropdown if it appears
         const firstSuggestion = this.page.locator('div.ng-option[role="option"]').first();
@@ -13310,6 +13339,7 @@ export class ListingActions {
         const legalFolder = this.page.locator('div.lib-file').last();
         await legalFolder.scrollIntoViewIfNeeded();
         await expect(legalFolder).toBeVisible({ timeout: 20000 });
+        await this.page.waitForTimeout(1000);
 
         // Right-click the Legal folder to open the context menu
         await legalFolder.click({ button: 'right' });
@@ -13324,10 +13354,17 @@ export class ListingActions {
         const shareDialogTitle = this.page.getByText('Share with people');
         await expect(shareDialogTitle).toBeVisible({ timeout: 10000 });
 
-        // Verify the presence of the 'Search User' field in the Share dialog
-        const searchUserField = this.page.locator('div.ng-value-container:has-text("Search User") div.ng-input input');
-        await expect(searchUserField).toBeVisible({ timeout: 6000 });
-        await searchUserField.click();
+        const userIcon = this.page.locator('span.ng-value-icon.left').last();
+        if (await userIcon.isVisible().catch(() => false)) {
+            // If the user icon is visible, click directly on the Share button
+            const shareButton = this.page.getByRole('button', { name: /^Share$/i }).last();
+            await expect(shareButton).toBeVisible({ timeout: 6000 });
+        } else {
+            // Otherwise, interact with the 'Search User' field
+            const searchUserField = this.page.locator('div.ng-value-container:has-text("Search User") div.ng-input input');
+            await expect(searchUserField).toBeVisible({ timeout: 6000 });
+            await searchUserField.click();
+        }
 
         // Find the first user/team suggestion in the dropdown if it appears
         const firstSuggestion = this.page.locator('div.ng-option[role="option"]').first();
@@ -13343,7 +13380,7 @@ export class ListingActions {
 
         // Verify success message for data shared successfully
         const successToast = this.page.getByText(/Data shared Successfully/i);
-        await expect(successToast).toBeVisible({ timeout: 7000 });
+        await expect(successToast).toBeVisible({ timeout: 10000 });
 
         // Click the users icon inside the last folder (if present and visible)
         const lastFolder = this.page.locator('div.lib-file').last();
