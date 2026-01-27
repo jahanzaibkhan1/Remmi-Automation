@@ -11949,7 +11949,7 @@ export class ListingActions {
         await firstCardRow.click();
         await this.page.waitForTimeout(1000);
 
-        
+
 
         // Go to Files tab
         const filesTab = this.page.getByRole('tab', { name: /Files/i });
@@ -13417,7 +13417,7 @@ export class ListingActions {
         // Assume you are on the Files tab after navigation
 
         // Find the first image file in the listing files grid
-        const imageFile = this.page.locator('div.lib-file', {hasText: 'PropertyImage2.jpg'});
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' });
 
         await expect(imageFile).toBeVisible({ timeout: 10000 });
         await imageFile.click({ button: 'right' });
@@ -13526,7 +13526,7 @@ export class ListingActions {
 
         // If there's a Back button, try to click it if it's visible
         const backButton = this.page.getByRole('link', { name: ' Back' });
-        await backButton.scrollIntoViewIfNeeded().catch(() => {});
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
         if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
             await backButton.click();
         }
@@ -13564,6 +13564,66 @@ export class ListingActions {
         // Optionally close the popup
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    // Verify clicking ‘Preview’ opens the file
+    async verifyPreviewOptionOpensFile() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and ensure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Find the image file to use for right click (adjust the file name if needed)
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' });
+        await expect(imageFile).toBeVisible({ timeout: 10000 });
+        await imageFile.click({ button: 'right' });
+
+        // Right-click the folder to open context menu
+        await imageFile.click({ button: 'right' });
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the "Preview" option from context menu (adjust selector if needed)
+        const previewOption = this.page.locator('a:has(i.pi.pi-eye):has-text("Preview")').first();
+        await expect(previewOption).toBeVisible({ timeout: 5000 });
+        await previewOption.click();
+
+        // Assert that the preview file modal/dialog appears
+        // The selector might need to be updated according to the actual modal/dialog html
+        const previewDialog = this.page.locator('.p-dialog:has-text("Preview")');
+        await expect(previewDialog).toBeVisible({ timeout: 10000 });
+
+        // Locate the cross (close) icon in the path popup dialog
+        const crossIcon = this.page.locator('button.p-dialog-header-close');
+        await expect(crossIcon.first()).toBeVisible();
+
+        await this.page.waitForTimeout(1000);
+        // Optionally, close the preview if a close button is available
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({timeout:10000}).catch(() => false)) {
             await closeBtn.click({ force: true });
         }
     }
