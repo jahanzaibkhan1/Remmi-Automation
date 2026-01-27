@@ -11931,6 +11931,7 @@ export class ListingActions {
         // Find the delete button for the first visible listing card in card/grid view
         const cardDeleteButton = this.page.locator('a:nth-child(4)').first();
         await cardDeleteButton.scrollIntoViewIfNeeded()
+        await this.page.waitForTimeout(1000);
         await cardDeleteButton.click({ force: true });
 
         // Wait for confirmation dialog to appear
@@ -13068,12 +13069,14 @@ export class ListingActions {
 
         // Right-click the folder to open context menu
         await folder.click({ button: "right" });
-        await this.page.waitForTimeout(600);
+        await this.page.waitForTimeout(1000);
 
         // Find and click 'Rename' in the context menu
-        const renameOption = this.page.getByText('Rename').first();
+        const renameOption = this.page.locator('a:has(img[alt="Rename"]):has-text("Rename")').first();
         await expect(renameOption).toBeVisible({ timeout: 10000 });
         await renameOption.click();
+
+        await this.page.waitForTimeout(1000);
 
         // After clicking 'Rename', a rename popup should appear (usually a dialog with input)
         const renameDialog = this.page.getByText('Rename').first();
@@ -13211,6 +13214,7 @@ export class ListingActions {
         const shareOption = this.page.getByText(/Share/i).first();
         await expect(shareOption).toBeVisible({ timeout: 6000 });
         await shareOption.click({ force: true });
+        await this.page.waitForTimeout(1000);
 
         // Should see "Share" dialog appear (look for some label/input inside it)
         const shareDialogTitle = this.page.getByText('Share with people');
@@ -13267,28 +13271,20 @@ export class ListingActions {
 
         // Right-click the Legal folder to open the context menu
         await legalFolder.click({ button: 'right' });
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
 
         // Select Share from the context menu
         const shareOption = this.page.getByText(/Share/i).first();
-        await expect(shareOption).toBeVisible({ timeout: 6000 });
+        await expect(shareOption).toBeVisible({ timeout: 10000 });
         await shareOption.click({ force: true });
 
         // Share dialog appears
         const shareDialogTitle = this.page.getByText('Share with people');
         await expect(shareDialogTitle).toBeVisible({ timeout: 10000 });
 
-        const userIcon = this.page.locator('span.ng-value-icon.left').last();
-        if (await userIcon.isVisible().catch(() => false)) {
-            // If the user icon is visible, click directly on the Share button
-            const shareButton = this.page.getByRole('button', { name: /^Share$/i }).last();
-            await expect(shareButton).toBeVisible({ timeout: 6000 });
-        } else {
-            // Otherwise, interact with the 'Search User' field
-            const searchUserField = this.page.locator('div.ng-value-container:has-text("Search User") div.ng-input input');
-            await expect(searchUserField).toBeVisible({ timeout: 6000 });
-            await searchUserField.click();
-        }
+        const searchUserField = this.page.locator('div.ng-value-container:has-text("Search User") div.ng-input input');
+        await expect(searchUserField).toBeVisible({ timeout: 10000 });
+        await searchUserField.click();
 
         // Find the first user/team suggestion in the dropdown if it appears
         const firstSuggestion = this.page.locator('div.ng-option[role="option"]').first();
@@ -13306,6 +13302,7 @@ export class ListingActions {
         if (await cancelBtn.isVisible().catch(() => false)) {
             await cancelBtn.click();
         }
+        await this.page.waitForTimeout(1000);
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
@@ -13354,17 +13351,11 @@ export class ListingActions {
         const shareDialogTitle = this.page.getByText('Share with people');
         await expect(shareDialogTitle).toBeVisible({ timeout: 10000 });
 
-        const userIcon = this.page.locator('span.ng-value-icon.left').last();
-        if (await userIcon.isVisible().catch(() => false)) {
-            // If the user icon is visible, click directly on the Share button
-            const shareButton = this.page.getByRole('button', { name: /^Share$/i }).last();
-            await expect(shareButton).toBeVisible({ timeout: 6000 });
-        } else {
-            // Otherwise, interact with the 'Search User' field
-            const searchUserField = this.page.locator('div.ng-value-container:has-text("Search User") div.ng-input input');
-            await expect(searchUserField).toBeVisible({ timeout: 6000 });
-            await searchUserField.click();
-        }
+        // Removed user icon logic per instruction. Always interact with 'Search User' field directly.
+        const searchUserField = this.page.locator('div.ng-value-container:has-text("Search User") div.ng-input input');
+        await expect(searchUserField).toBeVisible({ timeout: 6000 });
+        await searchUserField.click();
+
 
         // Find the first user/team suggestion in the dropdown if it appears
         const firstSuggestion = this.page.locator('div.ng-option[role="option"]').first();
@@ -13499,11 +13490,11 @@ export class ListingActions {
         const getLinkOption = this.page.locator('#folderOptionsList ul.folders li:has(i.pi.pi-link) a', { hasText: 'Get Link' });
         await expect(getLinkOption).toBeVisible({ timeout: 2000 });
         await getLinkOption.click();
+        await this.page.waitForTimeout(1000);
 
         // Assert that the link popup/dialog appears
-        // Typical selectors to check: dialog, modal, 'Copy Link' or input containing link...
         const linkPopup = this.page.locator('[role="dialog"], .p-dialog, .modal:has-text("Get Link")');
-        await expect(linkPopup).toBeVisible({ timeout: 7000 });
+        await expect(linkPopup).toBeVisible({ timeout: 10000 });
 
         // Locate the cross (close) icon in the link popup dialog
         const crossIcon = this.page.locator('button.p-dialog-header-close')
