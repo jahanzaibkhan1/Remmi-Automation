@@ -166,4 +166,46 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyGetLinkOpensLinkPopup();
     });
 
+    test('Test 29: Verify clicking "Get Path" opens path popup', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyGetPathOpensPathPopup();
+    });
+
+    test('Test 30: Verify clicking "Preview" opens the file', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyPreviewOptionOpensFile();
+    });
+
+    test('Test 31: Verify clicking "Download" downloads the file', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyDownloadFile();
+    });
+
+    test('Test 32: Verify clicking "Edit" opens image in preview', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyEditOpensImageInPreview();
+    });
+
+    test('Test 33: Verify that image zoom in/out works', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyImageZoomInOutWorks();
+    });
+
+    test('Test 34: Verify that dragging image in preview changes its position', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyImageDragChangesPosition();
+    });
+    
+    test('Test 35: Verify that edited image position reflects in the document tab', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        const newPosition = await listingActions.verifyEditedImagePositionReflectsInDocumentTab();
+        // Optionally, you may want to add an assertion here:
+        console.log('New X position after dragging the image:', newPosition);
+    });
+
+    test('Test 36: Verify that offline section expands and collapses', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyOfflineSectionExpandCollapse();
+    });
+    
 });
