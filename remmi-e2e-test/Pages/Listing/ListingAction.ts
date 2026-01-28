@@ -14091,6 +14091,80 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verifies the deletion of an offline file.
+     * Assumes the offline image section is present with at least one image.
+     */
+    async verifyDeleteOfflineFile() {
+        // Navigate to the Listings grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstListing = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListing).toBeVisible({ timeout: 30000 });
+        await firstListing.click();
+
+        // Switch to the "Files" tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await filesTab.waitFor({ state: 'visible' });
+        await filesTab.click();
+
+        // Optionally, click the Back button if visible (ignore errors if not)
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        try {
+            await backButton.scrollIntoViewIfNeeded();
+            if (await backButton.isVisible({ timeout: 20000 })) {
+                await backButton.click();
+            }
+        } catch { }
+
+        // Make sure "Legal" folder is visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Activate reorder mode
+        const reorderIcon = this.page.locator('img[ptooltip="Reorder"][src="assets/img/edit.svg"]').first();
+        await reorderIcon.waitFor({ state: 'visible' });
+        await reorderIcon.click();
+
+        // Click to expand the offline image section
+        const offlineSectionExpand = this.page.locator('h4', { hasText: "Click to expand and drag and drop images you do not want to push to portals." });
+        await offlineSectionExpand.scrollIntoViewIfNeeded();
+        await expect(offlineSectionExpand).toBeVisible({ timeout: 10000 });
+        await offlineSectionExpand.click();
+
+        const offlineDropList = this.page.locator('.hwfix').first();
+        await expect(offlineDropList).toBeVisible({ timeout: 10000 });
+        await offlineDropList.click();
+
+        // Click the delete ("cross") icon to delete selected images
+        const deleteBtn = this.page.locator('a[ptooltip="Delete selected images"]');
+        await expect(deleteBtn).toBeVisible({ timeout: 5000 });
+        await deleteBtn.dblclick({force:true});
+
+        // Verify that the image is no longer visible after deletion
+        await expect(
+            this.page.locator('img[src*="PropertyImage21769579749829.jpg"]').first()
+        ).not.toBeVisible({ timeout: 20000 });
+
+        await this.page.waitForTimeout(1200);
+
+        const crossIcon = this.page.locator('img[src="assets/img/Group37073.svg"]');
+        await expect(crossIcon.first()).toBeVisible({ timeout: 10000 });
+        await crossIcon.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Optionally, close the preview if a close button is available
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+
 
 
 }

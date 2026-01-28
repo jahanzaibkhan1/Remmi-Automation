@@ -212,5 +212,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyDragFileToOfflineSection();
     });
+
+    test('Test 38: Verify deleting an offline file', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyDeleteOfflineFile();
+    });
     
 });
