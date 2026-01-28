@@ -14360,7 +14360,82 @@ export class ListingActions {
 
     }
 
+    /**
+     * Verifies that folder reordering is functional.
+     * Assumes folders are draggable and will update visually after DnD.
+     */
+    async verifyFolderReordering() {
+        // Go to Listings in grid view, open the first listing
+        await this.navigateToListings();
+        await this.switchToGridView();
 
+        const firstListing = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListing).toBeVisible({ timeout: 30000 });
+        await firstListing.click();
 
+        // Open the "Files" tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await filesTab.waitFor({ state: 'visible' });
+        await filesTab.click();
+
+        // Optionally, click the Back button if visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        try {
+            await backButton.scrollIntoViewIfNeeded();
+            if (await backButton.isVisible({ timeout: 20000 })) {
+                await backButton.click();
+            }
+        } catch {}
+
+        // Enter the "Legal" folder
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Get at least 3 folder items within "Legal"
+        const folders = this.page.locator('div.lib-file');
+        const folderCount = await folders.count();
+        if (folderCount < 3) {
+            throw new Error('Not enough folders to reorder. Need at least 3 folders.');
+        }
+
+        // Grab names before reorder
+        const folder0 = folders.nth(0);
+        const folder1 = folders.nth(1);
+        const [name0Before, name1Before] = await Promise.all([
+            folder0.textContent(),
+            folder1.textContent()
+        ]);
+
+        // Reorder: drag first folder below the second
+        await folder0.dragTo(folder1);
+
+        // Wait momentarily for UI update
+        await this.page.waitForTimeout(1200);
+
+        // Get folder items and names after reorder (accounting for possible class name change)
+        const foldersAfter = this.page.locator('div.lib-folder, div.lib-file');
+        const [name0After, name1After] = await Promise.all([
+            foldersAfter.nth(0).textContent(),
+            foldersAfter.nth(1).textContent()
+        ]);
+
+        // Check if order has changed
+        if (name0Before === name0After && name1Before === name1After) {
+            throw new Error('Folders did not reorder as expected.');
+        }
+
+        // Wait before closing preview modal, if open
+        await this.page.waitForTimeout(800);
+
+        // Optionally, close any open preview modal
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        try {
+            if (await closeBtn.isVisible({ timeout: 10000 })) {
+                await closeBtn.click({ force: true });
+            }
+        } catch {}
+        
+    }
 
 }

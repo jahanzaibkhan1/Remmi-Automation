@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.91645199999958">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-28T07:07:48.696Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.519" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 42: Verify that document tab supports list/grid view toggle" classname="Pages\Listing\listingDocument.spec.ts" time="40.519">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="54.92141200000048">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-28T07:20:13.806Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.946" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 43: Verify that reordering folders works" classname="Pages\Listing\listingDocument.spec.ts" time="34.946">
 </testcase>
 </testsuite>
 </testsuites>

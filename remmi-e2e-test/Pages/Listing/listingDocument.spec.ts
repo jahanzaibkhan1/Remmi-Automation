@@ -237,5 +237,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyDocumentTabSupportsListGridViewToggle();
     });
+
+    test('Test 43: Verify that reordering folders works', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyFolderReordering();
+    });
     
 });
