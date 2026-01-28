@@ -13847,7 +13847,7 @@ export class ListingActions {
         await expect(legalFolder).toBeVisible({ timeout: 20000 });
 
         // Find the image file and drag it to the left side
-        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'propertyImage.jpg' }).first();
         await expect(imageFile).toBeVisible({ timeout: 10000 });
 
         const imageBox = await imageFile.boundingBox();
@@ -14436,6 +14436,61 @@ export class ListingActions {
             }
         } catch {}
         
+    }
+
+    /*
+    *Verify that reordering images works
+     */
+    public async verifyImageReorderingWorks() {
+        // Reminder: This uses public directory images for upload
+        const uploadInput = this.page.locator('input[type="file"]');
+        await expect(uploadInput).toBeVisible({ timeout: 10000 });
+
+        // Upload using images from the public assets folder (adjust as needed for your env)
+        const firstImage = path.resolve(__dirname, '../../public/test-image-01.jpg');
+        const secondImage = path.resolve(__dirname, '../../public/test-image-02.jpg');
+
+        // Upload the first image
+        await uploadInput.setInputFiles(firstImage);
+        const uploadedImg1 = this.page.locator('img[src*="test-image-01"]');
+        await expect(uploadedImg1).toBeVisible({ timeout: 10000 });
+
+        // Upload the second image
+        await uploadInput.setInputFiles(secondImage);
+        const uploadedImg2 = this.page.locator('img[src*="test-image-02"]');
+        await expect(uploadedImg2).toBeVisible({ timeout: 10000 });
+
+        await this.page.waitForTimeout(1200);
+
+        // Get the relevant images before reorder
+        const images = this.page.locator('img[src*="test-image-01"], img[src*="test-image-02"]');
+        const imgCount = await images.count();
+        if (imgCount < 2) {
+            throw new Error('Both images must be present to reorder.');
+        }
+
+        const srcBefore0 = await images.nth(0).getAttribute('src');
+        const srcBefore1 = await images.nth(1).getAttribute('src');
+
+        // Drag and drop to reorder
+        await images.nth(0).dragTo(images.nth(1));
+        await this.page.waitForTimeout(1200);
+
+        const imagesAfter = this.page.locator('img[src*="test-image-01"], img[src*="test-image-02"]');
+        const srcAfter0 = await imagesAfter.nth(0).getAttribute('src');
+        const srcAfter1 = await imagesAfter.nth(1).getAttribute('src');
+
+        if (srcBefore0 === srcAfter0 && srcBefore1 === srcAfter1) {
+            throw new Error('Images did not reorder as expected.');
+        }
+
+        // Optionally close preview modal if visible
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        try {
+            if (await closeBtn.isVisible({ timeout: 10000 })) {
+                await closeBtn.click({ force: true });
+            }
+        } catch {}
     }
 
 }
