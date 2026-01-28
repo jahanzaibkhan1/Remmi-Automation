@@ -13893,7 +13893,7 @@ export class ListingActions {
 
         // Try to click the Back button if visible
         const backButton = this.page.getByRole('link', { name: ' Back' });
-        await backButton.scrollIntoViewIfNeeded().catch(() => {});
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
         if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
             await backButton.click();
         }
@@ -13984,5 +13984,113 @@ export class ListingActions {
             await closeBtn.click({ force: true });
         }
     }
+
+    /**
+     * Drags an image from Gallery Images to Offline Images section (Angular CDK safe)
+     */
+    async verifyDragFileToOfflineSection() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstListing = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListing).toBeVisible({ timeout: 30000 });
+        await firstListing.click();
+
+        // Open Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await filesTab.waitFor({ state: 'visible' });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and ensure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Enable reorder mode
+        const reorderIcon = this.page
+            .locator('img[ptooltip="Reorder"][src="assets/img/edit.svg"]')
+            .first();
+        await reorderIcon.waitFor({ state: 'visible' });
+        await reorderIcon.click();
+
+        // SOURCE: Angular draggable image
+        const sourceImage = this.page.locator('#galImgList .cdk-drag').first();
+        await sourceImage.waitFor({ state: 'visible' });
+
+        // EXPAND Offline Images section (MANDATORY)
+        const offlineHeading = this.page.locator(
+            'h2.heading-style:has-text("Offline Images")'
+        );
+        await offlineHeading.scrollIntoViewIfNeeded();
+        await offlineHeading.click();
+
+        // REAL Angular CDK drop list under Offline Images
+        const offlineDropList = this.page.locator(
+            'div.cdk-drop-list:below(h2:has-text("Offline Images"))'
+        ).first();
+        await offlineDropList.waitFor({ state: 'visible' });
+
+        // Wait for Angular animations/layout
+        await this.page.waitForLoadState('networkidle');
+
+        // Get bounding boxes
+        const srcBox = await sourceImage.boundingBox();
+        const targetBox = await offlineDropList.boundingBox();
+        if (!srcBox || !targetBox) {
+            throw new Error('Bounding box not found for drag/drop');
+        }
+
+        // Angular-safe drag & drop (slow + pause)
+        await this.page.mouse.move(
+            srcBox.x + srcBox.width / 2,
+            srcBox.y + srcBox.height / 2
+        );
+        await this.page.mouse.down();
+
+        await this.page.waitForTimeout(200); // REQUIRED for CDK
+
+        await this.page.mouse.move(
+            targetBox.x + targetBox.width / 2,
+            targetBox.y + targetBox.height / 2,
+            { steps: 50 }
+        );
+
+        await this.page.waitForTimeout(200);
+        await this.page.mouse.up();
+
+        await this.page.waitForTimeout(2000);
+
+        // VERIFY image moved to Offline Images
+        await expect
+            .poll(async () => await offlineDropList.locator('.cdk-drag').count(), {
+                timeout: 15000,
+            })
+            .toBeGreaterThan(0);
+
+
+        await this.page.waitForTimeout(1200);
+
+        const crossIcon = this.page.locator('img[src="assets/img/Group37073.svg"]');
+        await expect(crossIcon.first()).toBeVisible({ timeout: 10000 });
+        await crossIcon.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Optionally, close the preview if a close button is available
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+
 
 }
