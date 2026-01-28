@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.86751700000092">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-28T07:27:19.908Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.515" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 44: Verify that reordering images works" classname="Pages\Listing\listingDocument.spec.ts" time="39.515">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.03138300000131">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-28T07:37:13.808Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.118" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 45: Verify error message when uploading unsupported file types" classname="Pages\Listing\listingDocument.spec.ts" time="33.118">
 </testcase>
 </testsuite>
 </testsuites>
