@@ -222,5 +222,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyBackButtonIsShownWhenFolderOpened();
     });
+
+    test('Test 40: Verify that folder names appear as navigation tabs', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyFolderNamesAppearAsNavigationTabs();
+    });
     
 });

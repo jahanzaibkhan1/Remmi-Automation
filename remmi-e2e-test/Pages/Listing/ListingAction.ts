@@ -14207,6 +14207,51 @@ export class ListingActions {
 
     }
 
+    /**
+     * Verify that folder names appear as navigation tabs after navigating into folders.
+     */
+    async verifyFolderNamesAppearAsNavigationTabs() {
+        // Navigate to the Listings grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstListing = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListing).toBeVisible({ timeout: 30000 });
+        await firstListing.click();
+
+        // Switch to the "Files" tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await filesTab.waitFor({ state: 'visible' });
+        await filesTab.click();
+
+       
+        // Optionally, click the Back button if visible (ignore errors if not)
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        try {
+            await backButton.scrollIntoViewIfNeeded();
+            if (await backButton.isVisible({ timeout: 20000 })) {
+                await backButton.click();
+            }
+        } catch { }
+
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+        await legalFolder.dblclick();
+        // expect the "Back" button to be visible after opening the "Legal" folder
+        await expect(this.page.getByRole('link', { name: ' Back' })).toBeVisible({ timeout: 10000 });
+
+        const breadcrumb = this.page.locator('ul li a span.bread-color:has-text("Legal")');
+        await expect(breadcrumb).toBeVisible({ timeout: 10000 });
+
+        // Optionally, close out of preview if necessary
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 
 
 

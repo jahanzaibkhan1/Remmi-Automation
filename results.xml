@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.117922000000256">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-28T06:26:30.433Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.402" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 39: Verify that opening a folder shows the &quot;Back&quot; button" classname="Pages\Listing\listingDocument.spec.ts" time="30.402">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.04713000000082">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-28T06:44:46.311Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.753" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 40: Verify that folder names appear as navigation tabs" classname="Pages\Listing\listingDocument.spec.ts" time="30.753">
 </testcase>
 </testsuite>
 </testsuites>
