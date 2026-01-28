@@ -247,5 +247,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyImageDragChangesPosition();
     });
+
+    test('Test 45: Verify error message when uploading unsupported file types', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+        const imagePath = path.join(IMAGE_DIR, 'invalidImage.webp');
+        await listingActions.verifyUnsupportedFileTypeUploadShowsError(imagePath);
+    });
     
 });

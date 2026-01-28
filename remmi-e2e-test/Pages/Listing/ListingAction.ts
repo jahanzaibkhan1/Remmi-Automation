@@ -14385,7 +14385,7 @@ export class ListingActions {
             if (await backButton.isVisible({ timeout: 20000 })) {
                 await backButton.click();
             }
-        } catch {}
+        } catch { }
 
         // Enter the "Legal" folder
         const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
@@ -14434,8 +14434,8 @@ export class ListingActions {
             if (await closeBtn.isVisible({ timeout: 10000 })) {
                 await closeBtn.click({ force: true });
             }
-        } catch {}
-        
+        } catch { }
+
     }
 
     /*
@@ -14490,7 +14490,64 @@ export class ListingActions {
             if (await closeBtn.isVisible({ timeout: 10000 })) {
                 await closeBtn.click({ force: true });
             }
-        } catch {}
+        } catch { }
+    }
+
+    /**
+    Verify error message when uploading unsupported file types
+    */
+    async verifyUnsupportedFileTypeUploadShowsError(filePath: string): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Files tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
+        await filesTab.click();
+
+        // If there's a Back button, try to click it if it's visible
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
+
+        // Find the "Legal" folder and make sure it's visible
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Click the Add button
+        const addButton = this.page.getByRole('button', { name: /add/i }).first();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        // Click "File Upload (Public)" option
+        const publicOption = this.page.locator('a', { hasText: 'File Upload (Public)' });
+
+        await expect(publicOption).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
+        await publicOption.click();
+
+        // Wait for upload input to appear
+        const fileInput = this.page.locator('#fileUpload');
+        // Upload the file
+        await fileInput.setInputFiles(filePath);
+        const errorToast = this.page.locator('div[aria-label="File type not supported"]');
+        await expect(errorToast).toBeVisible({ timeout: 10000 });
+
+         // Optionally, close out of preview if necessary
+         const closeBtn = this.page.locator('.pi.pi-times').first();
+         if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+             await closeBtn.click({ force: true });
+         }
+      
     }
 
 }
