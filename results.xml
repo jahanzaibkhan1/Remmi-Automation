@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="59.99042699999921">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-28T06:56:42.508Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.789" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 41: Verify clicking on a folder tab navigates to it" classname="Pages\Listing\listingDocument.spec.ts" time="37.789">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.91645199999958">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-28T07:07:48.696Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.519" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 42: Verify that document tab supports list/grid view toggle" classname="Pages\Listing\listingDocument.spec.ts" time="40.519">
 </testcase>
 </testsuite>
 </testsuites>
