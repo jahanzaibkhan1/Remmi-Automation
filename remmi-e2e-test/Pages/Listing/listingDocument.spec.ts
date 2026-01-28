@@ -232,5 +232,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyClickingFolderTabNavigatesToFolder();
     });
+
+    test('Test 42: Verify that document tab supports list/grid view toggle', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyDocumentTabSupportsListGridViewToggle();
+    });
     
 });

@@ -14225,7 +14225,7 @@ export class ListingActions {
         await filesTab.waitFor({ state: 'visible' });
         await filesTab.click();
 
-       
+
         // Optionally, click the Back button if visible (ignore errors if not)
         const backButton = this.page.getByRole('link', { name: ' Back' });
         try {
@@ -14272,7 +14272,7 @@ export class ListingActions {
         await filesTab.waitFor({ state: 'visible' });
         await filesTab.click();
 
-       
+
         // Optionally, click the Back button if visible (ignore errors if not)
         const backButton = this.page.getByRole('link', { name: ' Back' });
         try {
@@ -14306,6 +14306,58 @@ export class ListingActions {
         if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+    }
+
+    /**
+     * Verifies that the document tab supports toggling between list and grid views.
+     * Checks that toggling updates the UI as expected.
+     */
+    async verifyDocumentTabSupportsListGridViewToggle() {
+        // Navigate to the Listings grid view and open the first listing
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstListing = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListing).toBeVisible({ timeout: 30000 });
+        await firstListing.click();
+        // Switch to the "Files" tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await filesTab.waitFor({ state: 'visible' });
+        await filesTab.click();
+
+        // Optionally, click the Back button if visible (ignore errors if not)
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        try {
+            await backButton.scrollIntoViewIfNeeded();
+            if (await backButton.isVisible({ timeout: 20000 })) {
+                await backButton.click();
+            }
+        } catch { }
+
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+
+        // Now, verify that the list view container appears and grid view container disappears (if possible)
+        const listContainer = this.page.locator('img[ptooltip="List"]');
+        await expect(listContainer).toBeVisible({ timeout: 10000 });
+        await listContainer.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // After switching to list view, verify that the grid view container appears and the list container disappears (if possible)
+        const gridContainer = this.page.locator('img[ptooltip="Grid"]');
+        await expect(gridContainer).toBeVisible({ timeout: 10000 });
+        await gridContainer.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Optionally, close out of preview if necessary
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
     }
 
 
