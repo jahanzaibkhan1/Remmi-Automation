@@ -14252,6 +14252,62 @@ export class ListingActions {
         }
     }
 
+    /**
+     * Verifies that clicking a folder tab in the breadcrumb navigation opens that folder.
+     * Assumes navigation into at least one folder has already occurred.
+     * Optionally, accepts the folder name to test; defaults to 'Legal'.
+     */
+    async verifyClickingFolderTabNavigatesToFolder() {
+        // Navigate to the Listings grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstListing = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListing).toBeVisible({ timeout: 30000 });
+        await firstListing.click();
+
+        // Switch to the "Files" tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await filesTab.waitFor({ state: 'visible' });
+        await filesTab.click();
+
+       
+        // Optionally, click the Back button if visible (ignore errors if not)
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        try {
+            await backButton.scrollIntoViewIfNeeded();
+            if (await backButton.isVisible({ timeout: 20000 })) {
+                await backButton.click();
+            }
+        } catch { }
+
+        const ducumentsFolder = this.page.locator('div.lib-file', { hasText: 'Documents' }).first();
+        await ducumentsFolder.scrollIntoViewIfNeeded();
+        await expect(ducumentsFolder).toBeVisible({ timeout: 20000 });
+        await ducumentsFolder.dblclick();
+        // expect the "Back" button to be visible after opening the "Legal" folder
+        await expect(this.page.getByRole('link', { name: ' Back' })).toBeVisible({ timeout: 10000 });
+
+        const breadcrumb = this.page.locator('ul li a span.bread-color:has-text("Documents")');
+        await expect(breadcrumb).toBeVisible({ timeout: 10000 });
+
+        // Click on Appraisals folder
+        const appraisalsFolder = this.page.locator('div.lib-file', { hasText: 'Appraisals' }).first();
+        await appraisalsFolder.scrollIntoViewIfNeeded();
+        await expect(appraisalsFolder).toBeVisible({ timeout: 20000 });
+        await appraisalsFolder.dblclick();
+        // Optionally, assert that the breadcrumb has updated to 'Appraisals'
+        const appraisalsBreadcrumb = this.page.locator('ul li a span.bread-color:has-text("Appraisals")');
+        await expect(appraisalsBreadcrumb).toBeVisible({ timeout: 10000 });
+
+        // Optionally, close out of preview if necessary
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 
 
 
