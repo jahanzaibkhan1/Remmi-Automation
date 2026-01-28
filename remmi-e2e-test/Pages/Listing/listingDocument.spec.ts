@@ -207,5 +207,52 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyOfflineSectionExpandCollapse();
     });
+
+    test('Test 37: Verify dragging a file to the offline section', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyDragFileToOfflineSection();
+    });
+
+    test('Test 38: Verify deleting an offline file', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyDeleteOfflineFile();
+    });
+
+    test('Test 39: Verify that opening a folder shows the "Back" button', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyBackButtonIsShownWhenFolderOpened();
+    });
+
+    test('Test 40: Verify that folder names appear as navigation tabs', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyFolderNamesAppearAsNavigationTabs();
+    });
+
+    test('Test 41: Verify clicking on a folder tab navigates to it', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyClickingFolderTabNavigatesToFolder();
+    });
+
+    test('Test 42: Verify that document tab supports list/grid view toggle', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyDocumentTabSupportsListGridViewToggle();
+    });
+
+    test('Test 43: Verify that reordering folders works', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyFolderReordering();
+    });
+
+    test('Test 44: Verify that reordering images works', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyImageDragChangesPosition();
+    });
+
+    test('Test 45: Verify error message when uploading unsupported file types', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+        const imagePath = path.join(IMAGE_DIR, 'invalidImage.webp');
+        await listingActions.verifyUnsupportedFileTypeUploadShowsError(imagePath);
+    });
     
 });

@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="70.14239000000002">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-27T11:19:27.101Z" hostname="chromium" tests="1" failures="0" skipped="0" time="56.334" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 35: Verify that edited image position reflects in the document tab" classname="Pages\Listing\listingDocument.spec.ts" time="56.334">
-<system-out>
-<![CDATA[New X position after dragging the image: [33m302.265625[39m
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.03138300000131">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-28T07:37:13.808Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.118" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 45: Verify error message when uploading unsupported file types" classname="Pages\Listing\listingDocument.spec.ts" time="33.118">
 </testcase>
 </testsuite>
 </testsuites>
