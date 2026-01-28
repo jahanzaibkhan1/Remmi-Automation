@@ -227,5 +227,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyFolderNamesAppearAsNavigationTabs();
     });
+
+    test('Test 41: Verify clicking on a folder tab navigates to it', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyClickingFolderTabNavigatesToFolder();
+    });
     
 });

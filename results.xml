@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.04713000000082">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-28T06:44:46.311Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.753" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 40: Verify that folder names appear as navigation tabs" classname="Pages\Listing\listingDocument.spec.ts" time="30.753">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="59.99042699999921">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-28T06:56:42.508Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.789" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 41: Verify clicking on a folder tab navigates to it" classname="Pages\Listing\listingDocument.spec.ts" time="37.789">
 </testcase>
 </testsuite>
 </testsuites>
