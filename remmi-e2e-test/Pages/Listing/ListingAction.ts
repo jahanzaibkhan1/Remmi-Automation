@@ -12821,6 +12821,7 @@ export class ListingActions {
         // Optionally close the dialog again using ".pi.pi-times" icon if still open
         const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
         await closePreviewButton.click({ force: true });
+        await this.page.waitForTimeout(1200);
     }
 
     /**
@@ -12870,6 +12871,8 @@ export class ListingActions {
         await expect(renameOption).toBeVisible({ timeout: 10000 });
         await expect(makeCopyOption).toBeVisible({ timeout: 10000 });
         await expect(removeOption).toBeVisible({ timeout: 10000 });
+
+        await this.page.waitForTimeout(1200);
 
         // Optionally close the dialog again using ".pi.pi-times" icon if still open
         const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
@@ -13031,7 +13034,7 @@ export class ListingActions {
                 await expect(copiedFolder).toBeVisible({ timeout: 20000 });
             }
         }
-
+        await this.page.waitForTimeout(1200);
         // Optionally close any open popups
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
@@ -13069,7 +13072,8 @@ export class ListingActions {
 
         // Right-click the folder to open context menu
         await folder.click({ button: "right" });
-        await this.page.waitForTimeout(1000);
+        await folder.click({ button: "right" });
+        await this.page.waitForTimeout(2000);
 
         // Find and click 'Rename' in the context menu
         const renameOption = this.page.locator('a:has(img[alt="Rename"]):has-text("Rename")').first();
@@ -13232,6 +13236,8 @@ export class ListingActions {
         await expect(cancelBtn).toBeVisible({ timeout: 5000 });
         await cancelBtn.click();
 
+        await this.page.waitForTimeout(1200);
+
         // Optionally close the dialog
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
@@ -13271,7 +13277,8 @@ export class ListingActions {
 
         // Right-click the Legal folder to open the context menu
         await legalFolder.click({ button: 'right' });
-        await this.page.waitForTimeout(1000);
+        await legalFolder.click({ button: 'right' });
+        await this.page.waitForTimeout(2000);
 
         // Select Share from the context menu
         const shareOption = this.page.getByText(/Share/i).first();
@@ -13284,7 +13291,7 @@ export class ListingActions {
 
         const searchUserField = this.page.locator('div.ng-value-container:has-text("Search User") div.ng-input input');
         await expect(searchUserField).toBeVisible({ timeout: 10000 });
-        await searchUserField.click();
+        await searchUserField.click({force:true});
 
         // Find the first user/team suggestion in the dropdown if it appears
         const firstSuggestion = this.page.locator('div.ng-option[role="option"]').first();
@@ -13483,7 +13490,10 @@ export class ListingActions {
 
         // Find the image file to use for right click (adjust the file name if needed)
         const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' });
+        await imageFile.scrollIntoViewIfNeeded();
         await expect(imageFile).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
+        await imageFile.click({ button: 'right' });
         await imageFile.click({ button: 'right' });
 
         // Wait for the context menu and click "Get Link"
@@ -13499,6 +13509,8 @@ export class ListingActions {
         // Locate the cross (close) icon in the link popup dialog
         const crossIcon = this.page.locator('button.p-dialog-header-close')
         await expect(crossIcon.first()).toBeVisible();
+
+        await this.page.waitForTimeout(1200);
 
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
@@ -13538,10 +13550,11 @@ export class ListingActions {
 
         // Find the image file to use for right click (adjust the file name if needed)
         const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' });
+        await imageFile.scrollIntoViewIfNeeded();
         await expect(imageFile).toBeVisible({ timeout: 10000 });
-        await imageFile.click({ button: 'right' });
 
         // Right-click the folder to open context menu
+        await imageFile.click({ button: 'right' });
         await imageFile.click({ button: 'right' });
 
         await this.page.waitForTimeout(1000);
@@ -13598,10 +13611,11 @@ export class ListingActions {
 
         // Find the image file to use for right click (adjust the file name if needed)
         const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' });
+        await imageFile.scrollIntoViewIfNeeded();
         await expect(imageFile).toBeVisible({ timeout: 10000 });
-        await imageFile.click({ button: 'right' });
 
         // Right-click the folder to open context menu
+        await imageFile.click({ button: 'right' });
         await imageFile.click({ button: 'right' });
 
         await this.page.waitForTimeout(1000);
@@ -13658,12 +13672,12 @@ export class ListingActions {
 
         // Find the image file to use for right click (adjust the file name if needed)
         const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' });
+        await imageFile.scrollIntoViewIfNeeded();
         await expect(imageFile).toBeVisible({ timeout: 10000 });
-        await imageFile.click({ button: 'right' });
 
         // Right-click the folder to open context menu
         await imageFile.click({ button: 'right' });
-
+        await imageFile.click({ button: 'right' });
         await this.page.waitForTimeout(1000);
 
         // Click on the "Download" action from the context menu
@@ -13709,9 +13723,11 @@ export class ListingActions {
 
         // Find the image file to use for right click (adjust the file name if needed)
         const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
         await expect(imageFile).toBeVisible({ timeout: 10000 });
 
         // Right-click the image file to open context menu
+        await imageFile.click({ button: 'right' });
         await imageFile.click({ button: 'right' });
         await this.page.waitForTimeout(1000);
 
@@ -13848,6 +13864,7 @@ export class ListingActions {
 
         // Find the image file and drag it to the left side
         const imageFile = this.page.locator('div.lib-file', { hasText: 'propertyImage.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
         await expect(imageFile).toBeVisible({ timeout: 10000 });
 
         const imageBox = await imageFile.boundingBox();
@@ -13905,6 +13922,7 @@ export class ListingActions {
 
         // Find the target image file
         const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
         await expect(imageFile).toBeVisible({ timeout: 10000 });
 
         const imageBox = await imageFile.boundingBox();
