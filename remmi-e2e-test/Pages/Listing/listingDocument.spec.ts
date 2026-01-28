@@ -217,5 +217,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyDeleteOfflineFile();
     });
+
+    test('Test 39: Verify that opening a folder shows the "Back" button', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyBackButtonIsShownWhenFolderOpened();
+    });
     
 });
