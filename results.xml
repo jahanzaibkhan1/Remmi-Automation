@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.503939000001175">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-28T06:17:36.467Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.295" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 38: Verify deleting an offline file" classname="Pages\Listing\listingDocument.spec.ts" time="35.295">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.117922000000256">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-28T06:26:30.433Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.402" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 39: Verify that opening a folder shows the &quot;Back&quot; button" classname="Pages\Listing\listingDocument.spec.ts" time="30.402">
 </testcase>
 </testsuite>
 </testsuites>

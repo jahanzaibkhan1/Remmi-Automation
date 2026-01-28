@@ -14142,7 +14142,7 @@ export class ListingActions {
         // Click the delete ("cross") icon to delete selected images
         const deleteBtn = this.page.locator('a[ptooltip="Delete selected images"]');
         await expect(deleteBtn).toBeVisible({ timeout: 5000 });
-        await deleteBtn.dblclick({force:true});
+        await deleteBtn.dblclick({ force: true });
 
         // Verify that the image is no longer visible after deletion
         await expect(
@@ -14162,6 +14162,49 @@ export class ListingActions {
         if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+    }
+
+    /**
+     * Verify that opening a folder in the listing view displays the "Back" button.
+     */
+    async verifyBackButtonIsShownWhenFolderOpened() {
+        // Navigate to the Listings grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstListing = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListing).toBeVisible({ timeout: 30000 });
+        await firstListing.click();
+
+        // Switch to the "Files" tab
+        const filesTab = this.page.getByRole('tab', { name: /Files/i });
+        await filesTab.waitFor({ state: 'visible' });
+        await filesTab.click();
+
+        // Optionally, click the Back button if visible (ignore errors if not)
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        try {
+            await backButton.scrollIntoViewIfNeeded();
+            if (await backButton.isVisible({ timeout: 20000 })) {
+                await backButton.click();
+            }
+        } catch { }
+
+        const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
+        await legalFolder.scrollIntoViewIfNeeded();
+        await expect(legalFolder).toBeVisible({ timeout: 20000 });
+        await legalFolder.dblclick();
+        // expect the "Back" button to be visible after opening the "Legal" folder
+        await expect(this.page.getByRole('link', { name: ' Back' })).toBeVisible({ timeout: 10000 });
+
+        // Optionally, close the preview if a close button is available
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+
     }
 
 
