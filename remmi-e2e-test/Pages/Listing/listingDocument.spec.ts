@@ -242,5 +242,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyFolderReordering();
     });
+
+    test('Test 44: Verify that reordering images works', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyImageDragChangesPosition();
+    });
     
 });
