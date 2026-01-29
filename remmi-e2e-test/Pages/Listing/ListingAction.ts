@@ -8511,7 +8511,7 @@ export class ListingActions {
 
         await this.page.waitForTimeout(1500);
         // Check for download element in the same context
-        const downloadLocator = this.page.locator('img.img-hub2[src*="PropertyImage"]').last()
+        const downloadLocator = this.page.locator('img.img-hub2[src*="propertyImage"]').last()
         await downloadLocator.click();
 
         const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
@@ -8560,7 +8560,7 @@ export class ListingActions {
         await this.page.waitForTimeout(1500);
 
         // Attempt to download a private image to trigger PIN entry
-        const downloadLocator = this.page.locator('img.img-hub2[src*="PropertyImage"]').last();
+        const downloadLocator = this.page.locator('img.img-hub2[src*="propertyImage"]').last();
         await downloadLocator.click();
 
         const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
@@ -8825,6 +8825,7 @@ export class ListingActions {
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
     }
 
     /**
@@ -8848,7 +8849,6 @@ export class ListingActions {
         const folder = this.page.locator('div.lib-file').last();
         await folder.scrollIntoViewIfNeeded();
         await expect(folder).toBeVisible({ timeout: 20000 });
-        const origName = (await folder.textContent())?.trim();
 
         // Use a unique, random rename string to ensure uniqueness and avoid stale cache/UI issues
         const { faker } = require('@faker-js/faker');
