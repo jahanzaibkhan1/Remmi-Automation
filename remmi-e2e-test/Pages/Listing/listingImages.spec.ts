@@ -195,4 +195,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyImagesTabZoomInOutInEditPopup();
   });
 
+  test("Test 34: Verify that dragging an image in the Edit popup changes its position in the Images tab", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyDragChangesImagePosition();
+  });
+
 });
