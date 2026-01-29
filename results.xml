@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.86271299999952">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-29T10:30:32.604Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.331" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Verify that files have right click options: Preview, Share, Get Link, Get Path, Rename, Make a Copy, Download, Remove" classname="Pages\Listing\listingImages.spec.ts" time="33.331">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.02581899999827">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-29T10:36:41.991Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.198" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Verify that clicking Preview opens the file in a popup" classname="Pages\Listing\listingImages.spec.ts" time="31.198">
 </testcase>
 </testsuite>
 </testsuites>

@@ -9191,6 +9191,58 @@ export class ListingActions {
     }
 
     /**
+     * Verify that clicking Preview opens the file in a popup.
+     */
+    async verifyPreviewOptionOpensFileInImages() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+
+        // Find the image file to use for right click (adjust the file name if needed)
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1200);
+
+        // Right-click the folder to open context menu
+        await imageFile.click({ button: 'right' });
+        await imageFile.click({ button: 'right' });
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the "Preview" option from context menu (adjust selector if needed)
+        const previewOption = this.page.locator('a:has(i.pi.pi-eye):has-text("Preview")').first();
+        await expect(previewOption).toBeVisible({ timeout: 5000 });
+        await previewOption.click();
+
+        // Assert that the preview file modal/dialog appears
+        // The selector might need to be updated according to the actual modal/dialog html
+        const previewDialog = this.page.locator('.p-dialog:has-text("Preview")');
+        await expect(previewDialog).toBeVisible({ timeout: 10000 });
+
+        // Locate the cross (close) icon in the path popup dialog
+        const crossIcon = this.page.locator('button.p-dialog-header-close');
+        await expect(crossIcon.first()).toBeVisible();
+        await crossIcon.click();
+        await this.page.waitForTimeout(1200);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
      * Verify that the 'Inspection' tab is hidden before the listing is saved.
      */
     async verifyInspectionTabHiddenBeforeSave() {
