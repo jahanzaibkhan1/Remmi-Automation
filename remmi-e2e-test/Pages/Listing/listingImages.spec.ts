@@ -81,7 +81,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     const path = require('path');
     const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
-    const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+    const imagePath = path.join(IMAGE_DIR, 'propertyImage.jpg');
     await listingActions.uploadPrivateImage(imagePath);
   });
 
@@ -168,6 +168,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
   test("Test 28: Verify that clicking Get Path opens a popup with the file path", async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyGetPathOpensPathPopupInImagesTab();
+  });
+
+  test("Test 29: Verify that clicking Get Path on a private file requires a PIN", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyGetPathOnPrivateFileRequiresPIN();
   });
 
 });

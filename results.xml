@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.81926499999687">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-29T10:49:02.773Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.082" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Verify that clicking Get Path opens a popup with the file path" classname="Pages\Listing\listingImages.spec.ts" time="32.082">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.839783999998126">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-29T10:58:06.801Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.439" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 29: Verify that clicking Get Path on a private file requires a PIN" classname="Pages\Listing\listingImages.spec.ts" time="38.439">
 </testcase>
 </testsuite>
 </testsuites>
