@@ -9383,6 +9383,63 @@ export class ListingActions {
     }
 
     /**
+     * Verify that clicking "Get Path" on a private file requires a PIN
+     */
+    async verifyGetPathOnPrivateFileRequiresPIN() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+
+        // Find a private image file, adjust name as needed
+        const privateImageFile = this.page.locator('div.lib-file', { hasText: 'propertyImage.jpg' }).first();
+        await privateImageFile.scrollIntoViewIfNeeded();
+        await expect(privateImageFile).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1200);
+
+        await privateImageFile.click();
+
+        const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
+        await expect(downloadIcon).toBeVisible({ timeout: 5000 });
+        await downloadIcon.click();
+
+        // Assert that PIN input appears
+        const pinInput = this.page.locator('input[placeholder="PIN"]');
+        await expect(pinInput).toBeVisible({ timeout: 5000 });
+
+        // Negative test: Try clicking save without PIN, expect error or indication
+        const saveButton = this.page.getByLabel('Images').getByRole('button', { name: 'Save' })
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+        await saveButton.click();
+
+        const pinError = this.page.getByText('Please enter PIN first');
+        await expect(pinError).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+
+        // Click the cancel button in the PIN dialog
+        const cancelButton = this.page.getByRole('button', { name: /Cancel/i }).first();
+        await expect(cancelButton).toBeVisible({ timeout: 5000 });
+        await cancelButton.click();
+        await this.page.waitForTimeout(1000);
+
+        // Save and close form
+        const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+        await this.page.waitForTimeout(2000);
+    }
+
+    /**
      * Verify that the 'Inspection' tab is hidden before the listing is saved.
      */
     async verifyInspectionTabHiddenBeforeSave() {
