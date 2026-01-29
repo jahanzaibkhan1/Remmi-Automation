@@ -9532,7 +9532,6 @@ export class ListingActions {
        await this.page.waitForTimeout(1200);
         
     }
-
     /**
      * Verify that the 'Inspection' tab is hidden before the listing is saved.
      */

@@ -185,4 +185,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyImagesTabListGridViewToggle();
   });
 
+  test("Test 32: Verify that clicking Edit on an image opens the image in a popup", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyPreviewOptionOpensFileInImages();
+  });
+
 });
