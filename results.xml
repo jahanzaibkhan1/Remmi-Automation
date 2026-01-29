@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.03138300000131">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-28T07:37:13.808Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.118" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 45: Verify error message when uploading unsupported file types" classname="Pages\Listing\listingDocument.spec.ts" time="33.118">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.65500699999929">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-29T11:26:54.731Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.181" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 34: Verify that dragging an image in the Edit popup changes its position in the Images tab" classname="Pages\Listing\listingImages.spec.ts" time="37.181">
 </testcase>
 </testsuite>
 </testsuites>
