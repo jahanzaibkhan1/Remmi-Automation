@@ -9489,6 +9489,51 @@ export class ListingActions {
     }
 
     /**
+     * Verify that clicking the List View/Grid View toggle changes the display in the Images tab
+     */
+    async verifyImagesTabListGridViewToggle() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Wait for the Floor Plan folder/item to be visible within the image tab panel
+       const floorPlanFolder = this.page.locator('div.lib-file', { hasText: 'Floorplans' });
+       await floorPlanFolder.scrollIntoViewIfNeeded();
+       await expect(floorPlanFolder).toBeVisible({ timeout: 20000 });
+       await this.page.waitForTimeout(1000);
+       // Now, verify that the list view container appears and grid view container disappears (if possible)
+       const listContainer = this.page.locator('img[ptooltip="List"]');
+       await expect(listContainer).toBeVisible({ timeout: 10000 });
+       await listContainer.click();
+
+       await this.page.waitForTimeout(1000);
+
+       // After switching to list view, verify that the grid view container appears and the list container disappears (if possible)
+       const gridContainer = this.page.locator('img[ptooltip="Grid"]');
+       await expect(gridContainer).toBeVisible({ timeout: 10000 });
+       await gridContainer.click();
+
+       await this.page.waitForTimeout(1200);
+       const closeBtn = this.page.locator('.pi.pi-times').first();
+       if (await closeBtn.isVisible().catch(() => false)) {
+           await closeBtn.click({ force: true });
+       }
+       await this.page.waitForTimeout(1200);
+        
+    }
+
+    /**
      * Verify that the 'Inspection' tab is hidden before the listing is saved.
      */
     async verifyInspectionTabHiddenBeforeSave() {

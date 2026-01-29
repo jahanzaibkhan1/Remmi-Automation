@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.46734500000253">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-29T11:05:52.889Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.261" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 30: Verify that selecting a folder or file enables toolbar options (Share, Download, Delete, More)" classname="Pages\Listing\listingImages.spec.ts" time="39.261">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.52385799999907">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-29T11:10:12.446Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.065" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 31: Verify that clicking the List View/Grid View toggle changes the display in the Images tab" classname="Pages\Listing\listingImages.spec.ts" time="38.065">
 </testcase>
 </testsuite>
 </testsuites>

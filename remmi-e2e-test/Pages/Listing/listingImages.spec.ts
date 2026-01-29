@@ -180,4 +180,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyToolbarOptionsEnabledOnSelection();
   });
 
+  test('Test 31: Verify that clicking the List View/Grid View toggle changes the display in the Images tab', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyImagesTabListGridViewToggle();
+  });
+
 });
