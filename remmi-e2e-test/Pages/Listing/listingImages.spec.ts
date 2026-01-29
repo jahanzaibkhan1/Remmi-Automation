@@ -155,4 +155,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyPreviewOptionOpensFileInImages();
   });
 
+  test("Test 26: Verify that clicking Download successfully downloads the file in the Images tab", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyDownloadImageFile();
+  });
+
 });
