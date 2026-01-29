@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.02581899999827">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-29T10:36:41.991Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.198" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Verify that clicking Preview opens the file in a popup" classname="Pages\Listing\listingImages.spec.ts" time="31.198">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="65.83469399999827">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-29T10:40:39.174Z" hostname="chromium" tests="1" failures="0" skipped="0" time="59.119" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 26: Verify that clicking Download successfully downloads the file in the Images tab" classname="Pages\Listing\listingImages.spec.ts" time="59.119">
 </testcase>
 </testsuite>
 </testsuites>

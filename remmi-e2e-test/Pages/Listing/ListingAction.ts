@@ -9243,6 +9243,47 @@ export class ListingActions {
     }
 
     /**
+     * Verify that clicking Download successfully downloads the file in the Images tab.
+     */
+    async verifyDownloadImageFile() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+
+        // Find the image file to use for right click (adjust the file name if needed)
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1200);
+
+        // Right-click on the file to open context menu
+        await imageFile.click({ button: 'right' });
+        await imageFile.click({ button: 'right' });
+        await this.page.waitForTimeout(1000);
+
+         // Click on the "Download" action from the context menu
+         const downloadOption = this.page.locator('a:has(i.pi.pi-download):has-text("Download")').first();
+         await expect(downloadOption).toBeVisible({ timeout: 5000 });
+         await downloadOption.click();
+         await this.page.waitForTimeout(1200);
+         const closeBtn = this.page.locator('.pi.pi-times').first();
+         if (await closeBtn.isVisible().catch(() => false)) {
+             await closeBtn.click({ force: true });
+         }
+         await this.page.waitForTimeout(1200);
+    }
+
+    /**
      * Verify that the 'Inspection' tab is hidden before the listing is saved.
      */
     async verifyInspectionTabHiddenBeforeSave() {
