@@ -9458,33 +9458,33 @@ export class ListingActions {
         await imageTab.click();
         await this.page.waitForTimeout(1000);
 
-       // Wait for the Floor Plan folder/item to be visible within the image tab panel
-       const floorPlanFolder = this.page.locator('div.lib-file', { hasText: 'Floorplans' });
-       await floorPlanFolder.scrollIntoViewIfNeeded();
-       await expect(floorPlanFolder).toBeVisible({ timeout: 20000 });
-       // Right-click the folder to open context menu
-       await floorPlanFolder.click({ button: 'right' });
-       await floorPlanFolder.click({ button: 'right' });
-       await this.page.waitForTimeout(1000);
+        // Wait for the Floor Plan folder/item to be visible within the image tab panel
+        const floorPlanFolder = this.page.locator('div.lib-file', { hasText: 'Floorplans' });
+        await floorPlanFolder.scrollIntoViewIfNeeded();
+        await expect(floorPlanFolder).toBeVisible({ timeout: 20000 });
+        // Right-click the folder to open context menu
+        await floorPlanFolder.click({ button: 'right' });
+        await floorPlanFolder.click({ button: 'right' });
+        await this.page.waitForTimeout(1000);
 
-       // Check for Share, Rename, Make a Copy, Remove options in context menu
-       const shareOption = this.page.getByText(/Share/i).first();
-       const renameOption = this.page.getByText(/Rename/i).last();
-       const makeCopyOption = this.page.getByText(/Make a Copy/i).first();
-       const removeOption = this.page.getByText(/Remove/i).first();
+        // Check for Share, Rename, Make a Copy, Remove options in context menu
+        const shareOption = this.page.getByText(/Share/i).first();
+        const renameOption = this.page.getByText(/Rename/i).last();
+        const makeCopyOption = this.page.getByText(/Make a Copy/i).first();
+        const removeOption = this.page.getByText(/Remove/i).first();
 
-       await expect(shareOption).toBeVisible({ timeout: 10000 });
-       await expect(renameOption).toBeVisible({ timeout: 10000 });
-       await expect(makeCopyOption).toBeVisible({ timeout: 10000 });
-       await expect(removeOption).toBeVisible({ timeout: 10000 });
+        await expect(shareOption).toBeVisible({ timeout: 10000 });
+        await expect(renameOption).toBeVisible({ timeout: 10000 });
+        await expect(makeCopyOption).toBeVisible({ timeout: 10000 });
+        await expect(removeOption).toBeVisible({ timeout: 10000 });
 
-       await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(1200);
 
-       // Optionally close the dialog again using ".pi.pi-times" icon if still open
-       const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
-       if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-           await closePreviewButton.click({ force: true });
-       }
+        // Optionally close the dialog again using ".pi.pi-times" icon if still open
+        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+        if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await closePreviewButton.click({ force: true });
+        }
 
     }
 
@@ -9508,29 +9508,103 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
 
         // Wait for the Floor Plan folder/item to be visible within the image tab panel
-       const floorPlanFolder = this.page.locator('div.lib-file', { hasText: 'Floorplans' });
-       await floorPlanFolder.scrollIntoViewIfNeeded();
-       await expect(floorPlanFolder).toBeVisible({ timeout: 20000 });
-       await this.page.waitForTimeout(1000);
-       // Now, verify that the list view container appears and grid view container disappears (if possible)
-       const listContainer = this.page.locator('img[ptooltip="List"]');
-       await expect(listContainer).toBeVisible({ timeout: 10000 });
-       await listContainer.click();
+        const floorPlanFolder = this.page.locator('div.lib-file', { hasText: 'Floorplans' });
+        await floorPlanFolder.scrollIntoViewIfNeeded();
+        await expect(floorPlanFolder).toBeVisible({ timeout: 20000 });
+        await this.page.waitForTimeout(1000);
+        // Now, verify that the list view container appears and grid view container disappears (if possible)
+        const listContainer = this.page.locator('img[ptooltip="List"]');
+        await expect(listContainer).toBeVisible({ timeout: 10000 });
+        await listContainer.click();
 
-       await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(1000);
 
-       // After switching to list view, verify that the grid view container appears and the list container disappears (if possible)
-       const gridContainer = this.page.locator('img[ptooltip="Grid"]');
-       await expect(gridContainer).toBeVisible({ timeout: 10000 });
-       await gridContainer.click();
+        // After switching to list view, verify that the grid view container appears and the list container disappears (if possible)
+        const gridContainer = this.page.locator('img[ptooltip="Grid"]');
+        await expect(gridContainer).toBeVisible({ timeout: 10000 });
+        await gridContainer.click();
 
-       await this.page.waitForTimeout(1200);
-       const closeBtn = this.page.locator('.pi.pi-times').first();
-       if (await closeBtn.isVisible().catch(() => false)) {
-           await closeBtn.click({ force: true });
-       }
-       await this.page.waitForTimeout(1200);
-        
+        await this.page.waitForTimeout(1200);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+
+    }
+
+    /**
+     * Verify that Zoom In and Zoom Out buttons work in the Edit popup in the Images tab.
+     */
+    async verifyImagesTabZoomInOutInEditPopup() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Wait for the Floor Plan folder/item to be visible within the image tab panel
+        const floorPlanFolder = this.page.locator('div.lib-file', { hasText: 'Floorplans' });
+        await floorPlanFolder.scrollIntoViewIfNeeded();
+        await expect(floorPlanFolder).toBeVisible({ timeout: 20000 });
+        await this.page.waitForTimeout(1000);
+
+        // Locate and click the "Reorder" (edit.svg) icon for image reordering
+        const reorderIcon = this.page.locator('img[ptooltip="Reorder"][src="assets/img/edit.svg"].p-element.cursor-pointer')
+        await expect(reorderIcon.first()).toBeVisible({ timeout: 10000 });
+        await reorderIcon.first().click();
+
+        // Perform zoom in and zoom out by interacting with the slider
+        const slider = this.page.locator('p-slider.p-element');
+        await expect(slider).toBeVisible({ timeout: 10000 });
+
+        // Get the slider handle
+        const sliderHandle = slider.locator('.p-slider-handle').first();
+
+        // Ensure handle is visible and interactable
+        await expect(sliderHandle).toBeVisible({ timeout: 5000 });
+
+        const handleBox = await sliderHandle.boundingBox();
+
+        if (!handleBox) {
+            throw new Error('Slider handle bounding box not found');
+        }
+        // Move to center of handle
+        await this.page.mouse.move(handleBox.x + handleBox.width / 2, handleBox.y + handleBox.height / 2);
+
+        // Zoom In: Drag to the right by 80 pixels (simulate slider increase)
+        await this.page.mouse.down();
+        await this.page.mouse.move(handleBox.x + handleBox.width / 2 + 80, handleBox.y + handleBox.height / 2, { steps: 10 });
+        await this.page.mouse.up();
+
+        await this.page.waitForTimeout(800);
+
+        // Zoom Out: Drag back to the left by 30 pixels (simulate slider decrease)
+        await this.page.mouse.move(handleBox.x + handleBox.width / 2 + 50, handleBox.y + handleBox.height / 2);
+        await this.page.mouse.down();
+        await this.page.mouse.move(handleBox.x + handleBox.width / 2 + 20, handleBox.y + handleBox.height / 2, { steps: 10 });
+        await this.page.mouse.up();
+
+        await this.page.waitForTimeout(800);
+
+        const crossIcon = this.page.locator('img[src="assets/img/Group37073.svg"]');
+        await expect(crossIcon.first()).toBeVisible({ timeout: 10000 });
+        await crossIcon.click();
+        await this.page.waitForTimeout(1200);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
     }
     /**
      * Verify that the 'Inspection' tab is hidden before the listing is saved.
