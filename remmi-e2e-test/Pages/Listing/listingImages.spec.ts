@@ -145,4 +145,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyShareFolderRequiresStaffOrTeam();
   });
 
+  test("Test 24: Verify that files have right click options: Preview, Share, Get Link, Get Path, Rename, Make a Copy, Download, Remove", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyFileContextMenuOptionsInImagesTab();
+  });
+
 });
