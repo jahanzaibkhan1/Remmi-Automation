@@ -110,14 +110,14 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyFolderContextMenuOptions();
   });
 
-  test("Test 17: Verify that clicking Remove deletes the folder", async ({ sessionPage }) => {
-    const listingActions = new ListingActions(sessionPage);
-    await listingActions.verifyRemoveFolderDeletesFolder();
-  });
-
-  test("Test 18: Verify that clicking Make a Copy duplicates the folder", async ({ sessionPage }) => {
+  test("Test 17: Verify that clicking Make a Copy duplicates the folder", async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyMakeCopyDuplicatesFolder();
+  });
+
+  test("Test 18: Verify that clicking Remove deletes the folder", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyRemoveFolderDeletesFolder();
   });
 
   test("Test 19: Verify that entering a name and clicking Rename changes the folder name", async ({ sessionPage }) => {
