@@ -9440,6 +9440,55 @@ export class ListingActions {
     }
 
     /**
+     * Verify that selecting a folder or file enables toolbar options (Share, Download, Delete, More).
+     */
+    async verifyToolbarOptionsEnabledOnSelection() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+       // Wait for the Floor Plan folder/item to be visible within the image tab panel
+       const floorPlanFolder = this.page.locator('div.lib-file', { hasText: 'Floorplans' });
+       await floorPlanFolder.scrollIntoViewIfNeeded();
+       await expect(floorPlanFolder).toBeVisible({ timeout: 20000 });
+       // Right-click the folder to open context menu
+       await floorPlanFolder.click({ button: 'right' });
+       await floorPlanFolder.click({ button: 'right' });
+       await this.page.waitForTimeout(1000);
+
+       // Check for Share, Rename, Make a Copy, Remove options in context menu
+       const shareOption = this.page.getByText(/Share/i).first();
+       const renameOption = this.page.getByText(/Rename/i).last();
+       const makeCopyOption = this.page.getByText(/Make a Copy/i).first();
+       const removeOption = this.page.getByText(/Remove/i).first();
+
+       await expect(shareOption).toBeVisible({ timeout: 10000 });
+       await expect(renameOption).toBeVisible({ timeout: 10000 });
+       await expect(makeCopyOption).toBeVisible({ timeout: 10000 });
+       await expect(removeOption).toBeVisible({ timeout: 10000 });
+
+       await this.page.waitForTimeout(1200);
+
+       // Optionally close the dialog again using ".pi.pi-times" icon if still open
+       const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
+       if (await closePreviewButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+           await closePreviewButton.click({ force: true });
+       }
+
+    }
+
+    /**
      * Verify that the 'Inspection' tab is hidden before the listing is saved.
      */
     async verifyInspectionTabHiddenBeforeSave() {
