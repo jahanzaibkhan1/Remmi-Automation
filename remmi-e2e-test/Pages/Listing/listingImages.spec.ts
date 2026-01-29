@@ -140,4 +140,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyShareFolderSelectingStaffOrTeam();
   });
 
+  test("Test 23: Verify that sharing without selecting a staff/team member does not work", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyShareFolderRequiresStaffOrTeam();
+  });
+
 });
