@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.99261499999836">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-29T11:14:29.106Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.471" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 32: Verify that clicking Edit on an image opens the image in a popup" classname="Pages\Listing\listingImages.spec.ts" time="29.471">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.30589999999851">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-29T11:20:22.563Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.267" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 33: Verify that Zoom In and Zoom Out buttons work in the Edit popup in the Images tab" classname="Pages\Listing\listingImages.spec.ts" time="37.267">
 </testcase>
 </testsuite>
 </testsuites>

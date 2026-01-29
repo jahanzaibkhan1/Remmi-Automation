@@ -190,4 +190,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyPreviewOptionOpensFileInImages();
   });
 
+  test('Test 33: Verify that Zoom In and Zoom Out buttons work in the Edit popup in the Images tab', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyImagesTabZoomInOutInEditPopup();
+  });
+
 });
