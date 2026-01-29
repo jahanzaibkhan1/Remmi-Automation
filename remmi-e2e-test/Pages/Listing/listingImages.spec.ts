@@ -160,4 +160,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyDownloadImageFile();
   });
 
+  test("Test 27: Verify that clicking Get Link opens a popup with the file link", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyGetLinkOpensLinkPopupInImagesTab();
+  });
+
 });
