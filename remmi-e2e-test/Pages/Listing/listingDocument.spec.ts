@@ -198,9 +198,8 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     
     test('Test 35: Verify that edited image position reflects in the document tab', async ({ sessionPage }) => {
         const listingActions = new ListingActions(sessionPage);
-        const newPosition = await listingActions.verifyEditedImagePositionReflectsInDocumentTab();
-        // Optionally, you may want to add an assertion here:
-        console.log('New X position after dragging the image:', newPosition);
+        await listingActions.verifyEditedImagePositionReflectsInDocumentTab();
+        
     });
 
     test('Test 36: Verify that offline section expands and collapses', async ({ sessionPage }) => {
