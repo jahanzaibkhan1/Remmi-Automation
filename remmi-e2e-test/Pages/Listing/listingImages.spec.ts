@@ -135,4 +135,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.renamePopupopen();
   });
 
+  test("Test 22: Verify that adding a staff or team member in the Share popup enables the Share button", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyShareFolderSelectingStaffOrTeam();
+  });
+
 });

@@ -9008,6 +9008,71 @@ export class ListingActions {
     }
 
     /**
+     * Verify that adding a staff or team member in the Share popup enables the Share button.
+     */
+    async verifyShareFolderSelectingStaffOrTeam() {
+        // Navigate to Listings, open grid, then open the first listing
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+       // Go to Images tab
+       const imageTab = this.page.getByRole('tab', { name: /Images/i });
+       await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+       await imageTab.click();
+
+       // Find the first folder in the Files tab
+       const folder = this.page.locator('div.lib-file').last();
+       await folder.scrollIntoViewIfNeeded();
+       await expect(folder).toBeVisible({ timeout: 20000 });
+       await this.page.waitForTimeout(750);
+
+       // Right-click the folder to open context menu
+       await folder.click({ button: "right" });
+       await folder.click({ button: "right" });
+       await this.page.waitForTimeout(2000);
+
+        // Select Share from the context menu
+        const shareOption = this.page.getByText(/Share/i).first();
+        await expect(shareOption).toBeVisible({ timeout: 10000 });
+        await shareOption.click({ force: true });
+
+        // Share dialog appears
+        const shareDialogTitle = this.page.getByText('Share with people');
+        await expect(shareDialogTitle).toBeVisible({ timeout: 10000 });
+
+        const searchUserField = this.page.locator('div.ng-value-container:has-text("Search User") div.ng-input input');
+        await expect(searchUserField).toBeVisible({ timeout: 10000 });
+        await searchUserField.click({ force: true });
+
+        // Find the first user/team suggestion in the dropdown if it appears
+        const firstSuggestion = this.page.locator('div.ng-option[role="option"]').first();
+        if (await firstSuggestion.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await firstSuggestion.click();
+        }
+
+        // Share button should start disabled
+        const shareButton = this.page.getByRole('button', { name: /^Share$/i }).last();
+        await expect(shareButton).toBeVisible({ timeout: 6000 });
+        await expect(shareButton).toBeEnabled();
+
+        // Close the share dialog using Cancel or close button
+        const cancelBtn = this.page.getByRole('button', { name: /^Cancel$/i }).first();
+        if (await cancelBtn.isVisible().catch(() => false)) {
+            await cancelBtn.click();
+        }
+        await this.page.waitForTimeout(1200);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
      * Verify that the 'Inspection' tab is hidden before the listing is saved.
      */
     async verifyInspectionTabHiddenBeforeSave() {

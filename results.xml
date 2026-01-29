@@ -1,50 +1,6 @@
-<testsuites id="" name="" tests="21" failures="0" skipped="0" errors="0" time="220.056549">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-29T09:18:16.635Z" hostname="chromium" tests="21" failures="0" skipped="0" time="215.112" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that the image tab contains a search field" classname="Pages\Listing\listingImages.spec.ts" time="27.726">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify that the Floor Plan folder is displayed upon opening the image tab" classname="Pages\Listing\listingImages.spec.ts" time="3.824">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that the Add button provides options for folder, public file upload, and private file upload" classname="Pages\Listing\listingImages.spec.ts" time="4.196">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that clicking Folder opens the &apos;New Folder&apos; popup" classname="Pages\Listing\listingImages.spec.ts" time="6.674">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that the &apos;New Folder&apos; popup contains a required name field" classname="Pages\Listing\listingImages.spec.ts" time="8.153">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that the &apos;New Folder&apos; popup has cross, cancel, and create buttons" classname="Pages\Listing\listingImages.spec.ts" time="9.451">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that clicking &apos;Create&apos; without entering a name does not create a folder" classname="Pages\Listing\listingImages.spec.ts" time="8.463">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that entering a name and clicking Create successfully creates a folder" classname="Pages\Listing\listingImages.spec.ts" time="23.83">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify that clicking Public File Upload allows file uploads" classname="Pages\Listing\listingImages.spec.ts" time="14.337">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that Public File Upload allows downloading files" classname="Pages\Listing\listingImages.spec.ts" time="6.972">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify that Private File Upload asks for a PIN before downloading" classname="Pages\Listing\listingImages.spec.ts" time="10.287">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify that entering the correct PIN allows file download" classname="Pages\Listing\listingImages.spec.ts" time="11.774">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that entering an incorrect PIN prevents file download" classname="Pages\Listing\listingImages.spec.ts" time="8.282">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that double clicking a file opens the File Preview popup" classname="Pages\Listing\listingImages.spec.ts" time="6.885">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that the total number of files is displayed next to the search field" classname="Pages\Listing\listingImages.spec.ts" time="3.201">
-<system-out>
-<![CDATA[File count label text: 3 Files
-]]>
-</system-out>
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that right clicking a folder shows options for Share, Rename, Make a Copy, and Remove" classname="Pages\Listing\listingImages.spec.ts" time="5.587">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify that clicking Make a Copy duplicates the folder" classname="Pages\Listing\listingImages.spec.ts" time="9.854">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Verify that clicking Remove deletes the folder" classname="Pages\Listing\listingImages.spec.ts" time="10.61">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify that entering a name and clicking Rename changes the folder name" classname="Pages\Listing\listingImages.spec.ts" time="14.963">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Verify that clicking Share opens the Share popup" classname="Pages\Listing\listingImages.spec.ts" time="9.839">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 21:  Verify that clicking rename open the popup " classname="Pages\Listing\listingImages.spec.ts" time="10.204">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.906142999999226">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-29T09:29:28.256Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.558" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Verify that adding a staff or team member in the Share popup enables the Share button" classname="Pages\Listing\listingImages.spec.ts" time="32.558">
 </testcase>
 </testsuite>
 </testsuites>
