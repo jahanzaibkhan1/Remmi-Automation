@@ -8844,57 +8844,57 @@ export class ListingActions {
         await imageTab.waitFor({ state: 'visible', timeout: 20000 });
         await imageTab.click();
 
-         // Find the last folder in the Files tab (to minimize risk of conflicting with system folders)
-         const folder = this.page.locator('div.lib-file').last();
-         await folder.scrollIntoViewIfNeeded();
-         await expect(folder).toBeVisible({ timeout: 20000 });
-         const origName = (await folder.textContent())?.trim();
- 
-         // Use a unique, random rename string to ensure uniqueness and avoid stale cache/UI issues
-         const { faker } = require('@faker-js/faker');
-         const newFolderName = `Renamed-${faker.string.alphanumeric(6)}`;
-         await this.page.waitForTimeout(1000);
- 
-         // Right-click the folder to open context menu
-         await folder.click({ button: "right" });
-         await this.page.waitForTimeout(750);
- 
-         // Find and click 'Rename' in the context menu
-         const renameOption = this.page.getByText('Rename').first();
-         await expect(renameOption).toBeVisible({ timeout: 10000 });
-         await renameOption.click({ force: true });
- 
-         const nameInput = this.page.locator('input[type="text"][required]');
-         await expect(nameInput).toBeVisible({ timeout: 10000 });
-         await this.page.waitForTimeout(500);
- 
-         // Clear the input in a robust way before filling
-         await nameInput.click();
-         await this.page.waitForTimeout(200);
-         for (const char of newFolderName) {
-             await nameInput.type(char, { delay: 20 }); // 120ms per character
-         }
- 
-         // Click the "Rename" button
-         const renameBtn = this.page.getByRole('button', { name: /^Rename$/i }).first();
-         await expect(renameBtn).toBeVisible({ timeout: 5000 });
-         await renameBtn.click({ force: true });
- 
-         // Verify the success toast "Name changed successfully" appears
-         const successToast = this.page.getByRole('alert', { name: 'Name change successfully' })
-         await expect(successToast).toBeVisible({ timeout: 10000 });
- 
- 
-         // Wait for the folder tile to update—retrying for potential debounce/network delay
-         const renamedFolder = this.page.locator('div.lib-file', { hasText: newFolderName }).first();
-         await renamedFolder.scrollIntoViewIfNeeded();
-         await expect(renamedFolder).toBeVisible({ timeout: 25000 }); // increased for async propagation
-         await this.page.waitForTimeout(1200);
-         const closeBtn = this.page.locator('.pi.pi-times').first();
-         if (await closeBtn.isVisible().catch(() => false)) {
-             await closeBtn.click({ force: true });
-         }
-         await this.page.waitForTimeout(1200);
+        // Find the last folder in the Files tab (to minimize risk of conflicting with system folders)
+        const folder = this.page.locator('div.lib-file').last();
+        await folder.scrollIntoViewIfNeeded();
+        await expect(folder).toBeVisible({ timeout: 20000 });
+        const origName = (await folder.textContent())?.trim();
+
+        // Use a unique, random rename string to ensure uniqueness and avoid stale cache/UI issues
+        const { faker } = require('@faker-js/faker');
+        const newFolderName = `Renamed-${faker.string.alphanumeric(6)}`;
+        await this.page.waitForTimeout(1000);
+
+        // Right-click the folder to open context menu
+        await folder.click({ button: "right" });
+        await this.page.waitForTimeout(750);
+
+        // Find and click 'Rename' in the context menu
+        const renameOption = this.page.getByText('Rename').first();
+        await expect(renameOption).toBeVisible({ timeout: 10000 });
+        await renameOption.click({ force: true });
+
+        const nameInput = this.page.locator('input[type="text"][required]');
+        await expect(nameInput).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(500);
+
+        // Clear the input in a robust way before filling
+        await nameInput.click();
+        await this.page.waitForTimeout(200);
+        for (const char of newFolderName) {
+            await nameInput.type(char, { delay: 20 }); // 120ms per character
+        }
+
+        // Click the "Rename" button
+        const renameBtn = this.page.getByRole('button', { name: /^Rename$/i }).first();
+        await expect(renameBtn).toBeVisible({ timeout: 5000 });
+        await renameBtn.click({ force: true });
+
+        // Verify the success toast "Name changed successfully" appears
+        const successToast = this.page.getByRole('alert', { name: 'Name change successfully' })
+        await expect(successToast).toBeVisible({ timeout: 10000 });
+
+
+        // Wait for the folder tile to update—retrying for potential debounce/network delay
+        const renamedFolder = this.page.locator('div.lib-file', { hasText: newFolderName }).first();
+        await renamedFolder.scrollIntoViewIfNeeded();
+        await expect(renamedFolder).toBeVisible({ timeout: 25000 }); // increased for async propagation
+        await this.page.waitForTimeout(1200);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
     }
 
     // Verify that clicking Share opens the Share popup
@@ -9019,21 +9019,21 @@ export class ListingActions {
         await firstCardRow.click();
         await this.page.waitForTimeout(1000);
 
-       // Go to Images tab
-       const imageTab = this.page.getByRole('tab', { name: /Images/i });
-       await imageTab.waitFor({ state: 'visible', timeout: 20000 });
-       await imageTab.click();
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
 
-       // Find the first folder in the Files tab
-       const folder = this.page.locator('div.lib-file').last();
-       await folder.scrollIntoViewIfNeeded();
-       await expect(folder).toBeVisible({ timeout: 20000 });
-       await this.page.waitForTimeout(750);
+        // Find the first folder in the Files tab
+        const folder = this.page.locator('div.lib-file').last();
+        await folder.scrollIntoViewIfNeeded();
+        await expect(folder).toBeVisible({ timeout: 20000 });
+        await this.page.waitForTimeout(750);
 
-       // Right-click the folder to open context menu
-       await folder.click({ button: "right" });
-       await folder.click({ button: "right" });
-       await this.page.waitForTimeout(2000);
+        // Right-click the folder to open context menu
+        await folder.click({ button: "right" });
+        await folder.click({ button: "right" });
+        await this.page.waitForTimeout(2000);
 
         // Select Share from the context menu
         const shareOption = this.page.getByText(/Share/i).first();
@@ -9064,6 +9064,65 @@ export class ListingActions {
         if (await cancelBtn.isVisible().catch(() => false)) {
             await cancelBtn.click();
         }
+        await this.page.waitForTimeout(1200);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Verify that attempting to share a folder without selecting staff or team shows error and disables Share button.
+     */
+    public async verifyShareFolderRequiresStaffOrTeam(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await imageTab.waitFor({ state: 'visible', timeout: 20000 });
+        await imageTab.click();
+
+        // Find the first folder in the Files tab
+        const folder = this.page.locator('div.lib-file').last();
+        await folder.scrollIntoViewIfNeeded();
+        await expect(folder).toBeVisible({ timeout: 20000 });
+        await this.page.waitForTimeout(750);
+
+        // Right-click the folder to open context menu
+        await folder.click({ button: "right" });
+        await folder.click({ button: "right" });
+        await this.page.waitForTimeout(2000);
+
+        // Click Share in context menu
+        const shareOption = this.page.getByText(/Share/i).first();
+        await expect(shareOption).toBeVisible({ timeout: 6000 });
+        await shareOption.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        // Should see "Share" dialog appear (look for some label/input inside it)
+        const shareDialogTitle = this.page.getByText('Share with people');
+        await expect(shareDialogTitle).toBeVisible({ timeout: 10000 });
+
+        // Try clicking 'Share' button with nobody selected (should be disabled)
+        const shareButton = this.page.getByRole('button', { name: /^Share$/i }).last();
+        await expect(shareButton).toBeVisible({ timeout: 6000 });
+        await expect(shareButton).toBeDisabled();
+        const errMsg = this.page.getByText(/At least one staff or team must be selected/i);
+        await expect(errMsg).toBeVisible({ timeout: 6000 });
+
+        // Click the "Cancel" button to close the share dialog
+        const cancelBtn = this.page.getByRole('button', { name: /^Cancel$/i }).first();
+        await expect(cancelBtn).toBeVisible({ timeout: 5000 });
+        await cancelBtn.click();
+
         await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {

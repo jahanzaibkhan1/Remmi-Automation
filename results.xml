@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.906142999999226">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-29T09:29:28.256Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.558" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Verify that adding a staff or team member in the Share popup enables the Share button" classname="Pages\Listing\listingImages.spec.ts" time="32.558">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.34315700000152">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-29T09:34:22.923Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.565" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Verify that sharing without selecting a staff/team member does not work" classname="Pages\Listing\listingImages.spec.ts" time="31.565">
 </testcase>
 </testsuite>
 </testsuites>
