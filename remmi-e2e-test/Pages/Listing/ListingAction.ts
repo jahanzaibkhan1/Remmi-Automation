@@ -9132,6 +9132,65 @@ export class ListingActions {
     }
 
     /**
+     * Verify that files in the Images tab show all expected right-click context menu options:
+     * Preview, Share, Get Link, Get Path, Rename, Make a Copy, Download, Remove
+     */
+    async verifyFileContextMenuOptionsInImagesTab() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+
+        // Find the first image file in the listing files grid
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1200);
+        await imageFile.click({ button: 'right' });
+        await imageFile.click({ button: 'right' });
+        // After clicking the image, all options in the context menu should be visible by text
+
+        // Find the container for the folder options list specifically
+        const folderOptionsList = this.page.locator('#folderOptionsList ul.folders');
+        await expect(folderOptionsList).toBeVisible({ timeout: 5000 });
+
+        // These selectors match the text and icon/image for each menu option as rendered in the DOM
+        const optionChecks = [
+            { text: 'Preview', iconSelector: 'i.pi.pi-eye' },
+            { text: 'Share', iconSelector: 'i.pi.pi-user-plus' },
+            { text: 'Get Link', iconSelector: 'i.pi.pi-link' },
+            { text: 'Get Path', iconSelector: 'i.pi.pi-directions' },
+            { text: 'Rename', iconSelector: 'img[alt="Rename"][src*="pencil.svg"]' },
+            { text: 'Make a Copy', iconSelector: 'i.pi.pi-copy' },
+            { text: 'Download', iconSelector: 'i.pi.pi-download' },
+            { text: 'Remove', iconSelector: 'img[alt="Remove"][src*="delete_icon.svg"]' }
+        ];
+
+        for (const { text, iconSelector } of optionChecks) {
+            // Each option is a <li> containing an <a> with icon/img and the label text
+            const option = folderOptionsList.locator(`li:has(${iconSelector}) a`, { hasText: text });
+            await option.scrollIntoViewIfNeeded();
+            await expect(option, `Menu option "${text}" with icon should be visible`).toBeVisible({ timeout: 10000 });
+        }
+
+        await this.page.waitForTimeout(1200);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
      * Verify that the 'Inspection' tab is hidden before the listing is saved.
      */
     async verifyInspectionTabHiddenBeforeSave() {
