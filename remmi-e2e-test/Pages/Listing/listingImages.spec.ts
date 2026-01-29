@@ -165,4 +165,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyGetLinkOpensLinkPopupInImagesTab();
   });
 
+  test("Test 28: Verify that clicking Get Path opens a popup with the file path", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyGetPathOpensPathPopupInImagesTab();
+  });
+
 });

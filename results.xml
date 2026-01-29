@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.909607000000776">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-29T10:46:04.603Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.178" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Verify that clicking Get Link opens a popup with the file link" classname="Pages\Listing\listingImages.spec.ts" time="34.178">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.81926499999687">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-29T10:49:02.773Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.082" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Verify that clicking Get Path opens a popup with the file path" classname="Pages\Listing\listingImages.spec.ts" time="32.082">
 </testcase>
 </testsuite>
 </testsuites>
