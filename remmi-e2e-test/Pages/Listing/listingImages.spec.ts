@@ -150,4 +150,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyFileContextMenuOptionsInImagesTab();
   });
 
+  test("Test 25: Verify that clicking Preview opens the file in a popup", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyPreviewOptionOpensFileInImages();
+  });
+
 });
