@@ -1,6 +1,94 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.03138300000131">
-<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-28T07:37:13.808Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.118" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 45: Verify error message when uploading unsupported file types" classname="Pages\Listing\listingDocument.spec.ts" time="33.118">
+<testsuites id="" name="" tests="45" failures="0" skipped="0" errors="0" time="530.4107999999999">
+<testsuite name="Pages\Listing\listingDocument.spec.ts" timestamp="2026-01-29T06:18:29.442Z" hostname="chromium" tests="45" failures="0" skipped="0" time="525.729" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that the Document Tab opens correctly" classname="Pages\Listing\listingDocument.spec.ts" time="28.212">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify the presence of search field in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="3.527">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that default folders are displayed in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="3.107">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that clicking on a folder expands it in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="3.501">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify subfolders under &quot;Documents&quot; in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="3.837">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify subfolders under &quot;Images&quot; in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="4.121">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that the &quot;Legal&quot; folder is empty in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="3.807">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that clicking Add opens options in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="3.963">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify that clicking &quot;Folder&quot; opens the &quot;New Folder&quot; popup in the Document Tab" classname="Pages\Listing\listingDocument.spec.ts" time="6.65">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that creating a folder with a valid name works" classname="Pages\Listing\listingDocument.spec.ts" time="14.358">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify error message when creating folder without a name" classname="Pages\Listing\listingDocument.spec.ts" time="7.338">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify that clicking &quot;Public File Upload&quot; allows uploading a file" classname="Pages\Listing\listingDocument.spec.ts" time="20.341">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that clicking &quot;Private File Upload&quot; allows uploading a file" classname="Pages\Listing\listingDocument.spec.ts" time="40.578">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that entering the correct PIN allows file download" classname="Pages\Listing\listingDocument.spec.ts" time="6.947">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that downloading a private file requires entering a PIN" classname="Pages\Listing\listingDocument.spec.ts" time="8.54">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that entering incorrect PIN prevents private file download" classname="Pages\Listing\listingDocument.spec.ts" time="9.974">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify double clicking a file opens preview" classname="Pages\Listing\listingDocument.spec.ts" time="7.833">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Verify that file preview has a close button" classname="Pages\Listing\listingDocument.spec.ts" time="9.162">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify right clicking a folder shows context menu options" classname="Pages\Listing\listingDocument.spec.ts" time="10.605">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Verify that clicking &quot;Remove&quot; deletes a folder in the Files tab" classname="Pages\Listing\listingDocument.spec.ts" time="12.947">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Verify that clicking &quot;Make a Copy&quot; duplicates the folder in the Files tab" classname="Pages\Listing\listingDocument.spec.ts" time="22.646">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Verify that clicking &quot;Rename&quot; opens rename popup" classname="Pages\Listing\listingDocument.spec.ts" time="10.728">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Verify that renaming a folder updates its name" classname="Pages\Listing\listingDocument.spec.ts" time="14.676">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Verify that sharing a folder requires selecting staff or team member" classname="Pages\Listing\listingDocument.spec.ts" time="10.452">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Verify that selecting staff or team member enables &quot;Share&quot; button" classname="Pages\Listing\listingDocument.spec.ts" time="11.788">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 26: Verify that shared staff/team appear with profile image" classname="Pages\Listing\listingDocument.spec.ts" time="11.051">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Verify that clicking a file shows action options" classname="Pages\Listing\listingDocument.spec.ts" time="10.017">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Verify clicking &quot;Get Link&quot; opens link popup" classname="Pages\Listing\listingDocument.spec.ts" time="10.299">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 29: Verify clicking &quot;Get Path&quot; opens path popup" classname="Pages\Listing\listingDocument.spec.ts" time="12.121">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 30: Verify clicking &quot;Preview&quot; opens the file" classname="Pages\Listing\listingDocument.spec.ts" time="10.79">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 31: Verify clicking &quot;Download&quot; downloads the file" classname="Pages\Listing\listingDocument.spec.ts" time="13.793">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 32: Verify clicking &quot;Edit&quot; opens image in preview" classname="Pages\Listing\listingDocument.spec.ts" time="13.073">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 33: Verify that image zoom in/out works" classname="Pages\Listing\listingDocument.spec.ts" time="13.068">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 34: Verify that dragging image in preview changes its position" classname="Pages\Listing\listingDocument.spec.ts" time="7.395">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 35: Verify that edited image position reflects in the document tab" classname="Pages\Listing\listingDocument.spec.ts" time="11.817">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 36: Verify that offline section expands and collapses" classname="Pages\Listing\listingDocument.spec.ts" time="12.864">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 37: Verify dragging a file to the offline section" classname="Pages\Listing\listingDocument.spec.ts" time="13.865">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 38: Verify deleting an offline file" classname="Pages\Listing\listingDocument.spec.ts" time="17.469">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 39: Verify that opening a folder shows the &quot;Back&quot; button" classname="Pages\Listing\listingDocument.spec.ts" time="9.027">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 40: Verify that folder names appear as navigation tabs" classname="Pages\Listing\listingDocument.spec.ts" time="9.175">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 41: Verify clicking on a folder tab navigates to it" classname="Pages\Listing\listingDocument.spec.ts" time="9.345">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 42: Verify that document tab supports list/grid view toggle" classname="Pages\Listing\listingDocument.spec.ts" time="9.704">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 43: Verify that reordering folders works" classname="Pages\Listing\listingDocument.spec.ts" time="14.689">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 44: Verify that reordering images works" classname="Pages\Listing\listingDocument.spec.ts" time="18.492">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 45: Verify error message when uploading unsupported file types" classname="Pages\Listing\listingDocument.spec.ts" time="18.037">
 </testcase>
 </testsuite>
 </testsuites>

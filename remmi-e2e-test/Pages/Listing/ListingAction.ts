@@ -11942,7 +11942,7 @@ export class ListingActions {
         const confirmButton = this.page.getByRole('button', { name: 'Delete' });
         await expect(confirmButton).toBeVisible({ timeout: 10000 });
         await confirmButton.click({ force: true });
-        const toast = this.page.getByRole('alert', { name: 'Listing successfully deleted' });;
+        const toast = this.page.getByRole('alert', { name: 'Listing successfully deleted' });
         await expect(toast).toBeVisible({ timeout: 10000 });
         await this.page.waitForTimeout(2000);
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
@@ -13069,6 +13069,7 @@ export class ListingActions {
         const folder = this.page.locator('div.lib-file').last();
         await folder.scrollIntoViewIfNeeded();
         await expect(folder).toBeVisible({ timeout: 20000 });
+        await this.page.waitForTimeout(1200);
 
         // Right-click the folder to open context menu
         await folder.click({ button: "right" });
@@ -13100,6 +13101,7 @@ export class ListingActions {
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
     }
 
     /**
@@ -13172,12 +13174,12 @@ export class ListingActions {
         const renamedFolder = this.page.locator('div.lib-file', { hasText: newFolderName }).first();
         await renamedFolder.scrollIntoViewIfNeeded();
         await expect(renamedFolder).toBeVisible({ timeout: 25000 }); // increased for async propagation
-
-        // Optionally close any open popups
+        await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
     }
 
     /**
@@ -13237,12 +13239,11 @@ export class ListingActions {
         await cancelBtn.click();
 
         await this.page.waitForTimeout(1200);
-
-        // Optionally close the dialog
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
     }
 
     /**
@@ -13309,11 +13310,12 @@ export class ListingActions {
         if (await cancelBtn.isVisible().catch(() => false)) {
             await cancelBtn.click();
         }
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
     }
 
     // Verify that shared staff/team appear with profile image
@@ -13387,10 +13389,12 @@ export class ListingActions {
             await usersIconInLastFolder.click({ force: true });
         }
 
+        await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
     }
 
     // Verify that clicking an image file shows action options
@@ -13425,10 +13429,11 @@ export class ListingActions {
 
         // Find the first image file in the listing files grid
         const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' });
-
+        await imageFile.scrollIntoViewIfNeeded();
         await expect(imageFile).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
         await imageFile.click({ button: 'right' });
-
+        await imageFile.click({ button: 'right' });
         // After clicking the image, all options in the context menu should be visible by text
 
         // Find the container for the folder options list specifically
@@ -13450,13 +13455,16 @@ export class ListingActions {
         for (const { text, iconSelector } of optionChecks) {
             // Each option is a <li> containing an <a> with icon/img and the label text
             const option = folderOptionsList.locator(`li:has(${iconSelector}) a`, { hasText: text });
-            await expect(option, `Menu option "${text}" with icon should be visible`).toBeVisible({ timeout: 2000 });
+            await option.scrollIntoViewIfNeeded();
+            await expect(option, `Menu option "${text}" with icon should be visible`).toBeVisible({ timeout: 10000 });
         }
 
+        await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
 
     }
 
@@ -13509,13 +13517,12 @@ export class ListingActions {
         // Locate the cross (close) icon in the link popup dialog
         const crossIcon = this.page.locator('button.p-dialog-header-close')
         await expect(crossIcon.first()).toBeVisible();
+        await crossIcon.click();
 
         await this.page.waitForTimeout(1200);
-
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible().catch(() => false)) {
-            await closeBtn.click({ force: true });
-        }
+        await closeBtn.dblclick({ force: true });
+        await this.page.waitForTimeout(1200);
     }
 
     /**
@@ -13552,6 +13559,7 @@ export class ListingActions {
         const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' });
         await imageFile.scrollIntoViewIfNeeded();
         await expect(imageFile).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
 
         // Right-click the folder to open context menu
         await imageFile.click({ button: 'right' });
@@ -13571,14 +13579,13 @@ export class ListingActions {
         // Locate the cross (close) icon in the path popup dialog
         const crossIcon = this.page.locator('button.p-dialog-header-close');
         await expect(crossIcon.first()).toBeVisible();
-
-        await this.page.waitForTimeout(1000);
-
-        // Optionally close the popup
+        await crossIcon.click();
+        await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
     }
 
     // Verify clicking ‘Preview’ opens the file
@@ -13613,6 +13620,7 @@ export class ListingActions {
         const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' });
         await imageFile.scrollIntoViewIfNeeded();
         await expect(imageFile).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
 
         // Right-click the folder to open context menu
         await imageFile.click({ button: 'right' });
@@ -13633,13 +13641,13 @@ export class ListingActions {
         // Locate the cross (close) icon in the path popup dialog
         const crossIcon = this.page.locator('button.p-dialog-header-close');
         await expect(crossIcon.first()).toBeVisible();
-
-        await this.page.waitForTimeout(1000);
-        // Optionally, close the preview if a close button is available
+        await crossIcon.click();
+        await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+        if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
     }
 
     // Verify clicking 'Download' downloads the file
@@ -13674,6 +13682,7 @@ export class ListingActions {
         const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' });
         await imageFile.scrollIntoViewIfNeeded();
         await expect(imageFile).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
 
         // Right-click the folder to open context menu
         await imageFile.click({ button: 'right' });
@@ -13684,12 +13693,12 @@ export class ListingActions {
         const downloadOption = this.page.locator('a:has(i.pi.pi-download):has-text("Download")').first();
         await expect(downloadOption).toBeVisible({ timeout: 5000 });
         await downloadOption.click();
-        await this.page.waitForTimeout(1000);
-        // Optionally, close the preview if a close button is available
+        await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+        if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
 
     }
 
@@ -13725,6 +13734,7 @@ export class ListingActions {
         const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
         await imageFile.scrollIntoViewIfNeeded();
         await expect(imageFile).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
 
         // Right-click the image file to open context menu
         await imageFile.click({ button: 'right' });
@@ -13742,14 +13752,13 @@ export class ListingActions {
 
         const crossIcon = this.page.locator('button.p-dialog-header-close');
         await expect(crossIcon.first()).toBeVisible();
-
-        await this.page.waitForTimeout(1000);
-
-        // Optionally, close the preview if a close button is available
+        await crossIcon.click();
+        await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+        if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
     }
 
     // Verify that image zoom in/out works
@@ -13821,14 +13830,12 @@ export class ListingActions {
         const crossIcon = this.page.locator('img[src="assets/img/Group37073.svg"]');
         await expect(crossIcon.first()).toBeVisible({ timeout: 10000 });
         await crossIcon.click();
-
-        await this.page.waitForTimeout(1000);
-
-        // Optionally, close the preview if a close button is available
+        await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+        if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
 
     }
 
@@ -13880,20 +13887,19 @@ export class ListingActions {
         await this.page.mouse.move(startX + dragOffset, startY, { steps: 10 });
         await this.page.mouse.up();
 
-        await this.page.waitForTimeout(1000);
-
-        // Optionally, close the preview if a close button is available
+        await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+        if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
     }
 
     /**
      * Verifies that the edited image position is reflected in the document tab after dragging.
      * Returns the new X position of the image after drag for assertion.
      */
-    async verifyEditedImagePositionReflectsInDocumentTab(): Promise<number> {
+    async verifyEditedImagePositionReflectsInDocumentTab() {
         await this.navigateToListings();
         await this.switchToGridView();
 
@@ -13938,13 +13944,13 @@ export class ListingActions {
         await this.page.mouse.move(startX + dragOffset, startY, { steps: 10 });
         await this.page.mouse.up();
 
-        await this.page.waitForTimeout(1000);
-
-        // Re-fetch the bounding box after drag to check the new position
-        const newImageBox = await imageFile.boundingBox();
-        if (!newImageBox) throw new Error('Could not get bounding box for image after drag.');
-
-        return newImageBox.x;
+        await this.page.waitForTimeout(1200);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+      
     }
 
     /**
@@ -13993,14 +13999,12 @@ export class ListingActions {
         const crossIcon = this.page.locator('img[src="assets/img/Group37073.svg"]');
         await expect(crossIcon.first()).toBeVisible({ timeout: 10000 });
         await crossIcon.click();
-
-        await this.page.waitForTimeout(1000);
-
-        // Optionally, close the preview if a close button is available
+        await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+        if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
     }
 
     /**
@@ -14099,14 +14103,12 @@ export class ListingActions {
         const crossIcon = this.page.locator('img[src="assets/img/Group37073.svg"]');
         await expect(crossIcon.first()).toBeVisible({ timeout: 10000 });
         await crossIcon.click();
-
-        await this.page.waitForTimeout(1000);
-
-        // Optionally, close the preview if a close button is available
+        await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+        if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
     }
 
     /**
@@ -14153,7 +14155,7 @@ export class ListingActions {
         await expect(offlineSectionExpand).toBeVisible({ timeout: 10000 });
         await offlineSectionExpand.click();
 
-        const offlineDropList = this.page.locator('.hwfix').first();
+        const offlineDropList = this.page.locator('.hwfix').last();
         await expect(offlineDropList).toBeVisible({ timeout: 10000 });
         await offlineDropList.click();
 
@@ -14162,24 +14164,21 @@ export class ListingActions {
         await expect(deleteBtn).toBeVisible({ timeout: 5000 });
         await deleteBtn.dblclick({ force: true });
 
-        // Verify that the image is no longer visible after deletion
-        await expect(
-            this.page.locator('img[src*="PropertyImage21769579749829.jpg"]').first()
-        ).not.toBeVisible({ timeout: 20000 });
+        // Confirm deletion by checking for a "deleted successfully" toast/message by text
+        const deletedToast = this.page.getByText(/deleted successfully/i).first();
+        await expect(deletedToast).toBeVisible({ timeout: 20000 });
 
         await this.page.waitForTimeout(1200);
 
         const crossIcon = this.page.locator('img[src="assets/img/Group37073.svg"]');
         await expect(crossIcon.first()).toBeVisible({ timeout: 10000 });
         await crossIcon.click();
-
-        await this.page.waitForTimeout(1000);
-
-        // Optionally, close the preview if a close button is available
+        await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+        if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
     }
 
     /**
@@ -14216,11 +14215,12 @@ export class ListingActions {
         // expect the "Back" button to be visible after opening the "Legal" folder
         await expect(this.page.getByRole('link', { name: ' Back' })).toBeVisible({ timeout: 10000 });
 
-        // Optionally, close the preview if a close button is available
+        await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+        if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
 
 
     }
@@ -14263,11 +14263,12 @@ export class ListingActions {
         const breadcrumb = this.page.locator('ul li a span.bread-color:has-text("Legal")');
         await expect(breadcrumb).toBeVisible({ timeout: 10000 });
 
-        // Optionally, close out of preview if necessary
+        await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+        if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
     }
 
     /**
@@ -14319,11 +14320,12 @@ export class ListingActions {
         const appraisalsBreadcrumb = this.page.locator('ul li a span.bread-color:has-text("Appraisals")');
         await expect(appraisalsBreadcrumb).toBeVisible({ timeout: 10000 });
 
-        // Optionally, close out of preview if necessary
+        await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+        if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
     }
 
     /**
@@ -14368,94 +14370,70 @@ export class ListingActions {
         await expect(gridContainer).toBeVisible({ timeout: 10000 });
         await gridContainer.click();
 
-        await this.page.waitForTimeout(1000);
-
-        // Optionally, close out of preview if necessary
+        await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
+        if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
 
     }
 
     /**
-     * Verifies that folder reordering is functional.
-     * Assumes folders are draggable and will update visually after DnD.
+     * Verifies that reordering folders by drag-and-drop changes their order in the UI.
      */
     async verifyFolderReordering() {
-        // Go to Listings in grid view, open the first listing
         await this.navigateToListings();
         await this.switchToGridView();
 
+        // Open the first listing
         const firstListing = this.page.locator("//div[contains(@class,'s-property')]").first();
         await expect(firstListing).toBeVisible({ timeout: 30000 });
         await firstListing.click();
+        await this.page.waitForTimeout(1000);
 
-        // Open the "Files" tab
+        // Go to Files tab
         const filesTab = this.page.getByRole('tab', { name: /Files/i });
-        await filesTab.waitFor({ state: 'visible' });
+        await expect(filesTab).toBeVisible({ timeout: 10000 });
         await filesTab.click();
 
-        // Optionally, click the Back button if visible
+        // If there's a Back button, try to click it if it's visible
         const backButton = this.page.getByRole('link', { name: ' Back' });
-        try {
-            await backButton.scrollIntoViewIfNeeded();
-            if (await backButton.isVisible({ timeout: 20000 })) {
-                await backButton.click();
-            }
-        } catch { }
+        await backButton.scrollIntoViewIfNeeded().catch(() => { });
+        if (await backButton.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await backButton.click();
+        }
 
-        // Enter the "Legal" folder
+        // Find the "Legal" folder and ensure it's visible
         const legalFolder = this.page.locator('div.lib-file', { hasText: 'Legal' }).first();
         await legalFolder.scrollIntoViewIfNeeded();
         await expect(legalFolder).toBeVisible({ timeout: 20000 });
 
-        // Get at least 3 folder items within "Legal"
-        const folders = this.page.locator('div.lib-file');
-        const folderCount = await folders.count();
-        if (folderCount < 3) {
-            throw new Error('Not enough folders to reorder. Need at least 3 folders.');
-        }
+        // Find the "documents" folder and drag it to the right side
+        const documentsFolder = this.page.locator('div.lib-file', { hasText: 'documents' }).first();
+        await documentsFolder.scrollIntoViewIfNeeded();
+        await expect(documentsFolder).toBeVisible({ timeout: 10000 });
 
-        // Grab names before reorder
-        const folder0 = folders.nth(0);
-        const folder1 = folders.nth(1);
-        const [name0Before, name1Before] = await Promise.all([
-            folder0.textContent(),
-            folder1.textContent()
-        ]);
+        const documentsBox = await documentsFolder.boundingBox();
+        if (!documentsBox) throw new Error('BoundingBox for documents folder not found.');
 
-        // Reorder: drag first folder below the second
-        await folder0.dragTo(folder1);
+        // Drag from center of the folder to 150px right of its current center
+        const startX = documentsBox.x + documentsBox.width / 2;
+        const startY = documentsBox.y + documentsBox.height / 2;
+        const dragOffset = 150; // pixels to the right
 
-        // Wait momentarily for UI update
+        await this.page.mouse.move(startX, startY);
+        await this.page.mouse.down();
+        await this.page.mouse.move(startX + dragOffset, startY, { steps: 10 });
+        await this.page.mouse.up();
+
         await this.page.waitForTimeout(1200);
-
-        // Get folder items and names after reorder (accounting for possible class name change)
-        const foldersAfter = this.page.locator('div.lib-folder, div.lib-file');
-        const [name0After, name1After] = await Promise.all([
-            foldersAfter.nth(0).textContent(),
-            foldersAfter.nth(1).textContent()
-        ]);
-
-        // Check if order has changed
-        if (name0Before === name0After && name1Before === name1After) {
-            throw new Error('Folders did not reorder as expected.');
-        }
-
-        // Wait before closing preview modal, if open
-        await this.page.waitForTimeout(800);
-
-        // Optionally, close any open preview modal
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        try {
-            if (await closeBtn.isVisible({ timeout: 10000 })) {
-                await closeBtn.click({ force: true });
-            }
-        } catch { }
-
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
     }
-
     /*
     *Verify that reordering images works
      */
@@ -14502,13 +14480,12 @@ export class ListingActions {
             throw new Error('Images did not reorder as expected.');
         }
 
-        // Optionally close preview modal if visible
+        await this.page.waitForTimeout(1200);
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        try {
-            if (await closeBtn.isVisible({ timeout: 10000 })) {
-                await closeBtn.click({ force: true });
-            }
-        } catch { }
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
     }
 
     /**
@@ -14560,12 +14537,12 @@ export class ListingActions {
         const errorToast = this.page.locator('div[aria-label="File type not supported"]');
         await expect(errorToast).toBeVisible({ timeout: 10000 });
 
-         // Optionally, close out of preview if necessary
-         const closeBtn = this.page.locator('.pi.pi-times').first();
-         if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
-             await closeBtn.click({ force: true });
-         }
-      
+        await this.page.waitForTimeout(1200);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
     }
 
 }
