@@ -175,4 +175,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyGetPathOnPrivateFileRequiresPIN();
   });
 
+  test("Test 30: Verify that selecting a folder or file enables toolbar options (Share, Download, Delete, More)", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyToolbarOptionsEnabledOnSelection();
+  });
+
 });
