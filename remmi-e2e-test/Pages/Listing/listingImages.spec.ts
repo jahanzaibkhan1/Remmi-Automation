@@ -215,4 +215,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyUploadImageThroughEditPopupWorks();
   });
 
+  test('Test 38: Verify that converting a PDF to an image works in the Images tab', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyPdfToImageConversion();
+  });
+
 });
