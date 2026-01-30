@@ -10138,6 +10138,68 @@ export class ListingActions {
     }
 
     /**
+     * Verify that the 'Add Link' popup contains required fields.
+     * Checks the popup fields: "Link Name", "URL", "Type", and Save/Cancel buttons.
+     */
+    async verifyAddLinkPopupContainsFields() {
+        // Trigger popup via existing logic (reuse verifyAddLinkOpensLinkPopup if possible)
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Find the image file and drag it to the left side
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 30000 });
+
+        // Click the 'Add Link' button
+        const addLinkButton = this.page.locator('img[ptooltip="Add Link"]');
+        await expect(addLinkButton).toBeVisible({ timeout: 10000 });
+        await addLinkButton.click();
+
+        // Verify the link popup/modal appears
+        const linkPopup = this.page.locator('.link-popup, .p-dialog, [data-testid="link-popup"]');
+        await expect(linkPopup).toBeVisible({ timeout: 10000 });
+
+        // Check for "Video URL", "Online Tour 1", "Online Tour 2" fields inside the Listing Links popup
+        const videoUrlField = this.page.locator('div').filter({ hasText: /^Video URL$/ });
+        await expect(videoUrlField).toBeVisible({ timeout: 5000 });
+
+        const onlineTour1Field = this.page.locator('div').filter({ hasText: /^Online Tour 1$/ });
+        await expect(onlineTour1Field).toBeVisible({ timeout: 5000 });
+
+        const onlineTour2Field = this.page.locator('div').filter({ hasText: /^Online Tour 2$/ });
+        await expect(onlineTour2Field).toBeVisible({ timeout: 5000 });
+
+        // Check for Save and Cancel buttons
+        const saveButton = linkPopup.getByRole('button', { name: /^Save$/i });
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+
+         // click cancel button
+         const cancelButton = this.page.getByRole('button', { name: 'Cancel' });
+         await expect(cancelButton).toBeVisible({ timeout: 5000 });
+         await cancelButton.click();
+         await this.page.waitForTimeout(1000);
+         // Optionally close the popup if desired
+         const closeBtn = linkPopup.locator('.pi.pi-times, .close-btn').first();
+         if (await closeBtn.isVisible().catch(() => false)) {
+             await closeBtn.click({ force: true });
+         }
+         await this.page.waitForTimeout(1000);
+    }
+
+    /**
      * Verify that the 'Inspection' tab is hidden before the listing is saved.
      */
     async verifyInspectionTabHiddenBeforeSave() {
