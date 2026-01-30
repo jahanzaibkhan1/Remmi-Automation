@@ -9814,6 +9814,68 @@ export class ListingActions {
     }
 
     /**
+     * Verify PDF-to-image conversion by uploading a PDF 
+     */
+    async verifyPdfToImageConversion() {
+        // Go to Listings and open the first listing card
+        await this.navigateToListings();
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to the Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Ensure a representative image is loaded for the listing
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 20000 });
+
+        // Enter reorder/edit mode for that image
+        const reorderIcon = this.page.locator('img[ptooltip="Reorder"][src="assets/img/edit.svg"].p-element.cursor-pointer').first();
+        await expect(reorderIcon).toBeVisible({ timeout: 10000 });
+        await reorderIcon.click();
+
+        // Open the PDF-to-image upload popup
+        const pdfToImageBtn = this.page.locator('a[ptooltip="PDF to image"] i.pi.pi-file-pdf').first();
+        await expect(pdfToImageBtn).toBeVisible({ timeout: 10000 });
+        await pdfToImageBtn.click();
+
+        // Resolve the PDF path and upload it
+        const path = require('path');
+        const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+        const pdfPath = path.join(IMAGE_DIR, 'PdfToImage.pdf');
+        const fileInput = this.page.locator('input#pdffile[type="file"]').first();
+        await fileInput.setInputFiles(pdfPath);
+
+        // Wait for converted images container to appear and activate it
+        const convertedImagesContainer = this.page.locator('.d-flex.flex-wrap.w-100.gap-2');
+        await expect(convertedImagesContainer).toBeVisible({ timeout: 20000 });
+        await convertedImagesContainer.click(); // (optional: may trigger gallery refresh)
+
+        // Confirm a converted image appears and is visible
+        const resultImage = this.page.locator('#galImgList .cdk-drag', { hasText: 'PdfToImage' }).first();
+        await resultImage.waitFor({ state: 'visible', timeout: 20000 });
+
+        // Close the Edit popup
+        const crossIcon = this.page.locator('img[src="assets/img/Group37073.svg"]').first();
+        await expect(crossIcon).toBeVisible({ timeout: 10000 });
+        await crossIcon.click();
+        await this.page.waitForTimeout(1200);
+
+        // Optionally ensure the modal is closed
+        const closeBtn = this.page.locator('.pi.pi-times, .close-btn').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
      * Verify that the 'Inspection' tab is hidden before the listing is saved.
      */
     async verifyInspectionTabHiddenBeforeSave() {
