@@ -9974,6 +9974,43 @@ export class ListingActions {
     }
 
     /**
+     * Verify that clicking Back in a folder returns to the previous folder.
+     */
+    async verifyBackButtonReturnsToPreviousFolder() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing and ensure visibility
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Wait for the image tab to be visible and click it (adjust selector if needed)
+        const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
+        await imageTab.waitFor({ state: 'visible', timeout: 10000 });
+        await imageTab.click();
+
+        // Wait for the Floor Plan folder/item to be visible within the image tab panel
+        const floorPlanFolder = this.page.locator('div.lib-file', { hasText: 'Floorplans' });
+        await expect(floorPlanFolder).toBeVisible({ timeout: 20000 });
+        await floorPlanFolder.dblclick();
+
+        // Click Back button to return to previous folder
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.waitFor({ state: 'visible', timeout: 10000 });
+        await backButton.click();
+
+        await expect(floorPlanFolder).toBeVisible({timeout:10000});
+        await this.page.waitForTimeout(1000);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
      * Verify that the 'Inspection' tab is hidden before the listing is saved.
      */
     async verifyInspectionTabHiddenBeforeSave() {
