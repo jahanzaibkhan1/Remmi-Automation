@@ -245,4 +245,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyAddLinkOpensLinkPopup();
   });
 
+  test("Test 44: Verify that the 'Add Link' popup contains the fields", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyAddLinkPopupContainsFields();
+  });
+
 });
