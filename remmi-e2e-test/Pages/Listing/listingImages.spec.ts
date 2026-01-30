@@ -225,4 +225,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyImageDragToOfflineSectionUpdatesCounts();
   });
 
+  test('Test 40: Verify that clicking Back in a folder returns to the previous folder', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyBackButtonReturnsToPreviousFolder();
+  });
+
 });

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="52.15507899999991">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-30T07:23:49.757Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.465" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 39: Verify that dragging an image into the Offline section removes it from the main view but counts it in total files" classname="Pages\Listing\listingImages.spec.ts" time="45.465">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="61.155618999999014">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-30T08:03:46.492Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.941" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 40: Verify that clicking Back in a folder returns to the previous folder" classname="Pages\Listing\listingImages.spec.ts" time="51.941">
 </testcase>
 </testsuite>
 </testsuites>
