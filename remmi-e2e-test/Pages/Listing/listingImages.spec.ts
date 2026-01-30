@@ -220,4 +220,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyPdfToImageConversion();
   });
 
+  test("Test 39: Verify that dragging an image into the Offline section removes it from the main view but counts it in total files", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyImageDragToOfflineSectionUpdatesCounts();
+  });
+
 });
