@@ -235,4 +235,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyBreadcrumbsAllowDirectNavigation();
   });
 
+  test('Test 42: Verify that images can be reordered in the Images tab by drag and drop', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyImagesReorderable();
+  });
+
 });

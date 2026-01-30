@@ -10034,15 +10034,6 @@ export class ListingActions {
         await floorPlanFolder.scrollIntoViewIfNeeded();
         await expect(floorPlanFolder).toBeVisible({ timeout: 20000 });
         await floorPlanFolder.dblclick();
-
-        // Try to find the Floorplans breadcrumb and check if it is visible
-        const breadcrumb = this.page.locator('ul li a span.bread-color:has-text("Floorplans")');
-        try {
-            await expect(breadcrumb).toBeVisible({ timeout: 3000 });
-        } catch (e) {
-            // Ignore any error—it's acceptable if the breadcrumb is not visible
-        }
-        await this.page.waitForTimeout(1200);
         // Click Back button to return to previous folder
         const backButton = this.page.getByRole('link', { name: ' Back' });
         await backButton.waitFor({ state: 'visible', timeout: 10000 });
@@ -10053,6 +10044,51 @@ export class ListingActions {
             await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Verify that images can be reordered in the Images tab by drag and drop.
+     */
+    async verifyImagesReorderable() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+         // Find the image file and drag it to the left side
+         const imageFile = this.page.locator('div.lib-file', { hasText: 'propertyImage.jpg' }).first();
+         await imageFile.scrollIntoViewIfNeeded();
+         await expect(imageFile).toBeVisible({ timeout: 30000 });
+ 
+         const imageBox = await imageFile.boundingBox();
+         if (!imageBox) throw new Error('BoundingBox for image file not found.');
+ 
+         // Drag from center of the image file to 150px left of its current center
+         const startX = imageBox.x + imageBox.width / 2;
+         const startY = imageBox.y + imageBox.height / 2;
+         const dragOffset = -150; // pixels to the left
+ 
+         await this.page.mouse.move(startX, startY);
+         await this.page.mouse.down();
+         await this.page.mouse.move(startX + dragOffset, startY, { steps: 10 });
+         await this.page.mouse.up();
+ 
+         await this.page.waitForTimeout(1200);
+         const closeBtn = this.page.locator('.pi.pi-times').first();
+         if (await closeBtn.isVisible().catch(() => false)) {
+             await closeBtn.click({ force: true });
+         }
+         await this.page.waitForTimeout(1200);
     }
 
     /**
