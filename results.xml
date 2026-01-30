@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.258462000001224">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-30T10:29:29.968Z" hostname="chromium" tests="1" failures="0" skipped="0" time="43.171" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 41: Verify that breadcrumbs allow direct navigation to folders in the Images tab" classname="Pages\Listing\listingImages.spec.ts" time="43.171">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="59.63580199999735">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-30T11:38:02.067Z" hostname="chromium" tests="1" failures="0" skipped="0" time="53.382" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 42: Verify that images can be reordered in the Images tab by drag and drop" classname="Pages\Listing\listingImages.spec.ts" time="53.382">
 </testcase>
 </testsuite>
 </testsuites>
