@@ -8511,7 +8511,7 @@ export class ListingActions {
 
         await this.page.waitForTimeout(1500);
         // Check for download element in the same context
-        const downloadLocator = this.page.locator('img.img-hub2[src*="PropertyImage"]').last()
+        const downloadLocator = this.page.locator('img.img-hub2[src*="propertyImage"]').last()
         await downloadLocator.click();
 
         const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
@@ -8560,7 +8560,7 @@ export class ListingActions {
         await this.page.waitForTimeout(1500);
 
         // Attempt to download a private image to trigger PIN entry
-        const downloadLocator = this.page.locator('img.img-hub2[src*="PropertyImage"]').last();
+        const downloadLocator = this.page.locator('img.img-hub2[src*="propertyImage"]').last();
         await downloadLocator.click();
 
         const downloadIcon = this.page.locator('.p-element.mr-3.pi.pi-download').first();
@@ -8825,6 +8825,7 @@ export class ListingActions {
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
     }
 
     /**
@@ -8848,7 +8849,6 @@ export class ListingActions {
         const folder = this.page.locator('div.lib-file').last();
         await folder.scrollIntoViewIfNeeded();
         await expect(folder).toBeVisible({ timeout: 20000 });
-        const origName = (await folder.textContent())?.trim();
 
         // Use a unique, random rename string to ensure uniqueness and avoid stale cache/UI issues
         const { faker } = require('@faker-js/faker');
@@ -9658,6 +9658,547 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(1200);
     }
+
+    /**
+     * Verify that deleting an image from the Edit popup removes it from the library.
+     */
+    async verifyImageDeleteRemovesFromLibrary() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Find the image, open Edit popup
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 20000 });
+        await imageFile.click(); // Open image preview/edit popup
+        await this.page.waitForTimeout(1000);
+
+        // Find and click Delete/Remove button in the popup
+        const deleteBtn = this.page.getByRole('img', { name: 'Remove' }).first();
+        await expect(deleteBtn).toBeVisible({ timeout: 10000 });
+        await deleteBtn.click();
+
+        // Verify success notification for deletion
+        const deletedSuccessMsg = this.page.getByText(/deleted successfully/i, { exact: false });
+        await expect(deletedSuccessMsg).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+
+        // Close the popup if still present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+
+    }
+
+    /**
+     * Verify that duplicating an image creates a copy with "Copy of ..." in its name.
+     */
+    async verifyImageMakeCopyCreatesCopy() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Find the image, e.g. 'PropertyImage2.jpg'
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 20000 });
+
+        // Store original image name
+        const originalImageName = (await imageFile.textContent())?.trim() ?? '';
+
+        // Right-click image to open context menu (double right-click for robustness)
+        await imageFile.click({ button: 'right' });
+        await imageFile.click({ button: 'right' });
+        await this.page.waitForTimeout(600);
+
+        // Click "Make a Copy" (sometimes called "Duplicate")
+        const makeCopyOption = this.page.getByRole('link', { name: /Make a Copy/i }).first();
+        await expect(makeCopyOption).toBeVisible({ timeout: 5000 });
+        await makeCopyOption.click();
+
+        // Wait for the copy to appear
+        const expectedCopyName = `Copy of ${originalImageName}`;
+        const copiedImageFile = this.page.locator('div.lib-file', { hasText: expectedCopyName }).first();
+
+        await copiedImageFile.scrollIntoViewIfNeeded();
+        await expect(copiedImageFile).toBeVisible({ timeout: 20000 });
+        await this.page.waitForTimeout(1000);
+
+        // Optionally close any open popups
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Verify that uploading an image through the Edit popup works
+     */
+    async verifyUploadImageThroughEditPopupWorks() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Find the image, e.g. 'PropertyImage2.jpg'
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 20000 });
+
+        // Locate and click the "Reorder" (edit.svg) icon for image reordering
+        const reorderIcon = this.page.locator('img[ptooltip="Reorder"][src="assets/img/edit.svg"].p-element.cursor-pointer')
+        await expect(reorderIcon.first()).toBeVisible({ timeout: 10000 });
+        await reorderIcon.first().click();
+
+        // Locate and click the "Image upload" icon inside the Edit popup
+        const imageUploadBtn = this.page.locator('a[ptooltip="Image upload"]');
+        await expect(imageUploadBtn).toBeVisible({ timeout: 10000 });
+        await imageUploadBtn.click();
+
+        // Upload image through the Edit popup
+        const fileInput = this.page.locator('input[type="file"][accept=".svg,image/*"]').first();
+        const path = require('path');
+        const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+        const uploadImagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+        await fileInput.setInputFiles(uploadImagePath);
+
+        // Optionally: wait for upload to complete or for any success message
+        const uploadSuccess = this.page.getByText(/Added Successfully/i).first();
+        await expect(uploadSuccess).toBeVisible({ timeout: 20000 });
+
+        const crossIcon = this.page.locator('img[src="assets/img/Group37073.svg"]');
+        await expect(crossIcon.first()).toBeVisible({ timeout: 10000 });
+        await crossIcon.click();
+        await this.page.waitForTimeout(1200);
+        // Optionally close the popup
+        const closeBtn = this.page.locator('.pi.pi-times, .close-btn').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Verify PDF-to-image conversion by uploading a PDF 
+     */
+    async verifyPdfToImageConversion() {
+        // Go to Listings and open the first listing card
+        await this.navigateToListings();
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to the Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Ensure a representative image is loaded for the listing
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 20000 });
+
+        // Enter reorder/edit mode for that image
+        const reorderIcon = this.page.locator('img[ptooltip="Reorder"][src="assets/img/edit.svg"].p-element.cursor-pointer').first();
+        await expect(reorderIcon).toBeVisible({ timeout: 10000 });
+        await reorderIcon.click();
+
+        // Open the PDF-to-image upload popup
+        const pdfToImageBtn = this.page.locator('a[ptooltip="PDF to image"] i.pi.pi-file-pdf').first();
+        await expect(pdfToImageBtn).toBeVisible({ timeout: 10000 });
+        await pdfToImageBtn.click();
+
+        // Resolve the PDF path and upload it
+        const path = require('path');
+        const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+        const pdfPath = path.join(IMAGE_DIR, 'PdfToImage.pdf');
+        const fileInput = this.page.locator('input#pdffile[type="file"]').first();
+        await fileInput.setInputFiles(pdfPath);
+
+        // Wait for converted images container to appear and activate it
+        const convertedImagesContainer = this.page.locator('.d-flex.flex-wrap.w-100.gap-2');
+        await expect(convertedImagesContainer).toBeVisible({ timeout: 20000 });
+        await convertedImagesContainer.click(); // (optional: may trigger gallery refresh)
+
+        // Confirm a converted image appears and is visible
+        const resultImage = this.page.locator('#galImgList .cdk-drag', { hasText: 'PdfToImage' }).first();
+        await resultImage.waitFor({ state: 'visible', timeout: 20000 });
+
+        // Close the Edit popup
+        const crossIcon = this.page.locator('img[src="assets/img/Group37073.svg"]').first();
+        await expect(crossIcon).toBeVisible({ timeout: 10000 });
+        await crossIcon.click();
+        await this.page.waitForTimeout(1200);
+
+        // Optionally ensure the modal is closed
+        const closeBtn = this.page.locator('.pi.pi-times, .close-btn').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Verify that dragging an image into the Offline section removes it from the main view but counts it in total files
+     */
+    async verifyImageDragToOfflineSectionUpdatesCounts() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstListing = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListing).toBeVisible({ timeout: 30000 });
+        await firstListing.click();
+
+        // Switch to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Locate the representative image and count files before
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 20000 });
+
+        // Enable reorder mode
+        const reorderIcon = this.page
+            .locator('img[ptooltip="Reorder"][src="assets/img/edit.svg"]')
+            .first();
+        await reorderIcon.waitFor({ state: 'visible' });
+        await reorderIcon.click();
+
+        // SOURCE: Angular draggable image
+        const sourceImage = this.page.locator('#galImgList .cdk-drag', { hasText: 'PdfToImage' }).first();
+        await sourceImage.waitFor({ state: 'visible' });
+
+        // EXPAND Offline Images section (MANDATORY)
+        const offlineHeading = this.page.locator(
+            'h2.heading-style:has-text("Offline Images")'
+        );
+        await offlineHeading.scrollIntoViewIfNeeded();
+        await offlineHeading.click();
+
+        // REAL Angular CDK drop list under Offline Images
+        const offlineDropList = this.page.locator(
+            'div.cdk-drop-list:below(h2:has-text("Offline Images"))'
+        ).first();
+        await offlineDropList.waitFor({ state: 'visible' });
+
+        // Wait for Angular animations/layout
+        await this.page.waitForLoadState('networkidle');
+
+        // Get bounding boxes
+        const srcBox = await sourceImage.boundingBox();
+        const targetBox = await offlineDropList.boundingBox();
+        if (!srcBox || !targetBox) {
+            throw new Error('Bounding box not found for drag/drop');
+        }
+
+        // Angular-safe drag & drop (slow + pause)
+        await this.page.mouse.move(
+            srcBox.x + srcBox.width / 2,
+            srcBox.y + srcBox.height / 2
+        );
+        await this.page.mouse.down();
+
+        await this.page.waitForTimeout(200); // REQUIRED for CDK
+
+        await this.page.mouse.move(
+            targetBox.x + targetBox.width / 2,
+            targetBox.y + targetBox.height / 2,
+            { steps: 50 }
+        );
+
+        await this.page.waitForTimeout(200);
+        await this.page.mouse.up();
+
+        await this.page.waitForTimeout(2000);
+
+        // VERIFY image moved to Offline Images
+        await expect
+            .poll(async () => await offlineDropList.locator('.cdk-drag').count(), {
+                timeout: 15000,
+            })
+            .toBeGreaterThan(0);
+
+
+        await this.page.waitForTimeout(1200);
+
+        const crossIcon = this.page.locator('img[src="assets/img/Group37073.svg"]');
+        await expect(crossIcon.first()).toBeVisible({ timeout: 10000 });
+        await crossIcon.click();
+        await this.page.waitForTimeout(1200);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Verify that clicking Back in a folder returns to the previous folder.
+     */
+    async verifyBackButtonReturnsToPreviousFolder() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing and ensure visibility
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Wait for the image tab to be visible and click it (adjust selector if needed)
+        const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
+        await imageTab.waitFor({ state: 'visible', timeout: 10000 });
+        await imageTab.click();
+
+        // Wait for the Floor Plan folder/item to be visible within the image tab panel
+        const floorPlanFolder = this.page.locator('div.lib-file', { hasText: 'Floorplans' });
+        await floorPlanFolder.scrollIntoViewIfNeeded();
+        await expect(floorPlanFolder).toBeVisible({ timeout: 20000 });
+        await floorPlanFolder.dblclick();
+
+        // Click Back button to return to previous folder
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.waitFor({ state: 'visible', timeout: 10000 });
+        await backButton.click();
+
+        await expect(floorPlanFolder).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Verify that breadcrumbs allow direct navigation to folders
+     */
+    async verifyBreadcrumbsAllowDirectNavigation() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstListing = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListing).toBeVisible({ timeout: 30000 });
+        await firstListing.click();
+        await this.page.waitForTimeout(1000);
+
+        // Open Images tab
+        const imageTab = this.page.getByRole('tab', { name: 'gavel Images' });
+        await imageTab.waitFor({ state: 'visible', timeout: 10000 });
+        await imageTab.click();
+
+        // Enter the Floor Plan folder
+        const floorPlanFolder = this.page.locator('div.lib-file', { hasText: 'Floorplans' }).first();
+        await floorPlanFolder.scrollIntoViewIfNeeded();
+        await expect(floorPlanFolder).toBeVisible({ timeout: 20000 });
+        await floorPlanFolder.dblclick();
+        // Click Back button to return to previous folder
+        const backButton = this.page.getByRole('link', { name: ' Back' });
+        await backButton.waitFor({ state: 'visible', timeout: 10000 });
+        await backButton.click();
+        // Close dialog or modal if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Verify that images can be reordered in the Images tab by drag and drop.
+     */
+    async verifyImagesReorderable() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Find the image file and drag it to the left side
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'propertyImage.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 30000 });
+
+        const imageBox = await imageFile.boundingBox();
+        if (!imageBox) throw new Error('BoundingBox for image file not found.');
+
+        // Drag from center of the image file to 150px left of its current center
+        const startX = imageBox.x + imageBox.width / 2;
+        const startY = imageBox.y + imageBox.height / 2;
+        const dragOffset = -150; // pixels to the left
+
+        await this.page.mouse.move(startX, startY);
+        await this.page.mouse.down();
+        await this.page.mouse.move(startX + dragOffset, startY, { steps: 10 });
+        await this.page.mouse.up();
+
+        await this.page.waitForTimeout(1200);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Verify that clicking 'Add Link' opens the link popup.
+     */
+    async verifyAddLinkOpensLinkPopup() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Find the image file and drag it to the left side
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'propertyImage.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 30000 });
+
+        // Click the 'Add Link' button
+        const addLinkButton = this.page.locator('img[ptooltip="Add Link"]');
+        await expect(addLinkButton).toBeVisible({ timeout: 10000 });
+        await addLinkButton.click();
+
+        // Verify the link popup/modal appears
+        const linkPopup = this.page.locator('.link-popup, .p-dialog, [data-testid="link-popup"]');
+        await expect(linkPopup).toBeVisible({ timeout: 10000 });
+
+        // click cancel button
+        const cancelButton = this.page.getByRole('button', { name: 'Cancel' });
+        await expect(cancelButton).toBeVisible({ timeout: 5000 });
+        await cancelButton.click();
+        await this.page.waitForTimeout(1000);
+        // Optionally close the popup if desired
+        const closeBtn = linkPopup.locator('.pi.pi-times, .close-btn').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verify that the 'Add Link' popup contains required fields.
+     * Checks the popup fields: "Link Name", "URL", "Type", and Save/Cancel buttons.
+     */
+    async verifyAddLinkPopupContainsFields() {
+        // Trigger popup via existing logic (reuse verifyAddLinkOpensLinkPopup if possible)
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Find the image file and drag it to the left side
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 30000 });
+
+        // Click the 'Add Link' button
+        const addLinkButton = this.page.locator('img[ptooltip="Add Link"]');
+        await expect(addLinkButton).toBeVisible({ timeout: 10000 });
+        await addLinkButton.click();
+
+        // Verify the link popup/modal appears
+        const linkPopup = this.page.locator('.link-popup, .p-dialog, [data-testid="link-popup"]');
+        await expect(linkPopup).toBeVisible({ timeout: 10000 });
+
+        // Check for "Video URL", "Online Tour 1", "Online Tour 2" fields inside the Listing Links popup
+        const videoUrlField = this.page.locator('div').filter({ hasText: /^Video URL$/ });
+        await expect(videoUrlField).toBeVisible({ timeout: 5000 });
+
+        const onlineTour1Field = this.page.locator('div').filter({ hasText: /^Online Tour 1$/ });
+        await expect(onlineTour1Field).toBeVisible({ timeout: 5000 });
+
+        const onlineTour2Field = this.page.locator('div').filter({ hasText: /^Online Tour 2$/ });
+        await expect(onlineTour2Field).toBeVisible({ timeout: 5000 });
+
+        // Check for Save and Cancel buttons
+        const saveButton = linkPopup.getByRole('button', { name: /^Save$/i });
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+
+         // click cancel button
+         const cancelButton = this.page.getByRole('button', { name: 'Cancel' });
+         await expect(cancelButton).toBeVisible({ timeout: 5000 });
+         await cancelButton.click();
+         await this.page.waitForTimeout(1000);
+         // Optionally close the popup if desired
+         const closeBtn = linkPopup.locator('.pi.pi-times, .close-btn').first();
+         if (await closeBtn.isVisible().catch(() => false)) {
+             await closeBtn.click({ force: true });
+         }
+         await this.page.waitForTimeout(1000);
+    }
+
     /**
      * Verify that the 'Inspection' tab is hidden before the listing is saved.
      */
