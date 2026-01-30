@@ -9702,6 +9702,59 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
 
     }
+
+    /**
+     * Verify that duplicating an image creates a copy with "Copy of ..." in its name.
+     */
+    async verifyImageMakeCopyCreatesCopy() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Find the image, e.g. 'PropertyImage2.jpg'
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 20000 });
+
+        // Store original image name
+        const originalImageName = (await imageFile.textContent())?.trim() ?? '';
+
+        // Right-click image to open context menu (double right-click for robustness)
+        await imageFile.click({ button: 'right' });
+        await imageFile.click({ button: 'right' });
+        await this.page.waitForTimeout(600);
+
+        // Click "Make a Copy" (sometimes called "Duplicate")
+        const makeCopyOption = this.page.getByRole('link', { name: /Make a Copy/i }).first();
+        await expect(makeCopyOption).toBeVisible({ timeout: 5000 });
+        await makeCopyOption.click();
+
+        // Wait for the copy to appear
+        const expectedCopyName = `Copy of ${originalImageName}`;
+        const copiedImageFile = this.page.locator('div.lib-file', { hasText: expectedCopyName }).first();
+
+        await copiedImageFile.scrollIntoViewIfNeeded();
+        await expect(copiedImageFile).toBeVisible({ timeout: 20000 });
+        await this.page.waitForTimeout(1000);
+
+        // Optionally close any open popups
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
     
     /**
      * Verify that the 'Inspection' tab is hidden before the listing is saved.

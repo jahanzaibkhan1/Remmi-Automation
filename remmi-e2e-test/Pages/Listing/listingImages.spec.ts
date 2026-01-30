@@ -205,4 +205,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyImageDeleteRemovesFromLibrary();
   });
 
+  test("Test 36: Verify that duplicating an image creates a copy with 'Copy of ...' in its name", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyImageMakeCopyCreatesCopy();
+  });
+
 });
