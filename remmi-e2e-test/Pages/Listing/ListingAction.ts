@@ -9780,31 +9780,31 @@ export class ListingActions {
         await imageFile.scrollIntoViewIfNeeded();
         await expect(imageFile).toBeVisible({ timeout: 20000 });
 
-       // Locate and click the "Reorder" (edit.svg) icon for image reordering
-       const reorderIcon = this.page.locator('img[ptooltip="Reorder"][src="assets/img/edit.svg"].p-element.cursor-pointer')
-       await expect(reorderIcon.first()).toBeVisible({ timeout: 10000 });
-       await reorderIcon.first().click();
+        // Locate and click the "Reorder" (edit.svg) icon for image reordering
+        const reorderIcon = this.page.locator('img[ptooltip="Reorder"][src="assets/img/edit.svg"].p-element.cursor-pointer')
+        await expect(reorderIcon.first()).toBeVisible({ timeout: 10000 });
+        await reorderIcon.first().click();
 
-       // Locate and click the "Image upload" icon inside the Edit popup
-       const imageUploadBtn = this.page.locator('a[ptooltip="Image upload"]');
-       await expect(imageUploadBtn).toBeVisible({ timeout: 10000 });
-       await imageUploadBtn.click();
+        // Locate and click the "Image upload" icon inside the Edit popup
+        const imageUploadBtn = this.page.locator('a[ptooltip="Image upload"]');
+        await expect(imageUploadBtn).toBeVisible({ timeout: 10000 });
+        await imageUploadBtn.click();
 
-       // Upload image through the Edit popup
-       const fileInput = this.page.locator('input[type="file"][accept=".svg,image/*"]').first();    
-       const path = require('path');
-       const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
-       const uploadImagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
-       await fileInput.setInputFiles(uploadImagePath);
+        // Upload image through the Edit popup
+        const fileInput = this.page.locator('input[type="file"][accept=".svg,image/*"]').first();
+        const path = require('path');
+        const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+        const uploadImagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+        await fileInput.setInputFiles(uploadImagePath);
 
-       // Optionally: wait for upload to complete or for any success message
-       const uploadSuccess = this.page.getByText(/Added Successfully/i).first();
-       await expect(uploadSuccess).toBeVisible({ timeout: 20000 });
+        // Optionally: wait for upload to complete or for any success message
+        const uploadSuccess = this.page.getByText(/Added Successfully/i).first();
+        await expect(uploadSuccess).toBeVisible({ timeout: 20000 });
 
-       const crossIcon = this.page.locator('img[src="assets/img/Group37073.svg"]');
-       await expect(crossIcon.first()).toBeVisible({ timeout: 10000 });
-       await crossIcon.click();
-       await this.page.waitForTimeout(1200);
+        const crossIcon = this.page.locator('img[src="assets/img/Group37073.svg"]');
+        await expect(crossIcon.first()).toBeVisible({ timeout: 10000 });
+        await crossIcon.click();
+        await this.page.waitForTimeout(1200);
         // Optionally close the popup
         const closeBtn = this.page.locator('.pi.pi-times, .close-btn').first();
         if (await closeBtn.isVisible().catch(() => false)) {
@@ -9869,6 +9869,104 @@ export class ListingActions {
 
         // Optionally ensure the modal is closed
         const closeBtn = this.page.locator('.pi.pi-times, .close-btn').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Verify that dragging an image into the Offline section removes it from the main view but counts it in total files
+     */
+    async verifyImageDragToOfflineSectionUpdatesCounts() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing
+        const firstListing = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListing).toBeVisible({ timeout: 30000 });
+        await firstListing.click();
+
+        // Switch to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Locate the representative image and count files before
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 20000 });
+
+        // Enable reorder mode
+        const reorderIcon = this.page
+            .locator('img[ptooltip="Reorder"][src="assets/img/edit.svg"]')
+            .first();
+        await reorderIcon.waitFor({ state: 'visible' });
+        await reorderIcon.click();
+
+        // SOURCE: Angular draggable image
+        const sourceImage = this.page.locator('#galImgList .cdk-drag', { hasText: 'PdfToImage' }).first();
+        await sourceImage.waitFor({ state: 'visible' });
+
+        // EXPAND Offline Images section (MANDATORY)
+        const offlineHeading = this.page.locator(
+            'h2.heading-style:has-text("Offline Images")'
+        );
+        await offlineHeading.scrollIntoViewIfNeeded();
+        await offlineHeading.click();
+
+        // REAL Angular CDK drop list under Offline Images
+        const offlineDropList = this.page.locator(
+            'div.cdk-drop-list:below(h2:has-text("Offline Images"))'
+        ).first();
+        await offlineDropList.waitFor({ state: 'visible' });
+
+        // Wait for Angular animations/layout
+        await this.page.waitForLoadState('networkidle');
+
+        // Get bounding boxes
+        const srcBox = await sourceImage.boundingBox();
+        const targetBox = await offlineDropList.boundingBox();
+        if (!srcBox || !targetBox) {
+            throw new Error('Bounding box not found for drag/drop');
+        }
+
+        // Angular-safe drag & drop (slow + pause)
+        await this.page.mouse.move(
+            srcBox.x + srcBox.width / 2,
+            srcBox.y + srcBox.height / 2
+        );
+        await this.page.mouse.down();
+
+        await this.page.waitForTimeout(200); // REQUIRED for CDK
+
+        await this.page.mouse.move(
+            targetBox.x + targetBox.width / 2,
+            targetBox.y + targetBox.height / 2,
+            { steps: 50 }
+        );
+
+        await this.page.waitForTimeout(200);
+        await this.page.mouse.up();
+
+        await this.page.waitForTimeout(2000);
+
+        // VERIFY image moved to Offline Images
+        await expect
+            .poll(async () => await offlineDropList.locator('.cdk-drag').count(), {
+                timeout: 15000,
+            })
+            .toBeGreaterThan(0);
+
+
+        await this.page.waitForTimeout(1200);
+
+        const crossIcon = this.page.locator('img[src="assets/img/Group37073.svg"]');
+        await expect(crossIcon.first()).toBeVisible({ timeout: 10000 });
+        await crossIcon.click();
+        await this.page.waitForTimeout(1200);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }

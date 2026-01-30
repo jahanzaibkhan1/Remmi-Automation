@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.92237099999934">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-30T06:42:40.451Z" hostname="chromium" tests="1" failures="0" skipped="0" time="56.989" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 38: Verify that converting a PDF to an image works in the Images tab" classname="Pages\Listing\listingImages.spec.ts" time="56.989">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="52.15507899999991">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-30T07:23:49.757Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.465" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 39: Verify that dragging an image into the Offline section removes it from the main view but counts it in total files" classname="Pages\Listing\listingImages.spec.ts" time="45.465">
 </testcase>
 </testsuite>
 </testsuites>
