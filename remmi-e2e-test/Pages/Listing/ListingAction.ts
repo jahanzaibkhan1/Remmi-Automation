@@ -10065,30 +10065,76 @@ export class ListingActions {
         await imageTab.click();
         await this.page.waitForTimeout(1000);
 
-         // Find the image file and drag it to the left side
-         const imageFile = this.page.locator('div.lib-file', { hasText: 'propertyImage.jpg' }).first();
-         await imageFile.scrollIntoViewIfNeeded();
-         await expect(imageFile).toBeVisible({ timeout: 30000 });
- 
-         const imageBox = await imageFile.boundingBox();
-         if (!imageBox) throw new Error('BoundingBox for image file not found.');
- 
-         // Drag from center of the image file to 150px left of its current center
-         const startX = imageBox.x + imageBox.width / 2;
-         const startY = imageBox.y + imageBox.height / 2;
-         const dragOffset = -150; // pixels to the left
- 
-         await this.page.mouse.move(startX, startY);
-         await this.page.mouse.down();
-         await this.page.mouse.move(startX + dragOffset, startY, { steps: 10 });
-         await this.page.mouse.up();
- 
-         await this.page.waitForTimeout(1200);
-         const closeBtn = this.page.locator('.pi.pi-times').first();
-         if (await closeBtn.isVisible().catch(() => false)) {
-             await closeBtn.click({ force: true });
-         }
-         await this.page.waitForTimeout(1200);
+        // Find the image file and drag it to the left side
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'propertyImage.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 30000 });
+
+        const imageBox = await imageFile.boundingBox();
+        if (!imageBox) throw new Error('BoundingBox for image file not found.');
+
+        // Drag from center of the image file to 150px left of its current center
+        const startX = imageBox.x + imageBox.width / 2;
+        const startY = imageBox.y + imageBox.height / 2;
+        const dragOffset = -150; // pixels to the left
+
+        await this.page.mouse.move(startX, startY);
+        await this.page.mouse.down();
+        await this.page.mouse.move(startX + dragOffset, startY, { steps: 10 });
+        await this.page.mouse.up();
+
+        await this.page.waitForTimeout(1200);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Verify that clicking 'Add Link' opens the link popup.
+     */
+    async verifyAddLinkOpensLinkPopup() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Find the image file and drag it to the left side
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'propertyImage.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 30000 });
+
+        // Click the 'Add Link' button
+        const addLinkButton = this.page.locator('img[ptooltip="Add Link"]');
+        await expect(addLinkButton).toBeVisible({ timeout: 10000 });
+        await addLinkButton.click();
+
+        // Verify the link popup/modal appears
+        const linkPopup = this.page.locator('.link-popup, .p-dialog, [data-testid="link-popup"]');
+        await expect(linkPopup).toBeVisible({ timeout: 10000 });
+
+        // click cancel button
+        const cancelButton = this.page.getByRole('button', { name: 'Cancel' });
+        await expect(cancelButton).toBeVisible({ timeout: 5000 });
+        await cancelButton.click();
+        await this.page.waitForTimeout(1000);
+        // Optionally close the popup if desired
+        const closeBtn = linkPopup.locator('.pi.pi-times, .close-btn').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
     }
 
     /**

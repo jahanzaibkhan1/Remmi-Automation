@@ -240,4 +240,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyImagesReorderable();
   });
 
+  test("Test 43: Verify that clicking 'Add Link' opens the link popup in the Images tab", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyAddLinkOpensLinkPopup();
+  });
+
 });
