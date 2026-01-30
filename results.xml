@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.70317999999993">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-30T04:03:51.427Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.344" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 36: Verify that duplicating an image creates a copy with &apos;Copy of ...&apos; in its name" classname="Pages\Listing\listingImages.spec.ts" time="27.344">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.87652499999991">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-30T04:24:44.656Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.247" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 37: Verify that uploading an image through the Edit popup works" classname="Pages\Listing\listingImages.spec.ts" time="34.247">
 </testcase>
 </testsuite>
 </testsuites>

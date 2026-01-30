@@ -9755,7 +9755,64 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(1200);
     }
-    
+
+    /**
+     * Verify that uploading an image through the Edit popup works
+     */
+    async verifyUploadImageThroughEditPopupWorks() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Find the image, e.g. 'PropertyImage2.jpg'
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 20000 });
+
+       // Locate and click the "Reorder" (edit.svg) icon for image reordering
+       const reorderIcon = this.page.locator('img[ptooltip="Reorder"][src="assets/img/edit.svg"].p-element.cursor-pointer')
+       await expect(reorderIcon.first()).toBeVisible({ timeout: 10000 });
+       await reorderIcon.first().click();
+
+       // Locate and click the "Image upload" icon inside the Edit popup
+       const imageUploadBtn = this.page.locator('a[ptooltip="Image upload"]');
+       await expect(imageUploadBtn).toBeVisible({ timeout: 10000 });
+       await imageUploadBtn.click();
+
+       // Upload image through the Edit popup
+       const fileInput = this.page.locator('input[type="file"][accept=".svg,image/*"]').first();    
+       const path = require('path');
+       const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+       const uploadImagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+       await fileInput.setInputFiles(uploadImagePath);
+
+       // Optionally: wait for upload to complete or for any success message
+       const uploadSuccess = this.page.getByText(/Added Successfully/i).first();
+       await expect(uploadSuccess).toBeVisible({ timeout: 20000 });
+
+       const crossIcon = this.page.locator('img[src="assets/img/Group37073.svg"]');
+       await expect(crossIcon.first()).toBeVisible({ timeout: 10000 });
+       await crossIcon.click();
+       await this.page.waitForTimeout(1200);
+        // Optionally close the popup
+        const closeBtn = this.page.locator('.pi.pi-times, .close-btn').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
     /**
      * Verify that the 'Inspection' tab is hidden before the listing is saved.
      */
