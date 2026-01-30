@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="61.155618999999014">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-30T08:03:46.492Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.941" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 40: Verify that clicking Back in a folder returns to the previous folder" classname="Pages\Listing\listingImages.spec.ts" time="51.941">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.258462000001224">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-01-30T10:29:29.968Z" hostname="chromium" tests="1" failures="0" skipped="0" time="43.171" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 41: Verify that breadcrumbs allow direct navigation to folders in the Images tab" classname="Pages\Listing\listingImages.spec.ts" time="43.171">
 </testcase>
 </testsuite>
 </testsuites>
