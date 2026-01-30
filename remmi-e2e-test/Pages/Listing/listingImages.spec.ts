@@ -200,4 +200,54 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyDragChangesImagePosition();
   });
 
+  test("Test 35: Verify that deleting an image from the Edit popup removes it from the library", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyImageDeleteRemovesFromLibrary();
+  });
+
+  test("Test 36: Verify that duplicating an image creates a copy with 'Copy of ...' in its name", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyImageMakeCopyCreatesCopy();
+  });
+
+  test('Test 37: Verify that uploading an image through the Edit popup works', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyUploadImageThroughEditPopupWorks();
+  });
+
+  test('Test 38: Verify that converting a PDF to an image works in the Images tab', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyPdfToImageConversion();
+  });
+
+  test("Test 39: Verify that dragging an image into the Offline section removes it from the main view but counts it in total files", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyImageDragToOfflineSectionUpdatesCounts();
+  });
+
+  test('Test 40: Verify that clicking Back in a folder returns to the previous folder', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyBackButtonReturnsToPreviousFolder();
+  });
+
+  test('Test 41: Verify that breadcrumbs allow direct navigation to folders in the Images tab', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyBreadcrumbsAllowDirectNavigation();
+  });
+
+  test('Test 42: Verify that images can be reordered in the Images tab by drag and drop', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyImagesReorderable();
+  });
+
+  test("Test 43: Verify that clicking 'Add Link' opens the link popup in the Images tab", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyAddLinkOpensLinkPopup();
+  });
+
+  test("Test 44: Verify that the 'Add Link' popup contains the fields", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyAddLinkPopupContainsFields();
+  });
+
 });
