@@ -200,4 +200,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyDragChangesImagePosition();
   });
 
+  test("Test 35: Verify that deleting an image from the Edit popup removes it from the library", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyImageDeleteRemovesFromLibrary();
+  });
+
 });

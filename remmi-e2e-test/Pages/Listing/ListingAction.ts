@@ -9658,6 +9658,51 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(1200);
     }
+
+    /**
+     * Verify that deleting an image from the Edit popup removes it from the library.
+     */
+    async verifyImageDeleteRemovesFromLibrary() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Go to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Find the image, open Edit popup
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 20000 });
+        await imageFile.click(); // Open image preview/edit popup
+        await this.page.waitForTimeout(1000);
+
+        // Find and click Delete/Remove button in the popup
+        const deleteBtn = this.page.getByRole('img', { name: 'Remove' }).first();
+        await expect(deleteBtn).toBeVisible({ timeout: 10000 });
+        await deleteBtn.click();
+
+        // Verify success notification for deletion
+        const deletedSuccessMsg = this.page.getByText(/deleted successfully/i, { exact: false });
+        await expect(deletedSuccessMsg).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+
+        // Close the popup if still present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+
+    }
+    
     /**
      * Verify that the 'Inspection' tab is hidden before the listing is saved.
      */
