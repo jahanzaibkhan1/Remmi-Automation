@@ -10278,19 +10278,19 @@ export class ListingActions {
         await expect(videoUrlInput).toBeVisible({ timeout: 5000 });
         await videoUrlInput.click();
         const testVideoUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-        await videoUrlInput.fill(testVideoUrl); 
+        await videoUrlInput.fill(testVideoUrl);
         await this.page.waitForTimeout(1000);
         // Click the Save button
         const saveButton = linkPopup.getByRole('button', { name: /^Save$/i });
         await expect(saveButton).toBeVisible({ timeout: 5000 });
         await saveButton.click();
         await this.page.waitForTimeout(1500);
-         // Optionally close the popup if desired
-         const closeBtn = this.page.locator('.pi.pi-times').first();
-         if (await closeBtn.isVisible().catch(() => false)) {
-             await closeBtn.click({ force: true });
-         }
-         await this.page.waitForTimeout(1000);
+        // Optionally close the popup if desired
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -15918,5 +15918,64 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(1200);
     }
+
+    /**
+    * Verify that all portal rows display their toggle (slider) button
+    * in the Portals tab.
+    */
+    async verifyAllPortalToggleButtonsDisplayed() {
+        // Navigate to listings and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing safely
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.waitFor({ state: 'attached', timeout: 10000 });
+        await firstCardRow.click();
+
+        // Go to the 'Portals' tab
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+
+        // Wait for portal rows to appear
+        await this.page.locator('div.row.b-b-light').first().waitFor({ state: 'visible', timeout: 10000 });
+
+        // Expected portal names
+        const expectedPortals = [
+            'Company Website',
+            'Domain',
+            'realestate.com.au',
+            'Homely',
+            'Market Place',
+            'Real Estate View'
+        ];
+
+        for (const portal of expectedPortals) {
+            // Locate the row by portal name using regex to avoid whitespace issues
+            const portalRow = this.page
+                .locator('div.row.b-b-light')
+                .filter({ hasText: new RegExp(`^\\s*${portal}\\s*$`, 'i') })
+                .first();
+
+            // Verify row is visible
+            await expect(portalRow).toBeVisible({ timeout: 10000 });
+
+            // Locate toggle slider inside the row
+            const toggleSlider = portalRow.locator('label.switch span.slider');
+
+            // Verify toggle button is displayed
+            await expect(toggleSlider).toBeVisible({ timeout: 10000 });
+        }
+
+        await this.page.waitForTimeout(1200);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
 
 }
