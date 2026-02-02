@@ -16514,4 +16514,68 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    /**
+     * Verifies that toggling a portal ON without saving does not immediately enable it (change is not persisted until 'Save' is clicked).
+     */
+    async verifyPortalCannotBeEnabledWithoutSaving() {
+        // Step 1: Navigate to Listings and switch to grid view.
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Step 2: Open the first listing card.
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.waitFor({ state: 'attached', timeout: 10000 });
+        await firstCard.click();
+
+        // Step 3: Open the 'Portals' tab.
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+
+        // Wait for first portal row to appear
+        const firstPortalRow = this.page.locator('div.row.b-b-light').first();
+        await expect(firstPortalRow).toBeVisible({ timeout: 10000 });
+        
+        // Store the initial checked status of the first portal
+        const inputBox = firstPortalRow.locator('input[type="checkbox"]').first();
+        const wasChecked = await inputBox.isChecked();
+
+        // Toggle the checkbox (i.e., if it was off, turn it on)
+        const toggleSlider = firstPortalRow.locator('label.switch span.slider').first();
+        await toggleSlider.click();
+        await this.page.waitForTimeout(1000);
+
+        // WITHOUT SAVING: close the tab/modal or re-open the listing to check if the change persisted.
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(800);
+
+        // Re-open the listing and portals tab to check persisted status
+
+        const reopenedCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(reopenedCard).toBeVisible({ timeout: 30000 });
+        await reopenedCard.waitFor({ state: 'attached', timeout: 10000 });
+        await reopenedCard.click();
+
+        const portalsTabAgain = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTabAgain).toBeVisible({ timeout: 10000 });
+        await portalsTabAgain.click();
+
+        const reopenedPortalRow = this.page.locator('div.row.b-b-light').first();
+        await expect(reopenedPortalRow).toBeVisible({ timeout: 10000 });
+        const reopenedInputBox = reopenedPortalRow.locator('input[type="checkbox"]').first();
+        // The portal should not be checked (should be unchecked if save wasn't clicked)
+        await expect(reopenedInputBox).not.toBeChecked({ timeout: 10000 });
+        await this.page.waitForTimeout(800);
+        // Close out again
+        const finalClose = this.page.locator('.pi.pi-times').first();
+        if (await finalClose.isVisible().catch(() => false)) {
+            await finalClose.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
 }
