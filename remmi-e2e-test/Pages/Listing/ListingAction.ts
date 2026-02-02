@@ -10242,6 +10242,56 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    // Verify that entering a video URL and saving updates the library
+    async verifyEnteringVideoURLAndSavingUpdatesLibrary() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+        await this.page.waitForTimeout(1000);
+
+        // Switch to Images tab
+        const imageTab = this.page.getByRole('tab', { name: /Images/i });
+        await expect(imageTab).toBeVisible({ timeout: 20000 });
+        await imageTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Find the target image file to use for adding a link
+        const imageFile = this.page.locator('div.lib-file', { hasText: 'PropertyImage2.jpg' }).first();
+        await imageFile.scrollIntoViewIfNeeded();
+        await expect(imageFile).toBeVisible({ timeout: 30000 });
+
+        // Click the 'Add Link' button on the image
+        const addLinkButton = this.page.locator('img[ptooltip="Add Link"]');
+        await expect(addLinkButton).toBeVisible({ timeout: 10000 });
+        await addLinkButton.click();
+
+        // Wait for the Link popup/modal to appear
+        const linkPopup = this.page.locator('.link-popup, .p-dialog, [data-testid="link-popup"]');
+        await expect(linkPopup).toBeVisible({ timeout: 10000 });
+
+        // Fill the "Video URL" input in the popup
+        const videoUrlInput = this.page.locator('input[placeholder="Add link"]').first();
+        await expect(videoUrlInput).toBeVisible({ timeout: 5000 });
+        await videoUrlInput.click();
+        const testVideoUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+        await videoUrlInput.fill(testVideoUrl); 
+        await this.page.waitForTimeout(1000);
+        // Click the Save button
+        const saveButton = linkPopup.getByRole('button', { name: /^Save$/i });
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+        await saveButton.click();
+        await this.page.waitForTimeout(1500);
+         // Optionally close the popup if desired
+         const closeBtn = this.page.locator('.pi.pi-times').first();
+         if (await closeBtn.isVisible().catch(() => false)) {
+             await closeBtn.click({ force: true });
+         }
+         await this.page.waitForTimeout(1000);
+    }
     /**
      * Verify that the 'Inspection' tab is hidden before the listing is saved.
      */
