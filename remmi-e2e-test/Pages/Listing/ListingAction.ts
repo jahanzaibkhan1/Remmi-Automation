@@ -16018,6 +16018,9 @@ export class ListingActions {
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        // Verify that the "listing-active" paragraph appears indicating portal is enabled
+        const activeIndicator = this.page.locator('p.listing-active');
+        await expect(activeIndicator).toBeVisible({ timeout: 20000 });
         await this.page.waitForTimeout(1200);
     }
 
@@ -16061,6 +16064,8 @@ export class ListingActions {
         await saveButton.click();
         await this.page.waitForTimeout(1000);
 
+        const activeIndicator = this.page.locator('p.listing-active');
+        await expect(activeIndicator).not.toBeVisible({ timeout: 20000 });
         // Optionally close the popup or dialog
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
