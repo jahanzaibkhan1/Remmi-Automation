@@ -16021,4 +16021,52 @@ export class ListingActions {
         await this.page.waitForTimeout(1200);
     }
 
+    /**
+     * Verify that clicking a toggle button disables the first portal.
+     */
+    async verifyToggleDisablesPortal() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing safely
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.waitFor({ state: 'attached', timeout: 10000 });
+        await firstCardRow.click();
+
+        // Go to the 'Portals' tab
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+
+        // Wait for portal rows to appear
+        const firstPortalRow = this.page.locator('div.row.b-b-light').first();
+        await firstPortalRow.waitFor({ state: 'visible', timeout: 10000 });
+        await expect(firstPortalRow).toBeVisible({ timeout: 10000 });
+
+        // Locate the toggle slider inside the first portal row
+        const toggleSlider = firstPortalRow.locator('label.switch span.slider').first();
+        await expect(toggleSlider).toBeVisible({ timeout: 10000 });
+        // Only click to disable if it's enabled/checked:
+        const inputBox = firstPortalRow.locator('input[type="checkbox"]').first();
+        if (await inputBox.isChecked()) {
+            await toggleSlider.click();
+        }
+        await expect(inputBox).not.toBeChecked({ timeout: 5000 });
+        await this.page.waitForTimeout(1200);
+
+        // Click the save button after toggling the portal
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+        await saveButton.click();
+        await this.page.waitForTimeout(1000);
+
+        // Optionally close the popup or dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
 }
