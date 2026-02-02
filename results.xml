@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.85922000000067">
-<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-02T08:10:27.455Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.603" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that the listing  updates after saving changes" classname="Pages\Listing\listingPortal.spec.ts" time="27.603">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="29.444221999999137">
+<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-02T08:20:43.800Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.207" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that the green dot appears in grid view listing card after enabling a portal" classname="Pages\Listing\listingPortal.spec.ts" time="21.207">
 </testcase>
 </testsuite>
 </testsuites>
