@@ -16324,4 +16324,51 @@ export class ListingActions {
         await this.page.waitForTimeout(1200);
     }
 
+    /**
+     * Verify that clicking 'Save & Close' on the Portal Reminders popup saves changes and closes the popup.
+     */
+    async verifyPortalReminderSaveAndClose() {
+        // Navigate to Listings and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.waitFor({ state: 'attached', timeout: 10000 });
+        await firstCard.click();
+
+        // Open the 'Portals' tab
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+
+        // Wait for first portal row to appear
+        const firstPortalRow = this.page.locator('div.row.b-b-light').first();
+        await firstPortalRow.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Click the warning icon to trigger the Portal Reminders popup
+        const warningIcon = this.page.locator('i.pi.pi-exclamation-triangle, .warning-icon').first();
+        await expect(warningIcon).toBeVisible({ timeout: 10000 });
+        await expect(warningIcon).toBeEnabled();
+
+        // Click the save button to trigger the popup
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+        await saveButton.click();
+
+        // Verify the Portal Reminders popup/dialog appears
+        const portalRemindersDialog = this.page.locator('div[role="dialog"]:has-text("Portal Reminders")');
+        await expect(portalRemindersDialog).toBeVisible({ timeout: 10000 });
+
+        // Locate and click the 'Save & Close' button (assume button with text "Save & Close" exists)
+        const saveAndCloseButton = portalRemindersDialog.getByRole('button', { name: /Save & Close/i }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 5000 });
+        await saveAndCloseButton.click();
+        // Verify the dialog closes after clicking 'Save & Close'
+        await expect(portalRemindersDialog).not.toBeVisible({ timeout: 8000 });
+        await this.page.waitForTimeout(1200);
+
+    }
+
 }

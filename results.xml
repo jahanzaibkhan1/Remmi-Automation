@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.09583399999887">
-<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-02T09:48:00.655Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.901" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify that clicking the &apos;Cancel&apos; button closes the Portal Reminder popup without saving" classname="Pages\Listing\listingPortal.spec.ts" time="32.901">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="28.570107999999077">
+<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-02T09:51:26.601Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.26" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify that clicking &apos;Save &amp; Close&apos; saves changes and closes the Portal Reminder popup" classname="Pages\Listing\listingPortal.spec.ts" time="21.26">
 </testcase>
 </testsuite>
 </testsuites>

@@ -75,5 +75,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyPortalReminderPopupClosesOnCancel();
       });
 
+      test("Test 12: Verify that clicking 'Save & Close' saves changes and closes the Portal Reminder popup", async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyPortalReminderSaveAndClose();
+      });
+
 
 });
