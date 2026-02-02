@@ -16218,4 +16218,56 @@ export class ListingActions {
         await this.page.waitForTimeout(1200);
     }
 
+    /**
+     * Verify that the Portal Reminder popup (Portal Reminders dialog) has a functioning close button.
+     */
+    async verifyPortalReminderPopupHasCloseButton() {
+        // Navigate to Listings and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.waitFor({ state: 'attached', timeout: 10000 });
+        await firstCard.click();
+
+        // Open the 'Portals' tab
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+
+        // Wait for first portal row to appear
+        const firstPortalRow = this.page.locator('div.row.b-b-light').first();
+        await firstPortalRow.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Click the warning icon in the portals tab to trigger the Portal Reminders popup
+        const warningIcon = this.page.locator('i.pi.pi-exclamation-triangle, .warning-icon').first();
+        await expect(warningIcon).toBeVisible({ timeout: 10000 });
+        await expect(warningIcon).toBeEnabled();
+
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+        await saveButton.click();
+
+        // Verify the Portal Reminders popup/dialog appears
+        const portalRemindersDialog = this.page.locator('div[role="dialog"]:has-text("Portal Reminders")');
+        await expect(portalRemindersDialog).toBeVisible({ timeout: 10000 });
+
+        const closeBtn = portalRemindersDialog.locator('button.p-dialog-header-close');
+        await expect(closeBtn).toBeVisible({ timeout: 5000 });
+        
+        // Click the close button and verify the dialog closes
+        await closeBtn.click();
+        await expect(portalRemindersDialog).not.toBeVisible({ timeout: 5000 });
+
+        await this.page.waitForTimeout(1000);
+        // Optionally, close the popup and dialog if present
+        const Close = this.page.locator('.pi.pi-times').first();
+        if (await Close.isVisible().catch(() => false)) {
+            await Close.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
 }
