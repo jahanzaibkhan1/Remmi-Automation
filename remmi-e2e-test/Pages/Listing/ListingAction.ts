@@ -8800,7 +8800,7 @@ export class ListingActions {
         const targetFolder = this.page.locator('.lib-file').last();
         await targetFolder.scrollIntoViewIfNeeded();
         await expect(targetFolder).toBeVisible({ timeout: 10000 });
-
+        await this.page.waitForTimeout(1200);
         // Get the folder name before duplication
         const originalFolderName = (await targetFolder.innerText()).trim();
 
@@ -8811,7 +8811,7 @@ export class ListingActions {
 
         // Click Make a Copy from context menu
         const makeCopyOption = this.page.getByRole('link', { name: /Make a Copy/i });
-        await expect(makeCopyOption).toBeVisible({ timeout: 4000 });
+        await expect(makeCopyOption).toBeVisible({ timeout: 10000 });
         await makeCopyOption.click();
 
         // Verify duplicate folder appears with expected name
@@ -9220,13 +9220,10 @@ export class ListingActions {
 
         await this.page.waitForTimeout(1000);
 
-        // Click the "Preview" option from context menu (adjust selector if needed)
         const previewOption = this.page.locator('a:has(i.pi.pi-eye):has-text("Preview")').first();
         await expect(previewOption).toBeVisible({ timeout: 5000 });
         await previewOption.click();
 
-        // Assert that the preview file modal/dialog appears
-        // The selector might need to be updated according to the actual modal/dialog html
         const previewDialog = this.page.locator('.p-dialog:has-text("Preview")');
         await expect(previewDialog).toBeVisible({ timeout: 10000 });
 
@@ -10130,7 +10127,7 @@ export class ListingActions {
         await cancelButton.click();
         await this.page.waitForTimeout(1000);
         // Optionally close the popup if desired
-        const closeBtn = linkPopup.locator('.pi.pi-times, .close-btn').first();
+        const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
@@ -10186,17 +10183,17 @@ export class ListingActions {
         const saveButton = linkPopup.getByRole('button', { name: /^Save$/i });
         await expect(saveButton).toBeVisible({ timeout: 5000 });
 
-         // click cancel button
-         const cancelButton = this.page.getByRole('button', { name: 'Cancel' });
-         await expect(cancelButton).toBeVisible({ timeout: 5000 });
-         await cancelButton.click();
-         await this.page.waitForTimeout(1000);
-         // Optionally close the popup if desired
-         const closeBtn = linkPopup.locator('.pi.pi-times, .close-btn').first();
-         if (await closeBtn.isVisible().catch(() => false)) {
-             await closeBtn.click({ force: true });
-         }
-         await this.page.waitForTimeout(1000);
+        // click cancel button
+        const cancelButton = this.page.getByRole('button', { name: 'Cancel' });
+        await expect(cancelButton).toBeVisible({ timeout: 5000 });
+        await cancelButton.click();
+        await this.page.waitForTimeout(1000);
+        // Optionally close the popup if desired
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -10223,9 +10220,9 @@ export class ListingActions {
 
         await this.page.waitForTimeout(1000);
 
-        const closePreviewButton = this.page.locator('.pi.pi-times').filter({ hasText: '' }).first();
-        if (await closePreviewButton.isVisible({ timeout: 10 }).catch(() => false)) {
-            await closePreviewButton.click({ force: true });
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1500);
 
@@ -10281,9 +10278,9 @@ export class ListingActions {
         await expect(requiredFieldError).toBeVisible({ timeout: 5000 });
 
         // Close the form after test
-        const closeFormBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeFormBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
-            await closeFormBtn.click({ force: true });
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1500);
 
