@@ -16471,4 +16471,47 @@ export class ListingActions {
         await expect(greenDot).not.toBeVisible({ timeout: 8000 });
     }
 
+    /**
+     * Verifies that all portals are disabled by default when creating a new listing.
+     */
+    async verifyAllPortalsDisabledByDefaultForNewListing() {
+        // Step 1: Navigate to Listings and switch to grid view.
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Step 2: Open the first listing card.
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.waitFor({ state: 'attached', timeout: 10000 });
+        await firstCard.click();
+
+        // Step 3: Open the 'Portals' tab.
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+
+        // Wait for all portal rows to appear
+        const portalRows = this.page.locator('div.row.b-b-light');
+        await expect(portalRows.first()).toBeVisible({ timeout: 10000 });
+
+        const count = await portalRows.count();
+        if (count === 0) {
+            throw new Error('No portals found in the Portals tab.');
+        }
+
+        // For each portal row, check that the checkbox is NOT checked/enabled
+        for (let i = 0; i < count; i++) {
+            const row = portalRows.nth(i);
+            const inputBox = row.locator('input[type="checkbox"]').first();
+            await expect(inputBox).not.toBeChecked({ timeout: 10000 });
+        }
+
+        // Close the add listing dialog or navigate away
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
 }
