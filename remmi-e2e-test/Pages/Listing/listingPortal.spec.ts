@@ -54,5 +54,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyEnabledPortalCount();
       });
-      
+
+      test('Test 8: Verify that clicking the warning icon and save the listing, verify Portal Reminder popup', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyPortalReminderPopupOnWarningIconClick();
+      });
 });

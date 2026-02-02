@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.58440100000054">
-<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-02T08:36:10.808Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.965" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that the correct numbers of enabled portals appears in the portal tab" classname="Pages\Listing\listingPortal.spec.ts" time="31.965">
-<system-out>
-<![CDATA[Enabled portal count badge value: 1
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.54145100000128">
+<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-02T09:32:05.372Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.435" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that clicking the warning icon and save the listing, verify Portal Reminder popup" classname="Pages\Listing\listingPortal.spec.ts" time="38.435">
 </testcase>
 </testsuite>
 </testsuites>
