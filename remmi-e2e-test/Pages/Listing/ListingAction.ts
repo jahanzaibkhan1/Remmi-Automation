@@ -16256,7 +16256,7 @@ export class ListingActions {
 
         const closeBtn = portalRemindersDialog.locator('button.p-dialog-header-close');
         await expect(closeBtn).toBeVisible({ timeout: 5000 });
-        
+
         // Click the close button and verify the dialog closes
         await closeBtn.click();
         await expect(portalRemindersDialog).not.toBeVisible({ timeout: 5000 });
@@ -16369,6 +16369,58 @@ export class ListingActions {
         await expect(portalRemindersDialog).not.toBeVisible({ timeout: 8000 });
         await this.page.waitForTimeout(1200);
 
+    }
+
+    /**
+     * Verify that an already saved portal status remains unchanged after refreshing the page.
+     */
+    async verifyPortalStatusPersistenceAfterRefresh() {
+        // Step 1: Go to listings and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Step 2: Open first listing card
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.waitFor({ state: 'attached', timeout: 10000 });
+        await firstCard.click();
+
+        // Step 3: Open 'Portals' tab
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+
+        // Step 4: Wait for first portal row and get the toggle checkbox status
+        const firstPortalRow = this.page.locator('div.row.b-b-light').first();
+        await firstPortalRow.waitFor({ state: 'visible', timeout: 10000 });
+        const inputBox = firstPortalRow.locator('input[type="checkbox"]').first();
+        const isCheckedBefore = await inputBox.isChecked();
+
+        // Step 6: Refresh the page
+        await this.page.reload();
+        const refreshedFirstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(refreshedFirstCard).toBeVisible({ timeout: 30000 });
+        await refreshedFirstCard.waitFor({ state: 'attached', timeout: 10000 });
+        await refreshedFirstCard.click();
+
+        const refreshedPortalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(refreshedPortalsTab).toBeVisible({ timeout: 10000 });
+        await refreshedPortalsTab.click();
+
+        const refreshedFirstPortalRow = this.page.locator('div.row.b-b-light').first();
+        await refreshedFirstPortalRow.waitFor({ state: 'visible', timeout: 10000 });
+        const refreshedInputBox = refreshedFirstPortalRow.locator('input[type="checkbox"]').first();
+        const isCheckedAfter = await refreshedInputBox.isChecked();
+
+        // Step 8: Assert that checkbox state is unchanged after page refresh
+        expect(isCheckedAfter).toBe(isCheckedBefore);
+
+        // Optionally close any leftover dialogs/popups
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
     }
 
 }
