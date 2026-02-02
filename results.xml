@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.44358599999919">
-<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-02T10:29:04.796Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.841" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that toggling a portal OFF removes the green dot in grid view" classname="Pages\Listing\listingPortal.spec.ts" time="42.841">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.37498000000045">
+<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-02T10:39:43.263Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.879" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that all portals are disabled by default for a new listing" classname="Pages\Listing\listingPortal.spec.ts" time="44.879">
 </testcase>
 </testsuite>
 </testsuites>
