@@ -44,4 +44,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyToggleEnablesPortal();
       });
+
+      test('Test 6: Verify that the green dot appears in grid view listing card after enabling a portal', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyGreenDotAppearsAfterEnablingPortal();
+      });
 });

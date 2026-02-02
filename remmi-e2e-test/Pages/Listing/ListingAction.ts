@@ -15984,13 +15984,13 @@ export class ListingActions {
         await this.navigateToListings();
         await this.switchToGridView();
 
-        // Open the first listing safely
+        // Open the first listing card
         const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
         await firstCardRow.waitFor({ state: 'attached', timeout: 10000 });
         await firstCardRow.click();
 
-        // Go to the 'Portals' tab
+        // Go to 'Portals' tab
         const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
         await expect(portalsTab).toBeVisible({ timeout: 10000 });
         await portalsTab.click();
@@ -16000,28 +16000,33 @@ export class ListingActions {
         await firstPortalRow.waitFor({ state: 'visible', timeout: 10000 });
         await expect(firstPortalRow).toBeVisible({ timeout: 10000 });
 
-        // Locate the toggle slider inside the first portal row
+        // If already enabled, do nothing; if disabled, enable it
         const toggleSlider = firstPortalRow.locator('label.switch span.slider').first();
         await expect(toggleSlider).toBeVisible({ timeout: 10000 });
-        await toggleSlider.click();
-        await expect(toggleSlider).toBeChecked({ timeout: 5000 });
-        await this.page.waitForTimeout(1200);
+        const inputBox = firstPortalRow.locator('input[type="checkbox"]').first();
+        const isChecked = await inputBox.isChecked();
+        if (!isChecked) {
+            await toggleSlider.click();
+            await expect(inputBox).toBeChecked({ timeout: 5000 });
+            await this.page.waitForTimeout(1200);
+        }
 
-        // Click the save button after toggling the portal
+        // Click the save button after toggling
         const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
         await expect(saveButton).toBeVisible({ timeout: 5000 });
         await saveButton.click();
         await this.page.waitForTimeout(1000);
 
-        // Optionally close the popup or dialog
+        // Assume the green dot is a descendant element, e.g. '.listing-active'
+        const greenDotIndicator = this.page.locator('.listing-active').first();
+        await expect(greenDotIndicator).toBeVisible({ timeout: 10000 });
+
+        // Optionally, close any dialogs if opened
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
-        // Verify that the "listing-active" paragraph appears indicating portal is enabled
-        const activeIndicator = this.page.locator('p.listing-active');
-        await expect(activeIndicator).toBeVisible({ timeout: 20000 });
-        await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -16072,6 +16077,58 @@ export class ListingActions {
             await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Verify that the green dot appears in grid view listing  card after enabling a portal
+     */
+    async verifyGreenDotAppearsAfterEnablingPortal() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.waitFor({ state: 'attached', timeout: 10000 });
+        await firstCardRow.click();
+
+        // Go to 'Portals' tab
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+
+        // Wait for portal rows to appear
+        const firstPortalRow = this.page.locator('div.row.b-b-light').first();
+        await firstPortalRow.waitFor({ state: 'visible', timeout: 10000 });
+        await expect(firstPortalRow).toBeVisible({ timeout: 10000 });
+
+        // If already enabled, do nothing; if disabled, enable it
+        const toggleSlider = firstPortalRow.locator('label.switch span.slider').first();
+        await expect(toggleSlider).toBeVisible({ timeout: 10000 });
+        const inputBox = firstPortalRow.locator('input[type="checkbox"]').first();
+        const isChecked = await inputBox.isChecked();
+        if (!isChecked) {
+            await toggleSlider.click();
+            await expect(inputBox).toBeChecked({ timeout: 5000 });
+            await this.page.waitForTimeout(1200);
+        }
+
+        // Click the save button after toggling
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+        await saveButton.click();
+        await this.page.waitForTimeout(1000);
+
+        // Assume the green dot is a descendant element, e.g. '.listing-active'
+        const greenDotIndicator = this.page.locator('.listing-active').first();
+        await expect(greenDotIndicator).toBeVisible({ timeout: 10000 });
+
+        // Optionally, close any dialogs if opened
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
     }
 
 }
