@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.79197699999995">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-02-02T05:29:14.387Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.485" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 47: Verify that entering a video URL and saving updates the library" classname="Pages\Listing\listingImages.spec.ts" time="39.485">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.798435000000055">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-02-02T05:36:57.856Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.328" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 48: Verify that adding Online Tour links updates the library" classname="Pages\Listing\listingImages.spec.ts" time="38.328">
 </testcase>
 </testsuite>
 </testsuites>

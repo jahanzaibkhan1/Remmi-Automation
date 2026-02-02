@@ -266,4 +266,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyEnteringVideoURLAndSavingUpdatesLibrary();
   });
 
+  // Verify that adding Online Tour links updates the library
+  test("Test 48: Verify that adding Online Tour links updates the library", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyAddingOnlineTourLinkUpdatesLibrary();
+  });
+
 });
