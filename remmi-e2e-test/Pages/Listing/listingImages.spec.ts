@@ -260,4 +260,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifySaveWithoutDataAllowsSubmission();
   });
 
+  // Verify that entering a video URL and saving updates the library
+  test("Test 47: Verify that entering a video URL and saving updates the library", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyEnteringVideoURLAndSavingUpdatesLibrary();
+  });
+
 });
