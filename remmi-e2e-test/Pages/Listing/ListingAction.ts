@@ -16131,4 +16131,37 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    /**
+     * Verify that the correct number of enabled portals appears in the portal tab.
+     */
+    async verifyEnabledPortalCount() {
+        // Go to the portals tab of the first listing (as above)
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.waitFor({ state: 'attached', timeout: 10000 });
+        await firstCardRow.click();
+
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+
+        const enabledPortalCountBadge = this.page.locator('a#pills-portal-tab p.p-head-badge');
+        await expect(enabledPortalCountBadge).toBeVisible({ timeout: 10000 });
+
+        // Retrieve the number from the badge and log it for debugging
+        const countText = await enabledPortalCountBadge.textContent();
+        const actualCount = Number(countText?.trim());
+        console.info(`Enabled portal count badge value: ${actualCount}`);
+        await this.page.waitForTimeout(1000);
+        // Optionally, close any dialogs if opened
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
 }

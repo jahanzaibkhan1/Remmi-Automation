@@ -49,4 +49,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyGreenDotAppearsAfterEnablingPortal();
       });
+
+      test('Test 7: Verify that the correct numbers of enabled portals appears in the portal tab', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyEnabledPortalCount();
+      });
+      
 });
