@@ -255,4 +255,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyAddLinkOpensLinkPopup();
   });
 
+  test("Test 46: Verify that clicking 'Save' without entering any data allows submission", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifySaveWithoutDataAllowsSubmission();
+  });
+
 });
