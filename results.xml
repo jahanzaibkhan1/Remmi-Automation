@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.39381399999932">
-<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-02T10:47:20.990Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.369" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that portals cannot be enabled without saving" classname="Pages\Listing\listingPortal.spec.ts" time="36.369">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.16582400000095">
+<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-02T10:49:54.590Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.957" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify that listing appears on the portal after enabling" classname="Pages\Listing\listingPortal.spec.ts" time="36.957">
 </testcase>
 </testsuite>
 </testsuites>
