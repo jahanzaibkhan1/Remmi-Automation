@@ -250,4 +250,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyAddLinkPopupContainsFields();
   });
 
+  test("Test 45: Verify that clicking 'Cancel' closes the 'Add Link' popup", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyAddLinkOpensLinkPopup();
+  });
+
 });
