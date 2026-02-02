@@ -79,10 +79,15 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyPortalReminderSaveAndClose();
       });
-      
+
       test("Test 13: Verify that an already saved portal status remains unchanged after refreshing", async ({ sessionPage }) => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyPortalStatusPersistenceAfterRefresh();
+      });
+
+      test('Test 14: Verify that toggling a portal OFF removes the green dot in grid view', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyGreenDotRemovesAfterDisablingPortal();
       });
 
 

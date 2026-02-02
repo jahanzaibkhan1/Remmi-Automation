@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="58.46275400000066">
-<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-02T10:00:59.904Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.087" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that an already saved portal status remains unchanged after refreshing" classname="Pages\Listing\listingPortal.spec.ts" time="47.087">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.44358599999919">
+<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-02T10:29:04.796Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.841" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that toggling a portal OFF removes the green dot in grid view" classname="Pages\Listing\listingPortal.spec.ts" time="42.841">
 </testcase>
 </testsuite>
 </testsuites>

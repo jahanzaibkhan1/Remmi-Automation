@@ -16423,4 +16423,52 @@ export class ListingActions {
         await this.page.waitForTimeout(1200);
     }
 
+    /**
+     * Verifies that disabling a portal removes the green dot indicator in the grid view.
+     */
+    async verifyGreenDotRemovesAfterDisablingPortal() {
+        // Step 1: Navigate to Listings and switch to grid view.
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Step 2: Open the first listing card.
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.waitFor({ state: 'attached', timeout: 10000 });
+        await firstCard.click();
+
+        // Step 3: Open the 'Portals' tab.
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+
+        // Step 4: Locate the first portal row and its toggle/checkbox.
+        const firstPortalRow = this.page.locator('div.row.b-b-light').first();
+        await firstPortalRow.waitFor({ state: 'visible', timeout: 10000 });
+        const inputBox = firstPortalRow.locator('input[type="checkbox"]').first();
+        const toggleSlider = firstPortalRow.locator('label.switch span.slider').first();
+        await expect(toggleSlider).toBeVisible({ timeout: 10000 });
+
+        // Step 5: If portal is enabled, disable and save. If already disabled, do nothing.
+        const wasChecked = await inputBox.isChecked();
+        if (wasChecked) {
+            await toggleSlider.click();
+            const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+            await expect(saveButton).toBeVisible({ timeout: 5000 });
+            await saveButton.click();
+            await expect(inputBox).not.toBeChecked({ timeout: 5000 });
+            await expect(saveButton).toBeVisible({ timeout: 5000 });
+            await saveButton.click();
+            await this.page.waitForTimeout(1200);
+        }
+        // Step 6: Close any open dialogs/popups.
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+            await this.page.waitForTimeout(1200);
+        }
+        const greenDot = this.page.locator("//div[contains(@class,'s-property')]").first().locator('.listing-active').first();
+        await expect(greenDot).not.toBeVisible({ timeout: 8000 });
+    }
+
 }
