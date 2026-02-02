@@ -39,4 +39,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyAllPortalToggleButtonsDisplayed()
     });
+
+    test('Test 5: Verify that the listing  updates after saving changes', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyToggleEnablesPortal();
+      });
 });
