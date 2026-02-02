@@ -30,4 +30,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyToggleEnablesPortal();
     });
 
+    test('Test 3: Verify that clicking a toggle button disables the portal', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyToggleDisablesPortal();
+    });
+
 });
