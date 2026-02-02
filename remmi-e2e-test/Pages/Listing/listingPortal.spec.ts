@@ -102,7 +102,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
       test('Test 17: Verify that listing appears on the portal after enabling', async ({ sessionPage }) => {
         const listingActions = new ListingActions(sessionPage);
-        await listingActions.verifyToggleEnablesPortal();
+        await listingActions.verifyEnablingAllPortalsReflectsCount();
       });
 
 
