@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.798435000000055">
-<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-02-02T05:36:57.856Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.328" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 48: Verify that adding Online Tour links updates the library" classname="Pages\Listing\listingImages.spec.ts" time="38.328">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.39258800000045">
+<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-02T06:16:54.045Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.286" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that all portal toggle buttons are displayed" classname="Pages\Listing\listingPortal.spec.ts" time="33.286">
 </testcase>
 </testsuite>
 </testsuites>
