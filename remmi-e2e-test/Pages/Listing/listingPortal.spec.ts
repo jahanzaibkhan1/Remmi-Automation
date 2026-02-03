@@ -105,5 +105,35 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyEnablingAllPortalsReflectsCount();
       });
 
+      test('Test 18: Verify that disabling all portals reflects the correct count', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyToggleDisablesPortal();
+      });
+
+      test('Test 19: Verify that enabling/disabling a portal updates instantly in UI before saving', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyPortalInstantUiUpdateBeforeSave();
+      });
+
+      test("Test 20: Verify that invalid actions (e.g., rapidly clicking the portal toggle) do not cause issues", async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyPortalToggleIsDebouncedAndStable();
+      });
+
+      test("Test 21: Verify that changing a portal setting does not affect other tabs", async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyPortalSettingDoesNotAffectOtherTabs();
+      });
+
+      test('Test 22: Verify that disabling all portals does not show a green dot in grid view listing cards', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyNoGreenDotWhenAllPortalsDisabled();
+      });
+
+      test('Test 23: Verify that disabling a portal does not delete the listing from the system', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyDisablingPortalDoesNotDeleteListing();
+      });
+
 
 });
