@@ -46,4 +46,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyStreamCardAppearsForRelatedContact();
     });
 
+    test('Test 6: Verify contact name is clickable in the stream card', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyContactNameClickableInStreamCard();
+    });
+
 });
