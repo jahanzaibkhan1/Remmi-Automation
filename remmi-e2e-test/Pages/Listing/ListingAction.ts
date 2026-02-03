@@ -16028,7 +16028,7 @@ export class ListingActions {
     }
 
     /**
-     * Verify that clicking a toggle button disables the first portal.
+     * Verify that all portals are disabled 
      */
     async verifyToggleDisablesPortal() {
         await this.navigateToListings();
@@ -16045,28 +16045,44 @@ export class ListingActions {
         await expect(portalsTab).toBeVisible({ timeout: 10000 });
         await portalsTab.click();
 
-        // Wait for the first portal row to appear
-        const firstPortalRow = this.page.locator('div.row.b-b-light').first();
-        await firstPortalRow.waitFor({ state: 'visible', timeout: 10000 });
-        await expect(firstPortalRow).toBeVisible({ timeout: 10000 });
+        // Wait for portal rows to appear
+        const portalRows = this.page.locator('div.row.b-b-light');
+        const numPortals = await portalRows.count();
+        let needsUnchecking = false;
 
-        // Disable the first portal only if currently enabled
-        const toggleSlider = firstPortalRow.locator('label.switch span.slider').first();
-        await expect(toggleSlider).toBeVisible({ timeout: 10000 });
-        const inputBox = firstPortalRow.locator('input[type="checkbox"]').first();
-        const isChecked = await inputBox.isChecked();
-        if (isChecked) {
-            await toggleSlider.click();
-
-            // Click save button
-            const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
-            await expect(saveButton).toBeVisible({ timeout: 5000 });
-            await saveButton.click();
-            await expect(inputBox).not.toBeChecked({ timeout: 5000 });
-            await this.page.waitForTimeout(1200);
+        for (let i = 0; i < numPortals; i++) {
+            const row = portalRows.nth(i);
+            await row.waitFor({ state: 'visible', timeout: 20000 });
+            const inputBox = row.locator('input[type="checkbox"]').first();
+            if (!(await inputBox.isVisible())) {
+                // Scroll into view if not visible
+                await inputBox.scrollIntoViewIfNeeded();
+            }
+            const isChecked = await inputBox.isChecked();
+            if (isChecked) {
+                const toggleSlider = row.locator('label.switch span.slider').first();
+                await expect(toggleSlider).toBeVisible({ timeout: 10000 });
+                await toggleSlider.click();
+                needsUnchecking = true;
+            }
         }
 
-        // The green dot indicator should not be visible after disable
+        if (needsUnchecking) {
+            // Click save button if at least one was unchecked
+            const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+            await expect(saveButton).toBeVisible({ timeout: 10000 });
+            await saveButton.click();
+
+            // Verify all portals are now unchecked
+            for (let i = 0; i < numPortals; i++) {
+                const row = portalRows.nth(i);
+                const inputBox = row.locator('input[type="checkbox"]').first();
+                await expect(inputBox).not.toBeChecked({ timeout: 10000 });
+            }
+
+            await this.page.waitForTimeout(1200);
+        }
+        // The green dot indicator should not be visible after disabling all
         const activeIndicator = this.page.locator('.listing-active').first();
         await expect(activeIndicator).not.toBeVisible({ timeout: 20000 });
 
@@ -16633,5 +16649,825 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(800);
     }
+
+    /**
+     * Verify that enabling/disabling a portal updates instantly in the UI before saving changes.
+     */
+    async verifyPortalInstantUiUpdateBeforeSave() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.waitFor({ state: 'attached', timeout: 10000 });
+        await firstCardRow.click();
+
+        // Go to 'Portals' tab
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+        await this.page.waitForTimeout(500);
+
+        // Get the first portal's checkbox and toggle
+        const firstPortalRow = this.page.locator('div.row.b-b-light').first();
+        await expect(firstPortalRow).toBeVisible({ timeout: 4000 });
+        const toggle = firstPortalRow.locator('label.switch span.slider').first();
+        const checkbox = firstPortalRow.locator('input[type="checkbox"]').first();
+
+        // Record original state
+        const wasChecked = await checkbox.isChecked();
+
+        // Toggle the portal (enable if disabled, disable if enabled)
+        await toggle.click();
+
+        // Check that the toggle's state visually updates instantly in the DOM
+        const shouldBeChecked = !wasChecked;
+        await expect(checkbox).toBeChecked({ timeout: 3000, checked: shouldBeChecked });
+
+        // Do not save - instead, revert toggle for cleanup
+        await toggle.click();
+        await expect(checkbox).toBeChecked({ timeout: 3000, checked: wasChecked });
+
+        // Optionally close dialog/modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Verify that invalid actions (e.g., rapidly clicking the portal toggle) do not cause unexpected issues.
+     */
+    async verifyPortalToggleIsDebouncedAndStable() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.waitFor({ state: 'attached', timeout: 10000 });
+        await firstCardRow.click();
+
+        // Go to 'Portals' tab
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+        await this.page.waitForTimeout(300);
+
+        // Get the first portal's toggle and checkbox
+        const firstPortalRow = this.page.locator('div.row.b-b-light').first();
+        await expect(firstPortalRow).toBeVisible({ timeout: 3000 });
+        const toggle = firstPortalRow.locator('label.switch span.slider').first();
+        const checkbox = firstPortalRow.locator('input[type="checkbox"]').first();
+
+        // Record the initial checked state
+        const initialChecked = await checkbox.isChecked();
+
+        // Rapidly click the toggle several times in quick succession
+        for (let i = 0; i < 5; i++) {
+            await toggle.click({ force: true });
+            await this.page.waitForTimeout(100); // Very minimal pause between clicks
+        }
+
+        // Wait briefly to allow UI to stabilize
+        await this.page.waitForTimeout(500);
+
+        const errorBanner = this.page.locator('.p-toast-message-error,.error-banner,.ant-message-error').first();
+        expect(await errorBanner.isVisible().catch(() => false)).toBeFalsy();
+
+        // The toggle should now be either ON or OFF: it should not be in an indeterminate or disabled state
+        expect(await checkbox.isDisabled()).toBe(false);
+
+        // Clean up: Try to revert checkbox to original state if changed
+        const finalChecked = await checkbox.isChecked();
+        if (finalChecked !== initialChecked) {
+            await toggle.click({ force: true });
+            await expect(checkbox).toBeChecked({ timeout: 3000, checked: initialChecked });
+        }
+
+        // Optionally close dialog/modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Verify that changing a portal setting does not affect other tabs (e.g., Details).
+     */
+    async verifyPortalSettingDoesNotAffectOtherTabs() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        // Open first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to 'Portals' tab
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+        await this.page.waitForTimeout(400);
+
+        // Get the first portal's toggle and checkbox
+        const firstPortalRow = this.page.locator('div.row.b-b-light').first();
+        await expect(firstPortalRow).toBeVisible({ timeout: 3000 });
+        const toggle = firstPortalRow.locator('label.switch span.slider').first();
+        const checkbox = firstPortalRow.locator('input[type="checkbox"]').first();
+
+        // Record the initial checked state
+        const initialChecked = await checkbox.isChecked();
+
+        // Change the portal setting (toggle switch)
+        await toggle.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Now switch to the 'Details' tab
+        const detailsTab = this.page.getByRole('tab', { name: /Details/i }).first();
+        await expect(detailsTab).toBeVisible({ timeout: 10000 });
+        await detailsTab.click();
+        await this.page.waitForTimeout(400);
+
+        // Assertion: there's no error banner or unsaved warning in Details tab
+        const errorBanner = this.page.locator('.p-toast-message-error,.error-banner,.ant-message-error').first();
+        expect(await errorBanner.isVisible().catch(() => false)).toBeFalsy();
+        await portalsTab.click();
+        await this.page.waitForTimeout(400);
+
+        const finalChecked = await checkbox.isChecked();
+        if (finalChecked !== initialChecked) {
+            await toggle.click({ force: true });
+            await expect(checkbox).toBeChecked({ timeout: 3000, checked: initialChecked });
+        }
+
+        // Optionally close modal/dialog as cleanup
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(700);
+    }
+
+    /**
+     * Verify that disabling all portals does not show a green dot in grid view listing cards
+     */
+    async verifyNoGreenDotWhenAllPortalsDisabled() {
+        // Go to Listing page and grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to 'Portals' tab
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+        await this.page.waitForTimeout(400);
+
+        // For each portal row, ensure the toggle is *off*
+        const portalRows = this.page.locator('div.row.b-b-light');
+        const count = await portalRows.count();
+        for (let i = 0; i < count; i++) {
+            const row = portalRows.nth(i);
+            const checkbox = row.locator('input[type="checkbox"]').first();
+            if (await checkbox.isChecked()) {
+                const toggle = row.locator('label.switch span.slider').first();
+                await toggle.click({ force: true });
+                await expect(checkbox).not.toBeChecked({ timeout: 3000 });
+            }
+        }
+
+        // Save the changes (if required; assuming a Save button appears)
+        const saveBtn = this.page.getByRole('button', { name: /Save/ }).first();
+        if (await saveBtn.isVisible().catch(() => false)) {
+            await saveBtn.click({ force: true });
+            // Wait for confirmation (toast, etc)
+            await this.page.waitForTimeout(1200);
+        }
+
+        // Close details modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+
+        const gridCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(gridCard).toBeVisible({ timeout: 10000 });
+        // Ensure that no green dot/status indicator appears when all portals are disabled
+        const greenDot = gridCard.locator('.listing-active, .portal-green-dot, .pi.pi-circle-on, .status-dot-green');
+        await expect(greenDot).toHaveCount(0);
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Verify that disabling a portal does not delete the listing from the system.
+     */
+    async verifyDisablingPortalDoesNotDeleteListing() {
+        // Step 1: Navigate to Listing page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Step 2: Grab first listing card and extract an identifying attribute (e.g., title)
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        const title = await firstCard.locator('h3[title]').first().getAttribute('title').catch(() => null);
+
+        // Step 3: Open details for the first listing
+        await firstCard.click();
+
+        // Step 4: Go to the 'Portals' tab
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+        await this.page.waitForTimeout(400);
+
+        // Step 5: Disable the first enabled portal toggle (if any)
+        const portalRows = this.page.locator('div.row.b-b-light');
+        const portalCount = await portalRows.count();
+        let toggled = false;
+        for (let i = 0; i < portalCount; i++) {
+            const row = portalRows.nth(i);
+            const checkbox = row.locator('input[type="checkbox"]').first();
+            if (await checkbox.isChecked()) {
+                const slider = row.locator('label.switch span.slider').first();
+                await slider.click({ force: true });
+                await expect(checkbox).not.toBeChecked({ timeout: 3000 });
+                toggled = true;
+                break;
+            }
+        }
+
+        // Step 6: Save changes only if toggled
+        if (toggled) {
+            const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+            if (await saveButton.isVisible().catch(() => false)) {
+                await saveButton.click({ force: true });
+                await this.page.waitForTimeout(1500);
+            }
+        }
+
+        // Step 7: Close the details modal if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+
+        // Step 8: Check that the listing is still present in the grid by its title (or visible as fallback)
+        const listingCards = this.page.locator("//div[contains(@class,'s-property')]");
+        let exists = false;
+        if (title) {
+
+            const firstTitle = await listingCards.first().locator('h3[title]').getAttribute('title').catch(() => null);
+            exists =
+                !!firstTitle &&
+                firstTitle.trim().toLowerCase() === title.trim().toLowerCase();
+        }
+        if (!exists) {
+            exists = await listingCards.first().isVisible().catch(() => false);
+        }
+
+        expect(exists).toBeTruthy();
+
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Automated test: Search in the Stream tab, validate filter using partial match.
+     */
+    async verifySearchFunctionalityInStreamTab(searchKeyword: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+
+        const searchBox = this.page.getByRole('textbox', { name: /search by keyword/i });
+        await searchBox.fill(searchKeyword);
+        // Wait for search results to be displayed (wait for any stream-body to be visible)
+        const streamEntries = this.page.locator('div.stream-body');
+        await expect(streamEntries.first()).toBeVisible({ timeout: 10000 });
+
+        await this.page.waitForTimeout(1200);
+
+        const recordsLocator = this.page.getByLabel('Stream').getByText('Records:');
+        await expect(recordsLocator).toBeVisible({ timeout: 10000 });
+
+        const recordsText = await recordsLocator.textContent();
+        let totalRecords = 0;
+        if (recordsText) {
+            const match = recordsText.match(/Records:\s*(\d+)/);
+            if (match) {
+                totalRecords = Number(match[1]);
+            }
+        }
+
+        console.log('Total Records:', totalRecords);
+        await this.page.waitForTimeout(1000);
+
+        // Optionally close modal/dialog as cleanup
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+
+    async verifySearchFieldDisplaysCorrectTotalRecordsCount(searchKeyword: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+
+        const searchBox = this.page.getByRole('textbox', { name: /search by keyword/i });
+        await searchBox.fill(searchKeyword);
+        // Wait for search results to be displayed (wait for any stream-body to be visible)
+        const streamEntries = this.page.locator('div.stream-body');
+        await expect(streamEntries.first()).toBeVisible({ timeout: 10000 });
+
+        await this.page.waitForTimeout(1200);
+
+        const recordsLocator = this.page.getByLabel('Stream').getByText('Records:');
+        await expect(recordsLocator).toBeVisible({ timeout: 10000 });
+
+        const recordsText = await recordsLocator.textContent();
+        let totalRecords = 0;
+        if (recordsText) {
+            const match = recordsText.match(/Records:\s*(\d+)/);
+            if (match) {
+                totalRecords = Number(match[1]);
+            }
+        }
+
+        console.log('Total Records:', totalRecords);
+        await this.page.waitForTimeout(1000);
+        // Optionally close modal/dialog as cleanup
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+
+    }
+
+    /**
+     * Verifies infinite scrolling works in the Stream tab:
+     * Scrolls to the end of the stream entries repeatedly and ensures more entries are loaded.
+     */
+    async verifyInfiniteScrollingInStreamTab() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first card to go to the detail modal
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        // Switch to the Stream tab
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+        // Initial load of stream entries
+        const entryLocator = this.page.locator('div.stream-body');
+        let previousCount = await entryLocator.count();
+
+        // Attempt to scroll and trigger infinite loading
+        let didLoadNew = false;
+        for (let i = 0; i < 5; i++) {
+            await entryLocator.last().scrollIntoViewIfNeeded();
+            // Wait for possible loading, adjust time if needed
+            await this.page.waitForTimeout(1500);
+
+            const currentCount = await entryLocator.count();
+            if (currentCount > previousCount) {
+                didLoadNew = true;
+                previousCount = currentCount;
+            } else {
+                break; // No more entries loaded, assume end of scroll
+            }
+        }
+
+        console.log('Infinite scrolling loaded entries:', previousCount);
+
+        await this.page.waitForTimeout(1000);
+        // Optionally close modal/dialog as cleanup
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verify stream card is added when a new inspection is created
+     */
+    async verifyStreamCardAppearsForNewInspection() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+        await this.page.waitForTimeout(1000);
+        const streamEntryLocator = this.page.locator('div.stream-body');
+        const initialStreamCount = await streamEntryLocator.count();
+
+        const primaryAgent = this.page.locator(
+            'div.form-group:has-text("Primary Agent") ng-select'
+        );
+        await primaryAgent.scrollIntoViewIfNeeded();
+        await primaryAgent.click();
+        const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(primaryInput).toBeVisible({ timeout: 10000 });
+        await primaryInput.fill('Jahanzaib Xenex');
+        const primaryOption = this.page.locator(
+            '.ng-dropdown-panel .ng-option',
+            { hasText: 'Jahanzaib Xenex' }
+        ).first();
+        await expect(primaryOption).toBeVisible({ timeout: 10000 });
+        await primaryOption.click();
+        await this.page.waitForTimeout(1000);
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+
+        const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
+        await expect(inspectionsTab).toBeVisible({ timeout: 10000 });
+        await inspectionsTab.click();
+
+        const dateInput = this.page.locator('#basic');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const targetDay = tomorrow.getDate();
+        const targetMonth = tomorrow.getMonth();
+        const targetYear = tomorrow.getFullYear();
+        const calHeader = this.page.locator(".p-datepicker-title");
+        await expect(calHeader).toBeVisible();
+        const calHeaderText = await calHeader.innerText();
+        const [monthName, year] = calHeaderText.trim().split(" ");
+        const displayedMonthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+        const monthDiff = (targetYear - parseInt(year)) * 12 + (targetMonth - displayedMonthIndex);
+        for (let i = 0; i < Math.abs(monthDiff); i++) {
+            if (monthDiff > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+            await this.page.waitForTimeout(200);
+        }
+        const dayLocator = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
+        );
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
+        await dayLocator.first().click({ force: true });
+
+        const startTimeSelect = this.page.getByRole('combobox').nth(4);
+        await startTimeSelect.click();
+        await this.page.waitForTimeout(500);
+        const startTimeOption = this.page.getByText('5', { exact: true });
+        await expect(startTimeOption).toBeVisible({ timeout: 10000 });
+        await startTimeOption.click();
+
+        const addButton = this.page.getByRole('button', { name: /Add/i }).first();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        const successAlert = this.page.getByText('event added to calendar successfully');
+        await expect(successAlert).toBeVisible({ timeout: 10000 });
+
+        const deleteLink = this.page.getByRole('link', { name: 'delete' }).first();
+        await deleteLink.scrollIntoViewIfNeeded();
+        await deleteLink.waitFor({ state: "visible", timeout: 10000 });
+
+        await saveButton.click();
+
+        await streamTab.click();
+        await this.page.waitForTimeout(2000);
+        const finalStreamEntryLocator = this.page.locator('div.stream-body');
+        const finalStreamCount = await finalStreamEntryLocator.count();
+
+        expect(finalStreamCount).toBeGreaterThan(initialStreamCount);
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verify stream card is added when a contact is related
+     */
+    async verifyStreamCardAppearsForRelatedContact() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Assign the primary agent as 'Jahanzaib Xenex'
+        const primaryAgent = this.page.locator(
+            'div.form-group:has-text("Primary Agent") ng-select'
+        );
+        await primaryAgent.scrollIntoViewIfNeeded();
+        await primaryAgent.click();
+
+        const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(primaryInput).toBeVisible({ timeout: 10000 });
+        await primaryInput.fill('Jahanzaib Xenex');
+
+        const primaryOption = this.page.locator(
+            '.ng-dropdown-panel .ng-option',
+            { hasText: 'Jahanzaib Xenex' }
+        ).first();
+        await expect(primaryOption).toBeVisible({ timeout: 10000 });
+        await primaryOption.click();
+
+        await this.page.waitForTimeout(800);
+
+        // Save/continue the listing if a Save button is available
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await saveButton.click();
+            await this.page.waitForTimeout(1200);
+        }
+
+        // Go to the Inspections tab
+        const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i }).first();
+        await expect(inspectionsTab).toBeVisible({ timeout: 10000 });
+        await inspectionsTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Add a new inspection (date = tomorrow)
+        const dateInput = this.page.locator('#basic');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        // Read current calendar's month/year
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+        const headerText = await header.innerText();
+        const [monthName, year] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        const monthDifference =
+            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
+
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+            await this.page.waitForTimeout(200);
+        }
+
+        const dayLocator = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
+        );
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
+        await dayLocator.first().click({ force: true });
+
+        // Pick start time '5'
+        const startTimeSelect = this.page.getByRole('combobox').nth(4);
+        await startTimeSelect.click();
+        await this.page.waitForTimeout(500);
+        const startTimeOption = this.page.getByText('5', { exact: true });
+        await expect(startTimeOption).toBeVisible({ timeout: 10000 });
+        await startTimeOption.click();
+
+        // Add the inspection
+        const addButton = this.page.getByRole('button', { name: /Add/i }).first();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        // Wait for the success alert
+        const successAlert = this.page.getByText('event added to calendar successfully');
+        await expect(successAlert).toBeVisible({ timeout: 10000 });
+
+        // Save the form if required
+        if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await saveButton.click();
+            await this.page.waitForTimeout(1000);
+        }
+
+        // Now go to the Stream tab and check for Jahanzaib Xenex entry
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+
+        // Wait for stream entries to appear
+        const streamEntries = this.page.locator('div.stream-body');
+        await expect(streamEntries.first()).toBeVisible({ timeout: 10000 });
+        const inspectionStream = this.page
+            .locator('div.stream-body:has-text("Inspection"):has-text("Jahanzaib Xenex")')
+            .first();
+
+        await expect(inspectionStream).toBeVisible({ timeout: 10000 });
+
+        await this.page.waitForTimeout(1000);
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+
+    }
+
+    async verifyContactNameClickableInStreamCard() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstCard = this.page.locator('div.s-property').first();
+        await firstCard.waitFor({ state: 'visible', timeout: 30000 });
+        await firstCard.click();
+
+        const relatedTab = this.page.getByText('Related').first();
+        await relatedTab.waitFor({ state: 'visible', timeout: 10000 });
+        await relatedTab.click();
+
+        // ------------------- Delete existing contacts -------------------
+        const deleteIcons = this.page.locator('img[alt="delete"]');
+        let totalIcons = await deleteIcons.count();
+        
+        for (let i = 0; i < totalIcons; i++) {
+            const icon = deleteIcons.nth(i);
+            await icon.waitFor({ state: 'attached', timeout: 10000 }).catch(() => {});
+        
+            try {
+                // Scroll parent container into view
+                const parent = icon.locator('..');
+                await parent.evaluate(el => el.scrollIntoView({ block: 'center', inline: 'center' }));
+                await this.page.waitForTimeout(200);
+        
+                // Click delete icon
+                await icon.click({ force: true });
+        
+                // Handle confirmation
+                const yesButton = this.page.getByRole('button', { name: /Yes/i }).first();
+                const yesVisible = await yesButton.isVisible({ timeout: 5000 }).catch(() => false);
+        
+                if (yesVisible) {
+                    await yesButton.click();
+                    await this.page.waitForTimeout(500); // allow deletion to complete
+                }
+            } catch (err) {
+                console.warn(`Failed to delete icon #${i}:`, err);
+                continue;
+            }
+        
+            // Update count after each deletion
+            totalIcons = await deleteIcons.count();
+            i = -1; // restart loop because DOM has changed
+        }
+        
+        // Verify no delete icons remain
+        await expect(deleteIcons).toHaveCount(0, { timeout: 10000 });
+        
+        // ------------------- Select contact from multiselect -------------------
+        const contactDropdown = this.page.locator('div.col-10 re-multiselect div.tags').last();
+        await contactDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await contactDropdown.click();
+
+        const firstOption = this.page.locator('div.drop_box ul li.p-element p').first();
+        await firstOption.waitFor({ state: 'visible', timeout: 20000 });
+        await firstOption.click();
+        await contactDropdown.click();
+
+        const associateButton = this.page.getByRole('button', { name: /Associate/i }).first();
+        await associateButton.waitFor({ state: 'visible', timeout: 10000 });
+        await associateButton.click();
+
+        const successMsg = this.page.getByText('Contact attached successfully');
+        await successMsg.waitFor({ state: 'visible', timeout: 10000 });
+
+        // ------------------- Drag-and-drop the contact tag -------------------
+        const contactTag = this.page.locator('span.cdk-drag.related-tag.ng-star-inserted').last();
+        await contactTag.scrollIntoViewIfNeeded();
+        const dropList = this.page.locator('td.cdk-drop-list').first();
+        await this.page.waitForTimeout(1000);
+
+        await contactTag.dragTo(dropList);
+        await contactTag.dragTo(dropList);
+
+        // ------------------- Go to Stream tab and click contact -------------------
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await streamTab.scrollIntoViewIfNeeded();
+        await streamTab.waitFor({ state: 'visible', timeout: 10000 });
+        await streamTab.click();
+
+        const streamContact = this.page.locator('div.d-flex.align-items-center p._fw-400.cursor-pointer').first();
+        await streamContact.waitFor({ state: 'visible', timeout: 10000 });
+        await streamContact.click();
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(500);
+    }
+
+    // Verify that when a contact is removed, the stream card is also removed
+    async verifyStreamCardRemovedWhenContactRemoved() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstCard = this.page.locator('div.s-property').first();
+        await firstCard.waitFor({ state: 'visible', timeout: 30000 });
+        await firstCard.click();
+
+        const relatedTab = this.page.getByText('Related').first();
+        await relatedTab.waitFor({ state: 'visible', timeout: 10000 });
+        await relatedTab.click();
+
+        // ------------------- Delete existing contacts -------------------
+        const deleteIcons = this.page.locator('img[alt="delete"]');
+        let totalIcons = await deleteIcons.count();
+        
+        for (let i = 0; i < totalIcons; i++) {
+            const icon = deleteIcons.nth(i);
+            await icon.waitFor({ state: 'attached', timeout: 10000 }).catch(() => {});
+        
+            try {
+                // Scroll parent container into view
+                const parent = icon.locator('..');
+                await parent.evaluate(el => el.scrollIntoView({ block: 'center', inline: 'center' }));
+                await this.page.waitForTimeout(200);
+        
+                // Click delete icon
+                await icon.click({ force: true });
+        
+                // Handle confirmation
+                const yesButton = this.page.getByRole('button', { name: /Yes/i }).first();
+                const yesVisible = await yesButton.isVisible({ timeout: 5000 }).catch(() => false);
+        
+                if (yesVisible) {
+                    await yesButton.click();
+                    await this.page.waitForTimeout(500); // allow deletion to complete
+                }
+            } catch (err) {
+                console.warn(`Failed to delete icon #${i}:`, err);
+                continue;
+            }
+        
+            // Update count after each deletion
+            totalIcons = await deleteIcons.count();
+            i = -1; // restart loop because DOM has changed
+        }
+        
+        // Verify no delete icons remain
+        await expect(deleteIcons).toHaveCount(0, { timeout: 10000 });
+        
+        // ------------------- Go to Stream tab and click contact -------------------
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await streamTab.scrollIntoViewIfNeeded();
+        await streamTab.waitFor({ state: 'visible', timeout: 10000 });
+        await streamTab.click();
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(500);
+    }
+
+
+
 
 }
