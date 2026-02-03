@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="28.94246399999992">
-<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-03T03:59:57.056Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.473" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Verify that disabling all portals reflects the correct count" classname="Pages\Listing\listingPortal.spec.ts" time="21.473">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="28.61709700000007">
+<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-03T04:08:54.857Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.692" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify that enabling/disabling a portal updates instantly in UI before saving" classname="Pages\Listing\listingPortal.spec.ts" time="21.692">
 </testcase>
 </testsuite>
 </testsuites>
