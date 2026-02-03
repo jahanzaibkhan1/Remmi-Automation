@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.90036400000006">
-<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-03T07:10:08.266Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.406" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify search functionality in stream tab" classname="Pages\Listing\listingStream.spec.ts" time="29.406">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.99597900000028">
+<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-03T07:47:52.025Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.961" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify search field displays correct total records count" classname="Pages\Listing\listingStream.spec.ts" time="33.961">
+<system-out>
+<![CDATA[Total Records: [33m1[39m
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
