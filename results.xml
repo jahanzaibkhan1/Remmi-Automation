@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.95650799999945">
-<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-03T06:19:51.340Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.639" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Verify that changing a portal setting does not affect other tabs" classname="Pages\Listing\listingPortal.spec.ts" time="25.639">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.21288499999978">
+<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-03T06:25:55.158Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.423" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Verify that disabling all portals does not show a green dot in grid view listing cards" classname="Pages\Listing\listingPortal.spec.ts" time="39.423">
 </testcase>
 </testsuite>
 </testsuites>
