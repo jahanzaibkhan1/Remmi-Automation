@@ -16697,4 +16697,62 @@ export class ListingActions {
         await this.page.waitForTimeout(1200);
     }
 
+    /**
+     * Verify that invalid actions (e.g., rapidly clicking the portal toggle) do not cause unexpected issues.
+     */
+    async verifyPortalToggleIsDebouncedAndStable() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.waitFor({ state: 'attached', timeout: 10000 });
+        await firstCardRow.click();
+
+        // Go to 'Portals' tab
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+        await this.page.waitForTimeout(300);
+
+        // Get the first portal's toggle and checkbox
+        const firstPortalRow = this.page.locator('div.row.b-b-light').first();
+        await expect(firstPortalRow).toBeVisible({ timeout: 3000 });
+        const toggle = firstPortalRow.locator('label.switch span.slider').first();
+        const checkbox = firstPortalRow.locator('input[type="checkbox"]').first();
+
+        // Record the initial checked state
+        const initialChecked = await checkbox.isChecked();
+
+        // Rapidly click the toggle several times in quick succession
+        for (let i = 0; i < 5; i++) {
+            await toggle.click({ force: true });
+            await this.page.waitForTimeout(100); // Very minimal pause between clicks
+        }
+
+        // Wait briefly to allow UI to stabilize
+        await this.page.waitForTimeout(500);
+
+        const errorBanner = this.page.locator('.p-toast-message-error,.error-banner,.ant-message-error').first();
+        expect(await errorBanner.isVisible().catch(() => false)).toBeFalsy();
+
+        // The toggle should now be either ON or OFF: it should not be in an indeterminate or disabled state
+        expect(await checkbox.isDisabled()).toBe(false);
+
+        // Clean up: Try to revert checkbox to original state if changed
+        const finalChecked = await checkbox.isChecked();
+        if (finalChecked !== initialChecked) {
+            await toggle.click({ force: true });
+            await expect(checkbox).toBeChecked({ timeout: 3000, checked: initialChecked });
+        }
+
+        // Optionally close dialog/modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
 }
