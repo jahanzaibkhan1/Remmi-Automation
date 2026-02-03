@@ -16028,7 +16028,7 @@ export class ListingActions {
     }
 
     /**
-     * Verify that clicking a toggle button disables the first portal.
+     * Verify that all portals are disabled 
      */
     async verifyToggleDisablesPortal() {
         await this.navigateToListings();
@@ -16045,28 +16045,44 @@ export class ListingActions {
         await expect(portalsTab).toBeVisible({ timeout: 10000 });
         await portalsTab.click();
 
-        // Wait for the first portal row to appear
-        const firstPortalRow = this.page.locator('div.row.b-b-light').first();
-        await firstPortalRow.waitFor({ state: 'visible', timeout: 10000 });
-        await expect(firstPortalRow).toBeVisible({ timeout: 10000 });
+        // Wait for portal rows to appear
+        const portalRows = this.page.locator('div.row.b-b-light');
+        const numPortals = await portalRows.count();
+        let needsUnchecking = false;
 
-        // Disable the first portal only if currently enabled
-        const toggleSlider = firstPortalRow.locator('label.switch span.slider').first();
-        await expect(toggleSlider).toBeVisible({ timeout: 10000 });
-        const inputBox = firstPortalRow.locator('input[type="checkbox"]').first();
-        const isChecked = await inputBox.isChecked();
-        if (isChecked) {
-            await toggleSlider.click();
+        for (let i = 0; i < numPortals; i++) {
+            const row = portalRows.nth(i);
+            await row.waitFor({ state: 'visible', timeout: 10000 });
+            const inputBox = row.locator('input[type="checkbox"]').first();
+            if (!(await inputBox.isVisible())) {
+                // Scroll into view if not visible
+                await inputBox.scrollIntoViewIfNeeded();
+            }
+            const isChecked = await inputBox.isChecked();
+            if (isChecked) {
+                const toggleSlider = row.locator('label.switch span.slider').first();
+                await expect(toggleSlider).toBeVisible({ timeout: 10000 });
+                await toggleSlider.click();
+                needsUnchecking = true;
+            }
+        }
 
-            // Click save button
+        if (needsUnchecking) {
+            // Click save button if at least one was unchecked
             const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
             await expect(saveButton).toBeVisible({ timeout: 5000 });
             await saveButton.click();
-            await expect(inputBox).not.toBeChecked({ timeout: 5000 });
+
+            // Verify all portals are now unchecked
+            for (let i = 0; i < numPortals; i++) {
+                const row = portalRows.nth(i);
+                const inputBox = row.locator('input[type="checkbox"]').first();
+                await expect(inputBox).not.toBeChecked({ timeout: 5000 });
+            }
+
             await this.page.waitForTimeout(1200);
         }
-
-        // The green dot indicator should not be visible after disable
+        // The green dot indicator should not be visible after disabling all
         const activeIndicator = this.page.locator('.listing-active').first();
         await expect(activeIndicator).not.toBeVisible({ timeout: 20000 });
 
