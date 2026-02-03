@@ -16811,4 +16811,58 @@ export class ListingActions {
         await this.page.waitForTimeout(700);
     }
 
+    /**
+     * Verify that disabling all portals does not show a green dot in grid view listing cards
+     */
+    async verifyNoGreenDotWhenAllPortalsDisabled() {
+        // Go to Listing page and grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to 'Portals' tab
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+        await this.page.waitForTimeout(400);
+
+        // For each portal row, ensure the toggle is *off*
+        const portalRows = this.page.locator('div.row.b-b-light');
+        const count = await portalRows.count();
+        for (let i = 0; i < count; i++) {
+            const row = portalRows.nth(i);
+            const checkbox = row.locator('input[type="checkbox"]').first();
+            if (await checkbox.isChecked()) {
+                const toggle = row.locator('label.switch span.slider').first();
+                await toggle.click({ force: true });
+                await expect(checkbox).not.toBeChecked({ timeout: 3000 });
+            }
+        }
+
+        // Save the changes (if required; assuming a Save button appears)
+        const saveBtn = this.page.getByRole('button', { name: /Save/ }).first();
+        if (await saveBtn.isVisible().catch(() => false)) {
+            await saveBtn.click({ force: true });
+            // Wait for confirmation (toast, etc)
+            await this.page.waitForTimeout(1200);
+        }
+
+        // Close details modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+
+        const gridCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(gridCard).toBeVisible({ timeout: 10000 });
+        // Ensure that no green dot/status indicator appears when all portals are disabled
+        const greenDot = gridCard.locator('.listing-active, .portal-green-dot, .pi.pi-circle-on, .status-dot-green');
+        await expect(greenDot).toHaveCount(0);
+    }
+
 }

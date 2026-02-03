@@ -125,5 +125,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyPortalSettingDoesNotAffectOtherTabs();
       });
 
+      test('Test 22: Verify that disabling all portals does not show a green dot in grid view listing cards', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyNoGreenDotWhenAllPortalsDisabled();
+      });
+
 
 });
