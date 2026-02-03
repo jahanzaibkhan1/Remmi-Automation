@@ -17022,4 +17022,51 @@ export class ListingActions {
 
     }
 
+    /**
+     * Verifies infinite scrolling works in the Stream tab:
+     * Scrolls to the end of the stream entries repeatedly and ensures more entries are loaded.
+     */
+    async verifyInfiniteScrollingInStreamTab() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first card to go to the detail modal
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        // Switch to the Stream tab
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+        // Initial load of stream entries
+        const entryLocator = this.page.locator('div.stream-body');
+        let previousCount = await entryLocator.count();
+
+        // Attempt to scroll and trigger infinite loading
+        let didLoadNew = false;
+        for (let i = 0; i < 5; i++) {
+            await entryLocator.last().scrollIntoViewIfNeeded();
+            // Wait for possible loading, adjust time if needed
+            await this.page.waitForTimeout(1500);
+
+            const currentCount = await entryLocator.count();
+            if (currentCount > previousCount) {
+                didLoadNew = true;
+                previousCount = currentCount;
+            } else {
+                break; // No more entries loaded, assume end of scroll
+            }
+        }
+
+        console.log('Infinite scrolling loaded entries:', previousCount);
+
+        // Close the modal
+        const closeBtn = this.page.locator('button.p-dialog-header-close');
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click();
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
 }

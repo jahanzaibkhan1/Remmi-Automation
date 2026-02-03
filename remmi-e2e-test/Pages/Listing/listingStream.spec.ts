@@ -29,5 +29,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifySearchFieldDisplaysCorrectTotalRecordsCount('Listing Added');
     });
-    
+
+    test('Test 3: Verify infinite scrolling in stream tab', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyInfiniteScrollingInStreamTab();
+    });
+
 });
