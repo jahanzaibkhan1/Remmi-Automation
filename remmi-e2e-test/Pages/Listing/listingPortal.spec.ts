@@ -115,5 +115,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyPortalInstantUiUpdateBeforeSave();
       });
 
+      test("Test 20: Verify that invalid actions (e.g., rapidly clicking the portal toggle) do not cause issues", async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyPortalToggleIsDebouncedAndStable();
+      });
+
 
 });
