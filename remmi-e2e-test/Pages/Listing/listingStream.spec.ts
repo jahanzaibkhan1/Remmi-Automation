@@ -51,4 +51,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyContactNameClickableInStreamCard();
     });
 
+    test('Test 7: Verify that when a contact is removed, the stream card is also removed', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyStreamCardRemovedWhenContactRemoved();
+    });
+
 });

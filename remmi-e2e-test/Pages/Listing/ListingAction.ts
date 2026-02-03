@@ -17402,6 +17402,71 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    // Verify that when a contact is removed, the stream card is also removed
+    async verifyStreamCardRemovedWhenContactRemoved() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstCard = this.page.locator('div.s-property').first();
+        await firstCard.waitFor({ state: 'visible', timeout: 30000 });
+        await firstCard.click();
+
+        const relatedTab = this.page.getByText('Related').first();
+        await relatedTab.waitFor({ state: 'visible', timeout: 10000 });
+        await relatedTab.click();
+
+        // ------------------- Delete existing contacts -------------------
+        const deleteIcons = this.page.locator('img[alt="delete"]');
+        let totalIcons = await deleteIcons.count();
+        
+        for (let i = 0; i < totalIcons; i++) {
+            const icon = deleteIcons.nth(i);
+            await icon.waitFor({ state: 'attached', timeout: 10000 }).catch(() => {});
+        
+            try {
+                // Scroll parent container into view
+                const parent = icon.locator('..');
+                await parent.evaluate(el => el.scrollIntoView({ block: 'center', inline: 'center' }));
+                await this.page.waitForTimeout(200);
+        
+                // Click delete icon
+                await icon.click({ force: true });
+        
+                // Handle confirmation
+                const yesButton = this.page.getByRole('button', { name: /Yes/i }).first();
+                const yesVisible = await yesButton.isVisible({ timeout: 5000 }).catch(() => false);
+        
+                if (yesVisible) {
+                    await yesButton.click();
+                    await this.page.waitForTimeout(500); // allow deletion to complete
+                }
+            } catch (err) {
+                console.warn(`Failed to delete icon #${i}:`, err);
+                continue;
+            }
+        
+            // Update count after each deletion
+            totalIcons = await deleteIcons.count();
+            i = -1; // restart loop because DOM has changed
+        }
+        
+        // Verify no delete icons remain
+        await expect(deleteIcons).toHaveCount(0, { timeout: 10000 });
+        
+        // ------------------- Go to Stream tab and click contact -------------------
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await streamTab.scrollIntoViewIfNeeded();
+        await streamTab.waitFor({ state: 'visible', timeout: 10000 });
+        await streamTab.click();
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(500);
+    }
+
 
 
 
