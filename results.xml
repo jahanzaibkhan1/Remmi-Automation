@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.03740699999966">
-<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-03T06:39:05.176Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.684" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Verify that disabling a portal does not delete the listing from the system" classname="Pages\Listing\listingPortal.spec.ts" time="25.684">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.90036400000006">
+<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-03T07:10:08.266Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.406" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify search functionality in stream tab" classname="Pages\Listing\listingStream.spec.ts" time="29.406">
 </testcase>
 </testsuite>
 </testsuites>

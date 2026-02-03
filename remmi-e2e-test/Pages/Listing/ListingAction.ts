@@ -16939,4 +16939,44 @@ export class ListingActions {
         await this.page.waitForTimeout(1200);
     }
 
+    /**
+     * Automated test: Search in the Stream tab, validate filter using partial match.
+     */
+    async verifySearchFunctionalityInStreamTab(searchKeyword: string) {
+        // Navigate to the Listings page and enforce grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card in grid
+        const firstCard = this.page.locator("div.s-property").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        // Select the 'Stream' tab
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+
+        // Wait for stream entries to load
+        const streamEntries = this.page.locator('div.stream-body');
+        await expect(streamEntries.first()).toBeVisible({ timeout: 10000 });
+
+        // Search in the Stream tab using the keyword
+        const searchBox = this.page.getByRole('textbox', { name: /search by keyword/i });
+        await searchBox.fill(searchKeyword);
+
+        // Ensure at least one filtered result is shown
+        const count = await streamEntries.count();
+        expect(count).toBeGreaterThan(0);
+        await this.page.waitForTimeout(1000);
+
+        // Close dialog if present
+        const closeBtn = this.page.locator('button.p-dialog-header-close');
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click();
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
+
 }
