@@ -1,42 +1,6 @@
-<testsuites id="" name="" tests="17" failures="0" skipped="0" errors="0" time="115.85160499999999">
-<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-03T03:51:44.335Z" hostname="chromium" tests="17" failures="0" skipped="0" time="109.564" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that all portal toggle buttons are displayed" classname="Pages\Listing\listingPortal.spec.ts" time="26.361">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify that clicking a toggle button enables the portal" classname="Pages\Listing\listingPortal.spec.ts" time="2.634">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that clicking a toggle button disables the portal" classname="Pages\Listing\listingPortal.spec.ts" time="5.26">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that the listing  does not update without saving changes" classname="Pages\Listing\listingPortal.spec.ts" time="3.705">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that the listing  updates after saving changes" classname="Pages\Listing\listingPortal.spec.ts" time="4.044">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that the green dot appears in grid view listing card after enabling a portal" classname="Pages\Listing\listingPortal.spec.ts" time="5.292">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that the correct numbers of enabled portals appears in the portal tab" classname="Pages\Listing\listingPortal.spec.ts" time="3.958">
-<system-out>
-<![CDATA[Enabled portal count badge value: 1
-]]>
-</system-out>
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that clicking the warning icon and save the listing, verify Portal Reminder popup" classname="Pages\Listing\listingPortal.spec.ts" time="4.232">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify that the Portal Reminder popup has a close button" classname="Pages\Listing\listingPortal.spec.ts" time="4.108">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that clicking the close button closes the Portal Reminder popup" classname="Pages\Listing\listingPortal.spec.ts" time="4.691">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify that clicking the &apos;Cancel&apos; button closes the Portal Reminder popup without saving" classname="Pages\Listing\listingPortal.spec.ts" time="4.143">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify that clicking &apos;Save &amp; Close&apos; saves changes and closes the Portal Reminder popup" classname="Pages\Listing\listingPortal.spec.ts" time="3.508">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that an already saved portal status remains unchanged after refreshing" classname="Pages\Listing\listingPortal.spec.ts" time="17.308">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that toggling a portal OFF removes the green dot in grid view" classname="Pages\Listing\listingPortal.spec.ts" time="4.372">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that all portals are disabled by default for a new listing" classname="Pages\Listing\listingPortal.spec.ts" time="2.334">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that portals cannot be enabled without saving" classname="Pages\Listing\listingPortal.spec.ts" time="6.181">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify that listing appears on the portal after enabling" classname="Pages\Listing\listingPortal.spec.ts" time="7.433">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="28.94246399999992">
+<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-03T03:59:57.056Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.473" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Verify that disabling all portals reflects the correct count" classname="Pages\Listing\listingPortal.spec.ts" time="21.473">
 </testcase>
 </testsuite>
 </testsuites>
