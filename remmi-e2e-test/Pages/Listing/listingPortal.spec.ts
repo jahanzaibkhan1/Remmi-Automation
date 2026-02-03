@@ -120,5 +120,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyPortalToggleIsDebouncedAndStable();
       });
 
+      test("Test 21: Verify that changing a portal setting does not affect other tabs", async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyPortalSettingDoesNotAffectOtherTabs();
+      });
+
 
 });

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.418790999999967">
-<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-03T04:12:02.838Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.344" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Verify that invalid actions (e.g., rapidly clicking the portal toggle) do not cause issues" classname="Pages\Listing\listingPortal.spec.ts" time="25.344">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.95650799999945">
+<testsuite name="Pages\Listing\listingPortal.spec.ts" timestamp="2026-02-03T06:19:51.340Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.639" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Verify that changing a portal setting does not affect other tabs" classname="Pages\Listing\listingPortal.spec.ts" time="25.639">
 </testcase>
 </testsuite>
 </testsuites>
