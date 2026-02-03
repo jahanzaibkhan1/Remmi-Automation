@@ -41,4 +41,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyStreamCardAppearsForNewInspection();
     });
 
+    test('Test 5: Verify stream card is added when a contact is related', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyStreamCardAppearsForRelatedContact();
+    });
+
 });

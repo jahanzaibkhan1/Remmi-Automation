@@ -17078,27 +17078,22 @@ export class ListingActions {
     }
 
     /**
-     * Pehlay stream ka record count kerain, phir inspection create kerain,
-     * phir stream ka record count dobara check karain aur verify karain ke woh increase huwa hai.
+     * Verify stream card is added when a new inspection is created
      */
     async verifyStreamCardAppearsForNewInspection() {
-        // Navigate to listing and open first listing card
         await this.navigateToListings();
         await this.switchToGridView();
         const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
         await firstCardRow.click();
 
-        // 1️⃣ Stream tab pe jao aur pehlay count lo
         const streamTab = this.page.getByRole('tab', { name: /stream/i });
         await expect(streamTab).toBeVisible({ timeout: 10000 });
         await streamTab.click();
-        // Initial stream card count
         await this.page.waitForTimeout(1000);
         const streamEntryLocator = this.page.locator('div.stream-body');
         const initialStreamCount = await streamEntryLocator.count();
 
-        // 2️⃣ PRIMARY AGENT fill karo, warna inspections save nahi hota
         const primaryAgent = this.page.locator(
             'div.form-group:has-text("Primary Agent") ng-select'
         );
@@ -17114,17 +17109,14 @@ export class ListingActions {
         await expect(primaryOption).toBeVisible({ timeout: 10000 });
         await primaryOption.click();
         await this.page.waitForTimeout(1000);
-        // Save agent field
         const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
         await expect(saveButton).toBeVisible({ timeout: 10000 });
         await saveButton.click();
 
-        // 3️⃣ Ab inspections tab pe jao aur NEW inspection create karo
         const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
         await expect(inspectionsTab).toBeVisible({ timeout: 10000 });
         await inspectionsTab.click();
 
-        // Calendar se kal ki tareekh select karo
         const dateInput = this.page.locator('#basic');
         await expect(dateInput).toBeVisible({ timeout: 10000 });
         await dateInput.click();
@@ -17133,7 +17125,6 @@ export class ListingActions {
         const targetDay = tomorrow.getDate();
         const targetMonth = tomorrow.getMonth();
         const targetYear = tomorrow.getFullYear();
-        // Month-year set karo calendar men
         const calHeader = this.page.locator(".p-datepicker-title");
         await expect(calHeader).toBeVisible();
         const calHeaderText = await calHeader.innerText();
@@ -17148,14 +17139,12 @@ export class ListingActions {
             }
             await this.page.waitForTimeout(200);
         }
-        // Kal ki tareekh par click karo
         const dayLocator = this.page.locator(
             `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
         );
         await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
         await dayLocator.first().click({ force: true });
 
-        // Start time "5" select karo
         const startTimeSelect = this.page.getByRole('combobox').nth(4);
         await startTimeSelect.click();
         await this.page.waitForTimeout(500);
@@ -17163,38 +17152,160 @@ export class ListingActions {
         await expect(startTimeOption).toBeVisible({ timeout: 10000 });
         await startTimeOption.click();
 
-        // Add button press karo
         const addButton = this.page.getByRole('button', { name: /Add/i }).first();
         await expect(addButton).toBeVisible({ timeout: 10000 });
         await addButton.click();
 
-        // Event add hone ka success alert check karo
         const successAlert = this.page.getByText('event added to calendar successfully');
         await expect(successAlert).toBeVisible({ timeout: 10000 });
 
-        // Delete link visible ho jaye, yeh ensure kare
         const deleteLink = this.page.getByRole('link', { name: 'delete' }).first();
         await deleteLink.scrollIntoViewIfNeeded();
         await deleteLink.waitFor({ state: "visible", timeout: 10000 });
 
-        // Dobara Save button press karo
         await saveButton.click();
 
-        // 4️⃣ Dobara Stream tab pe ja ke records count compare karo
         await streamTab.click();
         await this.page.waitForTimeout(2000);
         const finalStreamEntryLocator = this.page.locator('div.stream-body');
         const finalStreamCount = await finalStreamEntryLocator.count();
 
-        // Assert: finalStreamCount should be more than initialStreamCount
         expect(finalStreamCount).toBeGreaterThan(initialStreamCount);
 
-        // Modal dialog band karo
-        const closeBtn = this.page.locator('button.p-dialog-header-close');
+        const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
-            await closeBtn.click();
+            await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verify stream card is added when a contact is related
+     */
+    async verifyStreamCardAppearsForRelatedContact() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Assign the primary agent as 'Jahanzaib Xenex'
+        const primaryAgent = this.page.locator(
+            'div.form-group:has-text("Primary Agent") ng-select'
+        );
+        await primaryAgent.scrollIntoViewIfNeeded();
+        await primaryAgent.click();
+
+        const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(primaryInput).toBeVisible({ timeout: 10000 });
+        await primaryInput.fill('Jahanzaib Xenex');
+
+        const primaryOption = this.page.locator(
+            '.ng-dropdown-panel .ng-option',
+            { hasText: 'Jahanzaib Xenex' }
+        ).first();
+        await expect(primaryOption).toBeVisible({ timeout: 10000 });
+        await primaryOption.click();
+
+        await this.page.waitForTimeout(800);
+
+        // Save/continue the listing if a Save button is available
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await saveButton.click();
+            await this.page.waitForTimeout(1200);
+        }
+
+        // Go to the Inspections tab
+        const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i }).first();
+        await expect(inspectionsTab).toBeVisible({ timeout: 10000 });
+        await inspectionsTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Add a new inspection (date = tomorrow)
+        const dateInput = this.page.locator('#basic');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        // Read current calendar's month/year
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+        const headerText = await header.innerText();
+        const [monthName, year] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        const monthDifference =
+            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
+
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+            await this.page.waitForTimeout(200);
+        }
+
+        const dayLocator = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
+        );
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
+        await dayLocator.first().click({ force: true });
+
+        // Pick start time '5'
+        const startTimeSelect = this.page.getByRole('combobox').nth(4);
+        await startTimeSelect.click();
+        await this.page.waitForTimeout(500);
+        const startTimeOption = this.page.getByText('5', { exact: true });
+        await expect(startTimeOption).toBeVisible({ timeout: 10000 });
+        await startTimeOption.click();
+
+        // Add the inspection
+        const addButton = this.page.getByRole('button', { name: /Add/i }).first();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        // Wait for the success alert
+        const successAlert = this.page.getByText('event added to calendar successfully');
+        await expect(successAlert).toBeVisible({ timeout: 10000 });
+
+        // Save the form if required
+        if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await saveButton.click();
+            await this.page.waitForTimeout(1000);
+        }
+
+        // Now go to the Stream tab and check for Jahanzaib Xenex entry
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+
+        // Wait for stream entries to appear
+        const streamEntries = this.page.locator('div.stream-body');
+        await expect(streamEntries.first()).toBeVisible({ timeout: 10000 });
+        const inspectionStream = this.page
+            .locator('div.stream-body:has-text("Inspection"):has-text("Jahanzaib Xenex")')
+            .first();
+
+        await expect(inspectionStream).toBeVisible({ timeout: 10000 });
+
+        await this.page.waitForTimeout(1000);
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+
     }
 
 }
