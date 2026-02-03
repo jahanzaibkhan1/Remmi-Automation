@@ -16755,4 +16755,60 @@ export class ListingActions {
         await this.page.waitForTimeout(1200);
     }
 
+    /**
+     * Verify that changing a portal setting does not affect other tabs (e.g., Details).
+     */
+    async verifyPortalSettingDoesNotAffectOtherTabs() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        // Open first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to 'Portals' tab
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+        await this.page.waitForTimeout(400);
+
+        // Get the first portal's toggle and checkbox
+        const firstPortalRow = this.page.locator('div.row.b-b-light').first();
+        await expect(firstPortalRow).toBeVisible({ timeout: 3000 });
+        const toggle = firstPortalRow.locator('label.switch span.slider').first();
+        const checkbox = firstPortalRow.locator('input[type="checkbox"]').first();
+
+        // Record the initial checked state
+        const initialChecked = await checkbox.isChecked();
+
+        // Change the portal setting (toggle switch)
+        await toggle.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Now switch to the 'Details' tab
+        const detailsTab = this.page.getByRole('tab', { name: /Details/i }).first();
+        await expect(detailsTab).toBeVisible({ timeout: 10000 });
+        await detailsTab.click();
+        await this.page.waitForTimeout(400);
+
+        // Assertion: there's no error banner or unsaved warning in Details tab
+        const errorBanner = this.page.locator('.p-toast-message-error,.error-banner,.ant-message-error').first();
+        expect(await errorBanner.isVisible().catch(() => false)).toBeFalsy();
+        await portalsTab.click();
+        await this.page.waitForTimeout(400);
+
+        const finalChecked = await checkbox.isChecked();
+        if (finalChecked !== initialChecked) {
+            await toggle.click({ force: true });
+            await expect(checkbox).toBeChecked({ timeout: 3000, checked: initialChecked });
+        }
+
+        // Optionally close modal/dialog as cleanup
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(700);
+    }
+
 }
