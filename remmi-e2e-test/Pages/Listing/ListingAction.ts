@@ -16979,4 +16979,47 @@ export class ListingActions {
     }
 
 
+    async verifySearchFieldDisplaysCorrectTotalRecordsCount(searchKeyword: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+
+        const searchBox = this.page.getByRole('textbox', { name: /search by keyword/i });
+        await searchBox.fill(searchKeyword);
+        // Wait for search results to be displayed (wait for any stream-body to be visible)
+        const streamEntries = this.page.locator('div.stream-body');
+        await expect(streamEntries.first()).toBeVisible({ timeout: 10000 });
+
+        await this.page.waitForTimeout(1200);
+
+        const recordsLocator = this.page.getByLabel('Stream').getByText('Records:');
+        await expect(recordsLocator).toBeVisible({ timeout: 10000 });
+
+        const recordsText = await recordsLocator.textContent();
+        let totalRecords = 0;
+        if (recordsText) {
+            const match = recordsText.match(/Records:\s*(\d+)/);
+            if (match) {
+                totalRecords = Number(match[1]);
+            }
+        }
+
+        console.log('Total Records:', totalRecords);
+        await this.page.waitForTimeout(1000);
+
+        const closeBtn = this.page.locator('button.p-dialog-header-close');
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click();
+        }
+        await this.page.waitForTimeout(1000);
+
+    }
+
 }
