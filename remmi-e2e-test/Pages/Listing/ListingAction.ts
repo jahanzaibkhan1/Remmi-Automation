@@ -16650,4 +16650,51 @@ export class ListingActions {
         await this.page.waitForTimeout(800);
     }
 
+    /**
+     * Verify that enabling/disabling a portal updates instantly in the UI before saving changes.
+     */
+    async verifyPortalInstantUiUpdateBeforeSave() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.waitFor({ state: 'attached', timeout: 10000 });
+        await firstCardRow.click();
+
+        // Go to 'Portals' tab
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+        await this.page.waitForTimeout(500);
+
+        // Get the first portal's checkbox and toggle
+        const firstPortalRow = this.page.locator('div.row.b-b-light').first();
+        await expect(firstPortalRow).toBeVisible({ timeout: 4000 });
+        const toggle = firstPortalRow.locator('label.switch span.slider').first();
+        const checkbox = firstPortalRow.locator('input[type="checkbox"]').first();
+
+        // Record original state
+        const wasChecked = await checkbox.isChecked();
+
+        // Toggle the portal (enable if disabled, disable if enabled)
+        await toggle.click();
+
+        // Check that the toggle's state visually updates instantly in the DOM
+        const shouldBeChecked = !wasChecked;
+        await expect(checkbox).toBeChecked({ timeout: 3000, checked: shouldBeChecked });
+
+        // Do not save - instead, revert toggle for cleanup
+        await toggle.click();
+        await expect(checkbox).toBeChecked({ timeout: 3000, checked: wasChecked });
+
+        // Optionally close dialog/modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+    }
+
 }

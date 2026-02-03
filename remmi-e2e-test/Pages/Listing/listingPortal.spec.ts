@@ -110,5 +110,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyToggleDisablesPortal();
       });
 
+      test('Test 19: Verify that enabling/disabling a portal updates instantly in UI before saving', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyPortalInstantUiUpdateBeforeSave();
+      });
+
 
 });
