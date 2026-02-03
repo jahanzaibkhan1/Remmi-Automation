@@ -130,5 +130,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyNoGreenDotWhenAllPortalsDisabled();
       });
 
+      test('Test 23: Verify that disabling a portal does not delete the listing from the system', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyDisablingPortalDoesNotDeleteListing();
+      });
+
 
 });
