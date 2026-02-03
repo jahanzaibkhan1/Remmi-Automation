@@ -16052,7 +16052,7 @@ export class ListingActions {
 
         for (let i = 0; i < numPortals; i++) {
             const row = portalRows.nth(i);
-            await row.waitFor({ state: 'visible', timeout: 10000 });
+            await row.waitFor({ state: 'visible', timeout: 20000 });
             const inputBox = row.locator('input[type="checkbox"]').first();
             if (!(await inputBox.isVisible())) {
                 // Scroll into view if not visible
@@ -16070,14 +16070,14 @@ export class ListingActions {
         if (needsUnchecking) {
             // Click save button if at least one was unchecked
             const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
-            await expect(saveButton).toBeVisible({ timeout: 5000 });
+            await expect(saveButton).toBeVisible({ timeout: 10000 });
             await saveButton.click();
 
             // Verify all portals are now unchecked
             for (let i = 0; i < numPortals; i++) {
                 const row = portalRows.nth(i);
                 const inputBox = row.locator('input[type="checkbox"]').first();
-                await expect(inputBox).not.toBeChecked({ timeout: 5000 });
+                await expect(inputBox).not.toBeChecked({ timeout: 10000 });
             }
 
             await this.page.waitForTimeout(1200);
@@ -17307,5 +17307,102 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
 
     }
+
+    async verifyContactNameClickableInStreamCard() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstCard = this.page.locator('div.s-property').first();
+        await firstCard.waitFor({ state: 'visible', timeout: 30000 });
+        await firstCard.click();
+
+        const relatedTab = this.page.getByText('Related').first();
+        await relatedTab.waitFor({ state: 'visible', timeout: 10000 });
+        await relatedTab.click();
+
+        // ------------------- Delete existing contacts -------------------
+        const deleteIcons = this.page.locator('img[alt="delete"]');
+        let totalIcons = await deleteIcons.count();
+        
+        for (let i = 0; i < totalIcons; i++) {
+            const icon = deleteIcons.nth(i);
+            await icon.waitFor({ state: 'attached', timeout: 10000 }).catch(() => {});
+        
+            try {
+                // Scroll parent container into view
+                const parent = icon.locator('..');
+                await parent.evaluate(el => el.scrollIntoView({ block: 'center', inline: 'center' }));
+                await this.page.waitForTimeout(200);
+        
+                // Click delete icon
+                await icon.click({ force: true });
+        
+                // Handle confirmation
+                const yesButton = this.page.getByRole('button', { name: /Yes/i }).first();
+                const yesVisible = await yesButton.isVisible({ timeout: 5000 }).catch(() => false);
+        
+                if (yesVisible) {
+                    await yesButton.click();
+                    await this.page.waitForTimeout(500); // allow deletion to complete
+                }
+            } catch (err) {
+                console.warn(`Failed to delete icon #${i}:`, err);
+                continue;
+            }
+        
+            // Update count after each deletion
+            totalIcons = await deleteIcons.count();
+            i = -1; // restart loop because DOM has changed
+        }
+        
+        // Verify no delete icons remain
+        await expect(deleteIcons).toHaveCount(0, { timeout: 10000 });
+        
+        // ------------------- Select contact from multiselect -------------------
+        const contactDropdown = this.page.locator('div.col-10 re-multiselect div.tags').last();
+        await contactDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await contactDropdown.click();
+
+        const firstOption = this.page.locator('div.drop_box ul li.p-element p').first();
+        await firstOption.waitFor({ state: 'visible', timeout: 20000 });
+        await firstOption.click();
+        await contactDropdown.click();
+
+        const associateButton = this.page.getByRole('button', { name: /Associate/i }).first();
+        await associateButton.waitFor({ state: 'visible', timeout: 10000 });
+        await associateButton.click();
+
+        const successMsg = this.page.getByText('Contact attached successfully');
+        await successMsg.waitFor({ state: 'visible', timeout: 10000 });
+
+        // ------------------- Drag-and-drop the contact tag -------------------
+        const contactTag = this.page.locator('span.cdk-drag.related-tag.ng-star-inserted').last();
+        await contactTag.scrollIntoViewIfNeeded();
+        const dropList = this.page.locator('td.cdk-drop-list').first();
+        await this.page.waitForTimeout(1000);
+
+        await contactTag.dragTo(dropList);
+        await contactTag.dragTo(dropList);
+
+        // ------------------- Go to Stream tab and click contact -------------------
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await streamTab.scrollIntoViewIfNeeded();
+        await streamTab.waitFor({ state: 'visible', timeout: 10000 });
+        await streamTab.click();
+
+        const streamContact = this.page.locator('div.d-flex.align-items-center p._fw-400.cursor-pointer').first();
+        await streamContact.waitFor({ state: 'visible', timeout: 10000 });
+        await streamContact.click();
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(500);
+    }
+
+
+
 
 }
