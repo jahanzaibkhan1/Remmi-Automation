@@ -35,4 +35,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyInfiniteScrollingInStreamTab();
     });
 
+    test('Test 4: Verify stream card is added when a new inspection is created', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      // Pass a sample inspection title; adjust as needed for your use case
+      await listingActions.verifyStreamCardAppearsForNewInspection();
+    });
+
 });
