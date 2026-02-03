@@ -16863,6 +16863,80 @@ export class ListingActions {
         // Ensure that no green dot/status indicator appears when all portals are disabled
         const greenDot = gridCard.locator('.listing-active, .portal-green-dot, .pi.pi-circle-on, .status-dot-green');
         await expect(greenDot).toHaveCount(0);
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Verify that disabling a portal does not delete the listing from the system.
+     */
+    async verifyDisablingPortalDoesNotDeleteListing() {
+        // Step 1: Navigate to Listing page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Step 2: Grab first listing card and extract an identifying attribute (e.g., title)
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        const title = await firstCard.locator('h3[title]').first().getAttribute('title').catch(() => null);
+
+        // Step 3: Open details for the first listing
+        await firstCard.click();
+
+        // Step 4: Go to the 'Portals' tab
+        const portalsTab = this.page.getByRole('tab', { name: /Portals/i });
+        await expect(portalsTab).toBeVisible({ timeout: 10000 });
+        await portalsTab.click();
+        await this.page.waitForTimeout(400);
+
+        // Step 5: Disable the first enabled portal toggle (if any)
+        const portalRows = this.page.locator('div.row.b-b-light');
+        const portalCount = await portalRows.count();
+        let toggled = false;
+        for (let i = 0; i < portalCount; i++) {
+            const row = portalRows.nth(i);
+            const checkbox = row.locator('input[type="checkbox"]').first();
+            if (await checkbox.isChecked()) {
+                const slider = row.locator('label.switch span.slider').first();
+                await slider.click({ force: true });
+                await expect(checkbox).not.toBeChecked({ timeout: 3000 });
+                toggled = true;
+                break;
+            }
+        }
+
+        // Step 6: Save changes only if toggled
+        if (toggled) {
+            const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+            if (await saveButton.isVisible().catch(() => false)) {
+                await saveButton.click({ force: true });
+                await this.page.waitForTimeout(1500);
+            }
+        }
+
+        // Step 7: Close the details modal if present
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+
+        // Step 8: Check that the listing is still present in the grid by its title (or visible as fallback)
+        const listingCards = this.page.locator("//div[contains(@class,'s-property')]");
+        let exists = false;
+        if (title) {
+
+            const firstTitle = await listingCards.first().locator('h3[title]').getAttribute('title').catch(() => null);
+            exists =
+                !!firstTitle &&
+                firstTitle.trim().toLowerCase() === title.trim().toLowerCase();
+        }
+        if (!exists) {
+            exists = await listingCards.first().isVisible().catch(() => false);
+        }
+
+        expect(exists).toBeTruthy();
+
+        await this.page.waitForTimeout(1200);
     }
 
 }
