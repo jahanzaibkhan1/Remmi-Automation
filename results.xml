@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.00821999999881">
-<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-03T07:52:13.814Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.149" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify infinite scrolling in stream tab" classname="Pages\Listing\listingStream.spec.ts" time="35.149">
-<system-out>
-<![CDATA[Infinite scrolling loaded entries: [33m3[39m
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.456872999999675">
+<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-03T08:23:11.425Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.54" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify stream card is added when a new inspection is created" classname="Pages\Listing\listingStream.spec.ts" time="32.54">
 </testcase>
 </testsuite>
 </testsuites>
