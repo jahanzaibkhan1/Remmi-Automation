@@ -105,5 +105,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyEnablingAllPortalsReflectsCount();
       });
 
+      test('Test 18: Verify that disabling all portals reflects the correct count', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyToggleDisablesPortal();
+      });
+
 
 });
