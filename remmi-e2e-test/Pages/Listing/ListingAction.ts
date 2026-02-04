@@ -17858,6 +17858,47 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    /**
+     * Verify that the stream search field with an empty input returns all records or does not display an error.
+     */
+    async verifySearchFieldWithEmptyInput() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to Stream tab
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+
+        // Wait for stream content
+        await this.page.waitForTimeout(1000);
+
+        // Find the search field in the stream tab
+        const searchInput = this.page.locator('input[placeholder*="Search by keyword"]').first();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+
+        // Clear search field (if needed) and submit empty input
+        await searchInput.fill(""); 
+        await searchInput.press('Enter');
+        await this.page.waitForTimeout(1000);
+
+        // Expect that there is at least one stream card (assuming non-empty listing)
+        const streamCards = this.page.locator("div.stream-body");
+        await expect(streamCards.first()).toBeVisible({ timeout: 10000 });
+
+        // Optionally close modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
 
 
 
