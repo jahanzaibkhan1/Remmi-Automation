@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.638331999998538">
-<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-03T11:58:50.811Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.078" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that when a contact is removed, the stream card is also removed" classname="Pages\Listing\listingStream.spec.ts" time="24.078">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.208484999999406">
+<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-04T11:18:22.870Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.979" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify stream tab UI consistency (headers, layout, scroll, empty state)" classname="Pages\Listing\listingStream.spec.ts" time="42.979">
 </testcase>
 </testsuite>
 </testsuites>
