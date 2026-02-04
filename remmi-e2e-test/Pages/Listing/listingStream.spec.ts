@@ -56,4 +56,56 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyStreamCardRemovedWhenContactRemoved();
     });
 
+    test('Test 8: Verify stream card is added when a primary agent is assigned', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      // Optionally provide a specific agent name; uses the default if omitted
+      await listingActions.verifyStreamCardAppearsForPrimaryAgentAssignment('Jahanzaib Xenex');
+    });
+
+    test('Test 9: Verify stream card is added when a secondary agent is added', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyStreamCardAppearsForSecondaryAgent();
+    });
+
+    test('Test 10: Verify stream card is added when a task is created for a listing', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyStreamCardAppearsForCreatedTask('Automation Task');
+    });
+
+    test('Test 11: Verify stream card is added when a listing is created', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyStreamCardAppearsForListingCreation();
+    });
+
+    test('Test 12: Verify stream card is added when a listing is created for the first time', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyStreamCardAppearsForListingCreation();
+    });
+
+    test('Test 13: Verify date and time is displayed on each stream card', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyDateTimeDisplayedOnEachStreamCard();
+    });
+
+    test('Test 14: Verify searching the stream tab with an invalid keyword shows zero results', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySearchWithInvalidKeyword("notarealkeyword123456");
+    });
+
+    test('Test 15: Verify search field with empty input returns all records', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySearchFieldWithEmptyInput();
+    });
+
+    test('Test 16: Verify that clicking on the agent name in the stream card opens the agent profile (or relevant details)', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyContactNameClickableInStreamCard();
+    });
+
+    test('Test 17: Verify stream tab UI consistency (headers, layout, scroll, empty state)', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyStreamTabUIConsistency()
+    });
+
+
 });
