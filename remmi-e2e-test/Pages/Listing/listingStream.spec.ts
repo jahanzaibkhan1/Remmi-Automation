@@ -87,5 +87,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyDateTimeDisplayedOnEachStreamCard();
     });
 
+    test('Test 14: Verify searching the stream tab with an invalid keyword shows zero results', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySearchWithInvalidKeyword("notarealkeyword123456");
+    });
+
 
 });
