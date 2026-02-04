@@ -17467,6 +17467,139 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    /**
+     * Verify stream card is added when a primary agent is added
+     */
+    async verifyStreamCardAppearsForPrimaryAgentAssignment(agentName: string = 'Jahanzaib Xenex') {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+        await this.page.waitForTimeout(1000);
+
+        const streamEntryLocator = this.page.locator('div.stream-body');
+        await expect(streamEntryLocator.first()).toBeVisible({ timeout: 10000 });
+        const primaryAgent = this.page.locator(
+            'div.form-group:has-text("Primary Agent") ng-select'
+        );
+
+        await primaryAgent.scrollIntoViewIfNeeded();
+        await primaryAgent.click();
+
+        const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(primaryInput).toBeVisible({ timeout: 10000 });
+        await primaryInput.fill('Jahanzaib Xenex');
+
+        const primaryOption = this.page.locator(
+            '.ng-dropdown-panel .ng-option',
+            { hasText: 'Jahanzaib Xenex' }
+        ).first();
+        await expect(primaryOption).toBeVisible({ timeout: 10000 });
+        await primaryOption.click();
+
+        await this.page.waitForTimeout(1000);
+        // Attempt to save/continue without filling fields
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+
+        // Click on the 'Inspections' tab to trigger validation messages for required fields
+        const inspectionTab = this.page.getByRole('tab', { name: /Inspections/i }).first();
+        await expect(inspectionTab).toBeVisible({ timeout: 10000 });
+        await inspectionTab.click();
+
+
+        // Fill in inspection event date: pick January 14, 2026 using the date picker and the displayed calendar
+        const dateInput = this.page.locator('#basic');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        // 1️⃣ Compute Tomorrow
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        // 2️⃣ Read currently opened calendar's month-year (stable header)
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+
+        const headerText = await header.innerText();
+        const [monthName, year] = headerText.trim().split(" ");
+
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        // 3️⃣ Move calendar to correct month
+        const monthDifference =
+            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
+
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+            // Wait for transition + re-render
+            await this.page.waitForTimeout(200);
+        }
+
+        // 4️⃣ Select tomorrow's date (non-flaky selector)
+        const dayLocator = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
+        );
+
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
+        await dayLocator.first().click({ force: true });
+
+        const startTimeSelect = this.page.getByRole('combobox').nth(4);
+        await startTimeSelect.click();
+        await this.page.waitForTimeout(1000);
+        // Select the 6th option (index 5) from the dropdown
+        const startTimeOption = this.page.getByText('5', { exact: true });
+        await expect(startTimeOption).toBeVisible({ timeout: 10000 });
+        await startTimeOption.click();
+        // Click the 'Add' button in the Inspections tab
+        const addButton = this.page.getByRole('button', { name: /Add/i }).first();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        // Wait for event success message to appear after adding inspection event
+        const successAlert = this.page.getByText('event added to calendar successfully');
+        await expect(successAlert).toBeVisible({ timeout: 10000 });
+
+        // Verify that the newly added inspection is deletable via the delete icon:
+        const deleteLink = this.page.getByRole('link', { name: 'delete' }).first();
+        await deleteLink.waitFor({ state: "visible", timeout: 10000 });
+        // Click the 'Save' button (if visible)
+        await saveButton.click();
+
+
+        await this.page.waitForTimeout(1500);
+
+        // Switch to stream tab again if not already active
+        await streamTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Optionally: Check the specific card for assigned agent's name and action
+        const agentCard = this.page.locator('div.stream-body', { hasText: agentName }).first();
+        await expect(agentCard).toBeVisible({ timeout: 10000 });
+
+        // Close details modal
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(500);
+    }
+
 
 
 
