@@ -56,4 +56,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyStreamCardRemovedWhenContactRemoved();
     });
 
+    test('Test 8: Verify stream card is added when a primary agent is assigned', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      // Optionally provide a specific agent name; uses the default if omitted
+      await listingActions.verifyStreamCardAppearsForPrimaryAgentAssignment('Jahanzaib Xenex');
+    });
+
 });
