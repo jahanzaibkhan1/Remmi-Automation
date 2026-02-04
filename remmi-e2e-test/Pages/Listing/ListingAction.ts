@@ -17900,6 +17900,44 @@ export class ListingActions {
     }
 
 
+    /**
+     * Verify the UI consistency of the stream tab:
+     */
+    async verifyStreamTabUIConsistency() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to Stream tab
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+
+        // Main: Stream tab container visible
+        const streamContainer = this.page.locator('div.stream-container, div.stream-list, div[class*="stream"]');
+        await expect(streamContainer.first()).toBeVisible({ timeout: 10000 });
+
+        // Search bar
+        const searchInput = this.page.locator('input[placeholder*="Search by keyword"]').first();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+
+        // At least one stream card loaded
+        const streamCards = this.page.locator('div.stream-body');
+        await expect(streamCards.first()).toBeVisible({ timeout: 10000 });
+
+        // Optionally close modal
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+
 
 
 }
