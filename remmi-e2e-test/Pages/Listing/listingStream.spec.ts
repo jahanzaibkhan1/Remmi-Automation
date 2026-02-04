@@ -97,5 +97,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifySearchFieldWithEmptyInput();
     });
 
+    test('Test 16: Verify that clicking on the agent name in the stream card opens the agent profile (or relevant details)', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyContactNameClickableInStreamCard();
+    });
+
 
 });
