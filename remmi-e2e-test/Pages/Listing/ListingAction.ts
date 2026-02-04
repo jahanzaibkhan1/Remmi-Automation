@@ -17742,6 +17742,35 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    /**
+     * Verify stream card is added when a new listing is created.
+     */
+    async verifyStreamCardAppearsForListingCreation() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        // Go to the Stream tab
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+
+        // Wait for stream card relating to creation event
+        const createdStreamCard = this.page.locator('div.stream-body', { hasText: /Listing Added|Listing Created/i }).first();
+        await createdStreamCard.scrollIntoViewIfNeeded();
+        await expect(createdStreamCard).toBeVisible({ timeout: 10000 });
+
+        // Optionally close modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
 
 
 
