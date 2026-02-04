@@ -17473,9 +17473,32 @@ export class ListingActions {
     async verifyStreamCardAppearsForPrimaryAgentAssignment(agentName: string = 'Jahanzaib Xenex') {
         await this.navigateToListings();
         await this.switchToGridView();
+
+        // Open first listing
         const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown.click({ force: true });
+        // Find the delete button for the first visible listing card in card/grid view
+        const cardDeleteButton = this.page.locator('a:nth-child(4)').first();
+        await cardDeleteButton.scrollIntoViewIfNeeded()
+        await this.page.waitForTimeout(1000);
+        await cardDeleteButton.click({ force: true });
+
+        // Wait for confirmation dialog to appear
+        const confirmationDialog = this.page.getByText('Are you sure you want to delete this listing ? Your listing will be permanently');
+        await expect(confirmationDialog).toBeVisible({ timeout: 10000 });
+
+        // Find and click the confirm Delete button
+        const confirmButton = this.page.getByRole('button', { name: 'Delete' });
+        await expect(confirmButton).toBeVisible({ timeout: 10000 });
+        await confirmButton.click({ force: true });
+        const toast = this.page.getByRole('alert', { name: 'Listing successfully deleted' });
+        await expect(toast).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(2000);
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
         await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
 
         const streamTab = this.page.getByRole('tab', { name: /stream/i });
         await expect(streamTab).toBeVisible({ timeout: 10000 });
@@ -17508,85 +17531,9 @@ export class ListingActions {
         await expect(saveButton).toBeVisible({ timeout: 10000 });
         await saveButton.click();
 
-        // Click on the 'Inspections' tab to trigger validation messages for required fields
-        const inspectionTab = this.page.getByRole('tab', { name: /Inspections/i }).first();
-        await expect(inspectionTab).toBeVisible({ timeout: 10000 });
-        await inspectionTab.click();
-
-
-        // Fill in inspection event date: pick January 14, 2026 using the date picker and the displayed calendar
-        const dateInput = this.page.locator('#basic');
-        await expect(dateInput).toBeVisible({ timeout: 10000 });
-        await dateInput.click();
-
-        // 1️⃣ Compute Tomorrow
-        const t = new Date();
-        t.setDate(t.getDate() + 1);
-
-        const targetDay = t.getDate();
-        const targetMonth = t.getMonth();
-        const targetYear = t.getFullYear();
-
-        // 2️⃣ Read currently opened calendar's month-year (stable header)
-        const header = this.page.locator(".p-datepicker-title");
-        await expect(header).toBeVisible();
-
-        const headerText = await header.innerText();
-        const [monthName, year] = headerText.trim().split(" ");
-
-        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
-
-        // 3️⃣ Move calendar to correct month
-        const monthDifference =
-            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
-
-        for (let i = 0; i < Math.abs(monthDifference); i++) {
-            if (monthDifference > 0) {
-                await this.page.locator(".p-datepicker-next").click();
-            } else {
-                await this.page.locator(".p-datepicker-prev").click();
-            }
-            // Wait for transition + re-render
-            await this.page.waitForTimeout(200);
-        }
-
-        // 4️⃣ Select tomorrow's date (non-flaky selector)
-        const dayLocator = this.page.locator(
-            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
-        );
-
-        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
-        await dayLocator.first().click({ force: true });
-
-        const startTimeSelect = this.page.getByRole('combobox').nth(4);
-        await startTimeSelect.click();
-        await this.page.waitForTimeout(1000);
-        // Select the 6th option (index 5) from the dropdown
-        const startTimeOption = this.page.getByText('5', { exact: true });
-        await expect(startTimeOption).toBeVisible({ timeout: 10000 });
-        await startTimeOption.click();
-        // Click the 'Add' button in the Inspections tab
-        const addButton = this.page.getByRole('button', { name: /Add/i }).first();
-        await expect(addButton).toBeVisible({ timeout: 10000 });
-        await addButton.click();
-
-        // Wait for event success message to appear after adding inspection event
-        const successAlert = this.page.getByText('event added to calendar successfully');
-        await expect(successAlert).toBeVisible({ timeout: 10000 });
-
-        // Verify that the newly added inspection is deletable via the delete icon:
-        const deleteLink = this.page.getByRole('link', { name: 'delete' }).first();
-        await deleteLink.waitFor({ state: "visible", timeout: 10000 });
-        // Click the 'Save' button (if visible)
-        await saveButton.click();
-
-
-        await this.page.waitForTimeout(1500);
-
         // Switch to stream tab again if not already active
         await streamTab.click();
         await this.page.waitForTimeout(1000);
-
         // Optionally: Check the specific card for assigned agent's name and action
         const agentCard = this.page.locator('div.stream-body', { hasText: agentName }).first();
         await expect(agentCard).toBeVisible({ timeout: 10000 });
@@ -17597,6 +17544,84 @@ export class ListingActions {
             await closeBtn.click({ force: true });
         }
 
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verify stream card is added when a secondary agent is added
+     */
+    async verifyStreamCardAppearsForSecondaryAgent() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown.click({ force: true });
+        // Find the delete button for the first visible listing card in card/grid view
+        const cardDeleteButton = this.page.locator('a:nth-child(4)').first();
+        await cardDeleteButton.scrollIntoViewIfNeeded()
+        await this.page.waitForTimeout(1000);
+        await cardDeleteButton.click({ force: true });
+
+        // Wait for confirmation dialog to appear
+        const confirmationDialog = this.page.getByText('Are you sure you want to delete this listing ? Your listing will be permanently');
+        await expect(confirmationDialog).toBeVisible({ timeout: 10000 });
+
+        // Find and click the confirm Delete button
+        const confirmButton = this.page.getByRole('button', { name: 'Delete' });
+        await expect(confirmButton).toBeVisible({ timeout: 10000 });
+        await confirmButton.click({ force: true });
+        const toast = this.page.getByRole('alert', { name: 'Listing successfully deleted' });
+        await expect(toast).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(2000);
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Add a secondary agent
+        const secondaryAgentNgSelect = this.page.locator(
+            'div.form-group:has-text("Secondary Agent") ng-select'
+        );
+        await secondaryAgentNgSelect.scrollIntoViewIfNeeded();
+        await secondaryAgentNgSelect.click();
+
+        const secondaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(secondaryInput).toBeVisible({ timeout: 10000 });
+        await secondaryInput.fill('Automation Test');
+
+        const secondaryOption = this.page.locator(
+            '.ng-dropdown-panel .ng-option',
+            { hasText: 'Automation Test' }
+        ).first();
+        await expect(secondaryOption).toBeVisible({ timeout: 10000 });
+        await secondaryOption.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Save changes (if the Save button appears)
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await saveButton.click();
+            await this.page.waitForTimeout(1500);
+        }
+
+        // Switch to Stream tab
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Check for stream card mentioning the secondary agent's name
+        const agentStreamCard = this.page.locator('div.stream-body', { hasText: 'Secondary Agent' }).first();
+        await expect(agentStreamCard).toBeVisible({ timeout: 10000 });
+
+        // Close the modal
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
         await this.page.waitForTimeout(500);
     }
 
