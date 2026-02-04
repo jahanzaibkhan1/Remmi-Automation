@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.301640000000596">
-<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-04T10:01:30.999Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.819" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify stream card is added when a secondary agent is added" classname="Pages\Listing\listingStream.spec.ts" time="44.819">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.01857399999909">
+<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-04T10:31:07.923Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.202" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify stream card is added when a task is created for a listing" classname="Pages\Listing\listingStream.spec.ts" time="38.202">
 </testcase>
 </testsuite>
 </testsuites>
