@@ -17323,24 +17323,24 @@ export class ListingActions {
         // ------------------- Delete existing contacts -------------------
         const deleteIcons = this.page.locator('img[alt="delete"]');
         let totalIcons = await deleteIcons.count();
-        
+
         for (let i = 0; i < totalIcons; i++) {
             const icon = deleteIcons.nth(i);
-            await icon.waitFor({ state: 'attached', timeout: 10000 }).catch(() => {});
-        
+            await icon.waitFor({ state: 'attached', timeout: 10000 }).catch(() => { });
+
             try {
                 // Scroll parent container into view
                 const parent = icon.locator('..');
                 await parent.evaluate(el => el.scrollIntoView({ block: 'center', inline: 'center' }));
                 await this.page.waitForTimeout(200);
-        
+
                 // Click delete icon
                 await icon.click({ force: true });
-        
+
                 // Handle confirmation
                 const yesButton = this.page.getByRole('button', { name: /Yes/i }).first();
                 const yesVisible = await yesButton.isVisible({ timeout: 5000 }).catch(() => false);
-        
+
                 if (yesVisible) {
                     await yesButton.click();
                     await this.page.waitForTimeout(500); // allow deletion to complete
@@ -17349,15 +17349,15 @@ export class ListingActions {
                 console.warn(`Failed to delete icon #${i}:`, err);
                 continue;
             }
-        
+
             // Update count after each deletion
             totalIcons = await deleteIcons.count();
             i = -1; // restart loop because DOM has changed
         }
-        
+
         // Verify no delete icons remain
         await expect(deleteIcons).toHaveCount(0, { timeout: 10000 });
-        
+
         // ------------------- Select contact from multiselect -------------------
         const contactDropdown = this.page.locator('div.col-10 re-multiselect div.tags').last();
         await contactDropdown.waitFor({ state: 'visible', timeout: 10000 });
@@ -17418,24 +17418,24 @@ export class ListingActions {
         // ------------------- Delete existing contacts -------------------
         const deleteIcons = this.page.locator('img[alt="delete"]');
         let totalIcons = await deleteIcons.count();
-        
+
         for (let i = 0; i < totalIcons; i++) {
             const icon = deleteIcons.nth(i);
-            await icon.waitFor({ state: 'attached', timeout: 10000 }).catch(() => {});
-        
+            await icon.waitFor({ state: 'attached', timeout: 10000 }).catch(() => { });
+
             try {
                 // Scroll parent container into view
                 const parent = icon.locator('..');
                 await parent.evaluate(el => el.scrollIntoView({ block: 'center', inline: 'center' }));
                 await this.page.waitForTimeout(200);
-        
+
                 // Click delete icon
                 await icon.click({ force: true });
-        
+
                 // Handle confirmation
                 const yesButton = this.page.getByRole('button', { name: /Yes/i }).first();
                 const yesVisible = await yesButton.isVisible({ timeout: 5000 }).catch(() => false);
-        
+
                 if (yesVisible) {
                     await yesButton.click();
                     await this.page.waitForTimeout(500); // allow deletion to complete
@@ -17444,15 +17444,15 @@ export class ListingActions {
                 console.warn(`Failed to delete icon #${i}:`, err);
                 continue;
             }
-        
+
             // Update count after each deletion
             totalIcons = await deleteIcons.count();
             i = -1; // restart loop because DOM has changed
         }
-        
+
         // Verify no delete icons remain
         await expect(deleteIcons).toHaveCount(0, { timeout: 10000 });
-        
+
         // ------------------- Go to Stream tab and click contact -------------------
         const streamTab = this.page.getByRole('tab', { name: /stream/i });
         await streamTab.scrollIntoViewIfNeeded();
@@ -17464,6 +17464,476 @@ export class ListingActions {
             await closeBtn.click({ force: true });
         }
 
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verify stream card is added when a primary agent is added
+     */
+    async verifyStreamCardAppearsForPrimaryAgentAssignment(agentName: string = 'Jahanzaib Xenex') {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown.click({ force: true });
+        // Find the delete button for the first visible listing card in card/grid view
+        const cardDeleteButton = this.page.locator('a:nth-child(4)').first();
+        await cardDeleteButton.scrollIntoViewIfNeeded()
+        await this.page.waitForTimeout(1000);
+        await cardDeleteButton.click({ force: true });
+
+        // Wait for confirmation dialog to appear
+        const confirmationDialog = this.page.getByText('Are you sure you want to delete this listing ? Your listing will be permanently');
+        await expect(confirmationDialog).toBeVisible({ timeout: 10000 });
+
+        // Find and click the confirm Delete button
+        const confirmButton = this.page.getByRole('button', { name: 'Delete' });
+        await expect(confirmButton).toBeVisible({ timeout: 10000 });
+        await confirmButton.click({ force: true });
+        const toast = this.page.getByRole('alert', { name: 'Listing successfully deleted' });
+        await expect(toast).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(2000);
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+        await this.page.waitForTimeout(1000);
+
+        const streamEntryLocator = this.page.locator('div.stream-body');
+        await expect(streamEntryLocator.first()).toBeVisible({ timeout: 10000 });
+        const primaryAgent = this.page.locator(
+            'div.form-group:has-text("Primary Agent") ng-select'
+        );
+
+        await primaryAgent.scrollIntoViewIfNeeded();
+        await primaryAgent.click();
+
+        const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(primaryInput).toBeVisible({ timeout: 10000 });
+        await primaryInput.fill('Jahanzaib Xenex');
+
+        const primaryOption = this.page.locator(
+            '.ng-dropdown-panel .ng-option',
+            { hasText: 'Jahanzaib Xenex' }
+        ).first();
+        await expect(primaryOption).toBeVisible({ timeout: 10000 });
+        await primaryOption.click();
+
+        await this.page.waitForTimeout(1000);
+        // Attempt to save/continue without filling fields
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+
+        // Switch to stream tab again if not already active
+        await streamTab.click();
+        await this.page.waitForTimeout(1000);
+        // Optionally: Check the specific card for assigned agent's name and action
+        const agentCard = this.page.locator('div.stream-body', { hasText: agentName }).first();
+        await expect(agentCard).toBeVisible({ timeout: 10000 });
+
+        // Close details modal
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verify stream card is added when a secondary agent is added
+     */
+    async verifyStreamCardAppearsForSecondaryAgent() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown.click({ force: true });
+        // Find the delete button for the first visible listing card in card/grid view
+        const cardDeleteButton = this.page.locator('a:nth-child(4)').first();
+        await cardDeleteButton.scrollIntoViewIfNeeded()
+        await this.page.waitForTimeout(1000);
+        await cardDeleteButton.click({ force: true });
+
+        // Wait for confirmation dialog to appear
+        const confirmationDialog = this.page.getByText('Are you sure you want to delete this listing ? Your listing will be permanently');
+        await expect(confirmationDialog).toBeVisible({ timeout: 10000 });
+
+        // Find and click the confirm Delete button
+        const confirmButton = this.page.getByRole('button', { name: 'Delete' });
+        await expect(confirmButton).toBeVisible({ timeout: 10000 });
+        await confirmButton.click({ force: true });
+        const toast = this.page.getByRole('alert', { name: 'Listing successfully deleted' });
+        await expect(toast).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(2000);
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        // Add a secondary agent
+        const secondaryAgentNgSelect = this.page.locator(
+            'div.form-group:has-text("Secondary Agent") ng-select'
+        );
+        await secondaryAgentNgSelect.scrollIntoViewIfNeeded();
+        await secondaryAgentNgSelect.click();
+
+        const secondaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(secondaryInput).toBeVisible({ timeout: 10000 });
+        await secondaryInput.fill('Automation Test');
+
+        const secondaryOption = this.page.locator(
+            '.ng-dropdown-panel .ng-option',
+            { hasText: 'Automation Test' }
+        ).first();
+        await expect(secondaryOption).toBeVisible({ timeout: 10000 });
+        await secondaryOption.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Save changes (if the Save button appears)
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await saveButton.click();
+            await this.page.waitForTimeout(1500);
+        }
+
+        // Switch to Stream tab
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Check for stream card mentioning the secondary agent's name
+        const agentStreamCard = this.page.locator('div.stream-body', { hasText: 'Secondary Agent' }).first();
+        await expect(agentStreamCard).toBeVisible({ timeout: 10000 });
+
+        // Close the modal
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verify stream card is added when a task is created for a listing
+     */
+    async verifyStreamCardAppearsForCreatedTask(taskTitle: string = 'Automation Task') {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click()
+
+        // Switch to "Tasks" tab (or however tasks are added)
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Click "Add Task" button
+        const addTaskButton = this.page.getByRole('button', { name: /Add Task|New Task/i });
+        await expect(addTaskButton).toBeVisible({ timeout: 10000 });
+        await addTaskButton.click();
+
+        // Input task title
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
+        await taskTitleInput.fill(taskTitle);
+
+        // Fill in inspection event date: pick January 14, 2026 using the date picker and the displayed calendar
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        // 1️⃣ Compute Tomorrow
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        // 2️⃣ Read currently opened calendar's month-year (stable header)
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+
+        const headerText = await header.innerText();
+        const [monthName, year] = headerText.trim().split(" ");
+
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        // 3️⃣ Move calendar to correct month
+        const monthDifference =
+            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
+
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+            // Wait for transition + re-render
+            await this.page.waitForTimeout(200);
+        }
+
+        // 4️⃣ Select tomorrow's date (non-flaky selector)
+        const dayLocator = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
+        );
+
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
+        await dayLocator.first().click({ force: true });
+
+        const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"]');
+        await expect(staffSelect).toBeVisible();
+        await staffSelect.click();
+
+        const staffInput = this.page.locator(
+            'ng-select[formcontrolname="assignedUsers"] input[type="text"]'
+        );
+        await staffInput.fill('Jahanzaib');
+
+        const staffOption = this.page.locator('.ng-dropdown-panel .ng-option', {
+            hasText: 'Jahanzaib'
+        });
+        await expect(staffOption).toBeVisible();
+        await staffOption.click();
+
+        // Save task
+        const saveTaskButton = this.page.getByRole('button', { name: /Save|Create/i }).first();
+        await expect(saveTaskButton).toBeVisible({ timeout: 10000 });
+        await saveTaskButton.click();
+
+        await this.page.waitForTimeout(2000);
+
+        const closetask = this.page.locator('.pi.pi-times').last();
+        if (await closetask.isVisible().catch(() => false)) {
+            await closetask.click({ force: true });
+        }
+
+        // Switch to Stream tab
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Check for stream card mentioning the task title
+        const streamCard = this.page.locator('div.stream-body', { hasText: 'Task Added' }).first();
+        await expect(streamCard).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+        // Close modal if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verify stream card is added when a new listing is created.
+     */
+    async verifyStreamCardAppearsForListingCreation() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        // Go to the Stream tab
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+
+        // Wait for stream card relating to creation event
+        const createdStreamCard = this.page.locator('div.stream-body', { hasText: /Listing Added|Listing Created/i }).first();
+        await createdStreamCard.scrollIntoViewIfNeeded();
+        await expect(createdStreamCard).toBeVisible({ timeout: 10000 });
+
+        // Optionally close modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verify that each stream card displays a date and time.
+     */
+    async verifyDateTimeDisplayedOnEachStreamCard() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to Stream tab
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+
+        // Wait until at least one stream card is visible
+        const streamCards = this.page.locator('div.stream-body');
+        await expect(streamCards.first()).toBeVisible({ timeout: 10000 });
+
+        // Ensure we got one or more stream cards
+        const count = await streamCards.count();
+        if (count === 0) {
+            throw new Error("No stream cards found on the Stream tab.");
+        }
+
+        // Check each stream card for the date/time span
+        for (let i = 0; i < count; i++) {
+            const card = streamCards.nth(i);
+            // span.f-10.text-dark contains the date/time info
+            const dateTimeSpan = card.locator('span.f-10.text-dark');
+            await expect(dateTimeSpan).toBeVisible({ timeout: 10000 });
+            const text = await dateTimeSpan.textContent();
+            if (!text || !text.trim()) {
+                throw new Error(`Stream card #${i + 1} does not display date/time.`);
+            }
+        }
+
+        // Optionally close modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verify that searching the stream tab with an invalid keyword shows zero results or empty state.
+     */
+    async verifySearchWithInvalidKeyword(invalidKeyword: string = "notarealkeyword123456") {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to Stream tab
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+
+        // Wait for stream content
+        await this.page.waitForTimeout(1000);
+
+        // Find the search field in the stream tab
+        const searchInput = this.page.locator('input[placeholder*="Search by keyword"]').first();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.fill(""); // clear any previous text
+        await searchInput.fill(invalidKeyword);
+        await searchInput.press('Enter');
+        await this.page.waitForTimeout(1000);
+
+        // Some apps show a "no records found" text, try to cover both
+        const noRecordsText = this.page.getByText(/no records available/i);
+        await expect(noRecordsText).toBeVisible({ timeout: 10000 });
+
+        // Optionally close modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verify that the stream search field with an empty input returns all records or does not display an error.
+     */
+    async verifySearchFieldWithEmptyInput() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to Stream tab
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+
+        // Wait for stream content
+        await this.page.waitForTimeout(1000);
+
+        // Find the search field in the stream tab
+        const searchInput = this.page.locator('input[placeholder*="Search by keyword"]').first();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+
+        // Clear search field (if needed) and submit empty input
+        await searchInput.fill(""); 
+        await searchInput.press('Enter');
+        await this.page.waitForTimeout(1000);
+
+        // Expect that there is at least one stream card (assuming non-empty listing)
+        const streamCards = this.page.locator("div.stream-body");
+        await expect(streamCards.first()).toBeVisible({ timeout: 10000 });
+
+        // Optionally close modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+
+    /**
+     * Verify the UI consistency of the stream tab:
+     */
+    async verifyStreamTabUIConsistency() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to Stream tab
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+
+        // Main: Stream tab container visible
+        const streamContainer = this.page.locator('div.stream-container, div.stream-list, div[class*="stream"]');
+        await expect(streamContainer.first()).toBeVisible({ timeout: 10000 });
+
+        // Search bar
+        const searchInput = this.page.locator('input[placeholder*="Search by keyword"]').first();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+
+        // At least one stream card loaded
+        const streamCards = this.page.locator('div.stream-body');
+        await expect(streamCards.first()).toBeVisible({ timeout: 10000 });
+
+        // Optionally close modal
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
         await this.page.waitForTimeout(500);
     }
 
