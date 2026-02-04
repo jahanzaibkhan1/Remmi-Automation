@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="58.798873999999834">
-<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-04T09:42:34.676Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.613" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify stream card is added when a primary agent is assigned" classname="Pages\Listing\listingStream.spec.ts" time="46.613">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.301640000000596">
+<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-04T10:01:30.999Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.819" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify stream card is added when a secondary agent is added" classname="Pages\Listing\listingStream.spec.ts" time="44.819">
 </testcase>
 </testsuite>
 </testsuites>

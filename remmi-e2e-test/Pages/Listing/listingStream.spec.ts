@@ -62,4 +62,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyStreamCardAppearsForPrimaryAgentAssignment('Jahanzaib Xenex');
     });
 
+    test('Test 9: Verify stream card is added when a secondary agent is added', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyStreamCardAppearsForSecondaryAgent();
+    });
+
 });
