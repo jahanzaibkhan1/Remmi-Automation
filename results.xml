@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="58.347497999999675">
-<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-04T10:52:33.989Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.62" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify date and time is displayed on each stream card" classname="Pages\Listing\listingStream.spec.ts" time="51.62">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.92745900000073">
+<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-04T10:59:46.214Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.454" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify searching the stream tab with an invalid keyword shows zero results" classname="Pages\Listing\listingStream.spec.ts" time="32.454">
 </testcase>
 </testsuite>
 </testsuites>
