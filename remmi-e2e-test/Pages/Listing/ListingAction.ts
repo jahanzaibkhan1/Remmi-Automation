@@ -17771,6 +17771,53 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    /**
+     * Verify that each stream card displays a date and time.
+     */
+    async verifyDateTimeDisplayedOnEachStreamCard() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to Stream tab
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+
+        // Wait until at least one stream card is visible
+        const streamCards = this.page.locator('div.stream-body');
+        await expect(streamCards.first()).toBeVisible({ timeout: 10000 });
+
+        // Ensure we got one or more stream cards
+        const count = await streamCards.count();
+        if (count === 0) {
+            throw new Error("No stream cards found on the Stream tab.");
+        }
+
+        // Check each stream card for the date/time span
+        for (let i = 0; i < count; i++) {
+            const card = streamCards.nth(i);
+            // span.f-10.text-dark contains the date/time info
+            const dateTimeSpan = card.locator('span.f-10.text-dark');
+            await expect(dateTimeSpan).toBeVisible({ timeout: 10000 });
+            const text = await dateTimeSpan.textContent();
+            if (!text || !text.trim()) {
+                throw new Error(`Stream card #${i + 1} does not display date/time.`);
+            }
+        }
+
+        // Optionally close modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
 
 
 
