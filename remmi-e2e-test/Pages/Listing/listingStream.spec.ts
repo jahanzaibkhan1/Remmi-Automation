@@ -102,5 +102,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyContactNameClickableInStreamCard();
     });
 
+    test('Test 17: Verify stream tab UI consistency (headers, layout, scroll, empty state)', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyStreamTabUIConsistency()
+    });
+
 
 });
