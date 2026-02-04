@@ -72,4 +72,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyStreamCardAppearsForCreatedTask('Automation Task');
     });
 
+    test('Test 11: Verify stream card is added when a listing is created', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyStreamCardAppearsForListingCreation();
+    });
+
 });
