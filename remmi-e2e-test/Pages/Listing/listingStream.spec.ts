@@ -92,5 +92,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifySearchWithInvalidKeyword("notarealkeyword123456");
     });
 
+    test('Test 15: Verify search field with empty input returns all records', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySearchFieldWithEmptyInput();
+    });
+
 
 });
