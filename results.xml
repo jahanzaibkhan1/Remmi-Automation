@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.6842330000028">
-<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-05T11:04:23.231Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.13" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Verify searching in the stream tab by agent name returns relevant records" classname="Pages\Listing\listingStream.spec.ts" time="36.13">
-<system-out>
-<![CDATA[Total Records: [33m3[39m
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="61.60174200000242">
+<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-05T11:18:05.011Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.743" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Verify page refresh does not remove stream cards" classname="Pages\Listing\listingStream.spec.ts" time="54.743">
 </testcase>
 </testsuite>
 </testsuites>
