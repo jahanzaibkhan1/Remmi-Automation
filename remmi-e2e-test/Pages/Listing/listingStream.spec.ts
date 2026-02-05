@@ -113,5 +113,15 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyStreamTabLoadingTime(5000);
     });
 
+    test('Test 19: Verify duplicate stream cards are not created for the same action', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyNoDuplicateStreamCardsForAction();
+    });
+
+    test('Test 20: Verify stream card updates when a listing is modified', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyStreamCardUpdatesOnListingModification();
+    });
+
 
 });
