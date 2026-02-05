@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.903607000000775">
-<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-05T10:47:49.018Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.622" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Verify search is not case sensitive" classname="Pages\Listing\listingStream.spec.ts" time="46.622">
-<system-out>
-<![CDATA[Total Records: [33m1[39m
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="57.96176200000197">
+<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-05T10:50:26.323Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.59" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Verify searching the stream tab with special characters" classname="Pages\Listing\listingStream.spec.ts" time="51.59">
 </testcase>
 </testsuite>
 </testsuites>

@@ -134,5 +134,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     });
 
 
+    test('Test 23: Verify searching the stream tab with special characters', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySearchWithInvalidKeyword('!@#$%^&*()_+|{}:"<>?`~[];\'\\,./');
+    });
+
 
 });
