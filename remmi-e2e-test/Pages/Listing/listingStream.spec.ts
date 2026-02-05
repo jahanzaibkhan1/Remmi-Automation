@@ -123,5 +123,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyStreamCardUpdatesOnListingModification();
     });
 
+    test('Test 21: Verify scroll does not stop loading new records', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyInfiniteScrollingInStreamTab();
+    });
+
 
 });
