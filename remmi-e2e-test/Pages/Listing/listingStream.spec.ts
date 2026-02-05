@@ -154,5 +154,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifySearchFieldWithEmptyInput();
     });
 
+    test('Test 27: Verify error handling for failed listing creation', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyErrorHandlingForFailedListingCreation();
+    });
+
 
 });
