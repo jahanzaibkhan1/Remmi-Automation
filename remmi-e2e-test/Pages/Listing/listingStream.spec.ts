@@ -37,12 +37,13 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
     test('Test 4: Verify stream card is added when a new inspection is created', async ({ sessionPage }) => {
       const listingActions = new ListingActions(sessionPage);
-      // Pass a sample inspection title; adjust as needed for your use case
+      await listingActions.addValidInspectionAndVerifySuccess();
       await listingActions.verifyStreamCardAppearsForNewInspection();
     });
 
     test('Test 5: Verify stream card is added when a contact is related', async ({ sessionPage }) => {
       const listingActions = new ListingActions(sessionPage);
+      await listingActions.addValidInspectionAndVerifySuccess();
       await listingActions.verifyStreamCardAppearsForRelatedContact();
     });
 
