@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="61.60174200000242">
-<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-05T11:18:05.011Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.743" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Verify page refresh does not remove stream cards" classname="Pages\Listing\listingStream.spec.ts" time="54.743">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.79062700000033">
+<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-05T11:24:07.558Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.112" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 26: Verify empty stream tab scenario" classname="Pages\Listing\listingStream.spec.ts" time="35.112">
 </testcase>
 </testsuite>
 </testsuites>

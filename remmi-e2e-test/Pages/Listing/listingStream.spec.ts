@@ -149,5 +149,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyStreamCardsPersistAfterRefresh();
     });
 
+    test('Test 26: Verify empty stream tab scenario', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySearchFieldWithEmptyInput();
+    });
+
 
 });
