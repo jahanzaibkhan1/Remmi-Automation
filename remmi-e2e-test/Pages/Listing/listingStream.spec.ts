@@ -139,5 +139,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifySearchWithInvalidKeyword('!@#$%^&*()_+|{}:"<>?`~[];\'\\,./');
     });
 
+    test('Test 24: Verify searching in the stream tab by agent name returns relevant records', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySearchFunctionalityInStreamTab('Jahanzaib Xenex');
+    });
+
 
 });
