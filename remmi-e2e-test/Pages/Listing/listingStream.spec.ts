@@ -37,12 +37,13 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
     test('Test 4: Verify stream card is added when a new inspection is created', async ({ sessionPage }) => {
       const listingActions = new ListingActions(sessionPage);
-      // Pass a sample inspection title; adjust as needed for your use case
+      await listingActions.addValidInspectionAndVerifySuccess();
       await listingActions.verifyStreamCardAppearsForNewInspection();
     });
 
     test('Test 5: Verify stream card is added when a contact is related', async ({ sessionPage }) => {
       const listingActions = new ListingActions(sessionPage);
+      await listingActions.addValidInspectionAndVerifySuccess();
       await listingActions.verifyStreamCardAppearsForRelatedContact();
     });
 
@@ -105,6 +106,57 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     test('Test 17: Verify stream tab UI consistency (headers, layout, scroll, empty state)', async ({ sessionPage }) => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyStreamTabUIConsistency()
+    });
+
+    test('Test 18: Verify stream tab loading time is within acceptable threshold', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyStreamTabLoadingTime(5000);
+    });
+
+    test('Test 19: Verify duplicate stream cards are not created for the same action', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyNoDuplicateStreamCardsForAction();
+    });
+
+    test('Test 20: Verify stream card updates when a listing is modified', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyStreamCardUpdatesOnListingModification();
+    });
+
+    test('Test 21: Verify scroll does not stop loading new records', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyInfiniteScrollingInStreamTab();
+    });
+
+    test('Test 22: Verify search is not case sensitive', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySearchFunctionalityInStreamTab('LisTing AdDed');
+    });
+
+
+    test('Test 23: Verify searching the stream tab with special characters', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySearchWithInvalidKeyword('!@#$%^&*()_+|{}:"<>?`~[];\'\\,./');
+    });
+
+    test('Test 24: Verify searching in the stream tab by agent name returns relevant records', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySearchFunctionalityInStreamTab('Jahanzaib Xenex');
+    });
+
+    test('Test 25: Verify page refresh does not remove stream cards', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyStreamCardsPersistAfterRefresh();
+    });
+
+    test('Test 26: Verify empty stream tab scenario', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySearchFieldWithEmptyInput();
+    });
+
+    test('Test 27: Verify error handling for failed listing creation', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyErrorHandlingForFailedListingCreation();
     });
 
 

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.208484999999406">
-<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-04T11:18:22.870Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.979" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify stream tab UI consistency (headers, layout, scroll, empty state)" classname="Pages\Listing\listingStream.spec.ts" time="42.979">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.32778699999675">
+<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-05T11:49:06.678Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.552" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Verify error handling for failed listing creation" classname="Pages\Listing\listingStream.spec.ts" time="37.552">
 </testcase>
 </testsuite>
 </testsuites>
