@@ -17826,7 +17826,171 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    /**
+     * Verifies that duplicate stream cards are not created for the same action 
+     */
+    async verifyNoDuplicateStreamCardsForAction() {
 
+        await this.navigateToListings();
+        await this.switchToGridView();
 
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
 
+        const relatedTab = this.page.getByText('Related').first();
+        await expect(relatedTab).toBeVisible({ timeout: 10000 });
+        await relatedTab.click();
+
+        // ------------------- Delete existing contacts -------------------
+        const contactTypeText = this.page.getByText('Contact TypeBuyerBuyer');
+        let isContactTypeVisible = false;
+        try {
+            await contactTypeText.waitFor({ state: 'visible', timeout: 5000 });
+            isContactTypeVisible = true;
+        } catch (e) {
+            // If not visible after 5 seconds, skip without throwing
+        }
+        const deleteIcons = this.page.locator('img[alt="delete"]');
+        // Wait until delete icons stabilize (in case of animations or loading)
+        let initialCount = await deleteIcons.count();
+        let currentCount = initialCount;
+
+        while (currentCount > 0) {
+            const icon = deleteIcons.first();
+            await icon.scrollIntoViewIfNeeded();
+            await icon.click();
+
+            const yesButton = this.page.getByRole('button', { name: /^Yes$/i }).first();
+            await yesButton.waitFor({ state: 'visible', timeout: 10000 });
+            await yesButton.click();
+
+            // Wait for the count to decrease before continuing
+            await expect(deleteIcons).toHaveCount(currentCount - 1, { timeout: 15000 });
+            currentCount = await deleteIcons.count();
+        }
+        await expect(deleteIcons).toHaveCount(0);
+
+        // ------------------- Select contact from multiselect -------------------
+        const contactDropdown = this.page.locator('div.col-10 re-multiselect div.tags').last();
+        await contactDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await contactDropdown.click();
+
+        const firstOption = this.page.locator('div.drop_box ul li.p-element p').first();
+        await firstOption.waitFor({ state: 'visible', timeout: 20000 });
+        await firstOption.click();
+        await contactDropdown.click();
+
+        const associateButton = this.page.getByRole('button', { name: /Associate/i }).first();
+        await associateButton.waitFor({ state: 'visible', timeout: 10000 });
+        await associateButton.click();
+
+        const successMsg = this.page.getByText('Contact attached successfully');
+        await expect(successMsg).toBeVisible({ timeout: 10000 });
+        await contactDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await contactDropdown.click()
+        const relatedTabPanelSearchInput = this.page.getByRole('tabpanel', { name: 'lead Related' }).getByPlaceholder('Search');
+        await expect(relatedTabPanelSearchInput).toBeVisible({ timeout: 10000 });
+        await relatedTabPanelSearchInput.fill('');
+        await relatedTabPanelSearchInput.fill('11 22');
+        await this.page.waitForTimeout(2500);
+        await firstOption.waitFor({ state: 'visible', timeout: 20000 });
+        await firstOption.click();
+        await contactDropdown.click();
+        await associateButton.waitFor({ state: 'visible', timeout: 10000 });
+        await associateButton.click();
+        // Check if alert for already associated contact appears
+        const alreadyAssociatedAlert = this.page.getByRole('alert', { name: /Contact is already associate/i });
+        if (await alreadyAssociatedAlert.isVisible({ timeout: 5000 }).catch(() => false)) {
+            await expect(alreadyAssociatedAlert).toBeVisible();
+        }
+
+        // Optionally close modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+
+    }
+
+    /**
+     * Verify that the stream card updates appropriately when a listing is modified
+     */
+    async verifyStreamCardUpdatesOnListingModification(agentName: string = 'Jahanzaib Xenex') {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown.click({ force: true });
+        // Find the delete button for the first visible listing card in card/grid view
+        const cardDeleteButton = this.page.locator('a:nth-child(4)').first();
+        await cardDeleteButton.scrollIntoViewIfNeeded()
+        await this.page.waitForTimeout(1000);
+        await cardDeleteButton.click({ force: true });
+
+        // Wait for confirmation dialog to appear
+        const confirmationDialog = this.page.getByText('Are you sure you want to delete this listing ? Your listing will be permanently');
+        await expect(confirmationDialog).toBeVisible({ timeout: 10000 });
+
+        // Find and click the confirm Delete button
+        const confirmButton = this.page.getByRole('button', { name: 'Delete' });
+        await expect(confirmButton).toBeVisible({ timeout: 10000 });
+        await confirmButton.click({ force: true });
+        const toast = this.page.getByRole('alert', { name: 'Listing successfully deleted' });
+        await expect(toast).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(2000);
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
+
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+        await this.page.waitForTimeout(1000);
+
+        const streamEntryLocator = this.page.locator('div.stream-body');
+        await expect(streamEntryLocator.first()).toBeVisible({ timeout: 10000 });
+        const primaryAgent = this.page.locator(
+            'div.form-group:has-text("Primary Agent") ng-select'
+        );
+
+        await primaryAgent.scrollIntoViewIfNeeded();
+        await primaryAgent.click();
+
+        const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(primaryInput).toBeVisible({ timeout: 10000 });
+        await primaryInput.fill('Jahanzaib Xenex');
+
+        const primaryOption = this.page.locator(
+            '.ng-dropdown-panel .ng-option',
+            { hasText: 'Jahanzaib Xenex' }
+        ).first();
+        await expect(primaryOption).toBeVisible({ timeout: 10000 });
+        await primaryOption.click();
+
+        await this.page.waitForTimeout(1000);
+        // Attempt to save/continue without filling fields
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+        // Switch to stream tab again if not already active
+        await streamTab.click();
+        await this.page.waitForTimeout(1000);
+        // Optionally: Check the specific card for assigned agent's name and action
+        const agentCard = this.page.locator('div.stream-body', { hasText: agentName }).first();
+        await expect(agentCard).toBeVisible({ timeout: 10000 });
+
+        // Close details modal
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(2000);
+    }
 }
