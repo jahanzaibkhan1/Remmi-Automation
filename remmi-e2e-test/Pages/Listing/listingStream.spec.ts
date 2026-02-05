@@ -108,5 +108,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyStreamTabUIConsistency()
     });
 
+    test('Test 18: Verify stream tab loading time is within acceptable threshold', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyStreamTabLoadingTime(5000);
+    });
+
 
 });
