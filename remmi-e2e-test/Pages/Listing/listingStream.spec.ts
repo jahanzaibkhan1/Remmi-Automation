@@ -128,5 +128,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyInfiniteScrollingInStreamTab();
     });
 
+    test('Test 22: Verify search is not case sensitive', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySearchFunctionalityInStreamTab('LisTing AdDed');
+    });
+
+
 
 });
