@@ -1,8 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.57083500000089">
-<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-05T10:44:02.554Z" hostname="chromium" tests="1" failures="0" skipped="0" time="26.296" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Verify scroll does not stop loading new records" classname="Pages\Listing\listingStream.spec.ts" time="26.296">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.903607000000775">
+<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-05T10:47:49.018Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.622" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Verify search is not case sensitive" classname="Pages\Listing\listingStream.spec.ts" time="46.622">
 <system-out>
-<![CDATA[Infinite scrolling loaded entries: [33m3[39m
+<![CDATA[Total Records: [33m1[39m
 ]]>
 </system-out>
 </testcase>
