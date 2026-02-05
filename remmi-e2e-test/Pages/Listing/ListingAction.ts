@@ -17995,7 +17995,7 @@ export class ListingActions {
     }
 
     // Verify page refresh does not remove stream cards
-    async verifyStreamCardsPersistAfterRefresh() { 
+    async verifyStreamCardsPersistAfterRefresh() {
         await this.navigateToListings();
         await this.switchToGridView();
 
@@ -18036,5 +18036,46 @@ export class ListingActions {
             await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verify error handling for failed listing creation (e.g. required fields missing, API failure, etc.)
+     */
+    async verifyErrorHandlingForFailedListingCreation() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        // Open the first listing card
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        // Assuming there is a button or icon to open the contact form in each card row
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick();
+        // Wait for contact form to be visible (adjust selector if needed)
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Without filling required fields, try to save listing
+        const saveBtn = this.page.getByRole('button', { name: /^save$/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+
+        // Wait for and check error message for required fields
+        const requiredErrorMsg = this.page.getByText(/required fields must be filled/i).first();
+        await expect(requiredErrorMsg).toBeVisible({ timeout: 5000 });
+
+        // Go to Stream tab
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+        // Verify the error message after failed listing creation is visible
+        const errorHandlingLocator = this.page.getByLabel('Stream').getByText('Please create the listing')
+        await expect(errorHandlingLocator).toBeVisible({ timeout: 10000 });
+
+        // Clean up: Close modal if still open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(800);
     }
 }
