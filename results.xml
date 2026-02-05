@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.208484999999406">
-<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-04T11:18:22.870Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.979" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify stream tab UI consistency (headers, layout, scroll, empty state)" classname="Pages\Listing\listingStream.spec.ts" time="42.979">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="29.63902400000021">
+<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-05T09:36:43.844Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.104" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Verify stream tab loading time is within acceptable threshold" classname="Pages\Listing\listingStream.spec.ts" time="23.104">
 </testcase>
 </testsuite>
 </testsuites>
