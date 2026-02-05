@@ -17993,5 +17993,48 @@ export class ListingActions {
 
         await this.page.waitForTimeout(2000);
     }
-    
+
+    // Verify page refresh does not remove stream cards
+    async verifyStreamCardsPersistAfterRefresh() { 
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        // Go to Stream tab
+        const streamTab = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.click();
+
+        // Ensure at least one stream entry is visible
+        const streamEntries = this.page.locator('div.stream-body');
+        await expect(streamEntries.first()).toBeVisible({ timeout: 10000 });
+
+        // Reload the page
+        await this.page.reload();
+
+        // Re-locate and open the first card again (in case the DOM changed)
+        const firstCardAfterReload = this.page.locator('div.s-property').first();
+        await expect(firstCardAfterReload).toBeVisible({ timeout: 30000 });
+        await firstCardAfterReload.click();
+
+        // Go to Stream tab again
+        const streamTabAfterReload = this.page.getByRole('tab', { name: /stream/i });
+        await expect(streamTabAfterReload).toBeVisible({ timeout: 10000 });
+        await streamTabAfterReload.click();
+
+        // Ensure stream entries are still present after refresh
+        const streamEntriesAfterReload = this.page.locator('div.stream-body');
+        await expect(streamEntriesAfterReload.first()).toBeVisible({ timeout: 10000 });
+
+        // Optionally close modal/dialog as cleanup
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
 }
