@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.15445199999958">
-<testsuite name="Pages\Listing\listingLead.spec.ts" timestamp="2026-02-09T11:03:06.931Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.324" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify lead listing details" classname="Pages\Listing\listingLead.spec.ts" time="31.324">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.700690999999644">
+<testsuite name="Pages\Listing\listingLead.spec.ts" timestamp="2026-02-09T11:07:26.492Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.099" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify lead source details" classname="Pages\Listing\listingLead.spec.ts" time="41.099">
 </testcase>
 </testsuite>
 </testsuites>

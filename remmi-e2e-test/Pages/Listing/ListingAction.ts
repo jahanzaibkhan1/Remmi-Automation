@@ -18392,4 +18392,33 @@ export class ListingActions {
         await this.page.waitForTimeout(800);
     }
 
+    /**
+     * Verify lead source details in the Lead Details popup for a newly created lead.
+     */
+    async verifyLeadSourceDetails() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        // Go to Lead tab
+        const leadTab = this.page.getByRole('tab', { name: 'lead Lead' });;
+        await expect(leadTab).toBeVisible({ timeout: 10000 });
+        await leadTab.click();
+        // Locate the "Lead Source" column cell for the first row in the lead table and verify it is "Billboard"
+        const leadSourceCell = this.page.locator('#customentitydatalist table tbody tr').first().locator('td').nth(5);
+        await expect(leadSourceCell).toHaveText(/Billboard/i, { timeout: 10000 });
+
+        // Clean up: Close modal if still open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(800);
+    }
+
+
 }
