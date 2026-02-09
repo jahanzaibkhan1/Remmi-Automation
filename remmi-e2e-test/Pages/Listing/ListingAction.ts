@@ -18529,5 +18529,74 @@ export class ListingActions {
         await this.page.waitForTimeout(800);
     }
 
+    /**
+     * Verifies that an existing lead can be modified and updates are reflected.
+     */
+    async verifyLeadModification() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        // Go to Lead tab
+        const leadTab = this.page.getByRole('tab', { name: 'lead Lead' });
+        await expect(leadTab).toBeVisible({ timeout: 10000 });
+        await leadTab.click();
+
+        // Click the edit button (assumes a pencil/edit icon exists in row)
+        const firstEditBtn = this.page.locator('#customentitydatalist table tbody tr').first();
+        await expect(firstEditBtn).toBeVisible({ timeout: 10000 });
+
+        const editDialog = this.page.getByRole('cell', { name: '22' }).first();
+        await expect(editDialog).toBeVisible({ timeout: 10000 });
+        await editDialog.click();
+
+        const editButton = this.page.locator('button._addNew img[src="assets/img/pencil.svg"]').first();
+        await editButton.waitFor({ state: 'visible', timeout: 20000 });
+        await expect(editButton).toBeEnabled({ timeout: 20000 });
+        await editButton.click();
+
+        // Change the Lead Status (choose a valid different status, e.g., 'Contacted')
+        const leadStatusSelect = this.page.locator('ng-select[formcontrolname="lead_status"]');
+        await leadStatusSelect.click();
+        await this.page.waitForTimeout(800);
+        const contactedOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Contact started' });
+        await expect(contactedOption).toBeVisible({ timeout: 10000 });
+        await contactedOption.click();
+        await this.page.waitForTimeout(1000);
+
+        // Click "Save & Close" to save changes
+        const saveAndCloseButton = this.page.getByRole('button', { name: /save/i }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await expect(saveAndCloseButton).toBeEnabled();
+        await saveAndCloseButton.click();
+
+        // Wait for and verify "lead updated successfully" toast message
+        const leadUpdatedMsg = this.page.getByText(/lead updated successfully/i);
+        await expect(leadUpdatedMsg).toBeVisible({ timeout: 10000 });
+
+        // Close the lead details modal if it's still open
+        const leadCloseBtn = this.page.locator('.pi.pi-times').last();
+        if (await leadCloseBtn.isVisible().catch(() => false)) {
+            await leadCloseBtn.click({ force: true });
+        }
+
+        // Ensure the first row is visible before checking status
+        const firstRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        const statusCell = firstRow.locator('td').nth(4);
+        await expect(statusCell).toHaveText(/Contact started/i, { timeout: 10000 });
+
+        // Clean up: Close modal if still open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(800);
+    }
+
 
 }
