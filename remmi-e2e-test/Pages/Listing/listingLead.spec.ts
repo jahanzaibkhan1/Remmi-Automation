@@ -24,4 +24,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.openLeadTab();
     });
+
+    test('Test 2: Verify New Lead tab', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyNewLeadButton();
+    });
+
 });

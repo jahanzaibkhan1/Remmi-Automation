@@ -18102,4 +18102,37 @@ export class ListingActions {
         await this.page.waitForTimeout(800);
 
     }
+
+    /**
+     * Verifies that the "New Lead" button is visible and clickable in the listing view.
+     */
+    async verifyNewLeadButton() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        const leadTab = this.page.getByRole('tab', { name: 'lead Lead' });
+        await expect(leadTab).toBeVisible({ timeout: 10000 });
+        await leadTab.click();
+
+        // Look for the "New Lead" button
+        const newLeadButton = this.page.getByRole('button', { name: /new lead/i });
+        await expect(newLeadButton).toBeVisible({ timeout: 10000 });
+        await expect(newLeadButton).toBeEnabled();
+        await newLeadButton.click();
+
+        const leadLink = this.page.locator('a').filter({ hasText: /^Lead$/ });
+        await expect(leadLink).toBeVisible({timeout:10000});
+
+        // Clean up: Close modal if still open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(800);
+    }
 }
