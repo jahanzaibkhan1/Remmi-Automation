@@ -30,4 +30,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyNewLeadButton();
     });
 
+    test('Test 3: Verify lead appears in the Lead module after creation', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyLeadAppearsInLeadModule();
+    });
+
 });
