@@ -61,4 +61,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyLeadListingDetails();
       });
 
+      test('Test 9: Verify lead source details', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyLeadSourceDetails();
+      });
+
 });
