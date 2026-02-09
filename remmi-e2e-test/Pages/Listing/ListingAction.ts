@@ -18310,5 +18310,51 @@ export class ListingActions {
         await this.page.waitForTimeout(800);
     }
 
+    // Verify lead assignment removal
+    async verifyLeadAssignmentRemoval() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        // Go to Lead tab
+        const leadTab = this.page.getByRole('tab', { name: 'lead Lead' });
+        await expect(leadTab).toBeVisible({ timeout: 10000 });
+        await leadTab.click();
+
+        // Wait for lead assignments to appear in the table
+        const assignmentTableRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await expect(assignmentTableRow).toBeVisible({ timeout: 10000 });
+
+        // Count the 'Remove Assigned' icons before removal
+        const removeAssignedIconsLocator = this.page.locator('i[ptooltip="Remove Assigned"].pi.pi-user-minus');
+        await removeAssignedIconsLocator.first().waitFor({ state: 'visible', timeout: 20000 });
+        const initialCount = await removeAssignedIconsLocator.count();
+        expect(initialCount).toBeGreaterThan(0);
+
+        // Remove the first assigned contact
+        const removeAssignedIcon = removeAssignedIconsLocator.first();
+        await expect(removeAssignedIcon).toBeVisible({ timeout: 10000 });
+        await removeAssignedIcon.click();
+        await this.page.waitForTimeout(1200);
+        // Wait for removal confirmation message using aria-label instead of text content
+        const removalSuccessMessage = this.page.locator('div[aria-label="Removed contact assignment for 11 22"]');
+        await expect(removalSuccessMessage).toBeVisible({ timeout: 10000 });
+        // Re-count the icons after removal, should be fewer
+        await this.page.waitForTimeout(1200);
+        const finalCount = await removeAssignedIconsLocator.count();
+        expect(finalCount).toBeLessThan(initialCount);
+
+        // Clean up: Close modal if still open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(800);
+    }
+
 
 }
