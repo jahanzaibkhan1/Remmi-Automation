@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.99774099999992">
-<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-09T05:46:00.070Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.742" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Verify excessive scrolling does not break the UI" classname="Pages\Listing\listingStream.spec.ts" time="41.742">
-<system-out>
-<![CDATA[Infinite scrolling loaded entries: [33m1[39m
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="66.06750900000054">
+<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-02-09T05:54:34.284Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.782" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 29: Verify invalid time/date formats do not affect stream tab" classname="Pages\Listing\listingStream.spec.ts" time="55.782">
 </testcase>
 </testsuite>
 </testsuites>
