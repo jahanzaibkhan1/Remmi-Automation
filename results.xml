@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.14849799999967">
-<testsuite name="Pages\Listing\listingLead.spec.ts" timestamp="2026-02-09T09:50:10.883Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.021" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify lead appears in the Lead module after creation" classname="Pages\Listing\listingLead.spec.ts" time="34.021">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.367603000000116">
+<testsuite name="Pages\Listing\listingLead.spec.ts" timestamp="2026-02-09T10:04:29.237Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.577" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify lead status details" classname="Pages\Listing\listingLead.spec.ts" time="35.577">
 </testcase>
 </testsuite>
 </testsuites>
