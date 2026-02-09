@@ -66,4 +66,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyLeadSourceDetails();
       });
 
+      test('Test 10: Verify duplicate lead creation does not merge records', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyDuplicateLeadCreation();
+      });
+
 });
