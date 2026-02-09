@@ -159,5 +159,15 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyErrorHandlingForFailedListingCreation();
     });
 
+    test('Test 28: Verify excessive scrolling does not break the UI', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyInfiniteScrollingInStreamTab();
+    });
+
+    test('Test 29: Verify invalid time/date formats do not affect stream tab', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyInspectionCannotAddPastDate();
+    });
+
 
 });
