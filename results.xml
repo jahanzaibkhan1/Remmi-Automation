@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="45.31381799999997">
-<testsuite name="Pages\Listing\listingLead.spec.ts" timestamp="2026-02-09T10:17:51.829Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.65" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify duplicate lead creation" classname="Pages\Listing\listingLead.spec.ts" time="37.65">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.61901899999753">
+<testsuite name="Pages\Listing\listingLead.spec.ts" timestamp="2026-02-09T10:50:59.710Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.902" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify lead assignment removal" classname="Pages\Listing\listingLead.spec.ts" time="31.902">
 </testcase>
 </testsuite>
 </testsuites>
