@@ -18078,4 +18078,28 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(800);
     }
+
+    /**
+     * Opens the "Lead" tab in the listing details view.
+     */
+    async openLeadTab() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        const leadTab = this.page.getByRole('tab', { name: 'lead Lead' });
+        await expect(leadTab).toBeVisible({ timeout: 10000 });
+        await leadTab.click();
+        // Clean up: Close modal if still open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(800);
+
+    }
 }
