@@ -71,4 +71,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyDuplicateLeadCreation();
       });
 
+      test('Test 11: Verify lead list updates after a new lead is added', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyLeadListUpdatesAfterAdd();
+      });
+
 });
