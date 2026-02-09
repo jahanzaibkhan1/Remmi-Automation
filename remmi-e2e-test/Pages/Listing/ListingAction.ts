@@ -18247,8 +18247,60 @@ export class ListingActions {
         await expect(leadTab).toBeVisible({ timeout: 10000 });
         await leadTab.click();
         // Locate the "Status" column cell for the first row in the lead table and verify it is "New"
-        const statusCell = this.page.locator('#customentitydatalist table tbody tr').first().locator('td').nth(4); 
+        const statusCell = this.page.locator('#customentitydatalist table tbody tr').first().locator('td').nth(4);
         await expect(statusCell).toHaveText(/New/i, { timeout: 10000 });
+
+        // Clean up: Close modal if still open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(800);
+    }
+
+    /**
+     * Verify duplicate lead creation.
+     */
+    async verifyDuplicateLeadCreation() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        // Go to Lead tab
+        const leadTab = this.page.getByRole('tab', { name: 'lead Lead' });
+        await expect(leadTab).toBeVisible({ timeout: 10000 });
+        await leadTab.click();
+        // Verify the first table row is visible after saving new lead
+        const firstTableRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await expect(firstTableRow).toBeVisible({ timeout: 10000 });
+        // Wait for duplicate icons to appear before the click
+        const duplicateIconsLocator = this.page.locator('i[ptooltip="Duplicate"].pi.pi-clone');
+        await expect(duplicateIconsLocator.first()).toBeVisible({ timeout: 10000 });
+        const initialCount = await duplicateIconsLocator.count();
+        expect(initialCount).toBeGreaterThan(0);
+
+        // Click the first duplicate icon
+        const duplicateIcon = duplicateIconsLocator.first();
+        await expect(duplicateIcon).toBeVisible({ timeout: 10000 });
+        await duplicateIcon.click();
+
+        await this.page.waitForTimeout(1200);
+
+        // Wait for the success message after duplication
+        const duplicateSuccessMessage = this.page.getByText('Duplicated!', { exact: true });
+        await expect(duplicateSuccessMessage).toBeVisible({ timeout: 10000 });
+
+        // Wait briefly to allow the UI to update the duplicate list
+        await this.page.waitForTimeout(1000);
+
+        // Count the duplicate icons again after duplication
+        const finalCount = await duplicateIconsLocator.count();
+        expect(finalCount).toBeGreaterThan(initialCount);
+
 
         // Clean up: Close modal if still open
         const closeBtn = this.page.locator('.pi.pi-times').first();
