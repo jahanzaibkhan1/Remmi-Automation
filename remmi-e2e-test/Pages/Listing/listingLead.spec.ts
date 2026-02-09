@@ -49,5 +49,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyLeadAssignmentRemoval();
     });
-    
+
+    // Verify reassignment of a lead after removal
+    test('Test 7: Verify reassignment of a lead after removal', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyLeadAppearsInLeadModule();
+      });
+
 });
