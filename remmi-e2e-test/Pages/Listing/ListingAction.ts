@@ -19023,4 +19023,53 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    /**
+     Task should not be created without valid data
+     */
+    async verifyTaskCannotBeCreatedWithoutValidData() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+        // Click "New Task" button
+        const newTaskBtn = this.page.getByRole('button', { name: /New Task/i });
+        await expect(newTaskBtn).toBeVisible({ timeout: 10000 });
+        await newTaskBtn.click();
+        // Input task title
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
+        await taskTitleInput.fill('Random Task');
+
+        // Try to save the task with empty fields (do not enter any data)
+        const saveBtn = this.page.getByRole('button', { name: /save/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+
+        // Close the task creation modal after attempting save
+        const closeTaskModalBtn = this.page.getByRole('button', { name: /close/i }).first();
+        if (await closeTaskModalBtn.isVisible().catch(() => false)) {
+            await closeTaskModalBtn.click({ force: true });
+        }
+
+        // Verify "Random Task" is not visible in the tasks table after invalid creation attempt
+        const randomTaskRow = this.page.locator('table tr', { hasText: 'Random Task' });
+        await expect(randomTaskRow).not.toBeVisible({ timeout: 2000 });
+
+        // Close the modal if still open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(500);
+    }
+
 }

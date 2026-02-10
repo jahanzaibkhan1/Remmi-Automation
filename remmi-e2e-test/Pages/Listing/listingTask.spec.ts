@@ -50,4 +50,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyTaskUpdatesReflectImmediately();
     });
 
+    test('Test 7: Task should not be created without valid data', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyTaskCannotBeCreatedWithoutValidData();
+    });
+
 });

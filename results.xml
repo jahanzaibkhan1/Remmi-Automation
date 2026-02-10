@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.576610000000336">
-<testsuite name="Pages\Listing\listingTask.spec.ts" timestamp="2026-02-10T09:49:23.533Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.757" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Task updates should reflect immediately" classname="Pages\Listing\listingTask.spec.ts" time="42.757">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.9989169999999">
+<testsuite name="Pages\Listing\listingTask.spec.ts" timestamp="2026-02-10T10:01:36.431Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.813" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Task should not be created without valid data" classname="Pages\Listing\listingTask.spec.ts" time="39.813">
 </testcase>
 </testsuite>
 </testsuites>
