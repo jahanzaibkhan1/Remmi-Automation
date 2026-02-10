@@ -18961,4 +18961,66 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    /**
+     * Verifies that updates to a task are reflected immediately in the task list UI after editing.
+     */
+    async verifyTaskUpdatesReflectImmediately() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Find the correct row for "Testing Task"
+        const taskRow = this.page.locator('table tbody tr').filter({ hasText: 'Testing Task' }).nth(3);
+        await expect(taskRow).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(500);
+
+        // Click the "Testing Task" cell to open editing
+        const testingTaskCell = taskRow.locator('td').first();
+        await expect(testingTaskCell).toBeVisible({ timeout: 5000 });
+        await testingTaskCell.click();
+
+        // Edit Job Type (Task Type) field
+        const jobTypeSelector = this.page.locator('ng-select[formcontrolname="job_type_id"] .ng-select-container');
+        await expect(jobTypeSelector).toBeVisible({ timeout: 10000 });
+        await jobTypeSelector.click();
+
+        // Select the "Tester" type from dropdown
+        const testerDropdownOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Tester' });
+        await expect(testerDropdownOption).toBeVisible({ timeout: 10000 });
+        await testerDropdownOption.click();
+
+        // Save the updated task
+        const saveBtn = this.page.getByRole('button', { name: /save/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+        // Wait for toast with "Task has been updated" to appear
+        await expect(this.page.getByText(/Task has been updated/i)).toBeVisible({ timeout: 10000 });
+        // Close the task modal if it's still open
+        const closeTaskBtn = this.page.locator('.pi.pi-times').last();
+        if (await closeTaskBtn.isVisible().catch(() => false)) {
+            await closeTaskBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1500);
+        await expect(taskRow).toBeVisible({ timeout: 10000 });
+        await expect(taskRow.locator('td').nth(1)).toHaveText(/Tester/i);
+
+        // Close the modal if still open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(500);
+    }
+
 }
