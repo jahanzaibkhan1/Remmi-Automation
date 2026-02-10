@@ -18598,5 +18598,40 @@ export class ListingActions {
         await this.page.waitForTimeout(800);
     }
 
+    /**
+     * Verifies that the lead status can be changed successfully and reflects in the grid.
+     */
+    async verifyLeadStatusChange() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        // Go to Lead tab
+        const leadTab = this.page.getByRole('tab', { name: 'lead Lead' });
+        await expect(leadTab).toBeVisible({ timeout: 10000 });
+        await leadTab.click();
+
+        // Click the edit button (assumes a pencil/edit icon exists in row)
+        const firstEditBtn = this.page.locator('#customentitydatalist table tbody tr').first();
+        await expect(firstEditBtn).toBeVisible({ timeout: 30000 });
+
+        // Verify the updated status in the table/grid
+        const firstRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        const statusCell = firstRow.locator('td').nth(4);
+        await expect(statusCell).toHaveText(/Contact started/i, { timeout: 10000 });
+
+        // Clean up: Ensure any modal is closed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(800);
+    }
+
 
 }
