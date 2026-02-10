@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="62.328783999999985">
-<testsuite name="Pages\Listing\listingLead.spec.ts" timestamp="2026-02-10T05:59:13.235Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.836" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify lead records time and date" classname="Pages\Listing\listingLead.spec.ts" time="46.836">
-<system-out>
-<![CDATA[Date cell text: 10/02/26
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.14411600000004">
+<testsuite name="Pages\Listing\listingLead.spec.ts" timestamp="2026-02-10T06:04:47.605Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.507" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify navigation between tabs on the listing detail page" classname="Pages\Listing\listingLead.spec.ts" time="28.507">
 </testcase>
 </testsuite>
 </testsuites>
