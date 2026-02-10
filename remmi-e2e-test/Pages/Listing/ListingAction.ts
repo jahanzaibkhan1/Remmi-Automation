@@ -18737,5 +18737,39 @@ export class ListingActions {
         await this.page.waitForTimeout(800);
     }
 
+    /**
+     * Verifies that clicking the "New Task" button opens the task creation form.
+     */
+    async verifyNewTaskButtonOpensTaskForm() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        // Go to Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Click the "New Task" button
+        const newTaskButton = this.page.getByRole('button', { name: /new task/i });
+        await expect(newTaskButton).toBeVisible({ timeout: 10000 });
+        await newTaskButton.click();
+
+        // Expect the task creation form to be visible (update selector as appropriate)
+        const taskForm = this.page.locator('a').filter({ hasText: /^Task$/ });
+        await expect(taskForm).toBeVisible({ timeout: 10000 });
+
+        // Clean up: Close modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(800);
+    }
+
 
 }
