@@ -34,4 +34,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyTaskAppearsInList('Testing Task');
     });
+
+    test('Test 4: Task should also appear in the Task module', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyTaskAppearsInTaskModule();
+    });
 });

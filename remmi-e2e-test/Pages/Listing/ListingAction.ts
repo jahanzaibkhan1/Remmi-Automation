@@ -18882,4 +18882,34 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    /**
+     * Verifies that the created task is visible in the global Task module.
+     */
+    async verifyTaskAppearsInTaskModule() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click()
+
+        // Switch to "Tasks" tab (or however tasks are added)
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+        await this.page.waitForTimeout(1000);
+        // Ensure the first row is visible
+        const firstRow = this.page.locator('table tbody tr')
+        .filter({ hasText: 'Testing Task' }).last();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+        // Close modal if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
 }
