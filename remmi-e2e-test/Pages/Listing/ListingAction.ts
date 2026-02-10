@@ -18665,11 +18665,47 @@ export class ListingActions {
 
         const cellText = (await dateCell.textContent())?.trim() || '';
         console.log('Date cell text:', cellText);
-        
+
         expect(cellText).toMatch(/^\d{2}\/\d{2}\/\d{2}$/);
-        
+
 
         // Clean up: Ensure any modal is closed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(800);
+    }
+
+    /**
+     * Verifies navigation between tabs on the listing detail page.
+     * Checks that each main tab is accessible and visible after navigation.
+     */
+    async verifyNavigationBetweenTabs() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        // Go to Lead tab
+        const leadTab = this.page.getByRole('tab', { name: 'lead Lead' });
+        await expect(leadTab).toBeVisible({ timeout: 10000 });
+        await leadTab.click();
+
+        // Ensure the first row is visible
+        const firstRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+
+        // Click on the Calendar tab
+        const calendarTab = this.page.getByRole('tab', { name: /calendar/i });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+        await leadTab.click();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        // Clean up: Close modal if open
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });

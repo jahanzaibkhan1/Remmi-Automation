@@ -91,5 +91,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyLeadRecordsTimeAndDate();
       });
 
+      test('Test 15: Verify navigation between tabs on the listing detail page', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyNavigationBetweenTabs();
+      });
+
 
 });
