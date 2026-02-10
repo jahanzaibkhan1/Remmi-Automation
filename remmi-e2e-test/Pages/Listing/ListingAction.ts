@@ -19071,5 +19071,4 @@ export class ListingActions {
 
         await this.page.waitForTimeout(500);
     }
-
 }
