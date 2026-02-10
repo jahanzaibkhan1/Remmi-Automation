@@ -19304,4 +19304,43 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(500);
     }
+
+    /**
+     * Verifies that the dropdown list opens when clicking on the Task Status field in the "New Task" form.
+     */
+    async verifyTaskStatusDropdownOpens() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Click "New Task" button
+        const newTaskBtn = this.page.getByRole('button', { name: /New Task/i });
+        await expect(newTaskBtn).toBeVisible({ timeout: 10000 });
+        await newTaskBtn.click();
+
+        // Edit Task Status field
+        const statusSelector = this.page.locator("//ng-select[@placeholder='Select Status']//div[@role='combobox']");
+        await expect(statusSelector).toBeVisible({ timeout: 10000 });
+        await statusSelector.click();
+
+        const dropdownOptions = this.page.locator('.ng-dropdown-panel .ng-option');
+        await expect(dropdownOptions.first()).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+
+        // Optionally, close the popup
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
 }
