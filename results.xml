@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="61.30795899999992">
-<testsuite name="Pages\Listing\listingLead.spec.ts" timestamp="2026-02-09T11:46:11.910Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.075" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify lead modification" classname="Pages\Listing\listingLead.spec.ts" time="54.075">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.91529700000025">
+<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-10T11:35:48.610Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.62" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that a dropdown list opens when clicking on Task Status field." classname="Pages\Listing\listingTaskForm.spec.ts" time="33.62">
 </testcase>
 </testsuite>
 </testsuites>
