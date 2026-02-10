@@ -18871,7 +18871,7 @@ export class ListingActions {
         }
         // Ensure the first row is visible
         const firstRow = this.page.locator('table tbody tr')
-        .filter({ hasText: 'Testing Task' }).last();
+            .filter({ hasText: 'Testing Task' }).last();
         await expect(firstRow).toBeVisible({ timeout: 10000 });
         await this.page.waitForTimeout(1000);
         // Close modal if needed
@@ -18901,10 +18901,59 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
         // Ensure the first row is visible
         const firstRow = this.page.locator('table tbody tr')
-        .filter({ hasText: 'Testing Task' }).last();
+            .filter({ hasText: 'Testing Task' }).last();
         await expect(firstRow).toBeVisible({ timeout: 10000 });
         await this.page.waitForTimeout(1000);
         // Close modal if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verifies that the task list displays the correct details for a given task.
+     */
+    async verifyTaskListDisplaysCorrectDetails() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing card
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Switch to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Ensure the row for "Testing Task" is visible
+        const taskRow = this.page.locator('table tbody tr')
+            .filter({ hasText: 'Testing Task' }).nth(3);
+        await expect(taskRow).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+
+        // Verify each column value by name for better clarity
+        const columns = {
+            Title: taskRow.locator('td').nth(0),
+            JobType: taskRow.locator('td').nth(1),
+            TaskStatus: taskRow.locator('td').nth(2),
+            DueDate: taskRow.locator('td').nth(3)
+        };
+
+        await expect(columns.Title).toHaveText(/Testing Task/i);
+        await expect(columns.JobType).toHaveText(/Door Knocks/i);
+        await expect(columns.TaskStatus).toHaveText(/Not Started/i);
+        const dueDateText = (await columns.DueDate.textContent())?.trim() ?? '';
+        console.log('Due Date Text:', dueDateText);
+        expect(dueDateText).not.toBe('');
+
+        await this.page.waitForTimeout(1000);
+
+        // Close modal if visible
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });

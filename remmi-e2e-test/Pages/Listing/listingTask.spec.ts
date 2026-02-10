@@ -39,4 +39,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyTaskAppearsInTaskModule();
     });
+
+    test('Test 5: Task list should display correct details for the created task', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyTaskListDisplaysCorrectDetails();
+    });
+    
 });
