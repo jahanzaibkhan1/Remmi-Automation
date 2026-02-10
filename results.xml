@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.003266999999994">
-<testsuite name="Pages\Listing\listingTask.spec.ts" timestamp="2026-02-10T08:42:53.624Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.032" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Task should also appear in the Task module" classname="Pages\Listing\listingTask.spec.ts" time="24.032">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.04226199999999">
+<testsuite name="Pages\Listing\listingTask.spec.ts" timestamp="2026-02-10T09:24:46.868Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.733" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Task list should display correct details for the created task" classname="Pages\Listing\listingTask.spec.ts" time="34.733">
+<system-out>
+<![CDATA[Due Date Text: 11/02/26
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
