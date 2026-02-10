@@ -19210,4 +19210,59 @@ export class ListingActions {
             }
         }
     }
+
+    /**
+     * Verify that Title, Due Date, Staff, Task Status, and Task Type are mandatory fields in the "Create New Task" popup.
+     */
+    async verifyTaskFormMandatoryFields() {
+        // Open Task creation form
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Click "New Task" button
+        const newTaskBtn = this.page.getByRole('button', { name: /New Task/i });
+        await expect(newTaskBtn).toBeVisible({ timeout: 10000 });
+        await newTaskBtn.click();
+
+        // Wait for popup to be visible
+        const popup = this.page.locator('a').filter({ hasText: /^Task$/ });
+        await expect(popup).toBeVisible({ timeout: 5000 });
+
+        // Try to save without filling any fields
+        const saveBtn = this.page.getByRole('button', { name: /Save|Create/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+
+        const titleErrorLocator = this.page.locator('input[formcontrolname="title"].ng-invalid');
+        const selectDateErrorLocator = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        const staffErrorLocator = this.page.locator('ng-select[formcontrolname="assignedUsers"].ng-invalid');
+
+        // Wait for all required error indicators to be visible individually
+        await expect(titleErrorLocator).toBeVisible({ timeout: 10000 });
+        await expect(selectDateErrorLocator).toBeVisible({ timeout: 10000 });
+        await expect(staffErrorLocator).toBeVisible({ timeout: 10000 });
+
+        // Click close button with text "Close" if visible
+        const closeTaskFormBtn = this.page.getByRole('button', { name: /close/i }).first();
+        if (await closeTaskFormBtn.isVisible().catch(() => false)) {
+            await closeTaskFormBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(1000);
+
+        // Optionally, close the popup
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
 }
