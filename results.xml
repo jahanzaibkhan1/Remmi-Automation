@@ -1,6 +1,81 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.14411600000004">
-<testsuite name="Pages\Listing\listingLead.spec.ts" timestamp="2026-02-10T06:04:47.605Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.507" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify navigation between tabs on the listing detail page" classname="Pages\Listing\listingLead.spec.ts" time="28.507">
+<testsuites id="" name="" tests="15" failures="1" skipped="0" errors="0" time="234.35584700000007">
+<testsuite name="Pages\Listing\listingLead.spec.ts" timestamp="2026-02-10T07:29:58.052Z" hostname="chromium" tests="15" failures="1" skipped="0" time="218.275" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Open Lead tab" classname="Pages\Listing\listingLead.spec.ts" time="35.901">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify New Lead tab" classname="Pages\Listing\listingLead.spec.ts" time="4.033">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify lead appears in the Lead module after creation" classname="Pages\Listing\listingLead.spec.ts" time="17.455">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify lead status details" classname="Pages\Listing\listingLead.spec.ts" time="3.55">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify duplicate lead creation" classname="Pages\Listing\listingLead.spec.ts" time="5.801">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify lead assignment removal" classname="Pages\Listing\listingLead.spec.ts" time="7.517">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify reassignment of a lead after removal" classname="Pages\Listing\listingLead.spec.ts" time="37.947">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify lead listing details" classname="Pages\Listing\listingLead.spec.ts" time="4.578">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify lead source details" classname="Pages\Listing\listingLead.spec.ts" time="4.419">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify duplicate lead creation does not merge records" classname="Pages\Listing\listingLead.spec.ts" time="14.796">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify lead list updates after a new lead is added" classname="Pages\Listing\listingLead.spec.ts" time="17.233">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify lead modification" classname="Pages\Listing\listingLead.spec.ts" time="17.133">
+<failure message="listingLead.spec.ts:79:7 Test 12: Verify lead modification" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Listing\listingLead.spec.ts:79:7 › Listing side Menu Tests - Remmi E2E › Test 12: Verify lead modification 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  locator('.ng-dropdown-panel .ng-option').filter({ hasText: 'Contact started' })
+    Expected: visible
+    Received: hidden
+    Timeout:  10000ms
+
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for locator('.ng-dropdown-panel .ng-option').filter({ hasText: 'Contact started' })
+        4 × locator resolved to <div role="option" id="afe7d891de65-0" aria-selected="false" class="ng-option ng-star-inserted">…</div>
+          - unexpected value "hidden"
+
+
+       at Pages\Listing\ListingAction.ts:18566
+
+      18564 |         await this.page.waitForTimeout(800);
+      18565 |         const contactedOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Contact started' });
+    > 18566 |         await expect(contactedOption).toBeVisible({ timeout: 10000 });
+            |                                       ^
+      18567 |         await contactedOption.click();
+      18568 |         await this.page.waitForTimeout(1000);
+      18569 |
+        at ListingActions.verifyLeadModification (E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\ListingAction.ts:18566:39)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\listingLead.spec.ts:81:9
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Listing-listingLead--84bb4-12-Verify-lead-modification-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Listing-listingLead--84bb4-12-Verify-lead-modification-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Listing-listingLead--84bb4-12-Verify-lead-modification-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Listing-listingLead--84bb4-12-Verify-lead-modification-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify lead status change" classname="Pages\Listing\listingLead.spec.ts" time="39.335">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify lead records time and date" classname="Pages\Listing\listingLead.spec.ts" time="3.655">
+<system-out>
+<![CDATA[Date cell text: 10/02/26
+]]>
+</system-out>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify navigation between tabs on the listing detail page" classname="Pages\Listing\listingLead.spec.ts" time="4.922">
 </testcase>
 </testsuite>
 </testsuites>
