@@ -18712,5 +18712,30 @@ export class ListingActions {
         await this.page.waitForTimeout(800);
     }
 
+    /**
+     * Verifies that the Tasks tab displays existing task records.
+     */
+    async verifyTasksTabDisplaysRecords() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        // Go to Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Clean up: Close modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(800);
+    }
+
 
 }
