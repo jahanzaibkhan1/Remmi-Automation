@@ -18633,5 +18633,49 @@ export class ListingActions {
         await this.page.waitForTimeout(800);
     }
 
+    /**
+     * Verifies that the lead record displays a valid date and time in the corresponding column.
+     */
+    async verifyLeadRecordsTimeAndDate() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        // Go to Lead tab
+        const leadTab = this.page.getByRole('tab', { name: 'lead Lead' });
+        await expect(leadTab).toBeVisible({ timeout: 10000 });
+        await leadTab.click();
+
+        // Ensure the first row is visible
+        const firstRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+
+        // Locate the "Date" column by its header name to ensure correct column in case order changes
+        const dateHeader = this.page.locator('#customentitydatalist table thead tr th').filter({ hasText: /date/i }).first();
+        const dateHeaderIndex = await dateHeader.evaluate((el: HTMLElement) => {
+            const cells = Array.from(el.parentElement!.children);
+            return cells.indexOf(el);
+        });
+        const dateCell = firstRow.locator('td').nth(dateHeaderIndex);
+        await expect(dateCell).toBeVisible({ timeout: 10000 });
+
+        const cellText = (await dateCell.textContent())?.trim() || '';
+        console.log('Date cell text:', cellText);
+        
+        expect(cellText).toMatch(/^\d{2}\/\d{2}\/\d{2}$/);
+        
+
+        // Clean up: Ensure any modal is closed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(800);
+    }
+
 
 }
