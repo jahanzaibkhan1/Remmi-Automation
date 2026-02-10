@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.160878000000025">
-<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-10T11:13:44.350Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.98" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that Title, Due Date, Staff, Task Status, and Task Type are mandatory fields in the &quot;Create New Task&quot; popup" classname="Pages\Listing\listingTaskForm.spec.ts" time="29.98">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="57.74301099999994">
+<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-10T11:27:46.859Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.048" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify that a dropdown list opens when clicking on Task Type field in the &quot;New Task&quot; form" classname="Pages\Listing\listingTaskForm.spec.ts" time="46.048">
 </testcase>
 </testsuite>
 </testsuites>
