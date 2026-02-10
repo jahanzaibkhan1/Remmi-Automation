@@ -24,4 +24,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyTasksTabDisplaysRecords();
     });
+
+    test('Test 2: "New Task" button should open the task creation form', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyNewTaskButtonOpensTaskForm();
+    });
 });
