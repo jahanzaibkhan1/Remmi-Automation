@@ -81,4 +81,20 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyLeadModification();
       });
 
+      test('Test 13: Verify lead status change', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyLeadStatusChange();
+      });
+
+      test('Test 14: Verify lead records time and date', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyLeadRecordsTimeAndDate();
+      });
+
+      test('Test 15: Verify navigation between tabs on the listing detail page', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyNavigationBetweenTabs();
+      });
+
+
 });
