@@ -19071,4 +19071,143 @@ export class ListingActions {
 
         await this.page.waitForTimeout(500);
     }
+
+    /**
+     * Verifies that tasks remain linked to the correct listing after creation.
+     * Creates a new task for a listing, navigates away, then returns to confirm the task is present only in that listing.
+     */
+    async verifyTasksRemainLinkedToCorrectListing(taskTitle: string = 'Linked Listing Task') {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("div.s-property").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Save the title or ID of the currently opened listing for later verification
+        const listingTitleLocator = this.page.locator('.listing-title, .property-title').first();
+        let currentListingTitle = '';
+        if (await listingTitleLocator.isVisible().catch(() => false)) {
+            currentListingTitle = await listingTitleLocator.innerText();
+        }
+
+        // Go to Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Add a new task to this listing
+        const addTaskButton = this.page.getByRole('button', { name: /Add Task|New Task/i });
+        await expect(addTaskButton).toBeVisible({ timeout: 10000 });
+        await addTaskButton.click();
+
+        // Enter task title & assign due date and any required fields
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
+        await taskTitleInput.fill(taskTitle);
+
+        // Fill in due date (pick tomorrow)
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+        const targetDay = t.getDate();
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+        const headerText = await header.innerText();
+        const [monthName, year] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+        const monthDifference = (t.getFullYear() - parseInt(year)) * 12 + (t.getMonth() - monthIndex);
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+            await this.page.waitForTimeout(200);
+        }
+        const dayLocator = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
+        );
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
+        await dayLocator.first().click({ force: true });
+
+        // Assign staff (if required)
+        const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"]');
+        if (await staffSelect.isVisible().catch(() => false)) {
+            await staffSelect.click();
+            const staffInput = this.page.locator('ng-select[formcontrolname="assignedUsers"] input[type="text"]');
+            await staffInput.fill('Jahanzaib');
+            const staffOption = this.page.locator('.ng-dropdown-panel .ng-option', {
+                hasText: 'Jahanzaib'
+            }).first();
+            await expect(staffOption).toBeVisible({ timeout: 5000 });
+            await staffOption.click();
+        }
+
+        // Save the task
+        const saveBtn = this.page.getByRole('button', { name: /save/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+
+        // Wait for the task creation modal to close
+        await this.page.waitForTimeout(1000);
+
+        // Confirm the task appears in the tasks list for this listing
+        const createdTaskRow = this.page.locator('table tr', { hasText: taskTitle });
+        await expect(createdTaskRow).toBeVisible({ timeout: 10000 });
+
+        // Close the listing detail (if there is a close button)
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+
+        // Navigate to a different listing
+        const secondListingCard = this.page.locator("div.s-property").nth(1);
+        await expect(secondListingCard).toBeVisible({ timeout: 30000 });
+        await secondListingCard.click();
+
+        // Go to Tasks tab for the second listing
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+        await this.page.waitForTimeout(800);
+
+        // The created task should NOT appear in this listing's tasks
+        const taskRowInSecondListing = this.page.locator('table tr', { hasText: taskTitle });
+        await expect(taskRowInSecondListing).not.toBeVisible({ timeout: 2000 });
+
+        // Cleanup: Optionally, return to the original listing and verify again
+        // (This confirms the task is persistently linked)
+        if (currentListingTitle) {
+            // Close second listing if needed
+            if (await closeBtn.isVisible().catch(() => false)) {
+                await closeBtn.click({ force: true });
+            }
+            await this.page.waitForTimeout(500);
+
+            // Find original listing by title and click it
+            const originalListingCard = this.page.locator('.s-property', { hasText: currentListingTitle }).first();
+            await expect(originalListingCard).toBeVisible({ timeout: 10000 });
+            await originalListingCard.click();
+
+            // Go to Tasks tab
+            await expect(tasksTab).toBeVisible({ timeout: 10000 });
+            await tasksTab.click();
+            await this.page.waitForTimeout(800);
+
+            // The created task should still be present here
+            const taskRow = this.page.locator('table tr', { hasText: taskTitle });
+            await expect(taskRow).toBeVisible({ timeout: 5000 });
+
+            // Close out
+            if (await closeBtn.isVisible().catch(() => false)) {
+                await closeBtn.click({ force: true });
+            }
+        }
+    }
 }

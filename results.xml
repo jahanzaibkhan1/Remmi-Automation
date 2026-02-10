@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="59.0706660000002">
-<testsuite name="Pages\Listing\listingTask.spec.ts" timestamp="2026-02-10T10:07:42.787Z" hostname="chromium" tests="1" failures="0" skipped="0" time="50.92" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Task status updates should be logged correctly" classname="Pages\Listing\listingTask.spec.ts" time="50.92">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.602571">
+<testsuite name="Pages\Listing\listingTask.spec.ts" timestamp="2026-02-10T10:11:58.442Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.862" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Tasks should remain linked to the correct listing" classname="Pages\Listing\listingTask.spec.ts" time="36.862">
 </testcase>
 </testsuite>
 </testsuites>
