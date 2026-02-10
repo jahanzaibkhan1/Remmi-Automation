@@ -18193,9 +18193,7 @@ export class ListingActions {
         await sourceOption.click();
         await this.page.waitForTimeout(1000);
         // Click the placeholder in the tags element
-        const tagPlaceholder = this.page.locator(
-            "div.d-flex.align-items-center.gap-2.ml-2 div.tags"
-        );
+        const tagPlaceholder = this.page.locator('.d-flex > label > re-multiselect > .box > .tags');
         await tagPlaceholder.waitFor({ state: 'visible' });
         await tagPlaceholder.click();
         const searchTagInput = this.page.getByRole('textbox', { name: 'Search' }).last();
@@ -18219,6 +18217,7 @@ export class ListingActions {
         // Get the "lead added successfully" toast message
         const leadAddedSuccessMsg = this.page.getByText(/lead added successfully/i);
         await expect(leadAddedSuccessMsg).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(2000);
         // Verify the first table row is visible after saving new lead
         const firstTableRow = this.page.locator('#customentitydatalist table tbody tr').first();
         await expect(firstTableRow).toBeVisible({ timeout: 10000 });
@@ -18487,7 +18486,7 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
 
         // Add a tag if available
-        const tagPlaceholder = this.page.locator('div.d-flex.align-items-center.gap-2.ml-2 div.tags');
+        const tagPlaceholder = this.page.locator('.d-flex > label > re-multiselect > .box > .tags');
         await tagPlaceholder.waitFor({ state: 'visible' });
         await tagPlaceholder.click();
         const searchTagInput = this.page.getByRole('textbox', { name: 'Search' }).last();
@@ -18515,7 +18514,7 @@ export class ListingActions {
         await expect(leadAddedSuccessMsg).toBeVisible({ timeout: 10000 });
 
         // Wait for the lead list to update and verify it has at least one more row than before
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(2000);
         const leadRowsAfter = this.page.locator('#customentitydatalist table tbody tr');
         await leadRowsAfter.first().waitFor({ state: 'visible', timeout: 20000 });
         const leadCountAfter = await leadRowsAfter.count();
@@ -18577,13 +18576,13 @@ export class ListingActions {
         // Wait for and verify "lead updated successfully" toast message
         const leadUpdatedMsg = this.page.getByText(/lead updated successfully/i);
         await expect(leadUpdatedMsg).toBeVisible({ timeout: 10000 });
-
+        await this.page.waitForTimeout(2000);
         // Close the lead details modal if it's still open
         const leadCloseBtn = this.page.locator('.pi.pi-times').last();
         if (await leadCloseBtn.isVisible().catch(() => false)) {
             await leadCloseBtn.click({ force: true });
         }
-
+        await this.page.waitForTimeout(2000);
         // Ensure the first row is visible before checking status
         const firstRow = this.page.locator('#customentitydatalist table tbody tr').first();
         await expect(firstRow).toBeVisible({ timeout: 10000 });
