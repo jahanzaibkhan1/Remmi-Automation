@@ -55,4 +55,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyTaskCannotBeCreatedWithoutValidData();
     });
 
+    test('Test 8: Task status updates should be logged correctly', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyTaskUpdatesReflectImmediately();
+    });
+
 });
