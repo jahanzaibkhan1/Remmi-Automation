@@ -60,4 +60,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyTaskUpdatesReflectImmediately();
     });
 
+    test('Test 9: Tasks should remain linked to the correct listing', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyTaskAppearsInList('Testing Task');
+    });
+
 });
