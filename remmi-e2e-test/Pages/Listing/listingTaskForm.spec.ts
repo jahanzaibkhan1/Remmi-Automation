@@ -24,4 +24,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyTaskFormMandatoryFields();
     });
+
+    test('Test 2: Verify that a dropdown list opens when clicking on Task Type field in the "New Task" form', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyTaskTypeDropdownOpens();
+    });
+    
 });
