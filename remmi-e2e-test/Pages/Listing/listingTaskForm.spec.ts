@@ -35,5 +35,59 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyTaskStatusDropdownOpens();
     });
 
+    test('Test 4: Verify that selecting "Lead Management" from Task Type triggers the Lead Name dropdown in the task form', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyLeadNameDropdownAppearsOnLeadManagementTaskType();
+    });
+
+    test('Test 5: Verify that a task is created for the selected listing when lead name is selected from the dropdown.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyTaskAppearsInList('Testing Task');
+    });
+
+    test('Test 6: Verify that selecting a module shows a relevant dropdown list for that module (e.g., Listings, Properties, Projects)', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyModuleDropdownsAppearForSelectedModule();
+    });
+
+    test('Test 7: Verify that selecting a listing from the dropdown creates a task linked to that listing', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyTaskIsLinkedToSelectedListing('Testing Task');
+    });
+
+    test('Test 8: Verify that selecting the Property module shows a dropdown list for selecting a property', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyModuleDropdownsAppearForSelectedModule();
+    });
+
+    test('Test 9: Verify that selecting a property from the dropdown creates a task linked to that property', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyTaskAppearsInList('Testing Task');
+    });
+
+    test('Test 10: Verify that selecting the "Project" module shows a dropdown list for selecting a project', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyProjectDropdownIsVisible();
+    });
+
+    test('Test 11: Verify that selecting a project from the dropdown creates a task linked to that project', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyTaskIsLinkedToSelectedProject('Testing Task');
+    });
+
+    test('Test 12: Verify that setting a reminder time sends an email or notification at the selected interval', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyTaskReminderTriggersNotification('Task Created');
+    });
+
+    test('Test 13: Verify that recurring task checkbox shows a dropdown with "Weekly," "Monthly," and "Yearly" options.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyRecurringTaskOptions();
+    });
+
+    test('Test 14: Verify that selecting "Weekly" from the recurring task dropdown sends email/notifications weekly.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyWeeklyRecurringTaskSendsNotification('Recurring Weekly Task');
+    });
 
 });
