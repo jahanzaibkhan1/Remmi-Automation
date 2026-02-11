@@ -60,4 +60,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyModuleDropdownsAppearForSelectedModule();
     });
 
+    test('Test 9: Verify that selecting a property from the dropdown creates a task linked to that property', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyTaskAppearsInList('Testing Task');
+    });
+
 });
