@@ -19391,4 +19391,52 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(500);
     }
+
+    /**
+     * Verifies that selecting a module shows the relevant dropdown list for that module 
+     * (e.g., Listings, Properties, Projects) in the task form.
+     */
+    async verifyModuleDropdownsAppearForSelectedModule() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Click "New Task" button
+        const newTaskBtn = this.page.getByRole('button', { name: /New Task/i });
+        await expect(newTaskBtn).toBeVisible({ timeout: 10000 });
+        await newTaskBtn.click();
+
+        // Handle module: Listings
+        // Focus the selectModule input for dropdown (uses Playwright to focus the <input> inside ng-select)
+        const selectModule = this.page.locator("//ng-select[@placeholder='Select Module']//div[@role='combobox']");
+        await selectModule.waitFor({state: 'visible', timeout:10000});
+        await selectModule.click();
+
+        let moduleOptionLocator = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: /listings?/i });
+        await expect(moduleOptionLocator).toBeVisible({ timeout: 10000 });
+        await moduleOptionLocator.click();
+
+        let listingDropdownLocator = this.page.locator("div[class='create-task-dropdown col-sm-6 ng-star-inserted'] div[class='tags']");
+        await listingDropdownLocator.waitFor({ state: 'visible', timeout: 10000 });
+        await listingDropdownLocator.click();
+        // Wait for the related dropdown options (checkbox list) to appear, then check the first one
+        const listingOption = this.page.locator("re-multiselect ul li").nth(1);
+        await expect(listingOption).toBeVisible({ timeout: 10000 });
+
+        // Optionally, close the popup
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
 }
