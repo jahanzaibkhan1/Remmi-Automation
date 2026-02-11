@@ -39,5 +39,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyLeadNameDropdownAppearsOnLeadManagementTaskType();
     });
-    
+
+    test('Test 5: Verify that a task is created for the selected listing when lead name is selected from the dropdown.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyTaskAppearsInList('Testing Task');
+    });
+
 });
