@@ -65,4 +65,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyTaskAppearsInList('Testing Task');
     });
 
+    test('Test 10: Verify that selecting the "Project" module shows a dropdown list for selecting a project', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyProjectDropdownIsVisible();
+    });
+
 });
