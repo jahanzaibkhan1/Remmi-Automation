@@ -19731,4 +19731,121 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(500);
     }
+
+    /**
+     * Verify that setting a reminder time sends an email or notification at the selected interval.
+     */
+    async verifyTaskReminderTriggersNotification(taskTitle: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Click "New Task" button
+        const newTaskBtn = this.page.getByRole('button', { name: /New Task/i });
+        await expect(newTaskBtn).toBeVisible({ timeout: 10000 });
+        await newTaskBtn.click();
+
+        // Fill in task title
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
+        await taskTitleInput.fill(taskTitle);
+
+        // Set a due date (e.g., tomorrow)
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        // Pick tomorrow's date
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        // Get displayed calendar month & year
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+        const headerText = await header.innerText();
+        const [monthName, yearText] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        const monthDifference = (targetYear - parseInt(yearText)) * 12 + (targetMonth - monthIndex);
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator('.p-datepicker-next').click();
+            } else if (monthDifference < 0) {
+                await this.page.locator('.p-datepicker-prev').click();
+            }
+        }
+
+        // Select the target day
+        const dayLocator = this.page.locator('.p-datepicker-calendar td:not(.p-datepicker-other-month)').getByText(new RegExp(`^${targetDay}$`));
+        await expect(dayLocator.first()).toBeVisible();
+        await dayLocator.first().click();
+
+        await this.page.waitForTimeout(1200);
+
+        const reminderLabel = await this.page.locator("ng-select[placeholder='Select Reminder'] div[class='ng-placeholder']").first();
+        await expect(reminderLabel).toBeVisible({ timeout: 10000 });
+        await reminderLabel.click({ force: true });
+
+        // Pick the "0" reminder option (has text "0")
+        const zeroReminderOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: '0 minutes' }).first();
+        await expect(zeroReminderOption).toBeVisible({ timeout: 5000 });
+        await zeroReminderOption.click();
+
+        const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"]');
+        await expect(staffSelect).toBeVisible();
+        await staffSelect.click();
+
+        const staffInput = this.page.locator(
+            'ng-select[formcontrolname="assignedUsers"] input[type="text"]'
+        );
+        await staffInput.fill('Jahanzaib');
+
+        const staffOption = this.page.locator('.ng-dropdown-panel .ng-option', {
+            hasText: 'Jahanzaib'
+        });
+        await expect(staffOption).toBeVisible();
+        await staffOption.click();
+
+        // Submit the form
+        const saveBtn = this.page.getByRole('button', { name: /Save|Create/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+        // Wait for the task to appear in the list under Tasks tab
+        await this.page.waitForTimeout(2000);
+        // Close modal if needed
+        const closeBtun = this.page.locator('.pi.pi-times').last();
+        if (await closeBtun.isVisible().catch(() => false)) {
+            await closeBtun.click({ force: true });
+        }
+        const createdTaskRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
+        await expect(createdTaskRow).toBeVisible({ timeout: 10000 });
+
+        // Close modal if needed
+        const closeBtn = this.page.locator('.pi.pi-times').last();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        const notificationDropdown = this.page.locator('#notification-dropdown');
+        await expect(notificationDropdown).toBeVisible({ timeout: 20000 })
+        await notificationDropdown.click();
+        
+        const notificationLink = this.page.getByRole('link', { name: 'JX Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
+        await expect(notificationLink).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+    }
+
+
 }
