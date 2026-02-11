@@ -75,4 +75,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyTaskIsLinkedToSelectedProject('Testing Task');
     });
 
+    test('Test 12: Verify that setting a reminder time sends an email or notification at the selected interval', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyTaskReminderTriggersNotification('Task Created');
+    });
+
 });
