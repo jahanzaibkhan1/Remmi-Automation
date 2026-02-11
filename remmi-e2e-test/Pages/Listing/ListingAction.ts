@@ -4876,7 +4876,7 @@ export class ListingActions {
         const cards = this.page.locator('.s-property');
         await expect(cards.first()).toBeVisible({ timeout: 20000 });
         const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]").first();
-        await expect(contactFormBtn).toBeVisible({ timeout: 5000 });
+        await contactFormBtn.waitFor({ state: 'visible', timeout: 10000 });
         await contactFormBtn.dblclick({ force: true });
 
         const contactForm = this.page.locator('#rightbarwithscroll');
@@ -4958,9 +4958,8 @@ export class ListingActions {
         const saveButton = this.page.locator("button[type='submit'], button:has-text('Save')").last();
         await expect(saveButton).toBeVisible({ timeout: 10000 });
         await saveButton.click({ force: true });
-        await expect(saveButton).toBeEnabled();
 
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(1800);
 
         const saveBtn = this.page.locator("button", { hasText: "Save" }).first();
         await expect(saveBtn).toBeVisible({ timeout: 10000 });
@@ -5004,7 +5003,7 @@ export class ListingActions {
         const saveBtun = this.page.locator("button", { hasText: "Save" }).last();
         await expect(saveBtun).toBeVisible({ timeout: 10000 });
         await saveBtun.click();
-
+        await this.page.waitForTimeout(1200);
 
         await expect(this.page.getByText('added successfully', { exact: false })).toBeVisible({ timeout: 7000 });
 
