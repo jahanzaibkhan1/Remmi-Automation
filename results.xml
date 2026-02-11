@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.85170900000073">
-<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-11T06:49:53.336Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.298" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that selecting the Property module shows a dropdown list for selecting a property" classname="Pages\Listing\listingTaskForm.spec.ts" time="30.298">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.68082499999925">
+<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-11T06:53:46.278Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.446" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify that selecting a property from the dropdown creates a task linked to that property" classname="Pages\Listing\listingTaskForm.spec.ts" time="28.446">
 </testcase>
 </testsuite>
 </testsuites>
