@@ -19531,7 +19531,7 @@ export class ListingActions {
         const clearSelectedIcon = this.page.locator('.create-task-dropdown > re-multiselect > .box > .tags > .selected_one > .pi');
         await clearSelectedIcon.waitFor({ state: 'visible', timeout: 10000 });
         await expect(clearSelectedIcon).toBeEnabled({ timeout: 10000 });
-        await clearSelectedIcon.click({force: true});
+        await clearSelectedIcon.click({ force: true });
         // Wait and select a listing from the dropdown list of listings
         const listingDropdown = this.page.locator(
             "div.create-task-dropdown.col-sm-6.ng-star-inserted div.tags"
@@ -19546,14 +19546,14 @@ export class ListingActions {
         // Optionally, select from the dropdown if it appears after search
         const desiredListingOption = this.page.locator('#Task_1').getByText('Coates Street, Laidley, QLD 4341').last();
         await desiredListingOption.waitFor({ state: 'visible', timeout: 10000 });
-        await desiredListingOption.click({force: true});
+        await desiredListingOption.click({ force: true });
         // Save task
         const saveTaskButton = this.page.getByRole('button', { name: /Save|Create/i }).first();
         await expect(saveTaskButton).toBeVisible({ timeout: 10000 });
         await saveTaskButton.click();
 
         await this.page.waitForTimeout(2000);
-    
+
         const closetask = this.page.locator('.pi.pi-times').first();
         if (await closetask.isVisible().catch(() => false)) {
             await closetask.click({ force: true });
@@ -19587,7 +19587,8 @@ export class ListingActions {
     }
 
     //Verify that selecting the "Project" module shows a dropdown list for selecting a project.
-    async verifyProjectDropdownIsVisible() { await this.navigateToListings();
+    async verifyProjectDropdownIsVisible() {
+        await this.navigateToListings();
         await this.switchToGridView();
 
         // Open the first listing card
@@ -19615,6 +19616,115 @@ export class ListingActions {
         await expect(moduleOptionLocator).toBeVisible({ timeout: 10000 });
 
         // Optionally, close the popup
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+    /**
+     * Verifies that selecting a project from the dropdown creates a task linked to that project.
+     */
+    async verifyTaskIsLinkedToSelectedProject(taskTitle: string = 'Testing Task') {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Click "New Task" button
+        const newTaskBtn = this.page.getByRole('button', { name: /New Task/i });
+        await expect(newTaskBtn).toBeVisible({ timeout: 10000 });
+        await newTaskBtn.click();
+
+        // Fill in task title
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
+        await taskTitleInput.fill(taskTitle);
+
+        // Set a due date (e.g., tomorrow)
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        // Pick tomorrow's date
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        // Get displayed calendar month & year
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+        const headerText = await header.innerText();
+        const [monthName, yearText] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        const monthDifference = (targetYear - parseInt(yearText)) * 12 + (targetMonth - monthIndex);
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator('.p-datepicker-next').click();
+            } else if (monthDifference < 0) {
+                await this.page.locator('.p-datepicker-prev').click();
+            }
+        }
+
+        // Select the target day
+        const dayLocator = this.page.locator('.p-datepicker-calendar td:not(.p-datepicker-other-month)').getByText(new RegExp(`^${targetDay}$`));
+        await expect(dayLocator.first()).toBeVisible();
+        await dayLocator.first().click();
+
+        const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"]');
+        await expect(staffSelect).toBeVisible();
+        await staffSelect.click();
+
+        const staffInput = this.page.locator(
+            'ng-select[formcontrolname="assignedUsers"] input[type="text"]'
+        );
+        await staffInput.fill('Jahanzaib');
+
+        const staffOption = this.page.locator('.ng-dropdown-panel .ng-option', {
+            hasText: 'Jahanzaib'
+        });
+        await expect(staffOption).toBeVisible();
+        await staffOption.click();
+
+        // Select the "Project" module from the module dropdown
+        const selectModule = this.page.locator("//ng-select[@placeholder='Select Module']//div[@role='combobox']");
+        await selectModule.waitFor({ state: 'visible', timeout: 10000 });
+        await selectModule.click();
+
+        const projectOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: /project/i });
+        await expect(projectOption).toBeVisible({ timeout: 10000 });
+        await projectOption.click();
+
+
+        // Submit the form
+        const saveBtn = this.page.getByRole('button', { name: /Save|Create/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+        // Wait for the task to appear in the list under Tasks tab
+        await this.page.waitForTimeout(2000);
+        // Close modal if needed
+        const closeBtun = this.page.locator('.pi.pi-times').last();
+        if (await closeBtun.isVisible().catch(() => false)) {
+            await closeBtun.click({ force: true });
+        }
+        // Wait for the task to appear in the list under Tasks tab
+        await this.page.waitForTimeout(500); // Small wait for save to complete
+
+        const createdTaskRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).first();
+        await expect(createdTaskRow).toBeVisible({ timeout: 10000 });
+
+        // Close modal if needed
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });

@@ -70,4 +70,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyProjectDropdownIsVisible();
     });
 
+    test('Test 11: Verify that selecting a project from the dropdown creates a task linked to that project', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyTaskIsLinkedToSelectedProject('Testing Task');
+    });
+
 });

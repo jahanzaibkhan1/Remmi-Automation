@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.85538200000115">
-<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-11T06:59:11.477Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.177" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that selecting the &quot;Project&quot; module shows a dropdown list for selecting a project" classname="Pages\Listing\listingTaskForm.spec.ts" time="27.177">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="59.971671000000086">
+<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-11T07:15:29.895Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.128" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify that selecting a project from the dropdown creates a task linked to that project" classname="Pages\Listing\listingTaskForm.spec.ts" time="45.128">
 </testcase>
 </testsuite>
 </testsuites>
