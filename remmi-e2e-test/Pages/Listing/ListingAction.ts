@@ -19342,4 +19342,53 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(500);
     }
+
+    /**
+     * Verifies that selecting "Lead Management" from Task Type triggers the Lead Name dropdown.
+     */
+    async verifyLeadNameDropdownAppearsOnLeadManagementTaskType() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Click "New Task" button
+        const newTaskBtn = this.page.getByRole('button', { name: /New Task/i });
+        await expect(newTaskBtn).toBeVisible({ timeout: 10000 });
+        await newTaskBtn.click();
+
+        // Click Task Type dropdown
+        const taskTypeSelector = this.page.locator("ng-select[formcontrolname='job_type_id'] .ng-select-container");
+        await expect(taskTypeSelector).toBeVisible({ timeout: 10000 });
+        await taskTypeSelector.click();
+
+        // Select "Lead Management" option
+        const leadMgmtOpt = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: /lead management/i });
+        await expect(leadMgmtOpt).toBeVisible({ timeout: 10000 });
+        await leadMgmtOpt.click();
+
+        // Check that the Lead Name dropdown appears
+        const leadNameDropdown = this.page.locator("ng-select[formcontrolname='lead_id']");
+        await expect(leadNameDropdown).toBeVisible({ timeout: 5000 });
+
+        // Optionally, interact with Lead Name dropdown to ensure it is functional
+        await leadNameDropdown.click();
+        const leadNameOption = this.page.locator('.ng-dropdown-panel .ng-option').first();
+        await expect(leadNameOption).toBeVisible({ timeout: 5000 });
+
+        // Optionally, close the popup
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
 }

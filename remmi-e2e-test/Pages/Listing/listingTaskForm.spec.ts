@@ -35,5 +35,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyTaskStatusDropdownOpens();
     });
 
-
+    test('Test 4: Verify that selecting "Lead Management" from Task Type triggers the Lead Name dropdown in the task form', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyLeadNameDropdownAppearsOnLeadManagementTaskType();
+    });
+    
 });
