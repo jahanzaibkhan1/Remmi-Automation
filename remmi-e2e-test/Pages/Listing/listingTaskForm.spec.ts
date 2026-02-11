@@ -80,4 +80,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyTaskReminderTriggersNotification('Task Created');
     });
 
+    test('Test 13: Verify that recurring task checkbox shows a dropdown with "Weekly," "Monthly," and "Yearly" options.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyRecurringTaskOptions();
+    });
+
 });
