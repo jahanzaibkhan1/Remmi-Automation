@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.91529700000025">
-<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-10T11:35:48.610Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.62" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that a dropdown list opens when clicking on Task Status field." classname="Pages\Listing\listingTaskForm.spec.ts" time="33.62">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="52.546563999999314">
+<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-11T05:00:38.934Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.479" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that selecting &quot;Lead Management&quot; from Task Type triggers the Lead Name dropdown in the task form" classname="Pages\Listing\listingTaskForm.spec.ts" time="40.479">
 </testcase>
 </testsuite>
 </testsuites>
