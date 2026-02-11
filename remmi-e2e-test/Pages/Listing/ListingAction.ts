@@ -19899,5 +19899,182 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    /**
+     * Verify that selecting "Weekly" from the recurring task dropdown triggers weekly email/notifications.
+     */
+    async verifyWeeklyRecurringTaskSendsNotification(taskTitle: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Click "New Task" button
+        const newTaskBtn = this.page.getByRole('button', { name: /New Task/i });
+        await expect(newTaskBtn).toBeVisible({ timeout: 10000 });
+        await newTaskBtn.click();
+
+        // Fill in task title
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
+        await taskTitleInput.fill(taskTitle);
+
+        // Set a due date (e.g., tomorrow)
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        // Pick tomorrow's date
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        // Get displayed calendar month & year
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+        const headerText = await header.innerText();
+        const [monthName, yearText] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        const monthDifference = (targetYear - parseInt(yearText)) * 12 + (targetMonth - monthIndex);
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator('.p-datepicker-next').click();
+            } else if (monthDifference < 0) {
+                await this.page.locator('.p-datepicker-prev').click();
+            }
+        }
+
+        // Select the target day
+        const dayLocator = this.page.locator('.p-datepicker-calendar td:not(.p-datepicker-other-month)').getByText(new RegExp(`^${targetDay}$`));
+        await expect(dayLocator.first()).toBeVisible();
+        await dayLocator.first().click();
+
+        await this.page.waitForTimeout(1200);
+
+        // Select the timer (reminder) dropdown and choose 9:00 AM
+        const timerLabel = this.page.getByText('Select Timer', { exact: true });
+        await expect(timerLabel).toBeVisible({ timeout: 10000 });
+        await timerLabel.click({ force: true });
+
+        // Wait for the options to appear and select "9:00 AM"
+        const nineAmOption = this.page.getByRole('option', { name: '9am' }).first();
+        await expect(nineAmOption).toBeVisible({ timeout: 5000 });
+        await nineAmOption.click({ force: true });
+
+
+         // Click the "Recurring Task" checkbox
+         const recurringCheckbox = this.page.locator('.form-group > .d-flex > .p-element > .p-checkbox > .p-checkbox-box').first();
+         await expect(recurringCheckbox).toBeVisible({ timeout: 20000 });
+         await recurringCheckbox.click();
+ 
+         // After checking, the frequency dropdown should appear
+         const frequencySelect = this.page.getByText('Select Recurring Type');
+         await expect(frequencySelect).toBeVisible({ timeout: 5000 });
+         await frequencySelect.click();
+ 
+         // Wait for the dropdown options to be visible
+         const dropdownPanel = this.page.locator('.ng-dropdown-panel');
+         await expect(dropdownPanel).toBeVisible({ timeout: 5000 });
+ 
+         // Assert that "Weekly", "Monthly", "Yearly" options are present
+         const weeklyOption = dropdownPanel.locator('.ng-option', { hasText: 'Weekly' });
+         const monthlyOption = dropdownPanel.locator('.ng-option', { hasText: 'Monthly' });
+         const yearlyOption = dropdownPanel.locator('.ng-option', { hasText: 'Yearly' });
+ 
+         await expect(weeklyOption).toBeVisible({ timeout: 5000 });
+         await expect(monthlyOption).toBeVisible({ timeout: 5000 });
+         await expect(yearlyOption).toBeVisible({ timeout: 5000 });
+
+         await weeklyOption.click({force:true});
+
+        // Always pick tomorrow's date in the recurring date input
+        const recurringDateInput = this.page.locator('input[placeholder="dd/mm/yy"]').last();
+        await expect(recurringDateInput).toBeVisible({ timeout: 10000 });
+        await recurringDateInput.click();
+
+        // Calculate tomorrow's date
+        const recurringTomorrow = new Date();
+        recurringTomorrow.setDate(recurringTomorrow.getDate() + 1);
+        const recurringTargetDay = recurringTomorrow.getDate();
+        const recurringTargetMonth = recurringTomorrow.getMonth();
+        const recurringTargetYear = recurringTomorrow.getFullYear();
+
+        // Get displayed calendar month & year
+        const recurringCalendarHeader = this.page.locator(".p-datepicker-title");
+        await expect(recurringCalendarHeader).toBeVisible();
+        const recurringCalendarHeaderText = await recurringCalendarHeader.innerText();
+        const [recurringMonthName, recurringYearText] = recurringCalendarHeaderText.trim().split(" ");
+        const recurringMonthIndex = new Date(`${recurringMonthName} 1, 2000`).getMonth();
+
+        const recurringMonthDifference = (recurringTargetYear - parseInt(recurringYearText)) * 12 + (recurringTargetMonth - recurringMonthIndex);
+        for (let i = 0; i < Math.abs(recurringMonthDifference); i++) {
+            if (recurringMonthDifference > 0) {
+                await this.page.locator('.p-datepicker-next').click();
+            } else if (recurringMonthDifference < 0) {
+                await this.page.locator('.p-datepicker-prev').click();
+            }
+        }
+
+        // Select tomorrow in the calendar
+        const recurringDayLocator = this.page.locator('.p-datepicker-calendar td:not(.p-datepicker-other-month)').getByText(new RegExp(`^${recurringTargetDay}$`));
+        await expect(recurringDayLocator.first()).toBeVisible();
+        await recurringDayLocator.first().click();
+        await this.page.waitForTimeout(1000);
+
+        const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"]');
+        await expect(staffSelect).toBeVisible();
+        await staffSelect.click();
+
+        const staffInput = this.page.locator(
+            'ng-select[formcontrolname="assignedUsers"] input[type="text"]'
+        );
+        await staffInput.fill('Jahanzaib');
+
+        const staffOption = this.page.locator('.ng-dropdown-panel .ng-option', {
+            hasText: 'Jahanzaib'
+        });
+        await expect(staffOption).toBeVisible();
+        await staffOption.click();
+
+        // Submit the form
+        const saveBtn = this.page.getByRole('button', { name: /Save|Create/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+        // Wait for the task to appear in the list under Tasks tab
+        await this.page.waitForTimeout(2000);
+        // Close modal if needed
+        const closeBtun = this.page.locator('.pi.pi-times').last();
+        if (await closeBtun.isVisible().catch(() => false)) {
+            await closeBtun.click({ force: true });
+        }
+
+        const createdTaskRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
+        await expect(createdTaskRow).toBeVisible({ timeout: 10000 });
+
+        // Close modal if needed
+        const closeBtn = this.page.locator('.pi.pi-times').last();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        const notificationDropdown = this.page.locator('#notification-dropdown');
+        await expect(notificationDropdown).toBeVisible({ timeout: 20000 })
+        await notificationDropdown.click();
+
+        const notificationLink = this.page.getByRole('link', { name: 'JX Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
+        await expect(notificationLink).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+    }
+
 
 }

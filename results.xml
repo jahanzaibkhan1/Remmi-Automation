@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.33237200000044">
-<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-11T11:33:51.246Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.673" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that recurring task checkbox shows a dropdown with &quot;Weekly,&quot; &quot;Monthly,&quot; and &quot;Yearly&quot; options." classname="Pages\Listing\listingTaskForm.spec.ts" time="30.673">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="67.81815799999983">
+<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-11T12:09:28.454Z" hostname="chromium" tests="1" failures="0" skipped="0" time="49.874" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that selecting &quot;Weekly&quot; from the recurring task dropdown sends email/notifications weekly." classname="Pages\Listing\listingTaskForm.spec.ts" time="49.874">
 </testcase>
 </testsuite>
 </testsuites>
