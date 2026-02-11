@@ -19841,9 +19841,61 @@ export class ListingActions {
         const notificationDropdown = this.page.locator('#notification-dropdown');
         await expect(notificationDropdown).toBeVisible({ timeout: 20000 })
         await notificationDropdown.click();
-        
+
         const notificationLink = this.page.getByRole('link', { name: 'JX Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
         await expect(notificationLink).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verify that the recurring task checkbox shows a dropdown with "Weekly," "Monthly," and "Yearly" options.
+     */
+    async verifyRecurringTaskOptions() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Click "New Task" button
+        const newTaskBtn = this.page.getByRole('button', { name: /New Task/i });
+        await expect(newTaskBtn).toBeVisible({ timeout: 10000 });
+        await newTaskBtn.click();
+        // Click the "Recurring Task" checkbox
+        const recurringCheckbox = this.page.locator('.form-group > .d-flex > .p-element > .p-checkbox > .p-checkbox-box').first();
+        await expect(recurringCheckbox).toBeVisible({ timeout: 20000 });
+        await recurringCheckbox.click();
+
+        // After checking, the frequency dropdown should appear
+        const frequencySelect = this.page.getByText('Select Recurring Type');
+        await expect(frequencySelect).toBeVisible({ timeout: 5000 });
+        await frequencySelect.click();
+
+        // Wait for the dropdown options to be visible
+        const dropdownPanel = this.page.locator('.ng-dropdown-panel');
+        await expect(dropdownPanel).toBeVisible({ timeout: 5000 });
+
+        // Assert that "Weekly", "Monthly", "Yearly" options are present
+        const weeklyOption = dropdownPanel.locator('.ng-option', { hasText: 'Weekly' });
+        const monthlyOption = dropdownPanel.locator('.ng-option', { hasText: 'Monthly' });
+        const yearlyOption = dropdownPanel.locator('.ng-option', { hasText: 'Yearly' });
+
+        await expect(weeklyOption).toBeVisible({ timeout: 2000 });
+        await expect(monthlyOption).toBeVisible({ timeout: 2000 });
+        await expect(yearlyOption).toBeVisible({ timeout: 2000 });
+        // Close modal if needed
+        const closeBtn = this.page.locator('.pi.pi-times').last();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
         await this.page.waitForTimeout(1000);
     }
 
