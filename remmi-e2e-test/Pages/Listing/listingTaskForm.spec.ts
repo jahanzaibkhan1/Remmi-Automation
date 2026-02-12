@@ -143,4 +143,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifySubTaskIsVisibleInParentTask();
     });
 
+    test('Test 25: Verify that when the sub task is opened, a parent task dropdown is shown next to the team field.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyParentTaskDropdownVisibleOnSubTaskOpen();
+    });
+
 });
