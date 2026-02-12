@@ -123,4 +123,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyFileUploadNoDuplicationOnDoubleSave(imagePath);
     });
 
+    test('Test 21: Verify that the added file appears correctly after saving the task.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyFileAppearsAfterTaskSave();
+    });
+
 });
