@@ -133,4 +133,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyCreateSubTaskOptionVisible();
     });
 
+    test('Test 23: Verify that clicking on the "Create Sub Task" button shows a field below the staff section to enter a sub task title.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyCreateSubTaskFieldAppearsBelowStaff();
+    });
+    
 });
