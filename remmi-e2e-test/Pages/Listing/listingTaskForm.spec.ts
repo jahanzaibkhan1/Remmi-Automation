@@ -90,4 +90,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyWeeklyRecurringTaskSendsNotification('Recurring Weekly Task');
     });
 
+    test('Test 15: Verify that selecting "Monthly" from the recurring task dropdown sends email/notifications monthly.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyMonthlyRecurringTaskSendsNotification('Recurring Monthly Task');
+    });
+
 });
