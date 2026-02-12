@@ -162,5 +162,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyTaskAppearsInList('Testing Task');
     });
+    test('Test 29: Verify that changes to the original task do not affect the copied task after it has been created.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyCopyTaskCopiesAllFieldsCorrectly();
+    });
 
 });
