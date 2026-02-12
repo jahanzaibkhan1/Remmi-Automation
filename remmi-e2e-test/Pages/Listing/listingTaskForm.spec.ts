@@ -128,4 +128,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyFileAppearsAfterTaskSave();
     });
 
+    test('Test 22: Verify that after creating a task, the "Create Sub Task" option becomes visible.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyCreateSubTaskOptionVisible();
+    });
+
 });
