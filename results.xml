@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.33990499999933">
-<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-12T07:23:48.805Z" hostname="chromium" tests="1" failures="0" skipped="0" time="56.557" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Verify that the added file appears correctly after saving the task." classname="Pages\Listing\listingTaskForm.spec.ts" time="56.557">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.7654179999996">
+<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-12T07:31:50.024Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.514" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Verify that after creating a task, the &quot;Create Sub Task&quot; option becomes visible." classname="Pages\Listing\listingTaskForm.spec.ts" time="35.514">
 </testcase>
 </testsuite>
 </testsuites>
