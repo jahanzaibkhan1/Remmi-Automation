@@ -20779,4 +20779,51 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(500);
     }
+
+    /**
+     * Verifies that the added file appears correctly after saving the task.
+     */
+    async verifyFileAppearsAfterTaskSave() {
+
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).nth(1);
+        await expect(taskRows).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(500);
+
+        // Click the "Testing Task" cell to open editing
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Recurring Yearly Task' });
+        await expect(testingTaskCell).toBeVisible({ timeout: 5000 });
+        await testingTaskCell.click();
+
+        await this.page.waitForTimeout(1200);
+
+        // Click the "Add Files" button to open the file dialog
+        const addFilesBtn = this.page.getByRole('button', { name: /Add Files/i });
+        await addFilesBtn.scrollIntoViewIfNeeded();
+        await expect(addFilesBtn).toBeVisible({ timeout: 10000 });
+        const uploadedImagesAfterSave = this.page.locator('.img-fluid');
+        await expect(uploadedImagesAfterSave).toBeVisible({ timeout: 10000 });
+        await expect(uploadedImagesAfterSave).toHaveCount(1);
+
+        
+        // Close modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+
+    }
 }
