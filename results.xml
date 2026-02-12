@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="84.34328700000047">
-<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-12T11:03:58.641Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.23" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Verify that selecting a different parent task from the parent task dropdown updates the sub task’s parent task." classname="Pages\Listing\listingTaskForm.spec.ts" time="48.23">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="86.93170399999991">
+<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-12T11:11:00.689Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.185" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Verify that the task is visible in the task list after it is saved." classname="Pages\Listing\listingTaskForm.spec.ts" time="55.185">
 </testcase>
 </testsuite>
 </testsuites>
