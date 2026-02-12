@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.00872099999897">
-<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-12T07:51:10.435Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.902" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Verify that clicking on the &quot;Create Sub Task&quot; button shows a field below the staff section to enter a sub task title." classname="Pages\Listing\listingTaskForm.spec.ts" time="44.902">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="73.15680200000108">
+<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-12T08:29:36.550Z" hostname="chromium" tests="1" failures="0" skipped="0" time="59.108" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Verify that the sub task is visible within the parent task after creation." classname="Pages\Listing\listingTaskForm.spec.ts" time="59.108">
 </testcase>
 </testsuite>
 </testsuites>

@@ -137,5 +137,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyCreateSubTaskFieldAppearsBelowStaff();
     });
-    
+
+    test('Test 24: Verify that the sub task is visible within the parent task after creation.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySubTaskIsVisibleInParentTask();
+    });
+
 });
