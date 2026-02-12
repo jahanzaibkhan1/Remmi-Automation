@@ -158,4 +158,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyChangeOfParentTaskInDropdown();
     });
 
+    test('Test 28: Verify that the task is visible in the task list after it is saved.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyTaskAppearsInList('Testing Task');
+    });
+
 });
