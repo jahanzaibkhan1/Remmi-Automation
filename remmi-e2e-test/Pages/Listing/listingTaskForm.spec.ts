@@ -115,4 +115,12 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyCommentAppearsUnderAdditionalComments();
     });
 
+    test('Test 20: Verify that after adding a file and saving the task, the file appears only once even if "Save" is clicked twice', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      const path = require('path');
+      const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+      const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+      await listingActions.verifyFileUploadNoDuplicationOnDoubleSave(imagePath);
+    });
+
 });
