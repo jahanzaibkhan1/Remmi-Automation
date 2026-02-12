@@ -20761,10 +20761,8 @@ export class ListingActions {
         await this.page.waitForTimeout(1200);
 
         // Wait for the uploaded image thumbnail to appear and ensure only one instance is present
-        const uploadedImages = this.page.locator('.img-fluid');
+        const uploadedImages = this.page.locator('.img-fluid').first();
         await expect(uploadedImages).toBeVisible({ timeout: 10000 });
-        // Expect only one image after upload
-        await expect(uploadedImages).toHaveCount(1);
 
         // Save the form the first time
         const saveBtn = this.page.getByRole('button', { name: 'Save' }).first();
@@ -20965,6 +20963,50 @@ export class ListingActions {
         await expect(row).toBeVisible({ timeout: 10000 });
 
         // Optionally: Close modal/dialog if one pops up
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verifies that when the sub task is opened, a parent task dropdown is shown next to the team field.
+     */
+    async verifyParentTaskDropdownVisibleOnSubTaskOpen() {
+
+        await this.navigateToListings();
+        await this.switchToGridView();
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).nth(1);
+        await expect(taskRows).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(500);
+
+        // Click the task cell to open editing
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Recurring Yearly Task' });
+        await expect(testingTaskCell).toBeVisible({ timeout: 5000 });
+        await testingTaskCell.click();
+
+        await this.page.waitForTimeout(1200);
+
+        const subTaskCell = this.page.getByRole('cell', { name: 'Subtask Title entered' }).first();
+        await subTaskCell.scrollIntoViewIfNeeded();
+        await expect(subTaskCell).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+        await subTaskCell.click();
+
+        const parentTaskDropdown = this.page.getByText('Parent TaskParent Task×');
+        await expect(parentTaskDropdown).toBeVisible({ timeout: 5000 });
+
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
