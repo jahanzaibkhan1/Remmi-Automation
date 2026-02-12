@@ -21218,4 +21218,71 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(500);
     }
+
+    // In the Related tab, verify that a contact can be searched and associated successfully
+    async verifyContactAssociationInRelatedTab() {
+
+        await this.navigateToListings();
+        await this.switchToGridView();
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+        // Click the "Related" tab
+        const relatedTab = this.page.getByText('Related');
+        await expect(relatedTab).toBeVisible({ timeout: 10000 });
+        await relatedTab.click();
+
+        // Open the dropdown to select a contact within the Related tab (more robust against index changes)
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")');
+        await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+        await selectDropdown.click();
+
+        // Locate the search input for the contact within the "Related" tab
+        const searchInputInRelatedTab = this.page
+            .getByRole('tabpanel', { name: /related/i })
+            .getByPlaceholder(/search/i)
+            .first();
+        await expect(searchInputInRelatedTab).toBeVisible({ timeout: 10000 });
+        await searchInputInRelatedTab.fill('11 22');
+
+        // Wait for and select the matching contact option from the dropdown
+        const suggestedContact = this.page.locator('.ng-dropdown-panel .ng-option').filter({
+            hasText: '22 (11@22.com.au)'
+        }).first();
+        await expect(suggestedContact).toBeVisible({ timeout: 20000 });
+        await suggestedContact.click();
+
+        await selectDropdown.click();
+
+        // In the Contact section, click "Associate Contact" or similar
+        const associateButton = this.page.getByRole('button', { name: /associate/i }).first();
+        await expect(associateButton).toBeVisible({ timeout: 5000 });
+        await associateButton.click();
+
+        // Scroll to the contact row and verify "11 22" is associated and visible in the Contact section
+        const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).first();
+        await associatedContactRow.scrollIntoViewIfNeeded();
+        await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
+
+        // Delete the associated contact by clicking its "delete" icon in the row
+        const deleteIcon = associatedContactRow.getByRole('img', { name: 'delete' }).first();
+        await expect(deleteIcon).toBeVisible({ timeout: 10000 });
+        await deleteIcon.click();
+
+        // Confirm deletion in the dialog by clicking "Yes"
+        const yesButton = this.page.getByRole('button', { name: /^Yes$/i }).first();
+        await expect(yesButton).toBeVisible({ timeout: 10000 });
+        await yesButton.click();
+
+        // Verify the row for "11 22" is no longer visible in the table
+        await expect(associatedContactRow).not.toBeVisible({ timeout: 10000 });
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    
 }
