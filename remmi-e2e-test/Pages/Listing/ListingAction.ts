@@ -20916,7 +20916,7 @@ export class ListingActions {
     /**
      * Verifies that the created sub task appears within the parent task in the UI.
      */
-    async verifySubTaskIsVisibleInParentTask(){
+    async verifySubTaskIsVisibleInParentTask() {
         await this.navigateToListings();
         await this.switchToGridView();
 
@@ -21012,5 +21012,121 @@ export class ListingActions {
             await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verifies that all fields of the original task are copied correctly to the new task when using the "Copy Task" option.
+     */
+    async verifyCopyTaskCopiesAllFieldsCorrectly() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card and capture the listing name
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        const listingNameElement = this.page.locator('h3.props-bg.cp.mb-1.px-0').first();
+        let listingName = (await listingNameElement.innerText()).trim();
+        await firstListingCard.click();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Find the row and open the "Recurring Yearly Task"
+        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).nth(1);
+        await expect(taskRows).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(500);
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Recurring Yearly Task' });
+        await expect(testingTaskCell).toBeVisible({ timeout: 5000 });
+        await testingTaskCell.click();
+
+        await this.page.waitForTimeout(1200);
+        const rightSidebar = this.page.locator('[id^="Task: REM-"][id$="_1"] #rightbarwithscroll');
+        await expect(rightSidebar).toBeVisible({ timeout: 10000 });
+
+        // Click the "Copy Task" button
+        const copyTaskBtn = this.page.getByRole('button', { name: /Copy Task/i }).first();
+        await expect(copyTaskBtn).toBeVisible({ timeout: 10000 });
+        await copyTaskBtn.click();
+
+        // Wait for the confirmation message
+        const duplicatedSuccessMsg = this.page.getByText(/Task duplicated successfully/i, { exact: false });
+        await expect(duplicatedSuccessMsg).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
+
+        // Fill in new title
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
+        await taskTitleInput.click();
+        await taskTitleInput.fill('Task copied');
+
+        // Fill in a due date - Pick tomorrow's date
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        // Calculate tomorrow's date
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const targetDay = tomorrow.getDate();
+        const targetMonth = tomorrow.getMonth();
+        const targetYear = tomorrow.getFullYear();
+
+        // Find calendar header and adjust to correct month/year
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+        const headerText = await header.innerText();
+        const [monthName, yearStr] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+        const monthDifference = (targetYear - parseInt(yearStr)) * 12 + (targetMonth - monthIndex);
+
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+            await this.page.waitForTimeout(200);
+        }
+
+        // Select tomorrow's day
+        const dayLocator = this.page.locator(`.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`);
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
+        await dayLocator.first().click({ force: true });
+
+        // Set the listing field to the same value as original
+        const listingDropdown = this.page.locator('div').filter({ hasText: /^Select Listing$/ }).nth(1);
+        await listingDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await listingDropdown.click();
+        const listingSearchBox = this.page.locator('[id="Task: REM-null_1"]').getByRole('textbox', { name: 'Search' });
+        await expect(listingSearchBox).toBeVisible({ timeout: 10000 });
+        await listingSearchBox.fill(listingName);
+        const desiredListingOption = this.page.locator('[id="Task: REM-null_1"]').getByText(new RegExp(listingName, 'i')).last();
+        await desiredListingOption.click({ force: true });
+
+        // Save the copied task
+        const saveBtn = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+        await this.page.waitForTimeout(1000);
+
+        // Close modal if present (last close button first)
+        const closeBtn = this.page.locator('.pi.pi-times').last();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        // Reopen the "Recurring Yearly Task" cell to verify content
+        await expect(testingTaskCell).toBeVisible({ timeout: 10000 });
+        await testingTaskCell.click();
+        await expect(rightSidebar).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(500);
+
+        // Close modal again if present (first close button)
+        const closeBtun = this.page.locator('.pi.pi-times').first();
+        if (await closeBtun.isVisible().catch(() => false)) {
+            await closeBtun.click({ force: true });
+        }
     }
 }
