@@ -21129,4 +21129,93 @@ export class ListingActions {
             await closeBtun.click({ force: true });
         }
     }
+
+    /**
+     * Verifies that selecting a different parent task from the parent task dropdown
+     */
+    async verifyChangeOfParentTaskInDropdown() {
+
+        await this.navigateToListings();
+        await this.switchToGridView();
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).nth(1);
+        await expect(taskRows).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(500);
+
+        // Click the task cell to open editing
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Recurring Yearly Task' });
+        await expect(testingTaskCell).toBeVisible({ timeout: 5000 });
+        await testingTaskCell.click();
+
+        await this.page.waitForTimeout(1200);
+
+        const subTaskCell = this.page.getByRole('cell', { name: 'Subtask Title entered' }).first();
+        await subTaskCell.scrollIntoViewIfNeeded();
+        await expect(subTaskCell).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+        await subTaskCell.click();
+
+        // Edit Job Type (Task Type) field
+        const jobTypeSelector = this.page.locator('ng-select[formcontrolname="job_type_id"] .ng-select-container').last();
+        await expect(jobTypeSelector).toBeVisible({ timeout: 10000 });
+        await jobTypeSelector.click();
+        await this.page.waitForTimeout(500);
+        const dropdownOptions = this.page.locator('.ng-dropdown-panel .ng-option').first();
+        await expect(dropdownOptions).toBeVisible({ timeout: 10000 });
+        await dropdownOptions.click();
+        
+
+        // Edit Task Status field
+        const statusSelector = this.page.locator("//ng-select[@placeholder='Select Status']//div[@role='combobox']").last();
+        await expect(statusSelector).toBeVisible({ timeout: 10000 });
+        await statusSelector.click();
+        await this.page.waitForTimeout(500);
+        const dropdownOption = this.page.locator('.ng-dropdown-panel .ng-option').first();
+        await expect(dropdownOption).toBeVisible({ timeout: 10000 });
+        await dropdownOption.click();
+
+        
+        const staffInput = this.page.locator(
+            'ng-select[formcontrolname="assignedUsers"] input[type="text"]'
+        ).last();
+        await staffInput.fill('Jahanzaib');
+
+        const staffOption = this.page.locator('.ng-dropdown-panel .ng-option', {
+            hasText: 'Jahanzaib'
+        });
+        await expect(staffOption).toBeVisible();
+        await staffOption.click();
+
+        const parentTask = this.page.locator('ng-select[formcontrolname="parent_id"] .ng-select-container');
+        await parentTask.waitFor({ state: 'visible', timeout: 10000 });
+        await parentTask.click();
+        // Find the option for "Automation testing" (with possible leading/trailing whitespace) and click it
+        const parentTaskOption = this.page.locator('.ng-dropdown-panel .ng-option').filter({ hasText: "Automation testing" }).first();
+        await expect(parentTaskOption).toBeVisible({ timeout: 5000 });
+        await parentTaskOption.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the "Save" button to update the parent task of the subtask
+        const saveBtn = this.page.getByRole('button', { name: 'Save' }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 5000 });
+        await saveBtn.click();
+
+        await this.page.waitForTimeout(1000);
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
 }

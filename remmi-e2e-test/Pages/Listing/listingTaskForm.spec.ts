@@ -153,4 +153,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyCopyTaskCopiesAllFieldsCorrectly();
     });
 
+    test('Test 27: Verify that selecting a different parent task from the parent task dropdown updates the sub task’s parent task.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyChangeOfParentTaskInDropdown();
+    });
+
 });
