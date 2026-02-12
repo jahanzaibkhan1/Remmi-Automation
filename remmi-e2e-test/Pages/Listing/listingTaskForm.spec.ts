@@ -90,4 +90,81 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyWeeklyRecurringTaskSendsNotification('Recurring Weekly Task');
     });
 
+    test('Test 15: Verify that selecting "Monthly" from the recurring task dropdown sends email/notifications monthly.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyMonthlyRecurringTaskSendsNotification('Recurring Monthly Task');
+    });
+
+    test('Test 16: Verify that selecting "Yearly" from the recurring task dropdown sends email/notifications yearly.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyYearlyRecurringTaskSendsNotification('Recurring Yearly Task');
+    });
+
+    test('Test 17: Verify that clicking "Sync Calendar" allows selection of a time period for task reminders', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySyncCalendarTaskSendsNotification('Task Reminder');
+    });
+
+    test('Test 18: Verify that when a comment is added in the "Additional Comments" section, a notification is sent to the selected staff member.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyCommentNotificationToStaff();
+    });
+
+    test('Test 19: Verify that the added comment appears below the "Additional Comments" section once the task is saved.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyCommentAppearsUnderAdditionalComments();
+    });
+
+    test('Test 20: Verify that after adding a file and saving the task, the file appears only once even if "Save" is clicked twice', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      const path = require('path');
+      const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
+      const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+      await listingActions.verifyFileUploadNoDuplicationOnDoubleSave(imagePath);
+    });
+
+    test('Test 21: Verify that the added file appears correctly after saving the task.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyFileAppearsAfterTaskSave();
+    });
+
+    test('Test 22: Verify that after creating a task, the "Create Sub Task" option becomes visible.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyCreateSubTaskOptionVisible();
+    });
+
+    test('Test 23: Verify that clicking on the "Create Sub Task" button shows a field below the staff section to enter a sub task title.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyCreateSubTaskFieldAppearsBelowStaff();
+    });
+
+    test('Test 24: Verify that the sub task is visible within the parent task after creation.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySubTaskIsVisibleInParentTask();
+    });
+
+    test('Test 25: Verify that when the sub task is opened, a parent task dropdown is shown next to the team field.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyParentTaskDropdownVisibleOnSubTaskOpen();
+    });
+
+    test('Test 26: Verify that all fields of the original task are copied correctly to the new task when the "Copy Task" option is used.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyCopyTaskCopiesAllFieldsCorrectly();
+    });
+
+    test('Test 27: Verify that selecting a different parent task from the parent task dropdown updates the sub task’s parent task.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyChangeOfParentTaskInDropdown();
+    });
+
+    test('Test 28: Verify that the task is visible in the task list after it is saved.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyTaskAppearsInList('Testing Task');
+    });
+    test('Test 29: Verify that changes to the original task do not affect the copied task after it has been created.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyCopyTaskCopiesAllFieldsCorrectly();
+    });
+
 });
