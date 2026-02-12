@@ -100,4 +100,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyYearlyRecurringTaskSendsNotification('Recurring Yearly Task');
     });
 
+    test('Test 17: Verify that clicking "Sync Calendar" allows selection of a time period for task reminders', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifySyncCalendarTaskSendsNotification('Task Reminder');
+    });
+
 });
