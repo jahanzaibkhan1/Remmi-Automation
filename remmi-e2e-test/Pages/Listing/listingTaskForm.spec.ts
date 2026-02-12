@@ -105,4 +105,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifySyncCalendarTaskSendsNotification('Task Reminder');
     });
 
+    test('Test 18: Verify that when a comment is added in the "Additional Comments" section, a notification is sent to the selected staff member.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyCommentNotificationToStaff();
+    });
+
 });
