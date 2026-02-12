@@ -110,4 +110,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyCommentNotificationToStaff();
     });
 
+    test('Test 19: Verify that the added comment appears below the "Additional Comments" section once the task is saved.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyCommentAppearsUnderAdditionalComments();
+    });
+
 });
