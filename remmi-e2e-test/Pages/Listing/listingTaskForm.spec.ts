@@ -148,4 +148,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
       await listingActions.verifyParentTaskDropdownVisibleOnSubTaskOpen();
     });
 
+    test('Test 26: Verify that all fields of the original task are copied correctly to the new task when the "Copy Task" option is used.', async ({ sessionPage }) => {
+      const listingActions = new ListingActions(sessionPage);
+      await listingActions.verifyCopyTaskCopiesAllFieldsCorrectly();
+    });
+
 });
