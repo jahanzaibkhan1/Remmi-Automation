@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.39108799999999">
-<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-12T03:55:48.428Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.967" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that selecting &quot;Yearly&quot; from the recurring task dropdown sends email/notifications yearly." classname="Pages\Listing\listingTaskForm.spec.ts" time="37.967">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="52.38838899999997">
+<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-12T04:17:53.787Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.856" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify that clicking &quot;Sync Calendar&quot; allows selection of a time period for task reminders" classname="Pages\Listing\listingTaskForm.spec.ts" time="44.856">
 </testcase>
 </testsuite>
 </testsuites>
