@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.89839500000002">
-<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-12T03:51:49.367Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.7" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that selecting &quot;Monthly&quot; from the recurring task dropdown sends email/notifications monthly." classname="Pages\Listing\listingTaskForm.spec.ts" time="47.7">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.39108799999999">
+<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-12T03:55:48.428Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.967" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that selecting &quot;Yearly&quot; from the recurring task dropdown sends email/notifications yearly." classname="Pages\Listing\listingTaskForm.spec.ts" time="37.967">
 </testcase>
 </testsuite>
 </testsuites>
