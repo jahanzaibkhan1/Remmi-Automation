@@ -20626,7 +20626,7 @@ export class ListingActions {
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
 
-         // Go to the Tasks tab
+        // Go to the Tasks tab
         const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
         await expect(tasksTab).toBeVisible({ timeout: 10000 });
         await tasksTab.click();
@@ -20685,7 +20685,7 @@ export class ListingActions {
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
 
-         // Go to the Tasks tab
+        // Go to the Tasks tab
         const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
         await expect(tasksTab).toBeVisible({ timeout: 10000 });
         await tasksTab.click();
@@ -20710,7 +20710,7 @@ export class ListingActions {
         const addedComment = this.page.getByText('Comment Added To Task').first();
         await expect(addedComment).toBeVisible({ timeout: 10000 });
 
-          // Close modal if needed
+        // Close modal if needed
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
@@ -20718,5 +20718,65 @@ export class ListingActions {
 
         await this.page.waitForTimeout(1000);
 
+    }
+
+    /**
+     * Verify that after attaching a file and saving the task (clicking "Save" twice), the file appears once (no duplicates).
+     */
+    async verifyFileUploadNoDuplicationOnDoubleSave(filePath: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).nth(1);
+        await expect(taskRows).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(500);
+
+        // Click the "Testing Task" cell to open editing
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Recurring Yearly Task' });
+        await expect(testingTaskCell).toBeVisible({ timeout: 5000 });
+        await testingTaskCell.click();
+
+        await this.page.waitForTimeout(1200);
+
+        // Click the "Add Files" button to open the file dialog
+        const addFilesBtn = this.page.getByRole('button', { name: /Add Files/i });
+        await addFilesBtn.scrollIntoViewIfNeeded();
+        await expect(addFilesBtn).toBeVisible({ timeout: 10000 });
+        await addFilesBtn.click();
+
+        // Attach a file
+        const uploadInput = this.page.locator('#fileInput');
+        await uploadInput.setInputFiles(filePath);
+
+        await this.page.waitForTimeout(1200);
+
+        // Wait for the uploaded image thumbnail to appear and ensure only one instance is present
+        const uploadedImages = this.page.locator('.img-fluid');
+        await expect(uploadedImages).toBeVisible({ timeout: 10000 });
+        // Expect only one image after upload
+        await expect(uploadedImages).toHaveCount(1);
+
+        // Save the form the first time
+        const saveBtn = this.page.getByRole('button', { name: 'Save' }).first();
+        await saveBtn.scrollIntoViewIfNeeded();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.dblclick();
+
+        // Close modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
     }
 }

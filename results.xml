@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.21844600000046">
-<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-12T06:40:04.138Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.884" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify that the added comment appears below the &quot;Additional Comments&quot; section once the task is saved." classname="Pages\Listing\listingTaskForm.spec.ts" time="32.884">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.36337100000121">
+<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-12T07:09:30.164Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.045" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Verify that after adding a file and saving the task, the file appears only once even if &quot;Save&quot; is clicked twice" classname="Pages\Listing\listingTaskForm.spec.ts" time="47.045">
 </testcase>
 </testsuite>
 </testsuites>
