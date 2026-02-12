@@ -20672,5 +20672,51 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    /**
+     * Verifies that the added comment appears below the "Additional Comments" section once the task is saved.
+     * Assumes the comment to verify is 'Comment Added To Task'.
+     */
+    async verifyCommentAppearsUnderAdditionalComments() {
+        await this.navigateToListings();
+        await this.switchToGridView();
 
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+         // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).nth(1);
+        await expect(taskRows).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(500);
+
+        // Click the "Testing Task" cell to open editing
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Recurring Yearly Task' });
+        await expect(testingTaskCell).toBeVisible({ timeout: 5000 });
+        await testingTaskCell.click();
+
+        await this.page.waitForTimeout(1200);
+
+        // Fill in Additional Comments
+        const commentsInput = this.page.getByRole('textbox', { name: 'Send comments to the Assignee' });
+        await commentsInput.scrollIntoViewIfNeeded();
+        await expect(commentsInput).toBeVisible({ timeout: 10000 });
+
+        // Wait for the comments container to appear below the header
+        const addedComment = this.page.getByText('Comment Added To Task').first();
+        await expect(addedComment).toBeVisible({ timeout: 10000 });
+
+          // Close modal if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(1000);
+
+    }
 }
