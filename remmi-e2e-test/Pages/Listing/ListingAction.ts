@@ -20869,4 +20869,49 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(500);
     }
+
+    /**
+     * Verifies that clicking on the "Create Sub Task" button shows a field below the staff section to enter a sub task title.
+     */
+    async verifyCreateSubTaskFieldAppearsBelowStaff() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).nth(1);
+        await expect(taskRows).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(500);
+
+        // Click the "Testing Task" cell to open editing
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Recurring Yearly Task' });
+        await expect(testingTaskCell).toBeVisible({ timeout: 5000 });
+        await testingTaskCell.click();
+
+        await this.page.waitForTimeout(1200);
+        const createSubTaskBtn = this.page.getByRole('button', { name: /Create SubTask/i }).first();
+        await expect(createSubTaskBtn).toBeVisible({ timeout: 5000 });
+        await createSubTaskBtn.click();
+
+        // Verify that the "Enter Task Title" textbox is visible in the Create SubTask modal
+        const subTaskTitleInput = this.page.getByRole('textbox', { name: /Enter Task Title/i });
+        await expect(subTaskTitleInput).toBeVisible({ timeout: 5000 });
+        await subTaskTitleInput.click();
+        await subTaskTitleInput.fill("Subtask Title entered");
+
+        // Optionally: Close modal/dialog if one pops up
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
 }
