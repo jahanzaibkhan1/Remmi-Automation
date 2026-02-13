@@ -30,4 +30,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyErrorMessageWhenAssociatingWithoutContact();
   });
 
+  test('Test 3: Verify that a non-existing contact shows "Add New contact" button', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyAddNewContactButtonAppearsForNonExistingContact();
+  });
+
 });
