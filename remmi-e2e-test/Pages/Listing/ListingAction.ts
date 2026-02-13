@@ -21414,5 +21414,97 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    /**
+     * Verifies that a newly created contact is automatically added to the Related contact list.
+     */
+    async verifyNewlyCreatedContactIsAddedToRelatedList() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Click the "Related" tab
+        const relatedTab = this.page.getByText('Related');
+        await expect(relatedTab).toBeVisible({ timeout: 10000 });
+        await relatedTab.click();
+
+        // Open the contact selection dropdown
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+        await selectDropdown.click();
+
+        // Use '@faker-js/faker' to generate random contact info
+        const faker = require('@faker-js/faker').faker;
+        const firstName = faker.person.firstName();
+        const lastName = faker.person.lastName();
+        const email = faker.internet.email({ firstName, lastName });
+
+        // Locate the search input in the "Related" tab
+        const searchInputInRelatedTab = this.page
+            .getByRole('tabpanel', { name: /related/i })
+            .getByPlaceholder(/search/i)
+            .first();
+        await expect(searchInputInRelatedTab).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+
+        // Click "Create New" button
+        const createNewBtn = this.page.getByText('Create New');
+        await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+        await createNewBtn.click();
+
+        // Fill out the new contact form
+        const newContactForm = this.page.locator('#Contact_1 #rightbarwithscroll');
+        await expect(newContactForm).toBeVisible({ timeout: 10000 });
+        await this.page.locator('input[formcontrolname="first_name"]').fill(firstName);
+        await this.page.locator('input[formcontrolname="last_name"]').fill(lastName);
+        await this.page.locator('input[formcontrolname="email"]').fill(email);
+
+        // Save the new contact
+        const saveButton = this.page.getByRole('button', { name: 'Save' }).first();
+        await expect(saveButton).toBeVisible({ timeout: 5000 });
+        await saveButton.click({ force: true });
+
+        // Confirm that the contact was created (wait for toast message)
+        const successToast = this.page.getByText(/Contact has been created|Contact has been updated/i);
+        await expect(successToast).toBeVisible({ timeout: 10000 });
+
+        // Close the new contact tab/modal
+        const closeBtn = this.page.locator('.pi.pi-times').last();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        // Re-open "Related" tab and dropdown to verify the contact appears in the list
+        await expect(relatedTab).toBeVisible({ timeout: 10000 });
+        await relatedTab.click();
+
+        await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+        await selectDropdown.click();
+
+        const fullName = `${firstName} ${lastName}`;
+        await expect(searchInputInRelatedTab).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+        await searchInputInRelatedTab.click();
+        await searchInputInRelatedTab.fill(fullName);
+        const relatedContactEntry = this.page
+            .locator('.drop_box li p')
+            .filter({
+                hasText: `${fullName} (${email})`
+            })
+            .first();
+
+        await expect(relatedContactEntry).toBeVisible({ timeout: 15000 });
+
+        // Close any open modal/tab
+        const closeBtn2 = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn2.isVisible().catch(() => false)) {
+            await closeBtn2.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
 
 }
