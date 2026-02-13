@@ -22011,6 +22011,77 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    /**
+     * Verify that a relationship tag can be added to a related contact successfully.
+     */
+    async verifyRelationshipTagCanBeAdded() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Click the "Related" tab
+        const relatedTab = this.page.getByText('Related');
+        await expect(relatedTab).toBeVisible({ timeout: 10000 });
+        await relatedTab.click();
+
+        // Open the contact dropdown and associate '11 22'
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+        await selectDropdown.click();
+
+        const searchInput = this.page
+            .getByRole('tabpanel', { name: /related/i })
+            .getByPlaceholder(/search/i)
+            .first();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.fill('11 22');
+
+        const suggestedContact = this.page.getByRole('listitem').filter({ hasText: '22 (11@22.com.au)' }).last();
+        await expect(suggestedContact).toBeVisible({ timeout: 20000 });
+        await suggestedContact.click();
+        await this.page.mouse.click(0, 0);
+
+        // Click Associate Contact
+        const associateButton = this.page.getByRole('button', { name: /associate/i }).first();
+        await expect(associateButton).toBeVisible({ timeout: 5000 });
+        await associateButton.click();
+
+        // Wait for confirmation
+        const successToast = this.page.getByText(/Contact attached successfully/i);
+        await expect(successToast).toBeVisible({ timeout: 10000 });
+
+        // Find the associated Contact row
+        const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).first();
+        await associatedContactRow.scrollIntoViewIfNeeded();
+        await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
+
+        // Locate the drop area for tags
+        const dropList = associatedContactRow.locator('td.cdk-drop-list[cdkdroplist][style*="padding-left: 12px"]');
+        await expect(dropList).toBeVisible({ timeout: 5000 });
+
+        // Locate the "Buyer" tag (example tag)
+        const buyerTag = this.page.locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Wife' }).first();
+        await expect(buyerTag).toBeVisible({ timeout: 5000 });
+
+        // Drag the "Buyer" tag onto the drop area for the contact
+        await buyerTag.dragTo(dropList);
+
+        // Check that the tag now appears with the contact chip area
+        const buyerChip = associatedContactRow.locator('[data-pc-name="chip"][aria-label="Wife"]');
+        await expect(buyerChip).toBeVisible({ timeout: 10000 });
+
+        // Close modal if any remains
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
 
 
 }
