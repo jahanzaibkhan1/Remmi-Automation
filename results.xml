@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.16118300000019">
-<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-13T05:50:15.996Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.643" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that a non-existing contact shows &quot;Add New contact&quot; button" classname="Pages\Listing\listingRelated.spec.ts" time="40.643">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="75.9474879999999">
+<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-13T06:06:25.115Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.86" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that clicking &quot;Add New contact&quot; opens a new contact tab" classname="Pages\Listing\listingRelated.spec.ts" time="54.86">
 </testcase>
 </testsuite>
 </testsuites>

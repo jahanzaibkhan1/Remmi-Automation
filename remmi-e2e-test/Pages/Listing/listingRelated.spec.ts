@@ -35,4 +35,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyAddNewContactButtonAppearsForNonExistingContact();
   });
 
+  test('Test 4: Verify that clicking "Add New contact" opens a new contact tab', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyCreateNewContactOpensContactTab();
+  });
+
 });
