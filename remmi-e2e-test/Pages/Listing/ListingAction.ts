@@ -21258,6 +21258,10 @@ export class ListingActions {
         await expect(associateButton).toBeVisible({ timeout: 5000 });
         await associateButton.click();
 
+        // Verify that the contact was successfully attached by checking for a success toast or confirmation message
+        const successToast = this.page.getByText(/Contact attached successfully/i, { exact: false });
+        await expect(successToast).toBeVisible({ timeout: 10000 });
+
         // Scroll to the contact row and verify "11 22" is associated and visible in the Contact section
         const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).first();
         await associatedContactRow.scrollIntoViewIfNeeded();
@@ -21273,6 +21277,8 @@ export class ListingActions {
         await expect(yesButton).toBeVisible({ timeout: 10000 });
         await yesButton.click();
         await this.page.waitForTimeout(500);
+        const removedToast = this.page.getByText(/Contact deleted successfully/i);
+        await expect(removedToast).toBeVisible({ timeout: 10000 });
         // Verify the row for "11 22" is no longer visible in the table
         await expect(associatedContactRow).not.toBeVisible({ timeout: 10000 });
         const closeBtn = this.page.locator('.pi.pi-times').first();

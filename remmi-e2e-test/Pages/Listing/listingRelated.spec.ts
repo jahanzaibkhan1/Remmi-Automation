@@ -45,4 +45,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyNewlyCreatedContactIsAddedToRelatedList();
   });
 
+  test('Test 6: Verify that a contact can be removed from the related contact list', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyContactAssociationInRelatedTab();
+  });
+
 });
