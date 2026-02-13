@@ -64,15 +64,15 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyContactTypeTagCanBeAdded();
   });
-
-  test('Test 10: Verify that a contact type tag can be removed from a related contact', async ({ sessionPage }) => {
-    const listingActions = new ListingActions(sessionPage);
-    await listingActions.verifyContactTypeTagCanBeRemoved();
-  });
-
-  test('Test 11: Verify that duplicate contact type tags cannot be added', async ({ sessionPage }) => {
+  
+  test('Test 10: Verify that duplicate contact type tags cannot be added', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyDuplicateContactTypeTagsCannotBeAdded();
+  });
+
+  test('Test 11: Verify that a contact type tag can be removed from a related contact', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyContactTypeTagCanBeRemoved();
   });
 
   test('Test 12: Verify that a relationship tag can be added to a related contact', async ({ sessionPage }) => {
