@@ -22082,6 +22082,48 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    /**
+     * Verify that duplicate relationship tags cannot be added to a related contact.
+     */
+    async verifyDuplicateRelationshipTagsCannotBeAdded() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Click the "Related" tab
+        const relatedTab = this.page.getByText('Related');
+        await expect(relatedTab).toBeVisible({ timeout: 10000 });
+        await relatedTab.click();
+
+        // Locate the associated contact row
+        const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).first();
+        await associatedContactRow.scrollIntoViewIfNeeded();
+        await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
+
+        // Find the tag drag-drop source area & tag for "Buyer"
+        const dropList = associatedContactRow.locator('td.cdk-drop-list[cdkdroplist][style*="padding-left: 12px"]');
+        await expect(dropList).toBeVisible({ timeout: 5000 });
+        const buyerTag = this.page.locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Wife' }).first();
+        await expect(buyerTag).toBeVisible({ timeout: 5000 });
+
+        // Drag the tag once to add it
+        await buyerTag.dragTo(dropList);
+
+        // Verify duplicate tag error appears
+        const duplicateError = this.page.getByRole('alert', { name: 'Tag is already associate to' });
+        await expect(duplicateError).toBeVisible({ timeout: 10000 });
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
 
 
 }
