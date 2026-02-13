@@ -40,4 +40,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyCreateNewContactOpensContactTab();
   });
 
+  test('Test 5: Verify that a newly created contact is automatically added to the Related contact list', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyNewlyCreatedContactIsAddedToRelatedList();
+  });
+
 });

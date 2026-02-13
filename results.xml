@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="75.9474879999999">
-<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-13T06:06:25.115Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.86" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that clicking &quot;Add New contact&quot; opens a new contact tab" classname="Pages\Listing\listingRelated.spec.ts" time="54.86">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.77439900000021">
+<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-13T06:27:01.445Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.173" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that a newly created contact is automatically added to the Related contact list" classname="Pages\Listing\listingRelated.spec.ts" time="33.173">
 </testcase>
 </testsuite>
 </testsuites>
