@@ -21678,5 +21678,101 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    /**
+     * Verifies that a contact type tag can be added to a contact in the listing.
+     * Assumes the contact row is available for interaction. 
+     */
+    async verifyContactTypeTagCanBeAdded() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Click the "Related" tab
+        const relatedTab = this.page.getByText('Related');
+        await expect(relatedTab).toBeVisible({ timeout: 10000 });
+        await relatedTab.click();
+
+        // Open the dropdown to select a contact within the Related tab
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+        await selectDropdown.click();
+
+        // Locate and fill the search input in the Related tab
+        const searchInputInRelatedTab = this.page
+            .getByRole('tabpanel', { name: /related/i })
+            .getByPlaceholder(/search/i)
+            .first();
+        await expect(searchInputInRelatedTab).toBeVisible({ timeout: 10000 });
+        await searchInputInRelatedTab.fill('11 22');
+
+        // Wait for and select the matching contact from suggestions
+        const suggestedContact = this.page.getByRole('listitem').filter({ hasText: '22 (11@22.com.au)' }).last();
+        await expect(suggestedContact).toBeVisible({ timeout: 20000 });
+        await suggestedContact.click();
+        await this.page.mouse.click(0, 0);
+
+        // Click the "Associate Contact" button
+        const associateButton = this.page.getByRole('button', { name: /associate/i }).first();
+        await expect(associateButton).toBeVisible({ timeout: 5000 });
+        await associateButton.click();
+
+        // Check for the success confirmation message
+        const successToast = this.page.getByText(/Contact attached successfully/i, { exact: false });
+        await expect(successToast).toBeVisible({ timeout: 10000 });
+
+        // Locate the associated contact row for "11 22" in the table
+        const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).first();
+        await associatedContactRow.scrollIntoViewIfNeeded();
+        await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
+
+        // Ensure the drag-drop area is visible
+        const dropList = associatedContactRow.locator('td.cdk-drop-list[cdkdroplist][style*="padding-left: 12px"]');
+        await expect(dropList).toBeVisible({ timeout: 5000 });
+        // Locate the "Wife" tag in the related contacts (assuming the tag is draggable)
+        const wifeTag = this.page.locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Wife' }).first();
+        await expect(wifeTag).toBeVisible({ timeout: 5000 });
+
+        // Drag the "Wife" tag to the drop list area within the contact row
+        await wifeTag.dragTo(dropList);
+
+        const contactTagAfter = associatedContactRow.locator('[data-pc-name="chip"][aria-label="Wife"]');
+        await expect(contactTagAfter).toBeVisible({ timeout: 10000 });
+
+         // Delete the associated contact by clicking its "delete" icon in the row
+         const deleteIcon = associatedContactRow.getByRole('img', { name: 'delete' }).first();
+         await expect(deleteIcon).toBeVisible({ timeout: 10000 });
+         await deleteIcon.click();
+ 
+         // Wait for the confirmation popup "Remove contact from this listing?"
+         const confirmationPopup = this.page.locator('div').filter({ hasText: /^Remove contact from this listing\?$/ });
+         await expect(confirmationPopup).toBeVisible({ timeout: 10000 });
+ 
+         // Confirm deletion in the dialog by clicking "Yes"
+         const yesButton = this.page.getByRole('button', { name: /^Yes$/i }).first();
+         await expect(yesButton).toBeVisible({ timeout: 10000 });
+ 
+         // Verify "No" button is visible in the confirmation popup
+         const noButton = this.page.getByRole('button', { name: /^No$/i }).first();
+         await expect(noButton).toBeVisible({ timeout: 10000 });
+ 
+         await yesButton.click();
+ 
+         await this.page.waitForTimeout(500);
+         const removedToast = this.page.getByText(/Contact deleted successfully/i);
+         await expect(removedToast).toBeVisible({ timeout: 10000 });
+         // Verify the row for "11 22" is no longer visible in the table
+         await expect(associatedContactRow).not.toBeVisible({ timeout: 10000 });
+         // Close any possible modal/dialog
+         const closeBtn = this.page.locator('.pi.pi-times').first();
+         if (await closeBtn.isVisible().catch(() => false)) {
+             await closeBtn.click({ force: true });
+         }
+         await this.page.waitForTimeout(1000);
+    }
+
 
 }

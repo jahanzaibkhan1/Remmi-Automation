@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.88567100000009">
-<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-13T06:52:23.350Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.219" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that a contact is not deleted if &quot;No&quot; is clicked on confirmation popup" classname="Pages\Listing\listingRelated.spec.ts" time="33.219">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.18689599999972">
+<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-13T07:26:28.638Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.737" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify that a contact type tag can be added to a related contact" classname="Pages\Listing\listingRelated.spec.ts" time="35.737">
 </testcase>
 </testsuite>
 </testsuites>
