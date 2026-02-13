@@ -75,4 +75,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyDuplicateContactTypeTagsCannotBeAdded();
   });
 
+  test('Test 12: Verify that a relationship tag can be added to a related contact', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyRelationshipTagCanBeAdded();
+  });
+
 });
