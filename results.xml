@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.972526999998834">
-<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-13T06:46:56.836Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.912" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify confirmation popup and correct behavior when deleting a contact from Related tab" classname="Pages\Listing\listingRelated.spec.ts" time="34.912">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.88567100000009">
+<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-13T06:52:23.350Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.219" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that a contact is not deleted if &quot;No&quot; is clicked on confirmation popup" classname="Pages\Listing\listingRelated.spec.ts" time="33.219">
 </testcase>
 </testsuite>
 </testsuites>

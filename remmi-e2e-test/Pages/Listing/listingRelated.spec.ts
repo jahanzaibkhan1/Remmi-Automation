@@ -55,4 +55,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyDeleteContactConfirmationPopup();
   });
 
+  test('Test 8: Verify that a contact is not deleted if "No" is clicked on confirmation popup', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyContactNotDeletedWhenNoClickedOnConfirmation();
+  });
+
 });
