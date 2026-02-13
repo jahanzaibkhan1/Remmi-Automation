@@ -65,4 +65,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyContactTypeTagCanBeAdded();
   });
 
+  test('Test 10: Verify that a contact type tag can be removed from a related contact', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyContactTypeTagCanBeRemoved();
+  });
+
 });
