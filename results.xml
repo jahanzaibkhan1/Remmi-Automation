@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="45.53467699999921">
-<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-13T07:42:47.610Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.271" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that a contact type tag can be removed from a related contact" classname="Pages\Listing\listingRelated.spec.ts" time="34.271">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="68.80114799999818">
+<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-13T09:05:06.383Z" hostname="chromium" tests="1" failures="0" skipped="0" time="52.271" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify that duplicate contact type tags cannot be added" classname="Pages\Listing\listingRelated.spec.ts" time="52.271">
 </testcase>
 </testsuite>
 </testsuites>
