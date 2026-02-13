@@ -21875,7 +21875,7 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
-    
+
     // Helper function: create, associate "11 22", drag "Buyer" tag, then delete associated contact and close modal
     async createAndDragContactTypeTag() {
         await this.navigateToListings();
@@ -22124,6 +22124,79 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    /**
+   * Verify that a relationship tag can be removed from a related contact.
+   */
+    async verifyRelationshipTagCanBeRemoved() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Open Related tab
+        const relatedTab = this.page.getByText('Related');
+        await expect(relatedTab).toBeVisible({ timeout: 10000 });
+        await relatedTab.click();
+
+        // Locate contact row
+        const associatedContactRow = this.page
+            .locator('table tr', { hasText: '11 22' })
+            .first();
+
+        await associatedContactRow.scrollIntoViewIfNeeded();
+        await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
+
+        // Locate the relationship chip
+        const relationshipChip = associatedContactRow.locator(
+            '[data-pc-name="chip"][aria-label="Wife"]'
+        );
+
+        await expect(relationshipChip).toBeVisible({ timeout: 10000 });
+
+        // Hover in case remove icon appears only on hover
+        await relationshipChip.hover();
+
+        // Click the remove icon wrapper (NOT the SVG)
+        const removeIcon = relationshipChip.locator(
+            '[data-pc-section="removeicon"]'
+        );
+
+        await expect(removeIcon).toBeVisible({ timeout: 10000 });
+        await removeIcon.click({ force: true });
+
+        // Verify chip is removed safely (Angular re-render safe)
+        await expect(
+            associatedContactRow.locator('[data-pc-name="chip"][aria-label="Wife"]')
+        ).toHaveCount(0);
+
+        // Delete associated contact (cleanup)
+        const deleteIcon = associatedContactRow.getByRole('img', { name: 'delete' }).first();
+        await expect(deleteIcon).toBeVisible({ timeout: 10000 });
+        await deleteIcon.click();
+
+        const confirmationPopup = this.page
+            .locator('div')
+            .filter({ hasText: /^Remove contact from this listing\?$/ });
+
+        await expect(confirmationPopup).toBeVisible({ timeout: 10000 });
+
+        const yesButton = this.page.getByRole('button', { name: /^Yes$/i }).first();
+        await expect(yesButton).toBeVisible({ timeout: 10000 });
+        await yesButton.click();
+
+        const removedToast = this.page.getByText(/Contact deleted successfully/i);
+        await expect(removedToast).toBeVisible({ timeout: 10000 });
+
+        await expect(associatedContactRow).not.toBeVisible({ timeout: 10000 });
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
 
 
 }

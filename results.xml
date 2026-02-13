@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="57.845661000002174">
-<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-13T09:21:04.557Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that duplicate relationship tags cannot be added" classname="Pages\Listing\listingRelated.spec.ts" time="48">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="72.78473399999737">
+<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-13T09:48:07.586Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.657" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that a relationship tag can be removed from a related contact" classname="Pages\Listing\listingRelated.spec.ts" time="55.657">
 </testcase>
 </testsuite>
 </testsuites>
