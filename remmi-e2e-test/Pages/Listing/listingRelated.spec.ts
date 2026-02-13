@@ -70,4 +70,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyContactTypeTagCanBeRemoved();
   });
 
+  test('Test 11: Verify that duplicate contact type tags cannot be added', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyDuplicateContactTypeTagsCannotBeAdded();
+  });
+
 });
