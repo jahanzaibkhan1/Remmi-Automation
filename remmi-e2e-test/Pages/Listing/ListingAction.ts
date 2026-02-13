@@ -19396,7 +19396,7 @@ export class ListingActions {
      * Verifies that selecting a module shows the relevant dropdown list for that module 
      */
     async verifyModuleDropdownsAppearForSelectedModule() {
-       
+
         await this.navigateToListings();
         await this.switchToGridView();
         // Open the first listing card
@@ -21174,7 +21174,7 @@ export class ListingActions {
         const dropdownOptions = this.page.locator('.ng-dropdown-panel .ng-option').first();
         await expect(dropdownOptions).toBeVisible({ timeout: 10000 });
         await dropdownOptions.click();
-        
+
 
         // Edit Task Status field
         const statusSelector = this.page.locator("//ng-select[@placeholder='Select Status']//div[@role='combobox']").last();
@@ -21185,7 +21185,7 @@ export class ListingActions {
         await expect(dropdownOption).toBeVisible({ timeout: 10000 });
         await dropdownOption.click();
 
-        
+
         const staffInput = this.page.locator(
             'ng-select[formcontrolname="assignedUsers"] input[type="text"]'
         ).last();
@@ -21236,7 +21236,7 @@ export class ListingActions {
         await relatedTab.click();
 
         // Open the dropdown to select a contact within the Related tab (more robust against index changes)
-        const selectDropdown = this.page.locator('div.tags:has-text("Select")');
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
         await expect(selectDropdown).toBeVisible({ timeout: 10000 });
         await selectDropdown.click();
 
@@ -21249,14 +21249,10 @@ export class ListingActions {
         await searchInputInRelatedTab.fill('11 22');
 
         // Wait for and select the matching contact option from the dropdown
-        const suggestedContact = this.page.locator('.ng-dropdown-panel .ng-option').filter({
-            hasText: '22 (11@22.com.au)'
-        }).first();
+        const suggestedContact = this.page.getByRole('listitem').filter({ hasText: '22 (11@22.com.au)' }).last();
         await expect(suggestedContact).toBeVisible({ timeout: 20000 });
         await suggestedContact.click();
-
-        await selectDropdown.click();
-
+        await this.page.mouse.click(0, 0);
         // In the Contact section, click "Associate Contact" or similar
         const associateButton = this.page.getByRole('button', { name: /associate/i }).first();
         await expect(associateButton).toBeVisible({ timeout: 5000 });
@@ -21276,15 +21272,53 @@ export class ListingActions {
         const yesButton = this.page.getByRole('button', { name: /^Yes$/i }).first();
         await expect(yesButton).toBeVisible({ timeout: 10000 });
         await yesButton.click();
-
+        await this.page.waitForTimeout(500);
         // Verify the row for "11 22" is no longer visible in the table
         await expect(associatedContactRow).not.toBeVisible({ timeout: 10000 });
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
     }
 
-    
+    /**
+     * Verifies that an error message appears when trying to associate a contact without selecting one.
+     */
+    async verifyErrorMessageWhenAssociatingWithoutContact() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Click the "Related" tab
+        const relatedTab = this.page.getByText('Related');
+        await expect(relatedTab).toBeVisible({ timeout: 10000 });
+        await relatedTab.click();
+
+        // Click on the contact selection dropdown but do NOT select any contact
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+
+        // Directly click "Associate" without selecting any contact
+        const associateButton = this.page.getByRole('button', { name: /associate/i }).first();
+        await expect(associateButton).toBeVisible({ timeout: 5000 });
+        await associateButton.click();
+
+        // Assert that the appropriate validation/error message appear
+        const errorMessage = this.page.getByText(/please select contact first/i);
+        await expect(errorMessage).toBeVisible({ timeout: 5000 });
+
+        // Optionally close any dialog that might appear
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+
 }

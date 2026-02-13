@@ -20,8 +20,14 @@ const test = base.extend<{ sessionPage: any }>({
 
 test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
-    test('Test 1: Verify that a contact can be searched and associated successfully', async ({ sessionPage }) => {
-      const listingActions = new ListingActions(sessionPage);
-      await listingActions.verifyContactAssociationInRelatedTab();
-    });
+  test('Test 1: Verify that a contact can be searched and associated successfully', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyContactAssociationInRelatedTab();
+  });
+
+  test('Test 2: Verify error message shown if trying to associate without selecting a contact', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyErrorMessageWhenAssociatingWithoutContact();
+  });
+
 });

@@ -1,62 +1,6 @@
-<testsuites id="" name="" tests="29" failures="0" skipped="0" errors="0" time="325.3368729999997">
-<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-13T05:08:53.448Z" hostname="chromium" tests="29" failures="0" skipped="0" time="308.776" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that Title, Due Date, Staff, Task Status, and Task Type are mandatory fields in the &quot;Create New Task&quot; popup" classname="Pages\Listing\listingTaskForm.spec.ts" time="24.756">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify that a dropdown list opens when clicking on Task Type field in the &quot;New Task&quot; form" classname="Pages\Listing\listingTaskForm.spec.ts" time="4.625">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that a dropdown list opens when clicking on Task Status field." classname="Pages\Listing\listingTaskForm.spec.ts" time="5.402">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that selecting &quot;Lead Management&quot; from Task Type triggers the Lead Name dropdown in the task form" classname="Pages\Listing\listingTaskForm.spec.ts" time="5.287">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that a task is created for the selected listing when lead name is selected from the dropdown." classname="Pages\Listing\listingTaskForm.spec.ts" time="7.782">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that selecting a module shows a relevant dropdown list for that module (e.g., Listings, Properties, Projects)" classname="Pages\Listing\listingTaskForm.spec.ts" time="13.547">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that selecting a listing from the dropdown creates a task linked to that listing" classname="Pages\Listing\listingTaskForm.spec.ts" time="20.437">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that selecting the Property module shows a dropdown list for selecting a property" classname="Pages\Listing\listingTaskForm.spec.ts" time="5.893">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify that selecting a property from the dropdown creates a task linked to that property" classname="Pages\Listing\listingTaskForm.spec.ts" time="7.531">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that selecting the &quot;Project&quot; module shows a dropdown list for selecting a project" classname="Pages\Listing\listingTaskForm.spec.ts" time="3.056">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify that selecting a project from the dropdown creates a task linked to that project" classname="Pages\Listing\listingTaskForm.spec.ts" time="7.769">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify that setting a reminder time sends an email or notification at the selected interval" classname="Pages\Listing\listingTaskForm.spec.ts" time="12.313">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that recurring task checkbox shows a dropdown with &quot;Weekly,&quot; &quot;Monthly,&quot; and &quot;Yearly&quot; options." classname="Pages\Listing\listingTaskForm.spec.ts" time="3.545">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that selecting &quot;Weekly&quot; from the recurring task dropdown sends email/notifications weekly." classname="Pages\Listing\listingTaskForm.spec.ts" time="15.269">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that selecting &quot;Monthly&quot; from the recurring task dropdown sends email/notifications monthly." classname="Pages\Listing\listingTaskForm.spec.ts" time="14.551">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that selecting &quot;Yearly&quot; from the recurring task dropdown sends email/notifications yearly." classname="Pages\Listing\listingTaskForm.spec.ts" time="15.079">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify that clicking &quot;Sync Calendar&quot; allows selection of a time period for task reminders" classname="Pages\Listing\listingTaskForm.spec.ts" time="16.043">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Verify that when a comment is added in the &quot;Additional Comments&quot; section, a notification is sent to the selected staff member." classname="Pages\Listing\listingTaskForm.spec.ts" time="12.147">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify that the added comment appears below the &quot;Additional Comments&quot; section once the task is saved." classname="Pages\Listing\listingTaskForm.spec.ts" time="7.241">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Verify that after adding a file and saving the task, the file appears only once even if &quot;Save&quot; is clicked twice" classname="Pages\Listing\listingTaskForm.spec.ts" time="8.901">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Verify that the added file appears correctly after saving the task." classname="Pages\Listing\listingTaskForm.spec.ts" time="8.81">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Verify that after creating a task, the &quot;Create Sub Task&quot; option becomes visible." classname="Pages\Listing\listingTaskForm.spec.ts" time="7.803">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Verify that clicking on the &quot;Create Sub Task&quot; button shows a field below the staff section to enter a sub task title." classname="Pages\Listing\listingTaskForm.spec.ts" time="8.126">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Verify that the sub task is visible within the parent task after creation." classname="Pages\Listing\listingTaskForm.spec.ts" time="8.892">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Verify that when the sub task is opened, a parent task dropdown is shown next to the team field." classname="Pages\Listing\listingTaskForm.spec.ts" time="8.959">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 26: Verify that all fields of the original task are copied correctly to the new task when the &quot;Copy Task&quot; option is used." classname="Pages\Listing\listingTaskForm.spec.ts" time="15.546">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Verify that selecting a different parent task from the parent task dropdown updates the sub task’s parent task." classname="Pages\Listing\listingTaskForm.spec.ts" time="12.83">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Verify that the task is visible in the task list after it is saved." classname="Pages\Listing\listingTaskForm.spec.ts" time="10.132">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 29: Verify that changes to the original task do not affect the copied task after it has been created." classname="Pages\Listing\listingTaskForm.spec.ts" time="16.504">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="52.526484999999404">
+<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-13T05:40:27.170Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.554" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify error message shown if trying to associate without selecting a contact" classname="Pages\Listing\listingRelated.spec.ts" time="36.554">
 </testcase>
 </testsuite>
 </testsuites>
