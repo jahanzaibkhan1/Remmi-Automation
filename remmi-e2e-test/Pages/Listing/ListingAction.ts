@@ -21366,5 +21366,53 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    /**
+     * Verifies that clicking "Create New" contact opens a new contact tab.
+     */
+    async verifyCreateNewContactOpensContactTab() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Click the "Related" tab
+        const relatedTab = this.page.getByText('Related');
+        await expect(relatedTab).toBeVisible({ timeout: 10000 });
+        await relatedTab.click();
+
+        // Click on the contact selection dropdown
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+        await selectDropdown.click();
+
+        // Locate the search input for the contact within the "Related" tab
+        const searchInputInRelatedTab = this.page
+            .getByRole('tabpanel', { name: /related/i })
+            .getByPlaceholder(/search/i)
+            .first();
+        await expect(searchInputInRelatedTab).toBeVisible({ timeout: 10000 });
+        // Wait for the dropdown options to load
+        await this.page.waitForTimeout(1000);
+
+        // Find and click the "Create New" button
+        const createNewBtn = this.page.getByText('Create New');
+        await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+        await createNewBtn.click();
+
+        // Verify that a new contact tab/modal opens (adapt selector as needed for your UI)
+        const newContactForm = this.page.locator('#Contact_1 #rightbarwithscroll');
+        await expect(newContactForm).toBeVisible({ timeout: 10000 });
+
+        // Optionally: Close the dialog or modal
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
 
 }
