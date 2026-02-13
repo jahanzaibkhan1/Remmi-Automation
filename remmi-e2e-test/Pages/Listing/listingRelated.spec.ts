@@ -50,4 +50,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyContactAssociationInRelatedTab();
   });
 
+  test('Test 7: Verify confirmation popup and correct behavior when deleting a contact from Related tab', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyDeleteContactConfirmationPopup();
+  });
+
 });
