@@ -1,6 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="86.93170399999991">
-<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-02-12T11:11:00.689Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.185" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Verify that the task is visible in the task list after it is saved." classname="Pages\Listing\listingTaskForm.spec.ts" time="55.185">
+<testsuites id="" name="" tests="1" failures="0" skipped="1" errors="0" time="14.006809000000358">
+<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-13T10:47:38.512Z" hostname="chromium" tests="1" failures="0" skipped="1" time="5.945" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify that a contact type tag can be removed from a related contact" classname="Pages\Listing\listingRelated.spec.ts" time="5.945">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
 </testsuites>
