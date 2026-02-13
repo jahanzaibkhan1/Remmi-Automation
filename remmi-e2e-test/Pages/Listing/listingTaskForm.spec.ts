@@ -53,6 +53,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     test('Test 7: Verify that selecting a listing from the dropdown creates a task linked to that listing', async ({ sessionPage }) => {
       const listingActions = new ListingActions(sessionPage);
       await listingActions.verifyTaskIsLinkedToSelectedListing('Testing Task');
+      await listingActions.resetFilters();
     });
 
     test('Test 8: Verify that selecting the Property module shows a dropdown list for selecting a property', async ({ sessionPage }) => {

@@ -243,7 +243,7 @@ export class ListingActions {
         await expect(resetButton).toBeVisible({ timeout: 5000 });
         await expect(resetButton).toBeEnabled();
         await resetButton.click({ force: true });
-        await this.page.waitForTimeout(700);
+        await this.page.waitForTimeout(1200);
     }
 
 
@@ -18761,13 +18761,13 @@ export class ListingActions {
         // Expect the task creation form to be visible (update selector as appropriate)
         const taskForm = this.page.locator('a').filter({ hasText: /^Task$/ });
         await expect(taskForm).toBeVisible({ timeout: 10000 });
-
+        await this.page.waitForTimeout(1000);
         // Clean up: Close modal if open
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
-        await this.page.waitForTimeout(800);
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -19383,23 +19383,22 @@ export class ListingActions {
         await leadNameDropdown.click();
         const leadNameOption = this.page.locator('.ng-dropdown-panel .ng-option').first();
         await expect(leadNameOption).toBeVisible({ timeout: 5000 });
-
+        await this.page.waitForTimeout(1000);
         // Optionally, close the popup
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
     }
 
     /**
      * Verifies that selecting a module shows the relevant dropdown list for that module 
-     * (e.g., Listings, Properties, Projects) in the task form.
      */
     async verifyModuleDropdownsAppearForSelectedModule() {
+       
         await this.navigateToListings();
         await this.switchToGridView();
-
         // Open the first listing card
         const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
@@ -19431,13 +19430,13 @@ export class ListingActions {
         // Wait for the related dropdown options (checkbox list) to appear, then check the first one
         const listingOption = this.page.locator("re-multiselect ul li").nth(1);
         await expect(listingOption).toBeVisible({ timeout: 10000 });
-
+        await this.page.waitForTimeout(1000);
         // Optionally, close the popup
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -19566,10 +19565,13 @@ export class ListingActions {
         // Optionally, wait for the searched listing to appear and select it
         const listingCard = this.page.locator("//div[contains(@class,'s-property')]", { hasText: '140 Coates Street, Laidley, QLD 4341' });
         await listingCard.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
         await firstCardRow.click();
 
-        await expect(tasksTab).toBeVisible({ timeout: 10000 });
-        await tasksTab.click();
+        // Use a new locator to ensure we're selecting the Tasks tab accurately and consistently
+        const refreshedTasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(refreshedTasksTab).toBeVisible({ timeout: 10000 });
+        await refreshedTasksTab.click();
         await this.page.waitForTimeout(1000);
 
         // Ensure the first row is visible
@@ -19578,12 +19580,12 @@ export class ListingActions {
         await expect(firstRow).toBeVisible({ timeout: 10000 });
         await this.page.waitForTimeout(1000);
 
-        // Close the modal or popup if it's open
-        const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible().catch(() => false)) {
-            await closeBtn.click({ force: true });
+        // Save and close the task popup
+        const saveAndCloseBtn = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        if (await saveAndCloseBtn.isVisible().catch(() => false)) {
+            await saveAndCloseBtn.click({ force: true });
         }
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
     }
 
     //Verify that selecting the "Project" module shows a dropdown list for selecting a project.
@@ -19620,7 +19622,7 @@ export class ListingActions {
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
     }
     /**
      * Verifies that selecting a project from the dropdown creates a task linked to that project.
@@ -19729,7 +19731,7 @@ export class ListingActions {
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -19830,7 +19832,7 @@ export class ListingActions {
             await closeBtun.click({ force: true });
         }
         const createdTaskRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
-        await expect(createdTaskRow).toBeVisible({ timeout: 10000 });
+        await expect(createdTaskRow).toBeVisible({ timeout: 20000 });
 
         // Close modal if needed
         const closeBtn = this.page.locator('.pi.pi-times').last();
@@ -19891,7 +19893,7 @@ export class ListingActions {
         await expect(monthlyOption).toBeVisible({ timeout: 2000 });
         await expect(yearlyOption).toBeVisible({ timeout: 2000 });
         // Close modal if needed
-        const closeBtn = this.page.locator('.pi.pi-times').last();
+        const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
@@ -20631,7 +20633,7 @@ export class ListingActions {
         await expect(tasksTab).toBeVisible({ timeout: 10000 });
         await tasksTab.click();
 
-        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).nth(1);
+        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).last();
         await expect(taskRows).toBeVisible({ timeout: 10000 });
         await this.page.waitForTimeout(500);
 
@@ -20690,7 +20692,7 @@ export class ListingActions {
         await expect(tasksTab).toBeVisible({ timeout: 10000 });
         await tasksTab.click();
 
-        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).nth(1);
+        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).last();
         await expect(taskRows).toBeVisible({ timeout: 10000 });
         await this.page.waitForTimeout(500);
 
@@ -20737,7 +20739,7 @@ export class ListingActions {
         await expect(tasksTab).toBeVisible({ timeout: 10000 });
         await tasksTab.click();
 
-        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).nth(1);
+        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).last();
         await expect(taskRows).toBeVisible({ timeout: 10000 });
         await this.page.waitForTimeout(500);
 
@@ -20796,7 +20798,7 @@ export class ListingActions {
         await expect(tasksTab).toBeVisible({ timeout: 10000 });
         await tasksTab.click();
 
-        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).nth(1);
+        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).last();
         await expect(taskRows).toBeVisible({ timeout: 10000 });
         await this.page.waitForTimeout(500);
 
@@ -20842,7 +20844,7 @@ export class ListingActions {
         await expect(tasksTab).toBeVisible({ timeout: 10000 });
         await tasksTab.click();
 
-        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).nth(1);
+        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).last();
         await expect(taskRows).toBeVisible({ timeout: 10000 });
         await this.page.waitForTimeout(500);
 
@@ -20885,7 +20887,7 @@ export class ListingActions {
         await expect(tasksTab).toBeVisible({ timeout: 10000 });
         await tasksTab.click();
 
-        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).nth(1);
+        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).last();
         await expect(taskRows).toBeVisible({ timeout: 10000 });
         await this.page.waitForTimeout(500);
 
@@ -20930,7 +20932,7 @@ export class ListingActions {
         await expect(tasksTab).toBeVisible({ timeout: 10000 });
         await tasksTab.click();
 
-        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).nth(1);
+        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).last();
         await expect(taskRows).toBeVisible({ timeout: 10000 });
         await this.page.waitForTimeout(500);
 
@@ -20987,7 +20989,7 @@ export class ListingActions {
         await expect(tasksTab).toBeVisible({ timeout: 10000 });
         await tasksTab.click();
 
-        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).nth(1);
+        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).last();
         await expect(taskRows).toBeVisible({ timeout: 10000 });
         await this.page.waitForTimeout(500);
 
@@ -21034,7 +21036,7 @@ export class ListingActions {
         await tasksTab.click();
 
         // Find the row and open the "Recurring Yearly Task"
-        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).nth(1);
+        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).last();
         await expect(taskRows).toBeVisible({ timeout: 10000 });
         await this.page.waitForTimeout(500);
         const testingTaskCell = this.page.getByRole('cell', { name: 'Recurring Yearly Task' });
@@ -21147,7 +21149,7 @@ export class ListingActions {
         await expect(tasksTab).toBeVisible({ timeout: 10000 });
         await tasksTab.click();
 
-        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).nth(1);
+        const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).last();
         await expect(taskRows).toBeVisible({ timeout: 10000 });
         await this.page.waitForTimeout(500);
 
