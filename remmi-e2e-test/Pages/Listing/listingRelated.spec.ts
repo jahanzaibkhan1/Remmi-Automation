@@ -80,4 +80,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyRelationshipTagCanBeAdded();
   });
 
+  test('Test 13: Verify that duplicate relationship tags cannot be added', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyDuplicateRelationshipTagsCannotBeAdded();
+  });
+
 });
