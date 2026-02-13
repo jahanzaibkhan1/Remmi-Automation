@@ -60,4 +60,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyContactNotDeletedWhenNoClickedOnConfirmation();
   });
 
+  test('Test 9: Verify that a contact type tag can be added to a related contact', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyContactTypeTagCanBeAdded();
+  });
+
 });
