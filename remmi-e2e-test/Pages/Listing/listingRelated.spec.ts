@@ -90,4 +90,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyRelationshipTagCanBeRemoved();
   });
 
+  test('Test 15: Verify that total associated contact count updates correctly', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyAssociatedContactCountUpdatesCorrectly();
+  });
+
 });
