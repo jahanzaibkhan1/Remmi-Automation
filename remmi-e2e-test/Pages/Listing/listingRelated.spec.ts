@@ -95,4 +95,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyAssociatedContactCountUpdatesCorrectly();
   });
 
+  test('Test 16: Verify that contract related contacts are automatically added to Related contact tab', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyContractRelatedContactsAreAddedToRelatedTab();
+  });
+
 });

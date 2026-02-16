@@ -1,10 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="61.398597999999296">
-<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-16T07:08:43.030Z" hostname="chromium" tests="1" failures="0" skipped="0" time="53.062" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that total associated contact count updates correctly" classname="Pages\Listing\listingRelated.spec.ts" time="53.062">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.07157299999893">
+<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-16T11:50:23.513Z" hostname="chromium" tests="1" failures="0" skipped="0" time="43.484" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that contract related contacts are automatically added to Related contact tab" classname="Pages\Listing\listingRelated.spec.ts" time="43.484">
 <system-out>
-<![CDATA[Initial contact count: 1
-Contact count before deleting '11 22': 2
-Final contact count after deletion: 1
+<![CDATA[No contracts available, skipping delete step.
 ]]>
 </system-out>
 </testcase>
