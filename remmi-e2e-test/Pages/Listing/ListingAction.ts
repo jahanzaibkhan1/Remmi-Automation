@@ -24,6 +24,12 @@ export class ListingActions {
         await listingTab.click({ force: true });
     }
 
+    async navigateToContracts() {
+        const contracts = this.page.locator('li[data-label="Contracts"]');
+        await expect(contracts).toBeVisible({ timeout: 30000 });
+        await contracts.click({ force: true });
+    }
+
     async navigateToProperties() {
         const PropertyTab = this.page.getByRole('link', { name: 'Properties' });
         await PropertyTab.waitFor({ state: 'visible', timeout: 20000 });
@@ -22486,6 +22492,193 @@ export class ListingActions {
         }
 
         await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verifies that contract-related contacts are automatically added to the Related contact tab.
+     */
+    async verifyContractRelatedContactsAreAddedToRelatedTab() {
+
+        await this.navigateToContracts();
+
+        await this.page.waitForFunction(() => {
+            const rows = Array.from(document.querySelectorAll('table tr'));
+            return rows.length > 0;
+        }, { timeout: 30000 });
+
+
+        const contractSearchText = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880';
+
+        const keywordInput = this.page.locator('#keywordInput');
+        await keywordInput.waitFor({ state: 'visible', timeout: 20000 });
+        await keywordInput.fill('');
+        await keywordInput.type(contractSearchText, { delay: 20 });
+        const contractRow = this.page.locator('table tr', { hasText: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880' }).first();
+        await this.page.waitForTimeout(1200);
+        const noContractsCell = this.page.getByRole('cell', { name: 'No contracts available' });
+
+        if (await contractRow.isVisible().catch(() => false)) {
+
+            const checkbox = contractRow.getByRole('checkbox').nth(1);
+
+            await checkbox.waitFor({ state: 'visible', timeout: 10000 });
+
+            await checkbox.click();
+
+            const deleteButton = this.page.getByRole('button', { name: /delete/i }).first();
+
+            if (await deleteButton.isVisible().catch(() => false)) {
+
+                await deleteButton.click();
+
+
+                const yesButton = this.page.getByRole('button', { name: /^yes$/i }).first();
+
+                await yesButton.waitFor({ state: 'visible', timeout: 10000 });
+
+                await yesButton.click();
+
+
+                await contractRow.waitFor({ state: 'detached', timeout: 10000 });
+
+            }
+
+        }
+        else if (await noContractsCell.isVisible().catch(() => false)) {
+
+            console.log('No contracts available, skipping delete step.');
+
+        }
+
+        const plusIcon = this.page.getByRole('button', { name: '' });
+
+        await expect(plusIcon).toBeVisible({ timeout: 10000 });
+
+        await plusIcon.click();
+
+        const listingDropdown = this.page.locator("ng-select[name='listingid']");
+        await listingDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await listingDropdown.click();
+        await listingDropdown.type(contractSearchText, { delay: 10 });
+
+        const firstOption = this.page.locator(".ng-option:not(.ng-option-disabled)").first();
+        await firstOption.waitFor({ state: 'visible', timeout: 10000 });
+        await firstOption.click();
+
+        const contractStatusDropdown = this.page.locator('#Contract_0').getByText('Contract Status');
+        await contractStatusDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await contractStatusDropdown.click();
+
+        const settledOption = this.page.getByRole('option', { name: 'Settled' });
+        await settledOption.waitFor({ state: 'visible', timeout: 10000 });
+        await settledOption.click();
+
+
+
+        const offerStatusDropdown = this.page.locator('ng-select').filter({ hasText: 'Offer Status' }).getByRole('combobox');
+        await offerStatusDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await offerStatusDropdown.click();
+
+        const firstOfferStatusOption = this.page.getByRole('option', { name: 'Accepted' }).first();
+        await firstOfferStatusOption.waitFor({ state: 'visible', timeout: 10000 });
+        await firstOfferStatusOption.click();
+
+        const sellerDropdown = this.page.locator('div').filter({ hasText: /^Select Seller$/ }).nth(1);
+        await sellerDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await sellerDropdown.click();
+
+        const sellerSearchBox = this.page.locator('#Contract_0').getByRole('textbox', { name: 'Search' });
+        await sellerSearchBox.fill('Automation Testing');
+
+        const sellerOption = this.page.getByText(/Automation testing \(testing@/i).first();
+        await sellerOption.waitFor({ state: 'visible', timeout: 20000 });
+        await sellerOption.click();
+
+        const sellersSolicitorDropdown = this.page.getByText('Select Sellers Solicitor');
+        await sellersSolicitorDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await sellersSolicitorDropdown.click();
+
+        const sellersSolicitorSearchBox = this.page.locator('#Contract_0').getByRole('textbox', { name: 'Search' });
+        await sellersSolicitorSearchBox.fill('11 22');
+
+        const sellersSolicitorOption = this.page.getByText('22 (11@22.com.au)').first();
+        await sellersSolicitorOption.waitFor({ state: 'visible', timeout: 20000 });
+        await sellersSolicitorOption.click();
+
+
+
+        const buyerDropdown = this.page.getByText('Select Buyer', { exact: true });
+        await buyerDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await buyerDropdown.click();
+
+        const buyerDropdownSearch = this.page.locator('#Contract_0').getByRole('textbox', { name: 'Search' });
+        await buyerDropdownSearch.fill('5555');
+
+        const buyerDropdownOption = this.page.getByRole('listitem').filter({ hasText: '(butt.ahmad78690@gmail.com)' }).first();
+        await buyerDropdownOption.waitFor({ state: 'visible', timeout: 20000 });
+        await buyerDropdownOption.click();
+
+
+
+        const offerDateInput = this.page.locator("//input[@name='dateOffer']");
+        await offerDateInput.scrollIntoViewIfNeeded();
+
+        const now = new Date();
+        const currentDateStr =
+            `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+        await offerDateInput.fill(currentDateStr);
+        await offerDateInput.press('Enter');
+
+
+
+        const priceInput = this.page.locator('input[name="price"]').first();
+        await priceInput.fill('10000');
+
+
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
+
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await saveAndCloseButton.click();
+
+
+
+        await expect(
+            this.page.getByRole('alert', { name: 'Contract added successfully' })
+        ).toBeVisible({ timeout: 10000 });
+
+
+
+        await this.navigateToListings();
+
+        await this.switchToGridView();
+
+        // Search for the listing by its name using the keyword input field
+        const nameSearchInput = this.page.locator('#keywordInput');
+        await nameSearchInput.waitFor({ state: 'visible', timeout: 10000 });
+        const listingName = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880'; // Replace with actual listing name if needed
+        await nameSearchInput.fill(listingName);
+        await nameSearchInput.press('Enter');
+        // Wait for the first listing card to appear in the list/grid
+        const firstListingCard = this.page.getByRole('heading', { name: '""Sauer LLC"" 453/37 Eliseo' }).first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 20000 });
+        await firstListingCard.click();
+        const relatedTab = this.page.getByText('Related');
+
+        await relatedTab.waitFor({ state: 'visible', timeout: 10000 });
+
+        await relatedTab.click();
+
+        // Scroll into view before making assertions
+        const buyerCell = this.page.getByRole('table').getByText('Buyer').last();
+        await buyerCell.scrollIntoViewIfNeeded();
+        await expect(buyerCell).toBeVisible({ timeout: 10000 });
+
+        const sellerSolicitorCell = this.page.getByRole('table').getByText('Seller Solicitor');
+        await sellerSolicitorCell.scrollIntoViewIfNeeded();
+        await expect(sellerSolicitorCell).toBeVisible({ timeout: 10000 });
+
     }
 
 
