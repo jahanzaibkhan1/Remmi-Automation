@@ -22370,5 +22370,126 @@ export class ListingActions {
 
     }
 
+    async verifyAssociatedContactCountUpdatesCorrectly() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        const relatedTab = this.page.getByText('Related');
+        await expect(relatedTab).toBeVisible({ timeout: 10000 });
+        await relatedTab.click();
+
+        const recordsBadge = this.page.locator('div.mt-4 > p.ng-star-inserted', { hasText: 'Records: ' }).first();
+        await recordsBadge.evaluate(el => el.scrollIntoView({ block: 'center', inline: 'center' }));
+        await expect(recordsBadge).toBeVisible({ timeout: 10000 });
+
+        const recordsText = await recordsBadge.textContent();
+        const recordMatch = recordsText?.match(/Records:\s*(\d+)/);
+        const initialCount = recordMatch ? parseInt(recordMatch[1], 10) : 0;
+        console.log(`Initial contact count: ${initialCount}`); // Initial count
+
+        const getContactCount = async () => {
+            const badgeText = await recordsBadge.textContent();
+            const match = badgeText?.match(/Records:\s*(\d+)/);
+            return match ? parseInt(match[1], 10) : 0;
+        };
+
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await selectDropdown.scrollIntoViewIfNeeded();
+        await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+        await selectDropdown.click();
+
+        const searchInput = this.page
+            .getByRole('tabpanel', { name: /related/i })
+            .getByPlaceholder(/search/i)
+            .first();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.fill('11 22');
+
+        const suggestedContact = this.page.getByRole('listitem').filter({ hasText: '22 (11@22.com.au)' }).last();
+        await expect(suggestedContact).toBeVisible({ timeout: 20000 });
+        await suggestedContact.click();
+        await this.page.mouse.click(0, 0);
+
+        const associateButton = this.page.getByRole('button', { name: /associate/i }).first();
+        await expect(associateButton).toBeVisible({ timeout: 5000 });
+        await associateButton.click();
+
+        const duplicateAlert = this.page.getByRole('alert', { name: /Contact is already associate/i });
+        const successToast = this.page.getByText(/Contact attached successfully/i);
+        const alertOrSuccessLocator = duplicateAlert.or(successToast);
+        await expect(alertOrSuccessLocator).toBeVisible({ timeout: 10000 });
+
+        let added = false;
+        if (await successToast.isVisible().catch(() => false)) {
+            const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).first();
+            await associatedContactRow.scrollIntoViewIfNeeded();
+            await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
+
+            await this.page.waitForFunction(
+                async (initial) => {
+                    const badge = document.querySelector('div.mt-4 > p.ng-star-inserted');
+                    if (!badge) return false;
+                    const match = badge.textContent?.match(/Records:\s*(\d+)/);
+                    return match ? parseInt(match[1], 10) > initial : false;
+                },
+                initialCount,
+                { timeout: 5000 }
+            );
+
+            added = true;
+        }
+
+        // Log the count after adding but BEFORE deletion
+        const countBeforeDelete = await getContactCount();
+        console.log(`Contact count before deleting '11 22': ${countBeforeDelete}`); // <-- log here
+
+        const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).first();
+        const deleteIcon = associatedContactRow.getByRole('img', { name: 'delete' }).first();
+        await expect(deleteIcon).toBeVisible({ timeout: 10000 });
+        await deleteIcon.click();
+
+        const yesButton = this.page.getByRole('button', { name: /^Yes$/i }).first();
+        await expect(yesButton).toBeVisible({ timeout: 10000 });
+        await yesButton.click();
+
+        const removedToast = this.page.getByText(/Contact deleted successfully/i);
+        await expect(removedToast).toBeVisible({ timeout: 10000 });
+        await expect(associatedContactRow).not.toBeVisible({ timeout: 10000 });
+
+        if (added) {
+            await this.page.waitForFunction(
+                async (expected) => {
+                    const badge = document.querySelector('div.mt-4 > p.ng-star-inserted');
+                    if (!badge) return false;
+                    const match = badge.textContent?.match(/Records:\s*(\d+)/);
+                    return match ? parseInt(match[1], 10) === expected : false;
+                },
+                initialCount,
+                { timeout: 5000 }
+            );
+        }
+
+        const finalCount = await getContactCount();
+        console.log(`Final contact count after deletion: ${finalCount}`); // Final count
+
+        if (added && finalCount !== initialCount) {
+            throw new Error(`Expected count after deletion to be ${initialCount}, but got ${finalCount}`);
+        }
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(1000);
+    }
+
+
+
+
 
 }

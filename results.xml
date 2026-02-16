@@ -1,32 +1,12 @@
-<testsuites id="" name="" tests="14" failures="0" skipped="0" errors="0" time="103.68202000000001">
-<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-16T06:39:33.274Z" hostname="chromium" tests="14" failures="0" skipped="0" time="100.269" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that a contact can be searched and associated successfully" classname="Pages\Listing\listingRelated.spec.ts" time="37.24">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify error message shown if trying to associate without selecting a contact" classname="Pages\Listing\listingRelated.spec.ts" time="3.882">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that a non-existing contact shows &quot;Add New contact&quot; button" classname="Pages\Listing\listingRelated.spec.ts" time="3.301">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that clicking &quot;Add New contact&quot; opens a new contact tab" classname="Pages\Listing\listingRelated.spec.ts" time="3.517">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that a newly created contact is automatically added to the Related contact list" classname="Pages\Listing\listingRelated.spec.ts" time="6.99">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that a contact can be removed from the related contact list" classname="Pages\Listing\listingRelated.spec.ts" time="5.596">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify confirmation popup and correct behavior when deleting a contact from Related tab" classname="Pages\Listing\listingRelated.spec.ts" time="6.198">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that a contact is not deleted if &quot;No&quot; is clicked on confirmation popup" classname="Pages\Listing\listingRelated.spec.ts" time="6.361">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify that a contact type tag can be added to a related contact" classname="Pages\Listing\listingRelated.spec.ts" time="6.006">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that duplicate contact type tags cannot be added" classname="Pages\Listing\listingRelated.spec.ts" time="4.102">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify that a contact type tag can be removed from a related contact" classname="Pages\Listing\listingRelated.spec.ts" time="2.629">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify that a relationship tag can be added to a related contact" classname="Pages\Listing\listingRelated.spec.ts" time="6.274">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that duplicate relationship tags cannot be added" classname="Pages\Listing\listingRelated.spec.ts" time="4.151">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that a relationship tag can be removed from a related contact" classname="Pages\Listing\listingRelated.spec.ts" time="4.022">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="61.398597999999296">
+<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-16T07:08:43.030Z" hostname="chromium" tests="1" failures="0" skipped="0" time="53.062" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that total associated contact count updates correctly" classname="Pages\Listing\listingRelated.spec.ts" time="53.062">
+<system-out>
+<![CDATA[Initial contact count: 1
+Contact count before deleting '11 22': 2
+Final contact count after deletion: 1
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
