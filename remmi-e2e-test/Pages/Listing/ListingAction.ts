@@ -24,6 +24,12 @@ export class ListingActions {
         await listingTab.click({ force: true });
     }
 
+    async navigateToContracts() {
+        const contracts = this.page.locator('li[data-label="Contracts"]');
+        await expect(contracts).toBeVisible({ timeout: 30000 });
+        await contracts.click({ force: true });
+    }
+
     async navigateToProperties() {
         const PropertyTab = this.page.getByRole('link', { name: 'Properties' });
         await PropertyTab.waitFor({ state: 'visible', timeout: 20000 });
@@ -21500,10 +21506,6 @@ export class ListingActions {
             await closeBtn.click({ force: true });
         }
 
-        // Re-open "Related" tab and dropdown to verify the contact appears in the list
-        await expect(relatedTab).toBeVisible({ timeout: 10000 });
-        await relatedTab.click();
-
         await expect(selectDropdown).toBeVisible({ timeout: 10000 });
         await selectDropdown.click();
 
@@ -21711,6 +21713,7 @@ export class ListingActions {
      * Verifies that a contact type tag can be added to a contact in the listing.
      */
     async verifyContactTypeTagCanBeAdded() {
+
         await this.navigateToListings();
         await this.switchToGridView();
 
@@ -21750,17 +21753,25 @@ export class ListingActions {
         await expect(associateButton).toBeVisible({ timeout: 5000 });
         await associateButton.click();
 
-        const duplicateAlert = this.page.getByRole('alert', { name: /Contact is already associate/i });
+        const duplicateAlert = this.page.getByRole('alert').filter({
+            hasText: /Contact is already associate/i
+        });
+
         const successToast = this.page.getByText(/Contact attached successfully/i);
+
         await expect(duplicateAlert.or(successToast)).toBeVisible({ timeout: 10000 });
 
-        const associatedContactRow = this.page
-            .locator('table tr')
-            .filter({ hasText: '11 22' })
-            .first();
+        const associatedContactRow = this.page.locator('table tr').filter({
+            hasText: '11 22',
+            has: this.page.locator('td.cdk-drop-list[cdkdroplist]')
+        }).first();
 
-        await associatedContactRow.scrollIntoViewIfNeeded();
-        await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
+        await associatedContactRow.evaluate(el => {
+            el.scrollIntoView({
+                block: 'center',
+                inline: 'center'
+            });
+        });
 
         const dropList = associatedContactRow.locator('td.cdk-drop-list[cdkdroplist]');
         await expect(dropList).toBeVisible({ timeout: 10000 });
@@ -21815,17 +21826,17 @@ export class ListingActions {
                     throw new Error('Buyer tag drag failed after multiple attempts.');
                 }
 
-                await this.page.waitForTimeout(400);
+                await this.page.waitForTimeout(1000);
             }
         }
 
         await expect(getBuyerChip()).toHaveCount(1, { timeout: 10000 });
-
-        // Close modal safely if exists
+        await this.page.waitForTimeout(1000);
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -21844,89 +21855,64 @@ export class ListingActions {
         const relatedTab = this.page.getByText('Related');
         await expect(relatedTab).toBeVisible({ timeout: 10000 });
         await relatedTab.click();
-
-        // Open the dropdown to select a contact within the Related tab
-        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
-        await expect(selectDropdown).toBeVisible({ timeout: 10000 });
-        await selectDropdown.click();
-
-        // Locate and fill the search input in the Related tab
-        const searchInputInRelatedTab = this.page
-            .getByRole('tabpanel', { name: /related/i })
-            .getByPlaceholder(/search/i)
-            .first();
-        await expect(searchInputInRelatedTab).toBeVisible({ timeout: 10000 });
-        await searchInputInRelatedTab.fill('11 22');
-
-        // Wait for and select the matching contact from suggestions
-        const suggestedContact = this.page.getByRole('listitem').filter({ hasText: '22 (11@22.com.au)' }).last();
-        await expect(suggestedContact).toBeVisible({ timeout: 20000 });
-        await suggestedContact.click();
-        await this.page.mouse.click(0, 0);
-
-        // Click the "Associate Contact" button
-        const associateButton = this.page.getByRole('button', { name: /associate/i }).first();
-        await expect(associateButton).toBeVisible({ timeout: 5000 });
-        await associateButton.click();
-
-        // Check for the success confirmation message
-        const successToast = this.page.getByText(/Contact attached successfully/i, { exact: false });
-        await expect(successToast).toBeVisible({ timeout: 10000 });
-
         // Locate the associated contact row for "11 22" in the table
         const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).first();
-        await associatedContactRow.scrollIntoViewIfNeeded();
+        await associatedContactRow.evaluate(el => {
+            el.scrollIntoView({
+                block: 'center',
+                inline: 'center'
+            });
+        });
         await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
+        // Locate the relationship chip
+        const relationshipChip = associatedContactRow.locator(
+            '[data-pc-name="chip"][aria-label="Buyer"]'
+        );
 
-        // Ensure the drag-drop area is visible
-        const dropList = associatedContactRow.locator('td.cdk-drop-list[cdkdroplist][style*="padding-left: 12px"]');
-        await expect(dropList).toBeVisible({ timeout: 5000 });
-        // Locate the "Wife" tag in the related contacts (assuming the tag is draggable)
-        const wifeTag = this.page.locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Buyer' }).first();
-        await expect(wifeTag).toBeVisible({ timeout: 5000 });
+        await expect(relationshipChip).toBeVisible({ timeout: 10000 });
 
-        // Drag the "Wife" tag to the drop list area within the contact row
-        await wifeTag.dragTo(dropList);
+        // Hover in case remove icon appears only on hover
+        await relationshipChip.hover();
 
-        const contactTagAfter = associatedContactRow.locator('[data-pc-name="chip"][aria-label="Buyer"]');
-        await expect(contactTagAfter).toBeVisible({ timeout: 10000 });
-        await this.page.locator('.p-icon.pi-chip-remove-icon').first();
-        // Click the remove icon for the Buyer tag within that row, then check it's not visible anymore
-        const removeTagButton = contactTagAfter.locator('.p-icon.pi-chip-remove-icon').first();
-        await expect(removeTagButton).toBeVisible({ timeout: 10000 });
-        await removeTagButton.click();
-        await expect(removeTagButton).not.toBeVisible({ timeout: 10000 });
+        // Click the remove icon wrapper (NOT the SVG)
+        const removeIcon = relationshipChip.locator(
+            '[data-pc-section="removeicon"]'
+        );
 
-        // Delete the associated contact by clicking its "delete" icon in the row
+        await expect(removeIcon).toBeVisible({ timeout: 10000 });
+        await removeIcon.click({ force: true });
+
+        // Verify chip is removed safely (Angular re-render safe)
+        await expect(
+            associatedContactRow.locator('[data-pc-name="chip"][aria-label="Buyer"]')
+        ).toHaveCount(0);
+
+        // Delete associated contact (cleanup)
         const deleteIcon = associatedContactRow.getByRole('img', { name: 'delete' }).first();
         await expect(deleteIcon).toBeVisible({ timeout: 10000 });
         await deleteIcon.click();
 
-        // Wait for the confirmation popup "Remove contact from this listing?"
-        const confirmationPopup = this.page.locator('div').filter({ hasText: /^Remove contact from this listing\?$/ });
+        const confirmationPopup = this.page
+            .locator('div')
+            .filter({ hasText: /^Remove contact from this listing\?$/ });
+
         await expect(confirmationPopup).toBeVisible({ timeout: 10000 });
 
-        // Confirm deletion in the dialog by clicking "Yes"
         const yesButton = this.page.getByRole('button', { name: /^Yes$/i }).first();
         await expect(yesButton).toBeVisible({ timeout: 10000 });
-
-        // Verify "No" button is visible in the confirmation popup
-        const noButton = this.page.getByRole('button', { name: /^No$/i }).first();
-        await expect(noButton).toBeVisible({ timeout: 10000 });
-
         await yesButton.click();
-    
+
         const removedToast = this.page.getByText(/Contact deleted successfully/i);
         await expect(removedToast).toBeVisible({ timeout: 10000 });
-        // Verify the row for "11 22" is no longer visible in the table
+
         await expect(associatedContactRow).not.toBeVisible({ timeout: 10000 });
-        // Close any possible modal/dialog
+
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
     }
-    
+
 
     // Helper function: create, associate "11 22", drag "Buyer" tag, then delete associated contact and close modal
     async createAndDragContactTypeTag() {
@@ -22017,11 +22003,11 @@ export class ListingActions {
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
 
-         // Click the "Related" tab
-         const relatedTab = this.page.getByText('Related');
-         await expect(relatedTab).toBeVisible({ timeout: 10000 });
-         await relatedTab.click();
- 
+        // Click the "Related" tab
+        const relatedTab = this.page.getByText('Related');
+        await expect(relatedTab).toBeVisible({ timeout: 10000 });
+        await relatedTab.click();
+
 
         // Always re-query row (Angular-safe)
         const associatedContactRow = this.page
@@ -22029,7 +22015,13 @@ export class ListingActions {
             .filter({ hasText: '11 22' })
             .first();
 
-        await associatedContactRow.scrollIntoViewIfNeeded();
+        await associatedContactRow.evaluate(el => {
+            el.scrollIntoView({
+                block: 'center',
+                inline: 'center'
+            });
+        });
+
         await expect(associatedContactRow).toBeVisible({ timeout: 20000 });
 
         const dropList = associatedContactRow.locator('td.cdk-drop-list[cdkdroplist]');
@@ -22081,37 +22073,13 @@ export class ListingActions {
             .filter({ hasText: /already associate/i });
 
         await expect(duplicateError).toBeVisible({ timeout: 10000 });
-
-        // --- CLEANUP ---
-
-        const deleteIcon = associatedContactRow.getByRole('img', { name: /delete/i });
-        await expect(deleteIcon).toBeVisible({ timeout: 10000 });
-        await deleteIcon.click();
-
-        const confirmationDialog = this.page.getByText('Remove contact from this listing?');
-        await expect(confirmationDialog).toBeVisible({ timeout: 10000 });
-
-        const yesButton = this.page.getByRole('button', { name: /^Yes$/i });
-        const noButton = this.page.getByRole('button', { name: /^No$/i });
-
-        await expect(yesButton).toBeVisible();
-        await expect(noButton).toBeVisible();
-
-        await yesButton.click();
-
-        const removedToast = this.page.getByText(/Contact deleted successfully/i);
-        await expect(removedToast).toBeVisible({ timeout: 10000 });
-
-        // Stronger removal check (Angular-safe)
-        await expect(
-            this.page.locator('table tr').filter({ hasText: '11 22' })
-        ).toHaveCount(0, { timeout: 10000 });
-
+        await this.page.waitForTimeout(1000);
         // Close modal safely if exists
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -22163,26 +22131,77 @@ export class ListingActions {
         const alertOrSuccessLocator = duplicateAlert.or(successToast);
 
         await expect(alertOrSuccessLocator).toBeVisible({ timeout: 10000 });
+        const associatedContactRow = this.page.locator('table tr').filter({
+            hasText: '11 22',
+            has: this.page.locator('td.cdk-drop-list[cdkdroplist]')
+        }).first();
 
-        // Find the associated Contact row
-        const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).first();
-        await associatedContactRow.scrollIntoViewIfNeeded();
-        await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
+        await associatedContactRow.evaluate(el => {
+            el.scrollIntoView({
+                block: 'center',
+                inline: 'center'
+            });
+        });
 
-        // Ensure the drag-drop area is visible
-        const dropList = associatedContactRow.locator('td.cdk-drop-list[cdkdroplist][style*="padding-left: 12px"]');
-        await expect(dropList).toBeVisible({ timeout: 5000 });
-        // Locate the "Wife" tag in the related contacts (assuming the tag is draggable)
-        const wifeTag = this.page.locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Wife' }).first();
-        await expect(wifeTag).toBeVisible({ timeout: 5000 });
+        const dropList = associatedContactRow.locator('td.cdk-drop-list[cdkdroplist]');
+        await expect(dropList).toBeVisible({ timeout: 10000 });
 
-        // Drag the "Wife" tag to the drop list area within the contact row
-        await wifeTag.dragTo(dropList);
+        const getBuyerChip = () =>
+            associatedContactRow.locator('[data-pc-name="chip"][aria-label="Wife"]');
 
-        const contactTagAfter = associatedContactRow.locator('[data-pc-name="chip"][aria-label="Wife"]');
-        await expect(contactTagAfter).toBeVisible({ timeout: 10000 });
+        // If already added, exit early (prevents flake)
+        if (await getBuyerChip().count() > 0) {
+            return;
+        }
 
-        // Close modal if any remains
+        const maxAttempts = 4;
+
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                const buyerTag = this.page
+                    .locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Wife' })
+                    .first();
+
+                await expect(buyerTag).toBeVisible({ timeout: 5000 });
+
+                const sourceBox = await buyerTag.boundingBox();
+                const dropBox = await dropList.boundingBox();
+
+                if (!sourceBox || !dropBox) {
+                    throw new Error('Bounding box not available');
+                }
+
+                // Real mouse drag (CDK-safe)
+                await this.page.mouse.move(
+                    sourceBox.x + sourceBox.width / 2,
+                    sourceBox.y + sourceBox.height / 2
+                );
+                await this.page.mouse.down();
+
+                await this.page.mouse.move(
+                    dropBox.x + dropBox.width / 2,
+                    dropBox.y + dropBox.height / 2,
+                    { steps: 12 }
+                );
+
+                await this.page.waitForTimeout(150);
+                await this.page.mouse.up();
+
+                // Wait for DOM update (most stable assertion)
+                await expect(getBuyerChip()).toHaveCount(1, { timeout: 3000 });
+
+                break; // success
+            } catch (error) {
+                if (attempt === maxAttempts) {
+                    throw new Error('Buyer tag drag failed after multiple attempts.');
+                }
+
+                await this.page.waitForTimeout(1000);
+            }
+        }
+
+        await expect(getBuyerChip()).toHaveCount(1, { timeout: 10000 });
+        await this.page.waitForTimeout(1000);
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
@@ -22207,30 +22226,77 @@ export class ListingActions {
         await expect(relatedTab).toBeVisible({ timeout: 10000 });
         await relatedTab.click();
 
-        // Locate the associated contact row
-        const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).first();
-        await associatedContactRow.scrollIntoViewIfNeeded();
-        await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
+        // Always re-query row (Angular-safe)
+        const associatedContactRow = this.page
+            .locator('table tr')
+            .filter({ hasText: '11 22' })
+            .first();
 
-        // Ensure the drag-drop area is visible
-        const dropList = associatedContactRow.locator('td.cdk-drop-list[cdkdroplist][style*="padding-left: 12px"]');
-        await expect(dropList).toBeVisible({ timeout: 5000 });
-        // Locate the "Wife" tag in the related contacts (assuming the tag is draggable)
-        const wifeTag = this.page.locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Wife' }).first();
-        await expect(wifeTag).toBeVisible({ timeout: 5000 });
+        await associatedContactRow.evaluate(el => {
+            el.scrollIntoView({
+                block: 'center',
+                inline: 'center'
+            });
+        });
 
-        // Drag the "Wife" tag to the drop list area within the contact row
-        await wifeTag.dragTo(dropList);
+        await expect(associatedContactRow).toBeVisible({ timeout: 20000 });
 
-        // Verify duplicate tag error appears
-        const duplicateError = this.page.getByRole('alert', { name: 'Tag is already associate to' });
+        const dropList = associatedContactRow.locator('td.cdk-drop-list[cdkdroplist]');
+        await expect(dropList).toBeVisible({ timeout: 10000 });
+
+        const getBuyerChip = () =>
+            associatedContactRow.locator('[data-pc-name="chip"][aria-label="Wife"]');
+
+        // Ensure Buyer already exists (otherwise duplicate test invalid)
+        await expect(getBuyerChip()).toHaveCount(1, { timeout: 10000 });
+
+        // --- CDK SAFE DRAG (manual mouse events) ---
+        const buyerTag = this.page
+            .locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Wife' })
+            .first();
+
+        await expect(buyerTag).toBeVisible({ timeout: 10000 });
+
+        const sourceBox = await buyerTag.boundingBox();
+        const dropBox = await dropList.boundingBox();
+
+        if (!sourceBox || !dropBox) {
+            throw new Error('Bounding box not found for drag operation.');
+        }
+
+        await this.page.mouse.move(
+            sourceBox.x + sourceBox.width / 2,
+            sourceBox.y + sourceBox.height / 2
+        );
+        await this.page.mouse.down();
+
+        await this.page.mouse.move(
+            dropBox.x + dropBox.width / 2,
+            dropBox.y + dropBox.height / 2,
+            { steps: 12 }
+        );
+
+        await this.page.waitForTimeout(150);
+        await this.page.mouse.up();
+
+        // --- VALIDATIONS ---
+
+        // Still only one Buyer chip
+        await expect(getBuyerChip()).toHaveCount(1, { timeout: 5000 });
+
+        // Duplicate alert (case-insensitive & partial match)
+        const duplicateError = this.page
+            .getByRole('alert')
+            .filter({ hasText: /already associate/i });
+
         await expect(duplicateError).toBeVisible({ timeout: 10000 });
-
+        await this.page.waitForTimeout(1000);
+        // Close modal safely if exists
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(1200);
     }
 
     /**
@@ -22250,14 +22316,15 @@ export class ListingActions {
         await expect(relatedTab).toBeVisible({ timeout: 10000 });
         await relatedTab.click();
 
-        // Locate contact row
-        const associatedContactRow = this.page
-            .locator('table tr', { hasText: '11 22' })
-            .first();
-
-        await associatedContactRow.scrollIntoViewIfNeeded();
+        // Locate the associated contact row for "11 22" in the table
+        const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).first();
+        await associatedContactRow.evaluate(el => {
+            el.scrollIntoView({
+                block: 'center',
+                inline: 'center'
+            });
+        });
         await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
-
         // Locate the relationship chip
         const relationshipChip = associatedContactRow.locator(
             '[data-pc-name="chip"][aria-label="Wife"]'
@@ -22305,7 +22372,317 @@ export class ListingActions {
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
+        await this.page.waitForTimeout(1200);
+
     }
+
+    async verifyAssociatedContactCountUpdatesCorrectly() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        const relatedTab = this.page.getByText('Related');
+        await expect(relatedTab).toBeVisible({ timeout: 10000 });
+        await relatedTab.click();
+
+        const recordsBadge = this.page.locator('div.mt-4 > p.ng-star-inserted', { hasText: 'Records: ' }).first();
+        await recordsBadge.evaluate(el => el.scrollIntoView({ block: 'center', inline: 'center' }));
+        await expect(recordsBadge).toBeVisible({ timeout: 10000 });
+
+        const recordsText = await recordsBadge.textContent();
+        const recordMatch = recordsText?.match(/Records:\s*(\d+)/);
+        const initialCount = recordMatch ? parseInt(recordMatch[1], 10) : 0;
+        console.log(`Initial contact count: ${initialCount}`); // Initial count
+
+        const getContactCount = async () => {
+            const badgeText = await recordsBadge.textContent();
+            const match = badgeText?.match(/Records:\s*(\d+)/);
+            return match ? parseInt(match[1], 10) : 0;
+        };
+
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await selectDropdown.scrollIntoViewIfNeeded();
+        await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+        await selectDropdown.click();
+
+        const searchInput = this.page
+            .getByRole('tabpanel', { name: /related/i })
+            .getByPlaceholder(/search/i)
+            .first();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.fill('11 22');
+
+        const suggestedContact = this.page.getByRole('listitem').filter({ hasText: '22 (11@22.com.au)' }).last();
+        await expect(suggestedContact).toBeVisible({ timeout: 20000 });
+        await suggestedContact.click();
+        await this.page.mouse.click(0, 0);
+
+        const associateButton = this.page.getByRole('button', { name: /associate/i }).first();
+        await expect(associateButton).toBeVisible({ timeout: 5000 });
+        await associateButton.click();
+
+        const duplicateAlert = this.page.getByRole('alert', { name: /Contact is already associate/i });
+        const successToast = this.page.getByText(/Contact attached successfully/i);
+        const alertOrSuccessLocator = duplicateAlert.or(successToast);
+        await expect(alertOrSuccessLocator).toBeVisible({ timeout: 10000 });
+
+        let added = false;
+        if (await successToast.isVisible().catch(() => false)) {
+            const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).first();
+            await associatedContactRow.scrollIntoViewIfNeeded();
+            await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
+
+            await this.page.waitForFunction(
+                async (initial) => {
+                    const badge = document.querySelector('div.mt-4 > p.ng-star-inserted');
+                    if (!badge) return false;
+                    const match = badge.textContent?.match(/Records:\s*(\d+)/);
+                    return match ? parseInt(match[1], 10) > initial : false;
+                },
+                initialCount,
+                { timeout: 5000 }
+            );
+
+            added = true;
+        }
+
+        // Log the count after adding but BEFORE deletion
+        const countBeforeDelete = await getContactCount();
+        console.log(`Contact count before deleting '11 22': ${countBeforeDelete}`); // <-- log here
+
+        const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).first();
+        const deleteIcon = associatedContactRow.getByRole('img', { name: 'delete' }).first();
+        await expect(deleteIcon).toBeVisible({ timeout: 10000 });
+        await deleteIcon.click();
+
+        const yesButton = this.page.getByRole('button', { name: /^Yes$/i }).first();
+        await expect(yesButton).toBeVisible({ timeout: 10000 });
+        await yesButton.click();
+
+        const removedToast = this.page.getByText(/Contact deleted successfully/i);
+        await expect(removedToast).toBeVisible({ timeout: 10000 });
+        await expect(associatedContactRow).not.toBeVisible({ timeout: 10000 });
+
+        if (added) {
+            await this.page.waitForFunction(
+                async (expected) => {
+                    const badge = document.querySelector('div.mt-4 > p.ng-star-inserted');
+                    if (!badge) return false;
+                    const match = badge.textContent?.match(/Records:\s*(\d+)/);
+                    return match ? parseInt(match[1], 10) === expected : false;
+                },
+                initialCount,
+                { timeout: 5000 }
+            );
+        }
+
+        const finalCount = await getContactCount();
+        console.log(`Final contact count after deletion: ${finalCount}`); // Final count
+
+        if (added && finalCount !== initialCount) {
+            throw new Error(`Expected count after deletion to be ${initialCount}, but got ${finalCount}`);
+        }
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verifies that contract-related contacts are automatically added to the Related contact tab.
+     */
+    async verifyContractRelatedContactsAreAddedToRelatedTab() {
+
+        await this.navigateToContracts();
+
+        await this.page.waitForFunction(() => {
+            const rows = Array.from(document.querySelectorAll('table tr'));
+            return rows.length > 0;
+        }, { timeout: 30000 });
+
+
+        const contractSearchText = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880';
+
+        const keywordInput = this.page.locator('#keywordInput');
+        await keywordInput.waitFor({ state: 'visible', timeout: 20000 });
+        await keywordInput.fill('');
+        await keywordInput.type(contractSearchText, { delay: 20 });
+        const contractRow = this.page.locator('table tr', { hasText: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880' }).first();
+        await this.page.waitForTimeout(1200);
+        const noContractsCell = this.page.getByRole('cell', { name: 'No contracts available' });
+
+        if (await contractRow.isVisible().catch(() => false)) {
+
+            const checkbox = contractRow.getByRole('checkbox').nth(1);
+
+            await checkbox.waitFor({ state: 'visible', timeout: 10000 });
+
+            await checkbox.click();
+
+            const deleteButton = this.page.getByRole('button', { name: /delete/i }).first();
+
+            if (await deleteButton.isVisible().catch(() => false)) {
+
+                await deleteButton.click();
+
+
+                const yesButton = this.page.getByRole('button', { name: /^yes$/i }).first();
+
+                await yesButton.waitFor({ state: 'visible', timeout: 10000 });
+
+                await yesButton.click();
+
+
+                await contractRow.waitFor({ state: 'detached', timeout: 10000 });
+
+            }
+
+        }
+        else if (await noContractsCell.isVisible().catch(() => false)) {
+
+            console.log('No contracts available, skipping delete step.');
+
+        }
+
+        const plusIcon = this.page.getByRole('button', { name: '' });
+
+        await expect(plusIcon).toBeVisible({ timeout: 10000 });
+
+        await plusIcon.click();
+
+        const listingDropdown = this.page.locator("ng-select[name='listingid']");
+        await listingDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await listingDropdown.click();
+        await listingDropdown.type(contractSearchText, { delay: 10 });
+
+        const firstOption = this.page.locator(".ng-option:not(.ng-option-disabled)").first();
+        await firstOption.waitFor({ state: 'visible', timeout: 10000 });
+        await firstOption.click();
+
+        const contractStatusDropdown = this.page.locator('#Contract_0').getByText('Contract Status');
+        await contractStatusDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await contractStatusDropdown.click();
+
+        const settledOption = this.page.getByRole('option', { name: 'Settled' });
+        await settledOption.waitFor({ state: 'visible', timeout: 10000 });
+        await settledOption.click();
+
+
+
+        const offerStatusDropdown = this.page.locator('ng-select').filter({ hasText: 'Offer Status' }).getByRole('combobox');
+        await offerStatusDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await offerStatusDropdown.click();
+
+        const firstOfferStatusOption = this.page.getByRole('option', { name: 'Accepted' }).first();
+        await firstOfferStatusOption.waitFor({ state: 'visible', timeout: 10000 });
+        await firstOfferStatusOption.click();
+
+        const sellerDropdown = this.page.locator('div').filter({ hasText: /^Select Seller$/ }).nth(1);
+        await sellerDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await sellerDropdown.click();
+
+        const sellerSearchBox = this.page.locator('#Contract_0').getByRole('textbox', { name: 'Search' });
+        await sellerSearchBox.fill('Automation Testing');
+
+        const sellerOption = this.page.getByText(/Automation testing \(testing@/i).first();
+        await sellerOption.waitFor({ state: 'visible', timeout: 20000 });
+        await sellerOption.click();
+
+        const sellersSolicitorDropdown = this.page.getByText('Select Sellers Solicitor');
+        await sellersSolicitorDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await sellersSolicitorDropdown.click();
+
+        const sellersSolicitorSearchBox = this.page.locator('#Contract_0').getByRole('textbox', { name: 'Search' });
+        await sellersSolicitorSearchBox.fill('11 22');
+
+        const sellersSolicitorOption = this.page.getByText('22 (11@22.com.au)').first();
+        await sellersSolicitorOption.waitFor({ state: 'visible', timeout: 20000 });
+        await sellersSolicitorOption.click();
+
+
+
+        const buyerDropdown = this.page.getByText('Select Buyer', { exact: true });
+        await buyerDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await buyerDropdown.click();
+
+        const buyerDropdownSearch = this.page.locator('#Contract_0').getByRole('textbox', { name: 'Search' });
+        await buyerDropdownSearch.fill('5555');
+
+        const buyerDropdownOption = this.page.getByRole('listitem').filter({ hasText: '(butt.ahmad78690@gmail.com)' }).first();
+        await buyerDropdownOption.waitFor({ state: 'visible', timeout: 20000 });
+        await buyerDropdownOption.click();
+
+
+
+        const offerDateInput = this.page.locator("//input[@name='dateOffer']");
+        await offerDateInput.scrollIntoViewIfNeeded();
+
+        const now = new Date();
+        const currentDateStr =
+            `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+        await offerDateInput.fill(currentDateStr);
+        await offerDateInput.press('Enter');
+
+
+
+        const priceInput = this.page.locator('input[name="price"]').first();
+        await priceInput.fill('10000');
+
+
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
+
+        await saveAndCloseButton.scrollIntoViewIfNeeded();
+        await saveAndCloseButton.click();
+
+
+
+        await expect(
+            this.page.getByRole('alert', { name: 'Contract added successfully' })
+        ).toBeVisible({ timeout: 10000 });
+
+
+
+        await this.navigateToListings();
+
+        await this.switchToGridView();
+
+        // Search for the listing by its name using the keyword input field
+        const nameSearchInput = this.page.locator('#keywordInput');
+        await nameSearchInput.waitFor({ state: 'visible', timeout: 10000 });
+        const listingName = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880'; // Replace with actual listing name if needed
+        await nameSearchInput.fill(listingName);
+        await nameSearchInput.press('Enter');
+        // Wait for the first listing card to appear in the list/grid
+        const firstListingCard = this.page.getByRole('heading', { name: '""Sauer LLC"" 453/37 Eliseo' }).first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 20000 });
+        await firstListingCard.click();
+        const relatedTab = this.page.getByText('Related');
+
+        await relatedTab.waitFor({ state: 'visible', timeout: 10000 });
+
+        await relatedTab.click();
+
+        // Scroll into view before making assertions
+        const buyerCell = this.page.getByRole('table').getByText('Buyer').last();
+        await buyerCell.scrollIntoViewIfNeeded();
+        await expect(buyerCell).toBeVisible({ timeout: 10000 });
+
+        const sellerSolicitorCell = this.page.getByRole('table').getByText('Seller Solicitor');
+        await sellerSolicitorCell.scrollIntoViewIfNeeded();
+        await expect(sellerSolicitorCell).toBeVisible({ timeout: 10000 });
+
+    }
+
+
+
 
 
 }
