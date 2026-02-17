@@ -22512,7 +22512,7 @@ export class ListingActions {
         const keywordInput = this.page.locator('#keywordInput');
         await keywordInput.waitFor({ state: 'visible', timeout: 20000 });
         await keywordInput.fill('');
-        await keywordInput.type(contractSearchText, { delay: 20 });
+        await keywordInput.type(contractSearchText, { delay: 50 });
         const contractRow = this.page.locator('table tr', { hasText: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880' }).first();
         await this.page.waitForTimeout(1200);
         const noContractsCell = this.page.getByRole('cell', { name: 'No contracts available' });
@@ -22594,31 +22594,42 @@ export class ListingActions {
         await sellerOption.waitFor({ state: 'visible', timeout: 20000 });
         await sellerOption.click();
 
-        const sellersSolicitorDropdown = this.page.getByText('Select Sellers Solicitor');
+         // Click the "x" icon in the buyer tags to clear if visible, otherwise skip
+         const sellersSolicitorDropdownIcon = this.page.locator('div:nth-child(2) > re-multiselect > .box > .tags > .selected_one > .pi');
+         if (await sellersSolicitorDropdownIcon.isVisible()) {
+             await sellersSolicitorDropdownIcon.click();
+         }
+
+        const sellersSolicitorDropdown = this.page.locator('.form-field:has(label:text("Seller\'s Solicitor")) .tags');
         await sellersSolicitorDropdown.waitFor({ state: 'visible', timeout: 10000 });
         await sellersSolicitorDropdown.click();
 
         const sellersSolicitorSearchBox = this.page.locator('#Contract_0').getByRole('textbox', { name: 'Search' });
-        await sellersSolicitorSearchBox.fill('11 22');
+        await sellersSolicitorSearchBox.waitFor({ state: 'visible', timeout: 10000 });
 
-        const sellersSolicitorOption = this.page.getByText('22 (11@22.com.au)').first();
-        await sellersSolicitorOption.waitFor({ state: 'visible', timeout: 20000 });
-        await sellersSolicitorOption.click();
+        const dropdown = this.page.locator('.drop_box');
+        await dropdown.waitFor({ state: 'visible', timeout: 20000 });
+        const firstSolicitorCheckbox = this.page.getByRole('listitem').filter({ hasText: '22' }).first();
+        await firstSolicitorCheckbox.waitFor({ state: 'attached', timeout: 20000 });
+        await firstSolicitorCheckbox.click({force: true});
 
 
+        // Click the "x" icon in the buyer tags to clear if visible, otherwise skip
+        const buyerClearIcon = this.page.locator('div:nth-child(3) > re-multiselect > .box > .tags > .selected_one > .pi');
+        if (await buyerClearIcon.isVisible()) {
+            await buyerClearIcon.click();
+        }
 
-        const buyerDropdown = this.page.getByText('Select Buyer', { exact: true });
+        const buyerDropdown = this.page.locator('.form-field:has(label:text("Buyer")) .tags').first();
         await buyerDropdown.waitFor({ state: 'visible', timeout: 10000 });
         await buyerDropdown.click();
 
         const buyerDropdownSearch = this.page.locator('#Contract_0').getByRole('textbox', { name: 'Search' });
-        await buyerDropdownSearch.fill('5555');
+        await buyerDropdownSearch.waitFor({ state: 'visible', timeout: 10000 });
 
-        const buyerDropdownOption = this.page.getByRole('listitem').filter({ hasText: '(butt.ahmad78690@gmail.com)' }).first();
-        await buyerDropdownOption.waitFor({ state: 'visible', timeout: 20000 });
-        await buyerDropdownOption.click();
-
-
+        const firstBuyerCheckbox = this.page.getByRole('listitem').filter({ hasText: 'Abe Weber (Abe.Weber@hotmail.' });
+        await firstBuyerCheckbox.waitFor({ state: 'visible', timeout: 20000 });
+        await firstBuyerCheckbox.click({force: true});
 
         const offerDateInput = this.page.locator("//input[@name='dateOffer']");
         await offerDateInput.scrollIntoViewIfNeeded();
@@ -22630,12 +22641,8 @@ export class ListingActions {
         await offerDateInput.fill(currentDateStr);
         await offerDateInput.press('Enter');
 
-
-
         const priceInput = this.page.locator('input[name="price"]').first();
         await priceInput.fill('10000');
-
-
 
         const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
 
@@ -22679,6 +22686,55 @@ export class ListingActions {
         await sellerSolicitorCell.scrollIntoViewIfNeeded();
         await expect(sellerSolicitorCell).toBeVisible({ timeout: 10000 });
 
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(1000);
+
+    }
+
+    /**
+     * Verify that contract related contacts are not removed when the contract is settled
+     */
+    public async verifyContractRelatedContactsRemainAfterSettlement() {
+        // Navigate to Listings and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Search for a test listing (replace with dynamic if needed)
+        const nameSearchInput = this.page.locator('#keywordInput');
+        await nameSearchInput.waitFor({ state: 'visible', timeout: 10000 });
+        const listingName = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880'; // replace as needed
+        await nameSearchInput.fill(listingName);
+        await nameSearchInput.press('Enter');
+
+        // Click the first listing card that matches
+        const firstListingCard = this.page.getByRole('heading', { name: '""Sauer LLC"" 453/37 Eliseo' }).first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 20000 });
+        await firstListingCard.click();
+
+        // Go to the Related tab
+        const relatedTab = this.page.getByText('Related');
+        await relatedTab.waitFor({ state: 'visible', timeout: 10000 });
+        await relatedTab.click();
+
+        // Scroll into view before making assertions
+        const buyerCell = this.page.getByRole('table').getByText('Buyer').last();
+        await buyerCell.scrollIntoViewIfNeeded();
+        await expect(buyerCell).toBeVisible({ timeout: 10000 });
+
+        const sellerSolicitorCell = this.page.getByRole('table').getByText('Seller Solicitor');
+        await sellerSolicitorCell.scrollIntoViewIfNeeded();
+        await expect(sellerSolicitorCell).toBeVisible({ timeout: 10000 });
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(1000);
     }
 
 
