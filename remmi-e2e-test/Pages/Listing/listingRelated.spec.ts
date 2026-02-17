@@ -130,4 +130,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyContactAssociationInRelatedTab();
   });
 
+  test('Test 23: Verify that removing a contact  does not affect unrelated contacts', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyContactAssociationInRelatedTab();
+  });
+
 });
