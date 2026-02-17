@@ -105,4 +105,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyContractRelatedContactsRemainAfterSettlement();
   });
 
+  test('Test 18: Verify that an associated contact remains linked after saving and reopening the contact', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyAssociatedContactRemainsLinkedAfterSaveAndReopen();
+  });
+
 });

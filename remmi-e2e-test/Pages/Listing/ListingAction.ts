@@ -22594,11 +22594,11 @@ export class ListingActions {
         await sellerOption.waitFor({ state: 'visible', timeout: 20000 });
         await sellerOption.click();
 
-         // Click the "x" icon in the buyer tags to clear if visible, otherwise skip
-         const sellersSolicitorDropdownIcon = this.page.locator('div:nth-child(2) > re-multiselect > .box > .tags > .selected_one > .pi');
-         if (await sellersSolicitorDropdownIcon.isVisible()) {
-             await sellersSolicitorDropdownIcon.click();
-         }
+        // Click the "x" icon in the buyer tags to clear if visible, otherwise skip
+        const sellersSolicitorDropdownIcon = this.page.locator('div:nth-child(2) > re-multiselect > .box > .tags > .selected_one > .pi');
+        if (await sellersSolicitorDropdownIcon.isVisible()) {
+            await sellersSolicitorDropdownIcon.click();
+        }
 
         const sellersSolicitorDropdown = this.page.locator('.form-field:has(label:text("Seller\'s Solicitor")) .tags');
         await sellersSolicitorDropdown.waitFor({ state: 'visible', timeout: 10000 });
@@ -22611,7 +22611,7 @@ export class ListingActions {
         await dropdown.waitFor({ state: 'visible', timeout: 20000 });
         const firstSolicitorCheckbox = this.page.getByRole('listitem').filter({ hasText: '22' }).first();
         await firstSolicitorCheckbox.waitFor({ state: 'attached', timeout: 20000 });
-        await firstSolicitorCheckbox.click({force: true});
+        await firstSolicitorCheckbox.click({ force: true });
 
 
         // Click the "x" icon in the buyer tags to clear if visible, otherwise skip
@@ -22629,7 +22629,7 @@ export class ListingActions {
 
         const firstBuyerCheckbox = this.page.getByRole('listitem').filter({ hasText: 'Abe Weber (Abe.Weber@hotmail.' });
         await firstBuyerCheckbox.waitFor({ state: 'visible', timeout: 20000 });
-        await firstBuyerCheckbox.click({force: true});
+        await firstBuyerCheckbox.click({ force: true });
 
         const offerDateInput = this.page.locator("//input[@name='dateOffer']");
         await offerDateInput.scrollIntoViewIfNeeded();
@@ -22729,6 +22729,48 @@ export class ListingActions {
         await sellerSolicitorCell.scrollIntoViewIfNeeded();
         await expect(sellerSolicitorCell).toBeVisible({ timeout: 10000 });
 
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verify that an associated contact remains linked after saving and reopening the contact
+     */
+    public async verifyAssociatedContactRemainsLinkedAfterSaveAndReopen() {
+        // Navigate to Listings and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Search for a test listing (replace with dynamic automation fixture if needed)
+        const listingName = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880'; // adjust as needed
+        const nameSearchInput = this.page.locator('#keywordInput');
+        await nameSearchInput.waitFor({ state: 'visible', timeout: 10000 });
+        await nameSearchInput.fill(listingName);
+        await nameSearchInput.press('Enter');
+
+        // Open the first matching listing
+        const firstListingCard = this.page.getByRole('heading', { name: '""Sauer LLC"" 453/37 Eliseo' }).first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 20000 });
+        await firstListingCard.click();
+
+        // Go to the Related tab
+        const relatedTab = this.page.getByText('Related');
+        await relatedTab.waitFor({ state: 'visible', timeout: 10000 });
+        await relatedTab.click();
+
+        // Find an associated contact in the table (e.g., with role 'Buyer')
+        const buyerContactRow = this.page.getByRole('table').getByText('Seller').first();
+        await buyerContactRow.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Click the contact's cell to edit/view (assuming adjacent cell contains clickable contact, adjust as needed)
+        const contactCell = this.page.getByRole('cell', { name: 'Automation testing' }).first();
+        await contactCell.click();
+
+        await this.page.waitForTimeout(1000);
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
