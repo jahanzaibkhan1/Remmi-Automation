@@ -100,4 +100,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyContractRelatedContactsAreAddedToRelatedTab();
   });
 
+  test('Test 17: Verify that contract related contacts are not removed when the contract is settled', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyContractRelatedContactsRemainAfterSettlement();
+  });
+
 });
