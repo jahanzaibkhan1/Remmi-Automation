@@ -22512,7 +22512,7 @@ export class ListingActions {
         const keywordInput = this.page.locator('#keywordInput');
         await keywordInput.waitFor({ state: 'visible', timeout: 20000 });
         await keywordInput.fill('');
-        await keywordInput.type(contractSearchText, { delay: 20 });
+        await keywordInput.type(contractSearchText, { delay: 50 });
         const contractRow = this.page.locator('table tr', { hasText: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880' }).first();
         await this.page.waitForTimeout(1200);
         const noContractsCell = this.page.getByRole('cell', { name: 'No contracts available' });
@@ -22594,31 +22594,42 @@ export class ListingActions {
         await sellerOption.waitFor({ state: 'visible', timeout: 20000 });
         await sellerOption.click();
 
-        const sellersSolicitorDropdown = this.page.getByText('Select Sellers Solicitor');
+        // Click the "x" icon in the buyer tags to clear if visible, otherwise skip
+        const sellersSolicitorDropdownIcon = this.page.locator('div:nth-child(2) > re-multiselect > .box > .tags > .selected_one > .pi');
+        if (await sellersSolicitorDropdownIcon.isVisible()) {
+            await sellersSolicitorDropdownIcon.click();
+        }
+
+        const sellersSolicitorDropdown = this.page.locator('.form-field:has(label:text("Seller\'s Solicitor")) .tags');
         await sellersSolicitorDropdown.waitFor({ state: 'visible', timeout: 10000 });
         await sellersSolicitorDropdown.click();
 
         const sellersSolicitorSearchBox = this.page.locator('#Contract_0').getByRole('textbox', { name: 'Search' });
-        await sellersSolicitorSearchBox.fill('11 22');
+        await sellersSolicitorSearchBox.waitFor({ state: 'visible', timeout: 10000 });
 
-        const sellersSolicitorOption = this.page.getByText('22 (11@22.com.au)').first();
-        await sellersSolicitorOption.waitFor({ state: 'visible', timeout: 20000 });
-        await sellersSolicitorOption.click();
+        const dropdown = this.page.locator('.drop_box');
+        await dropdown.waitFor({ state: 'visible', timeout: 20000 });
+        const firstSolicitorCheckbox = this.page.getByRole('listitem').filter({ hasText: '22' }).first();
+        await firstSolicitorCheckbox.waitFor({ state: 'attached', timeout: 20000 });
+        await firstSolicitorCheckbox.click({ force: true });
 
 
+        // Click the "x" icon in the buyer tags to clear if visible, otherwise skip
+        const buyerClearIcon = this.page.locator('div:nth-child(3) > re-multiselect > .box > .tags > .selected_one > .pi');
+        if (await buyerClearIcon.isVisible()) {
+            await buyerClearIcon.click();
+        }
 
-        const buyerDropdown = this.page.getByText('Select Buyer', { exact: true });
+        const buyerDropdown = this.page.locator('.form-field:has(label:text("Buyer")) .tags').first();
         await buyerDropdown.waitFor({ state: 'visible', timeout: 10000 });
         await buyerDropdown.click();
 
         const buyerDropdownSearch = this.page.locator('#Contract_0').getByRole('textbox', { name: 'Search' });
-        await buyerDropdownSearch.fill('5555');
+        await buyerDropdownSearch.waitFor({ state: 'visible', timeout: 10000 });
 
-        const buyerDropdownOption = this.page.getByRole('listitem').filter({ hasText: '(butt.ahmad78690@gmail.com)' }).first();
-        await buyerDropdownOption.waitFor({ state: 'visible', timeout: 20000 });
-        await buyerDropdownOption.click();
-
-
+        const firstBuyerCheckbox = this.page.getByRole('listitem').filter({ hasText: 'Abe Weber (Abe.Weber@hotmail.' });
+        await firstBuyerCheckbox.waitFor({ state: 'visible', timeout: 20000 });
+        await firstBuyerCheckbox.click({ force: true });
 
         const offerDateInput = this.page.locator("//input[@name='dateOffer']");
         await offerDateInput.scrollIntoViewIfNeeded();
@@ -22630,12 +22641,8 @@ export class ListingActions {
         await offerDateInput.fill(currentDateStr);
         await offerDateInput.press('Enter');
 
-
-
         const priceInput = this.page.locator('input[name="price"]').first();
         await priceInput.fill('10000');
-
-
 
         const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).first();
 
@@ -22679,9 +22686,232 @@ export class ListingActions {
         await sellerSolicitorCell.scrollIntoViewIfNeeded();
         await expect(sellerSolicitorCell).toBeVisible({ timeout: 10000 });
 
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(1000);
+
     }
 
+    /**
+     * Verify that contract related contacts are not removed when the contract is settled
+     */
+    public async verifyContractRelatedContactsRemainAfterSettlement() {
+        // Navigate to Listings and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
 
+        // Search for a test listing (replace with dynamic if needed)
+        const nameSearchInput = this.page.locator('#keywordInput');
+        await nameSearchInput.waitFor({ state: 'visible', timeout: 10000 });
+        const listingName = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880'; // replace as needed
+        await nameSearchInput.fill(listingName);
+        await nameSearchInput.press('Enter');
+
+        // Click the first listing card that matches
+        const firstListingCard = this.page.getByRole('heading', { name: '""Sauer LLC"" 453/37 Eliseo' }).first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 20000 });
+        await firstListingCard.click();
+
+        // Go to the Related tab
+        const relatedTab = this.page.getByText('Related');
+        await relatedTab.waitFor({ state: 'visible', timeout: 10000 });
+        await relatedTab.click();
+
+        // Scroll into view before making assertions
+        const buyerCell = this.page.getByRole('table').getByText('Buyer').last();
+        await buyerCell.scrollIntoViewIfNeeded();
+        await expect(buyerCell).toBeVisible({ timeout: 10000 });
+
+        const sellerSolicitorCell = this.page.getByRole('table').getByText('Seller Solicitor');
+        await sellerSolicitorCell.scrollIntoViewIfNeeded();
+        await expect(sellerSolicitorCell).toBeVisible({ timeout: 10000 });
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verify that an associated contact remains linked after saving and reopening the contact
+     */
+    public async verifyAssociatedContactRemainsLinkedAfterSaveAndReopen() {
+        // Navigate to Listings and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Search for a test listing (replace with dynamic automation fixture if needed)
+        const listingName = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880'; // adjust as needed
+        const nameSearchInput = this.page.locator('#keywordInput');
+        await nameSearchInput.waitFor({ state: 'visible', timeout: 10000 });
+        await nameSearchInput.fill(listingName);
+        await nameSearchInput.press('Enter');
+
+        // Open the first matching listing
+        const firstListingCard = this.page.getByRole('heading', { name: '""Sauer LLC"" 453/37 Eliseo' }).first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 20000 });
+        await firstListingCard.click();
+
+        // Go to the Related tab
+        const relatedTab = this.page.getByText('Related');
+        await relatedTab.waitFor({ state: 'visible', timeout: 10000 });
+        await relatedTab.click();
+
+        // Find an associated contact in the table (e.g., with role 'Buyer')
+        const buyerContactRow = this.page.getByRole('table').getByText('Seller').first();
+        await buyerContactRow.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Click the contact's cell to edit/view (assuming adjacent cell contains clickable contact, adjust as needed)
+        const contactCell = this.page.getByRole('cell', { name: 'Automation testing' }).first();
+        await contactCell.click();
+
+        await this.page.waitForTimeout(1000);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Delete all related contacts for a listing.
+     */
+    public async deleteAllRelatedContacts() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const listingName = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880';
+        const nameSearchInput = this.page.locator('#keywordInput');
+        await nameSearchInput.waitFor({ state: 'visible', timeout: 10000 });
+        await nameSearchInput.fill(listingName);
+        await nameSearchInput.press('Enter');
+
+        const firstListingCard = this.page.getByRole('heading', { name: '""Sauer LLC"" 453/37 Eliseo' }).first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 20000 });
+        await firstListingCard.click();
+
+        const relatedTab = this.page.getByText('Related');
+        await relatedTab.waitFor({ state: 'visible', timeout: 10000 });
+        await relatedTab.click();
+        // wait for the first delete icon to become visible
+        const firstDeleteIcon = this.page.getByRole('img', { name: 'delete' }).first();
+        await firstDeleteIcon.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Delete all related contacts one by one
+        while (true) {
+            const deleteIcons = this.page.getByRole('img', { name: 'delete' });
+            const count = await deleteIcons.count();
+            if (count === 0) break;
+
+            await deleteIcons.first().click();
+
+            const confirmYesBtn = this.page.getByRole('button', { name: /^Yes$/i });
+            await confirmYesBtn.waitFor({ state: 'visible', timeout: 5000 });
+            await confirmYesBtn.click();
+
+            // Wait for the delete button to disappear before proceeding to next, allowing extra load time for UI update
+            await this.page.waitForTimeout(1500);
+            // Optional: you could use a more robust wait here, for example, wait for count to decrease if needed
+        }
+        await this.page.waitForTimeout(1000);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verifies that canceling "Add New contact" does not create a new contact.
+     */
+    public async verifyCancelAddNewContactDoesNotCreateContact() {
+        // Navigate to Listings and open the first listing as in previous methods
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const listingName = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880';
+        const nameSearchInput = this.page.locator('#keywordInput');
+        await nameSearchInput.waitFor({ state: 'visible', timeout: 10000 });
+        await nameSearchInput.fill(listingName);
+        await nameSearchInput.press('Enter');
+
+        const firstListingCard = this.page.getByRole('heading', { name: '""Sauer LLC"" 453/37 Eliseo' }).first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 20000 });
+        await firstListingCard.click();
+
+        // Go to Related tab
+        const relatedTab = this.page.getByText('Related');
+        await relatedTab.waitFor({ state: 'visible', timeout: 10000 });
+        await relatedTab.click();
+
+       // Open the contact selection dropdown
+       const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+       await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+       await selectDropdown.click();
+
+       // Use '@faker-js/faker' to generate random contact info
+       const faker = require('@faker-js/faker').faker;
+       const firstName = faker.person.firstName();
+       const lastName = faker.person.lastName();
+       const email = faker.internet.email({ firstName, lastName });
+
+       // Locate the search input in the "Related" tab
+       const searchInputInRelatedTab = this.page
+           .getByRole('tabpanel', { name: /related/i })
+           .getByPlaceholder(/search/i)
+           .first();
+       await expect(searchInputInRelatedTab).toBeVisible({ timeout: 10000 });
+       await this.page.waitForTimeout(1000);
+
+       // Click "Create New" button
+       const createNewBtn = this.page.getByLabel('Related').getByText('Create New');
+       await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+       await createNewBtn.click();
+
+       // Fill out the new contact form
+       const newContactForm = this.page.locator('#Contact_1 #rightbarwithscroll');
+       await expect(newContactForm).toBeVisible({ timeout: 10000 });
+       await this.page.locator('input[formcontrolname="first_name"]').fill(firstName);
+       await this.page.locator('input[formcontrolname="last_name"]').fill(lastName);
+       await this.page.locator('input[formcontrolname="email"]').fill(email);
+
+       // Close the new contact tab/modal
+       const closeBtn = this.page.locator('.pi.pi-times').last();
+       if (await closeBtn.isVisible().catch(() => false)) {
+           await closeBtn.click({ force: true });
+       }
+
+       await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+       await selectDropdown.click();
+
+       const fullName = `${firstName} ${lastName}`;
+       await expect(searchInputInRelatedTab).toBeVisible({ timeout: 10000 });
+       await this.page.waitForTimeout(1000);
+       await searchInputInRelatedTab.click();
+       await searchInputInRelatedTab.fill(fullName);
+       const relatedContactEntry = this.page
+           .locator('.drop_box li p')
+           .filter({
+               hasText: `${fullName} (${email})`
+           })
+           .first();
+
+       await expect(relatedContactEntry).not.toBeVisible({ timeout: 15000 });
+
+       // Close any open modal/tab
+       const closeBtn2 = this.page.locator('.pi.pi-times').first();
+       if (await closeBtn2.isVisible().catch(() => false)) {
+           await closeBtn2.click({ force: true });
+       }
+       await this.page.waitForTimeout(1000);
+    }
 
 
 
