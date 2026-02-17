@@ -125,4 +125,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyCancelAddNewContactDoesNotCreateContact();
   });
 
+  test('Test 22: Verify that an associated contact remains even after refreshing the page', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyContactAssociationInRelatedTab();
+  });
+
 });
