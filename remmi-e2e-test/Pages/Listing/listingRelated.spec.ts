@@ -115,4 +115,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.deleteAllRelatedContacts();
   });
 
+  test('Test 20: Verify that a newly created contact appears in the global contact list', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyNewlyCreatedContactIsAddedToRelatedList();
+  });
+
 });
