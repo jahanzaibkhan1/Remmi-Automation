@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.39266700000316">
-<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-17T11:03:21.379Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.965" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify that contract related contacts are not removed when the contract is settled" classname="Pages\Listing\listingRelated.spec.ts" time="47.965">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.58659200000018">
+<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-17T11:12:34.385Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.587" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Verify that an associated contact remains linked after saving and reopening the contact" classname="Pages\Listing\listingRelated.spec.ts" time="41.587">
 </testcase>
 </testsuite>
 </testsuites>
