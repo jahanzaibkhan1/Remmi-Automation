@@ -110,4 +110,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyAssociatedContactRemainsLinkedAfterSaveAndReopen();
   });
 
+  test('Test 19: Verify that deleting all related contacts shows nothing', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.deleteAllRelatedContacts();
+  });
+
 });

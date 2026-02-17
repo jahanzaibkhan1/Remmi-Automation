@@ -22779,7 +22779,47 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    /**
+     * Delete all related contacts for a listing.
+     */
+    public async deleteAllRelatedContacts() {
+        await this.navigateToListings();
+        await this.switchToGridView();
 
+        const listingName = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880';
+        const nameSearchInput = this.page.locator('#keywordInput');
+        await nameSearchInput.waitFor({ state: 'visible', timeout: 10000 });
+        await nameSearchInput.fill(listingName);
+        await nameSearchInput.press('Enter');
+
+        const firstListingCard = this.page.getByRole('heading', { name: '""Sauer LLC"" 453/37 Eliseo' }).first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 20000 });
+        await firstListingCard.click();
+
+        const relatedTab = this.page.getByText('Related');
+        await relatedTab.waitFor({ state: 'visible', timeout: 10000 });
+        await relatedTab.click();
+        // wait for the first delete icon to become visible
+        const firstDeleteIcon = this.page.getByRole('img', { name: 'delete' }).first();
+        await firstDeleteIcon.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Delete all related contacts one by one
+        while (true) {
+            const deleteIcons = this.page.getByRole('img', { name: 'delete' });
+            const count = await deleteIcons.count();
+            if (count === 0) break;
+
+            await deleteIcons.first().click();
+
+            const confirmYesBtn = this.page.getByRole('button', { name: /^Yes$/i });
+            await confirmYesBtn.waitFor({ state: 'visible', timeout: 5000 });
+            await confirmYesBtn.click();
+
+            // Wait for the delete button to disappear before proceeding to next, allowing extra load time for UI update
+            await this.page.waitForTimeout(1500);
+            // Optional: you could use a more robust wait here, for example, wait for count to decrease if needed
+        }
+    }
 
 
 
