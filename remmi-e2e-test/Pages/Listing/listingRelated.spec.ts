@@ -120,4 +120,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifyNewlyCreatedContactIsAddedToRelatedList();
   });
 
+  test('Test 21: Verify that canceling "Add New Contact" does not create a contact', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyCancelAddNewContactDoesNotCreateContact();
+  });
+
 });

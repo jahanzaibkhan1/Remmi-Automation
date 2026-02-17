@@ -22819,6 +22819,98 @@ export class ListingActions {
             await this.page.waitForTimeout(1500);
             // Optional: you could use a more robust wait here, for example, wait for count to decrease if needed
         }
+        await this.page.waitForTimeout(1000);
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verifies that canceling "Add New contact" does not create a new contact.
+     */
+    public async verifyCancelAddNewContactDoesNotCreateContact() {
+        // Navigate to Listings and open the first listing as in previous methods
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const listingName = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880';
+        const nameSearchInput = this.page.locator('#keywordInput');
+        await nameSearchInput.waitFor({ state: 'visible', timeout: 10000 });
+        await nameSearchInput.fill(listingName);
+        await nameSearchInput.press('Enter');
+
+        const firstListingCard = this.page.getByRole('heading', { name: '""Sauer LLC"" 453/37 Eliseo' }).first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 20000 });
+        await firstListingCard.click();
+
+        // Go to Related tab
+        const relatedTab = this.page.getByText('Related');
+        await relatedTab.waitFor({ state: 'visible', timeout: 10000 });
+        await relatedTab.click();
+
+       // Open the contact selection dropdown
+       const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+       await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+       await selectDropdown.click();
+
+       // Use '@faker-js/faker' to generate random contact info
+       const faker = require('@faker-js/faker').faker;
+       const firstName = faker.person.firstName();
+       const lastName = faker.person.lastName();
+       const email = faker.internet.email({ firstName, lastName });
+
+       // Locate the search input in the "Related" tab
+       const searchInputInRelatedTab = this.page
+           .getByRole('tabpanel', { name: /related/i })
+           .getByPlaceholder(/search/i)
+           .first();
+       await expect(searchInputInRelatedTab).toBeVisible({ timeout: 10000 });
+       await this.page.waitForTimeout(1000);
+
+       // Click "Create New" button
+       const createNewBtn = this.page.getByLabel('Related').getByText('Create New');
+       await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+       await createNewBtn.click();
+
+       // Fill out the new contact form
+       const newContactForm = this.page.locator('#Contact_1 #rightbarwithscroll');
+       await expect(newContactForm).toBeVisible({ timeout: 10000 });
+       await this.page.locator('input[formcontrolname="first_name"]').fill(firstName);
+       await this.page.locator('input[formcontrolname="last_name"]').fill(lastName);
+       await this.page.locator('input[formcontrolname="email"]').fill(email);
+
+       // Close the new contact tab/modal
+       const closeBtn = this.page.locator('.pi.pi-times').last();
+       if (await closeBtn.isVisible().catch(() => false)) {
+           await closeBtn.click({ force: true });
+       }
+
+       await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+       await selectDropdown.click();
+
+       const fullName = `${firstName} ${lastName}`;
+       await expect(searchInputInRelatedTab).toBeVisible({ timeout: 10000 });
+       await this.page.waitForTimeout(1000);
+       await searchInputInRelatedTab.click();
+       await searchInputInRelatedTab.fill(fullName);
+       const relatedContactEntry = this.page
+           .locator('.drop_box li p')
+           .filter({
+               hasText: `${fullName} (${email})`
+           })
+           .first();
+
+       await expect(relatedContactEntry).not.toBeVisible({ timeout: 15000 });
+
+       // Close any open modal/tab
+       const closeBtn2 = this.page.locator('.pi.pi-times').first();
+       if (await closeBtn2.isVisible().catch(() => false)) {
+           await closeBtn2.click({ force: true });
+       }
+       await this.page.waitForTimeout(1000);
     }
 
 
