@@ -23073,6 +23073,56 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    /**
+     * Verify that the listing location field is auto-filled when opening a listing.
+     */
+    async verifyListingLocationFieldIsAutoFilled() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+       // Open the first listing card
+       const firstListingCard = this.page
+       .locator("//div[contains(@class,'s-property')]")
+       .first();
+   await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+   await firstListingCard.click();
+
+   // Navigate to the Calendar/Integrations tab
+   const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+   await expect(calendarTab).toBeVisible({ timeout: 10000 });
+   await calendarTab.click();
+
+   // Wait for "+Create New" button to appear and click it
+   const createNewBtn = this.page.getByRole('button', { name: /create new/i });
+   await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+   await createNewBtn.click();
+
+   const inspectionField = this.page.locator('.p-dialog-content').first();
+   await expect(inspectionField).toBeVisible({ timeout: 5000 });
+
+   const location = this.page.getByPlaceholder('Location');
+
+   const value = await location.inputValue();
+
+   console.log('Location:', value);
+
+   expect(value).not.toBe('');
+
+   const closeBtun = this.page.locator('.event_poup_close_btn');
+
+   if (await closeBtun.isVisible()) {
+       await closeBtun.click({force: true});
+   }
+   await expect(closeBtun).not.toBeVisible({timeout:10000});
+   // Optionally, close the inspection modal after test
+   const closeBtn = this.page.locator('.pi.pi-times').first();
+   if (await closeBtn.isVisible().catch(() => false)) {
+       await closeBtn.click({ force: true });
+   }
+   await this.page.waitForTimeout(1000);
+    }
+
 
 
 }
