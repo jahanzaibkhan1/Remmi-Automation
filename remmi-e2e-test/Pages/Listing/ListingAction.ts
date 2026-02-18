@@ -22851,67 +22851,485 @@ export class ListingActions {
         await relatedTab.waitFor({ state: 'visible', timeout: 10000 });
         await relatedTab.click();
 
-       // Open the contact selection dropdown
-       const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
-       await expect(selectDropdown).toBeVisible({ timeout: 10000 });
-       await selectDropdown.click();
+        // Open the contact selection dropdown
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+        await selectDropdown.click();
 
-       // Use '@faker-js/faker' to generate random contact info
-       const faker = require('@faker-js/faker').faker;
-       const firstName = faker.person.firstName();
-       const lastName = faker.person.lastName();
-       const email = faker.internet.email({ firstName, lastName });
+        // Use '@faker-js/faker' to generate random contact info
+        const faker = require('@faker-js/faker').faker;
+        const firstName = faker.person.firstName();
+        const lastName = faker.person.lastName();
+        const email = faker.internet.email({ firstName, lastName });
 
-       // Locate the search input in the "Related" tab
-       const searchInputInRelatedTab = this.page
-           .getByRole('tabpanel', { name: /related/i })
-           .getByPlaceholder(/search/i)
-           .first();
-       await expect(searchInputInRelatedTab).toBeVisible({ timeout: 10000 });
-       await this.page.waitForTimeout(1000);
+        // Locate the search input in the "Related" tab
+        const searchInputInRelatedTab = this.page
+            .getByRole('tabpanel', { name: /related/i })
+            .getByPlaceholder(/search/i)
+            .first();
+        await expect(searchInputInRelatedTab).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
 
-       // Click "Create New" button
-       const createNewBtn = this.page.getByLabel('Related').getByText('Create New');
-       await expect(createNewBtn).toBeVisible({ timeout: 10000 });
-       await createNewBtn.click();
+        // Click "Create New" button
+        const createNewBtn = this.page.getByLabel('Related').getByText('Create New');
+        await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+        await createNewBtn.click();
 
-       // Fill out the new contact form
-       const newContactForm = this.page.locator('#Contact_1 #rightbarwithscroll');
-       await expect(newContactForm).toBeVisible({ timeout: 10000 });
-       await this.page.locator('input[formcontrolname="first_name"]').fill(firstName);
-       await this.page.locator('input[formcontrolname="last_name"]').fill(lastName);
-       await this.page.locator('input[formcontrolname="email"]').fill(email);
+        // Fill out the new contact form
+        const newContactForm = this.page.locator('#Contact_1 #rightbarwithscroll');
+        await expect(newContactForm).toBeVisible({ timeout: 10000 });
+        await this.page.locator('input[formcontrolname="first_name"]').fill(firstName);
+        await this.page.locator('input[formcontrolname="last_name"]').fill(lastName);
+        await this.page.locator('input[formcontrolname="email"]').fill(email);
 
-       // Close the new contact tab/modal
-       const closeBtn = this.page.locator('.pi.pi-times').last();
-       if (await closeBtn.isVisible().catch(() => false)) {
-           await closeBtn.click({ force: true });
-       }
+        // Close the new contact tab/modal
+        const closeBtn = this.page.locator('.pi.pi-times').last();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
 
-       await expect(selectDropdown).toBeVisible({ timeout: 10000 });
-       await selectDropdown.click();
+        await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+        await selectDropdown.click();
 
-       const fullName = `${firstName} ${lastName}`;
-       await expect(searchInputInRelatedTab).toBeVisible({ timeout: 10000 });
-       await this.page.waitForTimeout(1000);
-       await searchInputInRelatedTab.click();
-       await searchInputInRelatedTab.fill(fullName);
-       const relatedContactEntry = this.page
-           .locator('.drop_box li p')
-           .filter({
-               hasText: `${fullName} (${email})`
-           })
-           .first();
+        const fullName = `${firstName} ${lastName}`;
+        await expect(searchInputInRelatedTab).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+        await searchInputInRelatedTab.click();
+        await searchInputInRelatedTab.fill(fullName);
+        const relatedContactEntry = this.page
+            .locator('.drop_box li p')
+            .filter({
+                hasText: `${fullName} (${email})`
+            })
+            .first();
 
-       await expect(relatedContactEntry).not.toBeVisible({ timeout: 15000 });
+        await expect(relatedContactEntry).not.toBeVisible({ timeout: 15000 });
 
-       // Close any open modal/tab
-       const closeBtn2 = this.page.locator('.pi.pi-times').first();
-       if (await closeBtn2.isVisible().catch(() => false)) {
-           await closeBtn2.click({ force: true });
-       }
-       await this.page.waitForTimeout(1000);
+        // Close any open modal/tab
+        const closeBtn2 = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn2.isVisible().catch(() => false)) {
+            await closeBtn2.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
     }
+
+    /**
+     * Verify that the "Connect Your Account" button is visible when Google Calendar is not connected.
+     */
+    async verifyGoogleCalendarConnectButtonVisible() {
+        // Navigate to the relevant page/section where Google Calendar integration is managed.
+        // (Implement navigation as appropriate for your app context)
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card (if required by context)
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+        // Assert "Connect Your Account" button is visible
+        const connectAccountBtn = this.page.getByRole('button', { name: /connect your account/i });
+        await expect(connectAccountBtn).toBeVisible({ timeout: 10000 });
+
+        // Close modal/tab
+        const closeBtn2 = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn2.isVisible().catch(() => false)) {
+            await closeBtn2.click({ force: true });
+        }
+        await this.page.waitForTimeout(1500);
+
+    }
+
+    /**
+     * Verify that "+Create New" and "+New Task" buttons appear on the expected page/tab.
+     */
+    async verifyCreateNewAndNewTaskButtonsVisible() {
+        // Navigate to the Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Assert that "+New Task" button is visible
+        const newTaskBtn = this.page.getByRole('button', { name: /New Task/i });
+        await expect(newTaskBtn).toBeVisible({ timeout: 10000 });
+
+        // Close modal/tab if any is open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verify that clicking "+Create New" opens the inspection fields.
+     */
+    async verifyCreateNewOpensInspectionFields() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Wait for "+Create New" button to appear and click it
+        const createNewBtn = this.page.getByRole('button', { name: /create new/i });
+        await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+        await createNewBtn.click();
+
+        const inspectionField = this.page.locator('.p-dialog-content').first();
+        await expect(inspectionField).toBeVisible({ timeout: 5000 });
+
+        const closeBtun = this.page.locator('.event_poup_close_btn');
+
+        if (await closeBtun.isVisible()) {
+            await closeBtun.click({ force: true });
+        }
+
+        await expect(closeBtun).not.toBeVisible({ timeout: 10000 });
+
+        // Close modal/tab if any is open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verify that private inspection fields enforce required validation for date and time.
+     */
+    async verifyPrivateInspectionFieldsValidation() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Wait for "+Create New" button to appear and click it
+        const createNewBtn = this.page.getByRole('button', { name: /create new/i });
+        await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+        await createNewBtn.click();
+
+        const inspectionField = this.page.locator('.p-dialog-content').first();
+        await expect(inspectionField).toBeVisible({ timeout: 5000 });
+
+        // Attempt to save without entering required date and time
+        const saveBtn = this.page.getByRole('button', { name: /save/i }).last();
+        await expect(saveBtn).toBeVisible({ timeout: 5000 });
+        await saveBtn.click();
+
+        // Expect validation messages for date and time fields
+        const dateValidationMsg = this.page.getByRole('alert', { name: 'Start time must be before end' });
+        await expect(dateValidationMsg).toBeVisible({ timeout: 10000 });
+
+        const closeBtun = this.page.locator('.event_poup_close_btn');
+
+        if (await closeBtun.isVisible()) {
+            await closeBtun.click({ force: true });
+        }
+        await expect(closeBtun).not.toBeVisible({ timeout: 10000 });
+        // Optionally, close the inspection modal after test
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verify that the listing location field is auto-filled when opening a listing.
+     */
+    async verifyListingLocationFieldIsAutoFilled() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Wait for "+Create New" button to appear and click it
+        const createNewBtn = this.page.getByRole('button', { name: /create new/i });
+        await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+        await createNewBtn.click();
+
+        const inspectionField = this.page.locator('.p-dialog-content').first();
+        await expect(inspectionField).toBeVisible({ timeout: 5000 });
+
+        const location = this.page.getByPlaceholder('Location');
+
+        const value = await location.inputValue();
+
+        console.log('Location:', value);
+
+        expect(value).not.toBe('');
+
+        const closeBtun = this.page.locator('.event_poup_close_btn');
+
+        if (await closeBtun.isVisible()) {
+            await closeBtun.click({ force: true });
+        }
+        await expect(closeBtun).not.toBeVisible({ timeout: 10000 });
+        // Optionally, close the inspection modal after test
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verify that the primary agent is auto selected when creating a new inspection.
+     */
+    async verifyPrimaryAgentIsAutoSelected() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Wait for "+Create New" button to appear and click it
+        const createNewBtn = this.page.getByRole('button', { name: /create new/i });
+        await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+        await createNewBtn.click();
+
+        const primaryAgent = this.page.locator('ng-select[bindlabel="full_name"] .ng-value-label').last();
+        await expect(primaryAgent).toBeVisible();
+        const agentName = await primaryAgent.textContent();
+        console.log('Primary Agent:', agentName);
+        expect(agentName?.trim()).not.toBe('');
+
+        const closeBtun = this.page.locator('.event_poup_close_btn');
+
+        if (await closeBtun.isVisible()) {
+            await closeBtun.click({ force: true });
+        }
+        await expect(closeBtun).not.toBeVisible({ timeout: 10000 });
+
+
+        // Close the modal
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verify that the agent dropdown allows adding and removing agents.
+     */
+    async verifyAgentDropdownAllowsAddAndRemoveAgents() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Wait for "+Create New" button to appear and click it
+        const createNewBtn = this.page.getByRole('button', { name: /create new/i });
+        await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+        await createNewBtn.click();
+
+        // Open the agent dropdown
+        const agentDropdown = this.page.locator('ng-select[bindlabel="full_name"]').last();
+        await expect(agentDropdown).toBeVisible({ timeout: 5000 });
+        await agentDropdown.click();
+
+        // Wait for dropdown options to appear
+        const dropdownOptions = this.page.locator('ng-dropdown-panel .ng-option');
+        await expect(dropdownOptions.first()).toBeVisible({ timeout: 5000 });
+
+        // Select the first available agent from the list (for add)
+        const agentOptionToAdd = dropdownOptions.nth(1);
+        const agentOptionText = await agentOptionToAdd.textContent();
+        await agentOptionToAdd.click();
+
+        // Verify that the agent was added (should now be visible in the selected values)
+        const selectedAgents = this.page.locator('ng-select[bindlabel="full_name"] .ng-value-label');
+        const selectedAgentsCountAfterAdd = await selectedAgents.count();
+        expect(selectedAgentsCountAfterAdd).toBeGreaterThan(0);
+
+        // Remove the agent by clicking the remove/cross button next to their name
+        const removeBtn = this.page.locator('ng-select[bindlabel="full_name"] .ng-value-icon').last();
+        await expect(removeBtn).toBeVisible();
+        await removeBtn.click();
+
+        // Confirm agent is removed
+        const selectedAgentsCountAfterRemove = await selectedAgents.count();
+        expect(selectedAgentsCountAfterRemove).toBeLessThan(selectedAgentsCountAfterAdd);
+
+        const closeBtun = this.page.locator('.event_poup_close_btn');
+
+        if (await closeBtun.isVisible()) {
+            await closeBtun.click({ force: true });
+        }
+        await expect(closeBtun).not.toBeVisible({ timeout: 10000 });
+
+        // Clean up: Close the modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    // Verify that clicking on an agent name opens the listing form
+    async verifyClickingCancelNotSave() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Wait for "+Create New" button to appear and click it
+        const createNewBtn = this.page.getByRole('button', { name: /create new/i });
+        await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+        await createNewBtn.click();
+        // Click the cancel button to close the dialog/modal
+        const cancelBtn = this.page.getByRole('button', { name: /cancel/i });
+
+        if (await cancelBtn.isVisible().catch(() => false)) {
+            await cancelBtn.click({ force: true });
+        }
+        await expect(cancelBtn).not.toBeVisible({ timeout: 10000 });
+
+        // Clean up: Close the form dialog if open
+        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    async verifySavingInspectionAddsToCalendar() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Wait for "+Create New" button to appear and click it
+        const createNewBtn = this.page.getByRole('button', { name: /create new/i });
+        await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+        await createNewBtn.click();
+
+        // Fill out minimal required fields for the inspection
+        const titleInput = this.page.locator('input[placeholder="Add title"]');
+        await titleInput.click();
+        await titleInput.fill('');
+        await titleInput.fill('Test Inspection');
+
+        const startHour = this.page.locator('ng-select[placeholder="Hr"]').nth(3);
+        await startHour.click();
+        const startHourOption = this.page.getByRole('option', { name: '5' });
+        await expect(startHourOption).toBeVisible({ timeout: 10000 });
+        await startHourOption.click();
+
+        // Click Save
+        const saveBtn = this.page.getByLabel('Calendar').getByRole('button', { name: 'Save' });
+        await expect(saveBtn).toBeVisible({ timeout: 5000 });
+        await saveBtn.click();
+
+        // Wait for confirmation alert that event was added to calendar
+        const calendarAlert = this.page.getByRole('alert', { name: /event added to calendar/i });
+        await expect(calendarAlert).toBeVisible({ timeout: 10000 });
+
+        const newEvent = this.page.locator('a').filter({ hasText: 'Remmi: Private Inspection:' }).first();
+        await expect(newEvent).toBeVisible({ timeout: 10000 });
+
+        // Clean up: Close the form dialog if open
+        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
 
 
 
