@@ -29,4 +29,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyCreateNewAndNewTaskButtonsVisible();
     });
+
+    test('Test 3: Verify that clicking "+Create New" opens the inspection fields', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyCreateNewOpensInspectionFields();
+    });
 });

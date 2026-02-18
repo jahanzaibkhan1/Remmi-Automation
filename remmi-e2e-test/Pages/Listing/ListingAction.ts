@@ -22851,66 +22851,66 @@ export class ListingActions {
         await relatedTab.waitFor({ state: 'visible', timeout: 10000 });
         await relatedTab.click();
 
-       // Open the contact selection dropdown
-       const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
-       await expect(selectDropdown).toBeVisible({ timeout: 10000 });
-       await selectDropdown.click();
+        // Open the contact selection dropdown
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+        await selectDropdown.click();
 
-       // Use '@faker-js/faker' to generate random contact info
-       const faker = require('@faker-js/faker').faker;
-       const firstName = faker.person.firstName();
-       const lastName = faker.person.lastName();
-       const email = faker.internet.email({ firstName, lastName });
+        // Use '@faker-js/faker' to generate random contact info
+        const faker = require('@faker-js/faker').faker;
+        const firstName = faker.person.firstName();
+        const lastName = faker.person.lastName();
+        const email = faker.internet.email({ firstName, lastName });
 
-       // Locate the search input in the "Related" tab
-       const searchInputInRelatedTab = this.page
-           .getByRole('tabpanel', { name: /related/i })
-           .getByPlaceholder(/search/i)
-           .first();
-       await expect(searchInputInRelatedTab).toBeVisible({ timeout: 10000 });
-       await this.page.waitForTimeout(1000);
+        // Locate the search input in the "Related" tab
+        const searchInputInRelatedTab = this.page
+            .getByRole('tabpanel', { name: /related/i })
+            .getByPlaceholder(/search/i)
+            .first();
+        await expect(searchInputInRelatedTab).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
 
-       // Click "Create New" button
-       const createNewBtn = this.page.getByLabel('Related').getByText('Create New');
-       await expect(createNewBtn).toBeVisible({ timeout: 10000 });
-       await createNewBtn.click();
+        // Click "Create New" button
+        const createNewBtn = this.page.getByLabel('Related').getByText('Create New');
+        await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+        await createNewBtn.click();
 
-       // Fill out the new contact form
-       const newContactForm = this.page.locator('#Contact_1 #rightbarwithscroll');
-       await expect(newContactForm).toBeVisible({ timeout: 10000 });
-       await this.page.locator('input[formcontrolname="first_name"]').fill(firstName);
-       await this.page.locator('input[formcontrolname="last_name"]').fill(lastName);
-       await this.page.locator('input[formcontrolname="email"]').fill(email);
+        // Fill out the new contact form
+        const newContactForm = this.page.locator('#Contact_1 #rightbarwithscroll');
+        await expect(newContactForm).toBeVisible({ timeout: 10000 });
+        await this.page.locator('input[formcontrolname="first_name"]').fill(firstName);
+        await this.page.locator('input[formcontrolname="last_name"]').fill(lastName);
+        await this.page.locator('input[formcontrolname="email"]').fill(email);
 
-       // Close the new contact tab/modal
-       const closeBtn = this.page.locator('.pi.pi-times').last();
-       if (await closeBtn.isVisible().catch(() => false)) {
-           await closeBtn.click({ force: true });
-       }
+        // Close the new contact tab/modal
+        const closeBtn = this.page.locator('.pi.pi-times').last();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
 
-       await expect(selectDropdown).toBeVisible({ timeout: 10000 });
-       await selectDropdown.click();
+        await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+        await selectDropdown.click();
 
-       const fullName = `${firstName} ${lastName}`;
-       await expect(searchInputInRelatedTab).toBeVisible({ timeout: 10000 });
-       await this.page.waitForTimeout(1000);
-       await searchInputInRelatedTab.click();
-       await searchInputInRelatedTab.fill(fullName);
-       const relatedContactEntry = this.page
-           .locator('.drop_box li p')
-           .filter({
-               hasText: `${fullName} (${email})`
-           })
-           .first();
+        const fullName = `${firstName} ${lastName}`;
+        await expect(searchInputInRelatedTab).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+        await searchInputInRelatedTab.click();
+        await searchInputInRelatedTab.fill(fullName);
+        const relatedContactEntry = this.page
+            .locator('.drop_box li p')
+            .filter({
+                hasText: `${fullName} (${email})`
+            })
+            .first();
 
-       await expect(relatedContactEntry).not.toBeVisible({ timeout: 15000 });
+        await expect(relatedContactEntry).not.toBeVisible({ timeout: 15000 });
 
-       // Close any open modal/tab
-       const closeBtn2 = this.page.locator('.pi.pi-times').first();
-       if (await closeBtn2.isVisible().catch(() => false)) {
-           await closeBtn2.click({ force: true });
-       }
-       await this.page.waitForTimeout(1000);
+        // Close any open modal/tab
+        const closeBtn2 = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn2.isVisible().catch(() => false)) {
+            await closeBtn2.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -22938,11 +22938,11 @@ export class ListingActions {
         await expect(connectAccountBtn).toBeVisible({ timeout: 10000 });
 
         // Close modal/tab
-       const closeBtn2 = this.page.locator('.pi.pi-times').first();
-       if (await closeBtn2.isVisible().catch(() => false)) {
-           await closeBtn2.click({ force: true });
-       }
-       await this.page.waitForTimeout(1500);
+        const closeBtn2 = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn2.isVisible().catch(() => false)) {
+            await closeBtn2.click({ force: true });
+        }
+        await this.page.waitForTimeout(1500);
 
     }
 
@@ -22961,11 +22961,6 @@ export class ListingActions {
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
 
-        // Navigate to the "Tasks" tab (assuming tasks are found here; adjust if elsewhere)
-        const tasksTab = this.page.getByRole('tab', { name: /Tasks/i }).first();
-        await expect(tasksTab).toBeVisible({ timeout: 15000 });
-        await tasksTab.click();
-
         // Navigate to the Calendar/Integrations tab
         const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
         await expect(calendarTab).toBeVisible({ timeout: 10000 });
@@ -22974,6 +22969,50 @@ export class ListingActions {
         // Assert that "+New Task" button is visible
         const newTaskBtn = this.page.getByRole('button', { name: /New Task/i });
         await expect(newTaskBtn).toBeVisible({ timeout: 10000 });
+
+        // Close modal/tab if any is open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verify that clicking "+Create New" opens the inspection fields.
+     */
+    async verifyCreateNewOpensInspectionFields() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Wait for "+Create New" button to appear and click it
+        const createNewBtn = this.page.getByRole('button', { name: /create new/i });
+        await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+        await createNewBtn.click();
+
+        const inspectionField = this.page.locator('.p-dialog-content').first();
+        await expect(inspectionField).toBeVisible({ timeout: 5000 });
+
+        const closeBtun = this.page.locator('.event_poup_close_btn');
+
+        if (await closeBtun.isVisible()) {
+            await closeBtun.click({force: true});
+        }
+
+        await expect(closeBtun).not.toBeVisible({timeout:10000});
 
         // Close modal/tab if any is open
         const closeBtn = this.page.locator('.pi.pi-times').first();
