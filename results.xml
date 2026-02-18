@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.3934450000003">
-<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-02-17T11:56:52.843Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.754" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Verify that canceling &quot;Add New Contact&quot; does not create a contact" classname="Pages\Listing\listingRelated.spec.ts" time="33.754">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.410560000002384">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-18T10:28:55.643Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.453" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that the &quot;Connect Your Account&quot; button is shown if Google Calendar is not connected" classname="Pages\Listing\listingCalendar.spec.ts" time="39.453">
 </testcase>
 </testsuite>
 </testsuites>
