@@ -1,8 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.44156399999932">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-18T11:23:45.270Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.155" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that the listing location field is auto filled" classname="Pages\Listing\listingCalendar.spec.ts" time="37.155">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.02847399999946">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-18T11:32:02.018Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.88" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that the primary agent is auto selected" classname="Pages\Listing\listingCalendar.spec.ts" time="41.88">
 <system-out>
-<![CDATA[Location:  ""Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880
+<![CDATA[Primary Agent: Jahanzaib Xenex
 ]]>
 </system-out>
 </testcase>
