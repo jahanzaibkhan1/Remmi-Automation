@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.410560000002384">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-18T10:28:55.643Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.453" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that the &quot;Connect Your Account&quot; button is shown if Google Calendar is not connected" classname="Pages\Listing\listingCalendar.spec.ts" time="39.453">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.954193999998274">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-18T10:35:25.921Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.457" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify that &quot;+Create New&quot; and &quot;+New Task&quot; buttons appear " classname="Pages\Listing\listingCalendar.spec.ts" time="31.457">
 </testcase>
 </testsuite>
 </testsuites>

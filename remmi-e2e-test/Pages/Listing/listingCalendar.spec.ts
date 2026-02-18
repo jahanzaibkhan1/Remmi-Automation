@@ -24,4 +24,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyGoogleCalendarConnectButtonVisible();
     });
+
+    test('Test 2: Verify that "+Create New" and "+New Task" buttons appear ', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyCreateNewAndNewTaskButtonsVisible();
+    });
 });
