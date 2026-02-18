@@ -44,5 +44,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyListingLocationFieldIsAutoFilled();
     });
-    
+
+    test('Test 6: Verify that the primary agent is auto selected', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyPrimaryAgentIsAutoSelected();
+    });
+
 });
