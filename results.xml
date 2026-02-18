@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.02847399999946">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-18T11:32:02.018Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.88" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that the primary agent is auto selected" classname="Pages\Listing\listingCalendar.spec.ts" time="41.88">
-<system-out>
-<![CDATA[Primary Agent: Jahanzaib Xenex
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.132122000001374">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-18T11:38:54.448Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.467" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that the agent dropdown allows adding and removing agents" classname="Pages\Listing\listingCalendar.spec.ts" time="24.467">
 </testcase>
 </testsuite>
 </testsuites>
