@@ -22913,6 +22913,39 @@ export class ListingActions {
        await this.page.waitForTimeout(1000);
     }
 
+    /**
+     * Verify that the "Connect Your Account" button is visible when Google Calendar is not connected.
+     */
+    async verifyGoogleCalendarConnectButtonVisible() {
+        // Navigate to the relevant page/section where Google Calendar integration is managed.
+        // (Implement navigation as appropriate for your app context)
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card (if required by context)
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+        // Assert "Connect Your Account" button is visible
+        const connectAccountBtn = this.page.getByRole('button', { name: /connect your account/i });
+        await expect(connectAccountBtn).toBeVisible({ timeout: 10000 });
+
+        // Close modal/tab
+       const closeBtn2 = this.page.locator('.pi.pi-times').first();
+       if (await closeBtn2.isVisible().catch(() => false)) {
+           await closeBtn2.click({ force: true });
+       }
+       await this.page.waitForTimeout(1500);
+
+    }
+
 
 
 }
