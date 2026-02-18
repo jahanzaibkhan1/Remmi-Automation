@@ -39,4 +39,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyPrivateInspectionFieldsValidation();
     });
+
+    test('Test 5: Verify that the listing location field is auto filled', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyListingLocationFieldIsAutoFilled();
+    });
+    
 });

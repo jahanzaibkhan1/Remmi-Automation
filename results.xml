@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.645414000000805">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-18T11:16:07.519Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.315" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that private inspection fields have required validation for date and time" classname="Pages\Listing\listingCalendar.spec.ts" time="35.315">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.44156399999932">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-18T11:23:45.270Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.155" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that the listing location field is auto filled" classname="Pages\Listing\listingCalendar.spec.ts" time="37.155">
+<system-out>
+<![CDATA[Location:  ""Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
