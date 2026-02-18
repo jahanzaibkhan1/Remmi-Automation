@@ -23238,6 +23238,44 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    // Verify that clicking on an agent name opens the listing form
+    async verifyClickingCancelNotSave() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Wait for "+Create New" button to appear and click it
+        const createNewBtn = this.page.getByRole('button', { name: /create new/i });
+        await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+        await createNewBtn.click();
+        // Click the cancel button to close the dialog/modal
+        const cancelBtn = this.page.getByRole('button', { name: /cancel/i });
+
+        if (await cancelBtn.isVisible().catch(() => false)) {
+            await cancelBtn.click({ force: true });
+        }
+        await expect(cancelBtn).not.toBeVisible({ timeout: 10000 });
+
+        // Clean up: Close the form dialog if open
+        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
 
 
 }

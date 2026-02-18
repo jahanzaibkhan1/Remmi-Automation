@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.132122000001374">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-18T11:38:54.448Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.467" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that the agent dropdown allows adding and removing agents" classname="Pages\Listing\listingCalendar.spec.ts" time="24.467">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.52561100000143">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-18T11:59:30.721Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.23" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that clicking &quot;Cancel&quot; does not save the inspection" classname="Pages\Listing\listingCalendar.spec.ts" time="32.23">
 </testcase>
 </testsuite>
 </testsuites>

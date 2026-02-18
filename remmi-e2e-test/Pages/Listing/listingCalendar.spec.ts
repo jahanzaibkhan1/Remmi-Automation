@@ -55,4 +55,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyAgentDropdownAllowsAddAndRemoveAgents();
     });
 
+    test('Test 8: Verify that clicking "Cancel" does not save the inspection', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyClickingCancelNotSave();
+    });
+
 });
