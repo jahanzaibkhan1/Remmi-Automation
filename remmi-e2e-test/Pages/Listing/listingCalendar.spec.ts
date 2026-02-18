@@ -34,4 +34,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyCreateNewOpensInspectionFields();
     });
+
+    test('Test 4: Verify that private inspection fields have required validation for date and time', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyPrivateInspectionFieldsValidation();
+    });
 });
