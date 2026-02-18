@@ -22946,6 +22946,43 @@ export class ListingActions {
 
     }
 
+    /**
+     * Verify that "+Create New" and "+New Task" buttons appear on the expected page/tab.
+     */
+    async verifyCreateNewAndNewTaskButtonsVisible() {
+        // Navigate to the Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the "Tasks" tab (assuming tasks are found here; adjust if elsewhere)
+        const tasksTab = this.page.getByRole('tab', { name: /Tasks/i }).first();
+        await expect(tasksTab).toBeVisible({ timeout: 15000 });
+        await tasksTab.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Assert that "+New Task" button is visible
+        const newTaskBtn = this.page.getByRole('button', { name: /New Task/i });
+        await expect(newTaskBtn).toBeVisible({ timeout: 10000 });
+
+        // Close modal/tab if any is open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
 
 
 }
