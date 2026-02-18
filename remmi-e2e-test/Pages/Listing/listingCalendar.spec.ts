@@ -60,4 +60,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyClickingCancelNotSave();
     });
 
+    test('Test 9: Verify that saving an inspection adds it to the calendar', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifySavingInspectionAddsToCalendar();
+    });
+
 });
