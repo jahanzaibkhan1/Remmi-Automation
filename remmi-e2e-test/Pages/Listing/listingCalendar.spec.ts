@@ -50,4 +50,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyPrimaryAgentIsAutoSelected();
     });
 
+    test('Test 7: Verify that the agent dropdown allows adding and removing agents', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyAgentDropdownAllowsAddAndRemoveAgents();
+    });
+
 });

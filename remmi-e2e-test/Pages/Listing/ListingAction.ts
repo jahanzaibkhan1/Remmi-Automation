@@ -23170,6 +23170,74 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    /**
+     * Verify that the agent dropdown allows adding and removing agents.
+     */
+    async verifyAgentDropdownAllowsAddAndRemoveAgents() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Wait for "+Create New" button to appear and click it
+        const createNewBtn = this.page.getByRole('button', { name: /create new/i });
+        await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+        await createNewBtn.click();
+
+        // Open the agent dropdown
+        const agentDropdown = this.page.locator('ng-select[bindlabel="full_name"]').last();
+        await expect(agentDropdown).toBeVisible({ timeout: 5000 });
+        await agentDropdown.click();
+
+        // Wait for dropdown options to appear
+        const dropdownOptions = this.page.locator('ng-dropdown-panel .ng-option');
+        await expect(dropdownOptions.first()).toBeVisible({ timeout: 5000 });
+
+        // Select the first available agent from the list (for add)
+        const agentOptionToAdd = dropdownOptions.nth(1);
+        const agentOptionText = await agentOptionToAdd.textContent();
+        await agentOptionToAdd.click();
+
+        // Verify that the agent was added (should now be visible in the selected values)
+        const selectedAgents = this.page.locator('ng-select[bindlabel="full_name"] .ng-value-label');
+        const selectedAgentsCountAfterAdd = await selectedAgents.count();
+        expect(selectedAgentsCountAfterAdd).toBeGreaterThan(0);
+
+        // Remove the agent by clicking the remove/cross button next to their name
+        const removeBtn = this.page.locator('ng-select[bindlabel="full_name"] .ng-value-icon').last();
+        await expect(removeBtn).toBeVisible();
+        await removeBtn.click();
+
+        // Confirm agent is removed
+        const selectedAgentsCountAfterRemove = await selectedAgents.count();
+        expect(selectedAgentsCountAfterRemove).toBeLessThan(selectedAgentsCountAfterAdd);
+
+        const closeBtun = this.page.locator('.event_poup_close_btn');
+
+        if (await closeBtun.isVisible()) {
+            await closeBtun.click({ force: true });
+        }
+        await expect(closeBtun).not.toBeVisible({ timeout: 10000 });
+        
+        // Clean up: Close the modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
 
 
 }
