@@ -80,4 +80,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyInspectionPopupHasCloseAndDeleteIcons();
     });
 
+    test('Test 13: Verify that deleting an inspection from the popup removes it from both calendar and My Task section', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyDeletingInspectionRemovesFromCalendarAndMyTask();
+    });
+
 });

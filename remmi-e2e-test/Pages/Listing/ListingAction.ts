@@ -23447,7 +23447,64 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    /**
+     * Verifies that deleting an inspection from the popup removes it from both the calendar and the "My Task" section.
+     */
+    async verifyDeletingInspectionRemovesFromCalendarAndMyTask() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
 
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
 
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Locate and click the first calendar event
+        const eventLocator = this.page.locator("//div[@class='fc-event-main']").first();
+        await eventLocator.scrollIntoViewIfNeeded();
+        await expect(eventLocator).toBeVisible({ timeout: 10000 });
+        await eventLocator.click({ force: true });
+
+        // Wait for the inspection popup/dialog to appear
+        const popup = this.page.locator('.p-dialog, .fc-popover, [role="dialog"]');
+        await expect(popup).toBeVisible({ timeout: 10000 });
+
+        // Check and click the delete icon
+        // Use getByRole as in previous method, fallback to .pi-trash if needed
+        const deleteIcon = this.page.getByRole('img', { name: 'delete' }).last();
+        await expect(deleteIcon).toBeVisible({ timeout: 5000 });
+        await deleteIcon.click();
+
+        // Verify success message "Event deleted successfully" appears
+        const successMsg = this.page.getByText(/event deleted successfully/i).last();
+        await expect(successMsg).toBeVisible({ timeout: 10000 });
+
+        await expect(eventLocator).not.toBeVisible({ timeout: 10000 });
+
+        // Scroll to the "Inspections" section header (nth(1) to handle duplicates if needed)
+        const inspectionsSection = this.page.locator('div').filter({ hasText: /^Inspections$/ }).nth(1);
+        await inspectionsSection.scrollIntoViewIfNeeded();
+
+        const inspectionCard = this.page.locator('div.mb-2.p-3', {
+            hasText: 'Busy - Private Inspection'
+        });
+        await expect(inspectionCard).not.toBeVisible({ timeout: 10000 });
+
+        // Clean up: Close the form dialog if open
+        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+
+    }
 
 }
