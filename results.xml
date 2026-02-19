@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="57.58871499999985">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-19T06:39:27.248Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.905" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify that a saved task appears in the Task Module" classname="Pages\Listing\listingCalendar.spec.ts" time="44.905">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.96109200000018">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-19T06:51:32.288Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.764" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Verify that tasks are displayed in the calendar under the correct due date" classname="Pages\Listing\listingCalendar.spec.ts" time="37.764">
+<system-out>
+<![CDATA[Automation Testing task time is: 11:44 AM
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>

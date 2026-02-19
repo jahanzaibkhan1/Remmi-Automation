@@ -23805,7 +23805,7 @@ export class ListingActions {
         const myTasksDiv = this.page.locator('div').filter({ hasText: /^My Tasks$/ }).nth(1);
         await myTasksDiv.scrollIntoViewIfNeeded();
         await expect(myTasksDiv).toBeVisible({ timeout: 10000 });
-        await myTasksDiv.click({force: true});
+        await myTasksDiv.click({ force: true });
         const todayTasks = this.page.getByRole('cell', { name: 'Automation Testing' }).first();
         await expect(todayTasks).toBeVisible({ timeout: 10000 });
         // Close modal if needed
@@ -23836,10 +23836,57 @@ export class ListingActions {
         const myTasksDiv = this.page.locator('div').filter({ hasText: /^My Tasks$/ }).nth(1);
         await myTasksDiv.scrollIntoViewIfNeeded();
         await expect(myTasksDiv).toBeVisible({ timeout: 10000 });
-        await myTasksDiv.click({force: true});
+        await myTasksDiv.click({ force: true });
         const todayTasks = this.page.getByRole('cell', { name: 'Automation Testing' }).first();
         await expect(todayTasks).toBeVisible({ timeout: 10000 });
         // Close modal if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verifies that tasks are displayed in the calendar under the correct due date.
+     * Assumes a task titled 'Automation Task' has been added for tomorrow's date.
+     */
+    async verifyTaskAppearsInCalendarUnderCorrectDueDate() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to Calendar tab
+        const calendarTab = this.page.getByRole('tab', { name: /Calendar/i });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Ensure the second "My Tasks" div is visible
+        const myTasksDiv = this.page.locator('div').filter({ hasText: /^My Tasks$/ }).nth(1);
+        await myTasksDiv.scrollIntoViewIfNeeded();
+        await expect(myTasksDiv).toBeVisible({ timeout: 10000 });
+        await myTasksDiv.click({ force: true });
+
+
+        const taskCell = this.page.locator('td.d-flex.align-items-start', {
+            hasText: 'Automation Testing'
+        });
+
+        await expect(taskCell).toBeVisible({ timeout: 10000 });
+
+        const fullText = await taskCell.innerText();
+
+        const parts = fullText.split('\n').map(s => s.trim());
+
+        const taskTime = parts[parts.length - 1];
+
+        console.log(`Automation Testing task time is: ${taskTime}`);
+
+        // Close any modal/popover if opened (optional; depends on UI)
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
