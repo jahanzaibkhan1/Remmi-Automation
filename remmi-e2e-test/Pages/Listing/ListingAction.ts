@@ -23268,12 +23268,12 @@ export class ListingActions {
         }
         await expect(cancelBtn).not.toBeVisible({ timeout: 10000 });
 
-        // Clean up: Close the form dialog if open
-        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
-        if (await closeBtn.isVisible().catch(() => false)) {
-            await closeBtn.click({ force: true });
-        }
-        await this.page.waitForTimeout(500);
+         // Clean up: Close the modal if open
+         const closeBtn = this.page.locator('.pi.pi-times').first();
+         if (await closeBtn.isVisible().catch(() => false)) {
+             await closeBtn.click({ force: true });
+         }
+         await this.page.waitForTimeout(1000);
     }
 
     async verifySavingInspectionAddsToCalendar() {
@@ -23322,13 +23322,12 @@ export class ListingActions {
         const newEvent = this.page.locator("//div[@class='fc-event-main']").first();
         await newEvent.scrollIntoViewIfNeeded();
         await expect(newEvent).toBeVisible({ timeout: 10000 });
-
-        // Clean up: Close the form dialog if open
-        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+        // Clean up: Close the modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -23355,12 +23354,12 @@ export class ListingActions {
         await newEvent.scrollIntoViewIfNeeded();
         await expect(newEvent).toBeVisible({ timeout: 10000 });
 
-        // Clean up: Close the form dialog if open
-        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+       //Close the form dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -23392,12 +23391,12 @@ export class ListingActions {
         const popup = this.page.locator('.p-dialog, .fc-popover, [role="dialog"]');
         await expect(popup).toBeVisible({ timeout: 10000 });
 
-        // Clean up: Close the form dialog if open
-        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+       //Close the form dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
 
     }
 
@@ -23439,12 +23438,16 @@ export class ListingActions {
         const deleteIcon = this.page.getByRole('img', { name: 'delete' }).last();
         await expect(deleteIcon).toBeVisible({ timeout: 5000 });
 
-        // Clean up: Close the form dialog if open
-        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+        await closeIcon.click({force : true});
+
+        await this.page.waitForTimeout(1200);
+
+       //Close the form dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -23498,12 +23501,12 @@ export class ListingActions {
         });
         await expect(inspectionCard).not.toBeVisible({ timeout: 10000 });
 
-        // Clean up: Close the form dialog if open
-        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+       //Close the form dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
 
     }
 
@@ -23580,11 +23583,12 @@ export class ListingActions {
         await expect(inspectionCard).not.toBeVisible({ timeout: 10000 });
         await expect(newEvent).not.toBeVisible({ timeout: 10000 });
         // Optionally cleanup: Close any success toast/message/dialogs if needed
-        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+         // Clean up: Close the modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -23618,11 +23622,12 @@ export class ListingActions {
         await expect(body).not.toBeVisible({ timeout: 10000 });
 
         // Optionally close any dialog that pops up
-        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+         // Clean up: Close the modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -23654,11 +23659,12 @@ export class ListingActions {
         await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
 
         // Optionally cleanup: Close the form dialog if open
-        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+         // Clean up: Close the modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -23694,11 +23700,12 @@ export class ListingActions {
         expect(selectedListingName).not.toBe('');
         console.log('Selected Listing:', selectedListingName);
 
-        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+         // Clean up: Close the modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
     }
 
     async verifyTaskAppearsInTaskList(taskTitle: string) {
@@ -23807,6 +23814,7 @@ export class ListingActions {
         await expect(myTasksDiv).toBeVisible({ timeout: 10000 });
         await myTasksDiv.click({ force: true });
         const todayTasks = this.page.getByRole('cell', { name: 'Automation Testing' }).first();
+        await todayTasks.scrollIntoViewIfNeeded();
         await expect(todayTasks).toBeVisible({ timeout: 10000 });
         // Close modal if needed
         const closeBtn = this.page.locator('.pi.pi-times').first();

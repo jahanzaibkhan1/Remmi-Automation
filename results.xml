@@ -1,8 +1,58 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.96109200000018">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-19T06:51:32.288Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.764" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Verify that tasks are displayed in the calendar under the correct due date" classname="Pages\Listing\listingCalendar.spec.ts" time="37.764">
+<testsuites id="" name="" tests="20" failures="0" skipped="0" errors="0" time="216.49722799999918">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-19T11:35:09.158Z" hostname="chromium" tests="20" failures="0" skipped="0" time="204.058" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that the &quot;Connect Your Account&quot; button is shown if Google Calendar is not connected" classname="Pages\Listing\listingCalendar.spec.ts" time="51.236">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify that &quot;+Create New&quot; and &quot;+New Task&quot; buttons appear " classname="Pages\Listing\listingCalendar.spec.ts" time="7.545">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that clicking &quot;+Create New&quot; opens the inspection fields" classname="Pages\Listing\listingCalendar.spec.ts" time="11.004">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that private inspection fields have required validation for date and time" classname="Pages\Listing\listingCalendar.spec.ts" time="16.541">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that the listing location field is auto filled" classname="Pages\Listing\listingCalendar.spec.ts" time="16.65">
 <system-out>
-<![CDATA[Automation Testing task time is: 11:44 AM
+<![CDATA[Location:  ""Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880
+]]>
+</system-out>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that the primary agent is auto selected" classname="Pages\Listing\listingCalendar.spec.ts" time="12.401">
+<system-out>
+<![CDATA[Primary Agent: Jahanzaib Xenex
+]]>
+</system-out>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that the agent dropdown allows adding and removing agents" classname="Pages\Listing\listingCalendar.spec.ts" time="12.9">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that clicking &quot;Cancel&quot; does not save the inspection" classname="Pages\Listing\listingCalendar.spec.ts" time="4.8">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify that saving an inspection adds it to the calendar" classname="Pages\Listing\listingCalendar.spec.ts" time="6.518">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that the saved inspection appears under the &quot;Inspection&quot; section" classname="Pages\Listing\listingCalendar.spec.ts" time="4.023">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify that clicking an inspection in the calendar opens a popup with details" classname="Pages\Listing\listingCalendar.spec.ts" time="3.62">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify that the inspection popup contains a close (X) and delete icon" classname="Pages\Listing\listingCalendar.spec.ts" time="12.831">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that deleting an inspection from the popup removes it from both calendar and My Task section" classname="Pages\Listing\listingCalendar.spec.ts" time="7.119">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that deleting an inspection from the Inspections section removes it from the Calendar" classname="Pages\Listing\listingCalendar.spec.ts" time="8.389">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that the arrow button expands/collapses the inspection section" classname="Pages\Listing\listingCalendar.spec.ts" time="4.749">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that clicking &quot;+New Task&quot; opens the task creation form" classname="Pages\Listing\listingCalendar.spec.ts" time="3.362">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify that module and listing name are auto-selected in the task form" classname="Pages\Listing\listingCalendar.spec.ts" time="5.734">
+<system-out>
+<![CDATA[Selected Listing: ""Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880
+]]>
+</system-out>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Verify that saving a task adds it to the calendar under My Task section" classname="Pages\Listing\listingCalendar.spec.ts" time="6.497">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify that a saved task appears in the Task Module" classname="Pages\Listing\listingCalendar.spec.ts" time="3.782">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Verify that tasks are displayed in the calendar under the correct due date" classname="Pages\Listing\listingCalendar.spec.ts" time="4.357">
+<system-out>
+<![CDATA[Automation Testing task time is: 04:31 PM
 ]]>
 </system-out>
 </testcase>
