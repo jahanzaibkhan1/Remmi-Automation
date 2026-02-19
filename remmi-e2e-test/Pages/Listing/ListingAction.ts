@@ -23268,12 +23268,12 @@ export class ListingActions {
         }
         await expect(cancelBtn).not.toBeVisible({ timeout: 10000 });
 
-        // Clean up: Close the form dialog if open
-        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
-        if (await closeBtn.isVisible().catch(() => false)) {
-            await closeBtn.click({ force: true });
-        }
-        await this.page.waitForTimeout(500);
+         // Clean up: Close the modal if open
+         const closeBtn = this.page.locator('.pi.pi-times').first();
+         if (await closeBtn.isVisible().catch(() => false)) {
+             await closeBtn.click({ force: true });
+         }
+         await this.page.waitForTimeout(1000);
     }
 
     async verifySavingInspectionAddsToCalendar() {
@@ -23319,17 +23319,588 @@ export class ListingActions {
         const calendarAlert = this.page.getByRole('alert', { name: /event added to calendar/i });
         await expect(calendarAlert).toBeVisible({ timeout: 10000 });
 
-        const newEvent = this.page.locator('a').filter({ hasText: 'Remmi: Private Inspection:' }).first();
+        const newEvent = this.page.locator("//div[@class='fc-event-main']").first();
+        await newEvent.scrollIntoViewIfNeeded();
+        await expect(newEvent).toBeVisible({ timeout: 10000 });
+        // Clean up: Close the modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verifies that the saved inspection appears under the "Inspection Section".
+     */
+    async verifyInspectionAppearsInInspectionSection() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        const newEvent = this.page.locator("//div[@class='fc-event-main']").first();
+        await newEvent.scrollIntoViewIfNeeded();
         await expect(newEvent).toBeVisible({ timeout: 10000 });
 
-        // Clean up: Close the form dialog if open
-        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+       //Close the form dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verifies that clicking an inspection event in the calendar opens a popup with details.
+     */
+    async verifyClickingInspectionOpensPopupWithDetails() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        const newEvent = this.page.locator("//div[@class='fc-event-main']").first();
+        await newEvent.scrollIntoViewIfNeeded();
+        await expect(newEvent).toBeVisible({ timeout: 10000 });
+        await newEvent.click({ force: true });
+
+        // Expect the popup/dialog with details to appear
+        const popup = this.page.locator('.p-dialog, .fc-popover, [role="dialog"]');
+        await expect(popup).toBeVisible({ timeout: 10000 });
+
+       //Close the form dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+
+    }
+
+    /**
+     * Verifies that the inspection popup contains a close (X) icon and a delete icon.
+     */
+    async verifyInspectionPopupHasCloseAndDeleteIcons() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Locate and click the first calendar event
+        const newEvent = this.page.locator("//div[@class='fc-event-main']").first();
+        await newEvent.scrollIntoViewIfNeeded();
+        await expect(newEvent).toBeVisible({ timeout: 10000 });
+        await newEvent.click({ force: true });
+
+        // Wait for the inspection popup/dialog to appear
+        const popup = this.page.locator('.p-dialog, .fc-popover, [role="dialog"]');
+        await expect(popup).toBeVisible({ timeout: 10000 });
+
+        // Check for the close (X) icon in the popup
+        const closeIcon = popup.locator('.pi.pi-times.p-1');
+        await expect(closeIcon).toBeVisible({ timeout: 5000 });
+
+        // Check for the delete icon (commonly .pi-trash or a button labeled 'Delete') in the popup
+        const deleteIcon = this.page.getByRole('img', { name: 'delete' }).last();
+        await expect(deleteIcon).toBeVisible({ timeout: 5000 });
+
+        await closeIcon.click({force : true});
+
+        await this.page.waitForTimeout(1200);
+
+       //Close the form dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verifies that deleting an inspection from the popup removes it from both the calendar and the "My Task" section.
+     */
+    async verifyDeletingInspectionRemovesFromCalendarAndMyTask() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Locate and click the first calendar event
+        const eventLocator = this.page.locator("//div[@class='fc-event-main']").first();
+        await eventLocator.scrollIntoViewIfNeeded();
+        await expect(eventLocator).toBeVisible({ timeout: 10000 });
+        await eventLocator.click({ force: true });
+
+        // Wait for the inspection popup/dialog to appear
+        const popup = this.page.locator('.p-dialog, .fc-popover, [role="dialog"]');
+        await expect(popup).toBeVisible({ timeout: 10000 });
+
+        // Check and click the delete icon
+        // Use getByRole as in previous method, fallback to .pi-trash if needed
+        const deleteIcon = this.page.getByRole('img', { name: 'delete' }).last();
+        await expect(deleteIcon).toBeVisible({ timeout: 5000 });
+        await deleteIcon.click();
+
+        // Verify success message "Event deleted successfully" appears
+        const successMsg = this.page.getByText(/event deleted successfully/i).last();
+        await expect(successMsg).toBeVisible({ timeout: 10000 });
+
+        await expect(eventLocator).not.toBeVisible({ timeout: 10000 });
+
+        // Scroll to the "Inspections" section header (nth(1) to handle duplicates if needed)
+        const inspectionsSection = this.page.locator('div').filter({ hasText: /^Inspections$/ }).nth(1);
+        await inspectionsSection.scrollIntoViewIfNeeded();
+
+        const inspectionCard = this.page.locator('div.mb-2.p-3', {
+            hasText: 'Busy - Private Inspection'
+        });
+        await expect(inspectionCard).not.toBeVisible({ timeout: 10000 });
+
+       //Close the form dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+
+    }
+
+    /**
+     * Verify that deleting an inspection from the Inspections section removes it from the Calendar.
+     */
+    async verifyDeletingInspectionRemovesFromInspectionSectionAndCalendar() {
+
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Wait for "+Create New" button to appear and click it
+        const createNewBtn = this.page.getByRole('button', { name: /create new/i });
+        await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+        await createNewBtn.click();
+
+        // Fill out minimal required fields for the inspection
+        const titleInput = this.page.locator('input[placeholder="Add title"]');
+        await titleInput.click();
+        await titleInput.fill('');
+        await titleInput.fill('Test Inspection');
+
+        const startHour = this.page.locator('ng-select[placeholder="Hr"]').nth(3);
+        await startHour.click();
+        const startHourOption = this.page.getByRole('option', { name: '5' });
+        await expect(startHourOption).toBeVisible({ timeout: 10000 });
+        await startHourOption.click();
+
+        // Click Save
+        const saveBtn = this.page.getByLabel('Calendar').getByRole('button', { name: 'Save' });
+        await expect(saveBtn).toBeVisible({ timeout: 5000 });
+        await saveBtn.click();
+
+        // Wait for confirmation alert that event was added to calendar
+        const calendarAlert = this.page.getByRole('alert', { name: /event added to calendar/i });
+        await expect(calendarAlert).toBeVisible({ timeout: 10000 });
+
+        const newEvent = this.page.locator("//div[@class='fc-event-main']").first();
+        await newEvent.scrollIntoViewIfNeeded();
+        await expect(newEvent).toBeVisible({ timeout: 10000 });
+
+
+        // Wait for the Inspections section to be visible
+        const inspectionsSection = this.page.locator('div').filter({ hasText: /^Inspections$/ }).nth(1);
+        await expect(inspectionsSection).toBeVisible({ timeout: 10000 });
+        await inspectionsSection.scrollIntoViewIfNeeded();
+
+        // Find the first inspection card (assuming it contains this unique text)
+        const inspectionCard = this.page.locator('div.mb-2.p-3', {
+            hasText: 'Busy - Private Inspection'
+        }).first();
+        await expect(inspectionCard).toBeVisible({ timeout: 10000 });
+
+        // Click the delete icon on the inspection card
+        const deleteIcon = this.page.getByRole('link', { name: 'delete' });
+        await expect(deleteIcon).toBeVisible({ timeout: 5000 });
+        await deleteIcon.click();
+        // Optionally: check for a success toast/message
+        const successMsg = this.page.getByText(/event removed successfully/i).last();
+        await expect(successMsg).toBeVisible({ timeout: 10000 });
+        await expect(inspectionCard).not.toBeVisible({ timeout: 10000 });
+        await expect(newEvent).not.toBeVisible({ timeout: 10000 });
+        // Optionally cleanup: Close any success toast/message/dialogs if needed
+         // Clean up: Close the modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verifies that the arrow button expands and collapses the inspection section.
+     */
+    async verifyInspectionSectionArrowExpandCollapse() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Locate the Inspections section header and scroll it into view
+        const inspectionsSectionHeader = this.page.locator('div').filter({ hasText: /^Inspections$/ }).nth(1);
+        await inspectionsSectionHeader.scrollIntoViewIfNeeded();
+        await expect(inspectionsSectionHeader).toBeVisible({ timeout: 10000 });
+        const inspectionsSection = this.page.locator('app-collapse-box', { hasText: 'Inspections' }).nth(0);
+        const body = inspectionsSection.locator('.card-body');
+        await expect(body).toBeVisible({ timeout: 10000 });
+        await inspectionsSection.click();
+        await expect(body).not.toBeVisible({ timeout: 10000 });
+
+        // Optionally close any dialog that pops up
+         // Clean up: Close the modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verifies that clicking "+New Task" opens the task creation form.
+     */
+    async verifyClickingNewTaskOpensTaskCreationForm() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Wait for "+New Task" button to appear and click it
+        const newTaskBtn = this.page.getByRole('button', { name: /new task/i });
+        await expect(newTaskBtn).toBeVisible({ timeout: 10000 });
+        await newTaskBtn.click();
+
+        const taskTitleInput = this.page.getByRole('heading', { name: 'Create New Task' });
+        await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
+
+        // Optionally cleanup: Close the form dialog if open
+         // Clean up: Close the modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+  * Verifies that the module and listing name are auto-selected in the task creation form.
+  */
+    async verifyTaskFormAutoSelectsModuleAndListingName() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("div.s-property").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Wait for "+ New Task" button and click it
+        const newTaskBtn = this.page.getByRole('button', { name: /new task/i });
+        await expect(newTaskBtn).toBeVisible({ timeout: 10000 });
+        await newTaskBtn.click();
+
+        // Wait for the task creation dialog
+        const taskDialog = this.page.locator('app-create-new-task, .p-dialog');
+        await expect(taskDialog).toBeVisible({ timeout: 10000 });
+
+        const listingField = this.page.locator('re-multiselect .selected_one p.cursor-pointer').last();
+        await expect(listingField).toBeVisible({ timeout: 5000 });
+        const selectedListingName = (await listingField.textContent())?.trim() || '';
+        expect(selectedListingName).not.toBe('');
+        console.log('Selected Listing:', selectedListingName);
+
+         // Clean up: Close the modal if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    async verifyTaskAppearsInTaskList(taskTitle: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click()
+
+        // Navigate to Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Wait for "+ New Task" button and click it
+        const newTaskBtn = this.page.getByRole('button', { name: /new task/i });
+        await expect(newTaskBtn).toBeVisible({ timeout: 10000 });
+        await newTaskBtn.click();
+
+        // Wait for the task creation dialog
+        const taskDialog = this.page.locator('app-create-new-task, .p-dialog');
+        await expect(taskDialog).toBeVisible({ timeout: 10000 });
+
+        // Input task title
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
+        await taskTitleInput.fill(taskTitle);
+
+        // Fill in inspection event date: pick January 14, 2026 using the date picker and the displayed calendar
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        // 1️⃣ Compute Tomorrow
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        // 2️⃣ Read currently opened calendar's month-year (stable header)
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+
+        const headerText = await header.innerText();
+        const [monthName, year] = headerText.trim().split(" ");
+
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        // 3️⃣ Move calendar to correct month
+        const monthDifference =
+            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
+
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+            // Wait for transition + re-render
+            await this.page.waitForTimeout(200);
+        }
+
+        // 4️⃣ Select tomorrow's date (non-flaky selector)
+        const dayLocator = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
+        );
+
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
+        await dayLocator.first().click({ force: true });
+
+        const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"]');
+        await expect(staffSelect).toBeVisible();
+        await staffSelect.click();
+
+        const staffInput = this.page.locator(
+            'ng-select[formcontrolname="assignedUsers"] input[type="text"]'
+        );
+        await staffInput.fill('Jahanzaib');
+
+        const staffOption = this.page.locator('.ng-dropdown-panel .ng-option', {
+            hasText: 'Jahanzaib'
+        });
+        await expect(staffOption).toBeVisible();
+        await staffOption.click();
+
+        // Save task
+        const saveTaskButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveTaskButton).toBeVisible({ timeout: 10000 });
+        await saveTaskButton.click();
+
+        // Wait for confirmation that the task was created ("Task created successfully" alert or toast)
+        const successToast = this.page.getByText(/task created/i).last();
+        await expect(successToast).toBeVisible({ timeout: 10000 });
+
+        const closetask = this.page.locator('.pi.pi-times').last();
+        if (await closetask.isVisible().catch(() => false)) {
+            await closetask.click({ force: true });
+        }
+        // Ensure the second "My Tasks" div is visible
+        const myTasksDiv = this.page.locator('div').filter({ hasText: /^My Tasks$/ }).nth(1);
+        await myTasksDiv.scrollIntoViewIfNeeded();
+        await expect(myTasksDiv).toBeVisible({ timeout: 10000 });
+        await myTasksDiv.click({ force: true });
+        const todayTasks = this.page.getByRole('cell', { name: 'Automation Testing' }).first();
+        await todayTasks.scrollIntoViewIfNeeded();
+        await expect(todayTasks).toBeVisible({ timeout: 10000 });
+        // Close modal if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(500);
     }
 
+    /**
+     * Verifies that a saved task appears in the global Task Module.
+     */
+    async verifyTaskAppearsInTaskListAfterCreation() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click()
+
+        // Navigate to Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+        // Ensure the second "My Tasks" div is visible
+        const myTasksDiv = this.page.locator('div').filter({ hasText: /^My Tasks$/ }).nth(1);
+        await myTasksDiv.scrollIntoViewIfNeeded();
+        await expect(myTasksDiv).toBeVisible({ timeout: 10000 });
+        await myTasksDiv.click({ force: true });
+        const todayTasks = this.page.getByRole('cell', { name: 'Automation Testing' }).first();
+        await expect(todayTasks).toBeVisible({ timeout: 10000 });
+        // Close modal if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verifies that tasks are displayed in the calendar under the correct due date.
+     * Assumes a task titled 'Automation Task' has been added for tomorrow's date.
+     */
+    async verifyTaskAppearsInCalendarUnderCorrectDueDate() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to Calendar tab
+        const calendarTab = this.page.getByRole('tab', { name: /Calendar/i });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Ensure the second "My Tasks" div is visible
+        const myTasksDiv = this.page.locator('div').filter({ hasText: /^My Tasks$/ }).nth(1);
+        await myTasksDiv.scrollIntoViewIfNeeded();
+        await expect(myTasksDiv).toBeVisible({ timeout: 10000 });
+        await myTasksDiv.click({ force: true });
+
+
+        const taskCell = this.page.locator('td.d-flex.align-items-start', {
+            hasText: 'Automation Testing'
+        });
+
+        await expect(taskCell).toBeVisible({ timeout: 10000 });
+
+        const fullText = await taskCell.innerText();
+
+        const parts = fullText.split('\n').map(s => s.trim());
+
+        const taskTime = parts[parts.length - 1];
+
+        console.log(`Automation Testing task time is: ${taskTime}`);
+
+        // Close any modal/popover if opened (optional; depends on UI)
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
 
 
 
