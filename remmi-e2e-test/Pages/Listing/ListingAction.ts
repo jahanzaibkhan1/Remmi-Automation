@@ -23625,4 +23625,40 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    /**
+     * Verifies that clicking "+New Task" opens the task creation form.
+     */
+    async verifyClickingNewTaskOpensTaskCreationForm() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Wait for "+New Task" button to appear and click it
+        const newTaskBtn = this.page.getByRole('button', { name: /new task/i });
+        await expect(newTaskBtn).toBeVisible({ timeout: 10000 });
+        await newTaskBtn.click();
+
+        const taskTitleInput = this.page.getByRole('heading', { name: 'Create New Task' });
+        await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
+
+        // Optionally cleanup: Close the form dialog if open
+        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
 }
