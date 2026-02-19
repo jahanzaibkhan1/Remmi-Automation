@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="58.07598800000176">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-19T06:27:00.869Z" hostname="chromium" tests="1" failures="0" skipped="0" time="49.001" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Verify that saving a task adds it to the calendar under My Task section" classname="Pages\Listing\listingCalendar.spec.ts" time="49.001">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="57.58871499999985">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-19T06:39:27.248Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.905" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify that a saved task appears in the Task Module" classname="Pages\Listing\listingCalendar.spec.ts" time="44.905">
 </testcase>
 </testsuite>
 </testsuites>
