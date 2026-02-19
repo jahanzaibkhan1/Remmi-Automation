@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="45.57693600000022">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-19T04:46:00.095Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.431" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify that the inspection popup contains a close (X) and delete icon" classname="Pages\Listing\listingCalendar.spec.ts" time="33.431">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.195082000000404">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-19T04:58:10.090Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.585" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that deleting an inspection from the popup removes it from both calendar and My Task section" classname="Pages\Listing\listingCalendar.spec.ts" time="48.585">
 </testcase>
 </testsuite>
 </testsuites>
