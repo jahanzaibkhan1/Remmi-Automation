@@ -65,4 +65,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifySavingInspectionAddsToCalendar();
     });
 
+    test('Test 10: Verify that the saved inspection appears under the "Inspection" section', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyInspectionAppearsInInspectionSection();
+    });
+
 });
