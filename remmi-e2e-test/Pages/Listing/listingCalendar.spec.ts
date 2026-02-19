@@ -70,4 +70,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyInspectionAppearsInInspectionSection();
     });
 
+    test('Test 11: Verify that clicking an inspection in the calendar opens a popup with details', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyClickingInspectionOpensPopupWithDetails();
+    });
+
 });
