@@ -23816,6 +23816,37 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    /**
+     * Verifies that a saved task appears in the global Task Module.
+     */
+    async verifyTaskAppearsInTaskListAfterCreation() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click()
+
+        // Navigate to Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+        // Ensure the second "My Tasks" div is visible
+        const myTasksDiv = this.page.locator('div').filter({ hasText: /^My Tasks$/ }).nth(1);
+        await myTasksDiv.scrollIntoViewIfNeeded();
+        await expect(myTasksDiv).toBeVisible({ timeout: 10000 });
+        await myTasksDiv.click({force: true});
+        const todayTasks = this.page.getByRole('cell', { name: 'Automation Testing' }).first();
+        await expect(todayTasks).toBeVisible({ timeout: 10000 });
+        // Close modal if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
 
 
 }

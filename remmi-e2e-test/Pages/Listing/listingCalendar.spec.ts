@@ -110,4 +110,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyTaskAppearsInTaskList('Automation Task');
     });
 
+    test('Test 19: Verify that a saved task appears in the Task Module', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyTaskAppearsInTaskListAfterCreation();
+    });
+
 });
