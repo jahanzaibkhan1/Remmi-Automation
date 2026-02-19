@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.52561100000143">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-18T11:59:30.721Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.23" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that clicking &quot;Cancel&quot; does not save the inspection" classname="Pages\Listing\listingCalendar.spec.ts" time="32.23">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.2300830000001">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-19T04:21:08.852Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.527" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that the saved inspection appears under the &quot;Inspection&quot; section" classname="Pages\Listing\listingCalendar.spec.ts" time="44.527">
 </testcase>
 </testsuite>
 </testsuites>

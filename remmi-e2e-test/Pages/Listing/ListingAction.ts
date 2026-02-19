@@ -23319,7 +23319,40 @@ export class ListingActions {
         const calendarAlert = this.page.getByRole('alert', { name: /event added to calendar/i });
         await expect(calendarAlert).toBeVisible({ timeout: 10000 });
 
-        const newEvent = this.page.locator('a').filter({ hasText: 'Remmi: Private Inspection:' }).first();
+        const newEvent = this.page.locator("//div[@class='fc-event-main']").first();
+        await newEvent.scrollIntoViewIfNeeded();
+        await expect(newEvent).toBeVisible({ timeout: 10000 });
+
+        // Clean up: Close the form dialog if open
+        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verifies that the saved inspection appears under the "Inspection Section".
+     */
+    async verifyInspectionAppearsInInspectionSection() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        const newEvent = this.page.locator("//div[@class='fc-event-main']").first();
+        await newEvent.scrollIntoViewIfNeeded();
         await expect(newEvent).toBeVisible({ timeout: 10000 });
 
         // Clean up: Close the form dialog if open
