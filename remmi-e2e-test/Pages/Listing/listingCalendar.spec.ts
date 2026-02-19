@@ -95,4 +95,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyInspectionSectionArrowExpandCollapse();
     });
 
+    test('Test 16: Verify that clicking "+New Task" opens the task creation form', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyClickingNewTaskOpensTaskCreationForm();
+    });
+
 });
