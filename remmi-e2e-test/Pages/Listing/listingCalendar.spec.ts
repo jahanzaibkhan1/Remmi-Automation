@@ -75,4 +75,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyClickingInspectionOpensPopupWithDetails();
     });
 
+    test('Test 12: Verify that the inspection popup contains a close (X) and delete icon', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyInspectionPopupHasCloseAndDeleteIcons();
+    });
+
 });

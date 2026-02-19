@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.14445399999991">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-19T04:30:26.696Z" hostname="chromium" tests="1" failures="0" skipped="0" time="26.683" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify that clicking an inspection in the calendar opens a popup with details" classname="Pages\Listing\listingCalendar.spec.ts" time="26.683">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="45.57693600000022">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-19T04:46:00.095Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.431" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify that the inspection popup contains a close (X) and delete icon" classname="Pages\Listing\listingCalendar.spec.ts" time="33.431">
 </testcase>
 </testsuite>
 </testsuites>
