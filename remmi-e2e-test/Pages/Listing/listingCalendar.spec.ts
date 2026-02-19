@@ -65,4 +65,59 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifySavingInspectionAddsToCalendar();
     });
 
+    test('Test 10: Verify that the saved inspection appears under the "Inspection" section', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyInspectionAppearsInInspectionSection();
+    });
+
+    test('Test 11: Verify that clicking an inspection in the calendar opens a popup with details', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyClickingInspectionOpensPopupWithDetails();
+    });
+
+    test('Test 12: Verify that the inspection popup contains a close (X) and delete icon', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyInspectionPopupHasCloseAndDeleteIcons();
+    });
+
+    test('Test 13: Verify that deleting an inspection from the popup removes it from both calendar and My Task section', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyDeletingInspectionRemovesFromCalendarAndMyTask();
+    });
+
+    test('Test 14: Verify that deleting an inspection from the Inspections section removes it from the Calendar', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyDeletingInspectionRemovesFromInspectionSectionAndCalendar();
+    });
+
+    test('Test 15: Verify that the arrow button expands/collapses the inspection section', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyInspectionSectionArrowExpandCollapse();
+    });
+
+    test('Test 16: Verify that clicking "+New Task" opens the task creation form', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyClickingNewTaskOpensTaskCreationForm();
+    });
+
+    test('Test 17: Verify that module and listing name are auto-selected in the task form', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyTaskFormAutoSelectsModuleAndListingName();
+    });
+
+    test('Test 18: Verify that saving a task adds it to the calendar under My Task section', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyTaskAppearsInTaskList('Automation Task');
+    });
+
+    test('Test 19: Verify that a saved task appears in the Task Module', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyTaskAppearsInTaskListAfterCreation();
+    });
+
+    test('Test 20: Verify that tasks are displayed in the calendar under the correct due date', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyTaskAppearsInCalendarUnderCorrectDueDate();
+    });
+
 });
