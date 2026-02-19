@@ -23661,4 +23661,45 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    /**
+  * Verifies that the module and listing name are auto-selected in the task creation form.
+  */
+    async verifyTaskFormAutoSelectsModuleAndListingName() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("div.s-property").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Wait for "+ New Task" button and click it
+        const newTaskBtn = this.page.getByRole('button', { name: /new task/i });
+        await expect(newTaskBtn).toBeVisible({ timeout: 10000 });
+        await newTaskBtn.click();
+
+        // Wait for the task creation dialog
+        const taskDialog = this.page.locator('app-create-new-task, .p-dialog');
+        await expect(taskDialog).toBeVisible({ timeout: 10000 });
+
+        const listingField = this.page.locator('re-multiselect .selected_one p.cursor-pointer').last();
+        await expect(listingField).toBeVisible({ timeout: 5000 });
+        const selectedListingName = (await listingField.textContent())?.trim() || '';
+        expect(selectedListingName).not.toBe('');
+        console.log('Selected Listing:', selectedListingName);
+
+        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+
 }

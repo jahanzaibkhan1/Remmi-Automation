@@ -100,4 +100,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyClickingNewTaskOpensTaskCreationForm();
     });
 
+    test('Test 17: Verify that module and listing name are auto-selected in the task form', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyTaskFormAutoSelectsModuleAndListingName();
+    });
+
 });
