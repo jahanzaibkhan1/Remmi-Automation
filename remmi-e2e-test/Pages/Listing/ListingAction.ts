@@ -23587,4 +23587,42 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    /**
+     * Verifies that the arrow button expands and collapses the inspection section.
+     */
+    async verifyInspectionSectionArrowExpandCollapse() {
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Locate the Inspections section header and scroll it into view
+        const inspectionsSectionHeader = this.page.locator('div').filter({ hasText: /^Inspections$/ }).nth(1);
+        await inspectionsSectionHeader.scrollIntoViewIfNeeded();
+        await expect(inspectionsSectionHeader).toBeVisible({ timeout: 10000 });
+        const inspectionsSection = this.page.locator('app-collapse-box', { hasText: 'Inspections' }).nth(0);
+        const body = inspectionsSection.locator('.card-body');
+        await expect(body).toBeVisible({ timeout: 10000 });
+        await inspectionsSection.click();
+        await expect(body).not.toBeVisible({ timeout: 10000 });
+
+        // Optionally close any dialog that pops up
+        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
 }

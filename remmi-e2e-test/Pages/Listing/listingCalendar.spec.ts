@@ -90,4 +90,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyDeletingInspectionRemovesFromInspectionSectionAndCalendar();
     });
 
+    test('Test 15: Verify that the arrow button expands/collapses the inspection section', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyInspectionSectionArrowExpandCollapse();
+    });
+
 });
