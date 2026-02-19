@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.195082000000404">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-19T04:58:10.090Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.585" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that deleting an inspection from the popup removes it from both calendar and My Task section" classname="Pages\Listing\listingCalendar.spec.ts" time="48.585">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.54703099999949">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-19T05:13:47.552Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.353" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that deleting an inspection from the Inspections section removes it from the Calendar" classname="Pages\Listing\listingCalendar.spec.ts" time="31.353">
 </testcase>
 </testsuite>
 </testsuites>

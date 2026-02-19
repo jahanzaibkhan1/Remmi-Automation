@@ -23507,4 +23507,84 @@ export class ListingActions {
 
     }
 
+    /**
+     * Verify that deleting an inspection from the Inspections section removes it from the Calendar.
+     */
+    async verifyDeletingInspectionRemovesFromInspectionSectionAndCalendar() {
+
+        // Navigate to Listings page and switch to grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page
+            .locator("//div[contains(@class,'s-property')]")
+            .first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to the Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Wait for "+Create New" button to appear and click it
+        const createNewBtn = this.page.getByRole('button', { name: /create new/i });
+        await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+        await createNewBtn.click();
+
+        // Fill out minimal required fields for the inspection
+        const titleInput = this.page.locator('input[placeholder="Add title"]');
+        await titleInput.click();
+        await titleInput.fill('');
+        await titleInput.fill('Test Inspection');
+
+        const startHour = this.page.locator('ng-select[placeholder="Hr"]').nth(3);
+        await startHour.click();
+        const startHourOption = this.page.getByRole('option', { name: '5' });
+        await expect(startHourOption).toBeVisible({ timeout: 10000 });
+        await startHourOption.click();
+
+        // Click Save
+        const saveBtn = this.page.getByLabel('Calendar').getByRole('button', { name: 'Save' });
+        await expect(saveBtn).toBeVisible({ timeout: 5000 });
+        await saveBtn.click();
+
+        // Wait for confirmation alert that event was added to calendar
+        const calendarAlert = this.page.getByRole('alert', { name: /event added to calendar/i });
+        await expect(calendarAlert).toBeVisible({ timeout: 10000 });
+
+        const newEvent = this.page.locator("//div[@class='fc-event-main']").first();
+        await newEvent.scrollIntoViewIfNeeded();
+        await expect(newEvent).toBeVisible({ timeout: 10000 });
+
+
+        // Wait for the Inspections section to be visible
+        const inspectionsSection = this.page.locator('div').filter({ hasText: /^Inspections$/ }).nth(1);
+        await expect(inspectionsSection).toBeVisible({ timeout: 10000 });
+        await inspectionsSection.scrollIntoViewIfNeeded();
+
+        // Find the first inspection card (assuming it contains this unique text)
+        const inspectionCard = this.page.locator('div.mb-2.p-3', {
+            hasText: 'Busy - Private Inspection'
+        }).first();
+        await expect(inspectionCard).toBeVisible({ timeout: 10000 });
+
+        // Click the delete icon on the inspection card
+        const deleteIcon = this.page.getByRole('link', { name: 'delete' });
+        await expect(deleteIcon).toBeVisible({ timeout: 5000 });
+        await deleteIcon.click();
+        // Optionally: check for a success toast/message
+        const successMsg = this.page.getByText(/event removed successfully/i).last();
+        await expect(successMsg).toBeVisible({ timeout: 10000 });
+        await expect(inspectionCard).not.toBeVisible({ timeout: 10000 });
+        await expect(newEvent).not.toBeVisible({ timeout: 10000 });
+        // Optionally cleanup: Close any success toast/message/dialogs if needed
+        const closeBtn = this.page.locator('.p-dialog .pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
 }
