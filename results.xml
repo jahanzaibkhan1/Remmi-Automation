@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.5783060000008">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-19T05:54:04.472Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.827" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify that module and listing name are auto-selected in the task form" classname="Pages\Listing\listingCalendar.spec.ts" time="46.827">
-<system-out>
-<![CDATA[Selected Listing: ""Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="58.07598800000176">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-19T06:27:00.869Z" hostname="chromium" tests="1" failures="0" skipped="0" time="49.001" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Verify that saving a task adds it to the calendar under My Task section" classname="Pages\Listing\listingCalendar.spec.ts" time="49.001">
 </testcase>
 </testsuite>
 </testsuites>
