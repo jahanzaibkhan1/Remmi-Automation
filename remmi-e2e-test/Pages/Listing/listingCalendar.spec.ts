@@ -115,4 +115,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyTaskAppearsInTaskListAfterCreation();
     });
 
+    test('Test 20: Verify that tasks are displayed in the calendar under the correct due date', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyTaskAppearsInCalendarUnderCorrectDueDate();
+    });
+
 });
