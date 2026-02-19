@@ -105,4 +105,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyTaskFormAutoSelectsModuleAndListingName();
     });
 
+    test('Test 18: Verify that saving a task adds it to the calendar under My Task section', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyTaskAppearsInTaskList('Automation Task');
+    });
+
 });
