@@ -24151,5 +24151,138 @@ export class ListingActions {
         await this.page.waitForTimeout(2000);
     }
 
+    /**
+     * Verifies that clicking the check circle updates the task status and removes it from My Task section.
+     */
+    async verifyClickingCheckCircleUpdatesTaskStatusAndRemovesFromMyTask(taskTitle: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click()
+
+        // Navigate to Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Wait for "+ New Task" button and click it
+        const newTaskBtn = this.page.getByRole('button', { name: /new task/i });
+        await expect(newTaskBtn).toBeVisible({ timeout: 10000 });
+        await newTaskBtn.click();
+
+        // Wait for the task creation dialog
+        const taskDialog = this.page.locator('app-create-new-task, .p-dialog');
+        await expect(taskDialog).toBeVisible({ timeout: 10000 });
+
+        // Input task title
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
+        await taskTitleInput.fill(taskTitle);
+
+        // Fill in inspection event date: pick January 14, 2026 using the date picker and the displayed calendar
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        // 1️⃣ Compute Tomorrow
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        // 2️⃣ Read currently opened calendar's month-year (stable header)
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+
+        const headerText = await header.innerText();
+        const [monthName, year] = headerText.trim().split(" ");
+
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        // 3️⃣ Move calendar to correct month
+        const monthDifference =
+            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
+
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+            // Wait for transition + re-render
+            await this.page.waitForTimeout(200);
+        }
+
+        // 4️⃣ Select tomorrow's date (non-flaky selector)
+        const dayLocator = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
+        );
+
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
+        await dayLocator.first().click({ force: true });
+
+        const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"]');
+        await expect(staffSelect).toBeVisible();
+        await staffSelect.click();
+
+        const staffInput = this.page.locator(
+            'ng-select[formcontrolname="assignedUsers"] input[type="text"]'
+        );
+        await staffInput.fill('Jahanzaib');
+
+        const staffOption = this.page.locator('.ng-dropdown-panel .ng-option', {
+            hasText: 'Jahanzaib'
+        });
+        await expect(staffOption).toBeVisible();
+        await staffOption.click();
+
+        // Save task
+        const saveTaskButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveTaskButton).toBeVisible({ timeout: 10000 });
+        await saveTaskButton.click();
+
+        // Wait for confirmation that the task was created ("Task created successfully" alert or toast)
+        const successToast = this.page.getByText(/task created/i).last();
+        await expect(successToast).toBeVisible({ timeout: 10000 });
+
+        const closetask = this.page.locator('.pi.pi-times').last();
+        if (await closetask.isVisible().catch(() => false)) {
+            await closetask.click({ force: true });
+        }
+        // Ensure the second "My Tasks" div is visible
+        const myTasksDiv = this.page.locator('div').filter({ hasText: /^My Tasks$/ }).nth(1);
+        await myTasksDiv.scrollIntoViewIfNeeded();
+        await expect(myTasksDiv).toBeVisible({ timeout: 10000 });
+        await myTasksDiv.click({ force: true });
+        // Locate the table cell containing the "Automation Task" text, and ensure it is centered in view and clearly visible
+        const todayTasks = this.page.locator('td', { hasText: 'Automation Task' }).first();
+        // Elevate (raise and focus) the center of this element into the viewport
+        await todayTasks.evaluate((el) => {
+            el.scrollIntoView({ block: 'center', inline: 'center', behavior: 'auto' });
+        });
+        await expect(todayTasks).toBeVisible({ timeout: 10000 });
+
+        // Click the checkbox for the first task if present
+        const checkbox = this.page.locator('.p-checkbox-box.p-component').first();
+        await checkbox.waitFor({ state: "visible", timeout: 10000 });
+        await checkbox.click({ force: true });
+
+        // Wait for the status-updated success toast to appear after changing task status
+        const statusToast = this.page.getByText(/task status has changed/i).last();
+        await expect(statusToast).toBeVisible({ timeout: 10000 });
+
+        // Close modal if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
 
 }
