@@ -135,4 +135,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyClickingCheckCircleUpdatesTaskStatusAndRemovesFromMyTask('Automation Task');
     });
 
+    test('Test 24: Verify that the arrow button expands/collapses My Task section', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyTaskSectionArrowExpandCollapse();
+    });
+
+
 });

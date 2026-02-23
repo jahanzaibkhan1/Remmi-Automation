@@ -24284,5 +24284,42 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    /**
+     * Verifies that the arrow button expands/collapses the My Tasks section in the calendar/tasks module.
+     */
+    async verifyTaskSectionArrowExpandCollapse() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("div.s-property").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: /Calendar/i });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Locate the "My Tasks" section (nth(1) for the second)
+        const myTasksDiv = this.page.locator('div').filter({ hasText: /^My Tasks$/ }).nth(1);
+        await myTasksDiv.scrollIntoViewIfNeeded();
+        await expect(myTasksDiv).toBeVisible({ timeout: 10000 });
+        await myTasksDiv.click();
+
+        // Get the Actions column cell (for example, to expand/collapse or interact with the row)
+        const actionsCell = this.page.getByRole('cell', { name: 'Actions' }).first();
+        await expect(actionsCell).toBeVisible({ timeout: 10000 });
+
+        await myTasksDiv.click();
+        await expect(actionsCell).not.toBeVisible({ timeout: 10000 });
+         // Close modal if needed
+         const closeBtn = this.page.locator('.pi.pi-times').first();
+         if (await closeBtn.isVisible().catch(() => false)) {
+             await closeBtn.click({ force: true });
+         }
+         await this.page.waitForTimeout(500);
+    }
+
 
 }
