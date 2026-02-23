@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.111630000002684">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-23T11:09:52.264Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.785" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Verify that clicking the check circle updates task status and removes it from My Task" classname="Pages\Listing\listingCalendar.spec.ts" time="33.785">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.49392500000074">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-23T11:19:21.378Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.308" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Verify that the arrow button expands/collapses My Task section" classname="Pages\Listing\listingCalendar.spec.ts" time="40.308">
 </testcase>
 </testsuite>
 </testsuites>
