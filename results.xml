@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="87.49016099999845">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-23T11:38:57.978Z" hostname="chromium" tests="1" failures="0" skipped="0" time="52.45" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 26: Verify that selecting a contact in the dropdown filters calendar events" classname="Pages\Listing\listingCalendar.spec.ts" time="52.45">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="45.200782999999824">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-23T11:44:03.732Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.436" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Verify that selecting both agent and contact in the dropdown shows combined results" classname="Pages\Listing\listingCalendar.spec.ts" time="37.436">
 </testcase>
 </testsuite>
 </testsuites>

@@ -23190,7 +23190,7 @@ export class ListingActions {
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
 
-         await this.page.waitForTimeout(3000);
+        await this.page.waitForTimeout(3000);
         // Navigate to the Calendar/Integrations tab
         const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
         await expect(calendarTab).toBeVisible({ timeout: 10000 });
@@ -23244,7 +23244,7 @@ export class ListingActions {
         const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
         await expect(calendarTab).toBeVisible({ timeout: 10000 });
         await calendarTab.click();
-        
+
         await this.page.waitForTimeout(3000);
 
         // Wait for "+Create New" button to appear and click it
@@ -23294,7 +23294,7 @@ export class ListingActions {
         await expect(calendarTab).toBeVisible({ timeout: 10000 });
         await calendarTab.click();
 
-        
+
         await this.page.waitForTimeout(2000);
 
         // Wait for "+Create New" button to appear and click it
@@ -24093,7 +24093,7 @@ export class ListingActions {
             await closetask.click({ force: true });
         }
         await expect(myTasksDiv).toBeVisible({ timeout: 10000 });
-        
+
         const updatedTask = this.page.locator('td', { hasText: newTitle }).first();
         await expect(updatedTask).toBeVisible({ timeout: 10000 });
 
@@ -24102,7 +24102,7 @@ export class ListingActions {
             await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(2000);
-       
+
     }
 
     /**
@@ -24313,12 +24313,12 @@ export class ListingActions {
 
         await myTasksDiv.click();
         await expect(actionsCell).not.toBeVisible({ timeout: 10000 });
-         // Close modal if needed
-         const closeBtn = this.page.locator('.pi.pi-times').first();
-         if (await closeBtn.isVisible().catch(() => false)) {
-             await closeBtn.click({ force: true });
-         }
-         await this.page.waitForTimeout(500);
+        // Close modal if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
     }
 
     /**
@@ -24417,7 +24417,48 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
         const newEvent = this.page.locator("//div[@class='fc-event-main']").first();
         await newEvent.scrollIntoViewIfNeeded();
-        await expect(newEvent).toBeVisible({ timeout: 10000 });        
+        await expect(newEvent).toBeVisible({ timeout: 10000 });
+
+        await this.page.waitForTimeout(1000);
+
+        // Optionally close any modal if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verifies that selecting both an agent and a contact in the calendar filter dropdown
+     * displays calendar events for both, showing combined results.
+     */
+    async verifyCalendarFiltersByAgentAndContact() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Go to Calendar/Integrations tab
+        const calendarTab = this.page.getByRole('tab', { name: /Calendar/i });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+        // Open the agent dropdown or filter (assume there's such a dropdown)
+        const agentDropdown = this.page.getByText('SelectListing')
+        await expect(agentDropdown).toBeVisible({ timeout: 10000 });
+        await agentDropdown.click();
+
+        const agentOption = this.page.getByLabel('Options list').getByText('Jahanzaib Xenex', { exact: true });
+        await expect(agentOption).toBeVisible({ timeout: 10000 });
+        await agentOption.click();
+
+        await this.page.waitForTimeout(1000);
+        const newEvent = this.page.locator("//div[@class='fc-event-main']").first();
+        await newEvent.scrollIntoViewIfNeeded();
+        await expect(newEvent).toBeVisible({ timeout: 10000 });
 
         await this.page.waitForTimeout(1000);
 

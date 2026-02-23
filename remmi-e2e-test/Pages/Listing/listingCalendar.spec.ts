@@ -150,4 +150,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyCalendarFiltersByContact();
     });
 
+    test('Test 27: Verify that selecting both agent and contact in the dropdown shows combined results', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyCalendarFiltersByAgentAndContact();
+    });
+
 });
