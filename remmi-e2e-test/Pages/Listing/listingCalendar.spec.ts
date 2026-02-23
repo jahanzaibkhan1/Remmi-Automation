@@ -124,4 +124,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyTaskCanBeUpdated('Updated Automation Task');
     });
+
+    test('Test 22: Verify that tasks can be deleted and removed from both calendar and task list', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyTaskCanBeDeleted('Updated Automation Task');
+    });
+    
 });

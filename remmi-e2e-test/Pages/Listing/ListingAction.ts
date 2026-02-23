@@ -24105,6 +24105,51 @@ export class ListingActions {
        
     }
 
+    /**
+     * Verifies that a task can be deleted and is removed from both the calendar and the task list.
+     */
+    async verifyTaskCanBeDeleted(taskTitle: string = 'Updated Automation Task') {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open first listing
+        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await firstCardRow.click();
+
+        // Go to Calendar tab
+        const calendarTab = this.page.getByRole('tab', { name: /Calendar/i });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Ensure the second "My Tasks" div is visible
+        const myTasksDiv = this.page.locator('div').filter({ hasText: /^My Tasks$/ }).nth(1);
+        await myTasksDiv.scrollIntoViewIfNeeded();
+        await expect(myTasksDiv).toBeVisible({ timeout: 10000 });
+        await myTasksDiv.click({ force: true });
+
+        // Locate the task cell
+        const taskCell = this.page.locator('td', { hasText: taskTitle }).first();
+        await taskCell.scrollIntoViewIfNeeded();
+        await expect(taskCell).toBeVisible({ timeout: 10000 });
+
+        const deleteBtn = this.page.getByRole('img', { name: 'delete' }).first();
+        await expect(deleteBtn).toBeVisible({ timeout: 10000 });
+        await deleteBtn.click({ force: true });
+
+        // Wait for confirmation that the task was deleted successfully (alert or toast)
+        const successToast = this.page.getByText(/task deleted successfully/i).last();
+        await expect(successToast).toBeVisible({ timeout: 20000 });
+        // Ensure the task is no longer visible
+        await expect(this.page.locator('td', { hasText: taskTitle }).first()).not.toBeVisible({ timeout: 10000 });
+
+        // Optionally close any modal/popover if open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(2000);
+    }
 
 
 }
