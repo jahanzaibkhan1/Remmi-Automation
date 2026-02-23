@@ -7190,10 +7190,9 @@ export class ListingActions {
         expect(disclosePriceField).toBeVisible();
 
         await this.page.waitForTimeout(1000);
-        // Save and Close (alternative to closing with [x])
-        const saveAndCloseButton = this.page.getByRole('button', { name: /Save & Close/i }).last();
-        if (await saveAndCloseButton.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await saveAndCloseButton.click({ force: true });
+        const closeFormIcon = this.page.locator('.pi.pi-times').first();
+        if (await closeFormIcon.isVisible().catch(() => false)) {
+            await closeFormIcon.click({ force: true });
             await this.page.waitForTimeout(2000);
         }
     }
@@ -7308,33 +7307,18 @@ export class ListingActions {
         await expect(pencilIcon).toBeVisible({ timeout: 10000 });
         await pencilIcon.click();
 
-        await dateSoldInput.click();
-
+        const dialog = this.page.locator('.confirmation-dialog-body');
+        await dialog.waitFor({ state: "visible", timeout: 10000 });
         // Update "Sold Price"
         const priceInputEdit = this.page.locator('input[formcontrolname="soldPrice"], input[name="soldPrice"]').first();
-        await expect(priceInputEdit).toBeVisible({ timeout: 3000 });
+        await expect(priceInputEdit).toBeVisible({ timeout: 10000 });
+        
         const priceValue = '5678';
         await priceInputEdit.fill(priceValue);
-
-        const saveAndCloseBtnEdit = this.page.getByRole('button', { name: /save & close/i }).last();
-
-        // Click until the "Date Sold" field is visible, with safety loop
-        for (let attempt = 0; attempt < 5; attempt++) {
-            await saveAndCloseBtnEdit.click({ force: true });
-            try {
-                await this.page.waitForSelector('text=Date Sold', { state: 'visible', timeout: 10000 });
-                // "Date Sold" field is visible, break out of the loop
-                break;
-            } catch (e) {
-                if (attempt === 4) {
-                    throw new Error('"Date Sold" field not displayed after multiple attempts');
-                }
-                // Otherwise, try clicking again
-            }
-        }
-        // Wait for "Date Sold" field to definitely be visible before moving on
-        await this.page.waitForSelector('text=Date Sold', { state: 'visible', timeout: 10000 });
-
+        await this.page.waitForTimeout(1200);
+        const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).last();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await saveAndCloseButton.click({ force: true })
         // Verify updated details in the main view
         const dateSoldFieldAfter = this.page.getByText('Date Sold').first();
         await expect(dateSoldFieldAfter).toBeVisible({ timeout: 10000 });
@@ -7349,10 +7333,10 @@ export class ListingActions {
         const disclosePriceFieldAfter = this.page.getByText('Disclose Price').first();
         const disclosePriceTextAfter = await disclosePriceFieldAfter.textContent();
         expect(disclosePriceTextAfter).toMatch(/Disclose Price:\s*No/);
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(1500);
         // Also ensure pop-up form is closed if [x] icon is present
         const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
+        if (await closeFormIcon.isVisible().catch(() => false)) {
             await closeFormIcon.click({ force: true });
             await this.page.waitForTimeout(2000);
         }
@@ -7664,7 +7648,7 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
         // Also ensure pop-up form is closed if [x] icon is present
         const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
+        if (await closeFormIcon.isVisible().catch(() => false)) {
             await closeFormIcon.click({ force: true });
             await this.page.waitForTimeout(2000);
         }
@@ -7779,15 +7763,16 @@ export class ListingActions {
 
         // Apply Listing Status filter to "Sold" in list view  to ensure it's filtered correctly
         const listingStatusFilterDropdown = this.page.locator('re-multiselect[placeholder="Listing Status"]');
+        await listingStatusFilterDropdown.waitFor({ state: "visible", timeout: 10000 });
         await listingStatusFilterDropdown.click({ force: true });
         await this.page.waitForTimeout(1500);
-        const listingStatusInput = this.page.locator('input[placeholder="Search"]').last();
+        const listingStatusInput = this.page.locator('re-multiselect').filter({ hasText: 'Listing Status Deposit Taken' }).getByPlaceholder('Search');
         await expect(listingStatusInput).toBeVisible({ timeout: 10000 });
         await listingStatusInput.fill('Sold');
         const soldStatusOption = this.page.locator('li.p-element', { hasText: 'Sold' }).first();
         await expect(soldStatusOption).toBeVisible({ timeout: 10000 });
         await soldStatusOption.click({ force: true });
-
+        await this.page.waitForTimeout(3000);
         await this.page.locator('.fas.fa-sort-up').click({ force: true })
 
 
@@ -7814,11 +7799,11 @@ export class ListingActions {
         const soldPriceTextDetail = await soldPriceFieldDetail.textContent();
         expect(soldPriceTextDetail?.replace(/\D/g, '')).toContain('10000');
         // escape the detail view to clean up
-        await this.page.waitForTimeout(1000);
-        // Also ensure pop-up form is closed if [x] icon is present
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await closeFormIcon.click({ force: true });
+        await this.page.waitForTimeout(1500);
+        const maybeSaveAndCloseBtn = this.page.getByRole('button', { name: /Save & Close/i }).first();
+        const isSaveAndCloseVisible = await maybeSaveAndCloseBtn.isVisible({ timeout: 2000 }).catch(() => false);
+        if (isSaveAndCloseVisible) {
+            await maybeSaveAndCloseBtn.click({ force: true });
             await this.page.waitForTimeout(2000);
         }
     }
@@ -7947,7 +7932,7 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
         // Also ensure pop-up form is closed if [x] icon is present
         const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        if (await closeFormIcon.isVisible({ timeout: 2000 }).catch(() => false)) {
+        if (await closeFormIcon.isVisible().catch(() => false)) {
             await closeFormIcon.click({ force: true });
             await this.page.waitForTimeout(2000);
         }
