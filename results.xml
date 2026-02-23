@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.49392500000074">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-23T11:19:21.378Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.308" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Verify that the arrow button expands/collapses My Task section" classname="Pages\Listing\listingCalendar.spec.ts" time="40.308">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.7217659999989">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-23T11:26:39.746Z" hostname="chromium" tests="1" failures="0" skipped="0" time="57.582" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Verify that selecting an agent in the dropdown filters calendar events" classname="Pages\Listing\listingCalendar.spec.ts" time="57.582">
 </testcase>
 </testsuite>
 </testsuites>
