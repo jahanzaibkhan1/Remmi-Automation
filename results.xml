@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="54.70029600000009">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-23T10:38:38.409Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.419" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Verify that tasks can be updated" classname="Pages\Listing\listingCalendar.spec.ts" time="47.419">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.67361000000313">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-23T10:48:36.366Z" hostname="chromium" tests="1" failures="0" skipped="0" time="49.292" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Verify that tasks can be deleted and removed from both calendar and task list" classname="Pages\Listing\listingCalendar.spec.ts" time="49.292">
 </testcase>
 </testsuite>
 </testsuites>
