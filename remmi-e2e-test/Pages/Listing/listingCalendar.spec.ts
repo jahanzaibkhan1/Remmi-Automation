@@ -120,4 +120,8 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyTaskAppearsInCalendarUnderCorrectDueDate();
     });
 
+    test('Test 21: Verify that tasks can be updated', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyTaskCanBeUpdated('Updated Automation Task');
+    });
 });
