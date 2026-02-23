@@ -129,5 +129,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyTaskCanBeDeleted('Updated Automation Task');
     });
-    
+
+    test('Test 23: Verify that clicking the check circle updates task status and removes it from My Task', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyClickingCheckCircleUpdatesTaskStatusAndRemovesFromMyTask('Automation Task');
+    });
+
 });
