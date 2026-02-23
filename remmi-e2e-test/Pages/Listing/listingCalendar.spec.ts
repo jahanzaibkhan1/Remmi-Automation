@@ -120,4 +120,44 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyTaskAppearsInCalendarUnderCorrectDueDate();
     });
 
+    test('Test 21: Verify that tasks can be updated', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyTaskCanBeUpdated('Updated Automation Task');
+    });
+
+    test('Test 22: Verify that tasks can be deleted and removed from both calendar and task list', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyTaskCanBeDeleted('Updated Automation Task');
+    });
+
+    test('Test 23: Verify that clicking the check circle updates task status and removes it from My Task', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyClickingCheckCircleUpdatesTaskStatusAndRemovesFromMyTask('Automation Task');
+    });
+
+    test('Test 24: Verify that the arrow button expands/collapses My Task section', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyTaskSectionArrowExpandCollapse();
+    });
+
+    test('Test 25: Verify that selecting an agent in the dropdown filters calendar events', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyCalendarFiltersByAgent();
+    });
+
+    test('Test 26: Verify that selecting a contact in the dropdown filters calendar events', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyCalendarFiltersByContact();
+    });
+
+    test('Test 27: Verify that selecting both agent and contact in the dropdown shows combined results', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyCalendarFiltersByAgentAndContact();
+    });
+
+    test('Test 28: Verify that switching between Day and Month changes the calendar view', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyCalendarViewSwitching();
+    });
+
 });
