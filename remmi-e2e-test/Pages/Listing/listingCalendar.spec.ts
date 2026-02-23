@@ -155,4 +155,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyCalendarFiltersByAgentAndContact();
     });
 
+    test('Test 28: Verify that switching between Day and Month changes the calendar view', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyCalendarViewSwitching();
+    });
+
 });
