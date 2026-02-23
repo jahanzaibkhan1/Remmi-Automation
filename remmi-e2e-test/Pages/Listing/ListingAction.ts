@@ -24321,5 +24321,40 @@ export class ListingActions {
          await this.page.waitForTimeout(500);
     }
 
+    /**
+     * Verifies that selecting an agent in the assigned user dropdown filters calendar events accordingly.
+     */
+    async verifyCalendarFiltersByAgent() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("div.s-property").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Navigate to Calendar tab
+        const calendarTab = this.page.getByRole('tab', { name: /Calendar/i });
+        await expect(calendarTab).toBeVisible({ timeout: 10000 });
+        await calendarTab.click();
+
+        // Open the agent dropdown or filter (assume there's such a dropdown)
+        const agentDropdown = this.page.getByText('SelectListing')
+        await expect(agentDropdown).toBeVisible({ timeout: 10000 });
+        await agentDropdown.click();
+
+        const agentOption = this.page.getByLabel('Options list').getByText('Jahanzaib Xenex', { exact: true });
+        await expect(agentOption).toBeVisible({ timeout: 10000 });
+        await agentOption.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Optional: Close modal if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
 
 }

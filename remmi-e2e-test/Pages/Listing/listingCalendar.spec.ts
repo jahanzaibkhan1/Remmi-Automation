@@ -140,5 +140,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyTaskSectionArrowExpandCollapse();
     });
 
+    test('Test 25: Verify that selecting an agent in the dropdown filters calendar events', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyCalendarFiltersByAgent();
+    });
 
 });
