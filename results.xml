@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.245693999998274">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2026-02-20T12:01:21.346Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.544" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 72: Verify if clicking &apos;Save &amp; Close&apos; saves the details and closes the popup" classname="Pages\Listing\listingForm.spec.ts" time="36.544">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.39284600000084">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2026-02-23T07:47:46.452Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.605" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 76: Verify if selecting &apos;Disclose Price&apos; correctly reflects in the saved listing details." classname="Pages\Listing\listingForm.spec.ts" time="48.605">
 </testcase>
 </testsuite>
 </testsuites>
