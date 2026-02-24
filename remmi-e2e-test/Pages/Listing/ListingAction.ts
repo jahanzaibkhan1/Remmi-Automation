@@ -24447,8 +24447,8 @@ export class ListingActions {
         await expect(calendarTab).toBeVisible({ timeout: 10000 });
         await calendarTab.click();
         // Open the agent dropdown or filter (assume there's such a dropdown)
-        const agentDropdown = this.page.getByText('SelectListing')
-        await expect(agentDropdown).toBeVisible({ timeout: 10000 });
+        const agentDropdown = this.page.getByText('SelectListing');
+        await agentDropdown.waitFor({ state: 'visible', timeout: 30000 });
         await agentDropdown.click();
 
         const agentOption = this.page.getByLabel('Options list').getByText('Jahanzaib Xenex', { exact: true });
@@ -24456,11 +24456,27 @@ export class ListingActions {
         await agentOption.click();
 
         await this.page.waitForTimeout(1000);
+        // Locate and click the first calendar event
         const newEvent = this.page.locator("//div[@class='fc-event-main']").first();
         await newEvent.scrollIntoViewIfNeeded();
         await expect(newEvent).toBeVisible({ timeout: 10000 });
+        await newEvent.click({ force: true });
 
-        await this.page.waitForTimeout(1000);
+        // Wait for the inspection popup/dialog to appear
+        const popup = this.page.locator('.p-dialog, .fc-popover, [role="dialog"]');
+        await expect(popup).toBeVisible({ timeout: 10000 });
+
+        // Check for the delete icon (commonly .pi-trash or a button labeled 'Delete') in the popup
+        const deleteIcon = this.page.getByRole('img', { name: 'delete' }).last();
+        await expect(deleteIcon).toBeVisible({ timeout: 10000 });
+
+        await deleteIcon.click({ force: true });
+
+        // Verify the "event deleted successfully" success message appears
+        const eventDeletedMsg = this.page.getByText(/event deleted successfully/i).last();
+        await expect(eventDeletedMsg).toBeVisible({ timeout: 10000 });
+
+        await expect(newEvent).not.toBeVisible({ timeout: 10000 });
 
         // Optionally close any modal if needed
         const closeBtn = this.page.locator('.pi.pi-times').first();
@@ -24487,42 +24503,25 @@ export class ListingActions {
         await expect(calendarTab).toBeVisible({ timeout: 10000 });
         await calendarTab.click();
 
-        // Locate and click the first calendar event
-        const newEvent = this.page.locator("//div[@class='fc-event-main']").first();
-        await newEvent.scrollIntoViewIfNeeded();
-        await expect(newEvent).toBeVisible({ timeout: 10000 });
-        await newEvent.click({ force: true });
-
-        // Wait for the inspection popup/dialog to appear
-        const popup = this.page.locator('.p-dialog, .fc-popover, [role="dialog"]');
-        await expect(popup).toBeVisible({ timeout: 10000 });
-
-        // Check for the delete icon (commonly .pi-trash or a button labeled 'Delete') in the popup
-        const deleteIcon = this.page.getByRole('img', { name: 'delete' }).last();
-        await expect(deleteIcon).toBeVisible({ timeout: 10000 });
-
-        await deleteIcon.click({ force: true });
-
-        // Verify the "event deleted successfully" success message appears
-        const eventDeletedMsg = this.page.getByText(/event deleted successfully/i).last();
-        await expect(eventDeletedMsg).toBeVisible({ timeout: 10000 });
-
-        await this.page.waitForTimeout(4000);
-        
         // Helper to get the calendar view's main area text
         const calendarMain = this.page.locator('.fc-view-harness-active, .fc-view').last();
         await expect(calendarMain).toBeVisible({ timeout: 10000 });
+
+        // Switch to Week view
+        const weekViewButton = this.page.getByText('Week').first();
+        await expect(weekViewButton).toBeVisible({ timeout: 10000 });
+        await expect(calendarMain).toBeVisible({ timeout: 10000 });
+
         // Switch to Day view
-        const dayViewButton = this.page.locator('ng-select.w-25 input').first();
-        await expect(dayViewButton).toBeVisible({ timeout: 10000 });
-        await dayViewButton.click();
+        await weekViewButton.click();
         await this.page.waitForTimeout(500);
         await this.page.getByRole('option', { name: 'Day' }).click();
         await expect(calendarMain).toBeVisible({ timeout: 10000 });
 
+        await this.page.waitForTimeout(1000);
+
         // Switch to Month view
-        const monthViewButton = this.page.locator('ng-select.w-25 input').first();
-        await expect(monthViewButton).toBeVisible({ timeout: 10000 });
+        const monthViewButton = this.page.getByText('Day', { exact: true }).first();
         await monthViewButton.click();
         await this.page.waitForTimeout(500);
         await this.page.getByRole('option', { name: 'Month' }).click();
