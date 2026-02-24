@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="45.200782999999824">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-02-23T11:44:03.732Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.436" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Verify that selecting both agent and contact in the dropdown shows combined results" classname="Pages\Listing\listingCalendar.spec.ts" time="37.436">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="58.99441399999894">
+<testsuite name="Pages\Listing\listingInspection.spec.ts" timestamp="2026-02-24T12:05:33.862Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.62" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that deleting an inspection from the calendar does not affect other inspections" classname="Pages\Listing\listingInspection.spec.ts" time="41.62">
 </testcase>
 </testsuite>
 </testsuites>
