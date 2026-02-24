@@ -10610,7 +10610,7 @@ export class ListingActions {
         await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
         await dayLocator.first().click({ force: true });
 
-        const startTimeSelect = this.page.getByRole('combobox').nth(4);
+        const startTimeSelect = this.page.getByRole('combobox').nth(6);
         await startTimeSelect.click();
         await this.page.waitForTimeout(1000);
         // Select the 6th option (index 5) from the dropdown
@@ -10775,7 +10775,7 @@ export class ListingActions {
         await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
         await dayLocator.first().click({ force: true });
 
-        const startTimeSelect = this.page.getByRole('combobox').nth(4);
+         const startTimeSelect = this.page.getByRole('combobox').nth(6);
         await startTimeSelect.click();
         await this.page.waitForTimeout(1000);
         // Select the 6th option (index 5) from the dropdown
@@ -11088,7 +11088,7 @@ export class ListingActions {
         await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
         await dayLocator.first().click({ force: true });
 
-        const startTimeSelect = this.page.getByRole('combobox').nth(4);
+         const startTimeSelect = this.page.getByRole('combobox').nth(6);
         await startTimeSelect.click();
         await this.page.waitForTimeout(1000);
         // Select the 6th option (index 5) from the dropdown
@@ -11200,7 +11200,7 @@ export class ListingActions {
         await dayLocator.first().click({ force: true });
 
         // Select and pick a value for start time hour
-        const startTimeHour = this.page.getByRole('combobox').nth(4);
+        const startTimeHour = this.page.getByRole('combobox').nth(6);
         await expect(startTimeHour).toBeVisible({ timeout: 10000 });
         await startTimeHour.click();
         const startTimeHourOption = this.page.getByRole('option', { name: '5' }).first();
@@ -11209,7 +11209,7 @@ export class ListingActions {
         await this.page.waitForTimeout(200);
 
         // Select and pick a value for start time minutes
-        const startTimeMinutes = this.page.getByRole('combobox').nth(5);
+        const startTimeMinutes = this.page.getByRole('combobox').nth(7);
         await expect(startTimeMinutes).toBeVisible({ timeout: 2000 });
         await startTimeMinutes.click({ force: true });
         const startTimeMinuteOption = this.page.getByRole('option', { name: '05' }).first();
@@ -11218,7 +11218,7 @@ export class ListingActions {
         await this.page.waitForTimeout(200);
 
         // Select and pick a value for start time AM/PM
-        const startTimeAmPm = this.page.getByRole('combobox').nth(6);
+        const startTimeAmPm = this.page.getByRole('combobox').nth(8);
         await expect(startTimeAmPm).toBeVisible({ timeout: 10000 });
         await startTimeAmPm.click({ force: true });
         const startTimeAmPmOption = this.page.getByRole('option', { name: 'PM' }).first();
@@ -11227,7 +11227,7 @@ export class ListingActions {
         await this.page.waitForTimeout(200);
 
         // Select and pick a value for end time hour
-        const endTimeHour = this.page.getByRole('combobox').nth(7);
+        const endTimeHour = this.page.getByRole('combobox').nth(9);
         await expect(endTimeHour).toBeVisible({ timeout: 10000 });
         await endTimeHour.click({ force: true });
         const endTimeHourOption = this.page.getByRole('option', { name: '6' }).first();
@@ -11236,7 +11236,7 @@ export class ListingActions {
         await this.page.waitForTimeout(200);
 
         // Select and pick a value for end time minutes
-        const endTimeMinutes = this.page.getByRole('combobox').nth(8);
+        const endTimeMinutes = this.page.getByRole('combobox').nth(10);
         await expect(endTimeMinutes).toBeVisible({ timeout: 2000 });
         await endTimeMinutes.click({ force: true });
         const endTimeMinuteOption = this.page.getByRole('option', { name: '10' }).first();
@@ -11245,7 +11245,7 @@ export class ListingActions {
         await this.page.waitForTimeout(200);
 
         // Select and pick a value for end time AM/PM
-        const endTimeAmPm = this.page.getByRole('combobox').nth(9);
+        const endTimeAmPm = this.page.getByRole('combobox').nth(11);
         await expect(endTimeAmPm).toBeVisible({ timeout: 10000 });
         await endTimeAmPm.click({ force: true });
         const endTimeAmPmOption = this.page.getByRole('option', { name: 'PM' }).first();
@@ -11317,7 +11317,7 @@ export class ListingActions {
             await inspectionDayLocator.first().click({ force: true });
 
             // Fill required time field
-            const startTimeCombo = this.page.getByRole('combobox').nth(4);
+            const startTimeCombo = this.page.getByRole('combobox').nth(6);
             await startTimeCombo.click();
             await this.page.waitForTimeout(500);
             const startTimeTimeOption = this.page.getByText('5', { exact: true });
@@ -11402,10 +11402,10 @@ export class ListingActions {
             await dayLocator.first().click({ force: true });
 
             // Pick given hour
-            const startTimeCombo = this.page.getByRole('combobox').nth(4);
+            const startTimeCombo = this.page.getByRole('combobox').nth(6);
             await startTimeCombo.click();
             await this.page.waitForTimeout(500);
-            const option = this.page.getByText(hourText, { exact: true });
+            const option = this.page.getByText('5', { exact: true });;
             await expect(option).toBeVisible({ timeout: 2000 });
             await option.click();
 
@@ -11536,7 +11536,7 @@ export class ListingActions {
             await dayLocator.first().click({ force: true });
 
             // Select start time
-            const startTimeSelect = this.page.getByRole('combobox').nth(4);
+            const startTimeSelect = this.page.getByRole('combobox').nth(6);
             await startTimeSelect.click();
             await this.page.waitForTimeout(300);
             // Pick a known time option (6th, if that works)
@@ -11664,14 +11664,14 @@ export class ListingActions {
         // (e.g., Start time: 7:00 PM, End time: 6:00 PM)
         const allComboboxes = this.page.getByRole('combobox');
         // Select Start time (later)
-        const startTimeSelect = allComboboxes.nth(4);
+        const startTimeSelect = allComboboxes.nth(6);
         await startTimeSelect.click();
         await this.page.waitForTimeout(500);
         const lateStartOption = this.page.getByText('5', { exact: true }).first();
         await lateStartOption.click();
 
         // Select End time (earlier)
-        const endTimeSelect = allComboboxes.nth(7);
+        const endTimeSelect = allComboboxes.nth(9);
         await endTimeSelect.click({ force: true });
         await this.page.waitForTimeout(500);
         const earlyEndOption = this.page.getByText('4', { exact: true }).first();
@@ -11728,12 +11728,10 @@ export class ListingActions {
             await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
             await dayLocator.first().click({ force: true });
 
-            // Select start and end times (e.g., Start: 5, End: 6)
-            const allComboboxes = this.page.getByRole('combobox');
-            const startTimeSelect = allComboboxes.nth(4);
+            const startTimeSelect = this.page.getByRole('combobox').nth(6);
             await startTimeSelect.click();
             await this.page.waitForTimeout(500);
-            const startTimeOption = this.page.getByText('5', { exact: true }).first();
+            const startTimeOption = this.page.getByRole('option', { name: '5' });
             await startTimeOption.click();
 
             // Click 'Add'
