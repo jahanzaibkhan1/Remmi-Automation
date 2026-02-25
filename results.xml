@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.82072300000023">
-<testsuite name="Pages\Listing\listingNotes.spec.ts" timestamp="2026-02-25T10:15:57.510Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.816" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that clicking &quot;Cancel&quot; removes the note entry form" classname="Pages\Listing\listingNotes.spec.ts" time="33.816">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.188061999998986">
+<testsuite name="Pages\Listing\listingNotes.spec.ts" timestamp="2026-02-25T11:48:50.165Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.021" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that clicking &quot;Save&quot; saves the note successfully" classname="Pages\Listing\listingNotes.spec.ts" time="30.021">
 </testcase>
 </testsuite>
 </testsuites>

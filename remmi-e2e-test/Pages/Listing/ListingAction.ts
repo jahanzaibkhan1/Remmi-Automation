@@ -10775,7 +10775,7 @@ export class ListingActions {
         await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
         await dayLocator.first().click({ force: true });
 
-         const startTimeSelect = this.page.getByRole('combobox').nth(6);
+        const startTimeSelect = this.page.getByRole('combobox').nth(6);
         await startTimeSelect.click();
         await this.page.waitForTimeout(1000);
         // Select the 6th option (index 5) from the dropdown
@@ -11088,7 +11088,7 @@ export class ListingActions {
         await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
         await dayLocator.first().click({ force: true });
 
-         const startTimeSelect = this.page.getByRole('combobox').nth(6);
+        const startTimeSelect = this.page.getByRole('combobox').nth(6);
         await startTimeSelect.click();
         await this.page.waitForTimeout(1000);
         // Select the 6th option (index 5) from the dropdown
@@ -24713,6 +24713,73 @@ export class ListingActions {
         // Verify that the note entry form (title or content input) is no longer visible
         await expect(noteTitleInput).not.toBeVisible({ timeout: 10000 });
         await expect(noteContentInput).not.toBeVisible({ timeout: 10000 });
+
+        // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verifies that clicking "Save" saves the note successfully in the Notes section.
+     */
+
+    async verifyNotesSaveAddsNoteSuccessfully() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
+        await firstListingCard.click();
+
+        // Go to NOTE tab
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible({ timeout: 10000 });
+        await noteTab.click();
+
+        // Click the "+" button to add a note
+        const addButton = this.page.getByRole('button', { name: '' }).last();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        // Wait for note fields to appear and fill them in
+        const noteTitleInput = this.page.getByRole('textbox', { name: 'Add note name or search' });
+        const noteContentInput = this.page.locator('.editor');
+        await expect(noteTitleInput).toBeVisible({ timeout: 10000 });
+        await expect(noteContentInput).toBeVisible({ timeout: 10000 });
+
+        const noteTitle = '"list"    Bondi Beach, NSW, 2026 ';
+        await noteTitleInput.type(noteTitle, { delay: 200 });
+
+        // Wait for autocomplete/suggestions dropdown and select the option that matches the noteTitle
+        const noteOptionList = this.page.locator("//div[@class='list_ ng-star-inserted']//ul");
+        if (await noteOptionList.isVisible({ timeout: 30000 }).catch(() => false)) {
+            const matchedOption = this.page.getByText('"list" Bondi Beach, NSW,');
+            if (await matchedOption.isVisible().catch(() => false)) {
+                await matchedOption.click();
+            }
+        }
+
+        const noteContent = faker.lorem.sentences(1);
+
+        await noteTitleInput.fill(noteTitle);
+
+        await noteContentInput.fill(noteContent);
+
+        // Click the "Save" button (assumes button role and visible label "Save")
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).last();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+
+        // Assert that the note appears in the list
+        const savedNoteTitle = this.page.getByText(noteTitle, { exact: true });
+        await expect(savedNoteTitle).toBeVisible({ timeout: 10000 });
+
+        const savedNoteContent = this.page.getByText(noteContent, { exact: false });
+        await expect(savedNoteContent).toBeVisible({ timeout: 10000 });
 
         // Optionally close the form/dialog if needed
         const closeBtn = this.page.locator('.pi.pi-times').first();
