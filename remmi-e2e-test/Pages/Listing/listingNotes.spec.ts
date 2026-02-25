@@ -33,10 +33,15 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyNotesCancelRemovesEntryForm();
     });
-    
+
     test('Test 4: Verify that clicking "Save" saves the note successfully', async ({ sessionPage }) => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyNotesSaveAddsNoteSuccessfully();
+    });
+
+    test('Test 5: Verify that saved notes appear in the notes list', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyNoteIsPresent();
     });
 
 });
