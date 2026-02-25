@@ -23,4 +23,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyNoteTabOpensCorrectly();
     });
+
+    test('Test 2: Verify that clicking the "+" button in the Notes section displays the note fields', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyNotesAddButtonDisplaysFields();
+    });
+    
 });
