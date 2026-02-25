@@ -24752,7 +24752,7 @@ export class ListingActions {
         await expect(noteContentInput).toBeVisible({ timeout: 10000 });
 
         const noteTitle = '"list"    Bondi Beach, NSW, 2026 ';
-        await noteTitleInput.type(noteTitle, { delay: 200 });
+        await noteTitleInput.type(noteTitle, { delay: 100 });
 
         // Wait for autocomplete/suggestions dropdown and select the option that matches the noteTitle
         const noteOptionList = this.page.locator("//div[@class='list_ ng-star-inserted']//ul");
@@ -24763,7 +24763,7 @@ export class ListingActions {
             }
         }
 
-        const noteContent = faker.lorem.sentences(1);
+        const noteContent = 'Note Added';
 
         await noteTitleInput.fill(noteTitle);
 
@@ -24781,6 +24781,31 @@ export class ListingActions {
         const savedNoteContent = this.page.getByText(noteContent, { exact: false });
         await expect(savedNoteContent).toBeVisible({ timeout: 10000 });
 
+        // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    // Verify that a note with given title and content appears in the notes list
+    async verifyNoteIsPresent() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
+        await firstListingCard.click();
+
+        // Go to NOTE tab
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible({ timeout: 10000 });
+        await noteTab.click();
+        // Locate the note title in the list
+        const noteTitleLocator = this.page.getByRole('cell', { name: 'Note Added' });
+        await expect(noteTitleLocator).toBeVisible({ timeout: 10000 });
         // Optionally close the form/dialog if needed
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
