@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.57344299999997">
-<testsuite name="Pages\Listing\listingNotes.spec.ts" timestamp="2026-02-25T09:41:34.722Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.105" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify that clicking the &quot;+&quot; button in the Notes section displays the note fields" classname="Pages\Listing\listingNotes.spec.ts" time="33.105">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.82072300000023">
+<testsuite name="Pages\Listing\listingNotes.spec.ts" timestamp="2026-02-25T10:15:57.510Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.816" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that clicking &quot;Cancel&quot; removes the note entry form" classname="Pages\Listing\listingNotes.spec.ts" time="33.816">
 </testcase>
 </testsuite>
 </testsuites>
