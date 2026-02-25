@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.00269799999986">
-<testsuite name="Pages\Listing\listingConjunction.spec.ts" timestamp="2026-02-25T09:25:14.622Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.362" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify that Sale Commission accepts only numeric values" classname="Pages\Listing\listingConjunction.spec.ts" time="42.362">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.49202000000049">
+<testsuite name="Pages\Listing\listingNotes.spec.ts" timestamp="2026-02-25T09:34:20.513Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.519" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that the NOTE Tab opens correctly" classname="Pages\Listing\listingNotes.spec.ts" time="28.519">
 </testcase>
 </testsuite>
 </testsuites>

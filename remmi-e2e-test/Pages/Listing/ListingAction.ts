@@ -24613,4 +24613,32 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    /**
+     * Verifies that the NOTE Tab opens correctly.
+     */
+    async verifyNoteTabOpensCorrectly() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
+        await firstListingCard.click();
+
+        // Go to NOTE tab
+        const noteTab = this.page.getByRole('tab', { name: /Note/i });
+        await expect(noteTab).toBeVisible({ timeout: 10000 });
+        await noteTab.click();
+
+        const notePanel = this.page.getByLabel('Notes').getByRole('button', { name: '' })
+        await expect(notePanel).toBeVisible({ timeout: 10000 });
+
+        // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
 }
