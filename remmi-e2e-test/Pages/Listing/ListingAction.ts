@@ -24533,4 +24533,33 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
     }
 
+    /**
+     * Verifies that the Conjunction Tab opens correctly.
+     */
+    async verifyConjunctionTabOpensCorrectly() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Find and click the Conjunction tab
+        const conjunctionTab = this.page.getByRole('tab', { name: /Conjunction/i });
+        await expect(conjunctionTab).toBeVisible({ timeout: 10000 });
+        await conjunctionTab.click();
+
+        // Verify that the Conjunction tab content is visible/loaded.
+        const conjunctionContent = this.page.getByText('Sales CommissionConjunction');
+        await expect(conjunctionContent).toBeVisible({ timeout: 10000 });
+
+        // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
 }
