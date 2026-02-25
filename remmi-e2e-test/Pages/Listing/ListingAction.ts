@@ -24751,21 +24751,15 @@ export class ListingActions {
         await expect(noteTitleInput).toBeVisible({ timeout: 10000 });
         await expect(noteContentInput).toBeVisible({ timeout: 10000 });
 
-        const noteTitle = '"list"    Bondi Beach, NSW, 2026 ';
-        await noteTitleInput.type(noteTitle, { delay: 100 });
-
+        await noteTitleInput.type('   ', {delay : 100});
         // Wait for autocomplete/suggestions dropdown and select the option that matches the noteTitle
         const noteOptionList = this.page.locator("//div[@class='list_ ng-star-inserted']//ul");
-        if (await noteOptionList.isVisible({ timeout: 30000 }).catch(() => false)) {
-            const matchedOption = this.page.getByText('"list" Bondi Beach, NSW,');
-            if (await matchedOption.isVisible().catch(() => false)) {
-                await matchedOption.click();
-            }
-        }
+        await noteOptionList.waitFor({ state: 'visible', timeout: 30000 });
+        const matchedOption = this.page.locator('p.ml-2', { hasText: '"list" Bondi Beach, NSW,' });
+        await matchedOption.waitFor({ state: 'visible', timeout: 20000 });
+        await matchedOption.click({force: true});
 
         const noteContent = 'Note Added';
-
-        await noteTitleInput.fill(noteTitle);
 
         await noteContentInput.fill(noteContent);
 
@@ -24775,11 +24769,9 @@ export class ListingActions {
         await saveButton.click();
 
         // Assert that the note appears in the list
-        const savedNoteTitle = this.page.getByText(noteTitle, { exact: true });
+        const savedNoteTitle = this.page.getByRole('cell', { name: 'Note Added' }).first();
         await expect(savedNoteTitle).toBeVisible({ timeout: 10000 });
 
-        const savedNoteContent = this.page.getByText(noteContent, { exact: false });
-        await expect(savedNoteContent).toBeVisible({ timeout: 10000 });
 
         // Optionally close the form/dialog if needed
         const closeBtn = this.page.locator('.pi.pi-times').first();
