@@ -25,4 +25,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyConjunctionTabOpensCorrectly();
     });
 
+    test('Test 2: Verify that Sale Commission accepts only numeric values', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifySaleCommissionAcceptsOnlyNumeric();
+    });
+
 });
