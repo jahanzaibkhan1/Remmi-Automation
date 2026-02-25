@@ -10775,7 +10775,7 @@ export class ListingActions {
         await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
         await dayLocator.first().click({ force: true });
 
-         const startTimeSelect = this.page.getByRole('combobox').nth(6);
+        const startTimeSelect = this.page.getByRole('combobox').nth(6);
         await startTimeSelect.click();
         await this.page.waitForTimeout(1000);
         // Select the 6th option (index 5) from the dropdown
@@ -11088,7 +11088,7 @@ export class ListingActions {
         await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
         await dayLocator.first().click({ force: true });
 
-         const startTimeSelect = this.page.getByRole('combobox').nth(6);
+        const startTimeSelect = this.page.getByRole('combobox').nth(6);
         await startTimeSelect.click();
         await this.page.waitForTimeout(1000);
         // Select the 6th option (index 5) from the dropdown
@@ -24531,6 +24531,279 @@ export class ListingActions {
             await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verifies that the Conjunction Tab opens correctly.
+     */
+    async verifyConjunctionTabOpensCorrectly() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Find and click the Conjunction tab
+        const conjunctionTab = this.page.getByRole('tab', { name: /Conjunction/i });
+        await expect(conjunctionTab).toBeVisible({ timeout: 10000 });
+        await conjunctionTab.click();
+
+        // Verify that the Conjunction tab content is visible/loaded.
+        const conjunctionContent = this.page.getByText('Sales CommissionConjunction');
+        await expect(conjunctionContent).toBeVisible({ timeout: 10000 });
+
+        // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verifies that Sale Commission field accepts only numeric values.
+     */
+    async verifySaleCommissionAcceptsOnlyNumeric() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
+        await firstListingCard.click();
+
+        // Go to Conjunction tab
+        const conjunctionTab = this.page.getByRole('tab', { name: /Conjunction/i });
+        await expect(conjunctionTab).toBeVisible({ timeout: 10000 });
+        await conjunctionTab.click();
+
+        // Locate the Sale Commission input (adjust the selector if needed)
+        const saleCommissionInput = this.page.locator('input[type="number"]._input').last();
+
+        await expect(saleCommissionInput).toBeVisible({ timeout: 10000 });
+
+        // Test 1: Try entering a valid numeric value
+        await saleCommissionInput.fill('');
+        await saleCommissionInput.type('123.45');
+        let value = await saleCommissionInput.inputValue();
+        expect(value).toBe('123.45');
+
+        // Test 2: Try entering non-numeric values (letters, symbols)
+        await saleCommissionInput.fill('');
+        await saleCommissionInput.type('abc$%');
+        value = await saleCommissionInput.inputValue();
+        // The field should remain empty or strip out all non-numeric characters
+        expect(value).toBe('');
+
+        // Test 3: Try mixed input ("12xyz#45")
+        await saleCommissionInput.fill('');
+        await saleCommissionInput.type('12xyz#45');
+        value = await saleCommissionInput.inputValue();
+        // Should only keep numeric part ("1245" or blank, depending on validation implementation)
+        // If the field allows only numeric input, value will be '1245'.
+        expect(value).toMatch(/^\d*\.?\d*$/);
+
+        // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verifies that the NOTE Tab opens correctly.
+     */
+    async verifyNoteTabOpensCorrectly() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
+        await firstListingCard.click();
+
+        // Go to NOTE tab
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible({ timeout: 10000 });
+        await noteTab.click();
+
+        const notePanel = this.page.getByLabel('Notes').getByRole('button', { name: '' });
+        await expect(notePanel).toBeVisible({ timeout: 10000 });
+
+        // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verifies that clicking the "+" button in the Notes section displays the note fields.
+     */
+    async verifyNotesAddButtonDisplaysFields() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
+        await firstListingCard.click();
+
+        // Go to NOTE tab
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible({ timeout: 10000 });
+        await noteTab.click();
+
+        // Click the "+" button to add a note
+        const addButton = this.page.getByRole('button', { name: '' }).last();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        // Wait for note fields to appear
+        const noteTitleInput = this.page.getByRole('textbox', { name: 'Add note name or search' });
+        const noteContentInput = this.page.locator('.editor');
+        await expect(noteTitleInput).toBeVisible({ timeout: 10000 });
+        await expect(noteContentInput).toBeVisible({ timeout: 10000 });
+
+        // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verifies that clicking "Cancel" removes the note entry form in the Notes section.
+     */
+    async verifyNotesCancelRemovesEntryForm() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
+        await firstListingCard.click();
+
+        // Go to NOTE tab
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible({ timeout: 10000 });
+        await noteTab.click();
+
+        // Click the "+" button to add a note
+        const addButton = this.page.getByRole('button', { name: '' }).last();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        // Wait for note fields to appear
+        const noteTitleInput = this.page.getByRole('textbox', { name: 'Add note name or search' });
+        const noteContentInput = this.page.locator('.editor');
+        await expect(noteTitleInput).toBeVisible({ timeout: 10000 });
+        await expect(noteContentInput).toBeVisible({ timeout: 10000 });
+
+        // Click the "Cancel" button (assumes button role and visible label "Cancel")
+        const cancelButton = this.page.getByRole('button', { name: /Cancel/i }).last();
+        await expect(cancelButton).toBeVisible({ timeout: 10000 });
+        await cancelButton.click();
+
+        // Verify that the note entry form (title or content input) is no longer visible
+        await expect(noteTitleInput).not.toBeVisible({ timeout: 10000 });
+        await expect(noteContentInput).not.toBeVisible({ timeout: 10000 });
+
+        // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verifies that clicking "Save" saves the note successfully in the Notes section.
+     */
+
+    async verifyNotesSaveAddsNoteSuccessfully() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
+        await firstListingCard.click();
+
+        // Go to NOTE tab
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible({ timeout: 10000 });
+        await noteTab.click();
+
+        // Click the "+" button to add a note
+        const addButton = this.page.getByRole('button', { name: '' }).last();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        // Wait for note fields to appear and fill them in
+        const noteTitleInput = this.page.getByRole('textbox', { name: 'Add note name or search' });
+        const noteContentInput = this.page.locator('.editor');
+        await expect(noteTitleInput).toBeVisible({ timeout: 10000 });
+        await expect(noteContentInput).toBeVisible({ timeout: 10000 });
+
+        await noteTitleInput.type('   ', {delay : 100});
+        // Wait for autocomplete/suggestions dropdown and select the option that matches the noteTitle
+        const noteOptionList = this.page.locator("//div[@class='list_ ng-star-inserted']//ul");
+        await noteOptionList.waitFor({ state: 'visible', timeout: 30000 });
+        const matchedOption = this.page.locator('p.ml-2', { hasText: '"list" Bondi Beach, NSW,' });
+        await matchedOption.waitFor({ state: 'visible', timeout: 20000 });
+        await matchedOption.click({force: true});
+
+        const noteContent = 'Note Added';
+
+        await noteContentInput.fill(noteContent);
+
+        // Click the "Save" button (assumes button role and visible label "Save")
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).last();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+
+        // Assert that the note appears in the list
+        const savedNoteTitle = this.page.getByRole('cell', { name: 'Note Added' }).first();
+        await expect(savedNoteTitle).toBeVisible({ timeout: 10000 });
+
+
+        // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    // Verify that a note with given title and content appears in the notes list
+    async verifyNoteIsPresent() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
+        await firstListingCard.click();
+
+        // Go to NOTE tab
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible({ timeout: 10000 });
+        await noteTab.click();
+        // Locate the note title in the list
+        const noteTitleLocator = this.page.getByRole('cell', { name: 'Note Added' });
+        await expect(noteTitleLocator).toBeVisible({ timeout: 10000 });
+        // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
     }
 
 }
