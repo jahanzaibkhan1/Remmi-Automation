@@ -24677,4 +24677,49 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    /**
+     * Verifies that clicking "Cancel" removes the note entry form in the Notes section.
+     */
+    async verifyNotesCancelRemovesEntryForm() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
+        await firstListingCard.click();
+
+        // Go to NOTE tab
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible({ timeout: 10000 });
+        await noteTab.click();
+
+        // Click the "+" button to add a note
+        const addButton = this.page.getByRole('button', { name: '' }).last();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        // Wait for note fields to appear
+        const noteTitleInput = this.page.getByRole('textbox', { name: 'Add note name or search' });
+        const noteContentInput = this.page.locator('.editor');
+        await expect(noteTitleInput).toBeVisible({ timeout: 10000 });
+        await expect(noteContentInput).toBeVisible({ timeout: 10000 });
+
+        // Click the "Cancel" button (assumes button role and visible label "Cancel")
+        const cancelButton = this.page.getByRole('button', { name: /Cancel/i }).last();
+        await expect(cancelButton).toBeVisible({ timeout: 10000 });
+        await cancelButton.click();
+
+        // Verify that the note entry form (title or content input) is no longer visible
+        await expect(noteTitleInput).not.toBeVisible({ timeout: 10000 });
+        await expect(noteContentInput).not.toBeVisible({ timeout: 10000 });
+
+        // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
 }
