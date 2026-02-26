@@ -24768,6 +24768,10 @@ export class ListingActions {
         await expect(saveButton).toBeVisible({ timeout: 10000 });
         await saveButton.click();
 
+        // Assert that the "message saved successfully" notification appears
+        const successMessage = this.page.getByText('Saved successfully');
+        await expect(successMessage).toBeVisible({ timeout: 10000 });
+
         // Assert that the note appears in the list
         const savedNoteTitle = this.page.getByRole('cell', { name: 'Note Added' }).first();
         await expect(savedNoteTitle).toBeVisible({ timeout: 10000 });
@@ -24796,8 +24800,59 @@ export class ListingActions {
         await expect(noteTab).toBeVisible({ timeout: 10000 });
         await noteTab.click();
         // Locate the note title in the list
-        const noteTitleLocator = this.page.getByRole('cell', { name: 'Note Added' });
+        const noteTitleLocator = this.page.getByRole('cell', { name: 'Note Added' }).first();
         await expect(noteTitleLocator).toBeVisible({ timeout: 10000 });
+        // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    // Verify that clicking the edit icon allows updating a note
+    async verifyNoteEditFunctionality() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
+        await firstListingCard.click();
+
+        // Go to NOTE tab
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible({ timeout: 10000 });
+        await noteTab.click();
+
+        const firstEditIcon = this.page.locator("//img[@alt='edit']").first();
+        await firstEditIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await firstEditIcon.click();
+
+        // Change the note content - assumes an input/textarea is visible for editing
+        const noteContentInput = this.page.locator('.editor');;
+        await expect(noteContentInput).toBeVisible({ timeout: 10000 });
+
+        // Use a new note text for the update
+        const updatedNoteContent = 'Updated note';
+        await noteContentInput.click();
+        await noteContentInput.fill('');
+        await noteContentInput.fill(updatedNoteContent);
+
+        // Click the "Save" button
+        const updateButton = this.page.getByRole('button', { name: /Update/i }).last();
+        await expect(updateButton).toBeVisible({ timeout: 10000 });
+        await updateButton.click();
+
+        // Assert that the "Saved successfully" notification appears
+        const successMessage = this.page.getByText('Updated successfully');
+        await expect(successMessage).toBeVisible({ timeout: 10000 });
+
+        // Assert that the note's updated content appears in the list
+       
+        const updatedNoteCell = this.page.getByRole('cell', { name: updatedNoteContent }).first();
+        await updatedNoteCell.waitFor({ state: 'visible', timeout: 10000 });
+
         // Optionally close the form/dialog if needed
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
