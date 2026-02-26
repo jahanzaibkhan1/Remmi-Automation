@@ -24979,4 +24979,61 @@ export class ListingActions {
         await expect(firstCard).not.toBeVisible({ timeout: 10000 });
 
     }
+
+    /**
+     * Verify that the History tab displays details for the newly created listing.
+     */
+    async verifyHistoryTabDisplaysListingDetails() {
+        // Go to listings grid page
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
+        await firstListingCard.click();
+
+        
+        const primaryAgent = this.page.locator(
+            'div.form-group:has-text("Primary Agent") ng-select'
+        );
+
+        await primaryAgent.scrollIntoViewIfNeeded();
+        await primaryAgent.click();
+
+        const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(primaryInput).toBeVisible({ timeout: 10000 });
+        await primaryInput.fill('Jahanzaib Xenex');
+
+        const primaryOption = this.page.locator(
+            '.ng-dropdown-panel .ng-option',
+            { hasText: 'Jahanzaib Xenex' }
+        ).first();
+        await expect(primaryOption).toBeVisible({ timeout: 10000 });
+        await primaryOption.click();
+
+        await this.page.waitForTimeout(1000);
+        // Attempt to save/continue without filling fields
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Select the 'History' tab and wait for it to be visible, then click it
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait until the first row in the history table appears
+        const historyTableRow = this.page.getByRole('cell', { name: 'Jahanzaib Xenex' }).first();
+        await expect(historyTableRow).toBeVisible({ timeout: 20000 });
+
+        // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
 }
