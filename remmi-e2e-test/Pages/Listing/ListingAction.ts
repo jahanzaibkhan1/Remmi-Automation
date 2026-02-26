@@ -24751,13 +24751,13 @@ export class ListingActions {
         await expect(noteTitleInput).toBeVisible({ timeout: 10000 });
         await expect(noteContentInput).toBeVisible({ timeout: 10000 });
 
-        await noteTitleInput.type('   ', {delay : 100});
+        await noteTitleInput.type('   ', { delay: 100 });
         // Wait for autocomplete/suggestions dropdown and select the option that matches the noteTitle
         const noteOptionList = this.page.locator("//div[@class='list_ ng-star-inserted']//ul");
         await noteOptionList.waitFor({ state: 'visible', timeout: 30000 });
         const matchedOption = this.page.locator('p.ml-2', { hasText: '"list" Bondi Beach, NSW,' });
         await matchedOption.waitFor({ state: 'visible', timeout: 20000 });
-        await matchedOption.click({force: true});
+        await matchedOption.click({ force: true });
 
         const noteContent = 'Note Added';
 
@@ -24849,7 +24849,7 @@ export class ListingActions {
         await expect(successMessage).toBeVisible({ timeout: 10000 });
 
         // Assert that the note's updated content appears in the list
-       
+
         const updatedNoteCell = this.page.getByRole('cell', { name: updatedNoteContent }).first();
         await updatedNoteCell.waitFor({ state: 'visible', timeout: 10000 });
 
@@ -24859,6 +24859,46 @@ export class ListingActions {
             await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(500);
+    }
+
+    // Verify that clicking the delete icon removes a note
+    async verifyNoteDeleteFunctionality() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
+        await firstListingCard.click();
+
+        // Go to NOTE tab
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible({ timeout: 10000 });
+        await noteTab.click();
+
+        // Assume that there is at least one note present
+        const firstNoteCell = this.page.locator('tr.cursor-pointer').first();
+        await firstNoteCell.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Click the first delete icon
+        const firstDeleteIcon = this.page.locator("//img[@class='cursor-pointer']").first();
+        await firstDeleteIcon.waitFor({ state: 'visible', timeout: 10000 });
+        await firstDeleteIcon.click();
+
+        // Assert that the "Deleted successfully" notification appears
+        const successMessage = this.page.getByText(/Deleted successfully/i);
+        await expect(successMessage).toBeVisible({ timeout: 10000 });
+
+        // Expect the first note row to not be visible after deletion
+        await expect(firstNoteCell).not.toBeVisible({ timeout: 10000 });
+
+        // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+
     }
 
 }
