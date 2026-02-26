@@ -29,4 +29,9 @@ test.describe('Listing History Tab - Remmi E2E', () => {
     await listingActions.verifyListingFieldChangeIsReflectedInHistory();
   });
 
+  test('Verify that the "Changed Date" field displays the correct modification date and time', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyChangedDateIsCorrect();
+  });
+
 });
