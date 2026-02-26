@@ -24756,6 +24756,7 @@ export class ListingActions {
         const noteOptionList = this.page.locator("//div[@class='list_ ng-star-inserted']//ul");
         await noteOptionList.waitFor({ state: 'visible', timeout: 30000 });
         const matchedOption = this.page.locator('p.ml-2', { hasText: '"list" Bondi Beach, NSW,' });
+        await matchedOption.scrollIntoViewIfNeeded();
         await matchedOption.waitFor({ state: 'visible', timeout: 20000 });
         await matchedOption.click({ force: true });
 
@@ -24901,4 +24902,20 @@ export class ListingActions {
 
     }
 
+    // Added note should also appear in Personal Notes
+    async verifyNoteAppearsInPersonalNotes() {
+        await this.verifyNotesSaveAddsNoteSuccessfully();
+
+        const notesListIcon = this.page.locator("//img[@id='notes_lis']");
+        await notesListIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await notesListIcon.click();
+
+        const externalLinkIcon = this.page.locator("//i[contains(@class, 'pi-external-link')]");
+        await externalLinkIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await externalLinkIcon.click();
+
+        const addedNote = this.page.getByLabel('Open').getByText('note added').first();
+        await addedNote.waitFor({ state: 'visible', timeout: 20000 });
+
+    }
 }

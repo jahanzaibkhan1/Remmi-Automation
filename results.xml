@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.76442599999998">
-<testsuite name="Pages\Listing\listingNotes.spec.ts" timestamp="2026-02-26T04:29:13.651Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.914" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that clicking the delete icon removes a note" classname="Pages\Listing\listingNotes.spec.ts" time="27.914">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.12404500000086">
+<testsuite name="Pages\Listing\listingNotes.spec.ts" timestamp="2026-02-26T05:03:04.709Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.521" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that added note also appears in Personal Notes" classname="Pages\Listing\listingNotes.spec.ts" time="55.521">
 </testcase>
 </testsuite>
 </testsuites>
