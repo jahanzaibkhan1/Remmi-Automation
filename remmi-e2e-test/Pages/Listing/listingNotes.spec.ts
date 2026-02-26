@@ -54,5 +54,10 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyNoteDeleteFunctionality();
     });
 
+    test('Test 8: Verify that added note also appears in Personal Notes', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyNoteAppearsInPersonalNotes();
+    });
+
 
 });
