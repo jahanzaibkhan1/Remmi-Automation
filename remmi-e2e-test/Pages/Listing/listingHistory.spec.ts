@@ -23,4 +23,10 @@ test.describe('Listing History Tab - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyHistoryTabDisplaysListingDetails();
   });
+
+  test('Verify if changes to a listing field are reflected in history', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyListingFieldChangeIsReflectedInHistory();
+  });
+
 });

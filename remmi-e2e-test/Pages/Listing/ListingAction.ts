@@ -24993,7 +24993,6 @@ export class ListingActions {
         await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
         await firstListingCard.click();
 
-        
         const primaryAgent = this.page.locator(
             'div.form-group:has-text("Primary Agent") ng-select'
         );
@@ -25030,6 +25029,68 @@ export class ListingActions {
         await expect(historyTableRow).toBeVisible({ timeout: 20000 });
 
         // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verifies that changing a field in a listing is reflected in the History tab.
+     */
+    async verifyListingFieldChangeIsReflectedInHistory() {
+        // Go to listings grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
+        await firstListingCard.click();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Wait until the first row in the history table appears
+        const historyTableRow = this.page.getByRole('cell', { name: 'Jahanzaib Xenex' }).first();
+        await expect(historyTableRow).toBeVisible({ timeout: 20000 }); 
+
+
+        // Change the Listing Type to "Conjunctional"
+        const listingsTypeDropdown = this.page.locator('ng-select').filter({ hasText: 'Listings Type' }).getByRole('combobox');
+        await expect(listingsTypeDropdown).toBeVisible({ timeout: 10000 });
+        await listingsTypeDropdown.click();
+
+        const conjunctionalOption = this.page.getByRole('option', { name: 'Conjunctional' });
+        await expect(conjunctionalOption).toBeVisible({ timeout: 10000 });
+        await conjunctionalOption.click();
+        await this.page.waitForTimeout(500);
+
+        // Optionally, change Listing Status to "Settled"
+        const listingStatusDropdown = this.page.locator('ng-select').filter({ hasText: 'Listing Status' });
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
+        await listingStatusDropdown.click();
+
+        const settledOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Settled' }).first();
+        await expect(settledOption).toBeVisible({ timeout: 10000 });
+        await settledOption.click();
+        await this.page.waitForTimeout(500);
+
+        // Save the changes
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+        await this.page.waitForTimeout(1000);
+
+        // Verify that the changed field ("Conjunctional") appears in the history table
+        const conjunctionalHistoryCell = this.page.getByRole('cell', { name: /Conjunctional/i }).first();
+        await conjunctionalHistoryCell.waitFor({ state: 'visible', timeout: 20000 });
+
+        // Optionally close the modal/details dialog
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
