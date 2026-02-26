@@ -1,48 +1,6 @@
-<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="58.11682400000095">
-<testsuite name="Pages\Listing\listingNotes.spec.ts" timestamp="2026-02-25T12:07:25.164Z" hostname="chromium" tests="1" failures="1" skipped="0" time="37.103" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that clicking &quot;Save&quot; saves the note successfully" classname="Pages\Listing\listingNotes.spec.ts" time="37.103">
-<failure message="listingNotes.spec.ts:37:5 Test 4: Verify that clicking &quot;Save&quot; saves the note successfully" type="FAILURE">
-<![CDATA[  [chromium] › Pages\Listing\listingNotes.spec.ts:37:5 › Listing side Menu Tests - Remmi E2E › Test 4: Verify that clicking "Save" saves the note successfully 
-
-    Error: expect(locator).toBeVisible() failed
-
-    Locator: getByText('Note Added')
-    Expected: visible
-    Error: strict mode violation: getByText('Note Added') resolved to 2 elements:
-        1) <p class="editor" contenteditable="" _ngcontent-serverapp-c4245209773="">Note Added</p> aka getByRole('paragraph').filter({ hasText: 'Note Added' })
-        2) <span class="table-editor" _ngcontent-serverapp-c4245209773="">Note Added</span> aka locator('#pn_id_94-table').getByText('Note Added')
-
-    Call log:
-      - Expect "toBeVisible" with timeout 10000ms
-      - waiting for getByText('Note Added')
-
-
-       at Pages\Listing\ListingAction.ts:24777
-
-      24775 |
-      24776 |         const savedNoteContent = this.page.getByText(noteContent, { exact: false });
-    > 24777 |         await expect(savedNoteContent).toBeVisible({ timeout: 10000 });
-            |                                        ^
-      24778 |
-      24779 |         // Optionally close the form/dialog if needed
-      24780 |         const closeBtn = this.page.locator('.pi.pi-times').first();
-        at ListingActions.verifyNotesSaveAddsNoteSuccessfully (E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\ListingAction.ts:24777:40)
-        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\listingNotes.spec.ts:39:9
-
-    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ..\test-results\Pages-Listing-listingNotes-f69c4-saves-the-note-successfully-chromium\test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Error Context: ..\test-results\Pages-Listing-listingNotes-f69c4-saves-the-note-successfully-chromium\error-context.md
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|test-results\Pages-Listing-listingNotes-f69c4-saves-the-note-successfully-chromium\test-failed-1.png]]
-
-[[ATTACHMENT|test-results\Pages-Listing-listingNotes-f69c4-saves-the-note-successfully-chromium\error-context.md]]
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="67.95727099999972">
+<testsuite name="Pages\Listing\listingHistory.spec.ts" timestamp="2026-02-26T08:55:26.627Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.975" errors="0">
+<testcase name="Listing History Tab - Remmi E2E › Verify if changes to a listing field are reflected in history" classname="Pages\Listing\listingHistory.spec.ts" time="58.975">
 </testcase>
 </testsuite>
 </testsuites>

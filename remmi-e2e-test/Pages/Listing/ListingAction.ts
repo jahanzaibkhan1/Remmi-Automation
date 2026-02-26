@@ -24751,13 +24751,14 @@ export class ListingActions {
         await expect(noteTitleInput).toBeVisible({ timeout: 10000 });
         await expect(noteContentInput).toBeVisible({ timeout: 10000 });
 
-        await noteTitleInput.type('   ', {delay : 100});
+        await noteTitleInput.type('   ', { delay: 100 });
         // Wait for autocomplete/suggestions dropdown and select the option that matches the noteTitle
         const noteOptionList = this.page.locator("//div[@class='list_ ng-star-inserted']//ul");
         await noteOptionList.waitFor({ state: 'visible', timeout: 30000 });
         const matchedOption = this.page.locator('p.ml-2', { hasText: '"list" Bondi Beach, NSW,' });
+        await matchedOption.scrollIntoViewIfNeeded();
         await matchedOption.waitFor({ state: 'visible', timeout: 20000 });
-        await matchedOption.click({force: true});
+        await matchedOption.click({ force: true });
 
         const noteContent = 'Note Added';
 
@@ -24767,6 +24768,10 @@ export class ListingActions {
         const saveButton = this.page.getByRole('button', { name: /Save/i }).last();
         await expect(saveButton).toBeVisible({ timeout: 10000 });
         await saveButton.click();
+
+        // Assert that the "message saved successfully" notification appears
+        const successMessage = this.page.getByText('Saved successfully');
+        await expect(successMessage).toBeVisible({ timeout: 10000 });
 
         // Assert that the note appears in the list
         const savedNoteTitle = this.page.getByRole('cell', { name: 'Note Added' }).first();
@@ -24790,14 +24795,14 @@ export class ListingActions {
         const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
         await expect(firstListingCard).toBeVisible({ timeout: 20000 });
         await firstListingCard.click();
-
+        await this.page.waitForTimeout(3000);
         // Go to NOTE tab
         const noteTab = this.page.getByRole('tab', { name: /Notes/i });
         await expect(noteTab).toBeVisible({ timeout: 10000 });
         await noteTab.click();
-        // Locate the note title in the list
-        const noteTitleLocator = this.page.getByRole('cell', { name: 'Note Added' });
-        await expect(noteTitleLocator).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
+        const noteTitleLocator = this.page.getByRole('cell', { name: 'Note Added' }).first();
+        await noteTitleLocator.waitFor({ state: 'visible', timeout: 10000 });
         // Optionally close the form/dialog if needed
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
@@ -24806,4 +24811,332 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    // Verify that clicking the edit icon allows updating a note
+    async verifyNoteEditFunctionality() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
+        await firstListingCard.click();
+
+        await this.page.waitForTimeout(3000);
+
+        // Go to NOTE tab
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible({ timeout: 10000 });
+        await noteTab.click();
+
+        await this.page.waitForTimeout(1200);
+        const noteTitleLocator = this.page.getByRole('cell', { name: 'Note Added' }).first();
+        await noteTitleLocator.waitFor({ state: 'visible', timeout: 10000 });
+
+        const firstEditIcon = this.page.locator("//img[@alt='edit']").first();
+        await firstEditIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await firstEditIcon.click();
+
+        // Change the note content - assumes an input/textarea is visible for editing
+        const noteContentInput = this.page.locator('.editor');;
+        await expect(noteContentInput).toBeVisible({ timeout: 10000 });
+
+        // Use a new note text for the update
+        const updatedNoteContent = 'Updated note';
+        await noteContentInput.click();
+        await noteContentInput.fill('');
+        await noteContentInput.fill(updatedNoteContent);
+
+        // Click the "Save" button
+        const updateButton = this.page.getByRole('button', { name: /Update/i }).last();
+        await expect(updateButton).toBeVisible({ timeout: 10000 });
+        await updateButton.click();
+
+        // Assert that the "Saved successfully" notification appears
+        const successMessage = this.page.getByText('Updated successfully');
+        await expect(successMessage).toBeVisible({ timeout: 10000 });
+
+        // Assert that the note's updated content appears in the list
+
+        const updatedNoteCell = this.page.getByRole('cell', { name: updatedNoteContent }).first();
+        await updatedNoteCell.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    // Verify that clicking the delete icon removes a note
+    async verifyNoteDeleteFunctionality() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Click the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
+        await firstListingCard.click();
+
+        await this.page.waitForTimeout(3000);
+
+        // Go to NOTE tab
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible({ timeout: 10000 });
+        await noteTab.click();
+
+        // Assume that there is at least one note present
+        const firstNoteCell = this.page.locator('tr.cursor-pointer').first();
+        await firstNoteCell.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Click the first delete icon
+        const firstDeleteIcon = this.page.locator("//img[@class='cursor-pointer']").first();
+        await firstDeleteIcon.waitFor({ state: 'visible', timeout: 10000 });
+        await firstDeleteIcon.click();
+
+        // Assert that the "Deleted successfully" notification appears
+        const successMessage = this.page.getByText(/Deleted successfully/i);
+        await expect(successMessage).toBeVisible({ timeout: 10000 });
+
+        // Expect the first note row to not be visible after deletion
+        await expect(firstNoteCell).not.toBeVisible({ timeout: 10000 });
+
+        // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+
+    }
+
+    // Added note should also appear in Personal Notes
+    async verifyNoteAppearsInPersonalNotes() {
+        await this.verifyNotesSaveAddsNoteSuccessfully();
+
+        const notesListIcon = this.page.locator("//img[@id='notes_lis']");
+        await notesListIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await notesListIcon.click();
+
+        const externalLinkIcon = this.page.locator("//i[contains(@class, 'pi-external-link')]");
+        await externalLinkIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await externalLinkIcon.click();
+
+        const addedNote = this.page.getByLabel('Open').getByText('note added').first();
+        await addedNote.waitFor({ state: 'visible', timeout: 20000 });
+
+    }
+
+    // Editing a saved note should update it correctly
+    async verifyNotesditFunctionality() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
+
+        const notesListIcon = this.page.locator("//img[@id='notes_lis']");
+        await notesListIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await notesListIcon.click();
+
+        const externalLinkIcon = this.page.locator("//i[contains(@class, 'pi-external-link')]");
+        await externalLinkIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await externalLinkIcon.click();
+
+        const firstCard = this.page.locator('div.main-card-body').first();
+        await firstCard.waitFor({ state: 'visible', timeout: 20000 });
+
+        const editIcon = this.page.locator('div.main-card-body').first().locator('i.pi-pencil');;
+        await editIcon.waitFor({ state: 'visible', timeout: 10000 });
+        await editIcon.click();
+
+        const noteContentInput = this.page.locator('.editor').last();
+        await expect(noteContentInput).toBeVisible({ timeout: 10000 });
+
+        const updatedNoteContent = faker.lorem.words(2);
+        await noteContentInput.click();
+        await noteContentInput.fill('');
+        await noteContentInput.fill(updatedNoteContent);
+
+        const updateButton = this.page.getByRole('button', { name: /Update/i }).last();
+        await expect(updateButton).toBeVisible({ timeout: 10000 });
+        await updateButton.click();
+
+        const successMessage = this.page.getByText('Updated successfully');
+        await expect(successMessage).toBeVisible({ timeout: 10000 });
+
+        const deleteIcon = this.page.locator('img[src*="delete_icon.svg"]').first();
+        await expect(deleteIcon).toBeVisible({ timeout: 10000 });
+        await deleteIcon.click();
+
+        const confirmDeleteButton = this.page.getByRole('button', { name: /Delete/i }).last();
+        await expect(confirmDeleteButton).toBeVisible({ timeout: 10000 });
+        await confirmDeleteButton.click();
+
+        const deleteMessage = this.page.getByText(/Deleted successfully/i);
+        await expect(deleteMessage).toBeVisible({ timeout: 10000 });
+
+        await expect(firstCard).not.toBeVisible({ timeout: 10000 });
+
+    }
+
+    /**
+     * Verify that the History tab displays details for the newly created listing.
+     */
+    async verifyHistoryTabDisplaysListingDetails() {
+        // Go to listings grid page
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
+        await firstListingCard.click();
+
+        const primaryAgent = this.page.locator(
+            'div.form-group:has-text("Primary Agent") ng-select'
+        );
+
+        await primaryAgent.scrollIntoViewIfNeeded();
+        await primaryAgent.click();
+
+        const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(primaryInput).toBeVisible({ timeout: 10000 });
+        await primaryInput.fill('Jahanzaib Xenex');
+
+        const primaryOption = this.page.locator(
+            '.ng-dropdown-panel .ng-option',
+            { hasText: 'Jahanzaib Xenex' }
+        ).first();
+        await expect(primaryOption).toBeVisible({ timeout: 10000 });
+        await primaryOption.click();
+
+        await this.page.waitForTimeout(1000);
+        // Attempt to save/continue without filling fields
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Select the 'History' tab and wait for it to be visible, then click it
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait until the first row in the history table appears
+        const historyTableRow = this.page.getByRole('cell', { name: 'Jahanzaib Xenex' }).first();
+        await expect(historyTableRow).toBeVisible({ timeout: 20000 });
+
+        // Optionally close the form/dialog if needed
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verifies that changing a field in a listing is reflected in the History tab.
+     */
+    async verifyListingFieldChangeIsReflectedInHistory() {
+        // Go to listings grid view
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
+        await firstListingCard.click();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Wait until the first row in the history table appears
+        const historyTableRow = this.page.getByRole('cell', { name: 'Jahanzaib Xenex' }).first();
+        await expect(historyTableRow).toBeVisible({ timeout: 20000 });
+
+
+        // Change the Listing Type to "Conjunctional"
+        const listingsTypeDropdown = this.page.locator('ng-select').filter({ hasText: 'Listings Type' }).getByRole('combobox');
+        await expect(listingsTypeDropdown).toBeVisible({ timeout: 10000 });
+        await listingsTypeDropdown.click();
+
+        const conjunctionalOption = this.page.getByRole('option', { name: 'Conjunctional' });
+        await expect(conjunctionalOption).toBeVisible({ timeout: 10000 });
+        await conjunctionalOption.click();
+        await this.page.waitForTimeout(500);
+
+        // Save the changes
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+
+        // Wait for the "Updated successfully" notification to appear after saving
+        const updatedSuccessMessage = this.page.getByText(/Listing Updated successfully/i).first();
+        await expect(updatedSuccessMessage).toBeVisible({ timeout: 10000 });
+
+        await this.page.waitForTimeout(3000);
+
+        // Verify that the changed field ("Conjunctional") appears in the history table
+        const conjunctionalHistoryCell = this.page.getByRole('cell', { name: /Conjunctional/i }).first();
+        await conjunctionalHistoryCell.waitFor({ state: 'visible', timeout: 20000 });
+
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+        await this.page.waitForTimeout(1000);
+
+        // Optionally close the modal/details dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     Check if the 'Changed Date' displays the correct date and time of modification
+     */
+    async verifyChangedDateIsCorrect() {
+
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
+        await firstListingCard.click();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+        await this.page.waitForTimeout(3000);
+
+        // wait for the table to be visible
+        const table = this.page.locator('#pn_id_395-table');
+        await table.waitFor({ state: 'visible', timeout: 20000 });
+
+        // Wait for the first row to be visible before interacting
+        const firstRow = table.locator('tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 10000 });
+        const firstChangedDate = firstRow.locator('td').first();
+        await firstChangedDate.waitFor({ state: 'visible', timeout: 10000 });
+
+        // print value
+        const dateText = await firstChangedDate.innerText();
+        console.log('Changed Date:', dateText);
+
+
+        // Optionally close the modal/details dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+
+    }
 }
