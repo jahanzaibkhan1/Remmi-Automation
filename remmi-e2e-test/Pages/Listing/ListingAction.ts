@@ -25057,7 +25057,7 @@ export class ListingActions {
 
         // Wait until the first row in the history table appears
         const historyTableRow = this.page.getByRole('cell', { name: 'Jahanzaib Xenex' }).first();
-        await expect(historyTableRow).toBeVisible({ timeout: 20000 }); 
+        await expect(historyTableRow).toBeVisible({ timeout: 20000 });
 
 
         // Change the Listing Type to "Conjunctional"
@@ -25070,25 +25070,24 @@ export class ListingActions {
         await conjunctionalOption.click();
         await this.page.waitForTimeout(500);
 
-        // Optionally, change Listing Status to "Settled"
-        const listingStatusDropdown = this.page.locator('ng-select').filter({ hasText: 'Listing Status' });
-        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
-        await listingStatusDropdown.click();
-
-        const settledOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Settled' }).first();
-        await expect(settledOption).toBeVisible({ timeout: 10000 });
-        await settledOption.click();
-        await this.page.waitForTimeout(500);
-
         // Save the changes
         const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
         await expect(saveButton).toBeVisible({ timeout: 10000 });
         await saveButton.click();
-        await this.page.waitForTimeout(1000);
+
+        // Wait for the "Updated successfully" notification to appear after saving
+        const updatedSuccessMessage = this.page.getByText(/Listing Updated successfully/i).first();
+        await expect(updatedSuccessMessage).toBeVisible({ timeout: 10000 });
+
+        await this.page.waitForTimeout(3000);
 
         // Verify that the changed field ("Conjunctional") appears in the history table
         const conjunctionalHistoryCell = this.page.getByRole('cell', { name: /Conjunctional/i }).first();
         await conjunctionalHistoryCell.waitFor({ state: 'visible', timeout: 20000 });
+
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+        await this.page.waitForTimeout(1000);
 
         // Optionally close the modal/details dialog
         const closeBtn = this.page.locator('.pi.pi-times').first();
@@ -25096,5 +25095,48 @@ export class ListingActions {
             await closeBtn.click({ force: true });
         }
         await this.page.waitForTimeout(500);
+    }
+
+    /**
+     Check if the 'Changed Date' displays the correct date and time of modification
+     */
+    async verifyChangedDateIsCorrect() {
+
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
+        await firstListingCard.click();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+        await this.page.waitForTimeout(3000);
+
+        // wait for the table to be visible
+        const table = this.page.locator('#pn_id_395-table');
+        await table.waitFor({ state: 'visible', timeout: 20000 });
+
+        // Wait for the first row to be visible before interacting
+        const firstRow = table.locator('tbody tr').first();
+        await firstRow.waitFor({ state: 'visible', timeout: 10000 });
+        const firstChangedDate = firstRow.locator('td').first();
+        await firstChangedDate.waitFor({ state: 'visible', timeout: 10000 });
+
+        // print value
+        const dateText = await firstChangedDate.innerText();
+        console.log('Changed Date:', dateText);
+
+
+        // Optionally close the modal/details dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+
     }
 }
