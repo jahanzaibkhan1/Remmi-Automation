@@ -24918,4 +24918,57 @@ export class ListingActions {
         await addedNote.waitFor({ state: 'visible', timeout: 20000 });
 
     }
+
+    // Editing a saved note should update it correctly
+    async verifyNotesditFunctionality() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
+
+        const notesListIcon = this.page.locator("//img[@id='notes_lis']");
+        await notesListIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await notesListIcon.click();
+
+        const externalLinkIcon = this.page.locator("//i[contains(@class, 'pi-external-link')]");
+        await externalLinkIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await externalLinkIcon.click();
+
+        const firstCard = this.page.locator('div.main-card-body').first();
+        await firstCard.waitFor({ state: 'visible', timeout: 20000 });
+
+        const editIcon = this.page.locator('div.main-card-body').first().locator('i.pi-pencil');;
+        await editIcon.waitFor({ state: 'visible', timeout: 10000 });
+        await editIcon.click();
+
+        const noteContentInput = this.page.locator('.editor').last();
+        await expect(noteContentInput).toBeVisible({ timeout: 10000 });
+
+        const updatedNoteContent = faker.lorem.words(2);
+        await noteContentInput.click();
+        await noteContentInput.fill('');
+        await noteContentInput.fill(updatedNoteContent);
+
+        const updateButton = this.page.getByRole('button', { name: /Update/i }).last();
+        await expect(updateButton).toBeVisible({ timeout: 10000 });
+        await updateButton.click();
+
+        const successMessage = this.page.getByText('Updated successfully');
+        await expect(successMessage).toBeVisible({ timeout: 10000 });
+
+        const deleteIcon = this.page.locator('img[src*="delete_icon.svg"]').first();
+        await expect(deleteIcon).toBeVisible({ timeout: 10000 });
+        await deleteIcon.click();
+
+        const confirmDeleteButton = this.page.getByRole('button', { name: /Delete/i }).last();
+        await expect(confirmDeleteButton).toBeVisible({ timeout: 10000 });
+        await confirmDeleteButton.click();
+
+        const deleteMessage = this.page.getByText(/Deleted successfully/i);
+        await expect(deleteMessage).toBeVisible({ timeout: 10000 });
+
+        await expect(firstCard).not.toBeVisible({ timeout: 10000 });
+
+    }
 }

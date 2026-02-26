@@ -59,5 +59,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyNoteAppearsInPersonalNotes();
     });
 
+    test('Test 9: Editing a saved note should update it correctly', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyNotesditFunctionality();
+    });
 
 });

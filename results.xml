@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.12404500000086">
-<testsuite name="Pages\Listing\listingNotes.spec.ts" timestamp="2026-02-26T05:03:04.709Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.521" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that added note also appears in Personal Notes" classname="Pages\Listing\listingNotes.spec.ts" time="55.521">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.8119450000003">
+<testsuite name="Pages\Listing\listingNotes.spec.ts" timestamp="2026-02-26T05:43:17.897Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.893" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Editing a saved note should update it correctly" classname="Pages\Listing\listingNotes.spec.ts" time="29.893">
 </testcase>
 </testsuite>
 </testsuites>
