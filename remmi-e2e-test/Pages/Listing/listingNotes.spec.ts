@@ -44,4 +44,24 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         await listingActions.verifyNoteIsPresent();
     });
 
+    test('Test 6: Verify that clicking the edit icon allows updating a note', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyNoteEditFunctionality();
+    });
+
+    test('Test 7: Verify that clicking the delete icon removes a note', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyNoteDeleteFunctionality();
+    });
+
+    test('Test 8: Verify that added note also appears in Personal Notes', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyNoteAppearsInPersonalNotes();
+    });
+
+    test('Test 9: Editing a saved note should update it correctly', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyNotesditFunctionality();
+    });
+
 });
