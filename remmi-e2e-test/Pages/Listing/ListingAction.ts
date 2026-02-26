@@ -24795,14 +24795,14 @@ export class ListingActions {
         const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
         await expect(firstListingCard).toBeVisible({ timeout: 20000 });
         await firstListingCard.click();
-
+        await this.page.waitForTimeout(3000);
         // Go to NOTE tab
         const noteTab = this.page.getByRole('tab', { name: /Notes/i });
         await expect(noteTab).toBeVisible({ timeout: 10000 });
         await noteTab.click();
-        // Locate the note title in the list
+        await this.page.waitForTimeout(1200);
         const noteTitleLocator = this.page.getByRole('cell', { name: 'Note Added' }).first();
-        await expect(noteTitleLocator).toBeVisible({ timeout: 10000 });
+        await noteTitleLocator.waitFor({ state: 'visible', timeout: 10000 });
         // Optionally close the form/dialog if needed
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
@@ -24821,10 +24821,16 @@ export class ListingActions {
         await expect(firstListingCard).toBeVisible({ timeout: 20000 });
         await firstListingCard.click();
 
+        await this.page.waitForTimeout(3000);
+
         // Go to NOTE tab
         const noteTab = this.page.getByRole('tab', { name: /Notes/i });
         await expect(noteTab).toBeVisible({ timeout: 10000 });
         await noteTab.click();
+
+        await this.page.waitForTimeout(1200);
+        const noteTitleLocator = this.page.getByRole('cell', { name: 'Note Added' }).first();
+        await noteTitleLocator.waitFor({ state: 'visible', timeout: 10000 });
 
         const firstEditIcon = this.page.locator("//img[@alt='edit']").first();
         await firstEditIcon.waitFor({ state: 'visible', timeout: 20000 });
@@ -24871,6 +24877,8 @@ export class ListingActions {
         const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
         await expect(firstListingCard).toBeVisible({ timeout: 20000 });
         await firstListingCard.click();
+
+        await this.page.waitForTimeout(3000);
 
         // Go to NOTE tab
         const noteTab = this.page.getByRole('tab', { name: /Notes/i });
