@@ -48,5 +48,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
         const listingActions = new ListingActions(sessionPage);
         await listingActions.verifyNoteEditFunctionality();
     });
-    
+
+    test('Test 7: Verify that clicking the delete icon removes a note', async ({ sessionPage }) => {
+        const listingActions = new ListingActions(sessionPage);
+        await listingActions.verifyNoteDeleteFunctionality();
+    });
+
+
 });
