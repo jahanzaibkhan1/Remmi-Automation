@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="67.95727099999972">
-<testsuite name="Pages\Listing\listingHistory.spec.ts" timestamp="2026-02-26T08:55:26.627Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.975" errors="0">
-<testcase name="Listing History Tab - Remmi E2E › Verify if changes to a listing field are reflected in history" classname="Pages\Listing\listingHistory.spec.ts" time="58.975">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="23.943268000000156">
+<testsuite name="Pages\Listing\listingHistory.spec.ts" timestamp="2026-02-27T04:36:07.964Z" hostname="chromium" tests="1" failures="0" skipped="0" time="16.678" errors="0">
+<testcase name="Listing History Tab - Remmi E2E › Test 4: Verify if the &quot;Changed By&quot; field displays the correct user who made changes" classname="Pages\Listing\listingHistory.spec.ts" time="16.678">
+<system-out>
+<![CDATA[Changed By : Jahanzaib Xenex
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
