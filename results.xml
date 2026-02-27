@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.11366000000015">
-<testsuite name="Pages\Listing\listingHistory.spec.ts" timestamp="2026-02-27T10:53:47.129Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.748" errors="0">
-<testcase name="Listing History Tab - Remmi E2E › Test 14: Check if the records are loading correctly when scrolling" classname="Pages\Listing\listingHistory.spec.ts" time="27.748">
-<system-out>
-<![CDATA[Total records verified: [33m22[39m
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.246155999999495">
+<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2026-02-27T12:00:05.198Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.472" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Save button functionality" classname="Pages\Listing\listingForm.spec.ts" time="44.472">
 </testcase>
 </testsuite>
 </testsuites>
