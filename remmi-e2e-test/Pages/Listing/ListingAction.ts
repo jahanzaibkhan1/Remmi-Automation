@@ -25401,4 +25401,50 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(500);
     }
+
+    /**
+     * Verify that the history tab displays only relevant changes for a specific contact.
+     */
+    async verifyHistoryDisplaysRelevantChangesForContact(contactName: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
+        await firstListingCard.click();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for history table to appear
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+        const historyTableRows = historyContainer.locator("tbody tr");
+
+        // Search for the contact name in the history search bar if available
+        const searchInput = this.page.locator('input[placeholder*="search" i]').last();
+        await expect(searchInput).toBeVisible({ timeout: 5000 });
+        await searchInput.fill(contactName);
+        await searchInput.press('Enter');
+        await this.page.waitForTimeout(1000);
+
+        // Validate each visible history row is relevant to the contact
+        const rows = await historyTableRows.all();
+        for (const row of rows) {
+            const cellText = await row.innerText();
+            expect(
+                cellText.toLowerCase()
+            ).toContain(contactName.toLowerCase());
+        }
+
+        // Optionally close dialog or modal
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
 }
