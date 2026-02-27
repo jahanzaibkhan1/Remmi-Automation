@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.71600199999986">
-<testsuite name="Pages\Listing\listingHistory.spec.ts" timestamp="2026-02-27T05:00:47.479Z" hostname="chromium" tests="1" failures="0" skipped="0" time="18.265" errors="0">
-<testcase name="Listing History Tab - Remmi E2E › Test 8: Check search functionality with an invalid term" classname="Pages\Listing\listingHistory.spec.ts" time="18.265">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="26.97803099999996">
+<testsuite name="Pages\Listing\listingHistory.spec.ts" timestamp="2026-02-27T05:03:44.655Z" hostname="chromium" tests="1" failures="0" skipped="0" time="19.905" errors="0">
+<testcase name="Listing History Tab - Remmi E2E › Test 9: Verify if history displays only relevant changes per contact" classname="Pages\Listing\listingHistory.spec.ts" time="19.905">
 </testcase>
 </testsuite>
 </testsuites>

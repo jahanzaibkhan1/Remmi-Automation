@@ -59,4 +59,9 @@ test.describe('Listing History Tab - Remmi E2E', () => {
     await listingActions.verifyHistorySearchWithInvalidTerm('invalid_search_term_1234');
   });
 
+  test('Test 9: Verify if history displays only relevant changes per contact', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyHistoryDisplaysRelevantChangesForContact('Jahanzaib Xenex');
+  });
+
 });
