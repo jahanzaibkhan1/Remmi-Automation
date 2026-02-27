@@ -69,4 +69,9 @@ test.describe('Listing History Tab - Remmi E2E', () => {
     await listingActions.verifyHistoryTabWithNoChanges('Create');
   });
 
+  test('Test 11: Verify UI alignment and readability of history records', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyHistoryRecordsUIAlignmentAndReadability();
+  });
+
 });

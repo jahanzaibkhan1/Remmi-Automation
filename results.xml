@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.328048000000415">
-<testsuite name="Pages\Listing\listingHistory.spec.ts" timestamp="2026-02-27T06:16:01.420Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.098" errors="0">
-<testcase name="Listing History Tab - Remmi E2E › Test 10: Check history tab with no changes made" classname="Pages\Listing\listingHistory.spec.ts" time="34.098">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.07198300000094">
+<testsuite name="Pages\Listing\listingHistory.spec.ts" timestamp="2026-02-27T06:20:22.877Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.299" errors="0">
+<testcase name="Listing History Tab - Remmi E2E › Test 11: Verify UI alignment and readability of history records" classname="Pages\Listing\listingHistory.spec.ts" time="27.299">
 </testcase>
 </testsuite>
 </testsuites>
