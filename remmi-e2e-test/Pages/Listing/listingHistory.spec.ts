@@ -49,4 +49,9 @@ test.describe('Listing History Tab - Remmi E2E', () => {
     await listingActions.verifyChangedFieldIsCorrect('Listing Type');
   });
 
+  test('Test 7: Verify search functionality in history tab', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyHistorySearchFunctionality('Listing Type', 'Listing Type');
+  });
+
 });
