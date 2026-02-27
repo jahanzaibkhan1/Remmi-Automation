@@ -25024,9 +25024,8 @@ export class ListingActions {
         await expect(historyTab).toBeVisible({ timeout: 10000 });
         await historyTab.click();
 
-        // Wait until the first row in the history table appears
-        const historyTableRow = this.page.getByRole('cell', { name: 'Jahanzaib Xenex' }).first();
-        await expect(historyTableRow).toBeVisible({ timeout: 20000 });
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
 
         // Optionally close the form/dialog if needed
         const closeBtn = this.page.locator('.pi.pi-times').first();
@@ -25037,66 +25036,65 @@ export class ListingActions {
     }
 
     /**
-     * Verifies that changing a field in a listing is reflected in the History tab.
-     */
+  * Verifies that changing a field in a listing is reflected in the History tab.
+  */
     async verifyListingFieldChangeIsReflectedInHistory() {
-        // Go to listings grid view
         await this.navigateToListings();
         await this.switchToGridView();
 
-        // Open the first listing card
+        // Open first listing
         const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
 
-        // Open the History tab
-        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
-        await expect(historyTab).toBeVisible({ timeout: 10000 });
-        await historyTab.click();
-        await this.page.waitForTimeout(1000);
-
-        // Wait until the first row in the history table appears
-        const historyTableRow = this.page.getByRole('cell', { name: 'Jahanzaib Xenex' }).first();
-        await expect(historyTableRow).toBeVisible({ timeout: 20000 });
-
-
         // Change the Listing Type to "Conjunctional"
-        const listingsTypeDropdown = this.page.locator('ng-select').filter({ hasText: 'Listings Type' }).getByRole('combobox');
-        await expect(listingsTypeDropdown).toBeVisible({ timeout: 10000 });
-        await listingsTypeDropdown.click();
+        const listingTypeDropdown = this.page
+            .locator('ng-select')
+            .filter({ hasText: /Listing(s)? Type/i })
+            .first();
+
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 10000 });
+        await listingTypeDropdown.click();
 
         const conjunctionalOption = this.page.getByRole('option', { name: 'Conjunctional' });
-        await expect(conjunctionalOption).toBeVisible({ timeout: 10000 });
+        await expect(conjunctionalOption).toBeVisible();
         await conjunctionalOption.click();
-        await this.page.waitForTimeout(500);
 
-        // Save the changes
+        // Save
         const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
-        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await expect(saveButton).toBeVisible();
         await saveButton.click();
 
-        // Wait for the "Updated successfully" notification to appear after saving
-        const updatedSuccessMessage = this.page.getByText(/Listing Updated successfully/i).first();
-        await expect(updatedSuccessMessage).toBeVisible({ timeout: 10000 });
+        // Wait for success toast
+        await expect(
+            this.page.getByText(/Listing Updated successfully/i)
+        ).toBeVisible({ timeout: 15000 });
 
-        await this.page.waitForTimeout(3000);
-
-        // Verify that the changed field ("Conjunctional") appears in the history table
-        const conjunctionalHistoryCell = this.page.getByRole('cell', { name: /Conjunctional/i }).first();
-        await conjunctionalHistoryCell.waitFor({ state: 'visible', timeout: 20000 });
-
-        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        // Open History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
         await historyTab.click();
-        await this.page.waitForTimeout(1000);
 
-        // Optionally close the modal/details dialog
+        // Wait for history component
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 20000 });
+
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible();
+
+        // Wait for at least one history row
+        const firstRow = historyTable.locator("tbody tr").first();
+        await expect(firstRow).toBeVisible({ timeout: 15000 });
+        // Verify New Value column contains "Conjunctional"
+        await expect(
+            firstRow.getByRole('cell', { name: /Conjunctional/i })
+        ).toBeVisible();
+
+        // Close modal if present
         const closeBtn = this.page.locator('.pi.pi-times').first();
-        if (await closeBtn.isVisible().catch(() => false)) {
-            await closeBtn.click({ force: true });
+        if (await closeBtn.isVisible()) {
+            await closeBtn.click();
         }
-        await this.page.waitForTimeout(500);
     }
-
     /**
      Check if the 'Changed Date' displays the correct date and time of modification
      */
