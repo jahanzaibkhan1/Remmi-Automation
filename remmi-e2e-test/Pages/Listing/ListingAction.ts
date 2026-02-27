@@ -25298,4 +25298,66 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(500);
     }
+
+    /**
+     * Verify search functionality in the history tab for a listing
+     */
+    async verifyHistorySearchFunctionality(searchTerm: string, expectedFieldName: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
+        await firstListingCard.click();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Find the search input (assuming it exists in the history tab)
+        const searchInput = this.page.locator('input[placeholder*="search" i]').last();
+        await expect(searchInput).toBeVisible({ timeout: 5000 });
+        await searchInput.fill(searchTerm);
+        await searchInput.press('Enter');
+        // Wait for possible debounce or API response
+        await this.page.waitForTimeout(1000);
+
+        // Wait for the history component
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+
+        // Check that at least one row appears that matches the expectedFieldName
+        const rows = historyTable.locator("tbody tr");
+        const rowCount = await rows.count();
+
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Check at least one row contains the expected field name in any cell
+        let matchFound = false;
+        for (let i = 0; i < rowCount; ++i) {
+            const rowCells = rows.nth(i).locator("td");
+            const cellCount = await rowCells.count();
+            for (let j = 0; j < cellCount; ++j) {
+                const text = (await rowCells.nth(j).textContent())?.trim() || "";
+                if (text.toLowerCase().includes(expectedFieldName.toLowerCase())) {
+                    matchFound = true;
+                    break;
+                }
+            }
+            if (matchFound) break;
+        }
+        expect(matchFound).toBe(true);
+
+        // Optionally close the modal/details dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
 }
