@@ -25799,5 +25799,57 @@ export class ListingActions {
         }
     }
 
+    /**
+ * Verify all history records are rendered correctly
+ */
+    async checkRecordsLoadOnScrollInHistoryTab() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 15000 });
+        await firstCard.click();
+
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        const historyContainer = this.page.locator("app-remmi-history");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+
+        const rows = historyTable.locator("tbody tr");
+
+        // Wait for the first row to become visible before proceeding
+        const firstRow = rows.first();
+        await expect(firstRow).toBeVisible({ timeout: 15000 });
+
+        const rowCount = await rows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // ✅ Validate record count label matches actual rows
+        const recordLabel = historyContainer.locator("text=/Records:/i");
+        await expect(recordLabel).toBeVisible();
+
+        const recordText = await recordLabel.textContent();
+        const recordNumber = Number(recordText?.match(/\d+/)?.[0]);
+
+        expect(recordNumber).toBe(rowCount);
+
+        // ✅ Ensure last row is reachable
+        const lastRow = rows.last();
+        await lastRow.scrollIntoViewIfNeeded();
+        await lastRow.waitFor({ state: 'visible', timeout: 15000 });
+
+        console.log("Total records verified:", rowCount);
+
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
 
 }
