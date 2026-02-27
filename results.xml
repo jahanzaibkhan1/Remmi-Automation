@@ -1,42 +1,10 @@
-<testsuites id="" name="" tests="13" failures="0" skipped="0" errors="0" time="96.15088199999929">
-<testsuite name="Pages\Listing\listingHistory.spec.ts" timestamp="2026-02-27T10:27:42.632Z" hostname="chromium" tests="13" failures="0" skipped="0" time="81.947" errors="0">
-<testcase name="Listing History Tab - Remmi E2E › Test 1: Verify that the history tab displays details for the newly created listing" classname="Pages\Listing\listingHistory.spec.ts" time="27.215">
-</testcase>
-<testcase name="Listing History Tab - Remmi E2E › Test 2: Verify if changes to a listing field are reflected in history" classname="Pages\Listing\listingHistory.spec.ts" time="3.271">
-</testcase>
-<testcase name="Listing History Tab - Remmi E2E › Test 3: Verify that the &quot;Changed Date&quot; field displays the correct modification date and time" classname="Pages\Listing\listingHistory.spec.ts" time="4.346">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.11366000000015">
+<testsuite name="Pages\Listing\listingHistory.spec.ts" timestamp="2026-02-27T10:53:47.129Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.748" errors="0">
+<testcase name="Listing History Tab - Remmi E2E › Test 14: Check if the records are loading correctly when scrolling" classname="Pages\Listing\listingHistory.spec.ts" time="27.748">
 <system-out>
-<![CDATA[Changed Date : 27-02-2026 01:44 PM
+<![CDATA[Total records verified: [33m22[39m
 ]]>
 </system-out>
-</testcase>
-<testcase name="Listing History Tab - Remmi E2E › Test 4: Verify if the &quot;Changed By&quot; field displays the correct user who made changes" classname="Pages\Listing\listingHistory.spec.ts" time="2.99">
-<system-out>
-<![CDATA[Changed By : Jahanzaib Xenex
-]]>
-</system-out>
-</testcase>
-<testcase name="Listing History Tab - Remmi E2E › Test 5: Verify that the &quot;Event&quot; status correctly indicates the type of action" classname="Pages\Listing\listingHistory.spec.ts" time="5.431">
-<system-out>
-<![CDATA[Event Status: Update
-]]>
-</system-out>
-</testcase>
-<testcase name="Listing History Tab - Remmi E2E › Test 6: Verify if the &quot;Changed Field&quot; column correctly records the modified field name" classname="Pages\Listing\listingHistory.spec.ts" time="4.081">
-</testcase>
-<testcase name="Listing History Tab - Remmi E2E › Test 7: Verify search functionality in history tab" classname="Pages\Listing\listingHistory.spec.ts" time="3.175">
-</testcase>
-<testcase name="Listing History Tab - Remmi E2E › Test 8: Check search functionality with an invalid term" classname="Pages\Listing\listingHistory.spec.ts" time="4.554">
-</testcase>
-<testcase name="Listing History Tab - Remmi E2E › Test 9: Verify if history displays only relevant changes per contact" classname="Pages\Listing\listingHistory.spec.ts" time="3.394">
-</testcase>
-<testcase name="Listing History Tab - Remmi E2E › Test 10: Check history tab with no changes made" classname="Pages\Listing\listingHistory.spec.ts" time="4.338">
-</testcase>
-<testcase name="Listing History Tab - Remmi E2E › Test 11: Verify UI alignment and readability of history records" classname="Pages\Listing\listingHistory.spec.ts" time="6.56">
-</testcase>
-<testcase name="Listing History Tab - Remmi E2E › Test 12: Check system behavior when history records are too large" classname="Pages\Listing\listingHistory.spec.ts" time="9.127">
-</testcase>
-<testcase name="Listing History Tab - Remmi E2E › Test 13: Verify special characters in fields are displayed correctly in history" classname="Pages\Listing\listingHistory.spec.ts" time="3.465">
 </testcase>
 </testsuite>
 </testsuites>

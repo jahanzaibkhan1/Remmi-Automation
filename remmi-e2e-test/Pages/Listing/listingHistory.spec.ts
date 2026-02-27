@@ -84,4 +84,9 @@ test.describe('Listing History Tab - Remmi E2E', () => {
     await listingActions.verifySpecialCharactersInHistory('!@#$%');
   });
 
+  test('Test 14: Check if the records are loading correctly when scrolling', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.checkRecordsLoadOnScrollInHistoryTab();
+  });
+
 });
