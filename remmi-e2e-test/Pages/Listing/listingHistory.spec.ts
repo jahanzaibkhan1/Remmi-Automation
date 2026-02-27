@@ -54,4 +54,9 @@ test.describe('Listing History Tab - Remmi E2E', () => {
     await listingActions.verifyHistorySearchFunctionality('Listing Type', 'Listing Type');
   });
 
+  test('Test 8: Check search functionality with an invalid term', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyHistorySearchWithInvalidTerm('invalid_search_term_1234');
+  });
+
 });

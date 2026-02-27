@@ -25360,4 +25360,45 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(500);
     }
+
+    /**
+     * Check that searching with an invalid term returns no results in the history tab.
+     */
+    async verifyHistorySearchWithInvalidTerm(invalidSearchTerm: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
+        await firstListingCard.click();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Find the search input in the history tab
+        const searchInput = this.page.locator('input[placeholder*="search" i]').last();
+        await expect(searchInput).toBeVisible({ timeout: 5000 });
+        await searchInput.fill(invalidSearchTerm);
+        await searchInput.press('Enter');
+        await this.page.waitForTimeout(1000); // Wait for debounce/API
+
+        // Wait for the history component and table
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+
+        const noRecordMessage = historyContainer.locator('td');
+        await expect(noRecordMessage).toHaveText(/no record found/i);
+
+        // Optionally close dialog or modal
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
 }

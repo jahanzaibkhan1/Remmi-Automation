@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="26.186657000000125">
-<testsuite name="Pages\Listing\listingHistory.spec.ts" timestamp="2026-02-27T04:54:42.933Z" hostname="chromium" tests="1" failures="0" skipped="0" time="18.934" errors="0">
-<testcase name="Listing History Tab - Remmi E2E › Test 7: Verify search functionality in history tab" classname="Pages\Listing\listingHistory.spec.ts" time="18.934">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.71600199999986">
+<testsuite name="Pages\Listing\listingHistory.spec.ts" timestamp="2026-02-27T05:00:47.479Z" hostname="chromium" tests="1" failures="0" skipped="0" time="18.265" errors="0">
+<testcase name="Listing History Tab - Remmi E2E › Test 8: Check search functionality with an invalid term" classname="Pages\Listing\listingHistory.spec.ts" time="18.265">
 </testcase>
 </testsuite>
 </testsuites>
