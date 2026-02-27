@@ -25081,13 +25081,12 @@ export class ListingActions {
         const historyTable = historyContainer.locator("table");
         await expect(historyTable).toBeVisible();
 
-        // Wait for at least one history row
+        // Wait for at least one history row to be attached to the DOM
         const firstRow = historyTable.locator("tbody tr").first();
-        await expect(firstRow).toBeVisible({ timeout: 15000 });
-        // Verify New Value column contains "Conjunctional"
-        await expect(
-            firstRow.getByRole('cell', { name: /Conjunctional/i })
-        ).toBeVisible();
+        await firstRow.waitFor({ state: 'visible', timeout: 15000 });
+        // Wait for the cell containing "Conjunctional" to appear in the row
+        const newValueCell = firstRow.getByRole('cell', { name: /Conjunctional/i });
+        await newValueCell.waitFor({ state: 'visible', timeout: 10000 });
 
         // Close modal if present
         const closeBtn = this.page.locator('.pi.pi-times').first();
@@ -25437,6 +25436,61 @@ export class ListingActions {
                 cellText.toLowerCase()
             ).toContain(contactName.toLowerCase());
         }
+
+        // Optionally close dialog or modal
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * Verifies the history tab for a listing when no changes have been made.
+     */
+    async verifyHistoryTabWithNoChanges(expectedEvent: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
+        await firstListingCard.click();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for history container and table rows
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        // Search for the event name (e.g., "Create") in the history search bar if available
+        const searchInput = this.page.locator('input[placeholder*="search" i]').last();
+        await expect(searchInput).toBeVisible({ timeout: 5000 });
+        await searchInput.fill(expectedEvent);
+        await searchInput.press('Enter');
+        await this.page.waitForTimeout(1000);
+
+        // Validate every visible history row in the Event column contains the expected event
+        const historyTableRows = historyContainer.locator("tbody tr");
+        const rows = await historyTableRows.all();
+        let atLeastOneMatch = false;
+
+        for (const row of rows) {
+            // "Event" column is usually third (td:nth-child(3))
+            const eventCell = row.locator('td').nth(2);
+            await eventCell.waitFor({state: 'visible', timeout: 10000});
+            const eventText = (await eventCell.textContent())?.trim().toLowerCase() || '';
+            if (eventText === expectedEvent.toLowerCase()) {
+                atLeastOneMatch = true;
+            }
+            // If a row's Event column does not match, this is a failure
+            expect(eventText).toBe(expectedEvent.toLowerCase());
+        }
+        expect(atLeastOneMatch).toBeTruthy();
+
 
         // Optionally close dialog or modal
         const closeBtn = this.page.locator('.pi.pi-times').first();
