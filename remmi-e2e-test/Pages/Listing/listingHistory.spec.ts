@@ -19,19 +19,74 @@ const test = base.extend<{ sessionPage: any }>({
 });
 
 test.describe('Listing History Tab - Remmi E2E', () => {
-  test('Verify that the history tab displays details for the newly created listing', async ({ sessionPage }) => {
+  test('Test 1: Verify that the history tab displays details for the newly created listing', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyHistoryTabDisplaysListingDetails();
   });
 
-  test('Verify if changes to a listing field are reflected in history', async ({ sessionPage }) => {
+  test('Test 2: Verify if changes to a listing field are reflected in history', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyListingFieldChangeIsReflectedInHistory();
   });
 
-  test('Verify that the "Changed Date" field displays the correct modification date and time', async ({ sessionPage }) => {
+  test('Test 3: Verify that the "Changed Date" field displays the correct modification date and time', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyChangedDateIsCorrect();
+  });
+
+  test('Test 4: Verify if the "Changed By" field displays the correct user who made changes', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyChangedByFieldIsCorrect('Jahanzaib Xenex');
+  });
+
+  test('Test 5: Verify that the "Event" status correctly indicates the type of action', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyEventStatusIsCorrect('Update'); 
+  });
+
+  test('Test 6: Verify if the "Changed Field" column correctly records the modified field name', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyChangedFieldIsCorrect('Listing Type');
+  });
+
+  test('Test 7: Verify search functionality in history tab', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyHistorySearchFunctionality('Listing Type', 'Listing Type');
+  });
+
+  test('Test 8: Check search functionality with an invalid term', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyHistorySearchWithInvalidTerm('invalid_search_term_1234');
+  });
+
+  test('Test 9: Verify if history displays only relevant changes per contact', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyHistoryDisplaysRelevantChangesForContact('Jahanzaib Xenex');
+  });
+
+  test('Test 10: Check history tab with no changes made', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyHistoryTabWithNoChanges('Create');
+  });
+
+  test('Test 11: Verify UI alignment and readability of history records', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyHistoryRecordsUIAlignmentAndReadability();
+  });
+
+  test('Test 12: Check system behavior when history records are too large', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.checkLargeHistoryRecordsBehavior();
+  });
+
+  test('Test 13: Verify special characters in fields are displayed correctly in history', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifySpecialCharactersInHistory('!@#$%');
+  });
+
+  test('Test 14: Check if the records are loading correctly when scrolling', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.checkRecordsLoadOnScrollInHistoryTab();
   });
 
 });
