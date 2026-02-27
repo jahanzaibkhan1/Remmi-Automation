@@ -79,4 +79,9 @@ test.describe('Listing History Tab - Remmi E2E', () => {
     await listingActions.checkLargeHistoryRecordsBehavior();
   });
 
+  test('Test 13: Verify special characters in fields are displayed correctly in history', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifySpecialCharactersInHistory('!@#$%');
+  });
+
 });

@@ -25672,5 +25672,63 @@ export class ListingActions {
         await this.page.waitForTimeout(500);
     }
 
+    /**
+     * Checks if special characters in a given field are displayed correctly in the listing history.
+     */
+    async verifySpecialCharactersInHistory(specialChars: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first available listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        const displayPriceInput = this.page.locator("input[formcontrolname='display_price']").first();
+        await displayPriceInput.scrollIntoViewIfNeeded();
+        await expect(displayPriceInput).toBeVisible({ timeout: 15000 });
+        await displayPriceInput.fill('!@#$%');
+        await this.page.waitForTimeout(1000);
+
+        // Save changes (assuming a save button is required)
+        const saveBtn = this.page.getByRole('button', { name: /Save/i }).first();
+        if (await saveBtn.isVisible().catch(() => false)) {
+            await saveBtn.click({ force: true });
+        }
+
+       // Open the History tab
+       const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+       await expect(historyTab).toBeVisible({ timeout: 10000 });
+       await historyTab.click();
+
+       // Wait for history table to appear
+       const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+       await expect(historyContainer).toBeVisible({ timeout: 15000 });
+       const historyTableRows = historyContainer.locator("tbody tr");
+
+       // Search for the contact name in the history search bar if available
+       const searchInput = this.page.locator('input[placeholder*="search" i]').last();
+       await expect(searchInput).toBeVisible({ timeout: 5000 });
+       await searchInput.fill(specialChars);
+       await searchInput.press('Enter');
+       await this.page.waitForTimeout(1000);
+
+       // Validate that the special characters are visible in the "New Value" column of each visible history row
+       const rows = await historyTableRows.all();
+       for (const row of rows) {
+           const newValueCell = row.locator('td').nth(5);
+           await newValueCell.waitFor({ state: 'visible', timeout: 5000 });
+           const newValueText = (await newValueCell.innerText()).trim();
+           expect(newValueText).toContain(specialChars);
+       }
+
+       // Optionally close dialog or modal
+       const closeBtn = this.page.locator('.pi.pi-times').first();
+       if (await closeBtn.isVisible().catch(() => false)) {
+           await closeBtn.click({ force: true });
+       }
+       await this.page.waitForTimeout(500);
+    }
+
 
 }
