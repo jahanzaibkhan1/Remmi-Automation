@@ -25199,4 +25199,54 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(500);
     }
+    /**
+     * Check if the 'Event' status correctly indicates the type of action in listing history
+     */
+    async verifyEventStatusIsCorrect(expectedEventType: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
+        await firstListingCard.click();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for the history component to appear
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        // Wait for the table inside the history container
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+
+        // Wait for the first row
+        const firstRow = historyTable.locator("tbody tr").first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+
+        // Third column = Event (assumption: 1st=Changed Date, 2nd=Changed By, 3rd=Event)
+        const eventCell = firstRow.locator("td").nth(2);
+        await expect(eventCell).toBeVisible({ timeout: 10000 });
+
+        const eventText = (await eventCell.textContent())?.trim();
+        expect(eventText).toBeTruthy();
+
+        console.log('Event Status:', eventText);
+
+        // Check if the Event status matches the expected event type (case-insensitive, substring match)
+        expect(
+            eventText?.toLowerCase()
+        ).toContain(expectedEventType.toLowerCase());
+
+        // Optionally close the modal/details dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
 }
