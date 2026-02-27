@@ -25499,4 +25499,80 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(500);
     }
+
+    /**
+     * Verifies that the History tab table columns are visually aligned and data is readable.
+     */
+    async verifyHistoryRecordsUIAlignmentAndReadability() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for the History tab to load
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        // Check that the table and header exist
+        const table = historyContainer.locator("table");
+        await expect(table).toBeVisible({ timeout: 10000 });
+
+        const headerCells = table.locator("thead tr th");
+
+        // Ensure all header cell text is visible/non-empty
+        const headerCount = await headerCells.count();
+        for (let i = 0; i < headerCount; i++) {
+            const headerCell = headerCells.nth(i);
+            const headerText = (await headerCell.textContent())?.trim();
+            expect(headerText).toBeTruthy();
+            await expect(headerCell).toBeVisible();
+        }
+
+        // Check alignment of columns: widths should be non-zero and roughly similar across header and body
+        const firstBodyRow = table.locator("tbody tr").first();
+        await expect(firstBodyRow).toBeVisible({ timeout: 10000 });
+
+        const bodyCells = firstBodyRow.locator("td");
+        const bodyCellCount = await bodyCells.count();
+        expect(bodyCellCount).toBe(headerCount);
+
+        // Compare header and row cell bounding boxes for alignment
+        for (let i = 0; i < headerCount; i++) {
+            const headerCell = headerCells.nth(i);
+            const bodyCell = bodyCells.nth(i);
+
+            const headerBox = await headerCell.boundingBox();
+            const bodyBox = await bodyCell.boundingBox();
+
+            expect(headerBox).not.toBeNull();
+            expect(bodyBox).not.toBeNull();
+            // If boundingBox is null, skip this check
+            if (headerBox && bodyBox) {
+                // Left edge alignment within 2px tolerance
+                expect(Math.abs(headerBox.x - bodyBox.x)).toBeLessThanOrEqual(2);
+                // Cell widths should be visually similar
+                expect(Math.abs(headerBox.width - bodyBox.width)).toBeLessThanOrEqual(5);
+            }
+
+            // Also verify body cell is readable
+            const cellText = (await bodyCell.textContent())?.trim();
+            expect(cellText).toBeTruthy();
+        }
+
+        // Optionally close the modal/dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+    
 }
