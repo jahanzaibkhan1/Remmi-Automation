@@ -4881,7 +4881,7 @@ export class ListingActions {
         // Ensure listing cards are loaded
         const cards = this.page.locator('.s-property').first();
         await cards.waitFor({ state: 'visible', timeout: 30000 });
-        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]").first();
+        const contactFormBtn = this.page.locator("//i[@class='pi pi-plus']").first();
         await contactFormBtn.waitFor({ state: 'visible', timeout: 10000 });
 
         // Click on the contactFormBtn until the contact form is visible
@@ -5013,11 +5013,17 @@ export class ListingActions {
         const ddMmYyTextbox = this.page.getByRole('combobox', { name: 'DD-MM-YY' });
         await expect(ddMmYyTextbox).toBeVisible({ timeout: 10000 });
         await ddMmYyTextbox.click();
-
-        const currentDay = new Date().getDate().toString();
-        const date = this.page.getByText(currentDay, { exact: true });
-        await expect(date).toBeVisible({ timeout: 10000 });
-        await date.click();
+        
+        // Wait for calendar to be visible
+        const calendar = this.page.locator('.p-datepicker-calendar');
+        await expect(calendar).toBeVisible({ timeout: 5000 });
+        
+        // Locate today's date using the .p-datepicker-today class
+        const todayLocator = this.page.locator('.p-datepicker-today span');
+        
+        // Wait until the date is visible and click it
+        await todayLocator.waitFor({ state: 'visible', timeout: 5000 });
+        await todayLocator.click({ force: true });
 
         const priceInput = this.page.locator('input[name="price"]');
         await expect(priceInput).toBeVisible({ timeout: 10000 });
@@ -5791,11 +5797,17 @@ export class ListingActions {
         const ddMmYyTextbox = this.page.getByRole('combobox', { name: 'DD-MM-YY' });
         await expect(ddMmYyTextbox).toBeVisible({ timeout: 10000 });
         await ddMmYyTextbox.click();
-
-        const currentDay = new Date().getDate().toString();
-        const date = this.page.getByText(currentDay, { exact: true });
-        await expect(date).toBeVisible({ timeout: 10000 });
-        await date.click();
+        
+        // Wait for calendar to be visible
+        const calendar = this.page.locator('.p-datepicker-calendar');
+        await expect(calendar).toBeVisible({ timeout: 5000 });
+        
+        // Locate today's date using the .p-datepicker-today class
+        const todayLocator = this.page.locator('.p-datepicker-today span');
+        
+        // Wait until the date is visible and click it
+        await todayLocator.waitFor({ state: 'visible', timeout: 5000 });
+        await todayLocator.click({ force: true });
 
         const priceInput = this.page.locator('input[name="price"]');
         await expect(priceInput).toBeVisible({ timeout: 10000 });
