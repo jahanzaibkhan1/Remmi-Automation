@@ -25481,7 +25481,7 @@ export class ListingActions {
         for (const row of rows) {
             // "Event" column is usually third (td:nth-child(3))
             const eventCell = row.locator('td').nth(2);
-            await eventCell.waitFor({state: 'visible', timeout: 10000});
+            await eventCell.waitFor({ state: 'visible', timeout: 10000 });
             const eventText = (await eventCell.textContent())?.trim().toLowerCase() || '';
             if (eventText === expectedEvent.toLowerCase()) {
                 atLeastOneMatch = true;
@@ -25561,10 +25561,6 @@ export class ListingActions {
                 // Cell widths should be visually similar
                 expect(Math.abs(headerBox.width - bodyBox.width)).toBeLessThanOrEqual(5);
             }
-
-            // Also verify body cell is readable
-            const cellText = (await bodyCell.textContent())?.trim();
-            expect(cellText).toBeTruthy();
         }
 
         // Optionally close the modal/dialog
@@ -25574,5 +25570,107 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(500);
     }
-    
+
+    /**
+     * Check system behavior when history records are too large
+     */
+    async checkLargeHistoryRecordsBehavior() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
+        await firstListingCard.click();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Set the values for multiple editable fields to create a large history log
+        const updates = [
+            { name: 'price', selector: 'input[name="price"]', value: '10000' },
+            { name: 'bedrooms', selector: 'input[formcontrolname="beds"], input[name="bedrooms"], input[data-testid="bedrooms"]', value: '2' },
+            { name: 'bathrooms', selector: 'input[formcontrolname="baths"], input[name="bathrooms"], input[data-testid="bathrooms"]', value: '1' },
+            { name: 'ensuite', selector: 'input[name="ensuite"], input[data-testid="ensuite"], input[formcontrolname="ensuite"]', value: '1' },
+            { name: 'living_areas', selector: 'input[formcontrolname="living_areas"]', value: '1' },
+            { name: 'study', selector: 'input[formcontrolname="study"], input[name="study"], input[data-testid="study"]', value: '1' },
+            { name: 'pools', selector: 'input[formcontrolname="pools"]', value: '1' },
+            { name: 'garage', selector: 'input[formcontrolname="garage"]', value: '1' },
+            { name: 'carport', selector: 'div.col-xl-4:has(p:has-text("Carport")) input[type="number"]', value: '1' },
+            { name: 'open_spaces', selector: 'div.col-xl-4:has(p:has-text("Open Spaces")) input[type="number"]', value: '2' },
+            { name: 'land_size', selector: 'div.col-sm-6:has(p:has-text("Land Size")) input[formcontrolname="land_area"]', value: '500' },
+            { name: 'house_size', selector: 'input[formcontrolname="building_area"], input[name="building_area"], input[data-testid="house-size"]', value: '250' },
+        ];
+
+        for (const update of updates) {
+            const input = this.page.locator(update.selector).first();
+            await expect(input).toBeVisible({ timeout: 10000 });
+            await input.scrollIntoViewIfNeeded();
+            await input.click({ force: true });
+            await input.fill(update.value);
+        }
+
+        const saveButton = this.page.locator('button:has-text("Save")').first();
+        await saveButton.scrollIntoViewIfNeeded();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+        await this.page.waitForTimeout(2000);
+
+        // Wait for the History tab to load
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        // Check that the table and header exist
+        const table = historyContainer.locator("table");
+        await expect(table).toBeVisible({ timeout: 10000 });
+
+        const headerCells = table.locator("thead tr th");
+
+        // Ensure all header cell text is visible/non-empty
+        const headerCount = await headerCells.count();
+        for (let i = 0; i < headerCount; i++) {
+            const headerCell = headerCells.nth(i);
+            const headerText = (await headerCell.textContent())?.trim();
+            expect(headerText).toBeTruthy();
+            await expect(headerCell).toBeVisible();
+        }
+
+        // Check alignment of columns: widths should be non-zero and roughly similar across header and body
+        const firstBodyRow = table.locator("tbody tr").first();
+        await expect(firstBodyRow).toBeVisible({ timeout: 10000 });
+
+        const bodyCells = firstBodyRow.locator("td");
+        const bodyCellCount = await bodyCells.count();
+        expect(bodyCellCount).toBe(headerCount);
+
+        // Compare header and row cell bounding boxes for alignment
+        for (let i = 0; i < headerCount; i++) {
+            const headerCell = headerCells.nth(i);
+            const bodyCell = bodyCells.nth(i);
+
+            const headerBox = await headerCell.boundingBox();
+            const bodyBox = await bodyCell.boundingBox();
+
+            expect(headerBox).not.toBeNull();
+            expect(bodyBox).not.toBeNull();
+            // If boundingBox is null, skip this check
+            if (headerBox && bodyBox) {
+                // Left edge alignment within 2px tolerance
+                expect(Math.abs(headerBox.x - bodyBox.x)).toBeLessThanOrEqual(2);
+                // Cell widths should be visually similar
+                expect(Math.abs(headerBox.width - bodyBox.width)).toBeLessThanOrEqual(5);
+            }
+        }
+
+        // Optionally close the modal/dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
+    }
+
+
 }

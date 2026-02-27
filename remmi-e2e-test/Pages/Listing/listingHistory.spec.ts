@@ -74,4 +74,9 @@ test.describe('Listing History Tab - Remmi E2E', () => {
     await listingActions.verifyHistoryRecordsUIAlignmentAndReadability();
   });
 
+  test('Test 12: Check system behavior when history records are too large', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.checkLargeHistoryRecordsBehavior();
+  });
+
 });
