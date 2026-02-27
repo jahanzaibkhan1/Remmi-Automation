@@ -19,19 +19,24 @@ const test = base.extend<{ sessionPage: any }>({
 });
 
 test.describe('Listing History Tab - Remmi E2E', () => {
-  test('Verify that the history tab displays details for the newly created listing', async ({ sessionPage }) => {
+  test('Test 1: Verify that the history tab displays details for the newly created listing', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyHistoryTabDisplaysListingDetails();
   });
 
-  test('Verify if changes to a listing field are reflected in history', async ({ sessionPage }) => {
+  test('Test 2: Verify if changes to a listing field are reflected in history', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyListingFieldChangeIsReflectedInHistory();
   });
 
-  test('Verify that the "Changed Date" field displays the correct modification date and time', async ({ sessionPage }) => {
+  test('Test 3: Verify that the "Changed Date" field displays the correct modification date and time', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyChangedDateIsCorrect();
+  });
+
+  test('Test 4: Verify if the "Changed By" field displays the correct user who made changes', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyChangedByFieldIsCorrect('Jahanzaib Xenex');
   });
 
 });

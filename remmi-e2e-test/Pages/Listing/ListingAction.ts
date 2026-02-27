@@ -25114,22 +25114,31 @@ export class ListingActions {
         const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
         await expect(historyTab).toBeVisible({ timeout: 10000 });
         await historyTab.click();
-        await this.page.waitForTimeout(3000);
 
-        // wait for the table to be visible
-        const table = this.page.locator('#pn_id_395-table');
-        await table.waitFor({ state: 'visible', timeout: 20000 });
+        // Wait for the history component to appear
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
 
-        // Wait for the first row to be visible before interacting
-        const firstRow = table.locator('tbody tr').first();
-        await firstRow.waitFor({ state: 'visible', timeout: 10000 });
-        const firstChangedDate = firstRow.locator('td').first();
-        await firstChangedDate.waitFor({ state: 'visible', timeout: 10000 });
+        // Wait for the table inside the history container
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
 
-        // print value
-        const dateText = await firstChangedDate.innerText();
-        console.log('Changed Date:', dateText);
+        // Wait for the first row
+        const firstRow = historyTable.locator("tbody tr").first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
 
+        // First column = Changed Date
+        const firstChangedDateCell = firstRow.locator("td").first();
+        await expect(firstChangedDateCell).toBeVisible({ timeout: 10000 });
+
+        const changedDateText = (await firstChangedDateCell.textContent())?.trim();
+        expect(changedDateText).toBeTruthy();
+
+        console.log('Changed Date :', changedDateText);
+
+        // Optional: strict date format validation
+        const datePattern = /^\d{2}-\d{2}-\d{4}\s\d{2}:\d{2}\s(?:AM|PM)$/;
+        expect(changedDateText).toMatch(datePattern);
 
         // Optionally close the modal/details dialog
         const closeBtn = this.page.locator('.pi.pi-times').first();
@@ -25138,5 +25147,56 @@ export class ListingActions {
         }
         await this.page.waitForTimeout(500);
 
+    }
+
+    /**
+     * Verify if the 'Changed By' field displays the correct user who made changes
+     */
+    async verifyChangedByFieldIsCorrect(expectedUser: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
+        await firstListingCard.click();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for the history component to appear
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        // Wait for the table inside the history container
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+
+        // Wait for the first row
+        const firstRow = historyTable.locator("tbody tr").first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+
+        // Second column = Changed By (assumption: 1st is Changed Date, 2nd is Changed By)
+        const changedByCell = firstRow.locator("td").nth(1);
+        await expect(changedByCell).toBeVisible({ timeout: 10000 });
+
+        const changedByText = (await changedByCell.textContent())?.trim();
+        expect(changedByText).toBeTruthy();
+
+        console.log('Changed By :', changedByText);
+
+        // Check if the Changed By field matches the expected user (case-insensitive, substring match)
+        expect(
+            changedByText?.toLowerCase()
+        ).toContain(expectedUser.toLowerCase());
+
+        // Optionally close the modal/details dialog
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(500);
     }
 }
