@@ -44,4 +44,9 @@ test.describe('Listing History Tab - Remmi E2E', () => {
     await listingActions.verifyEventStatusIsCorrect('Update'); 
   });
 
+  test('Test 6: Verify if the "Changed Field" column correctly records the modified field name', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyChangedFieldIsCorrect('Listing Type');
+  });
+
 });

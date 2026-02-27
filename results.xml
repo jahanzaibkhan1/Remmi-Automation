@@ -1,8 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.895364999999757">
-<testsuite name="Pages\Listing\listingHistory.spec.ts" timestamp="2026-02-27T04:41:10.938Z" hostname="chromium" tests="1" failures="0" skipped="0" time="18.425" errors="0">
-<testcase name="Listing History Tab - Remmi E2E › Test 5: Verify that the &quot;Event&quot; status correctly indicates the type of action" classname="Pages\Listing\listingHistory.spec.ts" time="18.425">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="27.43050600000005">
+<testsuite name="Pages\Listing\listingHistory.spec.ts" timestamp="2026-02-27T04:46:02.823Z" hostname="chromium" tests="1" failures="0" skipped="0" time="19.026" errors="0">
+<testcase name="Listing History Tab - Remmi E2E › Test 6: Verify if the &quot;Changed Field&quot; column correctly records the modified field name" classname="Pages\Listing\listingHistory.spec.ts" time="19.026">
 <system-out>
-<![CDATA[Event Status: Update
+<![CDATA[Changed Field: Listing Type
 ]]>
 </system-out>
 </testcase>
