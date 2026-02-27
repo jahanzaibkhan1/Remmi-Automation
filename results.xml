@@ -1,8 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="23.943268000000156">
-<testsuite name="Pages\Listing\listingHistory.spec.ts" timestamp="2026-02-27T04:36:07.964Z" hostname="chromium" tests="1" failures="0" skipped="0" time="16.678" errors="0">
-<testcase name="Listing History Tab - Remmi E2E › Test 4: Verify if the &quot;Changed By&quot; field displays the correct user who made changes" classname="Pages\Listing\listingHistory.spec.ts" time="16.678">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.895364999999757">
+<testsuite name="Pages\Listing\listingHistory.spec.ts" timestamp="2026-02-27T04:41:10.938Z" hostname="chromium" tests="1" failures="0" skipped="0" time="18.425" errors="0">
+<testcase name="Listing History Tab - Remmi E2E › Test 5: Verify that the &quot;Event&quot; status correctly indicates the type of action" classname="Pages\Listing\listingHistory.spec.ts" time="18.425">
 <system-out>
-<![CDATA[Changed By : Jahanzaib Xenex
+<![CDATA[Event Status: Update
 ]]>
 </system-out>
 </testcase>

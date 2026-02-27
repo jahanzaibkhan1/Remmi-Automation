@@ -39,4 +39,9 @@ test.describe('Listing History Tab - Remmi E2E', () => {
     await listingActions.verifyChangedByFieldIsCorrect('Jahanzaib Xenex');
   });
 
+  test('Test 5: Verify that the "Event" status correctly indicates the type of action', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.verifyEventStatusIsCorrect('Update'); 
+  });
+
 });
