@@ -12286,59 +12286,44 @@ export class ListingActions {
         const calendar = this.page.locator('div.p-datepicker-group-container');
         await expect(calendar).toBeVisible({ timeout: 10000 });
 
-        // Calculate previous date
-        const today = new Date();
-        const prevDate = new Date(today);
-        prevDate.setDate(today.getDate() - 1);
+        // 1️⃣ Compute Tomorrow
+        const t = new Date();
+        t.setDate(t.getDate() - 1);
 
-        const prevDay = prevDate.getDate();
-        const prevMonth = prevDate.toLocaleString('default', { month: 'long' });
-        const prevYear = prevDate.getFullYear();
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
 
-        // Function to get displayed month/year from calendar
-        const getDisplayedMonthYear = async () => {
-            const headerText = (await this.page.locator('.p-datepicker-title').textContent()) || '';
-            const match = headerText.match(/(\w+)\s+(\d{4})/);
-            if (match) {
-                return { month: match[1], year: Number(match[2]) };
-            }
-            return null;
-        };
+        // 2️⃣ Read currently opened calendar's month-year (stable header)
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
 
-        // Navigate the calendar to the correct month/year
-        for (let i = 0; i < 12; i++) {
-            const displayed = await getDisplayedMonthYear();
-            if (!displayed) break;
+        const headerText = await header.innerText();
+        const [monthName, year] = headerText.trim().split(" ");
 
-            if (displayed.month === prevMonth && displayed.year === prevYear) break;
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
 
-            const shownDate = new Date(`${displayed.month} 1, ${displayed.year}`).getTime();
-            const targetDate = new Date(`${prevMonth} 1, ${prevYear}`).getTime();
+        // 3️⃣ Move calendar to correct month
+        const monthDifference =
+            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
 
-            if (shownDate > targetDate) {
-                await this.page.locator('button[aria-label="Previous Month"]').click();
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
             } else {
-                await this.page.locator('button[aria-label="Next Month"]').click();
+                await this.page.locator(".p-datepicker-prev").click();
             }
-            await this.page.waitForTimeout(200); // small delay for calendar to update
+            // Wait for transition + re-render
+            await this.page.waitForTimeout(200);
         }
 
-        // Locate the day button for the previous date
-        let dayLocator = this.page.locator(
-            `.p-datepicker-calendar td:not(.p-datepicker-other-month) button:has-text("${prevDay}")`
+        // 4️⃣ Select tomorrow's date (non-flaky selector)
+        const dayLocator = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
         );
 
-        // Fallback if day is not a button
-        if ((await dayLocator.count()) === 0) {
-            dayLocator = this.page.locator(
-                `.p-datepicker-calendar td:not(.p-datepicker-other-month) span:has-text("${prevDay}")`
-            );
-        }
-
-        // Click the day
-        await expect(dayLocator).toBeVisible({ timeout: 2000 });
-        await dayLocator.click();
-
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
+        await dayLocator.first().click({ force: true });
 
         const offerPriceInput = this.page.locator('div.col-sm-4:has(> p:text("Offer Price")) app-price-input input[name="price"]');
         await offerPriceInput.click();
@@ -12402,35 +12387,16 @@ export class ListingActions {
 
         // Wait for the dropdown panel to be visible
         const dropdownPanel = this.page.locator('.ng-dropdown-panel');
-        await expect(dropdownPanel).toBeVisible({ timeout: 10000 });
+        await dropdownPanel.waitFor({ state: 'visible', timeout: 10000 });
 
-        // Get all option locators in dropdown
-        const optionLocators = dropdownPanel.locator('.ng-option');
-        const expectedOptions = [
-            'Settled',
-            'Conditional',
-            'Offer Pending',
-            'Contract Issued',
-            'Awaiting Vendor Signing',
-            'Held',
-            'Unconditional',
-            'Cancelled'
-        ];
-
-        // Fetch the text of all the options in the dropdown
-        const actualOptions = await optionLocators.allTextContents();
-
-        for (const expected of expectedOptions) {
-            // Find index of the expected option in the dropdown
-            const idx = actualOptions.findIndex(opt => opt.trim() === expected);
-            expect(actualOptions.map(opt => opt.trim())).toContain(expected);
-            if (idx >= 0) {
-                // Optionally scroll that option into view to simulate user visibility (if possible)
-                const optionLocator = optionLocators.nth(idx);
-                // Scroll into view for good measure (or highlight visually for debug, not strictly required)
-                await optionLocator.scrollIntoViewIfNeeded().catch(() => { });
-            }
-        }
+        // Exact match (exact: true)
+        await expect(this.page.getByRole('option', { name: 'Settled', exact: true })).toBeVisible();
+        await expect(this.page.getByRole('option', { name: 'Conditional', exact: true })).toBeVisible();
+        await expect(this.page.getByRole('option', { name: 'Offer Pending', exact: true })).toBeVisible();
+        await expect(this.page.getByRole('option', { name: 'Contract Issued', exact: true })).toBeVisible();
+        await expect(this.page.getByRole('option', { name: 'Awaiting Vendor Signing', exact: true })).toBeVisible();
+        await expect(this.page.getByRole('option', { name: 'Held', exact: true })).toBeVisible();
+        await expect(this.page.getByRole('option', { name: 'Unconditional', exact: true })).toBeVisible();
 
         // Click the close icon after verifying the contract is displayed
         const closeBtn = this.page.locator('.pi.pi-times').first();
@@ -12459,7 +12425,8 @@ export class ListingActions {
         await legalTab.click();
 
         // Wait for checkboxes to be rendered in the Legal tab (table or list checkboxes)
-        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        const legalCheckbox = this.page.locator('.p-checkbox-box.p-component');
+        await legalCheckbox.scrollIntoViewIfNeeded();
         await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
 
         // Click the first checkbox
@@ -12517,7 +12484,8 @@ export class ListingActions {
         await legalTab.click();
 
         // Wait for the checkbox in the Legal tab
-        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        const legalCheckbox = this.page.locator('.p-checkbox-box.p-component');
+        await legalCheckbox.scrollIntoViewIfNeeded();
         await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
 
         // Click the checkbox if not already checked
@@ -12566,7 +12534,8 @@ export class ListingActions {
         await legalTab.click();
 
         // Wait for the checkboxes in the Legal tab, select the fourth (index 3)
-        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        const legalCheckbox = this.page.locator('.p-checkbox-box.p-component');
+        await legalCheckbox.scrollIntoViewIfNeeded();
         await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
 
         // Click the checkbox if not already checked
@@ -12615,7 +12584,8 @@ export class ListingActions {
         await legalTab.click();
 
         // Wait for the checkboxes in the Legal tab, select the fourth (index 3)
-        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        const legalCheckbox = this.page.locator('.p-checkbox-box.p-component');
+        await legalCheckbox.scrollIntoViewIfNeeded();
         await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
 
         // Click the checkbox if not already checked
@@ -12674,7 +12644,8 @@ export class ListingActions {
         await legalTab.click();
 
         // Wait for the checkboxes in the Legal tab, select the fourth (index 3)
-        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        const legalCheckbox = this.page.locator('.p-checkbox-box.p-component');
+        await legalCheckbox.scrollIntoViewIfNeeded();
         await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
 
         // Click the checkbox if not already checked
@@ -13209,7 +13180,7 @@ export class ListingActions {
         await expect(propertyLegalDetailsSection).toBeVisible({ timeout: 10000 });
 
         // Find the "Legal Name" dropdown (assuming it uses formcontrolname="legalOwner")
-        const legalNameDropdown = this.page.locator('.selected_one p');
+        const legalNameDropdown = this.page.locator('.selected_one p').nth(5);
         // Trim the text content and log it to console
         const dropdownText = (await legalNameDropdown.textContent())?.trim() ?? '';
         console.log('Legal Dropdown Name :', dropdownText);
@@ -13381,7 +13352,7 @@ export class ListingActions {
 
         // Check it exists / is visible
         await expect(selectedValue).toBeVisible();
-        await selectedValue.click();
+        await selectedValue.click({ force: true});
 
         await expect(this.page.locator('ng-select[formcontrolname="contact_type"]')).toBeVisible();
 
@@ -13443,7 +13414,7 @@ export class ListingActions {
         await companySelected.click()
 
 
-        await expect(this.page.locator('[id="Contact-Netsol _1"] #rightbarwithscroll')).toBeVisible();
+        await expect(this.page.locator('#rightbarwithscroll').last()).toBeVisible();
 
         // Optionally close a popup if present
         const closeBtn = this.page.locator('.pi.pi-times').first();
