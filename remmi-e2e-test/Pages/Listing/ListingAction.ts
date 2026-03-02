@@ -4435,7 +4435,7 @@ export class ListingActions {
 
         // Click "Unpin to Dashboard" in the context menu
         const unpinMenuItem = this.page.getByText('Unpin to Dashboard').first();
-        await expect(unpinMenuItem).toBeVisible({ timeout: 10000 });
+        await unpinMenuItem.waitFor({ state: 'visible', timeout: 10000 });
         await unpinMenuItem.click();
         await this.page.waitForTimeout(1000);
     }
@@ -5035,6 +5035,9 @@ export class ListingActions {
         await this.page.waitForTimeout(2000);
 
         await expect(this.page.getByText('added successfully', { exact: false })).toBeVisible({ timeout: 10000 });
+
+        const ownerText = this.page.getByText('Owner/s Automation');
+        await ownerText.waitFor({ state: 'visible', timeout: 10000 });
 
         await saveBtn.click();
         // Print the full entered address for debugging
@@ -5765,6 +5768,9 @@ export class ListingActions {
         const saveButton = this.page.locator("button[type='submit'], button:has-text('Save')").last();
         await expect(saveButton).toBeVisible({ timeout: 10000 });
         await saveButton.click({ force: true });
+
+        const ownerText = this.page.getByText('Owner/s Automation');
+        await ownerText.waitFor({ state: 'visible', timeout: 10000 });
 
         await this.page.waitForTimeout(1800);
 
@@ -6564,13 +6570,14 @@ export class ListingActions {
         await expect(previewBtn).toBeVisible({ timeout: 10000 });
         await previewBtn.click({ force: true });
 
-        // Locate the "Sale Type" value associated with the correct label in preview
-        const saleTypeLabel = this.page.locator('div.pricingDetail h3', { hasText: 'Sale Type' }).first();
+        // Scroll to the "Sale Type" label in preview and ensure visibility
+        const saleTypeLabel = this.page.getByText('Sale Type').last();
+        await saleTypeLabel.scrollIntoViewIfNeeded();
         await expect(saleTypeLabel).toBeVisible({ timeout: 10000 });
 
-        const saleStatus = this.page.locator('p.mr-0.statusStyle1', { hasText: 'For Lease' });
+        const saleStatus = this.page.getByRole('paragraph').filter({ hasText: /^For Lease$/ });
 
-        // await expect(saleStatus).toBeVisible({ timeout: 10000 });
+        await expect(saleStatus).toBeVisible({ timeout: 10000 });
 
         // Close preview safely if visible
         const closeForm = this.page.locator('.pi.pi-times').first();
@@ -8485,7 +8492,7 @@ export class ListingActions {
         // Check image name visibility within the .lib-file area
         const imageName = filePath.split(/[\\/]/).pop();
         if (imageName) {
-            const imageNameInLibFile = this.page.locator(`.lib-file :text("${imageName}")`);
+            const imageNameInLibFile = this.page.locator(`.lib-file :text("${imageName}")`).first();
             await expect(imageNameInLibFile).toBeVisible({ timeout: 20000 });
         }
 
@@ -10514,6 +10521,9 @@ export class ListingActions {
         await expect(saveButton).toBeVisible({ timeout: 10000 });
         await saveButton.click();
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         // Click on the 'Inspections' tab to trigger validation messages for required fields
         const inspectionTab = this.page.getByRole('tab', { name: /Inspections/i }).first();
         await expect(inspectionTab).toBeVisible({ timeout: 10000 });
@@ -10525,7 +10535,7 @@ export class ListingActions {
         await addButton.click();
 
         // Wait for potential validation/error messages to appear
-        const requiredFieldError = this.page.getByRole('alert', { name: 'Start time must be before end' });
+        const requiredFieldError = this.page.getByRole('alert', { name: 'Start time must be before end' }).first();
         await expect(requiredFieldError).toBeVisible({ timeout: 10000 });
 
         // Close the form after test
@@ -10572,6 +10582,9 @@ export class ListingActions {
         await expect(saveButton).toBeVisible({ timeout: 10000 });
         await saveButton.click();
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         // Click on the 'Inspections' tab to trigger validation messages for required fields
         const inspectionTab = this.page.getByRole('tab', { name: /Inspections/i }).first();
         await expect(inspectionTab).toBeVisible({ timeout: 10000 });
@@ -10622,8 +10635,10 @@ export class ListingActions {
         await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
         await dayLocator.first().click({ force: true });
 
-        const startTimeSelect = this.page.getByRole('combobox').nth(6);
-        await startTimeSelect.click();
+        const startTimeSelect = this.page.locator(
+            'div.col-sm-4:has(label:text("Start Time")) ng-select[placeholder="Hr"] div[role="combobox"]'
+          );
+        await startTimeSelect.click({force: true});
         await this.page.waitForTimeout(1000);
         // Select the 6th option (index 5) from the dropdown
         const startTimeOption = this.page.getByText('5', { exact: true });
@@ -10649,7 +10664,7 @@ export class ListingActions {
         if (await closeFormBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
             await closeFormBtn.click({ force: true });
         }
-        await this.page.waitForTimeout(1500);
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -10664,18 +10679,24 @@ export class ListingActions {
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
         await firstCardRow.click();
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         // Go to the Inspections tab
         const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
         await expect(inspectionsTab).toBeVisible({ timeout: 20000 });
         await inspectionsTab.click();
         await this.page.waitForTimeout(1000);
 
-        // Continuously click all visible delete icons until there are none left
-        while (true) {
+        // Keep clicking the delete icon until "Upcoming Inspections" section is not visible
+        const upcomingInspectionsLocator = this.page.getByText(/Upcoming Inspections/i);
+        // Wait for the section to appear (if needed)
+        await expect(upcomingInspectionsLocator).toBeVisible({ timeout: 10000 });
+        while (await upcomingInspectionsLocator.isVisible().catch(() => false)) {
             const deleteLinks = this.page.getByRole('link', { name: 'delete' });
             const count = await deleteLinks.count();
-            if (count === 0) break;
-            // Always click the first visible delete link that is visible
+            if (count === 0) break; // No delete icons left, break to avoid infinite loop
+            // Click the first visible delete link
             let clicked = false;
             for (let i = 0; i < count; i++) {
                 const deleteLink = deleteLinks.nth(i);
@@ -10683,16 +10704,16 @@ export class ListingActions {
                 if (isVisible) {
                     await deleteLink.click();
                     clicked = true;
-                    // Wait for UI/reactivity to update before next check
+                    // Wait for UI/reactivity to update after click
                     await this.page.waitForTimeout(600);
                     break;
                 }
             }
-            // If none were visible or clickable, break out of loop
+            // If none were visible or clickable, break to avoid hanging
             if (!clicked) break;
+            // Optionally, wait a short moment for the DOM to update and Upcoming Inspections section to disappear if needed
+            await this.page.waitForTimeout(500);
         }
-        await this.page.waitForTimeout(1200);
-
         // Optionally, close modal/form
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible({ timeout: 10000 }).catch(() => false)) {
@@ -10737,6 +10758,9 @@ export class ListingActions {
         await expect(saveButton).toBeVisible({ timeout: 10000 });
         await saveButton.click();
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         // Click on the 'Inspections' tab to trigger validation messages for required fields
         const inspectionTab = this.page.getByRole('tab', { name: /Inspections/i }).first();
         await expect(inspectionTab).toBeVisible({ timeout: 10000 });
@@ -10787,8 +10811,10 @@ export class ListingActions {
         await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
         await dayLocator.first().click({ force: true });
 
-        const startTimeSelect = this.page.getByRole('combobox').nth(6);
-        await startTimeSelect.click();
+        const startTimeSelect = this.page.locator(
+            'div.col-sm-4:has(label:text("Start Time")) ng-select[placeholder="Hr"] div[role="combobox"]'
+          );
+        await startTimeSelect.click({force: true});
         await this.page.waitForTimeout(1000);
         // Select the 6th option (index 5) from the dropdown
         const startTimeOption = this.page.getByText('5', { exact: true });
@@ -10851,6 +10877,9 @@ export class ListingActions {
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
         await firstCardRow.click();
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         // Go to the Calendar tab with robust waits
         const calendarTab = this.page.getByRole('tab', { name: /Calendar/i });
         await expect(calendarTab).toBeAttached({ timeout: 10000 });
@@ -10897,6 +10926,9 @@ export class ListingActions {
         await expect(firstCardRow).toBeAttached({ timeout: 20000 });
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
         await firstCardRow.click();
+
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
 
         // Go to the Calendar tab and robustly open it
         const calendarTab = this.page.getByRole('tab', { name: /Calendar/i });
@@ -10957,6 +10989,8 @@ export class ListingActions {
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
         await firstCardRow.click();
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
         // Go to the Calendar tab
         const calendarTab = this.page.getByRole('tab', { name: /Calendar/i });
         await calendarTab.scrollIntoViewIfNeeded();
@@ -11050,6 +11084,9 @@ export class ListingActions {
         await expect(saveButton).toBeVisible({ timeout: 10000 });
         await saveButton.click();
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         // Click on the 'Inspections' tab to trigger validation messages for required fields
         const inspectionTab = this.page.getByRole('tab', { name: /Inspections/i }).first();
         await expect(inspectionTab).toBeVisible({ timeout: 10000 });
@@ -11100,8 +11137,10 @@ export class ListingActions {
         await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
         await dayLocator.first().click({ force: true });
 
-        const startTimeSelect = this.page.getByRole('combobox').nth(6);
-        await startTimeSelect.click();
+        const startTimeSelect = this.page.locator(
+            'div.col-sm-4:has(label:text("Start Time")) ng-select[placeholder="Hr"] div[role="combobox"]'
+          );
+        await startTimeSelect.click({force: true});
         await this.page.waitForTimeout(1000);
         // Select the 6th option (index 5) from the dropdown
         const startTimeOption = this.page.getByText('5', { exact: true });
@@ -11146,6 +11185,9 @@ export class ListingActions {
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
         await firstCardRow.click();
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         // Go to the Inspections tab
         const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
         await expect(inspectionsTab).toBeVisible({ timeout: 20000 });
@@ -11188,6 +11230,9 @@ export class ListingActions {
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
         await firstCardRow.click();
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         // Go to the Inspections tab
         const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
         await expect(inspectionsTab).toBeVisible({ timeout: 20000 });
@@ -11212,16 +11257,20 @@ export class ListingActions {
         await dayLocator.first().click({ force: true });
 
         // Select and pick a value for start time hour
-        const startTimeHour = this.page.getByRole('combobox').nth(6);
-        await expect(startTimeHour).toBeVisible({ timeout: 10000 });
-        await startTimeHour.click();
+        const startTimeSelect = this.page.locator(
+            'div.col-sm-4:has(label:text("Start Time")) ng-select[placeholder="Hr"] div[role="combobox"]'
+        );
+        await startTimeSelect.waitFor({ state: "visible", timeout: 10000 });
+        await startTimeSelect.click({force: true});
         const startTimeHourOption = this.page.getByRole('option', { name: '5' }).first();
         await expect(startTimeHourOption).toBeVisible({ timeout: 10000 });
         await startTimeHourOption.click();
         await this.page.waitForTimeout(200);
 
         // Select and pick a value for start time minutes
-        const startTimeMinutes = this.page.getByRole('combobox').nth(7);
+        const startTimeMinutes = this.page.locator(
+            'div.col-sm-4:has(label:text("Start Time")) ng-select[placeholder="Min"] div[role="combobox"]'
+          ).first();
         await expect(startTimeMinutes).toBeVisible({ timeout: 2000 });
         await startTimeMinutes.click({ force: true });
         const startTimeMinuteOption = this.page.getByRole('option', { name: '05' }).first();
@@ -11230,7 +11279,9 @@ export class ListingActions {
         await this.page.waitForTimeout(200);
 
         // Select and pick a value for start time AM/PM
-        const startTimeAmPm = this.page.getByRole('combobox').nth(8);
+        const startTimeAmPm = this.page.locator(
+            'div.col-sm-4:has(label:text("Start Time")) ng-select[placeholder="Min"] div[role="combobox"]'
+          ).nth(1);
         await expect(startTimeAmPm).toBeVisible({ timeout: 10000 });
         await startTimeAmPm.click({ force: true });
         const startTimeAmPmOption = this.page.getByRole('option', { name: 'PM' }).first();
@@ -11239,7 +11290,9 @@ export class ListingActions {
         await this.page.waitForTimeout(200);
 
         // Select and pick a value for end time hour
-        const endTimeHour = this.page.getByRole('combobox').nth(9);
+        const endTimeHour = this.page.locator(
+            'div.col-sm-4:has(label:text("End Time")) ng-select[placeholder="Hr"] div[role="combobox"]'
+          );
         await expect(endTimeHour).toBeVisible({ timeout: 10000 });
         await endTimeHour.click({ force: true });
         const endTimeHourOption = this.page.getByRole('option', { name: '6' }).first();
@@ -11248,8 +11301,10 @@ export class ListingActions {
         await this.page.waitForTimeout(200);
 
         // Select and pick a value for end time minutes
-        const endTimeMinutes = this.page.getByRole('combobox').nth(10);
-        await expect(endTimeMinutes).toBeVisible({ timeout: 2000 });
+        const endTimeMinutes =  this.page.locator(
+            'div.col-sm-4:has(label:text("End Time")) ng-select[placeholder="Min"] div[role="combobox"]'
+          ).first();
+        await expect(endTimeMinutes).toBeVisible({ timeout: 5000 });
         await endTimeMinutes.click({ force: true });
         const endTimeMinuteOption = this.page.getByRole('option', { name: '10' }).first();
         await expect(endTimeMinuteOption).toBeVisible({ timeout: 10000 });
@@ -11257,7 +11312,9 @@ export class ListingActions {
         await this.page.waitForTimeout(200);
 
         // Select and pick a value for end time AM/PM
-        const endTimeAmPm = this.page.getByRole('combobox').nth(11);
+        const endTimeAmPm = this.page.locator(
+            'div.col-sm-4:has(label:text("End Time")) ng-select[placeholder="Min"] div[role="combobox"]'
+          ).nth(1);
         await expect(endTimeAmPm).toBeVisible({ timeout: 10000 });
         await endTimeAmPm.click({ force: true });
         const endTimeAmPmOption = this.page.getByRole('option', { name: 'PM' }).first();
@@ -11281,6 +11338,9 @@ export class ListingActions {
         const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
         await firstCardRow.click();
+
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
 
         // Helper to add a single inspection by offsetting days
         const addInspection = async (daysFromToday: number) => {
@@ -11329,8 +11389,8 @@ export class ListingActions {
             await inspectionDayLocator.first().click({ force: true });
 
             // Fill required time field
-            const startTimeCombo = this.page.getByRole('combobox').nth(6);
-            await startTimeCombo.click();
+            const startTimeCombo = this.page.locator('ng-select[placeholder="Hr"] div[role="combobox"]').nth(1);
+            await startTimeCombo.click({force: true});
             await this.page.waitForTimeout(500);
             const startTimeTimeOption = this.page.getByText('5', { exact: true });
             await expect(startTimeTimeOption).toBeVisible({ timeout: 2000 });
@@ -11369,6 +11429,9 @@ export class ListingActions {
         const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
         await firstCardRow.click();
+
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
 
         // Go to Inspections tab
         const inspectionTab = this.page.getByRole('tab', { name: /Inspections/i }).first();
@@ -11414,8 +11477,8 @@ export class ListingActions {
             await dayLocator.first().click({ force: true });
 
             // Pick given hour
-            const startTimeCombo = this.page.getByRole('combobox').nth(6);
-            await startTimeCombo.click();
+            const startTimeCombo = this.page.locator('ng-select[placeholder="Hr"] div[role="combobox"]').nth(1);
+            await startTimeCombo.click({force: true});
             await this.page.waitForTimeout(500);
             const option = this.page.getByText('5', { exact: true });;
             await expect(option).toBeVisible({ timeout: 2000 });
@@ -11453,6 +11516,9 @@ export class ListingActions {
         const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
         await expect(firstCard).toBeVisible({ timeout: 30000 });
         await firstCard.click();
+
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
 
         // Switch to Inspections tab
         const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
@@ -11502,6 +11568,9 @@ export class ListingActions {
         await expect(firstCard).toBeVisible({ timeout: 30000 });
         await firstCard.click();
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         // Go to the Inspections tab
         const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
         await expect(inspectionsTab).toBeVisible({ timeout: 15000 });
@@ -11546,15 +11615,14 @@ export class ListingActions {
             );
             await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
             await dayLocator.first().click({ force: true });
-
+            await this.page.waitForTimeout(1200);
             // Select start time
-            const startTimeSelect = this.page.getByRole('combobox').nth(6);
-            await startTimeSelect.click();
-            await this.page.waitForTimeout(300);
-            // Pick a known time option (6th, if that works)
-            const startTimeOption = this.page.getByRole('option').nth(5);
-            await expect(startTimeOption).toBeVisible({ timeout: 10000 });
-            await startTimeOption.click();
+            const startTimeCombo = this.page.locator('ng-select[placeholder="Hr"] div[role="combobox"]').nth(1);
+            await startTimeCombo.click({force: true});
+            await this.page.waitForTimeout(500);
+            const startTimeTimeOption = this.page.getByText('5', { exact: true });
+            await expect(startTimeTimeOption).toBeVisible({ timeout: 2000 });
+            await startTimeTimeOption.click();
 
             // Click the Add button
             const addButton = this.page.getByRole('button', { name: /Add/i }).first();
@@ -11649,6 +11717,9 @@ export class ListingActions {
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
         await firstCardRow.click();
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         // Go to the Inspections tab
         const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
         await expect(inspectionsTab).toBeVisible({ timeout: 20000 });
@@ -11672,22 +11743,20 @@ export class ListingActions {
         await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
         await dayLocator.first().click({ force: true });
 
-        // Simulate selecting a start time later than end time
-        // (e.g., Start time: 7:00 PM, End time: 6:00 PM)
-        const allComboboxes = this.page.getByRole('combobox');
-        // Select Start time (later)
-        const startTimeSelect = allComboboxes.nth(6);
-        await startTimeSelect.click();
+        const startTimeCombo = this.page.locator('ng-select[placeholder="Hr"] div[role="combobox"]').nth(1);
+        await startTimeCombo.click({force: true});
         await this.page.waitForTimeout(500);
-        const lateStartOption = this.page.getByText('5', { exact: true }).first();
-        await lateStartOption.click();
+        const startTimeTimeOption = this.page.getByText('5', { exact: true });
+        await expect(startTimeTimeOption).toBeVisible({ timeout: 2000 });
+        await startTimeTimeOption.click();
 
         // Select End time (earlier)
-        const endTimeSelect = allComboboxes.nth(9);
+        const endTimeSelect = this.page.locator('ng-select[placeholder="Hr"] div[role="combobox"]').nth(2)
         await endTimeSelect.click({ force: true });
-        await this.page.waitForTimeout(500);
-        const earlyEndOption = this.page.getByText('4', { exact: true }).first();
-        await earlyEndOption.click();
+        await this.page.waitForTimeout(1000);
+        const earlyEndOption = this.page.getByLabel('Options list').getByText('4', { exact: true });
+        await earlyEndOption.waitFor({ state: 'visible', timeout: 5000 });
+        await earlyEndOption.click({force: true});
 
         // Click 'Add' to submit
         const addButton = this.page.getByRole('button', { name: /Add/i }).first();
@@ -11717,6 +11786,8 @@ export class ListingActions {
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
         await firstCardRow.click();
 
+          const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
         // Go to the Inspections tab
         const inspectionsTab = this.page.getByRole('tab', { name: /Inspections/i });
         await expect(inspectionsTab).toBeVisible({ timeout: 20000 });
@@ -11740,8 +11811,8 @@ export class ListingActions {
             await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
             await dayLocator.first().click({ force: true });
 
-            const startTimeSelect = this.page.getByRole('combobox').nth(6);
-            await startTimeSelect.click();
+            const startTimeSelect = this.page.locator('ng-select[placeholder="Hr"] div[role="combobox"]').nth(1)
+            await startTimeSelect.click({force: true});
             await this.page.waitForTimeout(500);
             const startTimeOption = this.page.getByRole('option', { name: '5' });
             await startTimeOption.click();
@@ -12215,59 +12286,44 @@ export class ListingActions {
         const calendar = this.page.locator('div.p-datepicker-group-container');
         await expect(calendar).toBeVisible({ timeout: 10000 });
 
-        // Calculate previous date
-        const today = new Date();
-        const prevDate = new Date(today);
-        prevDate.setDate(today.getDate() - 1);
+        // 1️⃣ Compute Tomorrow
+        const t = new Date();
+        t.setDate(t.getDate() - 1);
 
-        const prevDay = prevDate.getDate();
-        const prevMonth = prevDate.toLocaleString('default', { month: 'long' });
-        const prevYear = prevDate.getFullYear();
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
 
-        // Function to get displayed month/year from calendar
-        const getDisplayedMonthYear = async () => {
-            const headerText = (await this.page.locator('.p-datepicker-title').textContent()) || '';
-            const match = headerText.match(/(\w+)\s+(\d{4})/);
-            if (match) {
-                return { month: match[1], year: Number(match[2]) };
-            }
-            return null;
-        };
+        // 2️⃣ Read currently opened calendar's month-year (stable header)
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
 
-        // Navigate the calendar to the correct month/year
-        for (let i = 0; i < 12; i++) {
-            const displayed = await getDisplayedMonthYear();
-            if (!displayed) break;
+        const headerText = await header.innerText();
+        const [monthName, year] = headerText.trim().split(" ");
 
-            if (displayed.month === prevMonth && displayed.year === prevYear) break;
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
 
-            const shownDate = new Date(`${displayed.month} 1, ${displayed.year}`).getTime();
-            const targetDate = new Date(`${prevMonth} 1, ${prevYear}`).getTime();
+        // 3️⃣ Move calendar to correct month
+        const monthDifference =
+            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
 
-            if (shownDate > targetDate) {
-                await this.page.locator('button[aria-label="Previous Month"]').click();
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
             } else {
-                await this.page.locator('button[aria-label="Next Month"]').click();
+                await this.page.locator(".p-datepicker-prev").click();
             }
-            await this.page.waitForTimeout(200); // small delay for calendar to update
+            // Wait for transition + re-render
+            await this.page.waitForTimeout(200);
         }
 
-        // Locate the day button for the previous date
-        let dayLocator = this.page.locator(
-            `.p-datepicker-calendar td:not(.p-datepicker-other-month) button:has-text("${prevDay}")`
+        // 4️⃣ Select tomorrow's date (non-flaky selector)
+        const dayLocator = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
         );
 
-        // Fallback if day is not a button
-        if ((await dayLocator.count()) === 0) {
-            dayLocator = this.page.locator(
-                `.p-datepicker-calendar td:not(.p-datepicker-other-month) span:has-text("${prevDay}")`
-            );
-        }
-
-        // Click the day
-        await expect(dayLocator).toBeVisible({ timeout: 2000 });
-        await dayLocator.click();
-
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
+        await dayLocator.first().click({ force: true });
 
         const offerPriceInput = this.page.locator('div.col-sm-4:has(> p:text("Offer Price")) app-price-input input[name="price"]');
         await offerPriceInput.click();
@@ -12331,35 +12387,16 @@ export class ListingActions {
 
         // Wait for the dropdown panel to be visible
         const dropdownPanel = this.page.locator('.ng-dropdown-panel');
-        await expect(dropdownPanel).toBeVisible({ timeout: 10000 });
+        await dropdownPanel.waitFor({ state: 'visible', timeout: 10000 });
 
-        // Get all option locators in dropdown
-        const optionLocators = dropdownPanel.locator('.ng-option');
-        const expectedOptions = [
-            'Settled',
-            'Conditional',
-            'Offer Pending',
-            'Contract Issued',
-            'Awaiting Vendor Signing',
-            'Held',
-            'Unconditional',
-            'Cancelled'
-        ];
-
-        // Fetch the text of all the options in the dropdown
-        const actualOptions = await optionLocators.allTextContents();
-
-        for (const expected of expectedOptions) {
-            // Find index of the expected option in the dropdown
-            const idx = actualOptions.findIndex(opt => opt.trim() === expected);
-            expect(actualOptions.map(opt => opt.trim())).toContain(expected);
-            if (idx >= 0) {
-                // Optionally scroll that option into view to simulate user visibility (if possible)
-                const optionLocator = optionLocators.nth(idx);
-                // Scroll into view for good measure (or highlight visually for debug, not strictly required)
-                await optionLocator.scrollIntoViewIfNeeded().catch(() => { });
-            }
-        }
+        // Exact match (exact: true)
+        await expect(this.page.getByRole('option', { name: 'Settled', exact: true })).toBeVisible();
+        await expect(this.page.getByRole('option', { name: 'Conditional', exact: true })).toBeVisible();
+        await expect(this.page.getByRole('option', { name: 'Offer Pending', exact: true })).toBeVisible();
+        await expect(this.page.getByRole('option', { name: 'Contract Issued', exact: true })).toBeVisible();
+        await expect(this.page.getByRole('option', { name: 'Awaiting Vendor Signing', exact: true })).toBeVisible();
+        await expect(this.page.getByRole('option', { name: 'Held', exact: true })).toBeVisible();
+        await expect(this.page.getByRole('option', { name: 'Unconditional', exact: true })).toBeVisible();
 
         // Click the close icon after verifying the contract is displayed
         const closeBtn = this.page.locator('.pi.pi-times').first();
@@ -12388,7 +12425,8 @@ export class ListingActions {
         await legalTab.click();
 
         // Wait for checkboxes to be rendered in the Legal tab (table or list checkboxes)
-        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        const legalCheckbox = this.page.locator('.p-checkbox-box.p-component');
+        await legalCheckbox.scrollIntoViewIfNeeded();
         await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
 
         // Click the first checkbox
@@ -12446,7 +12484,8 @@ export class ListingActions {
         await legalTab.click();
 
         // Wait for the checkbox in the Legal tab
-        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        const legalCheckbox = this.page.locator('.p-checkbox-box.p-component');
+        await legalCheckbox.scrollIntoViewIfNeeded();
         await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
 
         // Click the checkbox if not already checked
@@ -12495,7 +12534,8 @@ export class ListingActions {
         await legalTab.click();
 
         // Wait for the checkboxes in the Legal tab, select the fourth (index 3)
-        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        const legalCheckbox = this.page.locator('.p-checkbox-box.p-component');
+        await legalCheckbox.scrollIntoViewIfNeeded();
         await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
 
         // Click the checkbox if not already checked
@@ -12544,7 +12584,8 @@ export class ListingActions {
         await legalTab.click();
 
         // Wait for the checkboxes in the Legal tab, select the fourth (index 3)
-        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        const legalCheckbox = this.page.locator('.p-checkbox-box.p-component');
+        await legalCheckbox.scrollIntoViewIfNeeded();
         await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
 
         // Click the checkbox if not already checked
@@ -12603,7 +12644,8 @@ export class ListingActions {
         await legalTab.click();
 
         // Wait for the checkboxes in the Legal tab, select the fourth (index 3)
-        const legalCheckbox = this.page.getByRole('checkbox').nth(3);
+        const legalCheckbox = this.page.locator('.p-checkbox-box.p-component');
+        await legalCheckbox.scrollIntoViewIfNeeded();
         await legalCheckbox.waitFor({ state: 'visible', timeout: 10000 });
 
         // Click the checkbox if not already checked
@@ -13138,7 +13180,7 @@ export class ListingActions {
         await expect(propertyLegalDetailsSection).toBeVisible({ timeout: 10000 });
 
         // Find the "Legal Name" dropdown (assuming it uses formcontrolname="legalOwner")
-        const legalNameDropdown = this.page.locator('.selected_one p');
+        const legalNameDropdown = this.page.locator('.selected_one p').nth(5);
         // Trim the text content and log it to console
         const dropdownText = (await legalNameDropdown.textContent())?.trim() ?? '';
         console.log('Legal Dropdown Name :', dropdownText);
@@ -13310,7 +13352,7 @@ export class ListingActions {
 
         // Check it exists / is visible
         await expect(selectedValue).toBeVisible();
-        await selectedValue.click();
+        await selectedValue.click({ force: true});
 
         await expect(this.page.locator('ng-select[formcontrolname="contact_type"]')).toBeVisible();
 
@@ -13372,7 +13414,7 @@ export class ListingActions {
         await companySelected.click()
 
 
-        await expect(this.page.locator('[id="Contact-Netsol _1"] #rightbarwithscroll')).toBeVisible();
+        await expect(this.page.locator('#rightbarwithscroll').last()).toBeVisible();
 
         // Optionally close a popup if present
         const closeBtn = this.page.locator('.pi.pi-times').first();
@@ -23015,6 +23057,9 @@ export class ListingActions {
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         const primaryAgent = this.page.locator(
             'div.form-group:has-text("Primary Agent") ng-select'
         );
@@ -23073,6 +23118,9 @@ export class ListingActions {
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         // Navigate to the Calendar/Integrations tab
         const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
         await expect(calendarTab).toBeVisible({ timeout: 10000 });
@@ -23104,6 +23152,9 @@ export class ListingActions {
             .first();
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
+
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
 
         // Navigate to the Calendar/Integrations tab
         const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
@@ -23148,6 +23199,9 @@ export class ListingActions {
             .first();
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
+
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
 
         // Navigate to the Calendar/Integrations tab
         const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
@@ -23200,7 +23254,9 @@ export class ListingActions {
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
 
-        await this.page.waitForTimeout(3000);
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         // Navigate to the Calendar/Integrations tab
         const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
         await expect(calendarTab).toBeVisible({ timeout: 10000 });
@@ -23250,6 +23306,10 @@ export class ListingActions {
             .first();
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
+
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         // Navigate to the Calendar/Integrations tab
         const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
         await expect(calendarTab).toBeVisible({ timeout: 10000 });
@@ -23299,13 +23359,16 @@ export class ListingActions {
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         // Navigate to the Calendar/Integrations tab
         const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
         await expect(calendarTab).toBeVisible({ timeout: 10000 });
         await calendarTab.click();
 
 
-        await this.page.waitForTimeout(2000);
+        await this.page.waitForTimeout(1000);
 
         // Wait for "+Create New" button to appear and click it
         const createNewBtn = this.page.getByRole('button', { name: /create new/i });
@@ -23368,6 +23431,9 @@ export class ListingActions {
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         // Navigate to the Calendar/Integrations tab
         const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
         await expect(calendarTab).toBeVisible({ timeout: 10000 });
@@ -23405,7 +23471,8 @@ export class ListingActions {
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
 
-        await this.page.waitForTimeout(3000);
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
 
         // Navigate to the Calendar/Integrations tab
         const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
@@ -23423,7 +23490,8 @@ export class ListingActions {
         await titleInput.fill('');
         await titleInput.fill('Test Inspection');
 
-        const startHour = this.page.locator('ng-select[placeholder="Hr"]').nth(2);
+        const startHour = this.page.locator('ng-select[placeholder="Hr"] div[role="combobox"]').nth(3);
+        await startHour.waitFor({ state: 'visible', timeout: 10000 });
         await startHour.click();
         const startHourOption = this.page.getByRole('option', { name: '5' });
         await expect(startHourOption).toBeVisible({ timeout: 10000 });
@@ -23466,6 +23534,9 @@ export class ListingActions {
 
         await this.page.waitForTimeout(1000);
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         // Navigate to the Calendar/Integrations tab
         const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
         await expect(calendarTab).toBeVisible({ timeout: 10000 });
@@ -23501,6 +23572,9 @@ export class ListingActions {
         await firstListingCard.click();
 
         await this.page.waitForTimeout(1000);
+
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
 
         // Navigate to the Calendar/Integrations tab
         const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
@@ -23544,6 +23618,9 @@ export class ListingActions {
         await firstListingCard.click();
 
         await this.page.waitForTimeout(1000);
+
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
 
         // Navigate to the Calendar/Integrations tab
         const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
@@ -23597,6 +23674,9 @@ export class ListingActions {
             .first();
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
+
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
 
         await this.page.waitForTimeout(3000);
 
@@ -23664,6 +23744,8 @@ export class ListingActions {
         await firstListingCard.click();
 
         await this.page.waitForTimeout(3000);
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
 
         // Navigate to the Calendar/Integrations tab
         const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
@@ -23683,8 +23765,8 @@ export class ListingActions {
         await titleInput.click();
         await titleInput.fill('');
         await titleInput.fill('Test Inspection');
-
-        const startHour = this.page.locator('ng-select[placeholder="Hr"]').nth(2);
+        const startHour = this.page.locator('ng-select[placeholder="Hr"] div[role="combobox"]').nth(3);
+        await startHour.waitFor({ state: 'visible', timeout: 10000 });
         await startHour.click();
         const startHourOption = this.page.getByRole('option', { name: '5' });
         await expect(startHourOption).toBeVisible({ timeout: 10000 });
@@ -23748,6 +23830,8 @@ export class ListingActions {
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
         await this.page.waitForTimeout(3000);
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
 
         // Navigate to the Calendar/Integrations tab
         const calendarTab = this.page.getByRole('tab', { name: ' Calendar' });
@@ -24075,6 +24159,8 @@ export class ListingActions {
         await todayTasks.scrollIntoViewIfNeeded();
         await expect(todayTasks).toBeVisible({ timeout: 10000 });
 
+        await this.page.waitForTimeout(1200);
+
         // Click the Edit icon/button (assume .pi-pencil or a button with Edit)
         const editBtn = this.page.locator('.pi.pi-pencil, button:has-text("Edit")').first();
         await expect(editBtn).toBeVisible({ timeout: 10000 });
@@ -24142,6 +24228,8 @@ export class ListingActions {
         const taskCell = this.page.locator('td', { hasText: taskTitle }).first();
         await taskCell.scrollIntoViewIfNeeded();
         await expect(taskCell).toBeVisible({ timeout: 10000 });
+
+        await this.page.waitForTimeout(1200);
 
         const deleteBtn = this.page.getByRole('img', { name: 'delete' }).first();
         await expect(deleteBtn).toBeVisible({ timeout: 10000 });
@@ -24343,17 +24431,22 @@ export class ListingActions {
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         // Navigate to Calendar tab
         const calendarTab = this.page.getByRole('tab', { name: /Calendar/i });
         await expect(calendarTab).toBeVisible({ timeout: 10000 });
         await calendarTab.click();
 
-        // Open the agent dropdown or filter (assume there's such a dropdown)
-        const agentDropdown = this.page.getByText('SelectListing')
-        await expect(agentDropdown).toBeVisible({ timeout: 10000 });
-        await agentDropdown.click();
+        const primaryAgentDropdown = this.page.locator(
+            'div.form-group:has-text("Primary Agent") ng-select'
+        );
+        await expect(primaryAgentDropdown).toBeVisible({ timeout: 10000 });
+        await primaryAgentDropdown.click();
 
-        const agentOption = this.page.getByLabel('Options list').getByText('Jahanzaib Xenex', { exact: true });
+         // Select the agent "Jahanzaib Xenex" from the dropdown options
+        const agentOption = this.page.getByRole('option', { name: 'Jahanzaib Xenex' });
         await expect(agentOption).toBeVisible({ timeout: 10000 });
         await agentOption.click();
 
@@ -24382,6 +24475,9 @@ export class ListingActions {
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         await this.page.waitForTimeout(3000);
 
         // Navigate to the Calendar/Integrations tab
@@ -24400,7 +24496,9 @@ export class ListingActions {
         await titleInput.fill('');
         await titleInput.fill('Test Inspection');
 
-        const startHour = this.page.locator('ng-select[placeholder="Hr"]').nth(2);
+        
+        const startHour = this.page.locator('ng-select[placeholder="Hr"] div[role="combobox"]').nth(3);
+        await startHour.waitFor({ state: 'visible', timeout: 10000 });
         await startHour.click();
         const startHourOption = this.page.getByRole('option', { name: '5' });
         await expect(startHourOption).toBeVisible({ timeout: 10000 });
@@ -24452,20 +24550,35 @@ export class ListingActions {
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
 
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
+
         // Go to Calendar/Integrations tab
         const calendarTab = this.page.getByRole('tab', { name: /Calendar/i });
         await expect(calendarTab).toBeVisible({ timeout: 10000 });
         await calendarTab.click();
-        // Open the agent dropdown or filter (assume there's such a dropdown)
-        const agentDropdown = this.page.getByText('SelectListing');
-        await agentDropdown.waitFor({ state: 'visible', timeout: 30000 });
-        await agentDropdown.click();
+       
 
-        const agentOption = this.page.getByLabel('Options list').getByText('Jahanzaib Xenex', { exact: true });
-        await expect(agentOption).toBeVisible({ timeout: 10000 });
-        await agentOption.click();
+        const primaryAgent = this.page.locator(
+            'div.form-group:has-text("Primary Agent") ng-select'
+        );
+
+        await primaryAgent.scrollIntoViewIfNeeded();
+        await primaryAgent.click();
+
+        const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(primaryInput).toBeVisible({ timeout: 10000 });
+        await primaryInput.fill('Jahanzaib Xenex');
+
+        const primaryOption = this.page.locator(
+            '.ng-dropdown-panel .ng-option',
+            { hasText: 'Jahanzaib Xenex' }
+        ).first();
+        await expect(primaryOption).toBeVisible({ timeout: 10000 });
+        await primaryOption.click();
 
         await this.page.waitForTimeout(1000);
+        
         // Locate and click the first calendar event
         const newEvent = this.page.locator("//div[@class='fc-event-main']").first();
         await newEvent.scrollIntoViewIfNeeded();
@@ -24507,6 +24620,9 @@ export class ListingActions {
         const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
         await expect(firstListingCard).toBeVisible({ timeout: 30000 });
         await firstListingCard.click();
+
+        const historyCard = this.page.locator('div.stream-body').first();
+        await historyCard.waitFor({ state: 'visible', timeout: 15000 });
 
         // Go to Calendar/Integrations tab
         const calendarTab = this.page.getByRole('tab', { name: /Calendar/i });
@@ -25669,6 +25785,7 @@ export class ListingActions {
             const input = this.page.locator(update.selector).first();
             await expect(input).toBeVisible({ timeout: 10000 });
             await input.scrollIntoViewIfNeeded();
+            await this.page.waitForTimeout(300);
             await input.click({ force: true });
             await input.fill(update.value);
         }

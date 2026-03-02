@@ -1,6 +1,22 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.246155999999495">
-<testsuite name="Pages\Listing\listingForm.spec.ts" timestamp="2026-02-27T12:00:05.198Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.472" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Save button functionality" classname="Pages\Listing\listingForm.spec.ts" time="44.472">
+<testsuites id="" name="" tests="9" failures="0" skipped="0" errors="0" time="101.07855299999937">
+<testsuite name="Pages\Listing\listingNotes.spec.ts" timestamp="2026-03-02T12:17:54.479Z" hostname="chromium" tests="9" failures="0" skipped="0" time="94.091" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that the NOTE Tab opens correctly" classname="Pages\Listing\listingNotes.spec.ts" time="39.379">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify that clicking the &quot;+&quot; button in the Notes section displays the note fields" classname="Pages\Listing\listingNotes.spec.ts" time="2.455">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that clicking &quot;Cancel&quot; removes the note entry form" classname="Pages\Listing\listingNotes.spec.ts" time="2.822">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that clicking &quot;Save&quot; saves the note successfully" classname="Pages\Listing\listingNotes.spec.ts" time="6.284">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that saved notes appear in the notes list" classname="Pages\Listing\listingNotes.spec.ts" time="5.972">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that clicking the edit icon allows updating a note" classname="Pages\Listing\listingNotes.spec.ts" time="8.087">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that clicking the delete icon removes a note" classname="Pages\Listing\listingNotes.spec.ts" time="6.278">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that added note also appears in Personal Notes" classname="Pages\Listing\listingNotes.spec.ts" time="14.867">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Editing a saved note should update it correctly" classname="Pages\Listing\listingNotes.spec.ts" time="7.947">
 </testcase>
 </testsuite>
 </testsuites>
