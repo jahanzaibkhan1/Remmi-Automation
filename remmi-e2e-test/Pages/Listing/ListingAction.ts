@@ -4435,7 +4435,7 @@ export class ListingActions {
 
         // Click "Unpin to Dashboard" in the context menu
         const unpinMenuItem = this.page.getByText('Unpin to Dashboard').first();
-        await expect(unpinMenuItem).toBeVisible({ timeout: 10000 });
+        await unpinMenuItem.waitFor({ state: 'visible', timeout: 10000 });
         await unpinMenuItem.click();
         await this.page.waitForTimeout(1000);
     }
@@ -5035,6 +5035,9 @@ export class ListingActions {
         await this.page.waitForTimeout(2000);
 
         await expect(this.page.getByText('added successfully', { exact: false })).toBeVisible({ timeout: 10000 });
+
+        const ownerText = this.page.getByText('Owner/s Automation');
+        await ownerText.waitFor({ state: 'visible', timeout: 10000 });
 
         await saveBtn.click();
         // Print the full entered address for debugging
@@ -5765,6 +5768,9 @@ export class ListingActions {
         const saveButton = this.page.locator("button[type='submit'], button:has-text('Save')").last();
         await expect(saveButton).toBeVisible({ timeout: 10000 });
         await saveButton.click({ force: true });
+
+        const ownerText = this.page.getByText('Owner/s Automation');
+        await ownerText.waitFor({ state: 'visible', timeout: 10000 });
 
         await this.page.waitForTimeout(1800);
 
@@ -6564,13 +6570,14 @@ export class ListingActions {
         await expect(previewBtn).toBeVisible({ timeout: 10000 });
         await previewBtn.click({ force: true });
 
-        // Locate the "Sale Type" value associated with the correct label in preview
-        const saleTypeLabel = this.page.locator('div.pricingDetail h3', { hasText: 'Sale Type' }).first();
+        // Scroll to the "Sale Type" label in preview and ensure visibility
+        const saleTypeLabel = this.page.getByText('Sale Type').last();
+        await saleTypeLabel.scrollIntoViewIfNeeded();
         await expect(saleTypeLabel).toBeVisible({ timeout: 10000 });
 
-        const saleStatus = this.page.locator('p.mr-0.statusStyle1', { hasText: 'For Lease' });
+        const saleStatus = this.page.getByRole('paragraph').filter({ hasText: /^For Lease$/ });
 
-        // await expect(saleStatus).toBeVisible({ timeout: 10000 });
+        await expect(saleStatus).toBeVisible({ timeout: 10000 });
 
         // Close preview safely if visible
         const closeForm = this.page.locator('.pi.pi-times').first();
