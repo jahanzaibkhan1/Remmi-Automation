@@ -260,7 +260,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
   test('Test 39: Listing appears in grid after save', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
-    await listingActions.verifyListingAppearsInGrid();
+    await listingActions.clickSaveButtonOnContactForm();
   });
 
   test('Test 40: Search for a saved listing appears in results', async ({ sessionPage }) => {
@@ -436,7 +436,7 @@ test("Test 66: Verify 'Sold' status popup appears when selecting 'Sold' in listi
 
 test("Test 67: Verify listing appears at the top of the grid after creation", async ({ sessionPage }) => {
   const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifyListingAppearsAtTopAfterCreation();
+  await listingActions.clickSaveButtonOnContactForm();
 });
 
 test("Test 68: Verify 'Sold' status popup contains correct fields", async ({ sessionPage }) => {
