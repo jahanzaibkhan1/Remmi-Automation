@@ -98,41 +98,49 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
   test('Test 16: Verify that contract related contacts are automatically added to Related contact tab', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyContractRelatedContactsAreAddedToRelatedTab();
+    await listingActions.resetFilters();
   });
 
   test('Test 17: Verify that contract related contacts are not removed when the contract is settled', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyContractRelatedContactsRemainAfterSettlement();
+    await listingActions.resetFilters();
   });
 
   test('Test 18: Verify that an associated contact remains linked after saving and reopening the contact', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyAssociatedContactRemainsLinkedAfterSaveAndReopen();
+    await listingActions.resetFilters();
   });
 
   test('Test 19: Verify that deleting all related contacts shows nothing', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.deleteAllRelatedContacts();
+    await listingActions.resetFilters();
   });
 
   test('Test 20: Verify that a newly created contact appears in the global contact list', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyNewlyCreatedContactIsAddedToRelatedList();
+    await listingActions.resetFilters();
   });
 
   test('Test 21: Verify that canceling "Add New Contact" does not create a contact', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyCancelAddNewContactDoesNotCreateContact();
+    await listingActions.resetFilters();
   });
 
   test('Test 22: Verify that an associated contact remains even after refreshing the page', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyContactAssociationInRelatedTab();
+    await listingActions.resetFilters();
   });
 
   test('Test 23: Verify that removing a contact  does not affect unrelated contacts', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyContactAssociationInRelatedTab();
+    await listingActions.resetFilters();
   });
 
 });
