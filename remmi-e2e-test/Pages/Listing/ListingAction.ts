@@ -24457,6 +24457,7 @@ export class ListingActions {
         const primaryAgentDropdown = this.page.locator(
             'div.form-group:has-text("Primary Agent") ng-select'
         );
+        await primaryAgentDropdown.scrollIntoViewIfNeeded();
         await expect(primaryAgentDropdown).toBeVisible({ timeout: 10000 });
         await primaryAgentDropdown.click();
 
