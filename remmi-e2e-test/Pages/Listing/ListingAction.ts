@@ -19802,8 +19802,10 @@ export class ListingActions {
         // Wait for the task to appear in the list under Tasks tab
         await this.page.waitForTimeout(500); // Small wait for save to complete
 
-        const createdTaskRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).first();
+        const createdTaskRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
+        await createdTaskRow.scrollIntoViewIfNeeded();
         await expect(createdTaskRow).toBeVisible({ timeout: 10000 });
+
 
         // Close modal if needed
         const closeBtn = this.page.locator('.pi.pi-times').first();
@@ -19923,7 +19925,7 @@ export class ListingActions {
         await expect(notificationDropdown).toBeVisible({ timeout: 20000 })
         await notificationDropdown.click();
 
-        const notificationLink = this.page.getByRole('link', { name: 'JX Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
+        const notificationLink = this.page.getByRole('link', { name: 'Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
         await expect(notificationLink).toBeVisible({ timeout: 30000 });
         await this.page.waitForTimeout(1000);
     }
@@ -20152,7 +20154,7 @@ export class ListingActions {
         await expect(notificationDropdown).toBeVisible({ timeout: 20000 })
         await notificationDropdown.click();
 
-        const notificationLink = this.page.getByRole('link', { name: 'JX Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
+        const notificationLink = this.page.getByRole('link', { name: 'Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
         await expect(notificationLink).toBeVisible({ timeout: 30000 });
         await this.page.waitForTimeout(1000);
     }
@@ -20329,7 +20331,7 @@ export class ListingActions {
         await expect(notificationDropdown).toBeVisible({ timeout: 20000 })
         await notificationDropdown.click();
 
-        const notificationLink = this.page.getByRole('link', { name: 'JX Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
+        const notificationLink = this.page.getByRole('link', { name: 'Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
         await expect(notificationLink).toBeVisible({ timeout: 30000 });
         await this.page.waitForTimeout(1000);
     }
@@ -20506,7 +20508,7 @@ export class ListingActions {
         await expect(notificationDropdown).toBeVisible({ timeout: 20000 })
         await notificationDropdown.click();
 
-        const notificationLink = this.page.getByRole('link', { name: 'JX Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
+        const notificationLink = this.page.getByRole('link', { name: 'Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
         await expect(notificationLink).toBeVisible({ timeout: 30000 });
         await this.page.waitForTimeout(1000);
     }
@@ -20690,7 +20692,7 @@ export class ListingActions {
         await expect(notificationDropdown).toBeVisible({ timeout: 20000 })
         await notificationDropdown.click();
 
-        const notificationLink = this.page.getByRole('link', { name: 'JX Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
+        const notificationLink = this.page.getByRole('link', { name: 'Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
         await expect(notificationLink).toBeVisible({ timeout: 30000 });
         await this.page.waitForTimeout(1000);
     }
@@ -20748,7 +20750,7 @@ export class ListingActions {
         await expect(notificationDropdown).toBeVisible({ timeout: 20000 });
         await notificationDropdown.click();
 
-        const notificationLink = this.page.getByRole('link', { name: 'JX Task Comment Jahanzaib' }).first();
+        const notificationLink = this.page.getByRole('link', { name: 'Task Comment Jahanzaib' }).first();
         await expect(notificationLink).toBeVisible({ timeout: 30000 });
         await this.page.waitForTimeout(1000);
     }
