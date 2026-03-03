@@ -1,94 +1,26 @@
-<testsuites id="" name="" tests="29" failures="0" skipped="0" errors="0" time="261.266034">
-<testsuite name="Pages\Listing\listingStream.spec.ts" timestamp="2026-03-03T06:26:15.106Z" hostname="chromium" tests="29" failures="0" skipped="0" time="246.289" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify search functionality in stream tab" classname="Pages\Listing\listingStream.spec.ts" time="45.517">
+<testsuites id="" name="" tests="9" failures="0" skipped="0" errors="0" time="103.2677259999998">
+<testsuite name="Pages\Listing\listingTask.spec.ts" timestamp="2026-03-03T07:05:14.336Z" hostname="chromium" tests="9" failures="0" skipped="0" time="87.446" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Tasks tab should display existing task records" classname="Pages\Listing\listingTask.spec.ts" time="34.088">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: &quot;New Task&quot; button should open the task creation form" classname="Pages\Listing\listingTask.spec.ts" time="4.32">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Task should appear in the list after creation" classname="Pages\Listing\listingTask.spec.ts" time="8.432">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Task should also appear in the Task module" classname="Pages\Listing\listingTask.spec.ts" time="4.066">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Task list should display correct details for the created task" classname="Pages\Listing\listingTask.spec.ts" time="4.859">
 <system-out>
-<![CDATA[Total Records: [33m1[39m
+<![CDATA[Due Date Text: 04/03/26
 ]]>
 </system-out>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify search field displays correct total records count" classname="Pages\Listing\listingStream.spec.ts" time="5.212">
-<system-out>
-<![CDATA[Total Records: [33m1[39m
-]]>
-</system-out>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Task updates should reflect immediately" classname="Pages\Listing\listingTask.spec.ts" time="9.463">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify infinite scrolling in stream tab" classname="Pages\Listing\listingStream.spec.ts" time="5.248">
-<system-out>
-<![CDATA[Infinite scrolling loaded entries: [33m2[39m
-]]>
-</system-out>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Task should not be created without valid data" classname="Pages\Listing\listingTask.spec.ts" time="4.135">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify stream card is added when a new inspection is created" classname="Pages\Listing\listingStream.spec.ts" time="11.589">
-<system-out>
-<![CDATA[[33m3[39m
-]]>
-</system-out>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Task status updates should be logged correctly" classname="Pages\Listing\listingTask.spec.ts" time="10.173">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify stream card is added when a contact is related" classname="Pages\Listing\listingStream.spec.ts" time="12.258">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify contact name is clickable in the stream card" classname="Pages\Listing\listingStream.spec.ts" time="13.864">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that when a contact is removed, the stream card is also removed" classname="Pages\Listing\listingStream.spec.ts" time="6.684">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify stream card is added when a primary agent is assigned" classname="Pages\Listing\listingStream.spec.ts" time="9.608">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify stream card is added when a secondary agent is added" classname="Pages\Listing\listingStream.spec.ts" time="10.245">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify stream card is added when a task is created for a listing" classname="Pages\Listing\listingStream.spec.ts" time="10.779">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify stream card is added when a listing is created" classname="Pages\Listing\listingStream.spec.ts" time="2.496">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify stream card is added when a listing is created for the first time" classname="Pages\Listing\listingStream.spec.ts" time="2.171">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify date and time is displayed on each stream card" classname="Pages\Listing\listingStream.spec.ts" time="2.06">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify searching the stream tab with an invalid keyword shows zero results" classname="Pages\Listing\listingStream.spec.ts" time="4.666">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify search field with empty input returns all records" classname="Pages\Listing\listingStream.spec.ts" time="4.071">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that clicking on the agent name in the stream card opens the agent profile (or relevant details)" classname="Pages\Listing\listingStream.spec.ts" time="11.106">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify stream tab UI consistency (headers, layout, scroll, empty state)" classname="Pages\Listing\listingStream.spec.ts" time="2.695">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Verify stream tab loading time is within acceptable threshold" classname="Pages\Listing\listingStream.spec.ts" time="2.194">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify duplicate stream cards are not created for the same action" classname="Pages\Listing\listingStream.spec.ts" time="10.756">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Verify stream card updates when a listing is modified" classname="Pages\Listing\listingStream.spec.ts" time="8.509">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Verify scroll does not stop loading new records" classname="Pages\Listing\listingStream.spec.ts" time="5.538">
-<system-out>
-<![CDATA[Infinite scrolling loaded entries: [33m0[39m
-]]>
-</system-out>
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Verify search is not case sensitive" classname="Pages\Listing\listingStream.spec.ts" time="7.858">
-<system-out>
-<![CDATA[Total Records: [33m1[39m
-]]>
-</system-out>
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Verify searching the stream tab with special characters" classname="Pages\Listing\listingStream.spec.ts" time="5.109">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Verify searching in the stream tab by agent name returns relevant records" classname="Pages\Listing\listingStream.spec.ts" time="7.376">
-<system-out>
-<![CDATA[Total Records: [33m6[39m
-]]>
-</system-out>
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Verify page refresh does not remove stream cards" classname="Pages\Listing\listingStream.spec.ts" time="16.817">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 26: Verify empty stream tab scenario" classname="Pages\Listing\listingStream.spec.ts" time="5.595">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Verify error handling for failed listing creation" classname="Pages\Listing\listingStream.spec.ts" time="3.406">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Verify excessive scrolling does not break the UI" classname="Pages\Listing\listingStream.spec.ts" time="6.534">
-<system-out>
-<![CDATA[Infinite scrolling loaded entries: [33m6[39m
-]]>
-</system-out>
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 29: Verify invalid time/date formats do not affect stream tab" classname="Pages\Listing\listingStream.spec.ts" time="6.328">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Tasks should remain linked to the correct listing" classname="Pages\Listing\listingTask.spec.ts" time="7.91">
 </testcase>
 </testsuite>
 </testsuites>

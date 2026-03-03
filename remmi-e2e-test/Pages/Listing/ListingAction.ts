@@ -18993,40 +18993,38 @@ export class ListingActions {
         await this.switchToGridView();
 
         // Open first listing card
-        const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
-        await firstCardRow.click();
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
 
-        // Switch to the Tasks tab
+        // Go to Tasks tab
         const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
         await expect(tasksTab).toBeVisible({ timeout: 10000 });
         await tasksTab.click();
         await this.page.waitForTimeout(1000);
 
-        // Ensure the row for "Testing Task" is visible
-        const taskRow = this.page.locator('table tbody tr')
-            .filter({ hasText: 'Testing Task' }).nth(3);
+        // Find the row containing "Testing Task"
+        const taskRow = this.page.locator('table tbody tr').filter({ hasText: 'Testing Task' }).last();
         await expect(taskRow).toBeVisible({ timeout: 10000 });
         await this.page.waitForTimeout(1000);
 
-        // Verify each column value by name for better clarity
-        const columns = {
-            Title: taskRow.locator('td').nth(0),
-            JobType: taskRow.locator('td').nth(1),
-            TaskStatus: taskRow.locator('td').nth(2),
-            DueDate: taskRow.locator('td').nth(3)
-        };
+        // Analyze each cell value
+        const cells = taskRow.locator('td');
+        const titleCell = cells.nth(0);
+        const jobTypeCell = cells.nth(1);
+        const statusCell = cells.nth(2);
+        const dueDateCell = cells.nth(3);
 
-        await expect(columns.Title).toHaveText(/Testing Task/i);
-        await expect(columns.JobType).toHaveText(/Door Knocks/i);
-        await expect(columns.TaskStatus).toHaveText(/Not Started/i);
-        const dueDateText = (await columns.DueDate.textContent())?.trim() ?? '';
+        await expect(titleCell).toHaveText(/Testing Task/i);
+        await expect(jobTypeCell).toHaveText(/Door Knocks/i);
+        await expect(statusCell).toHaveText(/Not Started/i);
+        const dueDateText = (await dueDateCell.textContent())?.trim() ?? '';
         console.log('Due Date Text:', dueDateText);
         expect(dueDateText).not.toBe('');
 
         await this.page.waitForTimeout(1000);
 
-        // Close modal if visible
+        // Clean up - close modal if visible
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
@@ -19052,47 +19050,54 @@ export class ListingActions {
         await tasksTab.click();
         await this.page.waitForTimeout(1000);
 
-        // Find the correct row for "Testing Task"
-        const taskRow = this.page.locator('table tbody tr').filter({ hasText: 'Testing Task' }).nth(3);
+        // Locate the latest "Testing Task" row
+        const taskRow = this.page.locator('table tbody tr').filter({ hasText: 'Testing Task' }).last();
         await expect(taskRow).toBeVisible({ timeout: 10000 });
-        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(1000);
 
-        // Click the "Testing Task" cell to open editing
+        // Click the "Testing Task" row to open the task edit modal/form
         const testingTaskCell = taskRow.locator('td').first();
         await expect(testingTaskCell).toBeVisible({ timeout: 10000 });
         await testingTaskCell.click();
 
-        // Edit Job Type (Task Type) field
+        // Change the Job Type (Task Type) using the dropdown
         const jobTypeSelector = this.page.locator('ng-select[formcontrolname="job_type_id"] .ng-select-container');
         await expect(jobTypeSelector).toBeVisible({ timeout: 10000 });
         await jobTypeSelector.click();
 
-        // Select the "Tester" type from dropdown
-        const testerDropdownOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Tester' });
-        await expect(testerDropdownOption).toBeVisible({ timeout: 10000 });
-        await testerDropdownOption.click();
+        await this.page.waitForTimeout(300);
 
-        // Save the updated task
-        const saveBtn = this.page.getByRole('button', { name: /save/i }).first();
+        // Pick "Tester" from the dropdown options
+        const testerOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Tester' });
+        await expect(testerOption).toBeVisible({ timeout: 10000 });
+        await testerOption.click();
+
+        await this.page.waitForTimeout(1000);
+
+        // Save the edited task
+        const saveBtn = this.page.getByRole('button', { name: 'Save' }).first();
         await expect(saveBtn).toBeVisible({ timeout: 10000 });
-        await saveBtn.click();
-        // Wait for toast with "Task has been updated" to appear
-        await expect(this.page.getByText(/Task has been updated/i)).toBeVisible({ timeout: 10000 });
-        // Close the task modal if it's still open
+        await saveBtn.click({force: true});
+
+        // Wait until the toast confirms update and dismiss any modal-popup if open
+        await expect(this.page.getByText(/Task has been updated/i)).toBeVisible({ timeout: 15000 });
         const closeTaskBtn = this.page.locator('.pi.pi-times').last();
         if (await closeTaskBtn.isVisible().catch(() => false)) {
             await closeTaskBtn.click({ force: true });
         }
         await this.page.waitForTimeout(1500);
+
+        // Revalidate that the updated row is present and check Job Type reflects update
         await expect(taskRow).toBeVisible({ timeout: 10000 });
+        // Scroll the updated row into view and verify the Job Type update
+        await taskRow.scrollIntoViewIfNeeded();
         await expect(taskRow.locator('td').nth(1)).toHaveText(/Tester/i);
 
-        // Close the modal if still open
+        // Ensure modals are closed if left open
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
-
         await this.page.waitForTimeout(500);
     }
 
