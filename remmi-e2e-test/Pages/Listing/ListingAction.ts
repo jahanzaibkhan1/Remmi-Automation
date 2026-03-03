@@ -21512,7 +21512,7 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
 
         // Verify that "Add New contact" button becomes visible
-        const createNew = this.page.getByText('Create New');
+        const createNew = this.page.getByLabel('Related').getByText('Create New');
         await expect(createNew).toBeVisible({ timeout: 20000 });
 
         // Optionally close any dialog or dropdown
@@ -21555,7 +21555,7 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
 
         // Find and click the "Create New" button
-        const createNewBtn = this.page.getByText('Create New');
+        const createNewBtn = this.page.getByLabel('Related').getByText('Create New');
         await expect(createNewBtn).toBeVisible({ timeout: 10000 });
         await createNewBtn.click();
 
@@ -21608,7 +21608,7 @@ export class ListingActions {
         await this.page.waitForTimeout(1000);
 
         // Click "Create New" button
-        const createNewBtn = this.page.getByText('Create New');
+        const createNewBtn = this.page.getByLabel('Related').getByText('Create New');
         await expect(createNewBtn).toBeVisible({ timeout: 10000 });
         await createNewBtn.click();
 

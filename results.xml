@@ -1,22 +1,132 @@
-<testsuites id="" name="" tests="9" failures="0" skipped="0" errors="0" time="101.07855299999937">
-<testsuite name="Pages\Listing\listingNotes.spec.ts" timestamp="2026-03-02T12:17:54.479Z" hostname="chromium" tests="9" failures="0" skipped="0" time="94.091" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that the NOTE Tab opens correctly" classname="Pages\Listing\listingNotes.spec.ts" time="39.379">
+<testsuites id="" name="" tests="23" failures="1" skipped="20" errors="0" time="77.34859000000003">
+<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-03-03T03:44:25.873Z" hostname="chromium" tests="23" failures="1" skipped="20" time="46.293" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that a contact can be searched and associated successfully" classname="Pages\Listing\listingRelated.spec.ts" time="34.515">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify that clicking the &quot;+&quot; button in the Notes section displays the note fields" classname="Pages\Listing\listingNotes.spec.ts" time="2.455">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify error message shown if trying to associate without selecting a contact" classname="Pages\Listing\listingRelated.spec.ts" time="5.874">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that clicking &quot;Cancel&quot; removes the note entry form" classname="Pages\Listing\listingNotes.spec.ts" time="2.822">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that a non-existing contact shows &quot;Add New contact&quot; button" classname="Pages\Listing\listingRelated.spec.ts" time="5.903">
+<failure message="listingRelated.spec.ts:33:3 Test 3: Verify that a non-existing contact shows &quot;Add New contact&quot; button" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Listing\listingRelated.spec.ts:33:3 › Listing side Menu Tests - Remmi E2E › Test 3: Verify that a non-existing contact shows "Add New contact" button 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Create New')
+    Expected: visible
+    Error: strict mode violation: getByText('Create New') resolved to 2 elements:
+        1) <button _ngcontent-serverapp-c855059408="" class="preview-btn ng-star-inserted">…</button> aka getByLabel('Calendar').getByText('Create New')
+        2) <p _ngcontent-serverapp-c673174810="" class="my-2 ml-2 cursor-pointer ng-star-inserted">…</p> aka getByLabel('Related').getByText('Create New')
+
+    Call log:
+      - Expect "toBeVisible" with timeout 20000ms
+      - waiting for getByText('Create New')
+
+
+       at Pages\Listing\ListingAction.ts:21516
+
+      21514 |         // Verify that "Add New contact" button becomes visible
+      21515 |         const createNew = this.page.getByText('Create New');
+    > 21516 |         await expect(createNew).toBeVisible({ timeout: 20000 });
+            |                                 ^
+      21517 |
+      21518 |         // Optionally close any dialog or dropdown
+      21519 |         const closeBtn = this.page.locator('.pi.pi-times').first();
+        at ListingActions.verifyAddNewContactButtonAppearsForNonExistingContact (E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\ListingAction.ts:21516:33)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\listingRelated.spec.ts:35:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Listing-listingRelat-7636f-hows-Add-New-contact-button-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Listing-listingRelat-7636f-hows-Add-New-contact-button-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Listing-listingRelat-7636f-hows-Add-New-contact-button-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Listing-listingRelat-7636f-hows-Add-New-contact-button-chromium\error-context.md]]
+]]>
+</system-out>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that clicking &quot;Save&quot; saves the note successfully" classname="Pages\Listing\listingNotes.spec.ts" time="6.284">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that clicking &quot;Add New contact&quot; opens a new contact tab" classname="Pages\Listing\listingRelated.spec.ts" time="0.001">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that saved notes appear in the notes list" classname="Pages\Listing\listingNotes.spec.ts" time="5.972">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that a newly created contact is automatically added to the Related contact list" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that clicking the edit icon allows updating a note" classname="Pages\Listing\listingNotes.spec.ts" time="8.087">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that a contact can be removed from the related contact list" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that clicking the delete icon removes a note" classname="Pages\Listing\listingNotes.spec.ts" time="6.278">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify confirmation popup and correct behavior when deleting a contact from Related tab" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that added note also appears in Personal Notes" classname="Pages\Listing\listingNotes.spec.ts" time="14.867">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that a contact is not deleted if &quot;No&quot; is clicked on confirmation popup" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Editing a saved note should update it correctly" classname="Pages\Listing\listingNotes.spec.ts" time="7.947">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify that a contact type tag can be added to a related contact" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that duplicate contact type tags cannot be added" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify that a contact type tag can be removed from a related contact" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify that a relationship tag can be added to a related contact" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that duplicate relationship tags cannot be added" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that a relationship tag can be removed from a related contact" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that total associated contact count updates correctly" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that contract related contacts are automatically added to Related contact tab" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify that contract related contacts are not removed when the contract is settled" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Verify that an associated contact remains linked after saving and reopening the contact" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify that deleting all related contacts shows nothing" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Verify that a newly created contact appears in the global contact list" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Verify that canceling &quot;Add New Contact&quot; does not create a contact" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Verify that an associated contact remains even after refreshing the page" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Verify that removing a contact  does not affect unrelated contacts" classname="Pages\Listing\listingRelated.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
 </testsuites>
