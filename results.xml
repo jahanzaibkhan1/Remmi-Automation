@@ -1,70 +1,56 @@
-<testsuites id="" name="" tests="29" failures="0" skipped="0" errors="0" time="168.99031599999998">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-03-04T05:52:27.407Z" hostname="chromium" tests="29" failures="0" skipped="0" time="164.379" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that clicking the Add button in the Legal tab opens the contract popup in a new tab" classname="Pages\Listing\listingLegal.spec.ts" time="21.133">
+<testsuites id="" name="" tests="23" failures="0" skipped="0" errors="0" time="231.53321100000002">
+<testsuite name="Pages\Listing\listingRelated.spec.ts" timestamp="2026-03-04T06:42:00.971Z" hostname="chromium" tests="23" failures="0" skipped="0" time="226.305" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that a contact can be searched and associated successfully" classname="Pages\Listing\listingRelated.spec.ts" time="31.727">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify that the listing dropdown auto populates the selected listing in the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="5.342">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify error message shown if trying to associate without selecting a contact" classname="Pages\Listing\listingRelated.spec.ts" time="3.665">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that the Seller field auto populates in the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="4.082">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that a non-existing contact shows &quot;Add New contact&quot; button" classname="Pages\Listing\listingRelated.spec.ts" time="3.55">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that clicking &quot;Add New contact&quot; opens a new contact tab" classname="Pages\Listing\listingRelated.spec.ts" time="3.816">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that a newly created contact is automatically added to the Related contact list" classname="Pages\Listing\listingRelated.spec.ts" time="7.373">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that a contact can be removed from the related contact list" classname="Pages\Listing\listingRelated.spec.ts" time="8.716">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify confirmation popup and correct behavior when deleting a contact from Related tab" classname="Pages\Listing\listingRelated.spec.ts" time="5.832">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that a contact is not deleted if &quot;No&quot; is clicked on confirmation popup" classname="Pages\Listing\listingRelated.spec.ts" time="7.111">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify that a contact type tag can be added to a related contact" classname="Pages\Listing\listingRelated.spec.ts" time="8.31">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that duplicate contact type tags cannot be added" classname="Pages\Listing\listingRelated.spec.ts" time="6.643">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify that a contact type tag can be removed from a related contact" classname="Pages\Listing\listingRelated.spec.ts" time="3.584">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify that a relationship tag can be added to a related contact" classname="Pages\Listing\listingRelated.spec.ts" time="8.991">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that duplicate relationship tags cannot be added" classname="Pages\Listing\listingRelated.spec.ts" time="5.107">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that a relationship tag can be removed from a related contact" classname="Pages\Listing\listingRelated.spec.ts" time="4.861">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that total associated contact count updates correctly" classname="Pages\Listing\listingRelated.spec.ts" time="6.429">
 <system-out>
-<![CDATA[Owner is: Automation testing
+<![CDATA[Records badge not visible, continuing...
+Contact count before deleting '11 22': 1
+Final contact count after deletion: 0
 ]]>
 </system-out>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that the listing dropdown auto selects the primary listing for the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="8.152">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that contract related contacts are automatically added to Related contact tab" classname="Pages\Listing\listingRelated.spec.ts" time="30.253">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that the Managing Contact dropdown auto selects the primary Contact for the contact" classname="Pages\Listing\listingLegal.spec.ts" time="8.58">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify that contract related contacts are not removed when the contract is settled" classname="Pages\Listing\listingRelated.spec.ts" time="10.394">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that no field is marked as required in the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="2.453">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Verify that an associated contact remains linked after saving and reopening the contact" classname="Pages\Listing\listingRelated.spec.ts" time="10.008">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that the contract is displayed in the Legal tab after saving the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="9.543">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify that deleting all related contacts shows nothing" classname="Pages\Listing\listingRelated.spec.ts" time="16.392">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that the contract status displays Purchaser, Offer Price, Offer Date, Selling Contact, etc." classname="Pages\Listing\listingLegal.spec.ts" time="3.625">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Verify that a newly created contact appears in the global contact list" classname="Pages\Listing\listingRelated.spec.ts" time="12.27">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify that clicking the checkbox in the Legal tab shows a dropdown with Present, Accept, and Decline buttons" classname="Pages\Listing\listingLegal.spec.ts" time="2.99">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Verify that canceling &quot;Add New Contact&quot; does not create a contact" classname="Pages\Listing\listingRelated.spec.ts" time="13.365">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that clicking the Accept button updates the Offer Status to &quot;Accepted&quot;" classname="Pages\Listing\listingLegal.spec.ts" time="3.658">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Verify that an associated contact remains even after refreshing the page" classname="Pages\Listing\listingRelated.spec.ts" time="8.861">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify that clicking the Decline button updates the Offer Status to &quot;Declined&quot;" classname="Pages\Listing\listingLegal.spec.ts" time="2.845">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify that the Offer Status can be updated multiple times in the Legal tab" classname="Pages\Listing\listingLegal.spec.ts" time="5.969">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that the Offer Status is retained correctly after refreshing the page" classname="Pages\Listing\listingLegal.spec.ts" time="14.531">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that clicking on the &quot;Selling Agreement Start Date&quot; field opens a calendar for selecting a date" classname="Pages\Listing\listingLegal.spec.ts" time="2.833">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that clicking the Present button opens the Present Contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="5.385">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that closing the Present Contract popup does not change the Offer Status" classname="Pages\Listing\listingLegal.spec.ts" time="5.429">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify that clicking on the &quot;Selling Agreement End Date&quot; field opens a calendar for selecting a date" classname="Pages\Listing\listingLegal.spec.ts" time="2.32">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Verify that the &quot;Agreed Marketing Spend&quot; field accepts numeric input" classname="Pages\Listing\listingLegal.spec.ts" time="2.3">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify that the &quot;Marketing Payable By&quot; dropdown allows selection" classname="Pages\Listing\listingLegal.spec.ts" time="2.457">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Verify that the &quot;Commission % Inclusive of GST&quot; field accepts percentage input" classname="Pages\Listing\listingLegal.spec.ts" time="3.008">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Verify that the &quot;$ Amount Inclusive of GST&quot; field accepts numeric input" classname="Pages\Listing\listingLegal.spec.ts" time="2.425">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Verify that clicking on the &quot;Document&quot; button opens a popup to add a new document" classname="Pages\Listing\listingLegal.spec.ts" time="3.597">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Verify that the &quot;Property Legal Details&quot; section displays fields for Lot, On Subdivision, Title Reference, and Legal Address, and none of the fields are required" classname="Pages\Listing\listingLegal.spec.ts" time="2.373">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Verify that the &quot;Legal Name&quot; dropdown auto-populates with the property owner&apos;s name and allows creating a new contact" classname="Pages\Listing\listingLegal.spec.ts" time="3.249">
-<system-out>
-<![CDATA[Legal Dropdown Name : Automation testing
-]]>
-</system-out>
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 26: Verify that the &quot;Solicitor&quot; dropdown allows selecting a company and creating a new company" classname="Pages\Listing\listingLegal.spec.ts" time="4.775">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Verify that selecting a company from the &quot;Solicitor&quot; dropdown populates the &quot;Solicitor&apos;s Contact&quot; dropdown with relevant contacts" classname="Pages\Listing\listingLegal.spec.ts" time="8.052">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Verify that clicking the selected name in the &quot;Legal Name&quot; dropdown opens the owner&apos;s details in a new tab" classname="Pages\Listing\listingLegal.spec.ts" time="8.971">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 29: Verify that clicking the selected company in the &quot;Solicitor&quot; dropdown opens the company&apos;s details in a new tab" classname="Pages\Listing\listingLegal.spec.ts" time="6.107">
-</testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 30: Verify that clicking the selected contact in the &quot;Solicitor&apos;s Contact&quot; dropdown opens the contact&apos;s details in a new tab" classname="Pages\Listing\listingLegal.spec.ts" time="8.195">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Verify that removing a contact  does not affect unrelated contacts" classname="Pages\Listing\listingRelated.spec.ts" time="9.047">
 </testcase>
 </testsuite>
 </testsuites>

@@ -18671,16 +18671,26 @@ export class ListingActions {
         await expect(leadUpdatedMsg).toBeVisible({ timeout: 10000 });
         await this.page.waitForTimeout(2000);
         // Close the lead details modal if it's still open
-        const leadCloseBtn = this.page.locator('.pi.pi-times').last();
+        const leadCloseBtn = this.page.locator('.pi.pi-times').first();
         if (await leadCloseBtn.isVisible().catch(() => false)) {
             await leadCloseBtn.click({ force: true });
         }
         await this.page.waitForTimeout(2000);
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        // Go to Lead tab
+        const leadTab1 = this.page.getByRole('tab', { name: 'lead Lead' });
+        await leadTab1.waitFor({ state: 'visible', timeout: 10000 });
+        await leadTab1.click();
+
         // Ensure the first row is visible before checking status
         const firstRow = this.page.locator('#customentitydatalist table tbody tr').first();
         await expect(firstRow).toBeVisible({ timeout: 10000 });
         const statusCell = firstRow.locator('td').nth(4);
         await expect(statusCell).toHaveText(/Contact started/i, { timeout: 10000 });
+
+        await this.page.waitForTimeout(1000);
 
         // Clean up: Close modal if still open
         const closeBtn = this.page.locator('.pi.pi-times').first();
@@ -21369,26 +21379,6 @@ export class ListingActions {
 
         await expect(alertOrSuccessLocator).toBeVisible({ timeout: 10000 });
 
-        // Scroll to the contact row and verify "11 22" is associated and visible in the Contact section
-        const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).first();
-        await associatedContactRow.scrollIntoViewIfNeeded();
-        await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
-
-        // Delete the associated contact by clicking its "delete" icon in the row
-        const deleteIcon = associatedContactRow.getByRole('img', { name: 'delete' }).first();
-        await expect(deleteIcon).toBeVisible({ timeout: 10000 });
-        await deleteIcon.click();
-
-        // Confirm deletion in the dialog by clicking "Yes"
-        const yesButton = this.page.getByRole('button', { name: /^Yes$/i }).first();
-        await expect(yesButton).toBeVisible({ timeout: 10000 });
-        await yesButton.click();
-        await this.page.waitForTimeout(500);
-        const removedToast = this.page.getByText(/Contact deleted successfully/i);
-        await expect(removedToast).toBeVisible({ timeout: 10000 });
-        // Verify the row for "11 22" is no longer visible in the table
-        await expect(associatedContactRow).not.toBeVisible({ timeout: 10000 });
-
         // Delete the remaining contact if visible, otherwise pass
         const remainingContactRow = this.page.locator('table tr').filter({ hasText: 'seller' }).last();
         if (await remainingContactRow.isVisible().catch(() => false)) {
@@ -21404,8 +21394,28 @@ export class ListingActions {
                     await expect(removedToast2).toBeVisible({ timeout: 10000 });
                 }
             }
-            await expect(remainingContactRow).not.toBeVisible({ timeout: 10000 });
+            await expect(remainingContactRow).not.toBeVisible({ timeout: 30000 });
         }
+
+         // Scroll to the contact row and verify "11 22" is associated and visible in the Contact section
+         const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).first();
+         await associatedContactRow.scrollIntoViewIfNeeded();
+         await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
+ 
+         // Delete the associated contact by clicking its "delete" icon in the row
+         const deleteIcon = associatedContactRow.getByRole('img', { name: 'delete' }).first();
+         await expect(deleteIcon).toBeVisible({ timeout: 10000 });
+         await deleteIcon.click();
+ 
+         // Confirm deletion in the dialog by clicking "Yes"
+         const yesButton = this.page.getByRole('button', { name: /^Yes$/i }).first();
+         await expect(yesButton).toBeVisible({ timeout: 10000 });
+         await yesButton.click();
+         await this.page.waitForTimeout(500);
+         const removedToast = this.page.getByText(/Contact deleted successfully/i).first();
+         await expect(removedToast).toBeVisible({ timeout: 30000 });
+         // Verify the row for "11 22" is no longer visible in the table
+         await expect(associatedContactRow).not.toBeVisible({ timeout: 10000 });
 
         await this.page.waitForTimeout(1200);
 
@@ -22804,6 +22814,9 @@ export class ListingActions {
         const firstListingCard = this.page.getByText('For Sale Sauer LLC"" 453/37').first();
         await firstListingCard.waitFor({ state: 'visible', timeout: 20000 });
         await firstListingCard.click({ force: true });
+
+        await this.page.waitForTimeout(1200);
+
         const relatedTab = this.page.getByText('Related').first();
 
         await relatedTab.waitFor({ state: 'visible', timeout: 10000 });
