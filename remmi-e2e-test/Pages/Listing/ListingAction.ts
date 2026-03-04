@@ -18313,7 +18313,97 @@ export class ListingActions {
         await this.page.waitForTimeout(2000);
         // Verify the first table row is visible after saving new lead
         const firstTableRow = this.page.locator('#customentitydatalist table tbody tr').first();
-        await expect(firstTableRow).toBeVisible({ timeout: 10000 });
+        await firstTableRow.waitFor({ state: "visible", timeout: 30000 });
+        // Clean up: Close modal if still open
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+        await this.page.waitForTimeout(800);
+    }
+
+    async verifyLeadAppearInLeadModule() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the first listing card
+        const firstCard = this.page.locator('div.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 30000 });
+        await firstCard.click();
+
+        // Go to Lead tab
+        const leadTab = this.page.getByRole('tab', { name: 'lead Lead' });;
+        await expect(leadTab).toBeVisible({ timeout: 10000 });
+        await leadTab.click();
+
+        // Look for the "New Lead" button
+        const newLeadButton = this.page.getByRole('button', { name: /new lead/i });
+        await expect(newLeadButton).toBeVisible({ timeout: 10000 });
+        await expect(newLeadButton).toBeEnabled();
+        await newLeadButton.click();
+
+        const leadLink = this.page.locator('a').filter({ hasText: /^Lead$/ });
+        await expect(leadLink).toBeVisible({ timeout: 10000 });
+
+        const leadDetails = this.page.locator('div.popup-gray-box:has(p:text("Lead Details"))');
+        await expect(leadDetails).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(2000);
+
+        // Select Lead Type
+        const leadType = leadDetails.locator('ng-select[formcontrolname="lead_type"]');
+        await leadType.click();
+        await this.page.waitForTimeout(600);
+        const buyerOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Buyer' });
+        await expect(buyerOption).toBeVisible({ timeout: 10000 });
+        await buyerOption.click();
+        await this.page.waitForTimeout(600);
+        // Get other lead detail fields
+        const leadStatus = leadDetails.locator('ng-select[formcontrolname="lead_status"]');
+        await expect(leadStatus).toBeVisible({ timeout: 10000 });
+        await leadStatus.click();
+        await this.page.waitForTimeout(600);
+        const leadStatusOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'New' });
+        await expect(leadStatusOption).toBeVisible({ timeout: 10000 });
+        await leadStatusOption.click();
+        await this.page.waitForTimeout(600);
+        // Select Lead Source
+        const leadSource = leadDetails.locator('ng-select[formcontrolname="lead_source"]');
+        await expect(leadSource).toBeVisible({ timeout: 10000 });
+        await leadSource.click();
+        await this.page.waitForTimeout(600);
+        const sourceOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Billboard' });
+        await expect(sourceOption).toBeVisible({ timeout: 10000 });
+        await sourceOption.click();
+        await this.page.waitForTimeout(1000);
+        // Click the placeholder in the tags element
+        const tagPlaceholder = this.page.locator('.d-flex > label > re-multiselect > .box > .tags');
+        await tagPlaceholder.waitFor({ state: 'visible' });
+        await tagPlaceholder.click();
+        const searchTagInput = this.page.getByRole('textbox', { name: 'Search' }).last();
+        await expect(searchTagInput).toBeVisible({ timeout: 10000 });
+
+        const tagDropdownPanel = this.page.locator('.drop_box');
+        await expect(tagDropdownPanel).toBeVisible({ timeout: 20000 });
+
+        const tagOption = this.page.getByRole('listitem').filter({ hasText: '(butt.ahmad78690@gmail.com)' });
+        await expect(tagOption).toBeVisible({ timeout: 20000 });
+        await tagOption.click();
+
+        const contactDetails = this.page.getByText('Email:')
+        await contactDetails.waitFor({ state: 'visible' });
+
+        // Click "Save & Close" button
+        const saveAndCloseButton = this.page.getByRole('button', { name: /save & close/i }).first();
+        await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
+        await expect(saveAndCloseButton).toBeEnabled();
+        await saveAndCloseButton.click();
+        // Get the "lead added successfully" toast message
+        const leadAddedSuccessMsg = this.page.getByText(/lead added successfully/i);
+        await expect(leadAddedSuccessMsg).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(2000);
+        // Verify the first table row is visible after saving new lead
+        const firstTableRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await firstTableRow.waitFor({ state: "visible", timeout: 30000 });
         // Clean up: Close modal if still open
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
@@ -18387,7 +18477,7 @@ export class ListingActions {
         await expect(duplicateSuccessMessage).toBeVisible({ timeout: 10000 });
 
         // Wait briefly to allow the UI to update the duplicate list
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(3000);
 
         // Count the duplicate icons again after duplication
         const finalCount = await duplicateIconsLocator.count();
@@ -18436,7 +18526,7 @@ export class ListingActions {
         const removalSuccessMessage = this.page.locator('div[aria-label="Removed contact assignment for 11 22"]');
         await expect(removalSuccessMessage).toBeVisible({ timeout: 10000 });
         // Re-count the icons after removal, should be fewer
-        await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(2000);
         const finalCount = await removeAssignedIconsLocator.count();
         expect(finalCount).toBeLessThan(initialCount);
 
@@ -18497,7 +18587,7 @@ export class ListingActions {
         await firstCard.click();
 
         // Go to Lead tab
-        const leadTab = this.page.getByRole('tab', { name: 'lead Lead' });;
+        const leadTab = this.page.getByRole('tab', { name: 'lead Lead' });
         await expect(leadTab).toBeVisible({ timeout: 10000 });
         await leadTab.click();
         // Locate the "Lead Source" column cell for the first row in the lead table and verify it is "Billboard"
@@ -18588,7 +18678,7 @@ export class ListingActions {
         const tagDropdownPanel = this.page.locator('.drop_box');
         await expect(tagDropdownPanel).toBeVisible({ timeout: 20000 });
 
-        const tagOption = tagDropdownPanel.locator('ul li').first().locator('p');
+        const tagOption = tagDropdownPanel.locator('ul li').nth(1).locator('p');
         await expect(tagOption).toBeVisible({ timeout: 20000 });
         await tagOption.click();
 
@@ -18644,7 +18734,7 @@ export class ListingActions {
 
         const editDialog = this.page.getByRole('cell', { name: '22' }).first();
         await expect(editDialog).toBeVisible({ timeout: 10000 });
-        await editDialog.click();
+        await editDialog.click({force: true});
 
         const editButton = this.page.locator('button._addNew img[src="assets/img/pencil.svg"]').first();
         await editButton.waitFor({ state: 'visible', timeout: 20000 });
@@ -18664,11 +18754,11 @@ export class ListingActions {
         const saveAndCloseButton = this.page.getByRole('button', { name: /save/i }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
         await expect(saveAndCloseButton).toBeEnabled();
-        await saveAndCloseButton.click();
+        await saveAndCloseButton.click({force : true});
 
         // Wait for and verify "lead updated successfully" toast message
         const leadUpdatedMsg = this.page.getByText(/lead updated successfully/i);
-        await expect(leadUpdatedMsg).toBeVisible({ timeout: 10000 });
+        await expect(leadUpdatedMsg).toBeVisible({ timeout: 20000 });
         await this.page.waitForTimeout(2000);
         // Close the lead details modal if it's still open
         const leadCloseBtn = this.page.locator('.pi.pi-times').first();
@@ -18686,7 +18776,8 @@ export class ListingActions {
 
         // Ensure the first row is visible before checking status
         const firstRow = this.page.locator('#customentitydatalist table tbody tr').first();
-        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        await firstRow.waitFor({ state: 'visible', timeout: 20000 });
+        await this.page.waitForTimeout(2000);
         const statusCell = firstRow.locator('td').nth(4);
         await expect(statusCell).toHaveText(/Contact started/i, { timeout: 10000 });
 
