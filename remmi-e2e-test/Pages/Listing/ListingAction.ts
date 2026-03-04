@@ -4434,6 +4434,8 @@ export class ListingActions {
         const cards = this.page.locator('.s-property');
         await expect(cards.first()).toBeVisible({ timeout: 20000 });
 
+        await this.page.waitForTimeout(1200);
+
         // Find the pinned icon in the grid, assuming first pinned card
         const pinnedIcon = this.page.locator('app-props-grid img[src*="pin"]').first();
         await expect(pinnedIcon).toBeVisible({ timeout: 10000 });
@@ -4448,7 +4450,8 @@ export class ListingActions {
         // Click "Unpin to Dashboard" in the context menu
         const unpinMenuItem = this.page.getByText('Unpin to Dashboard').first();
         await unpinMenuItem.waitFor({ state: 'visible', timeout: 10000 });
-        await unpinMenuItem.click();
+        await this.page.waitForTimeout(1000);
+        await unpinMenuItem.click({force: true});
         await this.page.waitForTimeout(1000);
     }
 
