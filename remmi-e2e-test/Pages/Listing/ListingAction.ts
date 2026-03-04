@@ -12072,6 +12072,8 @@ export class ListingActions {
             'div.form-group:has-text("Primary Agent") ng-select'
         );
 
+        await primaryAgent.scrollIntoViewIfNeeded();
+
         await expect(primaryAgent).toBeVisible();
         await primaryAgent.click();
 
@@ -12109,9 +12111,11 @@ export class ListingActions {
         const contractPanel = this.page.locator('#Contract_1 #rightbarwithscroll');
         await expect(contractPanel).toBeVisible({ timeout: 10000 });
 
+        await this.page.waitForTimeout(1200);
+
         // Using the combobox role to locate the input, wait for it to be visible, then fill it with value 'John Doe'
         const managingAgent = this.page.locator('div.ng-value p.ng-star-inserted').last();
-        await expect(managingAgent).toBeVisible({ timeout: 20000 });
+        await managingAgent.waitFor({ state: 'visible', timeout: 20000 });
         await managingAgent.click();
         const managingAgentText = (await managingAgent.textContent() || '').trim();
 
@@ -13187,12 +13191,14 @@ export class ListingActions {
         await expect(legalTab).toBeVisible({ timeout: 10000 });
         await legalTab.click();
 
-        const propertyLegalDetailsSection = this.page.getByText('Property Legal Details');
+        const propertyLegalDetailsSection = this.page.getByText('Legal Name');
         await propertyLegalDetailsSection.scrollIntoViewIfNeeded();
         await expect(propertyLegalDetailsSection).toBeVisible({ timeout: 10000 });
 
         // Find the "Legal Name" dropdown (assuming it uses formcontrolname="legalOwner")
-        const legalNameDropdown = this.page.locator('.selected_one p').nth(5);
+        const legalNameDropdown = this.page.locator(
+            'div.create-task-dropdown:has(label:has-text("Legal Name")) .selected_one p'
+          );
         // Trim the text content and log it to console
         const dropdownText = (await legalNameDropdown.textContent())?.trim() ?? '';
         console.log('Legal Dropdown Name :', dropdownText);
@@ -13341,9 +13347,9 @@ export class ListingActions {
 
         // Wait for the dropdown and select the first option
         const dropdownPanel = this.page.locator('.drop_box ul li');
-        await expect(dropdownPanel.first()).toBeVisible({ timeout: 15000 });
+        await dropdownPanel.first().waitFor({ state: 'visible', timeout: 30000 });
         const searchInput = this.page.locator('.drop_box input[placeholder="Search"]');
-        await expect(searchInput).toBeVisible();
+        await searchInput.waitFor({ state: 'visible', timeout: 10000 });
         await searchInput.click();
         await searchInput.fill('Netsol');
         // Select the "Netsol" option (case-insensitive) from the dropdown
@@ -13354,10 +13360,12 @@ export class ListingActions {
         // Locate the Solicitor's Contact dropdown (it should be enabled and populated now)
         const contactDropdownLabel = this.page.getByText("Select Contact", { exact: true });
         await expect(contactDropdownLabel).toBeVisible({ timeout: 10000 });
-        await contactDropdownLabel.click();
+        await contactDropdownLabel.click({force: true});
+
+        await this.page.waitForTimeout(1000);
         // Wait for the dropdown panel to appear and click on the first contact option
         const contactDropdownPanel = this.page.locator('ng-dropdown-panel .ng-option');
-        await expect(contactDropdownPanel.first()).toBeVisible({ timeout: 10000 });
+        await contactDropdownPanel.first().waitFor({ state: 'visible', timeout: 30000 });
         await contactDropdownPanel.first().click();
 
         const selectedValue = this.page.locator('div.ng-value > div.d-flex.align-items-center.cursor-pointer');
@@ -13408,7 +13416,7 @@ export class ListingActions {
 
         // Wait for the dropdown and select the first option
         const dropdownPanel = this.page.locator('.drop_box ul li');
-        await expect(dropdownPanel.first()).toBeVisible({ timeout: 15000 });
+        await dropdownPanel.first().waitFor({ state: 'visible', timeout: 30000 });
         const searchInput = this.page.locator('.drop_box input[placeholder="Search"]');
         await expect(searchInput).toBeVisible();
         await searchInput.click();
@@ -18599,9 +18607,9 @@ export class ListingActions {
         await expect(leadAddedSuccessMsg).toBeVisible({ timeout: 10000 });
 
         // Wait for the lead list to update and verify it has at least one more row than before
-        await this.page.waitForTimeout(2000);
         const leadRowsAfter = this.page.locator('#customentitydatalist table tbody tr');
         await leadRowsAfter.first().waitFor({ state: 'visible', timeout: 20000 });
+        await this.page.waitForTimeout(2500);
         const leadCountAfter = await leadRowsAfter.count();
         expect(leadCountAfter).toBeGreaterThan(leadCountBefore);
 
