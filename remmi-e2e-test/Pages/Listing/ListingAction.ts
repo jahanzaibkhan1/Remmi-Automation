@@ -2111,7 +2111,7 @@ export class ListingActions {
         await expect(suburbOption).toBeVisible({ timeout: 10000 });
         await suburbOption.click({ force: true });
 
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(3000);
 
         // Table rows might contain a header row; filter out header by checking at least 1 row present
         const tableRows = this.page.locator('tr');
@@ -2440,7 +2440,7 @@ export class ListingActions {
         const selectedTypeLabel = (await typeOption.textContent())?.trim().toLowerCase() || '';
 
         await typeOption.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(3000);
 
         // Make sure rows are shown
         const rowCount = await tableRows.count();
