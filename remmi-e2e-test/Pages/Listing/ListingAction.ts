@@ -19326,9 +19326,34 @@ export class ListingActions {
         // Open Task creation form
         await this.navigateToListings();
         await this.switchToGridView();
+        // Open first listing
         const firstCardRow = this.page.locator("//div[contains(@class,'s-property')]").first();
         await expect(firstCardRow).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown.click({ force: true });
+        // Find the delete button for the first visible listing card in card/grid view
+        const cardDeleteButton = this.page.locator('a:nth-child(4)').first();
+        await cardDeleteButton.evaluate((el) => {
+            el.scrollIntoView({ block: 'center', inline: 'center' });
+          });
+        await this.page.waitForTimeout(1000);
+        await cardDeleteButton.click({ force: true });
+
+        // Wait for confirmation dialog to appear
+        const confirmationDialog = this.page.getByText('Are you sure you want to delete this listing ? Your listing will be permanently');
+        await expect(confirmationDialog).toBeVisible({ timeout: 10000 });
+
+        // Find and click the confirm Delete button
+        const confirmButton = this.page.getByRole('button', { name: 'Delete' });
+        await expect(confirmButton).toBeVisible({ timeout: 10000 });
+        await confirmButton.click({ force: true });
+        const toast = this.page.getByRole('alert', { name: 'Listing successfully deleted' });
+        await expect(toast).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(2000);
+        await expect(firstCardRow).toBeVisible({ timeout: 30000 });
         await firstCardRow.click();
+        await this.page.waitForTimeout(1000);
 
         // Go to Tasks tab
         const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
