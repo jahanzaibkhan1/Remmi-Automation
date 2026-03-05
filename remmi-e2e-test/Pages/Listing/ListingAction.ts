@@ -20,7 +20,7 @@ export class ListingActions {
      */
     async navigateToListings() {
         const listingTab = this.locators.ListingTab();
-        await expect(listingTab).toBeVisible({ timeout: 30000 });
+        await listingTab.waitFor({ state: 'visible', timeout: 30000 });
         await listingTab.click({ force: true });
     }
 
