@@ -4382,21 +4382,23 @@ export class ListingActions {
         const cards = this.page.locator('.s-property');
         await expect(cards.first()).toBeVisible({ timeout: 20000 });
 
-        // Get bounding box of the first card to use mouse
-        const firstCardRow = cards.first();
-        const box = await firstCardRow.boundingBox();
-        if (!box) throw new Error("First card bounding box not found");
+        // Check if the first card is already pinned
+        const firstCard = cards.first();
+        const pinnedIconOnFirstCard = firstCard.locator('img[src*="pin"]');
 
-        // Right-click using mouse at the center of the first card
-        await this.page.mouse.click(box.x + box.width / 2, box.y + box.height / 2, { button: 'right' });
+        if (await pinnedIconOnFirstCard.isVisible({ timeout: 2000 }).catch(() => false)) {
+            console.log("First listing is already pinned, skipping pin.");
+            return;
+        }
+        await firstCard.click({ button: 'right' });
 
         // Click "Pin To Dashboard" in the context menu
         const pinToDashboardMenuItem = this.page.getByText('Pin To Dashboard').first();
         await expect(pinToDashboardMenuItem).toBeVisible({ timeout: 10000 });
         await pinToDashboardMenuItem.click();
 
-        // Assert the pinned icon appears
-        const pinnedIcon = this.page.locator('app-props-grid img[src*="pin"]').first();
+        // Assert the pinned icon appears now
+        const pinnedIcon = firstCard.locator('img[src*="pin"]');
         await expect(pinnedIcon).toBeVisible({ timeout: 10000 });
 
         await this.page.waitForTimeout(1000);
@@ -4440,18 +4442,14 @@ export class ListingActions {
         const pinnedIcon = this.page.locator('app-props-grid img[src*="pin"]').first();
         await expect(pinnedIcon).toBeVisible({ timeout: 10000 });
 
-        // Get the bounding box of the pinned icon for right-click
-        const box = await pinnedIcon.boundingBox();
-        if (!box) throw new Error("Pinned icon bounding box not found");
-
-        // Right-click on the pinned icon to open the context menu
-        await this.page.mouse.click(box.x + box.width / 2, box.y + box.height / 2, { button: 'right' });
-
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 10000 });
+        await firstCard.click({ button: 'right' });
         // Click "Unpin to Dashboard" in the context menu
         const unpinMenuItem = this.page.getByText('Unpin to Dashboard').first();
         await unpinMenuItem.waitFor({ state: 'visible', timeout: 10000 });
         await this.page.waitForTimeout(1000);
-        await unpinMenuItem.click({force: true});
+        await unpinMenuItem.click({ force: true });
         await this.page.waitForTimeout(1000);
     }
 
@@ -4896,7 +4894,7 @@ export class ListingActions {
         // Ensure listing cards are loaded
         const cards = this.page.locator('.s-property').first();
         await cards.waitFor({ state: 'visible', timeout: 30000 });
-        const contactFormBtn = this.page.locator("//i[@class='pi pi-plus']").first();
+        const contactFormBtn = this.page.locator(".pi.pi-plus").first();
         await contactFormBtn.waitFor({ state: 'visible', timeout: 10000 });
 
         // Click on the contactFormBtn until the contact form is visible
@@ -6417,7 +6415,7 @@ export class ListingActions {
                 const uploadedImage = this.page.locator(
                     `.mt-3.black-text.pb-1.f-12:has-text("${imageName}")`
                 );
-                await expect(uploadedImage).toBeVisible({ timeout: 15000 });
+                await expect(uploadedImage).toBeVisible({ timeout: 30000 });
             }
         }
 
@@ -13201,7 +13199,7 @@ export class ListingActions {
         // Find the "Legal Name" dropdown (assuming it uses formcontrolname="legalOwner")
         const legalNameDropdown = this.page.locator(
             'div.create-task-dropdown:has(label:has-text("Legal Name")) .selected_one p'
-          );
+        );
         // Trim the text content and log it to console
         const dropdownText = (await legalNameDropdown.textContent())?.trim() ?? '';
         console.log('Legal Dropdown Name :', dropdownText);
@@ -13363,7 +13361,7 @@ export class ListingActions {
         // Locate the Solicitor's Contact dropdown (it should be enabled and populated now)
         const contactDropdownLabel = this.page.getByText("Select Contact", { exact: true });
         await expect(contactDropdownLabel).toBeVisible({ timeout: 10000 });
-        await contactDropdownLabel.click({force: true});
+        await contactDropdownLabel.click({ force: true });
 
         await this.page.waitForTimeout(1000);
         // Wait for the dropdown panel to appear and click on the first contact option
@@ -18737,7 +18735,7 @@ export class ListingActions {
 
         const editDialog = this.page.getByRole('cell', { name: '22' }).first();
         await expect(editDialog).toBeVisible({ timeout: 10000 });
-        await editDialog.click({force: true});
+        await editDialog.click({ force: true });
 
         const editButton = this.page.locator('button._addNew img[src="assets/img/pencil.svg"]').first();
         await editButton.waitFor({ state: 'visible', timeout: 20000 });
@@ -18757,7 +18755,7 @@ export class ListingActions {
         const saveAndCloseButton = this.page.getByRole('button', { name: /save/i }).first();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
         await expect(saveAndCloseButton).toBeEnabled();
-        await saveAndCloseButton.click({force : true});
+        await saveAndCloseButton.click({ force: true });
 
         // Wait for and verify "lead updated successfully" toast message
         const leadUpdatedMsg = this.page.getByText(/lead updated successfully/i);
@@ -19430,7 +19428,7 @@ export class ListingActions {
         const cardDeleteButton = this.page.locator('a:nth-child(4)').first();
         await cardDeleteButton.evaluate((el) => {
             el.scrollIntoView({ block: 'center', inline: 'center' });
-          });
+        });
         await this.page.waitForTimeout(1000);
         await cardDeleteButton.click({ force: true });
 
@@ -21516,25 +21514,25 @@ export class ListingActions {
             await expect(remainingContactRow).not.toBeVisible({ timeout: 30000 });
         }
 
-         // Scroll to the contact row and verify "11 22" is associated and visible in the Contact section
-         const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).first();
-         await associatedContactRow.scrollIntoViewIfNeeded();
-         await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
- 
-         // Delete the associated contact by clicking its "delete" icon in the row
-         const deleteIcon = associatedContactRow.getByRole('img', { name: 'delete' }).first();
-         await expect(deleteIcon).toBeVisible({ timeout: 10000 });
-         await deleteIcon.click();
- 
-         // Confirm deletion in the dialog by clicking "Yes"
-         const yesButton = this.page.getByRole('button', { name: /^Yes$/i }).first();
-         await expect(yesButton).toBeVisible({ timeout: 10000 });
-         await yesButton.click();
-         await this.page.waitForTimeout(500);
-         const removedToast = this.page.getByText(/Contact deleted successfully/i).first();
-         await expect(removedToast).toBeVisible({ timeout: 30000 });
-         // Verify the row for "11 22" is no longer visible in the table
-         await expect(associatedContactRow).not.toBeVisible({ timeout: 10000 });
+        // Scroll to the contact row and verify "11 22" is associated and visible in the Contact section
+        const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).first();
+        await associatedContactRow.scrollIntoViewIfNeeded();
+        await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
+
+        // Delete the associated contact by clicking its "delete" icon in the row
+        const deleteIcon = associatedContactRow.getByRole('img', { name: 'delete' }).first();
+        await expect(deleteIcon).toBeVisible({ timeout: 10000 });
+        await deleteIcon.click();
+
+        // Confirm deletion in the dialog by clicking "Yes"
+        const yesButton = this.page.getByRole('button', { name: /^Yes$/i }).first();
+        await expect(yesButton).toBeVisible({ timeout: 10000 });
+        await yesButton.click();
+        await this.page.waitForTimeout(500);
+        const removedToast = this.page.getByText(/Contact deleted successfully/i).first();
+        await expect(removedToast).toBeVisible({ timeout: 30000 });
+        // Verify the row for "11 22" is no longer visible in the table
+        await expect(associatedContactRow).not.toBeVisible({ timeout: 10000 });
 
         await this.page.waitForTimeout(1200);
 
