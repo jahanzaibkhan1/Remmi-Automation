@@ -6,7 +6,7 @@ export class DashboardAction {
 
   constructor(public page: Page) {
     this.locators = new DashboardLocator(page);
-  } 
+  }
 
   // Dashboard
   async verifyDashboardLoaded() {
@@ -449,6 +449,60 @@ export class DashboardAction {
   }
 
 
+  async clickEyeIcon() {
+    await this.locators.eyeIcon.waitFor({ state: "visible" });
+    await this.locators.eyeIcon.click({ force: true });
+  }
+
+  async verifyCalendarNavSection() {
+    await this.locators.calendarNavItem.waitFor({ state: "visible" });
+    await expect(this.locators.calendarNavItem).toBeVisible();
+  }
+
+  async verifyDragAndDropWidgetItemVisible() {
+    await this.locators.dragAndDropWidgetItem.waitFor({ state: "visible" });
+    await expect(this.locators.dragAndDropWidgetItem).toBeVisible();
+  }
+
+  async verifyWeatherNavItemVisible() {
+    await this.locators.weatherNavItem.waitFor({ state: "visible" });
+    await expect(this.locators.weatherNavItem).toBeVisible();
+    await this.locators.weatherNavItem.click();
+  }
+
+  async verifyNotesNavItemVisible() {
+    await this.locators.notesNavItem.waitFor({ state: "visible" });
+    await expect(this.locators.notesNavItem).toBeVisible();
+  }
+
+  async verifyMapNavItemVisible() {
+    await this.locators.mapNavItem.waitFor({ state: "visible" });
+    await expect(this.locators.mapNavItem).toBeVisible();
+  }
+
+  async verifyEmailsNavItemVisible() {
+    await this.locators.emailsNavItem.waitFor({ state: "visible" });
+    await expect(this.locators.emailsNavItem).toBeVisible();
+  }
+
+  async dragMapToCalendarPosition() {
+    await this.locators.weatherNavItem.waitFor({ state: "visible" });
+    await this.locators.calendarNavItem.waitFor({ state: "visible" });
+    await this.locators.weatherNavItem.dragTo(this.locators.calendarNavItem);
+  }
+
+  async clickCloseIcon() {
+    await this.locators.closeIcon.waitFor({ state: "visible" });
+    await expect(this.locators.closeIcon).toBeVisible();
+    await this.locators.closeIcon.click({ force: true });
+  }
+
+  async reloadBoards() {
+    await this.locators.reloadBoards.waitFor({ state: "visible" });
+    await expect(this.locators.reloadBoards).toBeVisible();
+    await this.locators.reloadBoards.click();
+  }
+
 
   /**
    *Verify that all module boards are displayed on the dashboard
@@ -480,7 +534,21 @@ export class DashboardAction {
     await this.getTotalProjectsCount();
     await this.getInProgressProjectsCount();
     await this.getCompletedProjectsCount();
- 
+
+  }
+
+  /**
+  Verify dragging boards to change their position
+   */
+  async verifyDraggingBoardsToChangePosition() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.verifyCalendarNavSection();
+    await this.verifyWeatherNavItemVisible();
+    await this.verifyDragAndDropWidgetItemVisible();
+    await this.dragMapToCalendarPosition();
+    await this.reloadBoards();
+    await this.clickCloseIcon();
   }
 
 }
