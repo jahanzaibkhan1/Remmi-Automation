@@ -327,4 +327,40 @@ export class DashboardLocator {
         return this.page.locator("//div[@class='bo_x_']");
     }
 
+    get eyeIcon(): Locator {
+        return this.page.locator('//i[@class="pi pi-eye eye_"]');
+    }
+
+    get calendarNavItem(): Locator {
+        return this.page.locator("//li[normalize-space()='Calendar']");
+    }
+
+    get dragAndDropWidgetItem(): Locator {
+        return this.page.locator("//li[normalize-space()='Drag & drop to add widget']").first();
+    }
+    
+    get weatherNavItem(): Locator {
+        return this.page.locator("//li[normalize-space()='Weather']");
+    }
+    
+    get notesNavItem(): Locator {
+        return this.page.locator("//li[normalize-space()='Notes']");
+    }
+    
+    get mapNavItem(): Locator {
+        return this.page.locator("//li[normalize-space()='Map']");
+    }
+    
+    get emailsNavItem(): Locator {
+        return this.page.locator("//li[normalize-space()='Emails']");
+    }
+
+    get closeIcon(): Locator {
+        return this.page.locator('//i[@class="pi pi-times close_"]');
+    }
+
+    get reloadBoards(): Locator {
+        return this.page.locator('//img[@class="reset"]');
+    }
+
 }
