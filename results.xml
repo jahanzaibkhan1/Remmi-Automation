@@ -1,6 +1,220 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.18454799999949">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-06T05:38:02.387Z" hostname="chromium" tests="1" failures="0" skipped="0" time="26.155" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify all main module boards are displayed" classname="Pages\Dashboard\dashboard.spec.ts" time="26.155">
+<testsuites id="" name="" tests="46" failures="1" skipped="31" errors="0" time="111.113418">
+<testsuite name="Pages\Listing\ListingGridView.spec.ts" timestamp="2026-03-06T09:05:44.451Z" hostname="chromium" tests="46" failures="1" skipped="31" time="102.66" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Searching for a valid contact" classname="Pages\Listing\ListingGridView.spec.ts" time="45.03">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Searching for an invalid contact" classname="Pages\Listing\ListingGridView.spec.ts" time="2.541">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Searching with special characters" classname="Pages\Listing\ListingGridView.spec.ts" time="2.441">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Searching with an empty search field" classname="Pages\Listing\ListingGridView.spec.ts" time="2.495">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Selecting a single property type filters listings correctly" classname="Pages\Listing\ListingGridView.spec.ts" time="3.816">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Selecting multiple property types filters listings correctly" classname="Pages\Listing\ListingGridView.spec.ts" time="4.235">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Using &quot;Select All&quot; option selects all property types and filters listings accordingly" classname="Pages\Listing\ListingGridView.spec.ts" time="3.826">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Using &quot;Deselect All&quot; option deselects all property types and resets filter" classname="Pages\Listing\ListingGridView.spec.ts" time="4.681">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Searching within property type filter displays correct filtered property types" classname="Pages\Listing\ListingGridView.spec.ts" time="4.579">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Closing the property type dropdown works as expected" classname="Pages\Listing\ListingGridView.spec.ts" time="2.795">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Selecting a single suburb with assertions" classname="Pages\Listing\ListingGridView.spec.ts" time="3.919">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Selecting multiple suburbs filters listings correctly" classname="Pages\Listing\ListingGridView.spec.ts" time="5.056">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Using &quot;Select All&quot; in suburb dropdown selects all suburbs and displays all listings" classname="Pages\Listing\ListingGridView.spec.ts" time="4.588">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Using &quot;Deselect All&quot; in suburb dropdown deselects all suburbs and resets filter" classname="Pages\Listing\ListingGridView.spec.ts" time="3.628">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Searching for a suburb in the dropdown filters listings" classname="Pages\Listing\ListingGridView.spec.ts" time="9.03">
+<failure message="ListingGridView.spec.ts:108:3 Test 15: Searching for a suburb in the dropdown filters listings" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Listing\ListingGridView.spec.ts:108:3 › Listing side Menu Tests - Remmi E2E › Test 15: Searching for a suburb in the dropdown filters listings 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+       at Pages\Listing\ListingAction.ts:639
+
+      637 |             const cardText = (await card.innerText()).toLowerCase();
+      638 |             // Check that suburbLabel is found in the card text
+    > 639 |             expect(cardText.includes(suburbLabel.toLowerCase())).toBe(true);
+          |                                                                  ^
+      640 |         }
+      641 |     }
+      642 |
+        at ListingActions.searchWithinSuburbDropdown (E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\ListingAction.ts:639:66)
+        at E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\ListingGridView.spec.ts:110:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Listing-ListingGridV-656b4-e-dropdown-filters-listings-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Listing-ListingGridV-656b4-e-dropdown-filters-listings-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: page.goto: Target page, context or browser has been closed
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/", waiting until "load"
+
+
+      11 |     try {
+      12 |       const page = await context.newPage();
+    > 13 |       await page.goto(DASHBOARD_URL);
+         |                  ^
+      14 |       await use(page);
+      15 |     } finally {
+      16 |
+        at Object.exports.test._test.test.extend.sessionPage.scope (E:\remmi-qa-automation\remmi-e2e-test\Pages\Listing\ListingGridView.spec.ts:13:18)
+
+    Error: browserContext._wrapApiCall: Target page, context or browser has been closed
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\Pages-Listing-ListingGridV-656b4-e-dropdown-filters-listings-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\Pages-Listing-ListingGridV-656b4-e-dropdown-filters-listings-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Listing-ListingGridV-656b4-e-dropdown-filters-listings-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Listing-ListingGridV-656b4-e-dropdown-filters-listings-chromium\error-context.md]]
+
+[[ATTACHMENT|test-results\Pages-Listing-ListingGridV-656b4-e-dropdown-filters-listings-chromium-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Selecting a single listing status filters the listings correctly" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Selecting multiple listing statuses filters listings correctly" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Using &quot;Select All&quot; in status filter selects all listing statuses and displays all listings" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Using &quot;Deselect All&quot; in status filter deselects all statuses and resets filter" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Searching within listing status filter filters status options" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Selecting a single listing type filters listings correctly" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Selecting multiple listing types filters listings correctly" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Selecting a single agent filters listings to show only those for the chosen agent" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Selecting multiple agents filters listings to show only those for the chosen agents" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Selecting a single contract status" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 26: Selecting multiple contract statuses filters listings correctly" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Selecting a contact creation date" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Selecting an invalid date" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 29: Checking grid view display" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 30: Checking contact details in grid view" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 31: Expanding a Listing card" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 32: Collapsing an expanded Listing card" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 33: Deleting a listing card" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 34: Editing a listing card" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 35: Editing and saving changes on a listing card" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 36: Opening a listing portal" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 37: Comparing two listing cards" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 38: Comparing more than two listing cards" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 39: Resetting all filters restores listing defaults" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 40: Switching to grid view displays" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 41: Switching to list view displays" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 42: Opening the contact form" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 43: Fill required fields and click &quot;Save&quot;" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 44: Creating a Listing with missing required fields shows validation error" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 45: Scrolling down should load more listings" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 46: Searching and then applying filters" classname="Pages\Listing\ListingGridView.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
 </testsuites>
