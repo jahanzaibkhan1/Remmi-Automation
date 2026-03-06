@@ -29,7 +29,7 @@ export class DashboardLocator {
     }
 
     get notesViewAllButton(): Locator {
-        return this.page.locator("p.viewAll");
+        return this.page.locator("p.viewAll").last();
     }
 
     get map(): Locator {
@@ -98,11 +98,11 @@ export class DashboardLocator {
     }
 
     get leadsHeading(): Locator {
-        return this.leadsSection.locator('h3.w.mb-3', { hasText: 'Leads' });
+        return this.page.locator('h3.w.mb-3', { hasText: 'Leads' });
     }
 
     get newLeadsBox(): Locator {
-        return this.leadsSection.locator('.lead_box', { hasText: 'New' });
+        return this.page.locator('.lead_box', { hasText: 'New' });
     }
 
     get newLeadsCount(): Locator {
@@ -110,7 +110,7 @@ export class DashboardLocator {
     }
 
     get buyerLeadsBox(): Locator {
-        return this.leadsSection.locator('.lead_box', { hasText: 'Buyer' });
+        return this.page.locator('.lead_box', { hasText: 'Buyer' });
     }
 
     get buyerLeadsCount(): Locator {
@@ -118,7 +118,7 @@ export class DashboardLocator {
     }
 
     get sellerLeadsBox(): Locator {
-        return this.leadsSection.locator('.lead_box', { hasText: 'Seller' });
+        return this.page.locator('.lead_box', { hasText: 'Seller' });
     }
 
     get sellerLeadsCount(): Locator {
@@ -126,7 +126,7 @@ export class DashboardLocator {
     }
 
     get unassignedLeadsBox(): Locator {
-        return this.leadsSection.locator('.lead_box', { hasText: 'Unassigned' });
+        return this.page.locator('.lead_box', { hasText: 'Unassigned' });
     }
 
     get unassignedLeadsCount(): Locator {
@@ -317,17 +317,14 @@ export class DashboardLocator {
     get projectsLinkIcon(): Locator {
         return this.projectsCard.locator('div.ico.icon.icon4[routerlink="/project/projects"][tabindex="0"]');
     }
-    get projectsCompletedCount(): Locator {
-        return this.projectsCard.locator('div.bo_x_ h3.h33').filter({
-            has: this.page.locator('p.f-10', { hasText: 'Completed Projects' })
-        });
-    }
     get projectsTotalCount(): Locator {
-        return this.projectsCard.locator('div.bo_x_.fv > div:has(p.f-10:has-text("Total")) > h3.h33');
+        return this.page.locator('div.bo_x_.fv > div:has(p.f-10:has-text("Total")) > h3.h33');
     }
     get projectsInProgressCount(): Locator {
-        return this.projectsCard.locator('div.bo_x_.fv > div:has(p.f-10:has-text("In Progress")) > h3.h33');
+        return this.page.locator('div.bo_x_.fv > div:has(p.f-10:has-text("In Progress")) > h3.h33');
     }
-
+    get projectsCompletedCount(): Locator {
+        return this.page.locator("//div[@class='bo_x_']");
+    }
 
 }
