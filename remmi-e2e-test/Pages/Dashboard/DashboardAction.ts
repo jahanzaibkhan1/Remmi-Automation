@@ -448,10 +448,20 @@ export class DashboardAction {
     return await this.locators.projectsCompletedCount.textContent();
   }
 
-
   async clickEyeIcon() {
-    await this.locators.eyeIcon.waitFor({ state: "visible" });
-    await this.locators.eyeIcon.click({ force: true });
+    await this.locators.eyeIcon.waitFor({ state: 'visible' });
+    await expect(this.locators.eyeIcon).toBeEnabled();
+
+    for (let attempt = 0; attempt < 10; attempt++) {
+      await this.locators.eyeIcon.click();
+      try {
+        await this.page.getByRole('heading', { name: 'Dashboard Display Order' }).waitFor({ state: 'visible', timeout: 2000 });
+        return;
+      } catch (error) {
+        if (attempt === 2) throw error;
+        await this.page.waitForTimeout(500);
+      }
+    }
   }
 
   async verifyCalendarNavSection() {
@@ -542,6 +552,56 @@ export class DashboardAction {
     }
   }
 
+  async getFirstRow() {
+    await this.locators.firstRow.waitFor({ state: "visible" });
+    await expect(this.locators.firstRow).toBeVisible();
+    return this.locators.firstRow;
+  }
+
+  async getBanner() {
+    await this.locators.banner.waitFor({ state: "visible" });
+    await expect(this.locators.banner).toBeVisible();
+  }
+
+  async dragBannerToFirstRow() {
+    await this.locators.banner.waitFor({ state: "visible" });
+    await this.locators.firstRow.waitFor({ state: "visible" });
+    await expect(this.locators.banner).toBeVisible();
+    await expect(this.locators.firstRow).toBeVisible();
+
+    // Attempt dragging up to 3 times in case of flakiness
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        // Re-acquire bounding boxes in each attempt
+        const bannerBox = await this.locators.banner.boundingBox();
+        const firstRowBox = await this.locators.firstRow.boundingBox();
+
+        if (bannerBox && firstRowBox) {
+          // Mouse drag-and-drop operation
+          await this.page.mouse.move(
+            bannerBox.x + bannerBox.width / 2,
+            bannerBox.y + bannerBox.height / 2
+          );
+          await this.page.mouse.down();
+          await this.page.mouse.move(
+            firstRowBox.x + firstRowBox.width / 2,
+            firstRowBox.y + firstRowBox.height / 2,
+            { steps: 10 }
+          );
+          await this.page.mouse.up();
+        } else {
+          // Fallback to dragAndDrop API if bounding boxes aren't available
+          await this.locators.banner.dragTo(this.locators.firstRow, { force: true, timeout: 5000 });
+        }
+        break; // If drag succeeds, exit loop
+      } catch (error) {
+        if (attempt === 2) throw error;
+        await this.page.waitForTimeout(1000); // Wait a bit before retrying
+      }
+    }
+    await expect(this.page.getByRole('alert', { name: /A maximum of 5 widgets is/i })).toBeVisible();
+  }
+
 
   /**
    *Verify that all module boards are displayed on the dashboard
@@ -596,6 +656,18 @@ export class DashboardAction {
     await this.hoverAddBox();
     await this.clickAddWidgetIcon();
     await this.dragCalendarToNewWidgetRow();
+    await this.reloadBoards();
+  }
+
+  /**
+   * Verify that a maximum of 5 boards are allowed per row.
+   */
+  async verifyMaxFiveBoardsPerRow() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.getFirstRow();
+    await this.getBanner();
+    await this.dragBannerToFirstRow();
     await this.reloadBoards();
   }
 
