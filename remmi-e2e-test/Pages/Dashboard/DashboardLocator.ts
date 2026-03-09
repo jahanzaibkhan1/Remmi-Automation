@@ -382,6 +382,10 @@ export class DashboardLocator {
     get banner(): Locator {
         return this.page.locator('.banner');
     }
+
+    get contractModuleBoard(): Locator {
+        return this.page.locator('div').filter({ hasText: /^Contract$/ });
+    }
     
 
 

@@ -8,6 +8,12 @@ export class DashboardAction {
     this.locators = new DashboardLocator(page);
   }
 
+  async clickDashboardHomeIcon() {
+    await this.locators.dashboardHomeIcon.waitFor({ state: "visible" });
+    await expect(this.locators.dashboardHomeIcon).toBeVisible();
+    await this.locators.dashboardHomeIcon.click({force: true});
+  }
+
   // Dashboard
   async verifyDashboardLoaded() {
     await this.locators.dashboardHomeIcon.waitFor({ state: "visible" });
@@ -520,7 +526,7 @@ export class DashboardAction {
   }
 
   async clickAddWidgetIcon() {
-    await this.locators.addWidgetIcon.waitFor({ state: "visible"});
+    await this.locators.addWidgetIcon.waitFor({ state: "visible" });
     await expect(this.locators.addWidgetIcon).toBeVisible();
     await this.locators.addWidgetIcon.click({ force: true, timeout: 5000 });
     await this.locators.dragToNewWidgetRow.waitFor({ state: "visible" });
@@ -529,8 +535,8 @@ export class DashboardAction {
 
   async dragCalendarToNewWidgetRow() {
     await Promise.all([
-      this.locators.calendarNavItem.waitFor({ state: "visible"}),
-      this.locators.dragToNewWidgetRow.waitFor({ state: "visible"})
+      this.locators.calendarNavItem.waitFor({ state: "visible" }),
+      this.locators.dragToNewWidgetRow.waitFor({ state: "visible" })
     ]);
     const calendarBox = await this.locators.calendarNavItem.boundingBox();
     const dropRowBox = await this.locators.dragToNewWidgetRow.boundingBox();
@@ -603,6 +609,12 @@ export class DashboardAction {
   }
 
 
+  async verifyContractModuleBoardVisible() {
+    await this.locators.contractModuleBoard.waitFor({ state: "visible" });
+    await expect(this.locators.contractModuleBoard).toBeVisible();
+  }
+
+
   /**
    *Verify that all module boards are displayed on the dashboard
    */
@@ -657,6 +669,7 @@ export class DashboardAction {
     await this.clickAddWidgetIcon();
     await this.dragCalendarToNewWidgetRow();
     await this.reloadBoards();
+    await this.clickCloseIcon();
   }
 
   /**
@@ -669,6 +682,21 @@ export class DashboardAction {
     await this.getBanner();
     await this.dragBannerToFirstRow();
     await this.reloadBoards();
+    await this.clickCloseIcon();
+  }
+
+  /**
+   * Verify that clicking on a module board opens the respective module.
+   */
+  async verifyModuleOpensOnBoardClick() {
+    await this.verifyDashboardLoaded();
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.verifyMapVisible();
+    await this.verifyContractsSection();
+    await this.clickContractsLink();
+    await this.verifyContractModuleBoardVisible();
   }
 
 }
