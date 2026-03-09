@@ -699,4 +699,14 @@ export class DashboardAction {
     await this.verifyContractModuleBoardVisible();
   }
 
+  /**
+   * Verify that the "Dashboard Display Order" popup opens.
+   */
+  async verifyDashboardDisplayOrderPopupOpens() {
+    await this.clickDashboardHomeIcon();
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.clickCloseIcon();
+  }
+
 }

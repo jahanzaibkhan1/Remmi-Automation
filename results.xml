@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="23.976940000001342">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-09T07:10:04.882Z" hostname="chromium" tests="1" failures="0" skipped="0" time="17.663" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify module opens on board click" classname="Pages\Dashboard\dashboard.spec.ts" time="17.663">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="21.77922599999979">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-09T07:26:31.134Z" hostname="chromium" tests="1" failures="0" skipped="0" time="14.552" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify &quot;Dashboard Display Order&quot; popup opens" classname="Pages\Dashboard\dashboard.spec.ts" time="14.552">
 </testcase>
 </testsuite>
 </testsuites>
