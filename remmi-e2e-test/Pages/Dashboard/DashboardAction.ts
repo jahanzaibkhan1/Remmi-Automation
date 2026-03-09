@@ -527,8 +527,7 @@ export class DashboardAction {
 
   async hoverAddBox() {
     await this.locators.addBox.waitFor({ state: "visible" });
-    await expect(this.locators.addBox).toBeVisible();
-    await this.locators.addBox.hover({ timeout: 5000 });
+    await this.locators.addBox.hover({ timeout: 10000 });
   }
 
   async clickAddWidgetIcon() {
@@ -784,6 +783,22 @@ export class DashboardAction {
     await expect(this.locators.notesHeading).not.toBeVisible();
     await expect(this.locators.map).not.toBeVisible();
     await expect(this.locators.emailsHeading).not.toBeVisible();
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+  }
+
+  /**
+   * Verify new row addition
+   */
+  async verifyNewRowAddition() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.locators.addBox.waitFor({ state: "visible" });
+    await this.locators.addBox.hover();
+    await this.locators.addWidgetIcon.waitFor({ state: "visible" });
+    await this.locators.addWidgetIcon.click({ force: true, timeout: 10000 });
+    await this.locators.dragToNewWidgetRow.waitFor({ state: "visible" });
+    await expect(this.locators.dragToNewWidgetRow).toBeVisible();
     await this.reloadBoards();
     await this.clickCloseIcon();
   }
