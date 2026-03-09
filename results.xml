@@ -1,12 +1,6 @@
-<testsuites id="" name="" tests="4" failures="0" skipped="0" errors="0" time="37.671504">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-09T06:51:04.908Z" hostname="chromium" tests="4" failures="0" skipped="0" time="30.754" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify all main module boards are displayed" classname="Pages\Dashboard\dashboard.spec.ts" time="21.224">
-</testcase>
-<testcase name="Dashboard Module Boards Display › Verify dragging boards to change their position" classname="Pages\Dashboard\dashboard.spec.ts" time="1.981">
-</testcase>
-<testcase name="Dashboard Module Boards Display › Verify boards can be moved to different rows" classname="Pages\Dashboard\dashboard.spec.ts" time="2.945">
-</testcase>
-<testcase name="Dashboard Module Boards Display › Verify max 5 boards allowed per row" classname="Pages\Dashboard\dashboard.spec.ts" time="4.604">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="23.976940000001342">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-09T07:10:04.882Z" hostname="chromium" tests="1" failures="0" skipped="0" time="17.663" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify module opens on board click" classname="Pages\Dashboard\dashboard.spec.ts" time="17.663">
 </testcase>
 </testsuite>
 </testsuites>
