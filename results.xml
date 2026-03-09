@@ -1,6 +1,26 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="68.04912300000339">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-06T10:59:57.156Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.141" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify dragging boards to change their position" classname="Pages\Dashboard\dashboard.spec.ts" time="58.141">
+<testsuites id="" name="" tests="11" failures="0" skipped="0" errors="0" time="115.6830319999978">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-09T11:25:19.945Z" hostname="chromium" tests="11" failures="0" skipped="0" time="111.299" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify all main module boards are displayed" classname="Pages\Dashboard\dashboard.spec.ts" time="27.138">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify dragging boards to change their position" classname="Pages\Dashboard\dashboard.spec.ts" time="3.827">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify boards can be moved to different rows" classname="Pages\Dashboard\dashboard.spec.ts" time="8.829">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify max 5 boards allowed per row" classname="Pages\Dashboard\dashboard.spec.ts" time="1.88">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify module opens on board click" classname="Pages\Dashboard\dashboard.spec.ts" time="9.674">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify &quot;Dashboard Display Order&quot; popup opens" classname="Pages\Dashboard\dashboard.spec.ts" time="0.973">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify widgets visibility toggle" classname="Pages\Dashboard\dashboard.spec.ts" time="0.734">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify drag and drop functionality in popup" classname="Pages\Dashboard\dashboard.spec.ts" time="3.14">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify board position sync between dashboard and popup" classname="Pages\Dashboard\dashboard.spec.ts" time="0.866">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify removing a row removes all its boards" classname="Pages\Dashboard\dashboard.spec.ts" time="48.774">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify new row addition" classname="Pages\Dashboard\dashboard.spec.ts" time="5.464">
 </testcase>
 </testsuite>
 </testsuites>
