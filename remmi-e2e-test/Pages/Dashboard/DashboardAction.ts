@@ -474,6 +474,12 @@ export class DashboardAction {
     await this.locators.calendarNavItem.waitFor({ state: "visible" });
     await expect(this.locators.calendarNavItem).toBeVisible();
   }
+  // 
+  async clickCalendarNavSection() {
+    await this.locators.calendarNavItem.waitFor({ state: "visible" });
+    await expect(this.locators.calendarNavItem).toBeVisible();
+    await this.locators.calendarNavItem.click();
+  }
 
   async verifyDragAndDropWidgetItemVisible() {
     await this.locators.dragAndDropWidgetItem.waitFor({ state: "visible" });
@@ -706,6 +712,17 @@ export class DashboardAction {
     await this.clickDashboardHomeIcon();
     await this.verifyDashboardLoaded();
     await this.clickEyeIcon();
+    await this.clickCloseIcon();
+  }
+
+  /**
+   * Verify widgets visibility toggle
+   */
+  async verifyWidgetsVisibilityToggle() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.clickCalendarNavSection();
+    await expect(this.locators.calendarHeading).not.toBeVisible();
     await this.clickCloseIcon();
   }
 

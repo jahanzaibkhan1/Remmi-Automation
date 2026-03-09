@@ -46,5 +46,10 @@ test.describe("Dashboard Module Boards Display", () => {
     const dashboard = new DashboardAction(sessionPage);
     await dashboard.verifyDashboardDisplayOrderPopupOpens();
   });
+
+  test('Verify widgets visibility toggle', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyWidgetsVisibilityToggle();
+  });
   
 });
