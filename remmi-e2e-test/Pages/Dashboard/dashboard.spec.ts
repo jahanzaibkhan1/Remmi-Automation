@@ -26,5 +26,10 @@ test.describe("Dashboard Module Boards Display", () => {
     const dashboard = new DashboardAction(sessionPage);
     await dashboard.verifyDraggingBoardsToChangePosition();
   });
+
+  test("Verify boards can be moved to different rows", async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyBoardsCanBeMovedToDifferentRows();
+  });
   
 });
