@@ -11,7 +11,7 @@ export class DashboardAction {
   async clickDashboardHomeIcon() {
     await this.locators.dashboardHomeIcon.waitFor({ state: "visible" });
     await expect(this.locators.dashboardHomeIcon).toBeVisible();
-    await this.locators.dashboardHomeIcon.click({force: true});
+    await this.locators.dashboardHomeIcon.click({ force: true });
   }
 
   // Dashboard
@@ -620,6 +620,12 @@ export class DashboardAction {
     await expect(this.locators.contractModuleBoard).toBeVisible();
   }
 
+  async clickMinusIcon() {
+    await this.locators.minusIcon.waitFor({ state: "visible" });
+    await expect(this.locators.minusIcon).toBeVisible();
+    await this.locators.minusIcon.click({force : true});
+  }
+
 
   /**
    *Verify that all module boards are displayed on the dashboard
@@ -761,6 +767,24 @@ export class DashboardAction {
     await this.clickEyeIcon();
     const popupOrder = await getBoardOrder('[data-testid="popup-board-item"]');
     expect(dashboardOrder).toEqual(popupOrder);
+    await this.clickCloseIcon();
+  }
+
+  /**
+ * Verify that removing a row removes all its boards in the dashboard.
+ */
+  async verifyRemovingRowRemovesAllBoards() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.locators.firstRow.waitFor({ state: "visible" });
+    await this.locators.firstRow.hover();
+    await this.clickMinusIcon();
+    await expect(this.locators.calendarHeading).not.toBeVisible();
+    await expect(this.locators.weather).not.toBeVisible();
+    await expect(this.locators.notesHeading).not.toBeVisible();
+    await expect(this.locators.map).not.toBeVisible();
+    await expect(this.locators.emailsHeading).not.toBeVisible();
+    await this.reloadBoards();
     await this.clickCloseIcon();
   }
 

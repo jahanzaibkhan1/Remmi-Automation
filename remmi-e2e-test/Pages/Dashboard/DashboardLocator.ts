@@ -387,6 +387,9 @@ export class DashboardLocator {
         return this.page.locator('div').filter({ hasText: /^Contract$/ });
     }
     
+    get minusIcon(): Locator{
+        return this.page.locator('img._img[src*="minus.svg"]').first();
+    }
 
 
 }
