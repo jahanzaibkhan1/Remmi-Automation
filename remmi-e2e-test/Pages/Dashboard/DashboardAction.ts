@@ -8,6 +8,12 @@ export class DashboardAction {
     this.locators = new DashboardLocator(page);
   }
 
+  async clickDashboardHomeIcon() {
+    await this.locators.dashboardHomeIcon.waitFor({ state: "visible" });
+    await expect(this.locators.dashboardHomeIcon).toBeVisible();
+    await this.locators.dashboardHomeIcon.click({ force: true });
+  }
+
   // Dashboard
   async verifyDashboardLoaded() {
     await this.locators.dashboardHomeIcon.waitFor({ state: "visible" });
@@ -448,15 +454,31 @@ export class DashboardAction {
     return await this.locators.projectsCompletedCount.textContent();
   }
 
-
   async clickEyeIcon() {
-    await this.locators.eyeIcon.waitFor({ state: "visible" });
-    await this.locators.eyeIcon.click({ force: true });
+    await this.locators.eyeIcon.waitFor({ state: 'visible' });
+    await expect(this.locators.eyeIcon).toBeEnabled();
+
+    for (let attempt = 0; attempt < 10; attempt++) {
+      await this.locators.eyeIcon.click();
+      try {
+        await this.page.getByRole('heading', { name: 'Dashboard Display Order' }).waitFor({ state: 'visible', timeout: 2000 });
+        return;
+      } catch (error) {
+        if (attempt === 2) throw error;
+        await this.page.waitForTimeout(500);
+      }
+    }
   }
 
   async verifyCalendarNavSection() {
     await this.locators.calendarNavItem.waitFor({ state: "visible" });
     await expect(this.locators.calendarNavItem).toBeVisible();
+  }
+  // 
+  async clickCalendarNavSection() {
+    await this.locators.calendarNavItem.waitFor({ state: "visible" });
+    await expect(this.locators.calendarNavItem).toBeVisible();
+    await this.locators.calendarNavItem.click();
   }
 
   async verifyDragAndDropWidgetItemVisible() {
@@ -503,6 +525,106 @@ export class DashboardAction {
     await this.locators.reloadBoards.click();
   }
 
+  async hoverAddBox() {
+    await this.locators.addBox.waitFor({ state: "visible" });
+    await this.locators.addBox.hover({ timeout: 10000 });
+  }
+
+  async clickAddWidgetIcon() {
+    await this.locators.addWidgetIcon.waitFor({ state: "visible" });
+    await expect(this.locators.addWidgetIcon).toBeVisible();
+    await this.locators.addWidgetIcon.click({ force: true, timeout: 5000 });
+    await this.locators.dragToNewWidgetRow.waitFor({ state: "visible" });
+    await expect(this.locators.dragToNewWidgetRow).toBeVisible();
+  }
+
+  async dragCalendarToNewWidgetRow() {
+    await Promise.all([
+      this.locators.calendarNavItem.waitFor({ state: "visible" }),
+      this.locators.dragToNewWidgetRow.waitFor({ state: "visible" })
+    ]);
+    const calendarBox = await this.locators.calendarNavItem.boundingBox();
+    const dropRowBox = await this.locators.dragToNewWidgetRow.boundingBox();
+
+    if (calendarBox && dropRowBox) {
+      await this.page.mouse.move(
+        calendarBox.x + calendarBox.width / 2,
+        calendarBox.y + calendarBox.height / 2
+      );
+      await this.page.mouse.down();
+      await this.page.mouse.move(
+        dropRowBox.x + dropRowBox.width / 2,
+        dropRowBox.y + dropRowBox.height / 2,
+        { steps: 10 }
+      );
+      await this.page.mouse.up();
+    } else {
+      await this.locators.calendarNavItem.dragTo(this.locators.dragToNewWidgetRow, { force: true, timeout: 5000 });
+    }
+  }
+
+  async getFirstRow() {
+    await this.locators.firstRow.waitFor({ state: "visible" });
+    await expect(this.locators.firstRow).toBeVisible();
+    return this.locators.firstRow;
+  }
+
+  async getBanner() {
+    await this.locators.banner.waitFor({ state: "visible" });
+    await expect(this.locators.banner).toBeVisible();
+  }
+
+  async dragBannerToFirstRow() {
+    await this.locators.banner.waitFor({ state: "visible" });
+    await this.locators.firstRow.waitFor({ state: "visible" });
+    await expect(this.locators.banner).toBeVisible();
+    await expect(this.locators.firstRow).toBeVisible();
+
+    // Attempt dragging up to 3 times in case of flakiness
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        // Re-acquire bounding boxes in each attempt
+        const bannerBox = await this.locators.banner.boundingBox();
+        const firstRowBox = await this.locators.firstRow.boundingBox();
+
+        if (bannerBox && firstRowBox) {
+          // Mouse drag-and-drop operation
+          await this.page.mouse.move(
+            bannerBox.x + bannerBox.width / 2,
+            bannerBox.y + bannerBox.height / 2
+          );
+          await this.page.mouse.down();
+          await this.page.mouse.move(
+            firstRowBox.x + firstRowBox.width / 2,
+            firstRowBox.y + firstRowBox.height / 2,
+            { steps: 10 }
+          );
+          await this.page.mouse.up();
+        } else {
+          // Fallback to dragAndDrop API if bounding boxes aren't available
+          await this.locators.banner.dragTo(this.locators.firstRow, { force: true, timeout: 5000 });
+        }
+        break; // If drag succeeds, exit loop
+      } catch (error) {
+        if (attempt === 2) throw error;
+        await this.page.waitForTimeout(1000); // Wait a bit before retrying
+      }
+    }
+    await expect(this.page.getByRole('alert', { name: /A maximum of 5 widgets is/i })).toBeVisible();
+  }
+
+
+  async verifyContractModuleBoardVisible() {
+    await this.locators.contractModuleBoard.waitFor({ state: "visible" });
+    await expect(this.locators.contractModuleBoard).toBeVisible();
+  }
+
+  async clickMinusIcon() {
+    await this.locators.minusIcon.waitFor({ state: "visible" });
+    await expect(this.locators.minusIcon).toBeVisible();
+    await this.locators.minusIcon.click({force : true});
+  }
+
 
   /**
    *Verify that all module boards are displayed on the dashboard
@@ -547,6 +669,136 @@ export class DashboardAction {
     await this.verifyWeatherNavItemVisible();
     await this.verifyDragAndDropWidgetItemVisible();
     await this.dragMapToCalendarPosition();
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+  }
+
+  async verifyBoardsCanBeMovedToDifferentRows() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.hoverAddBox();
+    await this.clickAddWidgetIcon();
+    await this.dragCalendarToNewWidgetRow();
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+  }
+
+  /**
+   * Verify that a maximum of 5 boards are allowed per row.
+   */
+  async verifyMaxFiveBoardsPerRow() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.getFirstRow();
+    await this.getBanner();
+    await this.dragBannerToFirstRow();
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+  }
+
+  /**
+   * Verify that clicking on a module board opens the respective module.
+   */
+  async verifyModuleOpensOnBoardClick() {
+    await this.verifyDashboardLoaded();
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.verifyMapVisible();
+    await this.verifyContractsSection();
+    await this.clickContractsLink();
+    await this.verifyContractModuleBoardVisible();
+  }
+
+  /**
+   * Verify that the "Dashboard Display Order" popup opens.
+   */
+  async verifyDashboardDisplayOrderPopupOpens() {
+    await this.clickDashboardHomeIcon();
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.clickCloseIcon();
+  }
+
+  /**
+   * Verify widgets visibility toggle
+   */
+  async verifyWidgetsVisibilityToggle() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.clickCalendarNavSection();
+    await expect(this.locators.calendarHeading).not.toBeVisible();
+    await this.clickCloseIcon();
+  }
+
+  /**
+   * Verify drag and drop functionality in the 'Dashboard Display Order' popup.
+   */
+  async verifyDragAndDropInPopup() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.verifyCalendarNavSection();
+    await this.verifyWeatherNavItemVisible();
+    await this.verifyDragAndDropWidgetItemVisible();
+    await this.dragMapToCalendarPosition();
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+  }
+
+  /**
+   * Verify that board positions in the dashboard match the positions shown
+   * in the "Dashboard Display Order" popup.
+   */
+  async verifyBoardPositionSyncBetweenDashboardAndPopup() {
+    await this.verifyDashboardLoaded();
+    const getBoardOrder = async (selector: string): Promise<string[]> => {
+      const locators = await this.page.locator(selector).all();
+      return (
+        await Promise.all(
+          locators.map(async (locator) => {
+            const text = await locator.textContent();
+            return typeof text === "string" ? text.trim() : "";
+          })
+        )
+      ).filter(Boolean);
+    };
+    const dashboardOrder = await getBoardOrder('[data-testid="dashboard-board"]');
+    await this.clickEyeIcon();
+    const popupOrder = await getBoardOrder('[data-testid="popup-board-item"]');
+    expect(dashboardOrder).toEqual(popupOrder);
+    await this.clickCloseIcon();
+  }
+
+  /**
+ * Verify that removing a row removes all its boards in the dashboard.
+ */
+  async verifyRemovingRowRemovesAllBoards() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.locators.firstRow.waitFor({ state: "visible" });
+    await this.locators.firstRow.hover();
+    await this.clickMinusIcon();
+    await expect(this.locators.calendarHeading).not.toBeVisible();
+    await expect(this.locators.weather).not.toBeVisible();
+    await expect(this.locators.notesHeading).not.toBeVisible();
+    await expect(this.locators.map).not.toBeVisible();
+    await expect(this.locators.emailsHeading).not.toBeVisible();
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+  }
+
+  /**
+   * Verify new row addition
+   */
+  async verifyNewRowAddition() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.locators.addBox.waitFor({ state: "visible" });
+    await this.locators.addBox.hover();
+    await this.locators.addWidgetIcon.waitFor({ state: "visible" });
+    await this.locators.addWidgetIcon.click({ force: true, timeout: 10000 });
+    await this.locators.dragToNewWidgetRow.waitFor({ state: "visible" });
+    await expect(this.locators.dragToNewWidgetRow).toBeVisible();
     await this.reloadBoards();
     await this.clickCloseIcon();
   }
