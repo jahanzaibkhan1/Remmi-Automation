@@ -41,5 +41,10 @@ test.describe("Dashboard Module Boards Display", () => {
     const dashboard = new DashboardAction(sessionPage);
     await dashboard.verifyModuleOpensOnBoardClick();
   });
+
+  test('Verify "Dashboard Display Order" popup opens', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyDashboardDisplayOrderPopupOpens();
+  });
   
 });
