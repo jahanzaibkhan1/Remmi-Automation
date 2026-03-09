@@ -56,5 +56,10 @@ test.describe("Dashboard Module Boards Display", () => {
     const dashboard = new DashboardAction(sessionPage);
     await dashboard.verifyDragAndDropInPopup();
   });
+
+  test('Verify board position sync between dashboard and popup', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyBoardPositionSyncBetweenDashboardAndPopup();
+  });
   
 });

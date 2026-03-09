@@ -740,4 +740,28 @@ export class DashboardAction {
     await this.clickCloseIcon();
   }
 
+  /**
+   * Verify that board positions in the dashboard match the positions shown
+   * in the "Dashboard Display Order" popup.
+   */
+  async verifyBoardPositionSyncBetweenDashboardAndPopup() {
+    await this.verifyDashboardLoaded();
+    const getBoardOrder = async (selector: string): Promise<string[]> => {
+      const locators = await this.page.locator(selector).all();
+      return (
+        await Promise.all(
+          locators.map(async (locator) => {
+            const text = await locator.textContent();
+            return typeof text === "string" ? text.trim() : "";
+          })
+        )
+      ).filter(Boolean);
+    };
+    const dashboardOrder = await getBoardOrder('[data-testid="dashboard-board"]');
+    await this.clickEyeIcon();
+    const popupOrder = await getBoardOrder('[data-testid="popup-board-item"]');
+    expect(dashboardOrder).toEqual(popupOrder);
+    await this.clickCloseIcon();
+  }
+
 }
