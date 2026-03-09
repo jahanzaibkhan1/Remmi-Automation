@@ -31,5 +31,10 @@ test.describe("Dashboard Module Boards Display", () => {
     const dashboard = new DashboardAction(sessionPage);
     await dashboard.verifyBoardsCanBeMovedToDifferentRows();
   });
+
+  test("Verify max 5 boards allowed per row", async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyMaxFiveBoardsPerRow();
+  });
   
 });
