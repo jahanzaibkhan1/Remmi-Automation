@@ -51,5 +51,10 @@ test.describe("Dashboard Module Boards Display", () => {
     const dashboard = new DashboardAction(sessionPage);
     await dashboard.verifyWidgetsVisibilityToggle();
   });
+
+  test('Verify drag and drop functionality in popup', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyDragAndDropInPopup();
+  });
   
 });
