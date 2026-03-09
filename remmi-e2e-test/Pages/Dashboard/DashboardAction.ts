@@ -503,6 +503,45 @@ export class DashboardAction {
     await this.locators.reloadBoards.click();
   }
 
+  async hoverAddBox() {
+    await this.locators.addBox.waitFor({ state: "visible" });
+    await expect(this.locators.addBox).toBeVisible();
+    await this.locators.addBox.hover({ timeout: 5000 });
+  }
+
+  async clickAddWidgetIcon() {
+    await this.locators.addWidgetIcon.waitFor({ state: "visible"});
+    await expect(this.locators.addWidgetIcon).toBeVisible();
+    await this.locators.addWidgetIcon.click({ force: true, timeout: 5000 });
+    await this.locators.dragToNewWidgetRow.waitFor({ state: "visible" });
+    await expect(this.locators.dragToNewWidgetRow).toBeVisible();
+  }
+
+  async dragCalendarToNewWidgetRow() {
+    await Promise.all([
+      this.locators.calendarNavItem.waitFor({ state: "visible"}),
+      this.locators.dragToNewWidgetRow.waitFor({ state: "visible"})
+    ]);
+    const calendarBox = await this.locators.calendarNavItem.boundingBox();
+    const dropRowBox = await this.locators.dragToNewWidgetRow.boundingBox();
+
+    if (calendarBox && dropRowBox) {
+      await this.page.mouse.move(
+        calendarBox.x + calendarBox.width / 2,
+        calendarBox.y + calendarBox.height / 2
+      );
+      await this.page.mouse.down();
+      await this.page.mouse.move(
+        dropRowBox.x + dropRowBox.width / 2,
+        dropRowBox.y + dropRowBox.height / 2,
+        { steps: 10 }
+      );
+      await this.page.mouse.up();
+    } else {
+      await this.locators.calendarNavItem.dragTo(this.locators.dragToNewWidgetRow, { force: true, timeout: 5000 });
+    }
+  }
+
 
   /**
    *Verify that all module boards are displayed on the dashboard
@@ -549,6 +588,15 @@ export class DashboardAction {
     await this.dragMapToCalendarPosition();
     await this.reloadBoards();
     await this.clickCloseIcon();
+  }
+
+  async verifyBoardsCanBeMovedToDifferentRows() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.hoverAddBox();
+    await this.clickAddWidgetIcon();
+    await this.dragCalendarToNewWidgetRow();
+    await this.reloadBoards();
   }
 
 }

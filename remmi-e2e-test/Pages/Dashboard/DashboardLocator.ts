@@ -338,19 +338,19 @@ export class DashboardLocator {
     get dragAndDropWidgetItem(): Locator {
         return this.page.locator("//li[normalize-space()='Drag & drop to add widget']").first();
     }
-    
+
     get weatherNavItem(): Locator {
         return this.page.locator("//li[normalize-space()='Weather']");
     }
-    
+
     get notesNavItem(): Locator {
         return this.page.locator("//li[normalize-space()='Notes']");
     }
-    
+
     get mapNavItem(): Locator {
         return this.page.locator("//li[normalize-space()='Map']");
     }
-    
+
     get emailsNavItem(): Locator {
         return this.page.locator("//li[normalize-space()='Emails']");
     }
@@ -362,5 +362,27 @@ export class DashboardLocator {
     get reloadBoards(): Locator {
         return this.page.locator('//img[@class="reset"]');
     }
+
+    get addBox(): Locator {
+        return this.page.locator('.add_box').first();
+    }
+
+    get addWidgetIcon(): Locator {
+        return this.page.locator('.add_box > .ng-star-inserted').first()
+    }
+
+    get dragToNewWidgetRow(): Locator {
+        return this.page.locator('ul.cdk-drop-list').first();
+    }
+
+    get firstRow(): Locator {
+        return this.page.locator('div.r_o_w').first();
+    }
+
+    get banner(): Locator {
+        return this.page.locator('.banner');
+    }
+    
+
 
 }
