@@ -726,4 +726,18 @@ export class DashboardAction {
     await this.clickCloseIcon();
   }
 
+  /**
+   * Verify drag and drop functionality in the 'Dashboard Display Order' popup.
+   */
+  async verifyDragAndDropInPopup() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.verifyCalendarNavSection();
+    await this.verifyWeatherNavItemVisible();
+    await this.verifyDragAndDropWidgetItemVisible();
+    await this.dragMapToCalendarPosition();
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+  }
+
 }

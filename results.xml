@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.97354999999888">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-09T07:36:21.554Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.607" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify widgets visibility toggle" classname="Pages\Dashboard\dashboard.spec.ts" time="40.607">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.567811999998987">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-09T07:42:02.025Z" hostname="chromium" tests="1" failures="0" skipped="0" time="17.581" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify drag and drop functionality in popup" classname="Pages\Dashboard\dashboard.spec.ts" time="17.581">
 </testcase>
 </testsuite>
 </testsuites>
