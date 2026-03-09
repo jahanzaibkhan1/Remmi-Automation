@@ -1,6 +1,103 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.155517999999226">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-09T07:46:13.938Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.322" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify board position sync between dashboard and popup" classname="Pages\Dashboard\dashboard.spec.ts" time="47.322">
+<testsuites id="" name="" tests="10" failures="1" skipped="9" errors="0" time="111.783962">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-09T10:22:24.151Z" hostname="chromium" tests="10" failures="1" skipped="9" time="104.543" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify all main module boards are displayed" classname="Pages\Dashboard\dashboard.spec.ts" time="104.543">
+<failure message="dashboard.spec.ts:20:3 Verify all main module boards are displayed" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Dashboard\dashboard.spec.ts:20:3 › Dashboard Module Boards Display › Verify all main module boards are displayed 
+
+    Test timeout of 60000ms exceeded while setting up "sessionPage".
+
+    Error: page.goto: Test ended.
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/", waiting until "load"
+
+
+      10 |     try {
+      11 |       const page = await context.newPage();
+    > 12 |       await page.goto(DASHBOARD_URL);
+         |                  ^
+      13 |       await use(page);
+      14 |     } finally {
+      15 |     }
+        at Object._test.test.extend.sessionPage.scope (E:\remmi-qa-automation\remmi-e2e-test\Pages\Dashboard\dashboard.spec.ts:12:18)
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\Pages-Dashboard-dashboard--9da90-module-boards-are-displayed-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\Pages-Dashboard-dashboard--9da90-module-boards-are-displayed-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: page.goto: Target page, context or browser has been closed
+    Call log:
+      - navigating to "https://portal-staging.remmi.com.au/", waiting until "load"
+
+
+      10 |     try {
+      11 |       const page = await context.newPage();
+    > 12 |       await page.goto(DASHBOARD_URL);
+         |                  ^
+      13 |       await use(page);
+      14 |     } finally {
+      15 |     }
+        at Object._test.test.extend.sessionPage.scope (E:\remmi-qa-automation\remmi-e2e-test\Pages\Dashboard\dashboard.spec.ts:12:18)
+
+    Error: browserContext._wrapApiCall: Target page, context or browser has been closed
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\Pages-Dashboard-dashboard--9da90-module-boards-are-displayed-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\Pages-Dashboard-dashboard--9da90-module-boards-are-displayed-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\Pages-Dashboard-dashboard--9da90-module-boards-are-displayed-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|test-results\Pages-Dashboard-dashboard--9da90-module-boards-are-displayed-chromium\error-context.md]]
+
+[[ATTACHMENT|test-results\Pages-Dashboard-dashboard--9da90-module-boards-are-displayed-chromium-retry1\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify dragging boards to change their position" classname="Pages\Dashboard\dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify boards can be moved to different rows" classname="Pages\Dashboard\dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify max 5 boards allowed per row" classname="Pages\Dashboard\dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify module opens on board click" classname="Pages\Dashboard\dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify &quot;Dashboard Display Order&quot; popup opens" classname="Pages\Dashboard\dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify widgets visibility toggle" classname="Pages\Dashboard\dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify drag and drop functionality in popup" classname="Pages\Dashboard\dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify board position sync between dashboard and popup" classname="Pages\Dashboard\dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify removing a row removes all its boards" classname="Pages\Dashboard\dashboard.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
 </testsuites>
