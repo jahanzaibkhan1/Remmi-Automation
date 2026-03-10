@@ -89,8 +89,11 @@ export class ContactActions {
         return this.locators.DeleteIcon().click()
     }
 
-    private CheckBox() {
-        return this.locators.CheckBox().nth(3).click();
+    private async Checkbox() {
+        const checkbox = this.page.locator('.p-checkbox-box.p-component').first();
+        await checkbox.scrollIntoViewIfNeeded();
+        await checkbox.waitFor({state: 'visible'});
+        await checkbox.click({force: true});
     }
 
     private async NavigateToSettings() {
@@ -111,7 +114,7 @@ export class ContactActions {
 
     private async ClickRestoreIcon() {
         const RestoreIcon = this.locators.restoreContactIcon();
-        await RestoreIcon.waitFor({ state: 'visible', timeout: 10000 });
+        await RestoreIcon.waitFor({ state: 'visible'});
         await RestoreIcon.click({ force: true });
     }
 
@@ -398,11 +401,11 @@ export class ContactActions {
         const firstRow = this.page.locator('table tbody tr').first();
         await firstRow.waitFor({ state: 'visible', timeout: 30000 });
         await this.page.waitForTimeout(2000);
-        await this.CheckBox();
+        await this.Checkbox();
         const deleteButton = this.locators.DeleteIcon();
         await deleteButton.waitFor({ state: 'visible', timeout: 3000 });
         expect(await deleteButton.isEnabled()).toBe(true);
-        await this.CheckBox();
+        await this.Checkbox();
 
     }
 
@@ -435,8 +438,9 @@ export class ContactActions {
         console.log('Name displayed: ', contactName)
 
         // Select the contact's checkbox
-        const checkbox = this.page.getByRole('checkbox').last();
-        await checkbox.click()
+        const checkbox = this.page.locator('.p-checkbox-box.p-component').first();
+        await checkbox.waitFor({ state: 'visible' });
+        await checkbox.click();
 
         // Click the delete icon/button
         await this.DeleteIcon();
@@ -461,8 +465,8 @@ export class ContactActions {
         await this.page.waitForTimeout(2000);
         await this.SearchDeletedContact(contactName);
         await this.page.waitForTimeout(1500);
-        const checkbox = this.page.getByRole('checkbox').nth(1);
-        await checkbox.waitFor({ state: 'visible', timeout: 10000 });
+        const checkbox = this.page.locator('.p-checkbox-box.p-component').first();
+        await checkbox.waitFor({ state: 'visible'});
         await checkbox.click({ force: true });
         await this.ClickRestoreIcon();
         await this.NavigateToContacts();
@@ -490,7 +494,7 @@ export class ContactActions {
         console.log('Name displayed before delete attempt:', contactName);
 
         // Select the contact's checkbox
-        const checkbox = this.page.getByRole('checkbox').last();
+        const checkbox = this.page.locator('.p-checkbox-box.p-component').first();
         await checkbox.click();
 
         // Click the delete icon/button
@@ -519,8 +523,8 @@ export class ContactActions {
 
         console.log('Contact creation form is visible after clicking plus button.');
 
-        const closeButton = this.page.locator('.pi.pi-times').first();
-        await expect(closeButton).toBeVisible({ timeout: 10000 });
+        const closeButton = this.page.locator('.pi.pi-times.cursor-pointer.f-14').first();
+        await closeButton.waitFor({ state: 'visible' });
         await closeButton.click({ force: true });
 
     }
@@ -597,7 +601,7 @@ export class ContactActions {
         await this.page.waitForTimeout(2000);
 
         // Find the "select all" checkbox (typically first checkbox in thead)
-        const selectAllCheckbox = this.page.getByRole('checkbox').nth(1)
+        const selectAllCheckbox = this.page.locator('.p-checkbox-box').first()
 
         // Click the select all checkbox
         await selectAllCheckbox.click();
@@ -627,7 +631,7 @@ export class ContactActions {
         await this.page.waitForTimeout(2000);
 
         // Find the "select all" checkbox (typically first checkbox in thead)
-        const selectAllCheckbox = this.page.getByRole('checkbox').nth(1);
+        const selectAllCheckbox = this.page.locator('.p-checkbox-box').first();
 
         // Click the select all checkbox to select all
         await selectAllCheckbox.dblclick({ force: true });
@@ -641,7 +645,7 @@ export class ContactActions {
         await this.page.waitForTimeout(2000);
 
         // Get all row checkboxes in the contacts table body
-        const rowCheckboxes = this.page.getByRole('checkbox').nth(3);
+        const rowCheckboxes = this.page.locator('.p-checkbox-box.p-component').first();
         await rowCheckboxes.click({ force: true });
         await this.page.waitForTimeout(1200);
         await rowCheckboxes.click({ force: true });
@@ -831,7 +835,7 @@ export class ContactActions {
         const rowCount = await rows.count();
         await this.page.waitForTimeout(1500)
 
-        const checkbox = this.page.getByRole('checkbox').nth(1);
+        const checkbox = this.page.locator('.p-checkbox-box.p-component').first();
         await checkbox.scrollIntoViewIfNeeded()
         await expect(checkbox).toBeVisible();
 
