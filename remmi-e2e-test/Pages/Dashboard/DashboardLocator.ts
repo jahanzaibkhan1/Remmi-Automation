@@ -391,5 +391,48 @@ export class DashboardLocator {
         return this.page.locator('img._img[src*="minus.svg"]').first();
     }
 
+    get listingCards(): Locator {
+        return this.page.locator('.s-property');
+    }
+
+    get pinnedIcon(): Locator {
+        return this.page.locator('img[src*="pin"]');
+    }
+
+    get pinToDashboardMenuItem(): Locator {
+        return this.page.getByText('Pin To Dashboard').first();
+    }
+
+    get cardViewPropertyRow(): Locator {
+        return this.page.locator('.s-property');
+    }
+
+    get gridViewButton(): Locator {
+        return this.page.locator('img.grid-svg-image');
+    }
+
+    get listingTab(): Locator {
+        return this.page.locator("li.list.sideMenu.justify-center[data-label='Listings']");
+    }
+
+    get primaryAgentDropdown(): Locator {
+        return this.page.locator('div.form-group:has-text("Primary Agent") ng-select');
+    }
+    
+    get primaryAgentInput(): Locator {
+        return this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+    }
+    
+    get primaryAgentOptions(): Locator {
+        return this.page.locator('.ng-dropdown-panel .ng-option');
+    }
+
+    get saveAndCloseButton(): Locator {
+        return this.page.getByRole('button', { name: 'Save & Close' }).first();
+    }
+
+    get PinnedlistingCard(): Locator {
+        return this.page.locator('.h-150px').first();
+    }
 
 }
