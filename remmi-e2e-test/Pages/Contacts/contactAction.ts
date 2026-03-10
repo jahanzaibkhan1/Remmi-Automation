@@ -89,8 +89,11 @@ export class ContactActions {
         return this.locators.DeleteIcon().click()
     }
 
-    private CheckBox() {
-        return this.locators.CheckBox().nth(3).click();
+    private async Checkbox() {
+        const checkbox = this.page.locator('.p-checkbox-box.p-component').first();
+        await checkbox.scrollIntoViewIfNeeded();
+        await checkbox.waitFor({state: 'visible'});
+        await checkbox.click({force: true});
     }
 
     private async NavigateToSettings() {
@@ -111,7 +114,7 @@ export class ContactActions {
 
     private async ClickRestoreIcon() {
         const RestoreIcon = this.locators.restoreContactIcon();
-        await RestoreIcon.waitFor({ state: 'visible', timeout: 10000 });
+        await RestoreIcon.waitFor({ state: 'visible'});
         await RestoreIcon.click({ force: true });
     }
 
@@ -398,11 +401,11 @@ export class ContactActions {
         const firstRow = this.page.locator('table tbody tr').first();
         await firstRow.waitFor({ state: 'visible', timeout: 30000 });
         await this.page.waitForTimeout(2000);
-        await this.CheckBox();
+        await this.Checkbox();
         const deleteButton = this.locators.DeleteIcon();
         await deleteButton.waitFor({ state: 'visible', timeout: 3000 });
         expect(await deleteButton.isEnabled()).toBe(true);
-        await this.CheckBox();
+        await this.Checkbox();
 
     }
 
@@ -435,8 +438,9 @@ export class ContactActions {
         console.log('Name displayed: ', contactName)
 
         // Select the contact's checkbox
-        const checkbox = this.page.getByRole('checkbox').last();
-        await checkbox.click()
+        const checkbox = this.page.locator('.p-checkbox-box.p-component').first();
+        await checkbox.waitFor({ state: 'visible' });
+        await checkbox.click();
 
         // Click the delete icon/button
         await this.DeleteIcon();
@@ -461,8 +465,8 @@ export class ContactActions {
         await this.page.waitForTimeout(2000);
         await this.SearchDeletedContact(contactName);
         await this.page.waitForTimeout(1500);
-        const checkbox = this.page.getByRole('checkbox').nth(1);
-        await checkbox.waitFor({ state: 'visible', timeout: 10000 });
+        const checkbox = this.page.locator('.p-checkbox-box.p-component').first();
+        await checkbox.waitFor({ state: 'visible'});
         await checkbox.click({ force: true });
         await this.ClickRestoreIcon();
         await this.NavigateToContacts();
@@ -490,7 +494,7 @@ export class ContactActions {
         console.log('Name displayed before delete attempt:', contactName);
 
         // Select the contact's checkbox
-        const checkbox = this.page.getByRole('checkbox').last();
+        const checkbox = this.page.locator('.p-checkbox-box.p-component').first();
         await checkbox.click();
 
         // Click the delete icon/button
@@ -519,8 +523,10 @@ export class ContactActions {
 
         console.log('Contact creation form is visible after clicking plus button.');
 
+        await this.page.waitForTimeout(1200);
+
         const closeButton = this.page.locator('.pi.pi-times').first();
-        await expect(closeButton).toBeVisible({ timeout: 10000 });
+        await closeButton.waitFor({ state: 'visible' });
         await closeButton.click({ force: true });
 
     }
@@ -597,7 +603,7 @@ export class ContactActions {
         await this.page.waitForTimeout(2000);
 
         // Find the "select all" checkbox (typically first checkbox in thead)
-        const selectAllCheckbox = this.page.getByRole('checkbox').nth(1)
+        const selectAllCheckbox = this.page.locator('.p-checkbox-box').first()
 
         // Click the select all checkbox
         await selectAllCheckbox.click();
@@ -627,7 +633,7 @@ export class ContactActions {
         await this.page.waitForTimeout(2000);
 
         // Find the "select all" checkbox (typically first checkbox in thead)
-        const selectAllCheckbox = this.page.getByRole('checkbox').nth(1);
+        const selectAllCheckbox = this.page.locator('.p-checkbox-box').first();
 
         // Click the select all checkbox to select all
         await selectAllCheckbox.dblclick({ force: true });
@@ -641,7 +647,7 @@ export class ContactActions {
         await this.page.waitForTimeout(2000);
 
         // Get all row checkboxes in the contacts table body
-        const rowCheckboxes = this.page.getByRole('checkbox').nth(3);
+        const rowCheckboxes = this.page.locator('.p-checkbox-box.p-component').first();
         await rowCheckboxes.click({ force: true });
         await this.page.waitForTimeout(1200);
         await rowCheckboxes.click({ force: true });
@@ -831,7 +837,7 @@ export class ContactActions {
         const rowCount = await rows.count();
         await this.page.waitForTimeout(1500)
 
-        const checkbox = this.page.getByRole('checkbox').nth(1);
+        const checkbox = this.page.locator('.p-checkbox-box.p-component').first();
         await checkbox.scrollIntoViewIfNeeded()
         await expect(checkbox).toBeVisible();
 
@@ -2508,16 +2514,18 @@ export class ContactActions {
         await companyTagCell.waitFor({ state: 'visible', timeout: 10000 });
         await companyTagCell.click();
 
-        const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
+        const company = this.page.locator("div[class='col-12 grio'] div[class='tags']");
+        await company.scrollIntoViewIfNeeded();
+        await company.click({force: true});
 
-        const associationSearchInput = this.page.getByRole('searchbox', { name: 'Search Company' });
+        const associationSearchInput = this.page.locator('[id="Contact-11 22_0"]').getByRole('textbox', { name: 'Search', exact: true });
         await associationSearchInput.waitFor({ state: 'visible', timeout: 5000 });
         await associationSearchInput.click();
         await this.page.waitForTimeout(1200);
         await associationSearchInput.fill(companyName);
 
         // Wait for and select the desired company from the dropdown options
-        const companyOption = this.page.getByRole('option', { name: companyName }).first();
+        const companyOption = this.page.getByRole('listitem').filter({ hasText:companyName  }).first();
         await companyOption.waitFor({ state: 'visible', timeout: 30000 });
         await companyOption.click();
 
@@ -2547,20 +2555,20 @@ export class ContactActions {
         await companyTagCell.waitFor({ state: 'visible', timeout: 10000 });
         await companyTagCell.click();
 
-        const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
+        const company = this.page.locator("div[class='col-12 grio'] div[class='tags']");
+        await company.scrollIntoViewIfNeeded();
+        await company.click({force: true});
 
-        const associationSearchInput = this.page.getByRole('searchbox', { name: 'Search Company' });
-        await associationSearchInput.scrollIntoViewIfNeeded();
+        const associationSearchInput = this.page.locator('[id="Contact-11 22_0"]').getByRole('textbox', { name: 'Search', exact: true });
         await associationSearchInput.waitFor({ state: 'visible', timeout: 5000 });
         await associationSearchInput.click();
         await this.page.waitForTimeout(1200);
         await associationSearchInput.fill(companyName);
 
         // Wait for and select the desired company from the dropdown options
-        const companyOption = this.page.getByRole('option', { name: companyName }).first();
-        await companyOption.waitFor({ state: 'visible', timeout: 10000 });
+        const companyOption = this.page.getByRole('listitem').filter({ hasText:companyName  }).first();
+        await companyOption.waitFor({ state: 'visible', timeout: 30000 });
         await companyOption.click();
-
         // Click on the "Association" button (replace selector as needed)
         const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
         await associationButton.waitFor({ state: 'visible', timeout: 3000 });
@@ -2588,16 +2596,20 @@ export class ContactActions {
         const companyTagCell = this.page.locator('td').nth(1);
         await companyTagCell.waitFor({ state: 'visible', timeout: 10000 });
         await companyTagCell.click();
-        const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
+    
+        const company = this.page.locator("div[class='col-12 grio'] div[class='tags']");
+        await company.scrollIntoViewIfNeeded();
+        await company.click({force: true});
 
-        const associationSearchInput = this.page.getByRole('searchbox', { name: 'Search Company' });
+        const associationSearchInput = this.page.locator('[id="Contact-11 22_0"]').getByRole('textbox', { name: 'Search', exact: true });
         await associationSearchInput.waitFor({ state: 'visible', timeout: 5000 });
         await associationSearchInput.click();
+        await this.page.waitForTimeout(1200);
         await associationSearchInput.fill(companyName);
 
         // Wait for and select the desired company from the dropdown options
-        const companyOption = this.page.getByRole('option', { name: companyName }).first();
-        await companyOption.waitFor({ state: 'visible', timeout: 5000 });
+        const companyOption = this.page.getByRole('listitem').filter({ hasText:companyName  }).first();
+        await companyOption.waitFor({ state: 'visible', timeout: 30000 });
         await companyOption.click();
 
         // Click on the "Association" button (replace selector as needed)
@@ -2625,18 +2637,19 @@ export class ContactActions {
         await companyTagCell.waitFor({ state: 'visible', timeout: 10000 });
         await companyTagCell.click();
 
-        const detailPanel = this.page.locator('.f-20.ng-star-inserted').first();
+        const company = this.page.locator("div[class='col-12 grio'] div[class='tags']");
+        await company.scrollIntoViewIfNeeded();
+        await company.click({force: true});
 
-        const associationSearchInput = this.page.getByRole('searchbox', { name: 'Search Company' });
-        await associationSearchInput.scrollIntoViewIfNeeded();
-        await associationSearchInput.waitFor({ state: 'visible', timeout: 10000 });
+        const associationSearchInput = this.page.locator('[id="Contact-11 22_0"]').getByRole('textbox', { name: 'Search', exact: true });
+        await associationSearchInput.waitFor({ state: 'visible', timeout: 5000 });
         await associationSearchInput.click();
         await this.page.waitForTimeout(1200);
         await associationSearchInput.fill(companyName);
 
         // Wait for and select the desired company from the dropdown options
-        const companyOption = this.page.getByRole('option', { name: companyName }).first();
-        await companyOption.waitFor({ state: 'visible', timeout: 5000 });
+        const companyOption = this.page.getByRole('listitem').filter({ hasText:companyName  }).first();
+        await companyOption.waitFor({ state: 'visible', timeout: 30000 });
         await companyOption.click();
 
         // Click on the "Association" button (replace selector as needed)
@@ -2663,25 +2676,26 @@ export class ContactActions {
         await firstRow.waitFor({ state: 'visible', timeout: 30000 });
         // Click the company tag in the 3rd cell (index 2) of the first row to open the company form
         const companyTagCell = this.page.locator('td').nth(1);
-        await companyTagCell.waitFor({ state: 'visible', timeout: 10000 });
+        await companyTagCell.waitFor({ state: 'visible'});
         await companyTagCell.click();
         // Locate the address input field (update selector as needed)
         const addressInput = this.page.getByRole('textbox', { name: /address/i }).first();
-        await addressInput.waitFor({ state: 'visible', timeout: 5000 });
+        await addressInput.waitFor({ state: 'visible'});
         await addressInput.click();
         await addressInput.fill(addressPartial);
 
-        const suggestionsList = this.page.locator('.pac-item');
         // Simulate slow typing (since .type is not supported, use fill with increasing substrings and delay)
         for (let i = 1; i <= addressPartial.length; i++) {
             const partialStr = addressPartial.slice(0, i);
             await addressInput.fill(partialStr);
             await this.page.waitForTimeout(300); // wait 300ms to simulate user's "slow typing"
         }
-        // Wait for suggestions to appear and select the first one
-        await suggestionsList.first().waitFor({ state: 'visible', timeout: 5000 });
-        await suggestionsList.first().click();
-        await this.page.waitForTimeout(1000);
+
+        const suggestionsList = this.page.locator('.pac-item').first();
+        await suggestionsList.waitFor({ state: 'visible'});
+        await suggestionsList.click();
+
+        await this.page.waitForTimeout(2000);
         // Close the form using the X icon after address selection
         const closeFormIcon = this.page.locator('.pi.pi-times').first();
         await closeFormIcon.click({ force: true });
@@ -2699,34 +2713,32 @@ export class ContactActions {
         await companyTagCell.click();
 
         const contactForm = this.page.locator('section');
-        await contactForm.waitFor({ state: 'visible', timeout: 10000 });
+        await contactForm.waitFor({ state: 'visible' });
         expect(contactForm).toBeVisible();
         console.log("Contact Form open successfully");
 
         // Find the address input field
         const addressInput = this.page.locator('input[placeholder="Search Address"]');
-        await expect(addressInput).toBeVisible({ timeout: 10000 });
+        await addressInput.waitFor({state: 'visible'});
         await addressInput.click();
 
         // Type the address slowly to trigger autocomplete
         for (let i = 1; i <= addressPartial.length; ++i) {
             await addressInput.fill(addressPartial.slice(0, i));
-            await this.page.waitForTimeout(50);
+            await this.page.waitForTimeout(500);
         }
 
-        // Wait for Google Places suggestions and click the first one
-        const suggestionsList = this.page.locator('.pac-item');
-        await expect(suggestionsList.first()).toBeVisible({ timeout: 10000 });
-        await suggestionsList.first().click();
+        const suggestionsList = this.page.locator('.pac-item').first();
+        await suggestionsList.click({force: true});
 
         // Wait for autofill to populate
         await this.page.waitForTimeout(2000);
 
         // Open overlay/panel if required
         const editOverlayButton = this.page.locator('#toggle-overlay');
-        if (await editOverlayButton.isVisible({ timeout: 2000 })) {
-            await editOverlayButton.click();
-        }
+        await editOverlayButton.waitFor({state:'visible'});
+        await editOverlayButton.click();
+
 
         // Define locators using stable Angular formcontrolnames
         const buildingName = this.page.locator('input[formcontrolname="building_name"]');
