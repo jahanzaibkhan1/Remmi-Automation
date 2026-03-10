@@ -129,22 +129,22 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
 
   test('Test 18: Verify that a company is successfully associated with the contact', async ({ sessionPage }) => {
     const contact = new ContactActions(sessionPage);
-    await contact.verifyCompanyAssociatedWithContact('Netsol');
+    await contact.verifyCompanyAssociatedWithContact('Netsol INC');
   });
 
   test('Test 19: Try to associate the same company twice', async ({ sessionPage }) => {
     const contact = new ContactActions(sessionPage);
-    await contact.tryAssociateSameCompanyTwice('Netsol');
+    await contact.tryAssociateSameCompanyTwice('Netsol INC');
   });
 
   test('Test 20: Verify that clicking on a company tag opens the company form', async ({ sessionPage }) => {
     const contact = new ContactActions(sessionPage);
-    await contact.verifyOpenCompanyFormFromTag('Netsol');
+    await contact.verifyOpenCompanyFormFromTag('Netsol INC');
   });
 
   test('Test 21: Verify that a company tag can be removed', async ({ sessionPage }) => {
     const contact = new ContactActions(sessionPage);
-    await contact.verifyRemoveCompanyTag('Netsol');
+    await contact.verifyRemoveCompanyTag('Netsol INC');
   });
 
   test('Test 22: Verify that address suggestions appear while typing in the address field', async ({ sessionPage }) => {
