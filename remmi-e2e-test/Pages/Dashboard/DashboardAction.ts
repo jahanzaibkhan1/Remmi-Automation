@@ -622,7 +622,85 @@ export class DashboardAction {
   async clickMinusIcon() {
     await this.locators.minusIcon.waitFor({ state: "visible" });
     await expect(this.locators.minusIcon).toBeVisible();
-    await this.locators.minusIcon.click({force : true});
+    await this.locators.minusIcon.click({ force: true });
+  }
+  
+  async navigateToListings() {
+    const listingTab = this.locators.ListingTab();
+    await listingTab.waitFor({ state: 'visible', timeout: 30000 });
+    await listingTab.hover();
+    await listingTab.dblclick({force: true});
+  }
+
+  async clickGridViewButton() {
+    const cardRows = this.locators.cardViewPropertyRow;
+    if (await cardRows.first().isVisible().catch(() => false)) {
+      return;
+    }
+    const gridViewBtn = this.locators.gridViewButton();
+    await gridViewBtn.click();
+    await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+  }
+
+  async getListingCards() {
+    const cards = this.locators.listingCards;
+    await cards.first().waitFor({ state: 'visible' });
+  }
+
+  async isFirstListingPinned() {
+    const firstCard = this.locators.listingCards.first();
+    const pinnedIcon = firstCard.locator('img[src*="pin"]');
+    try {
+      return await pinnedIcon.isVisible();
+    } catch {
+      return false;
+    }
+  }
+
+  async rightClickFirstListing() {
+    const firstCard = this.locators.listingCards.first();
+    await firstCard.waitFor({ state: 'visible' });
+    await firstCard.click({ button: 'right' });
+    const pinMenuItem = this.locators.pinToDashboardMenuItem;
+    await pinMenuItem.waitFor({ state: 'visible' });
+    await pinMenuItem.click({ force: true });
+    return this.locators.listingCards.first().locator('img[src*="pin"]');
+  }
+
+
+  async selectPrimaryAgent(agentName: 'Jahanzaib Xenex') {
+    const firstCard = this.locators.listingCards.first();
+    await firstCard.waitFor({ state: 'visible' });
+    await firstCard.click();
+    // Open the agent dropdown
+    const dropdown = this.locators.primaryAgentDropdown;
+    await dropdown.scrollIntoViewIfNeeded();
+    await expect(dropdown).toBeVisible();
+    await dropdown.click();
+
+    // Fill the dropdown input with the agent name
+    const input = this.locators.primaryAgentInput;
+    await expect(input).toBeVisible();
+    await input.fill(agentName);
+
+    // Select the agent option from dropdown
+    const options = this.locators.primaryAgentOptions;
+    const agentOption = options.filter({ hasText: agentName }).first();
+    await expect(agentOption).toBeVisible();
+    await agentOption.click();
+
+    const saveAndCloseButton = this.locators.saveAndCloseButton;
+    await expect(saveAndCloseButton).toBeVisible();
+    await saveAndCloseButton.click();
+    const updateSuccessMsg = this.page.getByRole('alert', { name: 'Listing updated successfully' });
+    await updateSuccessMsg.waitFor({ state: 'visible'});
+  }
+
+  async getPinnedListingCard() {
+    const pinnedCard = this.locators.PinnedlistingCard;
+    await pinnedCard.scrollIntoViewIfNeeded();
+    await pinnedCard.waitFor({ state: 'visible' });
+    return pinnedCard;
   }
 
 
@@ -802,5 +880,25 @@ export class DashboardAction {
     await this.reloadBoards();
     await this.clickCloseIcon();
   }
+
+
+  /**
+   * Verifies that the pinned listing appears separately on the dashboard.
+   */
+  async verifyPinnedListingAppearsSeparately() {
+    await this.navigateToListings();
+    await this.getListingCards();
+    await this.clickGridViewButton();
+    await this.selectPrimaryAgent('Jahanzaib Xenex');
+    if (await this.isFirstListingPinned()) {
+      await this.clickDashboardHomeIcon();
+      await this.getPinnedListingCard();
+      return
+    }
+    await this.rightClickFirstListing();
+    await this.clickDashboardHomeIcon();
+    await this.getPinnedListingCard();
+  }
+
 
 }
