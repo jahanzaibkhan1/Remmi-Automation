@@ -624,12 +624,12 @@ export class DashboardAction {
     await expect(this.locators.minusIcon).toBeVisible();
     await this.locators.minusIcon.click({ force: true });
   }
-  
+
   async navigateToListings() {
     const listingTab = this.locators.ListingTab();
     await listingTab.waitFor({ state: 'visible', timeout: 30000 });
     await listingTab.hover();
-    await listingTab.dblclick({force: true});
+    await listingTab.dblclick({ force: true });
   }
 
   async clickGridViewButton() {
@@ -658,7 +658,7 @@ export class DashboardAction {
   }
 
   async rightClickFirstListing() {
-    const firstCard = this.locators.listingCards.first();
+    const firstCard = this.locators.listingCards.nth(1);
     await firstCard.waitFor({ state: 'visible' });
     await firstCard.click({ button: 'right' });
     const pinMenuItem = this.locators.pinToDashboardMenuItem;
@@ -693,16 +693,23 @@ export class DashboardAction {
     await expect(saveAndCloseButton).toBeVisible();
     await saveAndCloseButton.click();
     const updateSuccessMsg = this.page.getByRole('alert', { name: 'Listing updated successfully' });
-    await updateSuccessMsg.waitFor({ state: 'visible'});
+    await updateSuccessMsg.waitFor({ state: 'visible' });
   }
 
   async getPinnedListingCard() {
-    const pinnedCard = this.locators.PinnedlistingCard;
-    await pinnedCard.scrollIntoViewIfNeeded();
+    const pinnedCard = this.locators.PinnedlistingCardOnDashboard;
     await pinnedCard.waitFor({ state: 'visible' });
     return pinnedCard;
   }
 
+  async unpinFirstPinnedListing() {
+    const pinnedCard = this.locators.PinnedlistingCard;
+    await pinnedCard.waitFor({ state: "visible" });
+    await pinnedCard.click({ button: "right" });
+    const unpinMenuItem = this.locators.unpinToDashboardMenuItem;
+    await unpinMenuItem.waitFor({ state: "visible", timeout: 10000 });
+    await unpinMenuItem.click({ force: true });
+  }
 
   /**
    *Verify that all module boards are displayed on the dashboard
@@ -900,5 +907,42 @@ export class DashboardAction {
     await this.getPinnedListingCard();
   }
 
+  /**
+   * Verify unpinning a pinned listing.
+   */
+  async verifyUnpinningPinnedListing() {
+    await this.navigateToListings();
+    await this.getListingCards();
+    await this.clickGridViewButton();
+
+    const propertyCard = this.locators.cardViewPropertyRow.nth(1);
+    await propertyCard.waitFor({ state: "visible" });
+
+    let cardHeading: string | null = null;
+    try {
+      const headingLoc = propertyCard.locator('h3.props-bg.cp.mb-1.px-0');
+      if (await headingLoc.isVisible()) {
+        cardHeading = (await headingLoc.innerText())?.trim() ?? null;
+      }
+    } catch {
+      cardHeading = null;
+    }
+
+    const pinnedIcon = propertyCard.locator('img.imggG').first();
+    const isPinned = await pinnedIcon.isVisible().catch(() => false);
+    if (isPinned) {
+      await propertyCard.click({ button: 'right' });
+      const unpinMenuItem = this.locators.unpinToDashboardMenuItem;
+      await unpinMenuItem.waitFor({ state: "visible", timeout: 10000 });
+      await unpinMenuItem.click({ force: true });
+    }
+
+    await this.clickDashboardHomeIcon();
+
+    if (cardHeading) {
+      const pinnedCard = this.locators.PinnedlistingCardOnDashboard;
+      await expect(pinnedCard.filter({ hasText: cardHeading })).not.toBeVisible();
+    }
+  }
 
 }

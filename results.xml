@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.191461000000125">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-11T05:04:15.734Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.74" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify pinned listing appears separately" classname="Pages\Dashboard\dashboard.spec.ts" time="33.74">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.85808400000073">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-11T07:16:20.520Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.514" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify unpinning a pinned listing" classname="Pages\Dashboard\dashboard.spec.ts" time="36.514">
 </testcase>
 </testsuite>
 </testsuites>
