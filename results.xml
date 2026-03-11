@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.79491700000037">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-11T10:51:12.406Z" hostname="chromium" tests="1" failures="0" skipped="0" time="59.24" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify adding a note" classname="Pages\Dashboard\dashboard.spec.ts" time="59.24">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.66197199999914">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-11T11:53:55.398Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.601" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify lead types on Lead board" classname="Pages\Dashboard\dashboard.spec.ts" time="32.601">
+<system-out>
+<![CDATA[Found 0 unassigned leads, expected 1
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>

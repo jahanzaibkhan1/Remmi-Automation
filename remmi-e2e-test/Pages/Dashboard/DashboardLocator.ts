@@ -94,7 +94,7 @@ export class DashboardLocator {
 
     // Locators for the "Leads" section boxes
     get leadsSection(): Locator {
-        return this.page.locator('div.leads.mxw207px');
+        return this.page.locator('div.leads').first();
     }
 
     get leadsHeading(): Locator {
