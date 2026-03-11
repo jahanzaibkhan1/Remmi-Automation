@@ -443,4 +443,20 @@ export class DashboardLocator {
         return this.page.getByText('Unpin to Dashboard').first();
     }
 
+    get Dashboardlisting(): Locator {
+        return this.page.locator('li.mxw207px');
+    }
+
+    get listingHeadings(): Locator {
+        return this.page.locator('li.mxw207px h4');
+    }
+
+    get listingStatuses(): Locator {
+        return this.page.locator('li.mxw207px button');
+    }
+
+    get listingImages(): Locator {
+        return this.page.locator('li.mxw207px img');
+    }
+
 }

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.282003000000493">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-11T07:31:28.282Z" hostname="chromium" tests="1" failures="0" skipped="0" time="18.113" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify listing carousel arrows" classname="Pages\Dashboard\dashboard.spec.ts" time="18.113">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.101043999999995">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-11T09:45:46.227Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.091" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify listing details on desktop" classname="Pages\Dashboard\dashboard.spec.ts" time="39.091">
 </testcase>
 </testsuite>
 </testsuites>
