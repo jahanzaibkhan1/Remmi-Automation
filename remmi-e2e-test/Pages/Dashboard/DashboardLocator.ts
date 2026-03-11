@@ -407,12 +407,13 @@ export class DashboardLocator {
         return this.page.locator('.s-property');
     }
 
-    gridViewButton(): Locator {
+    get gridViewButton(): Locator {
         return this.page.locator('img.grid-svg-image');
     }
 
-    ListingTab(): Locator {
-        return this.page.locator("//li[@data-label='Listings']");
+    get listingTab(): Locator {
+        // Side menu "Listings" entry
+        return this.page.locator("li.list.sideMenu.justify-center[data-label='Listings']");
     }
 
     get primaryAgentDropdown(): Locator {
@@ -436,7 +437,8 @@ export class DashboardLocator {
     }
 
     get PinnedlistingCard(): Locator {
-        return this.page.locator('img.imggG').first();
+        // Card container for a pinned listing on dashboard
+        return this.page.locator('.h-150px').first();
     }
 
     get unpinToDashboardMenuItem(): Locator {

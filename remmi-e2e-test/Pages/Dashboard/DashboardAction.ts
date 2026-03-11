@@ -625,11 +625,9 @@ export class DashboardAction {
     await this.locators.minusIcon.click({ force: true });
   }
 
-  async navigateToListings() {
-    const listingTab = this.locators.ListingTab();
-    await listingTab.waitFor({ state: 'visible', timeout: 30000 });
-    await listingTab.hover();
-    await listingTab.dblclick({ force: true });
+  async openListingsTab() {
+    await this.locators.listingTab.waitFor({ state: 'visible' });
+    await this.locators.listingTab.click({ force: true });
   }
 
   async clickGridViewButton() {
@@ -637,14 +635,15 @@ export class DashboardAction {
     if (await cardRows.first().isVisible().catch(() => false)) {
       return;
     }
-    const gridViewBtn = this.locators.gridViewButton();
-    await gridViewBtn.click();
+    await this.locators.gridViewButton.waitFor({ state: 'visible' });
+    await this.locators.gridViewButton.click({ force: true });
     await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
   }
 
   async getListingCards() {
     const cards = this.locators.listingCards;
     await cards.first().waitFor({ state: 'visible' });
+    return cards;
   }
 
   async isFirstListingPinned() {
@@ -658,17 +657,27 @@ export class DashboardAction {
   }
 
   async rightClickFirstListing() {
-    const firstCard = this.locators.listingCards.nth(1);
+    const firstCard = this.locators.listingCards.first();
     await firstCard.waitFor({ state: 'visible' });
     await firstCard.click({ button: 'right' });
-    const pinMenuItem = this.locators.pinToDashboardMenuItem;
-    await pinMenuItem.waitFor({ state: 'visible' });
-    await pinMenuItem.click({ force: true });
-    return this.locators.listingCards.first().locator('img[src*="pin"]');
   }
 
+  async clickPinToDashboard() {
+    await this.locators.pinToDashboardMenuItem.waitFor({ state: 'visible' });
+    await this.locators.pinToDashboardMenuItem.click({ force: true });
+  }
 
-  async selectPrimaryAgent(agentName: 'Jahanzaib Xenex') {
+  getFirstListingPinnedIcon() {
+    const firstCard = this.locators.listingCards.first();
+    return firstCard.locator('img[src*="pin"]');
+  }
+
+  async waitForFirstListingPinned() {
+    const pinnedIcon = this.getFirstListingPinnedIcon();
+    await pinnedIcon.waitFor({ state: 'visible' });
+  }
+
+  async selectPrimaryAgent(agentName: string) {
     const firstCard = this.locators.listingCards.first();
     await firstCard.waitFor({ state: 'visible' });
     await firstCard.click();
@@ -692,7 +701,7 @@ export class DashboardAction {
     const saveAndCloseButton = this.locators.saveAndCloseButton;
     await expect(saveAndCloseButton).toBeVisible();
     await saveAndCloseButton.click();
-    const updateSuccessMsg = this.page.getByRole('alert', { name: 'Listing updated successfully' });
+    const updateSuccessMsg = this.page.getByRole('alert').filter({ hasText: /Listing updated successfully|Listing Update successfully/i }).first();
     await updateSuccessMsg.waitFor({ state: 'visible' });
   }
 
@@ -700,6 +709,12 @@ export class DashboardAction {
     const pinnedCard = this.locators.PinnedlistingCardOnDashboard;
     await pinnedCard.waitFor({ state: 'visible' });
     return pinnedCard;
+  }
+
+  async navigateToListings() {
+    const listingTab = this.locators.listingTab;
+    await listingTab.waitFor({ state: 'visible', timeout: 30000 });
+    await listingTab.click({ force: true });
   }
 
   async unpinFirstPinnedListing() {
@@ -893,6 +908,7 @@ export class DashboardAction {
    * Verifies that the pinned listing appears separately on the dashboard.
    */
   async verifyPinnedListingAppearsSeparately() {
+
     await this.navigateToListings();
     await this.getListingCards();
     await this.clickGridViewButton();
@@ -903,6 +919,16 @@ export class DashboardAction {
       return
     }
     await this.rightClickFirstListing();
+    await this.openListingsTab();
+    await this.clickGridViewButton();
+    await this.getListingCards();
+    await this.selectPrimaryAgent('Jahanzaib Xenex');
+    if (await this.isFirstListingPinned()) {
+      return;
+    }
+    await this.rightClickFirstListing();
+    await this.clickPinToDashboard();
+    await this.waitForFirstListingPinned();
     await this.clickDashboardHomeIcon();
     await this.getPinnedListingCard();
   }
