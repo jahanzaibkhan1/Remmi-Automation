@@ -1014,4 +1014,15 @@ async verifyBoardSizeAdjustsWithNumberOfBoards() {
     await this.verifyEmailsSection();
 }
 
+/**
+ * Verify note board popup opens
+ */
+async verifyNoteBoardPopupOpens() {
+  await this.verifyDashboardLoaded();
+  await this.clickNotesViewAll();
+  const noteSidebar = this.page.locator('._sidebar_.ng-star-inserted');
+  await noteSidebar.waitFor({ state: 'visible' });
+  await this.clickNotesViewAll();
+}
+
 }
