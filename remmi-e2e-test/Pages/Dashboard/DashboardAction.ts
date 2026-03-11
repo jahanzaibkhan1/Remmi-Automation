@@ -981,48 +981,80 @@ export class DashboardAction {
     await rightcarousel.waitFor({ state: 'visible' });
     await rightcarousel.click();
     const leftArrow = this.page.locator('i.pi-arrow-left').first();
-    await leftArrow.waitFor({ state: 'visible'});
+    await leftArrow.waitFor({ state: 'visible' });
     await leftArrow.click();
   }
 
-/**
- * Verify listing details on desktop
- */
-async verifyListingDetailsOnDashboardDesktop() {
-  await this.verifyDashboardLoaded();
-  const propertyCard = this.page.locator('ul.listing li').nth(1);
-  await propertyCard.scrollIntoViewIfNeeded();
-  await propertyCard.waitFor({ state: 'visible' });
-  const headerImage = propertyCard.locator('img');
-  await headerImage.waitFor({ state: 'visible' });
-  const saleTag = propertyCard.locator('button');
-  await saleTag.waitFor({ state: 'visible' });
-  const heading = propertyCard.locator('h4');
-  await heading.scrollIntoViewIfNeeded();
-  await heading.waitFor({ state: 'visible' });
-}
+  /**
+   * Verify listing details on desktop
+   */
+  async verifyListingDetailsOnDashboardDesktop() {
+    await this.verifyDashboardLoaded();
+    const propertyCard = this.page.locator('ul.listing li').nth(1);
+    await propertyCard.scrollIntoViewIfNeeded();
+    await propertyCard.waitFor({ state: 'visible' });
+    const headerImage = propertyCard.locator('img');
+    await headerImage.waitFor({ state: 'visible' });
+    const saleTag = propertyCard.locator('button');
+    await saleTag.waitFor({ state: 'visible' });
+    const heading = propertyCard.locator('h4');
+    await heading.scrollIntoViewIfNeeded();
+    await heading.waitFor({ state: 'visible' });
+  }
 
-/**
- * Verify board size adjusts with number of boards
- */
-async verifyBoardSizeAdjustsWithNumberOfBoards() {
-  await this.verifyDashboardLoaded();
+  /**
+   * Verify board size adjusts with number of boards
+   */
+  async verifyBoardSizeAdjustsWithNumberOfBoards() {
+    await this.verifyDashboardLoaded();
     await this.verifyCalendarSection();
     await this.verifyWeatherWidget();
     await this.verifyNotesSection();
     await this.verifyMapVisible();
     await this.verifyEmailsSection();
-}
+  }
 
-/**
- * Verify note board popup opens
- */
-async verifyNoteBoardPopupOpens() {
-  await this.verifyDashboardLoaded();
-  await this.clickNotesViewAll();
-  const noteSidebar = this.page.locator('._sidebar_.ng-star-inserted');
-  await noteSidebar.waitFor({ state: 'visible' });
-  await this.clickNotesViewAll();
-}
+  /**
+   * Verify note board popup opens
+   */
+  async verifyNoteBoardPopupOpens() {
+    await this.verifyDashboardLoaded();
+    await this.clickNotesViewAll();
+    const noteSidebar = this.page.locator('._sidebar_.ng-star-inserted');
+    await noteSidebar.waitFor({ state: 'visible' });
+    await this.clickNotesViewAll();
+  }
+
+  /**
+   * Verify adding a note
+   */
+  async verifyAddingNote() {
+    await this.verifyDashboardLoaded();
+    await this.clickNotesViewAll();
+    const noteSidebar = this.page.locator('._sidebar_.ng-star-inserted');
+    await noteSidebar.waitFor({ state: 'visible' });
+    const takaElement = this.page.locator('.taka.mb-2.ng-star-inserted');
+    await takaElement.waitFor({ state: 'visible' });
+    await takaElement.click();
+    const noteTitleInput = this.page.getByRole('textbox', { name: 'Add note name or search' });
+    const noteContentInput = this.page.locator('.editor');
+    await noteTitleInput.waitFor({ state: 'visible' });
+    await noteContentInput.waitFor({ state: 'visible' });
+    await noteTitleInput.type('"list"    Bondi Beach, NSW, 2026', { delay: 350 });
+    const noteOptionList = this.page.locator("//div[@class='list_ ng-star-inserted']//ul");
+    await noteOptionList.waitFor({ state: 'visible' });
+    const matchedOption = this.page.locator('p.ml-2', { hasText: '"list" Bondi Beach, NSW,' });
+    await matchedOption.waitFor({ state: 'visible' });
+    await matchedOption.click({ force: true });
+    const noteContent = 'Note Added';
+    await noteContentInput.fill(noteContent);
+    const saveButton = this.page.getByRole('button', { name: /Save/i }).last();
+    await saveButton.waitFor({ state: 'visible', timeout: 10000 });
+    await saveButton.click();
+    const successMessage = this.page.getByText('Added successfully');
+    await successMessage.waitFor({ state: 'visible', timeout: 10000 });
+    await this.page.reload();
+    await this.page.waitForSelector(".note.ng-star-inserted", { state: "visible" });
+  }
 
 }

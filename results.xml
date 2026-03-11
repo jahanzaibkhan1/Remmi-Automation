@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="16.21641800000053">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-11T10:23:55.091Z" hostname="chromium" tests="1" failures="0" skipped="0" time="12.092" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify note board popup opens" classname="Pages\Dashboard\dashboard.spec.ts" time="12.092">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.79491700000037">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-11T10:51:12.406Z" hostname="chromium" tests="1" failures="0" skipped="0" time="59.24" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify adding a note" classname="Pages\Dashboard\dashboard.spec.ts" time="59.24">
 </testcase>
 </testsuite>
 </testsuites>

@@ -104,5 +104,10 @@ test.describe("Dashboard Module Boards Display", () => {
     const dashboard = new DashboardAction(sessionPage);
     await dashboard.verifyNoteBoardPopupOpens();
   });
+
+  test('Verify adding a note', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyAddingNote();
+  });
   
 });
