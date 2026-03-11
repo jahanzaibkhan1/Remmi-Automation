@@ -945,4 +945,18 @@ export class DashboardAction {
     }
   }
 
+  /**
+   * Verify listing carousel arrows
+   */
+  async verifyListingCarouselArrows() {
+    await this.verifyDashboardLoaded();
+    const rightcarousel = this.page.locator('i.pi-arrow-right').first();
+    await rightcarousel.scrollIntoViewIfNeeded();
+    await rightcarousel.waitFor({ state: 'visible' });
+    await rightcarousel.click();
+    const leftArrow = this.page.locator('i.pi-arrow-left').first();
+    await leftArrow.waitFor({ state: 'visible'});
+    await leftArrow.click();
+  }
+
 }

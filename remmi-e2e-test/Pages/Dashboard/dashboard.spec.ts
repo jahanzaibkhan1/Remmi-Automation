@@ -82,5 +82,10 @@ test.describe("Dashboard Module Boards Display", () => {
     const dashboard = new DashboardAction(sessionPage);
     await dashboard.verifyUnpinningPinnedListing();
   });
+
+  test('Verify listing carousel arrows', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyListingCarouselArrows();
+  });
   
 });
