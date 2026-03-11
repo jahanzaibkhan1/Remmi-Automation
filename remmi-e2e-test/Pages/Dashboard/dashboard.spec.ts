@@ -4,7 +4,7 @@ import path from "path";
 const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
 const DASHBOARD_URL = process.env.DASHBOARD_URL || 'https://remmi-app-stage-ui.azurewebsites.net/dashboard';
 
-const test = base.extend<{ sessionPage: Page }>({
+const test = base.extend<{ sessionPage: any }>({
   sessionPage: [async ({ browser }, use) => {
     const context = await browser.newContext({ storageState: managerSessionPath });
     try {
@@ -12,10 +12,11 @@ const test = base.extend<{ sessionPage: Page }>({
       await page.goto(DASHBOARD_URL);
       await use(page);
     } finally {
-      await context.close();
+      // Optionally close context if desired in cleanup
     }
-  }, { scope: 'test' }]
+  }, { scope: 'worker' }]
 });
+
 
 test.describe("Dashboard Module Boards Display", () => {
   test("Verify all main module boards are displayed", async ({ sessionPage }) => {
@@ -97,6 +98,11 @@ test.describe("Dashboard Module Boards Display", () => {
   test('Verify board size adjusts with number of boards', async ({ sessionPage }) => {
     const dashboard = new DashboardAction(sessionPage);
     await dashboard.verifyBoardSizeAdjustsWithNumberOfBoards();
+  });
+
+  test('Verify note board popup opens', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyNoteBoardPopupOpens();
   });
   
 });
