@@ -1,4 +1,4 @@
-import { test as base, expect } from "@playwright/test";
+import { test as base, type Page } from "@playwright/test";
 import { DashboardAction } from "./DashboardAction";
 import path from "path";
 const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
@@ -12,9 +12,11 @@ const test = base.extend<{ sessionPage: any }>({
       await page.goto(DASHBOARD_URL);
       await use(page);
     } finally {
+      // Optionally close context if desired in cleanup
     }
   }, { scope: 'worker' }]
 });
+
 
 test.describe("Dashboard Module Boards Display", () => {
   test("Verify all main module boards are displayed", async ({ sessionPage }) => {
@@ -76,6 +78,41 @@ test.describe("Dashboard Module Boards Display", () => {
     const dashboard = new DashboardAction(sessionPage);
     await dashboard.verifyPinnedListingAppearsSeparately();
 
+  });
+
+  test('Verify unpinning a pinned listing', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyUnpinningPinnedListing();
+  });
+
+  test('Verify listing carousel arrows', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyListingCarouselArrows();
+  });
+
+  test('Verify listing details on desktop', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyListingDetailsOnDashboardDesktop();
+  });
+
+  test('Verify board size adjusts with number of boards', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyBoardSizeAdjustsWithNumberOfBoards();
+  });
+
+  test('Verify note board popup opens', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyNoteBoardPopupOpens();
+  });
+
+  test('Verify adding a note', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyAddingNote();
+  });
+
+  test('Verify lead types on Lead board', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyLeadTypesOnLeadBoard();
   });
   
 });

@@ -94,7 +94,7 @@ export class DashboardLocator {
 
     // Locators for the "Leads" section boxes
     get leadsSection(): Locator {
-        return this.page.locator('div.leads.mxw207px');
+        return this.page.locator('div.leads').first();
     }
 
     get leadsHeading(): Locator {
@@ -412,6 +412,7 @@ export class DashboardLocator {
     }
 
     get listingTab(): Locator {
+        // Side menu "Listings" entry
         return this.page.locator("li.list.sideMenu.justify-center[data-label='Listings']");
     }
 
@@ -431,8 +432,43 @@ export class DashboardLocator {
         return this.page.getByRole('button', { name: 'Save & Close' }).first();
     }
 
-    get PinnedlistingCard(): Locator {
+    get PinnedlistingCardOnDashboard(): Locator {
         return this.page.locator('.h-150px').first();
     }
+
+    get PinnedlistingCard(): Locator {
+        // Card container for a pinned listing on dashboard
+        return this.page.locator('.h-150px').first();
+    }
+
+    get unpinToDashboardMenuItem(): Locator {
+        return this.page.getByText('Unpin to Dashboard').first();
+    }
+
+    get Dashboardlisting(): Locator {
+        return this.page.locator('li.mxw207px');
+    }
+
+    get listingHeadings(): Locator {
+        return this.page.locator('li.mxw207px h4');
+    }
+
+    get listingStatuses(): Locator {
+        return this.page.locator('li.mxw207px button');
+    }
+
+    get listingImages(): Locator {
+        return this.page.locator('li.mxw207px img');
+    }
+
+    get takaElement(): Locator {
+        return this.page.locator('.taka.mb-2.ng-star-inserted');
+    }
+
+    get noteTitleInput(): Locator {
+        return this.page.getByRole('textbox', { name: 'Add note name or search' });
+    }
+
+
 
 }
