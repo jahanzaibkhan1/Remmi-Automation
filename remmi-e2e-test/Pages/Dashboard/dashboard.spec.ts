@@ -92,5 +92,10 @@ test.describe("Dashboard Module Boards Display", () => {
     const dashboard = new DashboardAction(sessionPage);
     await dashboard.verifyListingDetailsOnDashboardDesktop();
   });
+
+  test('Verify board size adjusts with number of boards', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyBoardSizeAdjustsWithNumberOfBoards();
+  });
   
 });
