@@ -431,8 +431,16 @@ export class DashboardLocator {
         return this.page.getByRole('button', { name: 'Save & Close' }).first();
     }
 
-    get PinnedlistingCard(): Locator {
+    get PinnedlistingCardOnDashboard(): Locator {
         return this.page.locator('.h-150px').first();
+    }
+
+    get PinnedlistingCard(): Locator {
+        return this.page.locator('img.imggG').first();
+    }
+
+    get unpinToDashboardMenuItem(): Locator {
+        return this.page.getByText('Unpin to Dashboard').first();
     }
 
 }

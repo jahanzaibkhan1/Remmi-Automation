@@ -77,5 +77,10 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifyPinnedListingAppearsSeparately();
 
   });
+
+  test('Verify unpinning a pinned listing', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyUnpinningPinnedListing();
+  });
   
 });
