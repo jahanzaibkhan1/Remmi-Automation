@@ -1,10 +1,10 @@
-import { test as base, expect } from "@playwright/test";
+import { test as base, type Page } from "@playwright/test";
 import { DashboardAction } from "./DashboardAction";
 import path from "path";
 const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
 const DASHBOARD_URL = process.env.DASHBOARD_URL || 'https://remmi-app-stage-ui.azurewebsites.net/dashboard';
 
-const test = base.extend<{ sessionPage: any }>({
+const test = base.extend<{ sessionPage: Page }>({
   sessionPage: [async ({ browser }, use) => {
     const context = await browser.newContext({ storageState: managerSessionPath });
     try {
@@ -12,8 +12,9 @@ const test = base.extend<{ sessionPage: any }>({
       await page.goto(DASHBOARD_URL);
       await use(page);
     } finally {
+      await context.close();
     }
-  }, { scope: 'worker' }]
+  }, { scope: 'test' }]
 });
 
 test.describe("Dashboard Module Boards Display", () => {
