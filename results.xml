@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.101043999999995">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-11T09:45:46.227Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.091" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify listing details on desktop" classname="Pages\Dashboard\dashboard.spec.ts" time="39.091">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.37506900000013">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-11T09:49:51.863Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.297" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify board size adjusts with number of boards" classname="Pages\Dashboard\dashboard.spec.ts" time="27.297">
 </testcase>
 </testsuite>
 </testsuites>

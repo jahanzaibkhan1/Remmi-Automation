@@ -976,5 +976,16 @@ async verifyListingDetailsOnDashboardDesktop() {
   await heading.waitFor({ state: 'visible' });
 }
 
+/**
+ * Verify board size adjusts with number of boards
+ */
+async verifyBoardSizeAdjustsWithNumberOfBoards() {
+  await this.verifyDashboardLoaded();
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.verifyMapVisible();
+    await this.verifyEmailsSection();
+}
 
 }
