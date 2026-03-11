@@ -461,4 +461,14 @@ export class DashboardLocator {
         return this.page.locator('li.mxw207px img');
     }
 
+    get takaElement(): Locator {
+        return this.page.locator('.taka.mb-2.ng-star-inserted');
+    }
+
+    get noteTitleInput(): Locator {
+        return this.page.getByRole('textbox', { name: 'Add note name or search' });
+    }
+
+
+
 }
