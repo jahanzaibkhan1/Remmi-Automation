@@ -140,5 +140,10 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.unpinPinnedListingFromDashboard();
   });
 
+  test('Verify popup position sync after row change', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.checkBoardPopupPositionSyncAfterMove();
+  });
+
   
 });
