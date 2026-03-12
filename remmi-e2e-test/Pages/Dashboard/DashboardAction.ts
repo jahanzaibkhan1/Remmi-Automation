@@ -1235,6 +1235,15 @@ export class DashboardAction {
   }
 
 
+  /**
+   * Verify that clicking the cross icon closes the popup.
+   */
+  async verifyCrossIconClosesPopup() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.clickCloseIcon();
+    await this.verifyDashboardLoaded();
+  }
 
 }
 
