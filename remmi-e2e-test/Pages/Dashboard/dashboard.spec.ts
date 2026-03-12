@@ -145,5 +145,10 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.checkBoardPopupPositionSyncAfterMove();
   });
 
+  test('Verify cross icon closes popup', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyCrossIconClosesPopup();
+  });
+
   
 });
