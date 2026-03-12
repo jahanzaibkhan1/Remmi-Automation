@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.4384990000017">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-12T11:15:02.452Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.345" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify cross icon closes popup" classname="Pages\Dashboard\dashboard.spec.ts" time="37.345">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.41945100000128">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-12T11:18:04.916Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.765" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify Reset button in popup" classname="Pages\Dashboard\dashboard.spec.ts" time="27.765">
 </testcase>
 </testsuite>
 </testsuites>

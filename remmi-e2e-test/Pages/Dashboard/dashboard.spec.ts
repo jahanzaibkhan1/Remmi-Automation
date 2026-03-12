@@ -150,5 +150,10 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifyCrossIconClosesPopup();
   });
 
+  test('Verify Reset button in popup', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyReloadButtonInPopup();
+  });
+
   
 });
