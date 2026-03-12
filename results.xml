@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.63697300000116">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-12T11:39:55.748Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.537" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify widget visibility in More Widgets" classname="Pages\Dashboard\dashboard.spec.ts" time="29.537">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="29.067411000002174">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-12T11:43:34.559Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.578" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify simultaneous board resizing" classname="Pages\Dashboard\dashboard.spec.ts" time="24.578">
 </testcase>
 </testsuite>
 </testsuites>
