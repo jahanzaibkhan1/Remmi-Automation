@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.41945100000128">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-12T11:18:04.916Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.765" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify Reset button in popup" classname="Pages\Dashboard\dashboard.spec.ts" time="27.765">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="27.250493999999016">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-12T11:24:42.705Z" hostname="chromium" tests="1" failures="0" skipped="0" time="22.113" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify widget visibility affects dashboard" classname="Pages\Dashboard\dashboard.spec.ts" time="22.113">
 </testcase>
 </testsuite>
 </testsuites>
