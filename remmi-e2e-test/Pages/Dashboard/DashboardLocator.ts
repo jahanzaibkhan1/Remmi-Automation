@@ -469,6 +469,14 @@ export class DashboardLocator {
         return this.page.getByRole('textbox', { name: 'Add note name or search' });
     }
 
+    get closeNote(): Locator {
+        return this.page.locator('i.pi.pi-times.cursor-pointer.my-2').first();
+    }
+
+    get saveButton(): Locator {
+        return this.page.getByRole('button', { name: /save/i }).first();
+    }
+
 
 
 }

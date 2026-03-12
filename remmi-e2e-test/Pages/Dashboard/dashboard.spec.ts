@@ -114,5 +114,66 @@ test.describe("Dashboard Module Boards Display", () => {
     const dashboard = new DashboardAction(sessionPage);
     await dashboard.verifyLeadTypesOnLeadBoard();
   });
+
+  test('Verify map board shows location', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyMapBoardShowsLocation();
+  });
+
+  test('Add 6 boards to a single row', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.addSixBoardsToSingleRow();
+  });
+
+  test('Verify that without saving the dashboard, board position does not change', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyBoardPositionDoesNotChangeWithoutSaving();
+  });
+
+  test('Add a note without title', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.addNoteWithoutTitle();
+  });
+
+  test('Verify that unpinned the listing from the dashboard', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.unpinPinnedListingFromDashboard();
+  });
+
+  test('Verify popup position sync after row change', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.checkBoardPopupPositionSyncAfterMove();
+  });
+
+  test('Verify cross icon closes popup', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyCrossIconClosesPopup();
+  });
+
+  test('Verify Reset button in popup', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyReloadButtonInPopup();
+  });
+
+  test('Verify widget visibility affects dashboard', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyWidgetVisibilityAffectsDashboard();
+  });
+
+  test('Verify widget movement between rows', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyWidgetMovementBetweenRows();
+  });
+
+  test('Verify widget visibility in More Widgets', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyWidgetVisibilityInMoreWidgets();
+  });
+
+  test('Verify simultaneous board resizing', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifySimultaneousBoardResizing();
+  });
+
   
 });
