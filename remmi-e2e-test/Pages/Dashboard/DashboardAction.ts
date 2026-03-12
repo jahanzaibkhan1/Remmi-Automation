@@ -1273,5 +1273,27 @@ export class DashboardAction {
     await this.clickCloseIcon();
   }
 
+  /**
+   * Verify widget movement between rows
+   */
+  async verifyWidgetMovementBetweenRows() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    const popupLocator = this.page.locator('.popup.ng-star-inserted');
+    await popupLocator.waitFor({ state: 'visible' });
+    const boardTitlesBefore = await popupLocator.allInnerTexts();
+    await this.hoverAddBox();
+    await this.clickAddWidgetIcon();
+    await this.dragCalendarToNewWidgetRow();
+    const popupLocatorAfterMove = this.page.locator('.popup.ng-star-inserted');
+    await popupLocatorAfterMove.waitFor({ state: 'visible' });
+    const boardTitlesAfter = await popupLocatorAfterMove.allInnerTexts();
+    expect(boardTitlesAfter).not.toEqual(boardTitlesBefore);
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+    await this.verifyDashboardLoaded();
+  }
+
+
 }
 
