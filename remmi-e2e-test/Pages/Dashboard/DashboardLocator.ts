@@ -470,7 +470,7 @@ export class DashboardLocator {
     }
 
     get closeNote(): Locator {
-        return this.page.locator('i.pi.pi-times.cursor-pointer.my-2');
+        return this.page.locator('i.pi.pi-times.cursor-pointer.my-2').first();
     }
 
     get saveButton(): Locator {

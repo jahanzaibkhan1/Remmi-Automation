@@ -1054,7 +1054,8 @@ export class DashboardAction {
     const successMessage = this.page.getByText('Added successfully');
     await successMessage.waitFor({ state: 'visible' });
     await this.page.reload();
-    await this.page.waitForSelector(".note.ng-star-inserted", { state: "visible" });
+    const noteListText = await this.page.getByText('"list" Bondi Beach, NS "list').first();
+    await noteListText.waitFor({ state: "visible" });
   }
 
   /**
@@ -1094,7 +1095,7 @@ export class DashboardAction {
 
       if (expectedCount === 0) {
         // Expect "No leads available" message
-        await expect(noLeadsMessage).toBeVisible({timeout: 20000});
+        await expect(noLeadsMessage).toBeVisible({ timeout: 20000 });
         await this.clickDashboardHomeIcon();
         return;
       }
@@ -1183,6 +1184,8 @@ export class DashboardAction {
     await this.locators.saveButton.click();
     await this.locators.closeNote.waitFor({ state: 'visible' });
     await this.locators.closeNote.click({ force: true });
+    await expect(this.locators.closeNote).not.toBeVisible({ timeout: 10000 });
+    await expect(noteSidebar).not.toBeVisible({ timeout: 10000 });
     await this.verifyDashboardLoaded();
 
   }
@@ -1192,7 +1195,13 @@ export class DashboardAction {
    */
   async unpinPinnedListingFromDashboard() {
     await this.verifyDashboardLoaded();
-    const pinnedListing = this.locators.PinnedlistingCardOnDashboard.first();
+    await this.page.reload();
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.verifyMapVisible();
+    await this.verifyEmailsSection();
+    const pinnedListing = this.page.locator('.h-150px').first();
     await pinnedListing.scrollIntoViewIfNeeded();
     await expect(pinnedListing).toBeVisible({ timeout: 15000 });
     await this.page.waitForTimeout(1000);
