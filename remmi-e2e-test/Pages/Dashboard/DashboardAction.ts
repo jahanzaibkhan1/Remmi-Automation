@@ -1177,5 +1177,21 @@ export class DashboardAction {
 
   }
 
+  /**
+   * Verify that the pinned listing can be unpinned from the dashboard.
+   */
+  async unpinPinnedListingFromDashboard() {
+    await this.verifyDashboardLoaded();
+    const pinnedListing = this.locators.PinnedlistingCardOnDashboard;
+    await pinnedListing.scrollIntoViewIfNeeded();
+    await pinnedListing.waitFor({ state: 'visible' });
+    await pinnedListing.hover();
+    await pinnedListing.click({ button: 'right' });
+    const unpinMenuItem = this.locators.unpinToDashboardMenuItem;
+    await unpinMenuItem.waitFor({ state: 'visible' });
+    await unpinMenuItem.click();
+    await this.verifyDashboardLoaded();
+  }
+
 }
 
