@@ -135,5 +135,10 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.addNoteWithoutTitle();
   });
 
+  test('Verify that unpinned the listing from the dashboard', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.unpinPinnedListingFromDashboard();
+  });
+
   
 });
