@@ -1,6 +1,54 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.80883300000057">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-12T08:56:10.935Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.867" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify popup position sync after row change" classname="Pages\Dashboard\dashboard.spec.ts" time="35.867">
+<testsuites id="" name="" tests="25" failures="0" skipped="0" errors="0" time="133.24076399999998">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-12T11:08:01.456Z" hostname="chromium" tests="25" failures="0" skipped="0" time="128.019" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify all main module boards are displayed" classname="Pages\Dashboard\dashboard.spec.ts" time="22.519">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify dragging boards to change their position" classname="Pages\Dashboard\dashboard.spec.ts" time="2.504">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify boards can be moved to different rows" classname="Pages\Dashboard\dashboard.spec.ts" time="2.624">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify max 5 boards allowed per row" classname="Pages\Dashboard\dashboard.spec.ts" time="2.45">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify module opens on board click" classname="Pages\Dashboard\dashboard.spec.ts" time="6.482">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify &quot;Dashboard Display Order&quot; popup opens" classname="Pages\Dashboard\dashboard.spec.ts" time="1.157">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify widgets visibility toggle" classname="Pages\Dashboard\dashboard.spec.ts" time="1.307">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify drag and drop functionality in popup" classname="Pages\Dashboard\dashboard.spec.ts" time="1.903">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify board position sync between dashboard and popup" classname="Pages\Dashboard\dashboard.spec.ts" time="0.574">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify removing a row removes all its boards" classname="Pages\Dashboard\dashboard.spec.ts" time="1.859">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify new row addition" classname="Pages\Dashboard\dashboard.spec.ts" time="1.438">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify pinned listing appears separately" classname="Pages\Dashboard\dashboard.spec.ts" time="19.35">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify unpinning a pinned listing" classname="Pages\Dashboard\dashboard.spec.ts" time="2.395">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify listing carousel arrows" classname="Pages\Dashboard\dashboard.spec.ts" time="1.157">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify listing details on desktop" classname="Pages\Dashboard\dashboard.spec.ts" time="0.218">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify board size adjusts with number of boards" classname="Pages\Dashboard\dashboard.spec.ts" time="0.173">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify note board popup opens" classname="Pages\Dashboard\dashboard.spec.ts" time="0.291">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify adding a note" classname="Pages\Dashboard\dashboard.spec.ts" time="23.727">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify lead types on Lead board" classname="Pages\Dashboard\dashboard.spec.ts" time="15.227">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify map board shows location" classname="Pages\Dashboard\dashboard.spec.ts" time="0.219">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Add 6 boards to a single row" classname="Pages\Dashboard\dashboard.spec.ts" time="1.369">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify that without saving the dashboard, board position does not change" classname="Pages\Dashboard\dashboard.spec.ts" time="1.507">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Add a note without title" classname="Pages\Dashboard\dashboard.spec.ts" time="0.504">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify that unpinned the listing from the dashboard" classname="Pages\Dashboard\dashboard.spec.ts" time="15.495">
+</testcase>
+<testcase name="Dashboard Module Boards Display › Verify popup position sync after row change" classname="Pages\Dashboard\dashboard.spec.ts" time="1.57">
 </testcase>
 </testsuite>
 </testsuites>
