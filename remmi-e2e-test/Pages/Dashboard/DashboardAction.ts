@@ -1311,6 +1311,13 @@ export class DashboardAction {
     await this.verifyDashboardLoaded();
   }
 
+  /**
+   * Verify simultaneous board resizing
+   */
+  async verifySimultaneousBoardResizing() {
+    await this.verifyWidgetMovementBetweenRows();
+  }
+
 
 }
 
