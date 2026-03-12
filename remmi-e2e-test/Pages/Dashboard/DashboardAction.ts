@@ -1259,5 +1259,19 @@ export class DashboardAction {
     await this.clickCloseIcon();
   }
 
+  /**
+   * Verify that changing widget visibility affects dashboard display.
+   */
+  async verifyWidgetVisibilityAffectsDashboard() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.verifyCalendarNavSection();
+    await this.verifyWeatherNavItemVisible();
+    const calendarEyeIcon = this.page.locator('.pi.pi-eye-slash').first();
+    await calendarEyeIcon.waitFor({ state: 'visible' });
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+  }
+
 }
 

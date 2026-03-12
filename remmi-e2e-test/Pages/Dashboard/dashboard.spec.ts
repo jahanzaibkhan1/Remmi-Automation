@@ -155,5 +155,10 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifyReloadButtonInPopup();
   });
 
+  test('Verify widget visibility affects dashboard', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyWidgetVisibilityAffectsDashboard();
+  });
+
   
 });
