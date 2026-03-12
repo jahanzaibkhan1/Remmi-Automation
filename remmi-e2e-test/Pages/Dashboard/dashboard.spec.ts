@@ -160,5 +160,10 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifyWidgetVisibilityAffectsDashboard();
   });
 
+  test('Verify widget movement between rows', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyWidgetMovementBetweenRows();
+  });
+
   
 });
