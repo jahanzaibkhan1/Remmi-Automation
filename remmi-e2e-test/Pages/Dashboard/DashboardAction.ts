@@ -1118,5 +1118,12 @@ export class DashboardAction {
     await verifyLeadPageCount(() => this.clickUnassignedLeads(), unassignedLeadsCount, "unassigned");
   }
 
+  // Verify map board shows location
+  async verifyMapBoardShowsLocation() {
+    await this.clickDashboardHomeIcon();
+    await this.verifyDashboardLoaded();
+    await this.verifyMapVisible();
+  }
+
 }
 
