@@ -1125,5 +1125,16 @@ export class DashboardAction {
     await this.verifyMapVisible();
   }
 
+  // Add 6 boards to a single row
+  async addSixBoardsToSingleRow() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.getFirstRow();
+    await this.getBanner();
+    await this.dragBannerToFirstRow();
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+  };
+
 }
 

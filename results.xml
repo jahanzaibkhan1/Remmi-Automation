@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="17.55351500000013">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-12T04:08:21.510Z" hostname="chromium" tests="1" failures="0" skipped="0" time="12.306" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify map board shows location" classname="Pages\Dashboard\dashboard.spec.ts" time="12.306">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="16.475405000000027">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-12T04:13:01.920Z" hostname="chromium" tests="1" failures="0" skipped="0" time="12.213" errors="0">
+<testcase name="Dashboard Module Boards Display › Add 6 boards to a single row" classname="Pages\Dashboard\dashboard.spec.ts" time="12.213">
 </testcase>
 </testsuite>
 </testsuites>
