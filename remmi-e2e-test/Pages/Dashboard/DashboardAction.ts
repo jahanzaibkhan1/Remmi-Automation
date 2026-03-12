@@ -1049,10 +1049,10 @@ export class DashboardAction {
     const noteContent = 'Note Added';
     await noteContentInput.fill(noteContent);
     const saveButton = this.page.getByRole('button', { name: /Save/i }).last();
-    await saveButton.waitFor({ state: 'visible', timeout: 10000 });
+    await saveButton.waitFor({ state: 'visible' });
     await saveButton.click();
     const successMessage = this.page.getByText('Added successfully');
-    await successMessage.waitFor({ state: 'visible', timeout: 10000 });
+    await successMessage.waitFor({ state: 'visible' });
     await this.page.reload();
     await this.page.waitForSelector(".note.ng-star-inserted", { state: "visible" });
   }
@@ -1064,47 +1064,57 @@ export class DashboardAction {
     // Wait for dashboard to load
     await this.verifyDashboardLoaded();
     await this.verifyLeadsSection();
-
-    // Wait a bit to ensure all data is loaded
     await this.page.waitForTimeout(1000);
 
-    // Helper to parse counts as numbers
     const parseCount = (count: string | null | undefined) => {
-      const trimmed = count?.trim() ?? "";
-      const value = Number(trimmed);
+      const value = Number((count ?? "").trim());
       return isNaN(value) ? 0 : value;
     };
 
     // Get counts from dashboard
-    const newLeadsCount = parseCount(await this.getNewLeadsCount());
-    const buyerLeadsCount = parseCount(await this.getBuyerLeadsCount());
-    const sellerLeadsCount = parseCount(await this.getSellerLeadsCount());
-    const unassignedLeadsCount = parseCount(await this.getUnassignedLeadsCount());
-
-    const statusMap: Record<string, string> = {
-      new: 'New',
-      buyer: 'Buyer',
-      seller: 'Seller',
-      unassigned: 'Unassigned'
+    const counts = {
+      new: parseCount(await this.getNewLeadsCount()),
+      buyer: parseCount(await this.getBuyerLeadsCount()),
+      seller: parseCount(await this.getSellerLeadsCount()),
+      unassigned: parseCount(await this.getUnassignedLeadsCount()),
     };
 
-    // Utility to verify lead counts
+    const statusMap: Record<string, string> = {
+      new: "New",
+      buyer: "Buyer",
+      seller: "Seller",
+      unassigned: "Unassigned",
+    };
+
     const verifyLeadPageCount = async (clickFn: () => Promise<void>, expectedCount: number, typeName: string) => {
       await clickFn();
-      const leadCards = this.page.locator(`tbody.p-datatable-tbody tr:has-text("${statusMap[typeName]}")`);
 
-      // Only wait if we expect at least 1
-      if (expectedCount > 0) {
-        await leadCards.first().waitFor({ state: 'visible', timeout: 10000 }).catch(() => { });
+      const leadRows = this.page.locator(`tbody.p-datatable-tbody tr`);
+      const noLeadsMessage = this.page.locator("tbody.p-datatable-tbody tr:has-text('No leads available')");
+
+      if (expectedCount === 0) {
+        // Expect "No leads available" message
+        await expect(noLeadsMessage).toBeVisible({timeout: 20000});
+        await this.clickDashboardHomeIcon();
+        return;
       }
 
-      const actualCount = await leadCards.count();
+      // Wait for rows to appear
+      await leadRows.first().waitFor({ state: "visible", timeout: 20000 });
 
-      if (typeName === 'unassigned') {
-        // Don't fail if unassigned leads are missing, just log
-        console.log(`Found ${actualCount} unassigned leads, expected ${expectedCount}`);
+      const actualCount = await leadRows.count();
+
+      if (typeName === "unassigned") {
+        // Only verify count, type is optional
+        expect(actualCount, `Expected ${expectedCount} unassigned leads, got ${actualCount}`).toBe(expectedCount);
       } else {
-        expect(actualCount, `Expected ${expectedCount} ${typeName} leads, got ${actualCount}.`).toBe(expectedCount);
+        // Verify both count and type
+        const matchingRows = await leadRows.filter({
+          hasText: statusMap[typeName],
+        }).count();
+
+        expect(actualCount, `Expected ${expectedCount} ${typeName} leads, got ${actualCount}`).toBe(expectedCount);
+        expect(matchingRows, `${typeName} leads type mismatch`).toBe(expectedCount);
       }
 
       // Go back to dashboard
@@ -1112,10 +1122,10 @@ export class DashboardAction {
     };
 
     // Verify all lead types
-    await verifyLeadPageCount(() => this.clickNewLeads(), newLeadsCount, "new");
-    await verifyLeadPageCount(() => this.clickBuyerLeads(), buyerLeadsCount, "buyer");
-    await verifyLeadPageCount(() => this.clickSellerLeads(), sellerLeadsCount, "seller");
-    await verifyLeadPageCount(() => this.clickUnassignedLeads(), unassignedLeadsCount, "unassigned");
+    await verifyLeadPageCount(() => this.clickNewLeads(), counts.new, "new");
+    await verifyLeadPageCount(() => this.clickBuyerLeads(), counts.buyer, "buyer");
+    await verifyLeadPageCount(() => this.clickSellerLeads(), counts.seller, "seller");
+    await verifyLeadPageCount(() => this.clickUnassignedLeads(), counts.unassigned, "unassigned");
   }
 
   // Verify map board shows location
@@ -1169,10 +1179,10 @@ export class DashboardAction {
     const takaElement = this.page.locator('.taka.mb-2.ng-star-inserted');
     await takaElement.waitFor({ state: 'visible' });
     await takaElement.click();
-    await this.locators.saveButton.waitFor({state: 'visible'});
+    await this.locators.saveButton.waitFor({ state: 'visible' });
     await this.locators.saveButton.click();
     await this.locators.closeNote.waitFor({ state: 'visible' });
-    await this.locators.closeNote.click({force: true});
+    await this.locators.closeNote.click({ force: true });
     await this.verifyDashboardLoaded();
 
   }
@@ -1182,16 +1192,40 @@ export class DashboardAction {
    */
   async unpinPinnedListingFromDashboard() {
     await this.verifyDashboardLoaded();
-    const pinnedListing = this.locators.PinnedlistingCardOnDashboard;
+    const pinnedListing = this.locators.PinnedlistingCardOnDashboard.first();
     await pinnedListing.scrollIntoViewIfNeeded();
-    await pinnedListing.waitFor({ state: 'visible' });
-    await pinnedListing.hover();
+    await expect(pinnedListing).toBeVisible({ timeout: 15000 });
+    await this.page.waitForTimeout(1000);
     await pinnedListing.click({ button: 'right' });
+    await this.page.waitForTimeout(1000);
     const unpinMenuItem = this.locators.unpinToDashboardMenuItem;
-    await unpinMenuItem.waitFor({ state: 'visible' });
+    await expect(unpinMenuItem).toBeVisible({ timeout: 10000 });
     await unpinMenuItem.click();
+  }
+
+
+  /**
+   * Check if popup position syncs after a board is moved
+   */
+  async checkBoardPopupPositionSyncAfterMove() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    const popupLocator = this.page.locator('.popup.ng-star-inserted');
+    await popupLocator.waitFor({ state: 'visible' });
+    const popupBoardTitlesBefore = await popupLocator.allInnerTexts();
+    await this.hoverAddBox();
+    await this.clickAddWidgetIcon();
+    await this.dragCalendarToNewWidgetRow();
+    const popupLocatorAfterMove = this.page.locator('.popup.ng-star-inserted');
+    await popupLocatorAfterMove.waitFor({ state: 'visible' });
+    const popupBoardTitlesAfter = await popupLocatorAfterMove.allInnerTexts();
+    expect(popupBoardTitlesAfter).not.toEqual(popupBoardTitlesBefore);
+    await this.reloadBoards();
+    await this.clickCloseIcon();
     await this.verifyDashboardLoaded();
   }
+
+
 
 }
 

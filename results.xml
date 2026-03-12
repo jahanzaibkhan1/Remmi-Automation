@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.01694700000016">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-12T06:01:53.852Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.878" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify that unpinned the listing from the dashboard" classname="Pages\Dashboard\dashboard.spec.ts" time="38.878">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.80883300000057">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-12T08:56:10.935Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.867" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify popup position sync after row change" classname="Pages\Dashboard\dashboard.spec.ts" time="35.867">
 </testcase>
 </testsuite>
 </testsuites>
