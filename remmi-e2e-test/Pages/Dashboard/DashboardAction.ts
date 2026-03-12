@@ -1294,6 +1294,23 @@ export class DashboardAction {
     await this.verifyDashboardLoaded();
   }
 
+  /**
+   * Verify widget visibility toggling via "More Widgets" section behaves correctly.
+   */
+  async verifyWidgetVisibilityInMoreWidgets() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    const popup = this.page.locator('.popup.ng-star-inserted');
+    await popup.waitFor({ state: 'visible' });
+    await this.verifyCalendarNavSection();
+    await this.verifyWeatherNavItemVisible();
+    const dragDropWidget = this.page.getByText('Drag & drop to add widget').first();
+    await dragDropWidget.waitFor({ state: 'visible' });
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+    await this.verifyDashboardLoaded();
+  }
+
 
 }
 
