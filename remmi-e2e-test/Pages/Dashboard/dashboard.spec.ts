@@ -124,5 +124,11 @@ test.describe("Dashboard Module Boards Display", () => {
     const dashboard = new DashboardAction(sessionPage);
     await dashboard.addSixBoardsToSingleRow();
   });
+
+  test('Verify that without saving the dashboard, board position does not change', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyBoardPositionDoesNotChangeWithoutSaving();
+  });
+
   
 });

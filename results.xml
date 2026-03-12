@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="16.475405000000027">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-12T04:13:01.920Z" hostname="chromium" tests="1" failures="0" skipped="0" time="12.213" errors="0">
-<testcase name="Dashboard Module Boards Display › Add 6 boards to a single row" classname="Pages\Dashboard\dashboard.spec.ts" time="12.213">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.737720000000206">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-12T04:53:22.888Z" hostname="chromium" tests="1" failures="0" skipped="0" time="19.256" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify that without saving the dashboard, board position does not change" classname="Pages\Dashboard\dashboard.spec.ts" time="19.256">
 </testcase>
 </testsuite>
 </testsuites>

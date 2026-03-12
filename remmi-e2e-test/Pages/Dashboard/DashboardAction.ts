@@ -1,4 +1,4 @@
-import { Page, expect } from "@playwright/test";
+import { Locator, Page, expect } from "@playwright/test";
 import { DashboardLocator } from "./DashboardLocator";
 
 export class DashboardAction {
@@ -1135,6 +1135,28 @@ export class DashboardAction {
     await this.reloadBoards();
     await this.clickCloseIcon();
   };
+
+  /**
+   * Verify that without saving the dashboard, board position should not be change 
+   */
+  async verifyBoardPositionDoesNotChangeWithoutSaving() {
+    await this.verifyDashboardLoaded();
+    const firstRow = this.page.locator("//div[contains(@class,'row_')]").first();
+    await firstRow.waitFor({ state: 'visible' });
+    const getBoardTitles = async () =>
+      (await firstRow.locator('h3').allInnerTexts()).map(t => t.trim()).filter(Boolean);
+    const initialOrder = await getBoardTitles();
+    await this.clickEyeIcon();
+    await this.hoverAddBox();
+    await this.clickAddWidgetIcon();
+    await this.dragCalendarToNewWidgetRow();
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+    await this.verifyDashboardLoaded();
+    await firstRow.waitFor({ state: 'visible' });
+    const finalOrder = await getBoardTitles();
+    expect(finalOrder).toEqual(initialOrder);
+  }
 
 }
 
