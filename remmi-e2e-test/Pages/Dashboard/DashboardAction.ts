@@ -1158,5 +1158,24 @@ export class DashboardAction {
     expect(finalOrder).toEqual(initialOrder);
   }
 
+  /**
+   * Add a note without title
+   */
+  async addNoteWithoutTitle() {
+    await this.verifyDashboardLoaded();
+    await this.clickNotesViewAll();
+    const noteSidebar = this.page.locator('._sidebar_.ng-star-inserted');
+    await noteSidebar.waitFor({ state: 'visible' });
+    const takaElement = this.page.locator('.taka.mb-2.ng-star-inserted');
+    await takaElement.waitFor({ state: 'visible' });
+    await takaElement.click();
+    await this.locators.saveButton.waitFor({state: 'visible'});
+    await this.locators.saveButton.click();
+    await this.locators.closeNote.waitFor({ state: 'visible' });
+    await this.locators.closeNote.click({force: true});
+    await this.verifyDashboardLoaded();
+
+  }
+
 }
 

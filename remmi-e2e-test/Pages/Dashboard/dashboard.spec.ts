@@ -130,5 +130,10 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifyBoardPositionDoesNotChangeWithoutSaving();
   });
 
+  test('Add a note without title', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.addNoteWithoutTitle();
+  });
+
   
 });
