@@ -1241,8 +1241,22 @@ export class DashboardAction {
   async verifyCrossIconClosesPopup() {
     await this.verifyDashboardLoaded();
     await this.clickEyeIcon();
+    const popup = this.page.locator('.popup.ng-star-inserted');
+    await popup.waitFor({ state: 'visible' });
     await this.clickCloseIcon();
     await this.verifyDashboardLoaded();
+  }
+
+  /**
+   * Verify the Reload button functionality in the popup.
+   */
+  async verifyReloadButtonInPopup() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    const popup = this.page.locator('.popup.ng-star-inserted');
+    await popup.waitFor({ state: 'visible' });
+    await this.reloadBoards();
+    await this.clickCloseIcon();
   }
 
 }
