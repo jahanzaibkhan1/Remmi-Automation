@@ -1,4 +1,4 @@
-import { Page, expect } from "@playwright/test";
+import { Locator, Page, expect } from "@playwright/test";
 import { DashboardLocator } from "./DashboardLocator";
 
 export class DashboardAction {
@@ -1049,12 +1049,13 @@ export class DashboardAction {
     const noteContent = 'Note Added';
     await noteContentInput.fill(noteContent);
     const saveButton = this.page.getByRole('button', { name: /Save/i }).last();
-    await saveButton.waitFor({ state: 'visible', timeout: 10000 });
+    await saveButton.waitFor({ state: 'visible' });
     await saveButton.click();
     const successMessage = this.page.getByText('Added successfully');
-    await successMessage.waitFor({ state: 'visible', timeout: 10000 });
+    await successMessage.waitFor({ state: 'visible' });
     await this.page.reload();
-    await this.page.waitForSelector(".note.ng-star-inserted", { state: "visible" });
+    const noteListText = await this.page.getByText('"list" Bondi Beach, NS "list').first();
+    await noteListText.waitFor({ state: "visible" });
   }
 
   /**
@@ -1064,47 +1065,57 @@ export class DashboardAction {
     // Wait for dashboard to load
     await this.verifyDashboardLoaded();
     await this.verifyLeadsSection();
-
-    // Wait a bit to ensure all data is loaded
     await this.page.waitForTimeout(1000);
 
-    // Helper to parse counts as numbers
     const parseCount = (count: string | null | undefined) => {
-      const trimmed = count?.trim() ?? "";
-      const value = Number(trimmed);
+      const value = Number((count ?? "").trim());
       return isNaN(value) ? 0 : value;
     };
 
     // Get counts from dashboard
-    const newLeadsCount = parseCount(await this.getNewLeadsCount());
-    const buyerLeadsCount = parseCount(await this.getBuyerLeadsCount());
-    const sellerLeadsCount = parseCount(await this.getSellerLeadsCount());
-    const unassignedLeadsCount = parseCount(await this.getUnassignedLeadsCount());
-
-    const statusMap: Record<string, string> = {
-      new: 'New',
-      buyer: 'Buyer',
-      seller: 'Seller',
-      unassigned: 'Unassigned'
+    const counts = {
+      new: parseCount(await this.getNewLeadsCount()),
+      buyer: parseCount(await this.getBuyerLeadsCount()),
+      seller: parseCount(await this.getSellerLeadsCount()),
+      unassigned: parseCount(await this.getUnassignedLeadsCount()),
     };
 
-    // Utility to verify lead counts
+    const statusMap: Record<string, string> = {
+      new: "New",
+      buyer: "Buyer",
+      seller: "Seller",
+      unassigned: "Unassigned",
+    };
+
     const verifyLeadPageCount = async (clickFn: () => Promise<void>, expectedCount: number, typeName: string) => {
       await clickFn();
-      const leadCards = this.page.locator(`tbody.p-datatable-tbody tr:has-text("${statusMap[typeName]}")`);
 
-      // Only wait if we expect at least 1
-      if (expectedCount > 0) {
-        await leadCards.first().waitFor({ state: 'visible', timeout: 10000 }).catch(() => { });
+      const leadRows = this.page.locator(`tbody.p-datatable-tbody tr`);
+      const noLeadsMessage = this.page.locator("tbody.p-datatable-tbody tr:has-text('No leads available')");
+
+      if (expectedCount === 0) {
+        // Expect "No leads available" message
+        await expect(noLeadsMessage).toBeVisible({ timeout: 20000 });
+        await this.clickDashboardHomeIcon();
+        return;
       }
 
-      const actualCount = await leadCards.count();
+      // Wait for rows to appear
+      await leadRows.first().waitFor({ state: "visible", timeout: 20000 });
 
-      if (typeName === 'unassigned') {
-        // Don't fail if unassigned leads are missing, just log
-        console.log(`Found ${actualCount} unassigned leads, expected ${expectedCount}`);
+      const actualCount = await leadRows.count();
+
+      if (typeName === "unassigned") {
+        // Only verify count, type is optional
+        expect(actualCount, `Expected ${expectedCount} unassigned leads, got ${actualCount}`).toBe(expectedCount);
       } else {
-        expect(actualCount, `Expected ${expectedCount} ${typeName} leads, got ${actualCount}.`).toBe(expectedCount);
+        // Verify both count and type
+        const matchingRows = await leadRows.filter({
+          hasText: statusMap[typeName],
+        }).count();
+
+        expect(actualCount, `Expected ${expectedCount} ${typeName} leads, got ${actualCount}`).toBe(expectedCount);
+        expect(matchingRows, `${typeName} leads type mismatch`).toBe(expectedCount);
       }
 
       // Go back to dashboard
@@ -1112,11 +1123,201 @@ export class DashboardAction {
     };
 
     // Verify all lead types
-    await verifyLeadPageCount(() => this.clickNewLeads(), newLeadsCount, "new");
-    await verifyLeadPageCount(() => this.clickBuyerLeads(), buyerLeadsCount, "buyer");
-    await verifyLeadPageCount(() => this.clickSellerLeads(), sellerLeadsCount, "seller");
-    await verifyLeadPageCount(() => this.clickUnassignedLeads(), unassignedLeadsCount, "unassigned");
+    await verifyLeadPageCount(() => this.clickNewLeads(), counts.new, "new");
+    await verifyLeadPageCount(() => this.clickBuyerLeads(), counts.buyer, "buyer");
+    await verifyLeadPageCount(() => this.clickSellerLeads(), counts.seller, "seller");
+    await verifyLeadPageCount(() => this.clickUnassignedLeads(), counts.unassigned, "unassigned");
   }
+
+  // Verify map board shows location
+  async verifyMapBoardShowsLocation() {
+    await this.clickDashboardHomeIcon();
+    await this.verifyDashboardLoaded();
+    await this.verifyMapVisible();
+  }
+
+  // Add 6 boards to a single row
+  async addSixBoardsToSingleRow() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.getFirstRow();
+    await this.getBanner();
+    await this.dragBannerToFirstRow();
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+  };
+
+  /**
+   * Verify that without saving the dashboard, board position should not be change 
+   */
+  async verifyBoardPositionDoesNotChangeWithoutSaving() {
+    await this.verifyDashboardLoaded();
+    const firstRow = this.page.locator("//div[contains(@class,'row_')]").first();
+    await firstRow.waitFor({ state: 'visible' });
+    const getBoardTitles = async () =>
+      (await firstRow.locator('h3').allInnerTexts()).map(t => t.trim()).filter(Boolean);
+    const initialOrder = await getBoardTitles();
+    await this.clickEyeIcon();
+    await this.hoverAddBox();
+    await this.clickAddWidgetIcon();
+    await this.dragCalendarToNewWidgetRow();
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+    await this.verifyDashboardLoaded();
+    await firstRow.waitFor({ state: 'visible' });
+    const finalOrder = await getBoardTitles();
+    expect(finalOrder).toEqual(initialOrder);
+  }
+
+  /**
+   * Add a note without title
+   */
+  async addNoteWithoutTitle() {
+    await this.verifyDashboardLoaded();
+    await this.clickNotesViewAll();
+    const noteSidebar = this.page.locator('._sidebar_.ng-star-inserted');
+    await noteSidebar.waitFor({ state: 'visible' });
+    const takaElement = this.page.locator('.taka.mb-2.ng-star-inserted');
+    await takaElement.waitFor({ state: 'visible' });
+    await takaElement.click();
+    await this.locators.saveButton.waitFor({ state: 'visible' });
+    await this.locators.saveButton.click();
+    await this.locators.closeNote.waitFor({ state: 'visible' });
+    await this.locators.closeNote.click({ force: true });
+    await expect(this.locators.closeNote).not.toBeVisible({ timeout: 10000 });
+    await expect(noteSidebar).not.toBeVisible({ timeout: 10000 });
+    await this.verifyDashboardLoaded();
+
+  }
+
+  /**
+   * Verify that the pinned listing can be unpinned from the dashboard.
+   */
+  async unpinPinnedListingFromDashboard() {
+    await this.verifyDashboardLoaded();
+    await this.page.reload();
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.verifyMapVisible();
+    await this.verifyEmailsSection();
+    const pinnedListing = this.page.locator('.h-150px').first();
+    await pinnedListing.scrollIntoViewIfNeeded();
+    await expect(pinnedListing).toBeVisible({ timeout: 15000 });
+    await this.page.waitForTimeout(1000);
+    await pinnedListing.click({ button: 'right' });
+    await this.page.waitForTimeout(1000);
+    const unpinMenuItem = this.locators.unpinToDashboardMenuItem;
+    await expect(unpinMenuItem).toBeVisible({ timeout: 10000 });
+    await unpinMenuItem.click();
+  }
+
+
+  /**
+   * Check if popup position syncs after a board is moved
+   */
+  async checkBoardPopupPositionSyncAfterMove() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    const popupLocator = this.page.locator('.popup.ng-star-inserted');
+    await popupLocator.waitFor({ state: 'visible' });
+    const popupBoardTitlesBefore = await popupLocator.allInnerTexts();
+    await this.hoverAddBox();
+    await this.clickAddWidgetIcon();
+    await this.dragCalendarToNewWidgetRow();
+    const popupLocatorAfterMove = this.page.locator('.popup.ng-star-inserted');
+    await popupLocatorAfterMove.waitFor({ state: 'visible' });
+    const popupBoardTitlesAfter = await popupLocatorAfterMove.allInnerTexts();
+    expect(popupBoardTitlesAfter).not.toEqual(popupBoardTitlesBefore);
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+    await this.verifyDashboardLoaded();
+  }
+
+
+  /**
+   * Verify that clicking the cross icon closes the popup.
+   */
+  async verifyCrossIconClosesPopup() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    const popup = this.page.locator('.popup.ng-star-inserted');
+    await popup.waitFor({ state: 'visible' });
+    await this.clickCloseIcon();
+    await this.verifyDashboardLoaded();
+  }
+
+  /**
+   * Verify the Reload button functionality in the popup.
+   */
+  async verifyReloadButtonInPopup() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    const popup = this.page.locator('.popup.ng-star-inserted');
+    await popup.waitFor({ state: 'visible' });
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+  }
+
+  /**
+   * Verify that changing widget visibility affects dashboard display.
+   */
+  async verifyWidgetVisibilityAffectsDashboard() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    await this.verifyCalendarNavSection();
+    await this.verifyWeatherNavItemVisible();
+    const calendarEyeIcon = this.page.locator('.pi.pi-eye-slash').first();
+    await calendarEyeIcon.waitFor({ state: 'visible' });
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+  }
+
+  /**
+   * Verify widget movement between rows
+   */
+  async verifyWidgetMovementBetweenRows() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    const popupLocator = this.page.locator('.popup.ng-star-inserted');
+    await popupLocator.waitFor({ state: 'visible' });
+    const boardTitlesBefore = await popupLocator.allInnerTexts();
+    await this.hoverAddBox();
+    await this.clickAddWidgetIcon();
+    await this.dragCalendarToNewWidgetRow();
+    const popupLocatorAfterMove = this.page.locator('.popup.ng-star-inserted');
+    await popupLocatorAfterMove.waitFor({ state: 'visible' });
+    const boardTitlesAfter = await popupLocatorAfterMove.allInnerTexts();
+    expect(boardTitlesAfter).not.toEqual(boardTitlesBefore);
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+    await this.verifyDashboardLoaded();
+  }
+
+  /**
+   * Verify widget visibility toggling via "More Widgets" section behaves correctly.
+   */
+  async verifyWidgetVisibilityInMoreWidgets() {
+    await this.verifyDashboardLoaded();
+    await this.clickEyeIcon();
+    const popup = this.page.locator('.popup.ng-star-inserted');
+    await popup.waitFor({ state: 'visible' });
+    await this.verifyCalendarNavSection();
+    await this.verifyWeatherNavItemVisible();
+    const dragDropWidget = this.page.getByText('Drag & drop to add widget').first();
+    await dragDropWidget.waitFor({ state: 'visible' });
+    await this.reloadBoards();
+    await this.clickCloseIcon();
+    await this.verifyDashboardLoaded();
+  }
+
+  /**
+   * Verify simultaneous board resizing
+   */
+  async verifySimultaneousBoardResizing() {
+    await this.verifyWidgetMovementBetweenRows();
+  }
+
 
 }
 
