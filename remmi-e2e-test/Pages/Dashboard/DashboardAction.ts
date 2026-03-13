@@ -1382,8 +1382,24 @@ export class DashboardAction {
     const visibleRows = await rows.count();
     console.log(`EOI count from dashboard: ${eoiCount}, EOI table visible rows: ${visibleRows}`);
     expect(visibleRows).toBe(eoiCount);
-    
+
   }
+
+  // Verifies that all listing thumbnails on the dashboard are loaded properly
+  async verifyLoadingOfListingThumbnails() {
+    await this.verifyDashboardLoaded();
+    const propertyCard = this.page.locator('ul.listing li').nth(1);
+    await propertyCard.scrollIntoViewIfNeeded();
+    await propertyCard.waitFor({ state: 'visible' });
+    const headerImage = propertyCard.locator('img');
+    await headerImage.waitFor({ state: 'visible' });
+    const saleTag = propertyCard.locator('button');
+    await saleTag.waitFor({ state: 'visible' });
+    const heading = propertyCard.locator('h4');
+    await heading.scrollIntoViewIfNeeded();
+    await heading.waitFor({ state: 'visible' });
+  }
+
 
 }
 
