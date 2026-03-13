@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="29.067411000002174">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-12T11:43:34.559Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.578" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify simultaneous board resizing" classname="Pages\Dashboard\dashboard.spec.ts" time="24.578">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.84037900000065">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-13T11:38:51.807Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.164" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify that Report board on the Dashboard shows correct data" classname="Pages\Dashboard\dashboard.spec.ts" time="37.164">
 </testcase>
 </testsuite>
 </testsuites>

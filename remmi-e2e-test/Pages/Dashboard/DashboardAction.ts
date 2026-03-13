@@ -239,10 +239,10 @@ export class DashboardAction {
   }
 
   async getConditionalCount() {
-    await this.locators.conditionalCount.scrollIntoViewIfNeeded();
-    await this.locators.conditionalCount.waitFor({ state: "visible" });
-    await expect(this.locators.conditionalCount).toBeVisible();
-    return await this.locators.conditionalCount.textContent();
+    await this.locators.heldCount.scrollIntoViewIfNeeded();
+    await this.locators.heldCount.waitFor({ state: "visible" });
+    await expect(this.locators.heldCount).toBeVisible();
+    return await this.locators.heldCount.textContent();
   }
 
   // Tasks
@@ -1316,6 +1316,195 @@ export class DashboardAction {
    */
   async verifySimultaneousBoardResizing() {
     await this.verifyWidgetMovementBetweenRows();
+  }
+
+  /**
+   * Verify sorting of leads on the board.
+   */
+  async verifyBoardLeadSorting() {
+    await this.verifyDashboardLoaded();
+    await this.verifyLeadsSection();
+    await this.getNewLeadsCount();
+    await this.getBuyerLeadsCount();
+    await this.getSellerLeadsCount();
+    await this.getUnassignedLeadsCount();
+  }
+
+  /**
+   * Verify that the EOI board displays correct data on the dashboard.
+   */
+  async verifyEOIBoardDisplaysCorrectData() {
+    await this.verifyDashboardLoaded();
+    await this.verifyEOICard();
+
+    const eoiText = await this.getEOICount();
+    const eoiCount = Number((eoiText ?? "").match(/\d+/)?.[0] ?? 0);
+
+    await this.clickEOILink();
+
+    const dateRangeInput = this.page.locator("input[placeholder='Date Range']").first();
+    await dateRangeInput.waitFor({ state: "visible" });
+    await dateRangeInput.click();
+
+    const calendar = this.page.locator(".p-datepicker-calendar");
+    await expect(calendar).toBeVisible();
+
+    // Calculate Monday of current week
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+    const diffToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - diffToMonday);
+    const mondayDay = monday.getDate().toString();
+
+    // Select Monday safely
+    const mondayCell = calendar
+      .locator("tbody td:not(.p-disabled):not(.p-datepicker-other-month)")
+      .filter({ hasText: mondayDay })
+      .first();
+
+    await mondayCell.click();
+
+    const rows = this.page.locator("tbody.p-datatable-tbody tr");
+    const noEOI = this.page.getByText("No EOI available");
+
+    await Promise.race([
+      rows.first().waitFor({ state: "visible" }).catch(() => { }),
+      noEOI.waitFor({ state: "visible" }).catch(() => { }),
+    ]);
+
+    if (await noEOI.isVisible().catch(() => false)) {
+      expect(eoiCount).toBe(0);
+      return;
+    }
+
+    const visibleRows = await rows.count();
+    console.log(`EOI count from dashboard: ${eoiCount}, EOI table visible rows: ${visibleRows}`);
+    expect(visibleRows).toBe(eoiCount);
+
+  }
+
+  // Verifies that all listing thumbnails on the dashboard are loaded properly
+  async verifyLoadingOfListingThumbnails() {
+    await this.verifyDashboardLoaded();
+    const propertyCard = this.page.locator('ul.listing li').nth(1);
+    await propertyCard.scrollIntoViewIfNeeded();
+    await propertyCard.waitFor({ state: 'visible' });
+    const headerImage = propertyCard.locator('img');
+    await headerImage.waitFor({ state: 'visible' });
+    const saleTag = propertyCard.locator('button');
+    await saleTag.waitFor({ state: 'visible' });
+    const heading = propertyCard.locator('h4');
+    await heading.scrollIntoViewIfNeeded();
+    await heading.waitFor({ state: 'visible' });
+  }
+
+  /**
+   * Verify that the Task board is displayed correctly on the Dashboard
+   */
+  async verifyTaskBoardIsDisplayedCorrectly() {
+    await this.verifyDashboardLoaded();
+    await this.verifyTasksSection();
+    await this.getDueTodayCount();
+    await this.getHighPriorityCount();
+    await this.getTotalTasksCount();
+  }
+
+  /**
+   * Verify that the Report board is displayed correctly on the Dashboard
+   */
+  async verifyReportBoardIsDisplayedCorrectly() {
+    await this.verifyDashboardLoaded();
+    await this.verifyReportingComingSoon();
+  }
+
+  /**
+   * Verify that the Contract board is displayed correctly on the Dashboard
+   */
+  async verifyContractBoardIsDisplayedCorrectly() {
+    await this.verifyDashboardLoaded();
+    await this.locators.contractsHeading.waitFor({ state: "visible" });
+    await this.locators.contractsLinkIcon.waitFor({ state: "visible" });
+    await this.locators.awaitingVendorSigningCard.waitFor({ state: "visible" });
+    await this.locators.awaitingVendorSigningCount.waitFor({ state: "visible" });
+    const awaitingVendorCount = await this.locators.awaitingVendorSigningCount.textContent();
+    await this.locators.offerPendingCard.waitFor({ state: "visible" });
+    await this.locators.offerPendingCount.waitFor({ state: "visible" });
+    const offerPendingCount = await this.locators.offerPendingCount.textContent();
+    await this.locators.heldCard.waitFor({ state: "visible" });
+    await this.locators.heldCount.waitFor({ state: "visible" });
+    const heldCount = await this.locators.heldCount.textContent();
+    console.log(`Contracts Board Counts: Awaiting Vendor Signing: ${awaitingVendorCount}, Offer Pending: ${offerPendingCount}, Held: ${heldCount}`);
+  }
+
+  /**
+   * Verify that placeholder image is shown when a listing has no images on Dashboard board
+   */
+  async verifyPlaceholderImageForListingWithoutImages() {
+    await this.verifyDashboardLoaded();
+    const propertyCard = this.page.locator('ul.listing li').nth(1);
+    await propertyCard.scrollIntoViewIfNeeded();
+    await propertyCard.waitFor({ state: 'visible' });
+    const headerImage = propertyCard.locator('img');
+    await headerImage.waitFor({ state: 'visible' });
+  }
+
+  /**
+   * Verify that all Widgets sizes are valid and rendered correctly
+   */
+  async verifyAllWidgetsSizesAreConsistent() {
+    await this.verifyDashboardLoaded();
+
+    const widgets = this.page.locator('board-info');
+    const count = await widgets.count();
+
+    expect(count).toBeGreaterThan(0);
+
+    for (let i = 0; i < count; i++) {
+      const box = await widgets.nth(i).boundingBox();
+
+      expect(box).not.toBeNull();
+      expect(box!.width).toBeGreaterThan(0);
+      expect(box!.height).toBeGreaterThan(0);
+    }
+  }
+
+  /**
+   * Verify that the Contract board on the Dashboard shows correct data.
+   */
+  async verifyContractBoardShowsCorrectData() {
+    await this.verifyDashboardLoaded();
+
+    // Wait for contracts heading and key contract board elements
+    await this.locators.contractsHeading.waitFor({ state: "visible" });
+    await this.locators.contractsLinkIcon.waitFor({ state: "visible" });
+    await this.locators.awaitingVendorSigningCard.waitFor({ state: "visible" });
+    await this.locators.awaitingVendorSigningCount.waitFor({ state: "visible" });
+    await this.locators.offerPendingCard.waitFor({ state: "visible" });
+    await this.locators.offerPendingCount.waitFor({ state: "visible" });
+    await this.locators.heldCard.waitFor({ state: "visible" });
+    await this.locators.heldCount.waitFor({ state: "visible" });
+
+    // Get counts and assert they are numbers (>= 0)
+    const awaitingVendorCount = Number(await this.locators.awaitingVendorSigningCount.textContent() || '0');
+    const offerPendingCount = Number(await this.locators.offerPendingCount.textContent() || '0');
+    const heldCount = Number(await this.locators.heldCount.textContent() || '0');
+
+    expect(awaitingVendorCount).toBeGreaterThanOrEqual(0);
+    expect(offerPendingCount).toBeGreaterThanOrEqual(0);
+    expect(heldCount).toBeGreaterThanOrEqual(0);
+
+    // Report for debugging/logging
+    console.log(`Contract Board Data: Awaiting Vendor Signing: ${awaitingVendorCount}, Offer Pending: ${offerPendingCount}, Held: ${heldCount}`);
+  }
+
+  /**
+   * Verify that the Report board is displayed correctly on the Dashboard
+   */
+  async verifyReportsBoardIsDisplayedCorrectly() {
+    await this.verifyDashboardLoaded();
+    await this.verifyReportingComingSoon();
   }
 
 

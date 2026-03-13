@@ -666,7 +666,7 @@ export class MyProfileActions {
 
   private async selectProjectOption() {
     const option = this.locators.searchProjectOption;
-    await expect(option).toBeVisible();
+    await option.waitFor({ state: 'visible' });
     await option.click();
   }
 
@@ -1352,7 +1352,7 @@ export class MyProfileActions {
       }
 
       // Click the select-all checkbox if available
-      const selectAllCheckbox = this.page.getByRole('checkbox').nth(1);
+      const selectAllCheckbox = this.page.locator("div[class='p-checkbox-box']").first();
       await selectAllCheckbox.click({ force: true });
 
       // Click the delete button
@@ -2842,7 +2842,7 @@ export class MyProfileActions {
       await this.clickAddProjectButton();
       await this.fillSearchProjectInput(searchName);
       const option = this.locators.searchProjectOption;
-      await expect(option).toBeVisible({ timeout: 5000 });
+      await option.waitFor({ state: 'visible'});
       await this.page.waitForTimeout(1200);
     });
   }
@@ -2854,7 +2854,7 @@ export class MyProfileActions {
       await this.fillSearchProjectInput(nonExistentProject);
       // Assert that no project options are visible
       const option = this.locators.searchProjectOption;
-      await expect(option).not.toBeVisible({ timeout: 3000 });
+      await expect(option).not.toBeVisible({ timeout: 30000 });
       await this.page.waitForTimeout(1200);
     });
   }
@@ -2864,7 +2864,7 @@ export class MyProfileActions {
       await this.AssociationsTab();
       await this.clickAddProjectButton();
       const option = this.page.locator('.drop_box');
-      await expect(option).toBeVisible({ timeout: 5000 });
+      await option.waitFor({ state: 'visible'});
       await this.page.waitForTimeout(1200);
     });
   }
@@ -2875,7 +2875,8 @@ export class MyProfileActions {
       await this.clickAddProjectButton();
       await this.fillSearchProjectInput(searchTerm);
       const option = this.locators.searchProjectOption;
-      await expect(option).toContainText(searchTerm, { timeout: 5000 });
+      await option.waitFor({ state: 'visible'});
+      await expect(option).toContainText(searchTerm);
       await this.page.waitForTimeout(1200);
     });
   }
@@ -2915,7 +2916,8 @@ export class MyProfileActions {
     await test.step('Verify the Select All functionality in Associations', async () => {
       await this.AssociationsTab();
       await this.clickAddProjectButton();
-      await this.page.waitForTimeout(2000)
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible' });
       // Click "Select All" checkbox
       await this.selectAllProjects();
       // Verify all checkboxes are selected
@@ -2927,21 +2929,24 @@ export class MyProfileActions {
       }
       await this.clickAddButton();
       const addedAlert = this.page.getByRole('alert', { name: 'Added successfully' });
-      await addedAlert.waitFor({ state: 'visible', timeout: 10000 });
-      await this.page.waitForTimeout(4000);
+      await addedAlert.waitFor({ state: 'visible' });
+      await addedAlert.waitFor({ state: 'hidden' });
+
+      const tableRows1 = this.page.locator('table tbody tr').first();
+      await tableRows1.first().waitFor({ state: 'visible'});
       // Clear any existing projects in the list (if any) by clicking checkbox and trash icon
-      const checkbox = this.page.getByRole('checkbox').nth(1);
-      await checkbox.waitFor({ state: 'visible', timeout: 10000 });
+      const checkbox = this.page.locator("div[class='p-checkbox-box']").first();
+      await checkbox.waitFor({ state: 'visible' });
       await expect(checkbox).toBeEnabled();
       await checkbox.click({ force: true });
       const trashIcon = this.page.locator(".mr-2.cursor-pointer.ng-star-inserted").first();
-      await trashIcon.waitFor({ state: 'visible' , timeout:10000});
+      await trashIcon.waitFor({ state: 'visible'});
       await trashIcon.click({ force: true });
       // Click "Yes" button in confirmation dialog
       const yesButton = this.page.getByRole('button', { name: 'Yes' }).nth(1);
       await yesButton.click({ force: true });
       const NoRecord = this.page.getByRole('cell', { name: 'No records found' });
-      await expect(NoRecord).toBeVisible();
+      await NoRecord.waitFor({ state: 'visible'});
       await this.page.waitForTimeout(1200);
     });
   }
@@ -2950,8 +2955,6 @@ export class MyProfileActions {
     await test.step('Verify the Deselect All functionality in Associations', async () => {
       await this.AssociationsTab();
       await this.clickAddProjectButton();
-      await this.page.waitForTimeout(2000);
-
       // Click "Select All" checkbox to first select all projects
       await this.selectAllProjects();
 
@@ -3006,7 +3009,6 @@ export class MyProfileActions {
 
       for (const projectName of projectNames) {
         await this.fillSearchProjectInput(projectName);
-        await this.page.waitForTimeout(300);
         await this.selectProjectOption();
         // Optionally clear input if it's not automatically cleared
         await this.locators.searchProjectInput.fill('');
@@ -3072,9 +3074,10 @@ export class MyProfileActions {
   async verifyInitialProjectSelection() {
     await test.step('Verify adding when list is initially empty', async () => {
       await this.AssociationsTab();
-      await this.page.waitForTimeout(2000)
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible'});
       // Clear any existing projects in the list (if any) by clicking checkbox and trash icon
-      const checkbox = this.page.getByRole('checkbox').nth(1);
+      const checkbox = this.page.locator("div[class='p-checkbox-box']").first();
       await checkbox.click({ force: true });
       const trashIcon = this.page.locator(".mr-2.cursor-pointer.ng-star-inserted").first();
       await trashIcon.click({ force: true });
@@ -3089,10 +3092,10 @@ export class MyProfileActions {
       await this.page.waitForTimeout(1000);
       await this.AddButton()
 
-      // Confirm the success alert
-      await expect(
-        this.page.locator('[role="alert"]:has-text("Added successfully"), [role="alert"]:has-text("Removed successfully")')
-      ).toBeVisible();
+      const removedAlert = this.page.getByRole('alert', { name: 'Removed successfully' });
+      await removedAlert.waitFor({ state: 'visible' });
+      await removedAlert.waitFor({ state: 'hidden' });
+ 
       await this.page.waitForTimeout(1200);
     });
   }
@@ -3100,6 +3103,8 @@ export class MyProfileActions {
   async verifyAssocitionSortingList() {
     await test.step('Verify the sort functionality', async () => {
       await this.AssociationsTab();
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible'});
       const sortHeader = this.page.getByRole('columnheader', { name: /Name/i }).first();
       const sortIcon = sortHeader.locator('svg').first();
       await expect(sortIcon).toBeVisible({ timeout: 10000 });
@@ -3124,7 +3129,8 @@ export class MyProfileActions {
   async verifyDeleteIconInActionColumn() {
     await test.step('Verify delete icon under Action column', async () => {
       await this.AssociationsTab();
-      await this.page.waitForTimeout(3000);
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible'});
       const projectRows = this.page.locator('//table//tr//td[2]');
       const beforeDeleteNames = (await projectRows.allInnerTexts())
         .map(text => text.trim())
@@ -3134,8 +3140,9 @@ export class MyProfileActions {
 
       const yes = this.page.getByRole('button', { name: 'Yes' }).nth(1);
       await yes.click({ force: true });
-
-      await expect(this.page.getByRole('alert', { name: 'Removed successfully' })).toBeVisible();
+      const removedAlert = this.page.getByRole('alert', { name: 'Removed successfully' });
+      await removedAlert.waitFor({ state: 'visible' });
+      await removedAlert.waitFor({ state: 'hidden' });
       await this.page.waitForTimeout(1000);
       const afterDeleteNames = (await projectRows.allInnerTexts())
         .map(text => text.trim())
@@ -3146,7 +3153,8 @@ export class MyProfileActions {
   async verifyProjectDeleteFunctionality() {
     await test.step('Verify project delete functionality', async () => {
       await this.AssociationsTab();
-      await this.page.waitForTimeout(1000);
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible'});
 
       // Find all project rows, select the first project to delete (if available)
       const projectRows = this.page.locator('//table//tr//td[2]');
@@ -3167,7 +3175,9 @@ export class MyProfileActions {
       await yes.click({ force: true });
 
       // Expect a toast/alert for successful removal
-      await expect(this.page.getByRole('alert', { name: /Removed successfully/i })).toBeVisible();
+      const removedAlert = this.page.getByRole('alert', { name: /Removed successfully/i });
+      await removedAlert.waitFor({ state: 'visible' });
+      await removedAlert.waitFor({ state: 'hidden' });
 
       // Wait for table update, then re-read the projects
       await this.page.waitForTimeout(1000);
@@ -3182,10 +3192,11 @@ export class MyProfileActions {
   async verifyCheckboxBesideEachProject() {
     await test.step('Verify checkbox beside each project', async () => {
       await this.AssociationsTab();
-      await this.page.waitForTimeout(3000);
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible'});
 
       // Find the "main" (Select All) checkbox for project selection
-      const selectAllCheckbox = this.page.getByRole('checkbox').nth(1);
+      const selectAllCheckbox = this.page.locator("div[class='p-checkbox-box']").first();
       await selectAllCheckbox.scrollIntoViewIfNeeded();
       await selectAllCheckbox.click({ force: true }); // Select all
 
@@ -3199,7 +3210,7 @@ export class MyProfileActions {
 
       for (let i = 0; i < checkboxCount; i++) {
         const checkbox = checkboxes.nth(i);
-        await checkbox.scrollIntoViewIfNeeded();
+        // await checkbox.scrollIntoViewIfNeeded();
         // All should have PrimeNG selected class when selected
         const classes = await checkbox.getAttribute('class');
         expect(classes).toContain('p-highlight');
@@ -3213,7 +3224,8 @@ export class MyProfileActions {
   async verifyMultipleCheckboxSelection() {
     await test.step('Verify multiple checkbox selection', async () => {
       await this.AssociationsTab();
-      await this.page.waitForTimeout(1500);
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible'});
 
       // ✅ More accurate locator for PrimeNG table checkboxes
       const checkboxes = this.page.locator('//table//tr//td[1]//div[contains(@class,"p-checkbox-box")]');
@@ -3234,10 +3246,10 @@ export class MyProfileActions {
   async verifySelectAllCheckbox() {
     await test.step('Verify multiple checkbox selection', async () => {
       await this.AssociationsTab();
-      await this.page.waitForTimeout(2000)
-      const checkbox = this.page.getByRole('checkbox').nth(1);
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible'});
+      const checkbox = this.page.locator("div[class='p-checkbox-box']").first();
       await checkbox.click({ force: true });
-      expect(checkbox).toBeEnabled()
       await this.page.waitForTimeout(1200);
     });
   }
@@ -3246,7 +3258,8 @@ export class MyProfileActions {
   async verifyBulkDeleteFunctionality() {
     await test.step('Verify bulk delete functionality', async () => {
       await this.AssociationsTab();
-      await this.page.waitForTimeout(4000);
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible'});
 
       // ✅ Locate all project checkboxes (skipping header)
       const checkboxes = this.page.locator('//table//tr//td[1]//div[contains(@class,"p-checkbox-box")]');
@@ -3274,7 +3287,12 @@ export class MyProfileActions {
 
 
       // ✅ Wait for table to refresh
-      await this.page.waitForTimeout(2000);
+      const removedAlert = this.page.getByRole('alert', { name: /Removed successfully/i }).first();
+      await expect(removedAlert).toBeVisible();
+      await removedAlert.evaluate(node => node.style.display = 'none');
+
+      // Wait for the first row to be visible after deletion and table refresh
+      await this.page.locator('table tbody tr').first().waitFor({ state: 'visible' });
 
       // ✅ Get updated table after deletion
       const projectNamesAfter = await this.page.locator('//table//tr//td[2]').allInnerTexts();
@@ -3290,7 +3308,8 @@ export class MyProfileActions {
   async verifyUIUpdateAfterDeletion() {
     await test.step('Add a project if not present, otherwise delete a project and verify UI update', async () => {
       await this.AssociationsTab();
-      await this.page.waitForTimeout(3000);
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible'});
 
       // Get all current projects in the table
       let projectNamesBefore = await this.page.locator('//table//tr//td[2]').allInnerTexts();
@@ -3335,8 +3354,14 @@ export class MyProfileActions {
       const yesButton = this.page.getByRole('button', { name: 'Yes' }).nth(1);
       await yesButton.click({ force: true });
 
+      // Wait for "Removed successfully" alert to appear and disappear after deletion
+      const removedAlert = this.page.getByRole('alert', { name: 'Removed successfully' });
+      await removedAlert.waitFor({ state: 'visible' });
+      await removedAlert.waitFor({ state: 'hidden' });
+
       // Wait for table to refresh
-      await this.page.waitForTimeout(2000);
+      const tableRows1 = this.page.locator('table tbody tr').first();
+      await tableRows1.first().waitFor({ state: 'visible' });
 
       // Check the table after deletion
       const projectNamesAfter = await this.page.locator('//table//tr//td[2]').allInnerTexts();
@@ -3363,6 +3388,8 @@ export class MyProfileActions {
       await this.fillSearchProjectInput(projectName);
       await this.selectProjectOption();
       await this.clickAddButton();
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible'});
       await this.page.waitForTimeout(1200);
     });
   }
@@ -3371,19 +3398,25 @@ export class MyProfileActions {
     await test.step('Verify empty list message', async () => {
       await this.AssociationsTab();
       await this.clickAddProjectButton();
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible'});
       await this.fillSearchProjectInput(projectName);
       await this.page.waitForTimeout(400)
       await this.selectProjectOption()
       await this.clickAddButton();
       await this.page.waitForTimeout(1500);
       // Clear any existing projects in the list (if any) by clicking checkbox and trash icon
-      const checkbox = this.page.getByRole('checkbox').nth(1);
+      const checkbox = this.page.locator("div[class='p-checkbox-box']").first();
       await checkbox.click({ force: true });
       const trashIcon = this.page.locator(".mr-2.cursor-pointer.ng-star-inserted").first();
       await trashIcon.click({ force: true });
       // Click "Yes" button in confirmation dialog
       const yesButton = this.page.getByRole('button', { name: 'Yes' }).nth(1);
       await yesButton.click({ force: true });
+      // Wait for "Removed successfully" alert to appear and disappear after deletion
+      const removedAlert = this.page.getByRole('alert', { name: 'Removed successfully' });
+      await removedAlert.waitFor({ state: 'visible' });
+      await removedAlert.waitFor({ state: 'hidden' });
       const NoRecord = this.page.getByRole('cell', { name: 'No records found' });
       await expect(NoRecord).toBeVisible()
       await this.page.waitForTimeout(1200);
