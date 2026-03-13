@@ -1411,6 +1411,14 @@ export class DashboardAction {
     await this.getTotalTasksCount();
   }
 
+  /**
+   * Verify that the Report board is displayed correctly on the Dashboard
+   */
+  async verifyReportBoardIsDisplayedCorrectly() {
+    await this.verifyDashboardLoaded();
+    await this.verifyReportingComingSoon();
+  }
+
 
 }
 
