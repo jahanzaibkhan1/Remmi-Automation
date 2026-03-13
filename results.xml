@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.744915000002834">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-13T09:31:08.672Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.13" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify loading of listing thumbnails" classname="Pages\Dashboard\dashboard.spec.ts" time="37.13">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.97104699999839">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-13T09:42:16.828Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.818" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify that the Task board is displayed correctly on the Dashboard" classname="Pages\Dashboard\dashboard.spec.ts" time="40.818">
 </testcase>
 </testsuite>
 </testsuites>

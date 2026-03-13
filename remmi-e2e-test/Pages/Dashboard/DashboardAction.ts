@@ -1400,6 +1400,17 @@ export class DashboardAction {
     await heading.waitFor({ state: 'visible' });
   }
 
+  /**
+   * Verify that the Task board is displayed correctly on the Dashboard
+   */
+  async verifyTaskBoardIsDisplayedCorrectly() {
+    await this.verifyDashboardLoaded();
+    await this.verifyTasksSection();
+    await this.getDueTodayCount();
+    await this.getHighPriorityCount();
+    await this.getTotalTasksCount();
+  }
+
 
 }
 
