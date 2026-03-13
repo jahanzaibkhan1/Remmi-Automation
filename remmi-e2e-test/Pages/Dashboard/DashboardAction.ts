@@ -1318,6 +1318,17 @@ export class DashboardAction {
     await this.verifyWidgetMovementBetweenRows();
   }
 
+  /**
+   * Verify sorting of leads on the board.
+   */
+  async verifyBoardLeadSorting() {
+    await this.verifyDashboardLoaded();
+    await this.verifyLeadsSection();
+    await this.getNewLeadsCount();
+    await this.getBuyerLeadsCount();
+    await this.getSellerLeadsCount();
+    await this.getUnassignedLeadsCount();
+  }
 
 }
 
