@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.172508999999614">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-13T11:33:51.736Z" hostname="chromium" tests="1" failures="0" skipped="0" time="26.371" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify that Contract board on the Dashboard shows correct data" classname="Pages\Dashboard\dashboard.spec.ts" time="26.371">
-<system-out>
-<![CDATA[Contract Board Data: Awaiting Vendor Signing: 2, Offer Pending: 2, Held: 1
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.84037900000065">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-13T11:38:51.807Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.164" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify that Report board on the Dashboard shows correct data" classname="Pages\Dashboard\dashboard.spec.ts" time="37.164">
 </testcase>
 </testsuite>
 </testsuites>
