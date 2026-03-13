@@ -175,5 +175,54 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifySimultaneousBoardResizing();
   });
 
+  test('Verify sorting of leads on board', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyBoardLeadSorting();
+  });
+
+  test('Verify that EOI board displays correct data on dashboard', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyEOIBoardDisplaysCorrectData();
+  });
+
+  test('Verify loading of listing thumbnails', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyLoadingOfListingThumbnails();
+  });
+
+  test('Verify that the Task board is displayed correctly on the Dashboard', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyTaskBoardIsDisplayedCorrectly();
+  });
+
+  test('Verify that the Report board is displayed correctly on the Dashboard', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyReportBoardIsDisplayedCorrectly();
+  });
+
+  test('Verify that the Contract board is displayed correctly on the Dashboard', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyContractBoardIsDisplayedCorrectly();
+  });
   
+  test('Verify that placeholder image is shown when a listing has no images on Dashboard board', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyPlaceholderImageForListingWithoutImages();
+  });
+
+  test('Verify that all Widgets sizes are consistent', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyAllWidgetsSizesAreConsistent();
+  });
+
+  test('Verify that Contract board on the Dashboard shows correct data', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyContractBoardShowsCorrectData();
+  });
+
+  test('Verify that Report board on the Dashboard shows correct data', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyReportsBoardIsDisplayedCorrectly();
+  });
+
 });
