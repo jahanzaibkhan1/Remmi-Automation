@@ -190,5 +190,10 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifyLoadingOfListingThumbnails();
   });
 
+  test('Verify that the Task board is displayed correctly on the Dashboard', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyTaskBoardIsDisplayedCorrectly();
+  });
+
   
 });
