@@ -1470,6 +1470,35 @@ export class DashboardAction {
     }
   }
 
+  /**
+   * Verify that the Contract board on the Dashboard shows correct data.
+   */
+  async verifyContractBoardShowsCorrectData() {
+    await this.verifyDashboardLoaded();
+
+    // Wait for contracts heading and key contract board elements
+    await this.locators.contractsHeading.waitFor({ state: "visible" });
+    await this.locators.contractsLinkIcon.waitFor({ state: "visible" });
+    await this.locators.awaitingVendorSigningCard.waitFor({ state: "visible" });
+    await this.locators.awaitingVendorSigningCount.waitFor({ state: "visible" });
+    await this.locators.offerPendingCard.waitFor({ state: "visible" });
+    await this.locators.offerPendingCount.waitFor({ state: "visible" });
+    await this.locators.heldCard.waitFor({ state: "visible" });
+    await this.locators.heldCount.waitFor({ state: "visible" });
+
+    // Get counts and assert they are numbers (>= 0)
+    const awaitingVendorCount = Number(await this.locators.awaitingVendorSigningCount.textContent() || '0');
+    const offerPendingCount = Number(await this.locators.offerPendingCount.textContent() || '0');
+    const heldCount = Number(await this.locators.heldCount.textContent() || '0');
+
+    expect(awaitingVendorCount).toBeGreaterThanOrEqual(0);
+    expect(offerPendingCount).toBeGreaterThanOrEqual(0);
+    expect(heldCount).toBeGreaterThanOrEqual(0);
+
+    // Report for debugging/logging
+    console.log(`Contract Board Data: Awaiting Vendor Signing: ${awaitingVendorCount}, Offer Pending: ${offerPendingCount}, Held: ${heldCount}`);
+  }
+
 
 }
 
