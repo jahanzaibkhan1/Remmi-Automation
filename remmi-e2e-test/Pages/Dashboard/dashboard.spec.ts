@@ -180,5 +180,10 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifyBoardLeadSorting();
   });
 
+  test('Verify that EOI board displays correct data on dashboard', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyEOIBoardDisplaysCorrectData();
+  });
+
   
 });
