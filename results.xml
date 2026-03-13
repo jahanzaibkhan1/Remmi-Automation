@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="18.738140999998897">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-13T08:35:03.573Z" hostname="chromium" tests="1" failures="0" skipped="0" time="14.658" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify sorting of leads on board" classname="Pages\Dashboard\dashboard.spec.ts" time="14.658">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.2897890000008">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-13T09:26:08.666Z" hostname="chromium" tests="1" failures="0" skipped="0" time="43.803" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify that EOI board displays correct data on dashboard" classname="Pages\Dashboard\dashboard.spec.ts" time="43.803">
+<system-out>
+<![CDATA[EOI count from dashboard: 1, EOI table visible rows: 1
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>

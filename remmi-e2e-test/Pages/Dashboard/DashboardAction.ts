@@ -1330,5 +1330,60 @@ export class DashboardAction {
     await this.getUnassignedLeadsCount();
   }
 
+  /**
+   * Verify that the EOI board displays correct data on the dashboard.
+   */
+  async verifyEOIBoardDisplaysCorrectData() {
+    await this.verifyDashboardLoaded();
+    await this.verifyEOICard();
+
+    const eoiText = await this.getEOICount();
+    const eoiCount = Number((eoiText ?? "").match(/\d+/)?.[0] ?? 0);
+
+    await this.clickEOILink();
+
+    const dateRangeInput = this.page.locator("input[placeholder='Date Range']").first();
+    await dateRangeInput.waitFor({ state: "visible" });
+    await dateRangeInput.click();
+
+    const calendar = this.page.locator(".p-datepicker-calendar");
+    await expect(calendar).toBeVisible();
+
+    // Calculate Monday of current week
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+    const diffToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - diffToMonday);
+    const mondayDay = monday.getDate().toString();
+
+    // Select Monday safely
+    const mondayCell = calendar
+      .locator("tbody td:not(.p-disabled):not(.p-datepicker-other-month)")
+      .filter({ hasText: mondayDay })
+      .first();
+
+    await mondayCell.click();
+
+    const rows = this.page.locator("tbody.p-datatable-tbody tr");
+    const noEOI = this.page.getByText("No EOI available");
+
+    await Promise.race([
+      rows.first().waitFor({ state: "visible" }).catch(() => { }),
+      noEOI.waitFor({ state: "visible" }).catch(() => { }),
+    ]);
+
+    if (await noEOI.isVisible().catch(() => false)) {
+      expect(eoiCount).toBe(0);
+      return;
+    }
+
+    const visibleRows = await rows.count();
+    console.log(`EOI count from dashboard: ${eoiCount}, EOI table visible rows: ${visibleRows}`);
+    expect(visibleRows).toBe(eoiCount);
+    
+  }
+
 }
 
