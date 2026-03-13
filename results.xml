@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="61.03526099999994">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-13T10:57:47.523Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.954" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify that the Contract board is displayed correctly on the Dashboard" classname="Pages\Dashboard\dashboard.spec.ts" time="51.954">
-<system-out>
-<![CDATA[Contracts Board Counts: Awaiting Vendor Signing: 2, Offer Pending: 2, Held: 1
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.36282200000063">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-13T11:12:10.448Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.754" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify that placeholder image is shown when a listing has no images on Dashboard board" classname="Pages\Dashboard\dashboard.spec.ts" time="42.754">
 </testcase>
 </testsuite>
 </testsuites>

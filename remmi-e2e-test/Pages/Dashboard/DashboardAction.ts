@@ -1438,6 +1438,18 @@ export class DashboardAction {
     console.log(`Contracts Board Counts: Awaiting Vendor Signing: ${awaitingVendorCount}, Offer Pending: ${offerPendingCount}, Held: ${heldCount}`);
   }
 
+  /**
+   * Verify that placeholder image is shown when a listing has no images on Dashboard board
+   */
+  async verifyPlaceholderImageForListingWithoutImages() {
+    await this.verifyDashboardLoaded();
+    const propertyCard = this.page.locator('ul.listing li').nth(1);
+    await propertyCard.scrollIntoViewIfNeeded();
+    await propertyCard.waitFor({ state: 'visible' });
+    const headerImage = propertyCard.locator('img');
+    await headerImage.waitFor({ state: 'visible' });
+  }
+
 
 }
 

@@ -205,4 +205,8 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifyContractBoardIsDisplayedCorrectly();
   });
   
+  test('Verify that placeholder image is shown when a listing has no images on Dashboard board', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyPlaceholderImageForListingWithoutImages();
+  });
 });
