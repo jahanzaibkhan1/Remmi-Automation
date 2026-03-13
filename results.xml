@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.2897890000008">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-13T09:26:08.666Z" hostname="chromium" tests="1" failures="0" skipped="0" time="43.803" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify that EOI board displays correct data on dashboard" classname="Pages\Dashboard\dashboard.spec.ts" time="43.803">
-<system-out>
-<![CDATA[EOI count from dashboard: 1, EOI table visible rows: 1
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.744915000002834">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-13T09:31:08.672Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.13" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify loading of listing thumbnails" classname="Pages\Dashboard\dashboard.spec.ts" time="37.13">
 </testcase>
 </testsuite>
 </testsuites>

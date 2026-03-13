@@ -185,5 +185,10 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifyEOIBoardDisplaysCorrectData();
   });
 
+  test('Verify loading of listing thumbnails', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyLoadingOfListingThumbnails();
+  });
+
   
 });
