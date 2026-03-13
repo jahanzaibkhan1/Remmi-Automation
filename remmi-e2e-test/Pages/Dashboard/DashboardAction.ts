@@ -239,10 +239,10 @@ export class DashboardAction {
   }
 
   async getConditionalCount() {
-    await this.locators.conditionalCount.scrollIntoViewIfNeeded();
-    await this.locators.conditionalCount.waitFor({ state: "visible" });
-    await expect(this.locators.conditionalCount).toBeVisible();
-    return await this.locators.conditionalCount.textContent();
+    await this.locators.heldCount.scrollIntoViewIfNeeded();
+    await this.locators.heldCount.waitFor({ state: "visible" });
+    await expect(this.locators.heldCount).toBeVisible();
+    return await this.locators.heldCount.textContent();
   }
 
   // Tasks
@@ -1417,6 +1417,25 @@ export class DashboardAction {
   async verifyReportBoardIsDisplayedCorrectly() {
     await this.verifyDashboardLoaded();
     await this.verifyReportingComingSoon();
+  }
+
+  /**
+   * Verify that the Contract board is displayed correctly on the Dashboard
+   */
+  async verifyContractBoardIsDisplayedCorrectly() {
+    await this.verifyDashboardLoaded();
+    await this.locators.contractsHeading.waitFor({ state: "visible" });
+    await this.locators.contractsLinkIcon.waitFor({ state: "visible" });
+    await this.locators.awaitingVendorSigningCard.waitFor({ state: "visible" });
+    await this.locators.awaitingVendorSigningCount.waitFor({ state: "visible" });
+    const awaitingVendorCount = await this.locators.awaitingVendorSigningCount.textContent();
+    await this.locators.offerPendingCard.waitFor({ state: "visible" });
+    await this.locators.offerPendingCount.waitFor({ state: "visible" });
+    const offerPendingCount = await this.locators.offerPendingCount.textContent();
+    await this.locators.heldCard.waitFor({ state: "visible" });
+    await this.locators.heldCount.waitFor({ state: "visible" });
+    const heldCount = await this.locators.heldCount.textContent();
+    console.log(`Contracts Board Counts: Awaiting Vendor Signing: ${awaitingVendorCount}, Offer Pending: ${offerPendingCount}, Held: ${heldCount}`);
   }
 
 
