@@ -186,11 +186,11 @@ export class DashboardLocator {
     get offerPendingCount(): Locator {
         return this.offerPendingCard.locator('h3.h33');
     }
-    get conditionalCard(): Locator {
-        return this.page.locator('p', { hasText: 'Conditional' }).locator('..');
+    get heldCard(): Locator {
+        return this.page.locator('p', { hasText: 'held' }).locator('..');
     }
-    get conditionalCount(): Locator {
-        return this.conditionalCard.locator('h3.h33');
+    get heldCount(): Locator {
+        return this.heldCard.locator('h3.h33');
     }
 
     get tasksHeading(): Locator {

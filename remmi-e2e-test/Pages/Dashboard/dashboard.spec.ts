@@ -199,5 +199,10 @@ test.describe("Dashboard Module Boards Display", () => {
     const dashboard = new DashboardAction(sessionPage);
     await dashboard.verifyReportBoardIsDisplayedCorrectly();
   });
+
+  test('Verify that the Contract board is displayed correctly on the Dashboard', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyContractBoardIsDisplayedCorrectly();
+  });
   
 });
