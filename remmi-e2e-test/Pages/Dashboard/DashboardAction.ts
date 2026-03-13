@@ -1499,6 +1499,14 @@ export class DashboardAction {
     console.log(`Contract Board Data: Awaiting Vendor Signing: ${awaitingVendorCount}, Offer Pending: ${offerPendingCount}, Held: ${heldCount}`);
   }
 
+  /**
+   * Verify that the Report board is displayed correctly on the Dashboard
+   */
+  async verifyReportsBoardIsDisplayedCorrectly() {
+    await this.verifyDashboardLoaded();
+    await this.verifyReportingComingSoon();
+  }
+
 
 }
 
