@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.36282200000063">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-13T11:12:10.448Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.754" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify that placeholder image is shown when a listing has no images on Dashboard board" classname="Pages\Dashboard\dashboard.spec.ts" time="42.754">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="28.666509999997913">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-13T11:30:43.470Z" hostname="chromium" tests="1" failures="0" skipped="0" time="22.75" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify that all Widgets sizes are consistent" classname="Pages\Dashboard\dashboard.spec.ts" time="22.75">
 </testcase>
 </testsuite>
 </testsuites>

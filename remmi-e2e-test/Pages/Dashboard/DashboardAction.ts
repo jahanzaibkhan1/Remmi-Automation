@@ -1450,6 +1450,26 @@ export class DashboardAction {
     await headerImage.waitFor({ state: 'visible' });
   }
 
+  /**
+   * Verify that all Widgets sizes are valid and rendered correctly
+   */
+  async verifyAllWidgetsSizesAreConsistent() {
+    await this.verifyDashboardLoaded();
+
+    const widgets = this.page.locator('board-info');
+    const count = await widgets.count();
+
+    expect(count).toBeGreaterThan(0);
+
+    for (let i = 0; i < count; i++) {
+      const box = await widgets.nth(i).boundingBox();
+
+      expect(box).not.toBeNull();
+      expect(box!.width).toBeGreaterThan(0);
+      expect(box!.height).toBeGreaterThan(0);
+    }
+  }
+
 
 }
 

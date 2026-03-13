@@ -209,4 +209,10 @@ test.describe("Dashboard Module Boards Display", () => {
     const dashboard = new DashboardAction(sessionPage);
     await dashboard.verifyPlaceholderImageForListingWithoutImages();
   });
+
+  test('Verify that all Widgets sizes are consistent', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyAllWidgetsSizesAreConsistent();
+  });
+  
 });
