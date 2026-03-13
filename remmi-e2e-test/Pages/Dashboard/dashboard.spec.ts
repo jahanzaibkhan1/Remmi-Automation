@@ -175,5 +175,10 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifySimultaneousBoardResizing();
   });
 
+  test('Verify sorting of leads on board', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyBoardLeadSorting();
+  });
+
   
 });
