@@ -195,5 +195,9 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifyTaskBoardIsDisplayedCorrectly();
   });
 
+  test('Verify that the Report board is displayed correctly on the Dashboard', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyReportBoardIsDisplayedCorrectly();
+  });
   
 });
