@@ -1571,5 +1571,17 @@ export class DashboardAction {
   async verifyTaskBoardShowsCorrectData() {
     await this.verifyTaskBoardIsDisplayedCorrectly();
   }
+
+  /**
+   * Verify that Project board on the Dashboard shows correct data
+   */
+  async verifyProjectBoardShowsCorrectData() {
+    await this.verifyDashboardLoaded();
+    await this.verifyProjectsSection();
+    await this.getTomorrowFollowUpCount();
+    await this.getInProgressProjectsCount();
+    await this.getTotalProjectsCount();
+  }
+  
 }
 
