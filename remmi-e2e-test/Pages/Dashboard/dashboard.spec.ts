@@ -255,4 +255,9 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifyFollowUpSectionBorder();
   });
 
+  test('Verify that all module names have correct spelling on the dashboard', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyModuleNamesSpelling();
+  });
+
 });
