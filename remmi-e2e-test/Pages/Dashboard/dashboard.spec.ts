@@ -230,4 +230,9 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifyListingsBoardShowsCorrectData();
   });
 
+  test('Verify that OFIs board on the Dashboard shows correct data', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyOFIsBoardShowsCorrectData();
+  });
+
 });

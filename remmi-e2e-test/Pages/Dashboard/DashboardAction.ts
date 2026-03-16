@@ -1531,6 +1531,39 @@ export class DashboardAction {
     await this.getSoldPropertiesCount();
   }
 
+  /**
+   * Verify that the OFIs board on the Dashboard shows correct data
+   */
+  async verifyOFIsBoardShowsCorrectData(){
+    await this.verifyDashboardLoaded();
+    await this.locators.ofiHeading.waitFor({state:"visible"});
+    await this.locators.ofiNotificationCount.waitFor({state:'visible'});
+    const ofiText=await this.locators.ofiCountText.textContent();
+    const ofiCount=Number((ofiText??"").match(/\d+/)?.[0]??0);
+    await this.locators.ofiNotificationCount.click();
+    await this.locators.resetButton.waitFor({state:"visible"});
+    await this.locators.resetButton.click();
+    const dateRangeInput=this.page.locator("input[placeholder='Date Range']").first();
+    await dateRangeInput.waitFor({state:"visible"});
+    await dateRangeInput.click();
+    const calendar=this.page.locator(".p-datepicker-calendar");
+    await expect(calendar).toBeVisible();
+    const todayButton=this.page.getByRole('button',{name:'Today'}).first();
+    await todayButton.waitFor({state:"visible"});
+    await todayButton.click();
+    const tableRows=this.page.locator("tbody.p-datatable-tbody tr");
+    const noRecordMsg=this.page.getByText("No record available");
+    await Promise.race([
+      tableRows.first().waitFor({state:'visible'}).catch(()=>{}),
+      noRecordMsg.waitFor({state:'visible'}).catch(()=>{}),
+    ]);
+    if(ofiCount===0){
+      expect(await noRecordMsg.isVisible().catch(()=>false)).toBe(true);
+    }else{
+      const visibleRowsCount=await tableRows.count();
+      expect(visibleRowsCount).toBe(ofiCount);
+    }
+  }
 
 }
 
