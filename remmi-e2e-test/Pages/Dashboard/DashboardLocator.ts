@@ -477,6 +477,30 @@ export class DashboardLocator {
         return this.page.getByRole('button', { name: /save/i }).first();
     }
 
+    get listingStatusDropdown(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Listing Status"]');
+    }
+    get listingStatusSearchInput(): Locator {
+        return this.page.locator('re-multiselect').filter({ hasText: 'Listing Status' }).getByPlaceholder('Search');
+    }
+    get listingStatusSelectAll(): Locator {
+        return this.page.locator('.checkbox__checkmark');
+    }
+    listingStatusOption(label: string): Locator {
+        return this.page.locator('li.p-element', { hasText: label });
+    }
+
+    get listingTypeDropdown(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Listing Type"]');
+    }
+    get listingTypeSearchInput(): Locator {
+        return this.page.locator('re-multiselect').filter({ hasText: 'Listing Type' }).getByPlaceholder('Search');
+    }
+
+    get resetButton(): Locator {
+        return this.page.getByRole('button', { name: /reset/i }).first();
+    }
+
 
 
 }

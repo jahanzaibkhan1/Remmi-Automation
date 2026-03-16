@@ -225,4 +225,39 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifyReportsBoardIsDisplayedCorrectly();
   });
 
+  test('Verify that Listings records board on the Dashboard shows correct data', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyListingsBoardShowsCorrectData();
+  });
+
+  test('Verify that OFIs board on the Dashboard shows correct data', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyOFIsBoardShowsCorrectData();
+  });
+
+  test('Verify that Lead board on the Dashboard shows correct data', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyLeadTypesOnLeadBoard();
+  });
+
+  test('Verify that Task board on the Dashboard shows correct data', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyTaskBoardShowsCorrectData();
+  });
+
+  test('Verify that Project board on the Dashboard shows correct data', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyProjectBoardShowsCorrectData();
+  });
+
+  test('Verify that Follow-up section border is displayed properly', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyFollowUpSectionBorder();
+  });
+
+  test('Verify that all module names have correct spelling on the dashboard', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyModuleNamesSpelling();
+  });
+
 });

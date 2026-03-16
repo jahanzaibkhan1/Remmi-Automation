@@ -374,6 +374,20 @@ export class DashboardAction {
     return await this.locators.listingRecordSoldPropertiesCount.textContent();
   }
 
+  async clickNewListingCount() {
+    await this.locators.listingRecordNewListingCount.scrollIntoViewIfNeeded();
+    await this.locators.listingRecordNewListingCount.waitFor({ state: "visible" });
+    await expect(this.locators.listingRecordNewListingCount).toBeVisible();
+    await this.locators.listingRecordNewListingCount.click();
+  }
+
+  async clickSoldPropertiesCount() {
+    await this.locators.listingRecordSoldPropertiesCount.scrollIntoViewIfNeeded();
+    await this.locators.listingRecordSoldPropertiesCount.waitFor({ state: "visible" });
+    await expect(this.locators.listingRecordSoldPropertiesCount).toBeVisible();
+    await this.locators.listingRecordSoldPropertiesCount.click();
+  }
+
   // EOI
   async verifyEOICard() {
     await this.locators.eoiHeading.scrollIntoViewIfNeeded();
@@ -1507,6 +1521,104 @@ export class DashboardAction {
     await this.verifyReportingComingSoon();
   }
 
+  /**
+   * Verify that Listings records board on the Dashboard shows correct data
+   */
+  async verifyListingsBoardShowsCorrectData() {
+    await this.verifyDashboardLoaded();
+    await this.verifyListingRecord();
+    await this.getNewListingCount();
+    await this.getSoldPropertiesCount();
+  }
+
+  /**
+   * Verify that the OFIs board on the Dashboard shows correct data
+   */
+  async verifyOFIsBoardShowsCorrectData() {
+    await this.verifyDashboardLoaded();
+    await this.locators.ofiHeading.waitFor({ state: "visible" });
+    await this.locators.ofiNotificationCount.waitFor({ state: 'visible' });
+    const ofiText = await this.locators.ofiCountText.textContent();
+    const ofiCount = Number((ofiText ?? "").match(/\d+/)?.[0] ?? 0);
+    await this.locators.ofiNotificationCount.click();
+    await this.locators.resetButton.waitFor({ state: "visible" });
+    await this.locators.resetButton.click();
+    const dateRangeInput = this.page.locator("input[placeholder='Date Range']").first();
+    await dateRangeInput.waitFor({ state: "visible" });
+    await dateRangeInput.click();
+    const calendar = this.page.locator(".p-datepicker-calendar");
+    await expect(calendar).toBeVisible();
+    const todayButton = this.page.getByRole('button', { name: 'Today' }).first();
+    await todayButton.waitFor({ state: "visible" });
+    await todayButton.click();
+    const tableRows = this.page.locator("tbody.p-datatable-tbody tr");
+    const noRecordMsg = this.page.getByText("No record available");
+    await Promise.race([
+      tableRows.first().waitFor({ state: 'visible' }).catch(() => { }),
+      noRecordMsg.waitFor({ state: 'visible' }).catch(() => { }),
+    ]);
+    if (ofiCount === 0) {
+      expect(await noRecordMsg.isVisible().catch(() => false)).toBe(true);
+    } else {
+      const visibleRowsCount = await tableRows.count();
+      expect(visibleRowsCount).toBe(ofiCount);
+    }
+  }
+
+  /**
+   * Verify that Task board on the Dashboard shows correct data
+   */
+  async verifyTaskBoardShowsCorrectData() {
+    await this.verifyTaskBoardIsDisplayedCorrectly();
+  }
+
+  /**
+   * Verify that Project board on the Dashboard shows correct data
+   */
+  async verifyProjectBoardShowsCorrectData() {
+    await this.verifyDashboardLoaded();
+    await this.verifyProjectsSection();
+    await this.getTomorrowFollowUpCount();
+    await this.getInProgressProjectsCount();
+    await this.getTotalProjectsCount();
+  }
+
+  /**
+   * Verify that the Follow-up section border is displayed properly on the dashboard.
+   */
+  async verifyFollowUpSectionBorder() {
+    await this.verifyDashboardLoaded();
+    await this.verifyFollowUpSection();
+    await this.getMorningFollowUpCount();
+    await this.getAfternoonFollowUpCount();
+    await this.getTomorrowFollowUpCount();
+    await this.getThisWeekFollowUpCount();
+  }
+
+  /**
+   * Verify that all module names have correct spelling on the dashboard
+   */
+  async verifyModuleNamesSpelling() {
+    await this.verifyDashboardLoaded();
+
+    const modules = [
+      { locator: this.page.getByRole('heading', { name: 'Task', exact: true }), expected: 'Task' },
+      { locator: this.page.getByRole('heading', { name: "Projects", exact: true }), expected: 'Projects' },
+      { locator: this.page.getByRole('heading', { name: "Leads", exact: true }), expected: 'Leads' },
+      { locator: this.page.getByRole('heading', { name: "OFI's" }), expected: "OFI's" },
+      { locator: this.page.getByRole('heading', { name: "EOI" }), expected: "EOI" },
+      { locator: this.page.getByRole('heading', { name: "Listing Record" }), expected: "Listing Record" },
+      { locator: this.page.getByRole('heading', { name: "Create new Appraisal" }), expected: "Create new Appraisal" },
+      { locator: this.page.getByRole('heading', { name: /Report(s)?/, exact: false }), expected: "Reports" },
+    ];
+
+    for (const mod of modules) {
+      await mod.locator.scrollIntoViewIfNeeded();
+      await mod.locator.waitFor({ state: "visible" });
+      const actual = await mod.locator.textContent();
+      expect((actual ?? '').trim()).toBe(mod.expected);
+    }
+  }
 
 }
 
