@@ -235,4 +235,9 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifyOFIsBoardShowsCorrectData();
   });
 
+  test('Verify that Lead board on the Dashboard shows correct data', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyLeadTypesOnLeadBoard();
+  });
+
 });
