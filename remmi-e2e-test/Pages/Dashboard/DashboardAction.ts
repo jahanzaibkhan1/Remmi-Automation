@@ -1534,33 +1534,33 @@ export class DashboardAction {
   /**
    * Verify that the OFIs board on the Dashboard shows correct data
    */
-  async verifyOFIsBoardShowsCorrectData(){
+  async verifyOFIsBoardShowsCorrectData() {
     await this.verifyDashboardLoaded();
-    await this.locators.ofiHeading.waitFor({state:"visible"});
-    await this.locators.ofiNotificationCount.waitFor({state:'visible'});
-    const ofiText=await this.locators.ofiCountText.textContent();
-    const ofiCount=Number((ofiText??"").match(/\d+/)?.[0]??0);
+    await this.locators.ofiHeading.waitFor({ state: "visible" });
+    await this.locators.ofiNotificationCount.waitFor({ state: 'visible' });
+    const ofiText = await this.locators.ofiCountText.textContent();
+    const ofiCount = Number((ofiText ?? "").match(/\d+/)?.[0] ?? 0);
     await this.locators.ofiNotificationCount.click();
-    await this.locators.resetButton.waitFor({state:"visible"});
+    await this.locators.resetButton.waitFor({ state: "visible" });
     await this.locators.resetButton.click();
-    const dateRangeInput=this.page.locator("input[placeholder='Date Range']").first();
-    await dateRangeInput.waitFor({state:"visible"});
+    const dateRangeInput = this.page.locator("input[placeholder='Date Range']").first();
+    await dateRangeInput.waitFor({ state: "visible" });
     await dateRangeInput.click();
-    const calendar=this.page.locator(".p-datepicker-calendar");
+    const calendar = this.page.locator(".p-datepicker-calendar");
     await expect(calendar).toBeVisible();
-    const todayButton=this.page.getByRole('button',{name:'Today'}).first();
-    await todayButton.waitFor({state:"visible"});
+    const todayButton = this.page.getByRole('button', { name: 'Today' }).first();
+    await todayButton.waitFor({ state: "visible" });
     await todayButton.click();
-    const tableRows=this.page.locator("tbody.p-datatable-tbody tr");
-    const noRecordMsg=this.page.getByText("No record available");
+    const tableRows = this.page.locator("tbody.p-datatable-tbody tr");
+    const noRecordMsg = this.page.getByText("No record available");
     await Promise.race([
-      tableRows.first().waitFor({state:'visible'}).catch(()=>{}),
-      noRecordMsg.waitFor({state:'visible'}).catch(()=>{}),
+      tableRows.first().waitFor({ state: 'visible' }).catch(() => { }),
+      noRecordMsg.waitFor({ state: 'visible' }).catch(() => { }),
     ]);
-    if(ofiCount===0){
-      expect(await noRecordMsg.isVisible().catch(()=>false)).toBe(true);
-    }else{
-      const visibleRowsCount=await tableRows.count();
+    if (ofiCount === 0) {
+      expect(await noRecordMsg.isVisible().catch(() => false)).toBe(true);
+    } else {
+      const visibleRowsCount = await tableRows.count();
       expect(visibleRowsCount).toBe(ofiCount);
     }
   }
@@ -1593,6 +1593,31 @@ export class DashboardAction {
     await this.getAfternoonFollowUpCount();
     await this.getTomorrowFollowUpCount();
     await this.getThisWeekFollowUpCount();
+  }
+
+  /**
+   * Verify that all module names have correct spelling on the dashboard
+   */
+  async verifyModuleNamesSpelling() {
+    await this.verifyDashboardLoaded();
+
+    const modules = [
+      { locator: this.page.getByRole('heading', { name: 'Task', exact: true }), expected: 'Task' },
+      { locator: this.page.getByRole('heading', { name: "Projects", exact: true }), expected: 'Projects' },
+      { locator: this.page.getByRole('heading', { name: "Leads", exact: true }), expected: 'Leads' },
+      { locator: this.page.getByRole('heading', { name: "OFI's" }), expected: "OFI's" },
+      { locator: this.page.getByRole('heading', { name: "EOI" }), expected: "EOI" },
+      { locator: this.page.getByRole('heading', { name: "Listing Record" }), expected: "Listing Record" },
+      { locator: this.page.getByRole('heading', { name: "Create new Appraisal" }), expected: "Create new Appraisal" },
+      { locator: this.page.getByRole('heading', { name: /Report(s)?/, exact: false }), expected: "Reports" },
+    ];
+
+    for (const mod of modules) {
+      await mod.locator.scrollIntoViewIfNeeded();
+      await mod.locator.waitFor({ state: "visible" });
+      const actual = await mod.locator.textContent();
+      expect((actual ?? '').trim()).toBe(mod.expected);
+    }
   }
 
 }
