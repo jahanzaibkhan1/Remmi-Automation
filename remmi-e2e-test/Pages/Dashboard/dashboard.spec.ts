@@ -250,4 +250,9 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifyProjectBoardShowsCorrectData();
   });
 
+  test('Verify that Follow-up section border is displayed properly', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyFollowUpSectionBorder();
+  });
+
 });
