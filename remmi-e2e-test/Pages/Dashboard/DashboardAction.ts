@@ -374,6 +374,20 @@ export class DashboardAction {
     return await this.locators.listingRecordSoldPropertiesCount.textContent();
   }
 
+  async clickNewListingCount() {
+    await this.locators.listingRecordNewListingCount.scrollIntoViewIfNeeded();
+    await this.locators.listingRecordNewListingCount.waitFor({ state: "visible" });
+    await expect(this.locators.listingRecordNewListingCount).toBeVisible();
+    await this.locators.listingRecordNewListingCount.click();
+  }
+
+  async clickSoldPropertiesCount() {
+    await this.locators.listingRecordSoldPropertiesCount.scrollIntoViewIfNeeded();
+    await this.locators.listingRecordSoldPropertiesCount.waitFor({ state: "visible" });
+    await expect(this.locators.listingRecordSoldPropertiesCount).toBeVisible();
+    await this.locators.listingRecordSoldPropertiesCount.click();
+  }
+
   // EOI
   async verifyEOICard() {
     await this.locators.eoiHeading.scrollIntoViewIfNeeded();
@@ -1505,6 +1519,16 @@ export class DashboardAction {
   async verifyReportsBoardIsDisplayedCorrectly() {
     await this.verifyDashboardLoaded();
     await this.verifyReportingComingSoon();
+  }
+
+  /**
+   * Verify that Listings records board on the Dashboard shows correct data
+   */
+  async verifyListingsBoardShowsCorrectData() {
+    await this.verifyDashboardLoaded();
+    await this.verifyListingRecord();
+    await this.getNewListingCount();
+    await this.getSoldPropertiesCount();
   }
 
 
