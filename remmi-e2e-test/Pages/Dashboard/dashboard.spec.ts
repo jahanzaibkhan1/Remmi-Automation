@@ -225,4 +225,9 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifyReportsBoardIsDisplayedCorrectly();
   });
 
+  test('Verify that Listings records board on the Dashboard shows correct data', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyListingsBoardShowsCorrectData();
+  });
+
 });
