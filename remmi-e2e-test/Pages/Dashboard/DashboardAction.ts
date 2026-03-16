@@ -1582,6 +1582,18 @@ export class DashboardAction {
     await this.getInProgressProjectsCount();
     await this.getTotalProjectsCount();
   }
-  
+
+  /**
+   * Verify that the Follow-up section border is displayed properly on the dashboard.
+   */
+  async verifyFollowUpSectionBorder() {
+    await this.verifyDashboardLoaded();
+    await this.verifyFollowUpSection();
+    await this.getMorningFollowUpCount();
+    await this.getAfternoonFollowUpCount();
+    await this.getTomorrowFollowUpCount();
+    await this.getThisWeekFollowUpCount();
+  }
+
 }
 
