@@ -245,4 +245,9 @@ test.describe("Dashboard Module Boards Display", () => {
     await dashboard.verifyTaskBoardShowsCorrectData();
   });
 
+  test('Verify that Project board on the Dashboard shows correct data', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyProjectBoardShowsCorrectData();
+  });
+
 });
