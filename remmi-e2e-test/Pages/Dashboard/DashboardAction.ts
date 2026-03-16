@@ -1565,5 +1565,11 @@ export class DashboardAction {
     }
   }
 
+  /**
+   * Verify that Task board on the Dashboard shows correct data
+   */
+  async verifyTaskBoardShowsCorrectData() {
+    await this.verifyTaskBoardIsDisplayedCorrectly();
+  }
 }
 
