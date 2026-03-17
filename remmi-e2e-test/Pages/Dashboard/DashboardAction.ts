@@ -1869,6 +1869,24 @@ export class DashboardAction {
     await expect(this.locators.deleteIcon).not.toBeVisible();
   }
 
+  /**
+   * Add a blank message on Noticeboards
+   */
+  async addBlankMessageOnNoticeboard(message: string = "  ") {
+    await this.verifyDashboardLoaded();
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.locators.noticeBoardBox.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.waitFor({ state: "visible" });
+
+    await this.locators.writeMessageInput.fill(message);
+    await this.locators.sendButton.click();
+
+    const messageLocator = this.page.locator('.false.note.ng-star-inserted', { hasText: message }).first();
+    await expect(messageLocator).toBeVisible({ timeout: 10000 });
+  }
+
 
 
 }
