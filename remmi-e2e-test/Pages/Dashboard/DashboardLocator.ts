@@ -501,6 +501,35 @@ export class DashboardLocator {
         return this.page.getByRole('button', { name: /reset/i }).first();
     }
 
+    get noticeBoardBox(): Locator {
+        return this.page.locator('.box_notice');
+    }
+
+    get writeMessageInput(): Locator {
+        return this.page.locator("input[placeholder='Write a message...']");
+    }
+
+    get publicButton(): Locator {
+        return this.page.locator('button', { hasText: 'Public' });
+    }
+
+    get privateButton(): Locator {
+        return this.page.locator('button', { hasText: 'Private' });
+    }
+
+    get sendButton(): Locator {
+        return this.page.locator("i.pi.pi-send");
+    }
+
+    get messageSent(): Locator {
+        return this.page.locator('.ng-tns-c2308121496-8.ng-star-inserted.ng-trigger.ng-trigger-flyInOut.ngx-toastr.toast-success');
+    }
+
+    get deleteIcon(): Locator {
+        return this.page.locator("img[src='assets/img/menuIcon/delete_icon.svg']").first();
+    }
+
+
 
 
 }
