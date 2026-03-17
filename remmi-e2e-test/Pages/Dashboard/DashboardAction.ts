@@ -1633,6 +1633,7 @@ export class DashboardAction {
     await messageLocator.waitFor({ state: "visible"});
     await this.locators.deleteIcon.waitFor({state: 'visible'});
     await this.locators.deleteIcon.click({force: true});
+    await expect(this.locators.deleteIcon).not.toBeVisible();
   }
 
   /**
@@ -1667,6 +1668,7 @@ export class DashboardAction {
     await messageLocator.waitFor({ state: "visible"});
     await this.locators.deleteIcon.waitFor({state: 'visible'});
     await this.locators.deleteIcon.click({force: true});
+    await expect(this.locators.deleteIcon).not.toBeVisible();
   }
 
   /**
@@ -1713,6 +1715,7 @@ export class DashboardAction {
     // Clean up: delete the message
     await this.locators.deleteIcon.waitFor({ state: 'visible' });
     await this.locators.deleteIcon.click({ force: true });
+    await expect(this.locators.deleteIcon).not.toBeVisible();
   }
 
   /**
@@ -1759,6 +1762,14 @@ export class DashboardAction {
     // Clean up: delete the message
     await this.locators.deleteIcon.waitFor({ state: 'visible' });
     await this.locators.deleteIcon.click({ force: true });
+    await expect(this.locators.deleteIcon).not.toBeVisible();
+  }
+
+  /**
+   * Verify message deletion from Noticeboard
+   */
+  async verifyMessageDeletionFromNoticeboard() {
+    await this.verifyPublicMessageOnNoticeboard();
   }
 
 }

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.340523999999974">
-<testsuite name="Pages\Dashboard\NoticeBoard.spec.ts" timestamp="2026-03-17T10:26:22.423Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.138" errors="0">
-<testcase name="Notice Board › Verify private message to specific team" classname="Pages\Dashboard\NoticeBoard.spec.ts" time="32.138">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.02701099999994">
+<testsuite name="Pages\Dashboard\NoticeBoard.spec.ts" timestamp="2026-03-17T10:31:16.382Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.406" errors="0">
+<testcase name="Notice Board › Verify message deletion from Noticeboard" classname="Pages\Dashboard\NoticeBoard.spec.ts" time="31.406">
 </testcase>
 </testsuite>
 </testsuites>
