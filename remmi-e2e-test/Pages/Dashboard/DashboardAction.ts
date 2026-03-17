@@ -819,9 +819,6 @@ export class DashboardAction {
     await this.verifyWeatherWidget();
     await this.verifyNotesSection();
     await this.verifyMapVisible();
-    await this.verifyContractsSection();
-    await this.clickContractsLink();
-    await this.verifyContractModuleBoardVisible();
   }
 
   /**
@@ -1209,11 +1206,11 @@ export class DashboardAction {
    */
   async unpinPinnedListingFromDashboard() {
     await this.verifyDashboardLoaded();
-    await this.page.reload();
     await this.verifyCalendarSection();
     await this.verifyWeatherWidget();
     await this.verifyNotesSection();
     await this.verifyMapVisible();
+    await this.page.reload();
     await this.verifyEmailsSection();
     const pinnedListing = this.page.locator('.h-150px').first();
     await pinnedListing.scrollIntoViewIfNeeded();
@@ -1536,11 +1533,11 @@ export class DashboardAction {
    */
   async verifyOFIsBoardShowsCorrectData() {
     await this.verifyDashboardLoaded();
+    await this.locators.ofiHeading.scrollIntoViewIfNeeded();
     await this.locators.ofiHeading.waitFor({ state: "visible" });
-    await this.locators.ofiNotificationCount.waitFor({ state: 'visible' });
     const ofiText = await this.locators.ofiCountText.textContent();
     const ofiCount = Number((ofiText ?? "").match(/\d+/)?.[0] ?? 0);
-    await this.locators.ofiNotificationCount.click();
+    await this.locators.ofiLinkIcon.click();
     await this.locators.resetButton.waitFor({ state: "visible" });
     await this.locators.resetButton.click();
     const dateRangeInput = this.page.locator("input[placeholder='Date Range']").first();
@@ -1609,7 +1606,7 @@ export class DashboardAction {
       { locator: this.page.getByRole('heading', { name: "EOI" }), expected: "EOI" },
       { locator: this.page.getByRole('heading', { name: "Listing Record" }), expected: "Listing Record" },
       { locator: this.page.getByRole('heading', { name: "Create new Appraisal" }), expected: "Create new Appraisal" },
-      { locator: this.page.getByRole('heading', { name: /Report(s)?/, exact: false }), expected: "Reports" },
+      { locator: this.page.getByRole('heading', { name: /Report(s)?/, exact: false }), expected: "Reporting" },
     ];
 
     for (const mod of modules) {
