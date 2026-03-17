@@ -1617,5 +1617,321 @@ export class DashboardAction {
     }
   }
 
+  /**
+   * Verify that a public message can be posted and is visible on the Noticeboard.
+   */
+  async verifyPublicMessageOnNoticeboard(message: string = "Public notice test message") {
+    await this.verifyDashboardLoaded();
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.locators.noticeBoardBox.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.fill(message);
+    await this.locators.sendButton.click();
+    const messageLocator = this.page.locator('.false.note.ng-star-inserted', { hasText: message }).first();
+    await messageLocator.waitFor({ state: "visible" });
+    await this.locators.deleteIcon.waitFor({ state: 'visible' });
+    await this.locators.deleteIcon.click({ force: true });
+    await expect(this.locators.deleteIcon).not.toBeVisible();
+  }
+
+  /**
+   * Verify private message to specific staff
+   */
+  async verifyPrivateMessageToSpecificStaff(
+    recipient: string = 'Jahanzaib Xenex',
+    message: string = "Private notice test message"
+  ) {
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.locators.noticeBoardBox.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.fill(message);
+    await this.locators.privateButton.waitFor({ state: "visible" });
+    await this.locators.privateButton.click();
+
+    // Open recipient selector and choose a staff (assuming this opens a dropdown or similar)
+    await this.locators.staffUser.waitFor({ state: "visible" });
+    await this.locators.staffUser.click();
+    await this.locators.searchUser.waitFor({ state: 'visible' });
+    await this.locators.searchUser.click();
+    await this.locators.searchUser.clear();
+    await this.locators.searchUser.fill('Jahanzaib Xenex');
+    const recipientOption = this.page.locator("li.p-element.ng-star-inserted", { hasText: recipient });
+    await recipientOption.waitFor({ state: "visible" });
+    await recipientOption.click();
+    await this.locators.sendButton.waitFor({ state: "visible" });
+    await this.locators.sendButton.click();
+    const messageLocator = this.page.locator('.bg-color.note.ng-star-inserted', { hasText: message }).first();
+    await messageLocator.waitFor({ state: "visible" });
+    await this.locators.deleteIcon.waitFor({ state: 'visible' });
+    await this.locators.deleteIcon.click({ force: true });
+    await expect(this.locators.deleteIcon).not.toBeVisible();
+  }
+
+  /**
+   * Verify private message to specific office
+   */
+  async verifyPrivateMessageToSpecificOffice(
+    office: string = 'QA Tester',
+    message: string = "Private office notice test message"
+  ) {
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.locators.noticeBoardBox.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.fill(message);
+
+    // Select "Private" type
+    await this.locators.privateButton.waitFor({ state: "visible" });
+    await this.locators.privateButton.click();
+
+    // Click Office selector
+    await this.locators.officeButton.waitFor({ state: "visible" });
+    await this.locators.officeButton.click();
+
+    // Select office from list
+    await this.locators.selectOffice.waitFor({ state: "visible" });
+    await this.locators.selectOffice.click();
+    await this.locators.searchUser.waitFor({ state: 'visible' });
+    await this.locators.searchUser.clear();
+    await this.locators.searchUser.fill(office);
+
+    const officeOption = this.locators.officeOption.filter({ hasText: office }).first();
+    await officeOption.waitFor({ state: "visible" });
+    await officeOption.click();
+
+    // Send the message
+    await this.locators.sendButton.waitFor({ state: "visible" });
+    await this.locators.sendButton.click();
+
+    // Verify message sent
+    const messageLocator = this.page.locator('.bg-color.note.ng-star-inserted', { hasText: message }).first();
+    await messageLocator.waitFor({ state: "visible" });
+
+    // Clean up: delete the message
+    await this.locators.deleteIcon.waitFor({ state: 'visible' });
+    await this.locators.deleteIcon.click({ force: true });
+    await expect(this.locators.deleteIcon).not.toBeVisible();
+  }
+
+  /**
+   * Verify private message to specific team
+   */
+  async verifyPrivateMessageToSpecificTeam(
+    team: string = 'Automation Team',
+    message: string = "Private team notice test message"
+  ) {
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.locators.noticeBoardBox.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.fill(message);
+
+    // Select "Private" type
+    await this.locators.privateButton.waitFor({ state: "visible" });
+    await this.locators.privateButton.click();
+
+    // Click Team selector
+    await this.locators.teamButton.waitFor({ state: "visible" });
+    await this.locators.teamButton.click();
+
+    // Select team from list
+    await this.locators.selectTeam.waitFor({ state: "visible" });
+    await this.locators.selectTeam.click();
+    await this.locators.searchUser.waitFor({ state: 'visible' });
+    await this.locators.searchUser.clear();
+    await this.locators.searchUser.fill(team);
+
+    const teamOption = this.locators.teamOption.filter({ hasText: team }).first();
+    await teamOption.waitFor({ state: "visible" });
+    await teamOption.click();
+
+    // Send the message
+    await this.locators.sendButton.waitFor({ state: "visible" });
+    await this.locators.sendButton.click();
+
+    // Verify message sent
+    const messageLocator = this.page.locator('.bg-color.note.ng-star-inserted', { hasText: message }).first();
+    await messageLocator.waitFor({ state: "visible" });
+
+    // Clean up: delete the message
+    await this.locators.deleteIcon.waitFor({ state: 'visible' });
+    await this.locators.deleteIcon.click({ force: true });
+    await expect(this.locators.deleteIcon).not.toBeVisible();
+  }
+
+  /**
+   * Verify message deletion from Noticeboard
+   */
+  async verifyMessageDeletionFromNoticeboard() {
+    await this.verifyPublicMessageOnNoticeboard();
+  }
+
+  /**
+   * Verify that the user's name is shown when a message is added to the Noticeboard
+   */
+  async verifyUserNameOnNoticeboardMessage(message: string = "Test notice message", expectedUserName: string = "Jahanzaib Xenex") {
+    await this.verifyDashboardLoaded();
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.locators.noticeBoardBox.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.fill(message);
+    await this.locators.sendButton.click();
+    const messageLocator = this.page.locator('.false.note.ng-star-inserted', { hasText: message }).first();
+    await messageLocator.waitFor({ state: "visible" });
+    // Assert the user's name is visible adjacent to the posted message
+    const userNameLocator = messageLocator.locator('p.user.f-10', { hasText: 'Jahanzaib Xenex' }).first();
+    await expect(userNameLocator).toBeVisible();
+
+    // Optional: Clean up (delete message)
+    await this.locators.deleteIcon.waitFor({ state: 'visible' });
+    await this.locators.deleteIcon.click({ force: true });
+    await expect(this.locators.deleteIcon).not.toBeVisible();
+  }
+
+  /**
+   * Verify comment on a message.
+   */
+  async verifyCommentOnNoticeboardMessage(message: string = "Test notice message") {
+    await this.verifyDashboardLoaded();
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.locators.noticeBoardBox.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.fill(message);
+    await this.locators.sendButton.click();
+    const messageLocator = this.page.locator('.false.note.ng-star-inserted', { hasText: message }).first();
+    await messageLocator.waitFor({ state: "visible" });
+    // Assert the user's name is visible adjacent to the posted message
+    const userNameLocator = messageLocator.locator('p.user.f-10', { hasText: 'Jahanzaib Xenex' }).first();
+    await expect(userNameLocator).toBeVisible();
+
+    // Optional: Clean up (delete message)
+    await this.locators.deleteIcon.waitFor({ state: 'visible' });
+    await this.locators.deleteIcon.click({ force: true });
+    await expect(this.locators.deleteIcon).not.toBeVisible();
+  }
+
+  /**
+   * Verify all reacts (like, heart, comment) on a message in the Noticeboard.
+   */
+  async verifyReactOnNoticeboardMessage(message: string = "Test notice message") {
+    await this.verifyDashboardLoaded();
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.locators.noticeBoardBox.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.fill(message);
+    await this.locators.sendButton.click();
+
+    const messageLocator = this.page.locator('.false.note.ng-star-inserted', { hasText: message }).first();
+    await messageLocator.waitFor({ state: "visible" });
+
+    // Get the icon_list container within this message (scoped to message if necessary)
+    const iconList = messageLocator.locator('div.icon_list');
+    await iconList.waitFor({ state: "visible" });
+
+    // React selectors for like, heart, comment
+    const reactIcons = [
+      { imgSelector: "img[src*='like.svg']", desc: 'like' },
+      { imgSelector: "img[src*='heart.svg']", desc: 'heart' }
+    ];
+
+    for (let i = 0; i < reactIcons.length; i++) {
+      const reactDiv = iconList.locator('div.img_ico').nth(i);
+      const reactImg = reactDiv.locator(reactIcons[i].imgSelector);
+      const reactCount = reactDiv.locator('p');
+
+      // Get initial count
+      const initialCount = parseInt(await reactCount.textContent() || "0", 10);
+
+      await reactImg.waitFor({ state: "visible" });
+      await reactImg.click();
+
+      // Wait for the count to increase by 1
+      await expect.poll(async () => {
+        return parseInt(await reactCount.textContent() || "0", 10);
+      }, { timeout: 20000 }).toBe(initialCount + 1);
+    }
+
+    // Optional: Clean up (delete message)
+    await this.locators.deleteIcon.waitFor({ state: 'visible' });
+    await this.locators.deleteIcon.click({ force: true });
+    await expect(this.locators.deleteIcon).not.toBeVisible();
+  }
+
+  /**
+   * Add a blank message on Noticeboards
+   */
+  async addBlankMessageOnNoticeboard(message: string = "  ") {
+    await this.verifyDashboardLoaded();
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.locators.noticeBoardBox.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.waitFor({ state: "visible" });
+
+    await this.locators.writeMessageInput.fill(message);
+    await this.locators.sendButton.click();
+
+    const messageLocator = this.page.locator('.false.note.ng-star-inserted', { hasText: message }).first();
+    await expect(messageLocator).toBeVisible({ timeout: 10000 });
+
+    // Optional: Clean up (delete message)
+    await this.locators.deleteIcon.waitFor({ state: 'visible' });
+    await this.locators.deleteIcon.click({ force: true });
+    await expect(this.locators.deleteIcon).not.toBeVisible();
+  }
+
+  /**
+   * Verify "Load more" button loads all Noticeboard 
+   */
+  async verifyNoticeboardCommentScrollAndCleanup() {
+    await this.verifyDashboardLoaded();
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.locators.noticeBoardBox.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.waitFor({ state: "visible" });
+    const testMessage = " ";
+    const messageCount = 8;
+    for (let i = 0; i < messageCount; i++) {
+      await this.locators.writeMessageInput.fill(testMessage);
+      await this.locators.sendButton.click();
+      const msgLocator = this.page.locator('.false.note.ng-star-inserted', { hasText: testMessage }).nth(i);
+      await msgLocator.waitFor({ state: "visible" });
+    }
+    const loadMoreButton = this.page.locator('button', { hasText: /Load more/i });
+    const loadMoreVisible = await loadMoreButton.isVisible().catch(() => false);
+    if (loadMoreVisible) {
+      await loadMoreButton.scrollIntoViewIfNeeded();
+      await loadMoreButton.click();
+      await this.page.waitForTimeout(1000);
+    }
+    let remainingDeletes = await this.page.locator("img[src='assets/img/menuIcon/delete_icon.svg']").count();
+    let attempts = 0;
+    while (remainingDeletes > 0 && attempts < messageCount * 2) {
+      const deleteIcon = this.page.locator("img[src='assets/img/menuIcon/delete_icon.svg']").first();
+      await deleteIcon.waitFor({ state: 'visible', timeout: 5000 });
+      await deleteIcon.click({ force: true });
+      await this.page.waitForTimeout(700);
+      remainingDeletes = await this.page.locator("img[src='assets/img/menuIcon/delete_icon.svg']").count();
+      attempts++;
+    }
+    await expect(this.page.locator('.false.note.ng-star-inserted', { hasText: testMessage }))
+      .toHaveCount(0, { timeout: 20000 });
+  }
+
+
+
 }
 
