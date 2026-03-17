@@ -54,4 +54,9 @@ test.describe('Notice Board', () => {
     await dashboard.verifyCommentOnNoticeboardMessage();
   });
 
+  test('Verify react on a message', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyReactOnNoticeboardMessage();
+  });
+
 });

@@ -1799,7 +1799,7 @@ export class DashboardAction {
   /**
    * Verify comment on a message.
    */
-  async verifyCommentOnNoticeboardMessage(message: string = "Test notice message", expectedUserName: string = "Jahanzaib Xenex") {
+  async verifyCommentOnNoticeboardMessage(message: string = "Test notice message") {
     await this.verifyDashboardLoaded();
     await this.verifyCalendarSection();
     await this.verifyWeatherWidget();
@@ -1819,7 +1819,56 @@ export class DashboardAction {
     await this.locators.deleteIcon.click({ force: true });
     await expect(this.locators.deleteIcon).not.toBeVisible();
   }
-   
+
+  /**
+   * Verify all reacts (like, heart, comment) on a message in the Noticeboard.
+   */
+  async verifyReactOnNoticeboardMessage(message: string = "Test notice message") {
+    await this.verifyDashboardLoaded();
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.locators.noticeBoardBox.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.fill(message);
+    await this.locators.sendButton.click();
+
+    const messageLocator = this.page.locator('.false.note.ng-star-inserted', { hasText: message }).first();
+    await messageLocator.waitFor({ state: "visible" });
+
+    // Get the icon_list container within this message (scoped to message if necessary)
+    const iconList = messageLocator.locator('div.icon_list');
+    await iconList.waitFor({ state: "visible" });
+
+    // React selectors for like, heart, comment
+    const reactIcons = [
+      { imgSelector: "img[src*='like.svg']",   desc: 'like'    },
+      { imgSelector: "img[src*='heart.svg']",  desc: 'heart'   }
+    ];
+
+    for (let i = 0; i < reactIcons.length; i++) {
+      const reactDiv   = iconList.locator('div.img_ico').nth(i);
+      const reactImg   = reactDiv.locator(reactIcons[i].imgSelector);
+      const reactCount = reactDiv.locator('p');
+
+      // Get initial count
+      const initialCount = parseInt(await reactCount.textContent() || "0", 10);
+
+      await reactImg.waitFor({ state: "visible" });
+      await reactImg.click();
+
+      // Wait for the count to increase by 1
+      await expect.poll(async () => {
+        return parseInt(await reactCount.textContent() || "0", 10);
+      }, { timeout: 20000 }).toBe(initialCount + 1);
+    }
+
+    // Optional: Clean up (delete message)
+    await this.locators.deleteIcon.waitFor({ state: 'visible' });
+    await this.locators.deleteIcon.click({ force: true });
+    await expect(this.locators.deleteIcon).not.toBeVisible();
+  }
+
 
 
 }
