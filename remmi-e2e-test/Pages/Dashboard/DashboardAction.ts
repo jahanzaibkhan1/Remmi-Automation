@@ -1772,5 +1772,29 @@ export class DashboardAction {
     await this.verifyPublicMessageOnNoticeboard();
   }
 
+  /**
+   * Verify that the user's name is shown when a message is added to the Noticeboard
+   */
+  async verifyUserNameOnNoticeboardMessage(message: string = "Test notice message", expectedUserName: string = "Jahanzaib Xenex") {
+    await this.verifyDashboardLoaded();
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.locators.noticeBoardBox.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.fill(message);
+    await this.locators.sendButton.click();
+    const messageLocator = this.page.locator('.false.note.ng-star-inserted', { hasText: message }).first();
+    await messageLocator.waitFor({ state: "visible"});
+    // Assert the user's name is visible adjacent to the posted message
+    const userNameLocator = messageLocator.locator('p.user.f-10', { hasText: 'Jahanzaib Xenex' }).first();
+    await expect(userNameLocator).toBeVisible();
+
+    // Optional: Clean up (delete message)
+    await this.locators.deleteIcon.waitFor({ state: 'visible' });
+    await this.locators.deleteIcon.click({ force: true });
+    await expect(this.locators.deleteIcon).not.toBeVisible();
+  }
+
 }
 

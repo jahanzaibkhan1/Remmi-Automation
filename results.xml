@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.02701099999994">
-<testsuite name="Pages\Dashboard\NoticeBoard.spec.ts" timestamp="2026-03-17T10:31:16.382Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.406" errors="0">
-<testcase name="Notice Board › Verify message deletion from Noticeboard" classname="Pages\Dashboard\NoticeBoard.spec.ts" time="31.406">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="36.56277100000018">
+<testsuite name="Pages\Dashboard\NoticeBoard.spec.ts" timestamp="2026-03-17T10:49:01.572Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.069" errors="0">
+<testcase name="Notice Board › Verify that the user name is shown when a message is added to the Noticeboard" classname="Pages\Dashboard\NoticeBoard.spec.ts" time="31.069">
 </testcase>
 </testsuite>
 </testsuites>

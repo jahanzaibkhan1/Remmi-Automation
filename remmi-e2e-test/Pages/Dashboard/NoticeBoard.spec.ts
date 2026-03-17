@@ -44,4 +44,9 @@ test.describe('Notice Board', () => {
     await dashboard.verifyMessageDeletionFromNoticeboard();
   });
   
+  test('Verify that the user name is shown when a message is added to the Noticeboard', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyUserNameOnNoticeboardMessage();
+  });
+  
 });
