@@ -38,5 +38,10 @@ test.describe('Notice Board', () => {
     const dashboard = new DashboardAction(sessionPage);
     await dashboard.verifyPrivateMessageToSpecificTeam();
   });
+
+  test('Verify message deletion from Noticeboard', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyMessageDeletionFromNoticeboard();
+  });
   
 });
