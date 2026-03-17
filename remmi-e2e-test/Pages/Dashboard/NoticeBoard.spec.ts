@@ -48,5 +48,10 @@ test.describe('Notice Board', () => {
     const dashboard = new DashboardAction(sessionPage);
     await dashboard.verifyUserNameOnNoticeboardMessage();
   });
-  
+
+  test('Verify comment on a message', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyCommentOnNoticeboardMessage();
+  });
+
 });
