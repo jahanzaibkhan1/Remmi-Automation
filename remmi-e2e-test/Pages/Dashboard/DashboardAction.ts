@@ -1622,11 +1622,48 @@ export class DashboardAction {
    */
   async verifyPublicMessageOnNoticeboard(message: string = "Public notice test message") {
     await this.verifyDashboardLoaded();
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
     await this.locators.noticeBoardBox.waitFor({ state: "visible" });
     await this.locators.writeMessageInput.waitFor({ state: "visible" });
     await this.locators.writeMessageInput.fill(message);
     await this.locators.sendButton.click();
     const messageLocator = this.page.locator('.false.note.ng-star-inserted', { hasText: message }).first();
+    await messageLocator.waitFor({ state: "visible"});
+    await this.locators.deleteIcon.waitFor({state: 'visible'});
+    await this.locators.deleteIcon.click({force: true});
+  }
+
+  /**
+   * Verify private message to specific staff
+   */
+  async verifyPrivateMessageToSpecificStaff(
+    recipient: string= 'Jahanzaib Xenex',
+    message: string = "Private notice test message"
+  ) {
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.locators.noticeBoardBox.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.fill(message);
+    await this.locators.privateButton.waitFor({ state: "visible" });
+    await this.locators.privateButton.click();
+
+    // Open recipient selector and choose a staff (assuming this opens a dropdown or similar)
+    await this.locators.staffUser.waitFor({ state: "visible" });
+    await this.locators.staffUser.click();
+    await this.locators.searchUser.waitFor({state: 'visible'});
+    await this.locators.searchUser.click();
+    await this.locators.searchUser.clear();
+    await this.locators.searchUser.fill('Jahanzaib Xenex');
+    const recipientOption = this.page.locator("li.p-element.ng-star-inserted", { hasText: recipient });
+    await recipientOption.waitFor({ state: "visible" });
+    await recipientOption.click();
+    await this.locators.sendButton.waitFor({ state: "visible" });
+    await this.locators.sendButton.click();
+    const messageLocator = this.page.locator('.bg-color.note.ng-star-inserted', { hasText: message}).first();
     await messageLocator.waitFor({ state: "visible"});
     await this.locators.deleteIcon.waitFor({state: 'visible'});
     await this.locators.deleteIcon.click({force: true});

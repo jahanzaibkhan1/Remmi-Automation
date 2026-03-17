@@ -23,4 +23,10 @@ test.describe('Notice Board', () => {
     const dashboard = new DashboardAction(sessionPage);
     await dashboard.verifyPublicMessageOnNoticeboard();
   });
+
+  test('Verify private message to specific staff', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyPrivateMessageToSpecificStaff();
+  });
+  
 });

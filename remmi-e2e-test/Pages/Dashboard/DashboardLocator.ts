@@ -529,6 +529,16 @@ export class DashboardLocator {
         return this.page.locator("img[src='assets/img/menuIcon/delete_icon.svg']").first();
     }
 
+    get staffUser(): Locator {
+        return this.page.locator("//div[@class='tags']");
+    }
+
+    get searchUser(): Locator {
+        return this.page.locator("input._input-icon.ng-untouched.ng-pristine.ng-valid");
+    }
+
+    
+
 
 
 
