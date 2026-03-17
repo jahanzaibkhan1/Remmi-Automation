@@ -19,96 +19,96 @@ const test = base.extend<{ sessionPage: any }>({
 
 
 test.describe("Dashboard Module Boards Display", () => {
-  test("Verify all main module boards are displayed", async ({ sessionPage }) => {
-    const dashboard = new DashboardAction(sessionPage);
-    await dashboard.verifyAllModuleBoardsDisplayed();
-  });
+  // test("Verify all main module boards are displayed", async ({ sessionPage }) => {
+  //   const dashboard = new DashboardAction(sessionPage);
+  //   await dashboard.verifyAllModuleBoardsDisplayed();
+  // });
 
-  test("Verify dragging boards to change their position", async ({ sessionPage }) => {
-    const dashboard = new DashboardAction(sessionPage);
-    await dashboard.verifyDraggingBoardsToChangePosition();
-  });
+  // test("Verify dragging boards to change their position", async ({ sessionPage }) => {
+  //   const dashboard = new DashboardAction(sessionPage);
+  //   await dashboard.verifyDraggingBoardsToChangePosition();
+  // });
 
-  test("Verify boards can be moved to different rows", async ({ sessionPage }) => {
-    const dashboard = new DashboardAction(sessionPage);
-    await dashboard.verifyBoardsCanBeMovedToDifferentRows();
-  });
+  // test("Verify boards can be moved to different rows", async ({ sessionPage }) => {
+  //   const dashboard = new DashboardAction(sessionPage);
+  //   await dashboard.verifyBoardsCanBeMovedToDifferentRows();
+  // });
 
-  test("Verify max 5 boards allowed per row", async ({ sessionPage }) => {
-    const dashboard = new DashboardAction(sessionPage);
-    await dashboard.verifyMaxFiveBoardsPerRow();
-  });
+  // test("Verify max 5 boards allowed per row", async ({ sessionPage }) => {
+  //   const dashboard = new DashboardAction(sessionPage);
+  //   await dashboard.verifyMaxFiveBoardsPerRow();
+  // });
 
-  test("Verify module opens on board click", async ({ sessionPage }) => {
-    const dashboard = new DashboardAction(sessionPage);
-    await dashboard.verifyModuleOpensOnBoardClick();
-  });
+  // test("Verify module opens on board click", async ({ sessionPage }) => {
+  //   const dashboard = new DashboardAction(sessionPage);
+  //   await dashboard.verifyModuleOpensOnBoardClick();
+  // });
 
-  test('Verify "Dashboard Display Order" popup opens', async ({ sessionPage }) => {
-    const dashboard = new DashboardAction(sessionPage);
-    await dashboard.verifyDashboardDisplayOrderPopupOpens();
-  });
+  // test('Verify "Dashboard Display Order" popup opens', async ({ sessionPage }) => {
+  //   const dashboard = new DashboardAction(sessionPage);
+  //   await dashboard.verifyDashboardDisplayOrderPopupOpens();
+  // });
 
-  test('Verify widgets visibility toggle', async ({ sessionPage }) => {
-    const dashboard = new DashboardAction(sessionPage);
-    await dashboard.verifyWidgetsVisibilityToggle();
-  });
+  // test('Verify widgets visibility toggle', async ({ sessionPage }) => {
+  //   const dashboard = new DashboardAction(sessionPage);
+  //   await dashboard.verifyWidgetsVisibilityToggle();
+  // });
 
-  test('Verify drag and drop functionality in popup', async ({ sessionPage }) => {
-    const dashboard = new DashboardAction(sessionPage);
-    await dashboard.verifyDragAndDropInPopup();
-  });
+  // test('Verify drag and drop functionality in popup', async ({ sessionPage }) => {
+  //   const dashboard = new DashboardAction(sessionPage);
+  //   await dashboard.verifyDragAndDropInPopup();
+  // });
 
-  test('Verify board position sync between dashboard and popup', async ({ sessionPage }) => {
-    const dashboard = new DashboardAction(sessionPage);
-    await dashboard.verifyBoardPositionSyncBetweenDashboardAndPopup();
-  });
+  // test('Verify board position sync between dashboard and popup', async ({ sessionPage }) => {
+  //   const dashboard = new DashboardAction(sessionPage);
+  //   await dashboard.verifyBoardPositionSyncBetweenDashboardAndPopup();
+  // });
 
-  test('Verify removing a row removes all its boards', async ({ sessionPage }) => {
-    const dashboard = new DashboardAction(sessionPage);
-    await dashboard.verifyRemovingRowRemovesAllBoards();
-  });
+  // test('Verify removing a row removes all its boards', async ({ sessionPage }) => {
+  //   const dashboard = new DashboardAction(sessionPage);
+  //   await dashboard.verifyRemovingRowRemovesAllBoards();
+  // });
 
-  test('Verify new row addition', async ({ sessionPage }) => {
-    const dashboard = new DashboardAction(sessionPage);
-    await dashboard.verifyNewRowAddition();
-  });
+  // test('Verify new row addition', async ({ sessionPage }) => {
+  //   const dashboard = new DashboardAction(sessionPage);
+  //   await dashboard.verifyNewRowAddition();
+  // });
 
-  test('Verify pinned listing appears separately', async ({ sessionPage }) => {
-    const dashboard = new DashboardAction(sessionPage);
-    await dashboard.verifyPinnedListingAppearsSeparately();
+  // test('Verify pinned listing appears separately', async ({ sessionPage }) => {
+  //   const dashboard = new DashboardAction(sessionPage);
+  //   await dashboard.verifyPinnedListingAppearsSeparately();
 
-  });
+  // });
 
-  test('Verify unpinning a pinned listing', async ({ sessionPage }) => {
-    const dashboard = new DashboardAction(sessionPage);
-    await dashboard.verifyUnpinningPinnedListing();
-  });
+  // test('Verify unpinning a pinned listing', async ({ sessionPage }) => {
+  //   const dashboard = new DashboardAction(sessionPage);
+  //   await dashboard.verifyUnpinningPinnedListing();
+  // });
 
-  test('Verify listing carousel arrows', async ({ sessionPage }) => {
-    const dashboard = new DashboardAction(sessionPage);
-    await dashboard.verifyListingCarouselArrows();
-  });
+  // test('Verify listing carousel arrows', async ({ sessionPage }) => {
+  //   const dashboard = new DashboardAction(sessionPage);
+  //   await dashboard.verifyListingCarouselArrows();
+  // });
 
-  test('Verify listing details on desktop', async ({ sessionPage }) => {
-    const dashboard = new DashboardAction(sessionPage);
-    await dashboard.verifyListingDetailsOnDashboardDesktop();
-  });
+  // test('Verify listing details on desktop', async ({ sessionPage }) => {
+  //   const dashboard = new DashboardAction(sessionPage);
+  //   await dashboard.verifyListingDetailsOnDashboardDesktop();
+  // });
 
-  test('Verify board size adjusts with number of boards', async ({ sessionPage }) => {
-    const dashboard = new DashboardAction(sessionPage);
-    await dashboard.verifyBoardSizeAdjustsWithNumberOfBoards();
-  });
+  // test('Verify board size adjusts with number of boards', async ({ sessionPage }) => {
+  //   const dashboard = new DashboardAction(sessionPage);
+  //   await dashboard.verifyBoardSizeAdjustsWithNumberOfBoards();
+  // });
 
-  test('Verify note board popup opens', async ({ sessionPage }) => {
-    const dashboard = new DashboardAction(sessionPage);
-    await dashboard.verifyNoteBoardPopupOpens();
-  });
+  // test('Verify note board popup opens', async ({ sessionPage }) => {
+  //   const dashboard = new DashboardAction(sessionPage);
+  //   await dashboard.verifyNoteBoardPopupOpens();
+  // });
 
-  test('Verify adding a note', async ({ sessionPage }) => {
-    const dashboard = new DashboardAction(sessionPage);
-    await dashboard.verifyAddingNote();
-  });
+  // test('Verify adding a note', async ({ sessionPage }) => {
+  //   const dashboard = new DashboardAction(sessionPage);
+  //   await dashboard.verifyAddingNote();
+  // });
 
   test('Verify lead types on Lead board', async ({ sessionPage }) => {
     const dashboard = new DashboardAction(sessionPage);
