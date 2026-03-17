@@ -1617,5 +1617,20 @@ export class DashboardAction {
     }
   }
 
+  /**
+   * Verify that a public message can be posted and is visible on the Noticeboard.
+   */
+  async verifyPublicMessageOnNoticeboard(message: string = "Public notice test message") {
+    await this.verifyDashboardLoaded();
+    await this.locators.noticeBoardBox.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.fill(message);
+    await this.locators.sendButton.click();
+    const messageLocator = this.page.locator('.false.note.ng-star-inserted', { hasText: message }).first();
+    await messageLocator.waitFor({ state: "visible"});
+    await this.locators.deleteIcon.waitFor({state: 'visible'});
+    await this.locators.deleteIcon.click({force: true});
+  }
+
 }
 
