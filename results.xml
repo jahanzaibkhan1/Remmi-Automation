@@ -1,36 +1,6 @@
-<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="64.46159199999924">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-16T10:37:47.463Z" hostname="chromium" tests="1" failures="1" skipped="0" time="60.095" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify that Listings records board on the Dashboard shows correct data" classname="Pages\Dashboard\dashboard.spec.ts" time="60.095">
-<failure message="dashboard.spec.ts:228:3 Verify that Listings records board on the Dashboard shows correct data" type="FAILURE">
-<![CDATA[  [chromium] › Pages\Dashboard\dashboard.spec.ts:228:3 › Dashboard Module Boards Display › Verify that Listings records board on the Dashboard shows correct data 
-
-    Test timeout of 60000ms exceeded while setting up "sessionPage".
-
-    Error: page.goto: Target page, context or browser has been closed
-
-      10 |     try {
-      11 |       const page = await context.newPage();
-    > 12 |       await page.goto(DASHBOARD_URL);
-         |                  ^
-      13 |       await use(page);
-      14 |     } finally {
-      15 |       // Optionally close context if desired in cleanup
-        at Object._test.test.extend.sessionPage.scope (E:\remmi-qa-automation\remmi-e2e-test\Pages\Dashboard\dashboard.spec.ts:12:18)
-
-    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ..\test-results\Pages-Dashboard-dashboard--fa9f6-ashboard-shows-correct-data-chromium\test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Error Context: ..\test-results\Pages-Dashboard-dashboard--fa9f6-ashboard-shows-correct-data-chromium\error-context.md
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|test-results\Pages-Dashboard-dashboard--fa9f6-ashboard-shows-correct-data-chromium\test-failed-1.png]]
-
-[[ATTACHMENT|test-results\Pages-Dashboard-dashboard--fa9f6-ashboard-shows-correct-data-chromium\error-context.md]]
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.57367299999949">
+<testsuite name="Pages\Dashboard\NoticeBoard.spec.ts" timestamp="2026-03-17T11:41:04.804Z" hostname="chromium" tests="1" failures="0" skipped="0" time="50.626" errors="0">
+<testcase name="Notice Board › Verify scrolling loads all Noticeboard comments" classname="Pages\Dashboard\NoticeBoard.spec.ts" time="50.626">
 </testcase>
 </testsuite>
 </testsuites>

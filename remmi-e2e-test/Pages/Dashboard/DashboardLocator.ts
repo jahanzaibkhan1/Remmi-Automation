@@ -501,6 +501,71 @@ export class DashboardLocator {
         return this.page.getByRole('button', { name: /reset/i }).first();
     }
 
+    get noticeBoardBox(): Locator {
+        return this.page.locator('.box_notice');
+    }
+
+    get writeMessageInput(): Locator {
+        return this.page.locator("input[placeholder='Write a message...']");
+    }
+
+    get publicButton(): Locator {
+        return this.page.locator('button', { hasText: 'Public' });
+    }
+
+    get privateButton(): Locator {
+        return this.page.locator('button', { hasText: 'Private' });
+    }
+
+    get sendButton(): Locator {
+        return this.page.locator("i.pi.pi-send");
+    }
+
+    get messageSent(): Locator {
+        return this.page.locator('.ng-tns-c2308121496-8.ng-star-inserted.ng-trigger.ng-trigger-flyInOut.ngx-toastr.toast-success');
+    }
+
+    get deleteIcon(): Locator {
+        return this.page.locator("img[src='assets/img/menuIcon/delete_icon.svg']").first();
+    }
+
+    get staffUser(): Locator {
+        return this.page.locator("//div[@class='tags']");
+    }
+
+    get searchUser(): Locator {
+        return this.page.locator("input._input-icon.ng-untouched.ng-pristine.ng-valid");
+    }
+
+    get officeButton(): Locator {
+        return this.page.locator("div.btn_group.mb-3.ng-star-inserted > button:nth-child(2)");
+    }
+
+    get selectOffice(): Locator {
+        return this.page.locator('.tags');
+    }
+
+    get officeOption(): Locator {
+        return this.page.locator("li.p-element.ng-star-inserted");
+    }
+
+    get teamButton(): Locator {
+        return this.page.locator('body app-root notice-board button:nth-child(3)');
+    }
+
+    get selectTeam(): Locator {
+        return this.page.locator('.tags');
+    }
+
+    get teamOption(): Locator {
+        return this.page.locator('body app-root notice-board li:nth-child(1)');
+    }
+
+
+
+    
+
+
 
 
 }
