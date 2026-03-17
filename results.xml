@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="54.41058499999996">
-<testsuite name="Pages\Dashboard\NoticeBoard.spec.ts" timestamp="2026-03-17T11:13:02.892Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.277" errors="0">
-<testcase name="Notice Board › Add a blank message on Noticeboard" classname="Pages\Dashboard\NoticeBoard.spec.ts" time="48.277">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.57367299999949">
+<testsuite name="Pages\Dashboard\NoticeBoard.spec.ts" timestamp="2026-03-17T11:41:04.804Z" hostname="chromium" tests="1" failures="0" skipped="0" time="50.626" errors="0">
+<testcase name="Notice Board › Verify scrolling loads all Noticeboard comments" classname="Pages\Dashboard\NoticeBoard.spec.ts" time="50.626">
 </testcase>
 </testsuite>
 </testsuites>

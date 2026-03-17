@@ -64,4 +64,9 @@ test.describe('Notice Board', () => {
     await dashboard.addBlankMessageOnNoticeboard();
   });
 
+  test('Verify scrolling loads all Noticeboard comments', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.verifyNoticeboardCommentScrollAndCleanup();
+  });
+
 });
