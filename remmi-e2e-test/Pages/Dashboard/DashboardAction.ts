@@ -1206,11 +1206,11 @@ export class DashboardAction {
    */
   async unpinPinnedListingFromDashboard() {
     await this.verifyDashboardLoaded();
-    await this.page.reload();
     await this.verifyCalendarSection();
     await this.verifyWeatherWidget();
     await this.verifyNotesSection();
     await this.verifyMapVisible();
+    await this.page.reload();
     await this.verifyEmailsSection();
     const pinnedListing = this.page.locator('.h-150px').first();
     await pinnedListing.scrollIntoViewIfNeeded();
