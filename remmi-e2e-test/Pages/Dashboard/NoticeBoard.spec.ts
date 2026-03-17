@@ -59,4 +59,9 @@ test.describe('Notice Board', () => {
     await dashboard.verifyReactOnNoticeboardMessage();
   });
 
+  test('Add a blank message on Noticeboard', async ({ sessionPage }) => {
+    const dashboard = new DashboardAction(sessionPage);
+    await dashboard.addBlankMessageOnNoticeboard();
+  });
+
 });
