@@ -1669,5 +1669,51 @@ export class DashboardAction {
     await this.locators.deleteIcon.click({force: true});
   }
 
+  /**
+   * Verify private message to specific office
+   */
+  async verifyPrivateMessageToSpecificOffice(
+    office: string = 'QA Tester',
+    message: string = "Private office notice test message"
+  ) {
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.locators.noticeBoardBox.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.fill(message);
+
+    // Select "Private" type
+    await this.locators.privateButton.waitFor({ state: "visible" });
+    await this.locators.privateButton.click();
+
+    // Click Office selector
+    await this.locators.officeButton.waitFor({ state: "visible" });
+    await this.locators.officeButton.click();
+
+    // Select office from list
+    await this.locators.selectOffice.waitFor({ state: "visible" });
+    await this.locators.selectOffice.click();
+    await this.locators.searchUser.waitFor({ state: 'visible' });
+    await this.locators.searchUser.clear();
+    await this.locators.searchUser.fill(office);
+
+    const officeOption = this.locators.officeOption.filter({ hasText: office }).first();
+    await officeOption.waitFor({ state: "visible" });
+    await officeOption.click();
+
+    // Send the message
+    await this.locators.sendButton.waitFor({ state: "visible" });
+    await this.locators.sendButton.click();
+
+    // Verify message sent
+    const messageLocator = this.page.locator('.bg-color.note.ng-star-inserted', { hasText: message }).first();
+    await messageLocator.waitFor({ state: "visible" });
+
+    // Clean up: delete the message
+    await this.locators.deleteIcon.waitFor({ state: 'visible' });
+    await this.locators.deleteIcon.click({ force: true });
+  }
+
 }
 

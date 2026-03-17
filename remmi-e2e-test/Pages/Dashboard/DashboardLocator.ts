@@ -537,6 +537,32 @@ export class DashboardLocator {
         return this.page.locator("input._input-icon.ng-untouched.ng-pristine.ng-valid");
     }
 
+    get officeButton(): Locator {
+        return this.page.locator("div.btn_group.mb-3.ng-star-inserted > button:nth-child(2)");
+    }
+
+    get selectOffice(): Locator {
+        return this.page.locator('.tags');
+    }
+
+    get officeOption(): Locator {
+        return this.page.locator("li.p-element.ng-star-inserted");
+    }
+
+    get teamButton(): Locator {
+        return this.page.locator('body app-root notice-board button:nth-child(3)');
+    }
+
+    get selectTeam(): Locator {
+        return this.page.locator('.tags');
+    }
+
+    get teamOption(): Locator {
+        return this.page.locator('body app-root notice-board li:nth-child(1)');
+    }
+
+
+
     
 
 
