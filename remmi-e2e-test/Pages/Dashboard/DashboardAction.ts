@@ -1715,5 +1715,51 @@ export class DashboardAction {
     await this.locators.deleteIcon.click({ force: true });
   }
 
+  /**
+   * Verify private message to specific team
+   */
+  async verifyPrivateMessageToSpecificTeam(
+    team: string = 'Automation Team',
+    message: string = "Private team notice test message"
+  ) {
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.locators.noticeBoardBox.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.waitFor({ state: "visible" });
+    await this.locators.writeMessageInput.fill(message);
+
+    // Select "Private" type
+    await this.locators.privateButton.waitFor({ state: "visible" });
+    await this.locators.privateButton.click();
+
+    // Click Team selector
+    await this.locators.teamButton.waitFor({ state: "visible" });
+    await this.locators.teamButton.click();
+
+    // Select team from list
+    await this.locators.selectTeam.waitFor({ state: "visible" });
+    await this.locators.selectTeam.click();
+    await this.locators.searchUser.waitFor({ state: 'visible' });
+    await this.locators.searchUser.clear();
+    await this.locators.searchUser.fill(team);
+
+    const teamOption = this.locators.teamOption.filter({ hasText: team }).first();
+    await teamOption.waitFor({ state: "visible" });
+    await teamOption.click();
+
+    // Send the message
+    await this.locators.sendButton.waitFor({ state: "visible" });
+    await this.locators.sendButton.click();
+
+    // Verify message sent
+    const messageLocator = this.page.locator('.bg-color.note.ng-star-inserted', { hasText: message }).first();
+    await messageLocator.waitFor({ state: "visible" });
+
+    // Clean up: delete the message
+    await this.locators.deleteIcon.waitFor({ state: 'visible' });
+    await this.locators.deleteIcon.click({ force: true });
+  }
+
 }
 
