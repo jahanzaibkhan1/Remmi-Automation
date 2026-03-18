@@ -1346,8 +1346,13 @@ export class DashboardAction {
    */
   async verifyEOIBoardDisplaysCorrectData() {
     await this.verifyDashboardLoaded();
+    await this.verifyCalendarSection();
+    await this.verifyWeatherWidget();
+    await this.verifyNotesSection();
+    await this.verifyMapVisible();
+    await this.verifyEmailsSection();
+    await this.page.reload();
     await this.verifyEOICard();
-
     const eoiText = await this.getEOICount();
     const eoiCount = Number((eoiText ?? "").match(/\d+/)?.[0] ?? 0);
 
