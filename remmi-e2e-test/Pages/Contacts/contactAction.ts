@@ -3520,5 +3520,28 @@ export class ContactActions {
         await closeTagManagerIcon.click({ force: true });
         await this.page.waitForTimeout(1000);
     }
+
+    async openStreamTab() {
+        const streamTab = this.page.getByRole('tab', { name: /Stream/i });
+        await streamTab.waitFor({ state: 'visible' });
+        await streamTab.click();
+    }
+
+    async openFirstContact(): Promise<void> {
+        const firstContactRow = this.page.locator('tbody tr').first();
+        await firstContactRow.waitFor({ state: 'visible' });
+        const firstCell = this.page.locator('td').nth(1);
+        await firstCell.click();
+        await this.openStreamTab();
+    }
+
+    /**
+     * Open "Stream" tab
+     */
+    async openStream(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openStreamTab();
+    }
 }
 

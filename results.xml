@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.57367299999949">
-<testsuite name="Pages\Dashboard\NoticeBoard.spec.ts" timestamp="2026-03-17T11:41:04.804Z" hostname="chromium" tests="1" failures="0" skipped="0" time="50.626" errors="0">
-<testcase name="Notice Board › Verify scrolling loads all Noticeboard comments" classname="Pages\Dashboard\NoticeBoard.spec.ts" time="50.626">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.99931799999997">
+<testsuite name="Pages\Contacts\contactStream.spec.ts" timestamp="2026-03-19T06:20:38.369Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.727" errors="0">
+<testcase name="Contacts &quot;Stream&quot; Tab - E2E Tests › Open &quot;Stream&quot; tab" classname="Pages\Contacts\contactStream.spec.ts" time="36.727">
 </testcase>
 </testsuite>
 </testsuites>
