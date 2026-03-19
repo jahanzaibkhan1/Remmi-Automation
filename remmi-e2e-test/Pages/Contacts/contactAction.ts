@@ -4002,5 +4002,34 @@ export class ContactActions {
           }
           await this.closeModalIfVisible();
     }
+
+    /**
+     *Verify Stream search functionality
+     */
+    async verifyStreamSearchFunctionality(keyword: string, expectResults: boolean = true) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openStreamTab();
+        const firstStreamCard = this.page.locator('div.stream-body').first();
+        await firstStreamCard.waitFor({ state: "visible"});
+        const searchInput = this.page.locator('input[placeholder*="Search by keyword"]').first();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.fill(""); 
+        await searchInput.fill(keyword);
+        await searchInput.press("Enter");
+        await this.page.waitForTimeout(1000);
+        const streamCards = this.page.locator('div.stream-body');
+        if (expectResults) {
+            await expect(streamCards.first()).toBeVisible({ timeout: 10000 });
+            const count = await streamCards.count();
+            if (count === 0) {
+                throw new Error(`No stream cards were found for the search keyword: "${keyword}".`);
+            }
+        } else {
+            const noRecordsText = this.page.getByText(/no records available/i);
+            await expect(noRecordsText).toBeVisible({ timeout: 10000 });
+        }
+        await this.closeModalIfVisible();
+    }
 }
 

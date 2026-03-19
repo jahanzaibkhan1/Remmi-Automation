@@ -68,4 +68,9 @@ test.describe('Contacts "Stream" Tab - E2E Tests', () => {
     await contact.verifyStreamTimestampAccuracy();
   });
 
+  test('Verify Stream search returns correct results for a valid keyword', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyStreamSearchFunctionality("Lead Assigned", true);
+  });
+
 });
