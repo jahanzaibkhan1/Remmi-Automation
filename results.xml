@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="35.30468200000003">
-<testsuite name="Pages\Contacts\contactStream.spec.ts" timestamp="2026-03-19T11:29:25.222Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.926" errors="0">
-<testcase name="Contacts &quot;Stream&quot; Tab - E2E Tests › Verify timestamp accuracy on each stream card" classname="Pages\Contacts\contactStream.spec.ts" time="32.926">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.96723900000006">
+<testsuite name="Pages\Contacts\contactStream.spec.ts" timestamp="2026-03-19T11:39:41.488Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.437" errors="0">
+<testcase name="Contacts &quot;Stream&quot; Tab - E2E Tests › Verify Stream search returns correct results for a valid keyword" classname="Pages\Contacts\contactStream.spec.ts" time="29.437">
 </testcase>
 </testsuite>
 </testsuites>
