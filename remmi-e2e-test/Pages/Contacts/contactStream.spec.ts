@@ -53,4 +53,9 @@ test.describe('Contacts "Stream" Tab - E2E Tests', () => {
     await contact.verifyListingAttachmentRecordAppears()
   });
 
+  test('Verify related contact addition record appears', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyRelatedContactRecordAppears();
+  });
+
 });
