@@ -3646,5 +3646,140 @@ export class ContactActions {
         await streamEntry.waitFor({ state: "visible", timeout: 10000 });
         await this.closeModalIfVisible();
     }
+
+    async verifyRelatedPropertyTabDisplayedListing() {
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible'});
+        await relatedPropertyTab.click();
+        const listingTab = this.page.locator('#pills-listing0-tab');
+        await listingTab.waitFor({ state: 'visible' });
+        await listingTab.click();
+        const searchBox = this.page.getByRole('combobox', { name: 'Search Listing' });
+        await searchBox.waitFor({ state: 'visible'});
+        await searchBox.type('Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880',{delay:30});
+        const dropdownOption = this.page.getByRole('option', { name: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880' })
+        await dropdownOption.waitFor({ state: 'visible'});
+        await dropdownOption.click();
+        const associateButton = this.page.locator('button.preview-btn.btn-sm.f-12:visible');
+        await associateButton.waitFor({ state: 'visible' });
+        await associateButton.click();
+        const successToast = this.page.getByText(/listing attached successfully|Listing already associated/i).first();
+        await successToast.waitFor({ state: "visible"});
+        const associatedListing = this.page.getByRole('cell', { name: 'Sauer LLC\"\" 453/37 Eliseo Brook, East Albury, Nebraska 34880' })
+        await associatedListing.scrollIntoViewIfNeeded();
+        await associatedListing.waitFor({state:'visible'});
+        const associatedContactRow = this.page.locator('table tr').filter({
+            hasText: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880',
+            has: this.page.locator('td.cdk-drop-list[cdkdroplist]')
+        }).first();
+
+        await associatedContactRow.evaluate(el => {
+            el.scrollIntoView({
+                block: 'center',
+                inline: 'start'
+            });
+        });
+
+        const dropList = associatedContactRow.locator('td.cdk-drop-list[cdkdroplist]');
+        await expect(dropList).toBeVisible({ timeout: 10000 });
+
+        const getBuyerChip = () =>
+            associatedContactRow.locator('[data-pc-name="chip"][aria-label="Wife"]');
+
+        // If already added, exit early (prevents flake)
+        if (await getBuyerChip().count() > 0) {
+            return;
+        }
+
+        const maxAttempts = 4;
+
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                const buyerTag = this.page
+                    .locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Wife' })
+                    .first();
+
+                await expect(buyerTag).toBeVisible({ timeout: 10000 });
+
+                const sourceBox = await buyerTag.boundingBox();
+                const dropBox = await dropList.boundingBox();
+
+                if (!sourceBox || !dropBox) {
+                    throw new Error('Bounding box not available');
+                }
+
+                // Real mouse drag (CDK-safe)
+                await this.page.mouse.move(
+                    sourceBox.x + sourceBox.width / 2,
+                    sourceBox.y + sourceBox.height / 2
+                );
+                await this.page.mouse.down();
+
+                await this.page.mouse.move(
+                    dropBox.x + dropBox.width / 2,
+                    dropBox.y + dropBox.height / 2,
+                    { steps: 12 }
+                );
+
+                await this.page.waitForTimeout(150);
+                await this.page.mouse.up();
+
+                // Wait for DOM update (most stable assertion)
+                await expect(getBuyerChip()).toHaveCount(1, { timeout: 3000 });
+
+                break; // success
+            } catch (error) {
+                if (attempt === maxAttempts) {
+                    throw new Error('Buyer tag drag failed after multiple attempts.');
+                }
+
+                await this.page.waitForTimeout(1000);
+            }
+        }
+
+        await expect(getBuyerChip()).toHaveCount(1, { timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+    }
+
+    async verifyRelatedPropertyTabProperties() {
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible'});
+        await relatedPropertyTab.click();
+        const propertyTab = this.page.locator('#pills-property0-tab')
+        await propertyTab.waitFor({ state: 'visible' });
+        await propertyTab.click();
+        const searchBox = this.page.getByRole('combobox', { name: 'Search Property' });
+        await searchBox.waitFor({ state: 'visible'});
+        await searchBox.fill('Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880');
+        const dropdownOption = this.page.getByRole('option', { name: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880' })
+        await dropdownOption.waitFor({ state: 'visible'});
+        await dropdownOption.click();
+        const associateButton = this.page.locator('button.preview-btn.btn-sm.f-12:visible');
+        await associateButton.waitFor({ state: 'visible' });
+        await associateButton.click();
+        const successToast = this.page.getByText(/property attached successfully|property already associated/i).first();
+        await successToast.waitFor({ state: "visible"});
+        const associatedProperty = this.page.getByRole('cell', { name: 'Sauer LLC\"\" 453/37 Eliseo Brook, East Albury, Nebraska 34880' })
+        await associatedProperty.scrollIntoViewIfNeeded();
+        await associatedProperty.waitFor({state:'visible'});
+    }
+
+
+  
+    async verifyListingAttachmentRecordAppears() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.verifyRelatedPropertyTabDisplayedListing();
+        await this.verifyRelatedPropertyTabProperties();
+        await this.openStreamTab();
+        const searchBox = await this.page.getByRole('textbox', { name: 'Search by keyword' });
+        await searchBox.waitFor({ state: 'visible' });
+        await searchBox.fill('Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880');
+        const listingAttachmentEntry = this.page.locator('div.stream-body').filter({
+            hasText: 'Updated related Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880'
+        }).first();
+        await listingAttachmentEntry.waitFor({ state: "visible", timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
 }
 
