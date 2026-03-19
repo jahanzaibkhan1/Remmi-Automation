@@ -3542,6 +3542,97 @@ export class ContactActions {
         await this.NavigateToContacts();
         await this.openFirstContact();
         await this.openStreamTab();
+        await this.closeModalIfVisible();
+    }
+
+    async openTasksTab(): Promise<void> {
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await tasksTab.waitFor({ state: 'visible'});
+        await tasksTab.click();
+        const addTaskButton = this.page.getByRole('button', { name: /Add Task|New Task/i });
+        await addTaskButton.waitFor({state:'visible'});
+        await addTaskButton.click();
+    }
+
+    async taskData(taskTitle: string = 'Testing Task') {
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await taskTitleInput.waitFor({ state: "visible" });
+        await taskTitleInput.fill(taskTitle);
+
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await dateInput.waitFor({ state: "visible" });
+        await dateInput.click();
+
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        const header = this.page.locator(".p-datepicker-title");
+        await header.waitFor({ state: "visible" });
+        const headerText = await header.innerText();
+        const [monthName, year] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        const monthDifference =
+            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
+
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+        }
+
+        const dayLocator = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
+        );
+        await dayLocator.first().waitFor({ state: "visible" });
+        await dayLocator.first().click({ force: true });
+
+        const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"]');
+        await staffSelect.waitFor({ state: "visible" });
+        await staffSelect.click();
+
+        const saveTaskButton = this.page.getByRole('button', { name: 'Save' }).first();
+        await saveTaskButton.scrollIntoViewIfNeeded();
+        await saveTaskButton.waitFor({state: 'visible'});
+        await this.page.waitForTimeout(1000);
+        await saveTaskButton.dblclick({force: true});
+
+        const successToast = this.page.locator('div').filter({ hasText: 'Task created' }).last();
+        await successToast.waitFor({ state: "visible" });
+
+
+        const closetask = this.page.locator('.pi.pi-times').last();
+        if (await closetask.isVisible().catch(() => false)) {
+            await closetask.click({ force: true });
+        }
+
+        const firstRow = this.page.locator('table tbody tr')
+            .filter({ hasText: taskTitle }).last();
+        await firstRow.waitFor({ state: "visible" });
+        await this.openStreamTab();
+        const streamTaskRow = this.page.locator('div.stream-body').filter({ hasText: 'Task Added' }).first();
+        await streamTaskRow.waitFor({ state: "visible" });
+    }
+
+    async closeModalIfVisible() {
+        const closeBtn = this.page.locator('.pi.pi-times').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    async verifyTaskAppearsInList() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openStreamTab();
+        await this.openTasksTab();
+        await this.taskData();
+        await this.closeModalIfVisible();
     }
 }
 
