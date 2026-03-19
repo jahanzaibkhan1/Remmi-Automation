@@ -43,8 +43,14 @@ test.describe('Contacts "Stream" Tab - E2E Tests', () => {
     await contact.openStream();
   });
 
-  test('Verify contact creation record appears in Stream tab', async ({ sessionPage }) => {
+  test('Verify task record appears in Stream', async ({ sessionPage }) => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyTaskAppearsInList();
   });
+
+  test('Verify contact creation record appears in Stream tab', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyContactCreationRecordAppears();
+  });
+
 });

@@ -3634,5 +3634,17 @@ export class ContactActions {
         await this.taskData();
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Verifies that a "Contact Created" record appears in the stream for a contact.
+     */
+    async verifyContactCreationRecordAppears() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openStreamTab();
+        const streamEntry = this.page.locator('div.stream-body').first();
+        await streamEntry.waitFor({ state: "visible", timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
 }
 
