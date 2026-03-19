@@ -1,6 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.99931799999997">
-<testsuite name="Pages\Contacts\contactStream.spec.ts" timestamp="2026-03-19T06:20:38.369Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.727" errors="0">
-<testcase name="Contacts &quot;Stream&quot; Tab - E2E Tests › Open &quot;Stream&quot; tab" classname="Pages\Contacts\contactStream.spec.ts" time="36.727">
+<testsuites id="" name="" tests="2" failures="0" skipped="0" errors="0" time="59.357496999999505">
+<testsuite name="Pages\Contacts\contactStream.spec.ts" timestamp="2026-03-19T08:09:09.136Z" hostname="chromium" tests="2" failures="0" skipped="0" time="56.845" errors="0">
+<testcase name="Contacts &quot;Stream&quot; Tab - E2E Tests › Open &quot;Stream&quot; tab" classname="Pages\Contacts\contactStream.spec.ts" time="51.84">
+</testcase>
+<testcase name="Contacts &quot;Stream&quot; Tab - E2E Tests › Verify contact creation record appears in Stream tab" classname="Pages\Contacts\contactStream.spec.ts" time="5.005">
 </testcase>
 </testsuite>
 </testsuites>

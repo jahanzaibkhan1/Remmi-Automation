@@ -42,4 +42,9 @@ test.describe('Contacts "Stream" Tab - E2E Tests', () => {
     const contact = new ContactActions(sessionPage);
     await contact.openStream();
   });
+
+  test('Verify contact creation record appears in Stream tab', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskAppearsInList();
+  });
 });
