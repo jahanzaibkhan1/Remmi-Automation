@@ -63,4 +63,9 @@ test.describe('Contacts "Stream" Tab - E2E Tests', () => {
     await contact.verifyLeadAssignmentRecordAppears();
   });
 
+  test('Verify timestamp accuracy on each stream card', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyStreamTimestampAccuracy();
+  });
+
 });

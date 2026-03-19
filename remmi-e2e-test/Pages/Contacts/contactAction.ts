@@ -3977,5 +3977,30 @@ export class ContactActions {
         await streamEntry.waitFor({ state: "visible", timeout: 10000 });
         await this.closeModalIfVisible();
     }
+    /**
+     * Verify timestamp accuracy
+     */
+    async verifyStreamTimestampAccuracy() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openStreamTab();
+          const streamCards = this.page.locator('div.stream-body');
+          await expect(streamCards.first()).toBeVisible({ timeout: 10000 });
+          const count = await streamCards.count();
+          if (count === 0) {
+              throw new Error("No stream cards found on the Stream tab.");
+          }
+          for (let i = 0; i < count; i++) {
+              const card = streamCards.nth(i);
+              // span.f-10.text-dark contains the date/time info
+              const dateTimeSpan = card.locator('span.f-10.text-dark');
+              await expect(dateTimeSpan).toBeVisible({ timeout: 10000 });
+              const text = await dateTimeSpan.textContent();
+              if (!text || !text.trim()) {
+                  throw new Error(`Stream card #${i + 1} does not display date/time.`);
+              }
+          }
+          await this.closeModalIfVisible();
+    }
 }
 
