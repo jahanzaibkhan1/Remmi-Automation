@@ -3781,5 +3781,109 @@ export class ContactActions {
         await listingAttachmentEntry.waitFor({ state: "visible", timeout: 10000 });
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Verifies that a related contact can be associated successfully.
+     */
+    async verifyRelatedContactCanBeAssociated() {
+        const relatedTab = this.page.getByText('Related contacts').first();
+        await expect(relatedTab).toBeVisible({ timeout: 10000 });
+        await relatedTab.click();
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+        await selectDropdown.click();
+        const searchInput = this.page
+            .locator('#rContact0').getByRole('textbox', { name: 'Search' }).first();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.fill('11 22');
+        const suggestedContact = this.page
+            .getByRole('listitem')
+            .filter({ hasText: '22 (11@22.com.au)' })
+            .last();
+        await expect(suggestedContact).toBeVisible({ timeout: 20000 });
+        await suggestedContact.click();
+        await this.page.mouse.click(0, 0);
+        const associateButton = this.page.getByRole('button', { name: /associate/i }).first();
+        await expect(associateButton).toBeVisible({ timeout: 10000 });
+        await associateButton.click();
+        const duplicateAlert = this.page.getByText(/Contact is already associate|Please select company first| user is already/i).last();
+        const successToast = this.page.getByText(/Contact attached successfully/i).last();
+        await expect(duplicateAlert.or(successToast)).toBeVisible({ timeout: 10000 });
+        const associatedContactRow = this.page.locator('table tr').filter({
+            hasText: '11 22',
+            has: this.page.locator('td.cdk-drop-list[cdkdroplist]')
+        }).first();
+        await associatedContactRow.evaluate(el => {
+            el.scrollIntoView({
+                block: 'center',
+                inline: 'start'
+            });
+        });
+        const dropList = associatedContactRow.locator('td.cdk-drop-list[cdkdroplist]');
+        await expect(dropList).toBeVisible({ timeout: 10000 });
+        const getBuyerChip = () =>
+            associatedContactRow.locator('[data-pc-name="chip"][aria-label="Buyer"]');
+        if (await getBuyerChip().count() > 0) {
+            return;
+        }
+        const maxAttempts = 4;
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                const buyerTag = this.page
+                    .locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Business' })
+                    .last();
+                await expect(buyerTag).toBeVisible({ timeout: 10000 });
+                const sourceBox = await buyerTag.boundingBox();
+                const dropBox = await dropList.boundingBox();
+                if (!sourceBox || !dropBox) {
+                    throw new Error('Bounding box not available');
+                }
+                await this.page.mouse.move(
+                    sourceBox.x + sourceBox.width / 2,
+                    sourceBox.y + sourceBox.height / 2
+                );
+                await this.page.mouse.down();
+                await this.page.mouse.move(
+                    dropBox.x + dropBox.width / 2,
+                    dropBox.y + dropBox.height / 2,
+                    { steps: 12 }
+                );
+                await this.page.waitForTimeout(150);
+                await this.page.mouse.up();
+                break; 
+            } catch (error) {
+                if (attempt === maxAttempts) {
+                    throw new Error('Buyer tag drag failed after multiple attempts.');
+                }
+                await this.page.waitForTimeout(1000);
+            }
+        }
+    
+    }
+
+    // Verify related contact addition record appears
+    async verifyRelatedContactRecordAppears() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const firstStreamRecord = this.page.locator('div.stream-body').first();
+        await firstStreamRecord.waitFor({ state: 'visible' });
+        await this.verifyRelatedContactCanBeAssociated();
+        const streamTab = this.page.getByRole('tab', { name: /Stream/i });
+        await streamTab.evaluate(el => {
+            el.scrollIntoView({ block: 'center', inline: 'center' });
+        });
+        await streamTab.waitFor({ state: 'visible' });
+        await streamTab.click();
+ 
+        const searchBox = await this.page.getByRole('textbox', { name: 'Search by keyword' });
+        await searchBox.waitFor({ state: 'visible' });
+        await searchBox.fill('11 22');
+        const listingAttachmentEntry = this.page.locator('div.stream-body').filter({
+            hasText: '11 22'
+        }).first();
+        await listingAttachmentEntry.waitFor({ state: "visible", timeout: 10000 });
+        await this.closeModalIfVisible();
+
+    }
 }
 
