@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="36.06053299999982">
-<testsuite name="Pages\Contacts\contactStream.spec.ts" timestamp="2026-03-19T11:10:20.946Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.549" errors="0">
-<testcase name="Contacts &quot;Stream&quot; Tab - E2E Tests › Verify related contact addition record appears" classname="Pages\Contacts\contactStream.spec.ts" time="33.549">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="58.3609849999994">
+<testsuite name="Pages\Contacts\contactStream.spec.ts" timestamp="2026-03-19T11:19:36.017Z" hostname="chromium" tests="1" failures="0" skipped="0" time="56.079" errors="0">
+<testcase name="Contacts &quot;Stream&quot; Tab - E2E Tests › Verify lead assignment record appears" classname="Pages\Contacts\contactStream.spec.ts" time="56.079">
 </testcase>
 </testsuite>
 </testsuites>

@@ -3885,5 +3885,97 @@ export class ContactActions {
         await this.closeModalIfVisible();
 
     }
+
+    async leadCreation() {
+        const leadTab = this.page.getByRole('tab', { name: 'Lead' });
+        await leadTab.waitFor({ state: 'visible' });
+        await leadTab.click();
+        // Look for the "New Lead" button
+        const newLeadButton = this.page.getByRole('button', { name: /new lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await expect(newLeadButton).toBeEnabled();
+        await newLeadButton.click();
+
+        const leadLink = this.page.locator('a').filter({ hasText: /^Lead$/ });
+        await leadLink.waitFor({ state: 'visible' });
+
+        const leadDetails = this.page.locator('div.popup-gray-box:has(p:text("Lead Details"))');
+        await leadDetails.waitFor({ state: 'visible' });
+        await this.page.waitForTimeout(2000);
+
+        // Select Lead Type
+        const leadType = leadDetails.locator('ng-select[formcontrolname="lead_type"]');
+        await leadType.waitFor({ state: 'visible' });
+        await leadType.click();
+        await this.page.waitForTimeout(600);
+        const buyerOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Buyer' });
+        await buyerOption.waitFor({ state: 'visible' });
+        await buyerOption.click();
+        await this.page.waitForTimeout(600);
+
+        // Get other lead detail fields
+        const leadStatus = leadDetails.locator('ng-select[formcontrolname="lead_status"]');
+        await leadStatus.waitFor({ state: 'visible' });
+        await leadStatus.click();
+        await this.page.waitForTimeout(600);
+        const leadStatusOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'New' });
+        await leadStatusOption.waitFor({ state: 'visible' });
+        await leadStatusOption.click();
+        await this.page.waitForTimeout(600);
+
+        // Select Lead Source
+        const leadSource = leadDetails.locator('ng-select[formcontrolname="lead_source"]');
+        await leadSource.waitFor({ state: 'visible' });
+        await leadSource.click();
+        await this.page.waitForTimeout(600);
+        const sourceOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Billboard' });
+        await sourceOption.waitFor({ state: 'visible' });
+        await sourceOption.click();
+        await this.page.waitForTimeout(1000);
+
+        // Click the placeholder in the tags element
+        const tagPlaceholder = this.page.locator('.d-flex > label > re-multiselect > .box > .tags');
+        await tagPlaceholder.waitFor({ state: 'visible' });
+        await tagPlaceholder.click();
+        const searchTagInput = this.page.getByRole('textbox', { name: 'Search' }).last();
+        await searchTagInput.waitFor({ state: 'visible' });
+
+        const tagDropdownPanel = this.page.locator('.drop_box');
+        await tagDropdownPanel.waitFor({ state: 'visible' });
+
+        const tagOption = tagDropdownPanel.locator('ul li').first().locator('p');
+        await tagOption.waitFor({ state: 'visible' });
+        await tagOption.click();
+
+        const contactDetails = this.page.getByText('Email:');
+        await contactDetails.waitFor({ state: 'visible' });
+
+        // Click "Save & Close" button
+        const saveAndCloseButton = this.page.getByRole('button', { name: /save & close/i }).first();
+        await saveAndCloseButton.waitFor({ state: 'visible' });
+        await expect(saveAndCloseButton).toBeEnabled();
+        await saveAndCloseButton.click();
+
+        // Get the "lead added successfully" toast message
+        const leadAddedSuccessMsg = this.page.getByText(/lead added successfully/i);
+        await leadAddedSuccessMsg.waitFor({ state: 'visible' });
+
+        // Verify the first table row is visible after saving new lead
+        const firstTableRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await firstTableRow.waitFor({ state: "visible" });
+    }
+
+    /**
+     * Verifies that a "Lead Assigned" record appears in the stream for a contact.
+     */
+    async verifyLeadAssignmentRecordAppears() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.leadCreation();
+        await this.openStreamTab();
+        const streamEntry = this.page.locator('div.stream-body').filter({ hasText: 'Lead Assigned' }).first();
+        await streamEntry.waitFor({ state: "visible", timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
 }
 
