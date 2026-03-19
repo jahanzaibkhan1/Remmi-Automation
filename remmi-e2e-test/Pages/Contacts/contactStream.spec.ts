@@ -58,4 +58,9 @@ test.describe('Contacts "Stream" Tab - E2E Tests', () => {
     await contact.verifyRelatedContactRecordAppears();
   });
 
+  test('Verify lead assignment record appears', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyLeadAssignmentRecordAppears();
+  });
+
 });
