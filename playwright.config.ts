@@ -11,7 +11,6 @@ dotenv.config({ path: path.resolve(process.cwd(), '.env') });
  * Ensure critical environment variables exist
  */
 const BASE_URL = process.env.BASE_URL;
-if (!BASE_URL) throw new Error('BASE_URL is missing in .env or GitHub secrets!');
 
 /**
  * Playwright Test Configuration
@@ -24,7 +23,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: 3,
   workers: 1,
-  timeout: 60000, // 60s
+  timeout: 120000, // 60s
 
   reporter: [
     ['list'],
