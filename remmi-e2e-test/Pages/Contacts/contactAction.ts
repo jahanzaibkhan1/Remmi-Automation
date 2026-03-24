@@ -4257,6 +4257,24 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify lead source details 
+     */
+    async verifyLeadSourceDetails() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        const firstRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible' });
+        const leadSourceCell = firstRow.locator('td').nth(4);
+        await leadSourceCell.waitFor({ state: 'visible' });
+        const leadSourceText = await leadSourceCell.textContent();
+        if (!leadSourceText || !/Billboard/i.test(leadSourceText)) {
+            throw new Error("Lead 'Lead Source' cell does not show value 'Billboard'.");
+        }
+        await this.closeModalIfVisible();
+    }
+
 
 }
 
