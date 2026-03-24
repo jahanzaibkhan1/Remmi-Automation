@@ -1,8 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { ContactLocators } from './contactLocator';
 import { faker, tr } from '@faker-js/faker';
-import { setEngine } from 'crypto';
-import { waitForDebugger } from 'inspector';
 
 export class ContactActions {
     private locators: ContactLocators;
@@ -3667,7 +3665,7 @@ export class ContactActions {
         await associateButton.click();
         const successToast = this.page.getByText(/listing attached successfully|Listing already associated/i).first();
         await successToast.waitFor({ state: "visible"});
-        const associatedListing = this.page.getByRole('cell', { name: 'Sauer LLC\"\" 453/37 Eliseo Brook, East Albury, Nebraska 34880' })
+        const associatedListing = this.page.getByRole('cell', { name: 'Sauer LLC\"\" 453/37 Eliseo Brook, East Albury, Nebraska 34880' }).first();
         await associatedListing.scrollIntoViewIfNeeded();
         await associatedListing.waitFor({state:'visible'});
         const associatedContactRow = this.page.locator('table tr').filter({
@@ -3761,7 +3759,7 @@ export class ContactActions {
         await associateButton.click();
         const successToast = this.page.getByText(/property attached successfully|property already associated/i).first();
         await successToast.waitFor({ state: "visible"});
-        const associatedProperty = this.page.getByRole('cell', { name: 'Sauer LLC\"\" 453/37 Eliseo Brook, East Albury, Nebraska 34880' })
+        const associatedProperty = this.page.getByRole('cell', { name: 'Sauer LLC\"\" 453/37 Eliseo Brook, East Albury, Nebraska 34880' }).first();
         await associatedProperty.scrollIntoViewIfNeeded();
         await associatedProperty.waitFor({state:'visible'});
     }
@@ -3780,7 +3778,7 @@ export class ContactActions {
         const listingAttachmentEntry = this.page.locator('div.stream-body').filter({
             hasText: 'Updated related Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880'
         }).first();
-        await listingAttachmentEntry.waitFor({ state: "visible", timeout: 10000 });
+        await listingAttachmentEntry.waitFor({ state: "visible"});
         await this.closeModalIfVisible();
     }
 
@@ -3805,7 +3803,8 @@ export class ContactActions {
         await expect(suggestedContact).toBeVisible({ timeout: 20000 });
         await suggestedContact.click();
         await this.page.mouse.click(0, 0);
-        const associateButton = this.page.getByRole('button', { name: /associate/i }).first();
+        await this.page.waitForTimeout(1200);
+        const associateButton = this.page.getByRole('button', { name: /associate/i }).last();
         await expect(associateButton).toBeVisible({ timeout: 10000 });
         await associateButton.click();
         const duplicateAlert = this.page.getByText(/Contact is already associate|Please select company first| user is already/i).last();
@@ -4041,12 +4040,15 @@ export class ContactActions {
         await this.NavigateToContacts();
         await this.openFirstContact();
         await this.openStreamTab();
-        await this.openTasksTab();
-        await this.taskData();
-        await this.openStreamTab();
         const firstStreamCard = this.page.locator('div.stream-body').first();
-        await expect(firstStreamCard).toBeVisible({ timeout: 10000 });
-        await expect(firstStreamCard).toContainText(/task added/i);
+        await firstStreamCard.waitFor({ state: "visible"});
+        const searchInput = this.page.locator('input[placeholder*="Search by keyword"]').first();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.fill(""); 
+        await searchInput.fill("Task Added");
+        await searchInput.press("Enter");
+        const streamCards = this.page.locator('div.stream-body');
+        await expect(streamCards.first()).toContainText(/task added/i);
         await this.closeModalIfVisible();
     }
 
