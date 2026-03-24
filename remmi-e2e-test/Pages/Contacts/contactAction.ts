@@ -4033,5 +4033,22 @@ export class ContactActions {
         }
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Verify Stream updates in real time.
+     */
+    async verifyStreamUpdatesInRealTime() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openStreamTab();
+        await this.openTasksTab();
+        await this.taskData();
+        await this.openStreamTab();
+        const firstStreamCard = this.page.locator('div.stream-body').first();
+        await expect(firstStreamCard).toBeVisible({ timeout: 10000 });
+        await expect(firstStreamCard).toContainText(/task added/i);
+        await this.closeModalIfVisible();
+    }
+
 }
 

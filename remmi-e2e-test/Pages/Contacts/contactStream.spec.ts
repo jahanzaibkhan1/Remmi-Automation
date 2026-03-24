@@ -56,4 +56,10 @@ test.describe('Contacts "Stream" Tab - E2E Tests', () => {
     await contact.verifyStreamSearchFunctionality("Lead Assigned", true);
   });
 
+  test('Verify Stream updates in real time', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyStreamUpdatesInRealTime();
+  });
+
+
 });
