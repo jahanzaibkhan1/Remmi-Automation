@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.02446400000155">
-<testsuite name="Pages\Contacts\contactLead.spec.ts" timestamp="2026-03-24T10:13:03.046Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.19" errors="0">
-<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead appears in the Lead module after creation" classname="Pages\Contacts\contactLead.spec.ts" time="45.19">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.418444000000136">
+<testsuite name="Pages\Contacts\contactLead.spec.ts" timestamp="2026-03-24T10:25:46.803Z" hostname="chromium" tests="1" failures="0" skipped="0" time="57.559" errors="0">
+<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead status details" classname="Pages\Contacts\contactLead.spec.ts" time="57.559">
 </testcase>
 </testsuite>
 </testsuites>

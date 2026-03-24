@@ -4177,6 +4177,52 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verifies the details and status of a lead in the Lead tab/module.
+     */
+    async verifyLeadStatusDetails(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+        const firstLeadRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await firstLeadRow.waitFor({ state: "visible" });
+
+        // Verify "Date" cell
+        const dateCell = firstLeadRow.locator('td').nth(1);
+        await expect(dateCell).toBeVisible();
+        const dateText = await dateCell.textContent();
+        if (!dateText || !dateText.trim()) {
+            throw new Error("Lead 'Date' cell is empty or not found.");
+        }
+
+        // Verify "Status" cell (should be 'New')
+        const statusCell = firstLeadRow.locator('td').nth(2);
+        await expect(statusCell).toBeVisible();
+        const statusText = await statusCell.textContent();
+        if (!statusText || !statusText.trim()) {
+            throw new Error("Lead 'Status' cell is empty or not found.");
+        }
+
+        // Verify "Lead Source" cell (should be 'Billboard')
+        const leadSourceCell = firstLeadRow.locator('td').nth(4);
+        await expect(leadSourceCell).toBeVisible();
+        const leadSourceText = await leadSourceCell.textContent();
+        if (!leadSourceText || !leadSourceText.trim()) {
+            throw new Error("Lead 'Lead Source' cell is empty or not found.");
+        }
+
+        // Verify "Name" cell
+        const nameCell = firstLeadRow.locator('td').nth(5);
+        await expect(nameCell).toBeVisible();
+        const nameText = await nameCell.textContent();
+        if (!nameText || !nameText.trim()) {
+            throw new Error("Lead 'Name' cell is empty or not found.");
+        }
+        
+        await this.closeModalIfVisible();
+    }
+
 
 }
 
