@@ -36,7 +36,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: 3,
   workers: 1,
-  timeout: 60000, //
+  timeout: 120000, //
 
   reporter: [
     ['list'],

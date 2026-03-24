@@ -66,5 +66,10 @@ test.describe('Contacts "Stream" Tab - E2E Tests', () => {
     await contact.verifyStreamSearchFunctionality("thisShouldNotExist12345", false);
   });
 
+  test('Ensure missing records are not displayed', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.addAndDeleteContact();
+  });
+
 
 });
