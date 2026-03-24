@@ -61,5 +61,10 @@ test.describe('Contacts "Stream" Tab - E2E Tests', () => {
     await contact.verifyStreamUpdatesInRealTime();
   });
 
+  test('Test search with invalid data', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyStreamSearchFunctionality("thisShouldNotExist12345", false);
+  });
+
 
 });

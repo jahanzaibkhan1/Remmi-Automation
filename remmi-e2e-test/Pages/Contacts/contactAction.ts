@@ -4028,7 +4028,7 @@ export class ContactActions {
                 throw new Error(`No stream cards were found for the search keyword: "${keyword}".`);
             }
         } else {
-            const noRecordsText = this.page.getByText(/no records available/i);
+            const noRecordsText = this.page.getByText(/No Updates Yet/i);
             await expect(noRecordsText).toBeVisible({ timeout: 10000 });
         }
         await this.closeModalIfVisible();
