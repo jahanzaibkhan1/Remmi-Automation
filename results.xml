@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.695042000000015">
-<testsuite name="Pages\Contacts\contactStream.spec.ts" timestamp="2026-03-24T05:13:50.145Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.172" errors="0">
-<testcase name="Contacts &quot;Stream&quot; Tab - E2E Tests › Verify Stream updates in real time" classname="Pages\Contacts\contactStream.spec.ts" time="42.172">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.99505099999999">
+<testsuite name="Pages\Contacts\contactStream.spec.ts" timestamp="2026-03-24T05:19:29.524Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.081" errors="0">
+<testcase name="Contacts &quot;Stream&quot; Tab - E2E Tests › Test search with invalid data" classname="Pages\Contacts\contactStream.spec.ts" time="55.081">
 </testcase>
 </testsuite>
 </testsuites>
