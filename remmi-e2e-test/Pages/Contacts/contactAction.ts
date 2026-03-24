@@ -4155,6 +4155,18 @@ export class ContactActions {
         await this.openLead();
     }
 
+    /**
+     * Verify new lead button
+     */
+    async verifyNewLeadButton(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await expect(newLeadButton).toBeEnabled();
+    }
+
 
 }
 

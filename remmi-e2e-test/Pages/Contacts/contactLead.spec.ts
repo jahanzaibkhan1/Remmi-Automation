@@ -24,4 +24,10 @@ test.describe('Contacts "Lead" Tab - E2E Tests', () => {
         const contact = new ContactActions(sessionPage);
         await contact.openLeadTab();
     });
+
+    test('Verify new lead button', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyNewLeadButton();
+    });
+    
 });
