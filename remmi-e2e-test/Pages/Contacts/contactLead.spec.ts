@@ -29,5 +29,10 @@ test.describe('Contacts "Lead" Tab - E2E Tests', () => {
         const contact = new ContactActions(sessionPage);
         await contact.verifyNewLeadButton();
     });
-    
+
+    test('Verify lead appears in the Lead module after creation', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadAppearsInLeadModule();
+    });
+
 });
