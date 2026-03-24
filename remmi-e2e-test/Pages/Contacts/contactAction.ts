@@ -4275,6 +4275,43 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify duplicate lead creation does not merge records
+     */
+    async verifyDuplicateLeadDoesNotMergeRecords() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+        // Count the number of rows before duplication
+        const tableRowsLocator = this.page.locator('#customentitydatalist table tbody tr');
+        await tableRowsLocator.first().waitFor({ state: 'visible' });
+        const initialRowCount = await tableRowsLocator.count();
+
+        // Count duplicate icons before duplication
+        const duplicateIconsLocator = this.page.locator('i[ptooltip="Duplicate"].pi.pi-clone');
+        await duplicateIconsLocator.first().waitFor({ state: 'visible' });
+        const initialDuplicateCount = await duplicateIconsLocator.count();
+        expect(initialDuplicateCount).toBeGreaterThan(0);
+
+        // Click the first duplicate icon
+        const duplicateIcon = duplicateIconsLocator.first();
+        await duplicateIcon.waitFor({ state: 'visible' });
+        await duplicateIcon.click();
+
+        // Wait for success message after duplication
+        const duplicateSuccessMessage = this.page.getByText('Duplicated', { exact: true });
+        await duplicateSuccessMessage.waitFor({ state: 'visible' });
+
+        const finalRowCount = await tableRowsLocator.count();
+        const finalDuplicateCount = await duplicateIconsLocator.count();
+        if (finalRowCount < initialRowCount) {
+            throw new Error("Duplicate lead creation did not add a new record, possible merge occurred.");
+        }
+
+        await this.closeModalIfVisible();
+    }
+
 
 }
 

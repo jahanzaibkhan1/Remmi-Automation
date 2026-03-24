@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="72.39400100000016">
-<testsuite name="Pages\Contacts\contactLead.spec.ts" timestamp="2026-03-24T11:19:53.768Z" hostname="chromium" tests="1" failures="0" skipped="0" time="69.766" errors="0">
-<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead source details" classname="Pages\Contacts\contactLead.spec.ts" time="69.766">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="95.08657499999926">
+<testsuite name="Pages\Contacts\contactLead.spec.ts" timestamp="2026-03-24T11:26:54.838Z" hostname="chromium" tests="1" failures="0" skipped="0" time="92.435" errors="0">
+<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify duplicate lead creation does not merge records" classname="Pages\Contacts\contactLead.spec.ts" time="92.435">
 </testcase>
 </testsuite>
 </testsuites>
