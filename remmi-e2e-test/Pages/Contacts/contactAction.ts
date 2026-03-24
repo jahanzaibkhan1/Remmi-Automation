@@ -3586,15 +3586,18 @@ export class ContactActions {
             }
         }
 
-        const dayLocator = this.page.locator(
-            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
-        );
-        await dayLocator.first().waitFor({ state: "visible" });
-        await dayLocator.first().click({ force: true });
+        const dayButton = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) .p-datepicker-day:not(.p-disabled), .p-datepicker-calendar td:not(.p-disabled) span:not(.p-disabled)`
+        ).filter({ hasText: String(targetDay) }).first();
+
+        await dayButton.click({force: true});
 
         const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"]');
         await staffSelect.waitFor({ state: "visible" });
         await staffSelect.click();
+
+        const assigneeOption = this.page.locator('div').filter({ hasText: /^Jahanzaib Xenex$/ }).first();
+        await assigneeOption.waitFor({ state: 'visible'});
 
         const saveTaskButton = this.page.getByRole('button', { name: 'Save' }).first();
         await saveTaskButton.scrollIntoViewIfNeeded();
@@ -3605,8 +3608,7 @@ export class ContactActions {
         const successToast = this.page.locator('div').filter({ hasText: 'Task created' }).last();
         await successToast.waitFor({ state: "visible" });
 
-
-        const closetask = this.page.locator('.pi.pi-times').last();
+        const closetask = this.page.locator("//a[@class='level_li Task_1 cursor-pointer active']//i[@class='p-element pi pi-times ml-2 f-12 cursor-pointer']");
         if (await closetask.isVisible().catch(() => false)) {
             await closetask.click({ force: true });
         }
