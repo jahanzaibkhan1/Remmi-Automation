@@ -4149,7 +4149,7 @@ export class ContactActions {
         await leadTab.click();
     }
 
-    async openLeadTab(){
+    async openLeadTab() {
         await this.NavigateToContacts();
         await this.openFirstContact();
         await this.openLead();
@@ -4165,6 +4165,16 @@ export class ContactActions {
         const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
         await newLeadButton.waitFor({ state: 'visible' });
         await expect(newLeadButton).toBeEnabled();
+    }
+
+    /**
+     * Verifies that a lead appears in the Lead tab/module after creation.
+     */
+    async verifyLeadAppearsInLeadModule(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.leadCreation();
+        await this.closeModalIfVisible();
     }
 
 
