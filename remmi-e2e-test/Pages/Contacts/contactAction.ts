@@ -1,8 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { ContactLocators } from './contactLocator';
 import { faker, tr } from '@faker-js/faker';
-import { setEngine } from 'crypto';
-import { waitForDebugger } from 'inspector';
 
 export class ContactActions {
     private locators: ContactLocators;
@@ -92,8 +90,8 @@ export class ContactActions {
     private async Checkbox() {
         const checkbox = this.page.locator('.p-checkbox-box.p-component').first();
         await checkbox.scrollIntoViewIfNeeded();
-        await checkbox.waitFor({state: 'visible'});
-        await checkbox.click({force: true});
+        await checkbox.waitFor({ state: 'visible' });
+        await checkbox.click({ force: true });
     }
 
     private async NavigateToSettings() {
@@ -114,7 +112,7 @@ export class ContactActions {
 
     private async ClickRestoreIcon() {
         const RestoreIcon = this.locators.restoreContactIcon();
-        await RestoreIcon.waitFor({ state: 'visible'});
+        await RestoreIcon.waitFor({ state: 'visible' });
         await RestoreIcon.click({ force: true });
     }
 
@@ -361,7 +359,7 @@ export class ContactActions {
 
         // Get all visible table rows
         const rows = this.page.locator('table tbody tr').first();
-        expect(rows.first()).toBeVisible({timeout:10000});
+        expect(rows.first()).toBeVisible({ timeout: 10000 });
         const rowCount = await rows.count();
 
         // For each row, verify the "Company Type" cell matches the filter value
@@ -466,7 +464,7 @@ export class ContactActions {
         await this.SearchDeletedContact(contactName);
         await this.page.waitForTimeout(1500);
         const checkbox = this.page.locator('.p-checkbox-box.p-component').first();
-        await checkbox.waitFor({ state: 'visible'});
+        await checkbox.waitFor({ state: 'visible' });
         await checkbox.click({ force: true });
         await this.ClickRestoreIcon();
         await this.NavigateToContacts();
@@ -2516,7 +2514,7 @@ export class ContactActions {
 
         const company = this.page.locator("div[class='col-12 grio'] div[class='tags']");
         await company.scrollIntoViewIfNeeded();
-        await company.click({force: true});
+        await company.click({ force: true });
 
         const associationSearchInput = this.page.locator('[id="Contact-11 22_0"]').getByRole('textbox', { name: 'Search', exact: true });
         await associationSearchInput.waitFor({ state: 'visible', timeout: 5000 });
@@ -2525,7 +2523,7 @@ export class ContactActions {
         await associationSearchInput.fill(companyName);
 
         // Wait for and select the desired company from the dropdown options
-        const companyOption = this.page.getByRole('listitem').filter({ hasText:companyName  }).first();
+        const companyOption = this.page.getByRole('listitem').filter({ hasText: companyName }).first();
         await companyOption.waitFor({ state: 'visible', timeout: 30000 });
         await companyOption.click();
 
@@ -2557,7 +2555,7 @@ export class ContactActions {
 
         const company = this.page.locator("div[class='col-12 grio'] div[class='tags']");
         await company.scrollIntoViewIfNeeded();
-        await company.click({force: true});
+        await company.click({ force: true });
 
         const associationSearchInput = this.page.locator('[id="Contact-11 22_0"]').getByRole('textbox', { name: 'Search', exact: true });
         await associationSearchInput.waitFor({ state: 'visible', timeout: 5000 });
@@ -2566,7 +2564,7 @@ export class ContactActions {
         await associationSearchInput.fill(companyName);
 
         // Wait for and select the desired company from the dropdown options
-        const companyOption = this.page.getByRole('listitem').filter({ hasText:companyName  }).first();
+        const companyOption = this.page.getByRole('listitem').filter({ hasText: companyName }).first();
         await companyOption.waitFor({ state: 'visible', timeout: 30000 });
         await companyOption.click();
         // Click on the "Association" button (replace selector as needed)
@@ -2596,10 +2594,10 @@ export class ContactActions {
         const companyTagCell = this.page.locator('td').nth(1);
         await companyTagCell.waitFor({ state: 'visible', timeout: 10000 });
         await companyTagCell.click();
-    
+
         const company = this.page.locator("div[class='col-12 grio'] div[class='tags']");
         await company.scrollIntoViewIfNeeded();
-        await company.click({force: true});
+        await company.click({ force: true });
 
         const associationSearchInput = this.page.locator('[id="Contact-11 22_0"]').getByRole('textbox', { name: 'Search', exact: true });
         await associationSearchInput.waitFor({ state: 'visible', timeout: 5000 });
@@ -2608,7 +2606,7 @@ export class ContactActions {
         await associationSearchInput.fill(companyName);
 
         // Wait for and select the desired company from the dropdown options
-        const companyOption = this.page.getByRole('listitem').filter({ hasText:companyName  }).first();
+        const companyOption = this.page.getByRole('listitem').filter({ hasText: companyName }).first();
         await companyOption.waitFor({ state: 'visible', timeout: 30000 });
         await companyOption.click();
 
@@ -2639,7 +2637,7 @@ export class ContactActions {
 
         const company = this.page.locator("div[class='col-12 grio'] div[class='tags']");
         await company.scrollIntoViewIfNeeded();
-        await company.click({force: true});
+        await company.click({ force: true });
 
         const associationSearchInput = this.page.locator('[id="Contact-11 22_0"]').getByRole('textbox', { name: 'Search', exact: true });
         await associationSearchInput.waitFor({ state: 'visible', timeout: 5000 });
@@ -2648,7 +2646,7 @@ export class ContactActions {
         await associationSearchInput.fill(companyName);
 
         // Wait for and select the desired company from the dropdown options
-        const companyOption = this.page.getByRole('listitem').filter({ hasText:companyName  }).first();
+        const companyOption = this.page.getByRole('listitem').filter({ hasText: companyName }).first();
         await companyOption.waitFor({ state: 'visible', timeout: 30000 });
         await companyOption.click();
 
@@ -2676,11 +2674,11 @@ export class ContactActions {
         await firstRow.waitFor({ state: 'visible', timeout: 30000 });
         // Click the company tag in the 3rd cell (index 2) of the first row to open the company form
         const companyTagCell = this.page.locator('td').nth(1);
-        await companyTagCell.waitFor({ state: 'visible'});
+        await companyTagCell.waitFor({ state: 'visible' });
         await companyTagCell.click();
         // Locate the address input field (update selector as needed)
         const addressInput = this.page.getByRole('textbox', { name: /address/i }).first();
-        await addressInput.waitFor({ state: 'visible'});
+        await addressInput.waitFor({ state: 'visible' });
         await addressInput.click();
         await addressInput.fill(addressPartial);
 
@@ -2692,7 +2690,7 @@ export class ContactActions {
         }
 
         const suggestionsList = this.page.locator('.pac-item').first();
-        await suggestionsList.waitFor({ state: 'visible'});
+        await suggestionsList.waitFor({ state: 'visible' });
         await suggestionsList.click();
 
         await this.page.waitForTimeout(2000);
@@ -2719,7 +2717,7 @@ export class ContactActions {
 
         // Find the address input field
         const addressInput = this.page.locator('input[placeholder="Search Address"]');
-        await addressInput.waitFor({state: 'visible'});
+        await addressInput.waitFor({ state: 'visible' });
         await addressInput.click();
 
         // Type the address slowly to trigger autocomplete
@@ -2729,14 +2727,14 @@ export class ContactActions {
         }
 
         const suggestionsList = this.page.locator('.pac-item').first();
-        await suggestionsList.click({force: true});
+        await suggestionsList.click({ force: true });
 
         // Wait for autofill to populate
         await this.page.waitForTimeout(2000);
 
         // Open overlay/panel if required
         const editOverlayButton = this.page.locator('#toggle-overlay');
-        await editOverlayButton.waitFor({state:'visible'});
+        await editOverlayButton.waitFor({ state: 'visible' });
         await editOverlayButton.click();
 
 
@@ -3205,11 +3203,11 @@ export class ContactActions {
 
         // Save the new tag (Add button)
         const addButton = this.page.getByRole('button', { name: /^Add$/i });
-        await addButton.click({force:true});
+        await addButton.click({ force: true });
 
         // Confirm successful tag creation
         const creationToast = this.page.locator('div').filter({ hasText: 'Tag successfully created' }).nth(2);
-        await expect(creationToast).toBeVisible({timeout:10000});
+        await expect(creationToast).toBeVisible({ timeout: 10000 });
 
         // Close the tag manager popup if necessary
         const closeButton = this.page.locator('.d-flex.align-items-center > div > button:nth-child(2)');
@@ -3547,10 +3545,10 @@ export class ContactActions {
 
     async openTasksTab(): Promise<void> {
         const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
-        await tasksTab.waitFor({ state: 'visible'});
+        await tasksTab.waitFor({ state: 'visible' });
         await tasksTab.click();
         const addTaskButton = this.page.getByRole('button', { name: /Add Task|New Task/i });
-        await addTaskButton.waitFor({state:'visible'});
+        await addTaskButton.waitFor({ state: 'visible' });
         await addTaskButton.click();
     }
 
@@ -3586,27 +3584,29 @@ export class ContactActions {
             }
         }
 
-        const dayLocator = this.page.locator(
-            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
-        );
-        await dayLocator.first().waitFor({ state: "visible" });
-        await dayLocator.first().click({ force: true });
+        const dayButton = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) .p-datepicker-day:not(.p-disabled), .p-datepicker-calendar td:not(.p-disabled) span:not(.p-disabled)`
+        ).filter({ hasText: String(targetDay) }).first();
+
+        await dayButton.click({ force: true });
 
         const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"]');
         await staffSelect.waitFor({ state: "visible" });
         await staffSelect.click();
 
+        const assigneeOption = this.page.locator('div').filter({ hasText: /^Jahanzaib Xenex$/ }).first();
+        await assigneeOption.waitFor({ state: 'visible' });
+
         const saveTaskButton = this.page.getByRole('button', { name: 'Save' }).first();
         await saveTaskButton.scrollIntoViewIfNeeded();
-        await saveTaskButton.waitFor({state: 'visible'});
+        await saveTaskButton.waitFor({ state: 'visible' });
         await this.page.waitForTimeout(1000);
-        await saveTaskButton.dblclick({force: true});
+        await saveTaskButton.dblclick({ force: true });
 
         const successToast = this.page.locator('div').filter({ hasText: 'Task created' }).last();
         await successToast.waitFor({ state: "visible" });
 
-
-        const closetask = this.page.locator('.pi.pi-times').last();
+        const closetask = this.page.locator("//a[@class='level_li Task_1 cursor-pointer active']//i[@class='p-element pi pi-times ml-2 f-12 cursor-pointer']");
         if (await closetask.isVisible().catch(() => false)) {
             await closetask.click({ force: true });
         }
@@ -3649,25 +3649,25 @@ export class ContactActions {
 
     async verifyRelatedPropertyTabDisplayedListing() {
         const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
-        await relatedPropertyTab.waitFor({ state: 'visible'});
+        await relatedPropertyTab.waitFor({ state: 'visible' });
         await relatedPropertyTab.click();
         const listingTab = this.page.locator('#pills-listing0-tab');
         await listingTab.waitFor({ state: 'visible' });
         await listingTab.click();
         const searchBox = this.page.getByRole('combobox', { name: 'Search Listing' });
-        await searchBox.waitFor({ state: 'visible'});
-        await searchBox.type('Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880',{delay:30});
+        await searchBox.waitFor({ state: 'visible' });
+        await searchBox.type('Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880', { delay: 30 });
         const dropdownOption = this.page.getByRole('option', { name: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880' })
-        await dropdownOption.waitFor({ state: 'visible'});
+        await dropdownOption.waitFor({ state: 'visible' });
         await dropdownOption.click();
         const associateButton = this.page.locator('button.preview-btn.btn-sm.f-12:visible');
         await associateButton.waitFor({ state: 'visible' });
         await associateButton.click();
         const successToast = this.page.getByText(/listing attached successfully|Listing already associated/i).first();
-        await successToast.waitFor({ state: "visible"});
-        const associatedListing = this.page.getByRole('cell', { name: 'Sauer LLC\"\" 453/37 Eliseo Brook, East Albury, Nebraska 34880' })
+        await successToast.waitFor({ state: "visible" });
+        const associatedListing = this.page.getByRole('cell', { name: 'Sauer LLC\"\" 453/37 Eliseo Brook, East Albury, Nebraska 34880' }).first();
         await associatedListing.scrollIntoViewIfNeeded();
-        await associatedListing.waitFor({state:'visible'});
+        await associatedListing.waitFor({ state: 'visible' });
         const associatedContactRow = this.page.locator('table tr').filter({
             hasText: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880',
             has: this.page.locator('td.cdk-drop-list[cdkdroplist]')
@@ -3743,29 +3743,29 @@ export class ContactActions {
 
     async verifyRelatedPropertyTabProperties() {
         const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
-        await relatedPropertyTab.waitFor({ state: 'visible'});
+        await relatedPropertyTab.waitFor({ state: 'visible' });
         await relatedPropertyTab.click();
         const propertyTab = this.page.locator('#pills-property0-tab')
         await propertyTab.waitFor({ state: 'visible' });
         await propertyTab.click();
         const searchBox = this.page.getByRole('combobox', { name: 'Search Property' });
-        await searchBox.waitFor({ state: 'visible'});
+        await searchBox.waitFor({ state: 'visible' });
         await searchBox.fill('Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880');
         const dropdownOption = this.page.getByRole('option', { name: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880' })
-        await dropdownOption.waitFor({ state: 'visible'});
+        await dropdownOption.waitFor({ state: 'visible' });
         await dropdownOption.click();
         const associateButton = this.page.locator('button.preview-btn.btn-sm.f-12:visible');
         await associateButton.waitFor({ state: 'visible' });
         await associateButton.click();
         const successToast = this.page.getByText(/property attached successfully|property already associated/i).first();
-        await successToast.waitFor({ state: "visible"});
-        const associatedProperty = this.page.getByRole('cell', { name: 'Sauer LLC\"\" 453/37 Eliseo Brook, East Albury, Nebraska 34880' })
+        await successToast.waitFor({ state: "visible" });
+        const associatedProperty = this.page.getByRole('cell', { name: 'Sauer LLC\"\" 453/37 Eliseo Brook, East Albury, Nebraska 34880' }).first();
         await associatedProperty.scrollIntoViewIfNeeded();
-        await associatedProperty.waitFor({state:'visible'});
+        await associatedProperty.waitFor({ state: 'visible' });
     }
 
 
-  
+
     async verifyListingAttachmentRecordAppears() {
         await this.NavigateToContacts();
         await this.openFirstContact();
@@ -3778,7 +3778,7 @@ export class ContactActions {
         const listingAttachmentEntry = this.page.locator('div.stream-body').filter({
             hasText: 'Updated related Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880'
         }).first();
-        await listingAttachmentEntry.waitFor({ state: "visible", timeout: 10000 });
+        await listingAttachmentEntry.waitFor({ state: "visible" });
         await this.closeModalIfVisible();
     }
 
@@ -3803,7 +3803,8 @@ export class ContactActions {
         await expect(suggestedContact).toBeVisible({ timeout: 20000 });
         await suggestedContact.click();
         await this.page.mouse.click(0, 0);
-        const associateButton = this.page.getByRole('button', { name: /associate/i }).first();
+        await this.page.waitForTimeout(1200);
+        const associateButton = this.page.getByRole('button', { name: /associate/i }).last();
         await expect(associateButton).toBeVisible({ timeout: 10000 });
         await associateButton.click();
         const duplicateAlert = this.page.getByText(/Contact is already associate|Please select company first| user is already/i).last();
@@ -3850,7 +3851,7 @@ export class ContactActions {
                 );
                 await this.page.waitForTimeout(150);
                 await this.page.mouse.up();
-                break; 
+                break;
             } catch (error) {
                 if (attempt === maxAttempts) {
                     throw new Error('Buyer tag drag failed after multiple attempts.');
@@ -3858,7 +3859,7 @@ export class ContactActions {
                 await this.page.waitForTimeout(1000);
             }
         }
-    
+
     }
 
     // Verify related contact addition record appears
@@ -3874,7 +3875,7 @@ export class ContactActions {
         });
         await streamTab.waitFor({ state: 'visible' });
         await streamTab.click();
- 
+
         const searchBox = await this.page.getByRole('textbox', { name: 'Search by keyword' });
         await searchBox.waitFor({ state: 'visible' });
         await searchBox.fill('11 22');
@@ -3984,23 +3985,23 @@ export class ContactActions {
         await this.NavigateToContacts();
         await this.openFirstContact();
         await this.openStreamTab();
-          const streamCards = this.page.locator('div.stream-body');
-          await expect(streamCards.first()).toBeVisible({ timeout: 10000 });
-          const count = await streamCards.count();
-          if (count === 0) {
-              throw new Error("No stream cards found on the Stream tab.");
-          }
-          for (let i = 0; i < count; i++) {
-              const card = streamCards.nth(i);
-              // span.f-10.text-dark contains the date/time info
-              const dateTimeSpan = card.locator('span.f-10.text-dark');
-              await expect(dateTimeSpan).toBeVisible({ timeout: 10000 });
-              const text = await dateTimeSpan.textContent();
-              if (!text || !text.trim()) {
-                  throw new Error(`Stream card #${i + 1} does not display date/time.`);
-              }
-          }
-          await this.closeModalIfVisible();
+        const streamCards = this.page.locator('div.stream-body');
+        await expect(streamCards.first()).toBeVisible({ timeout: 10000 });
+        const count = await streamCards.count();
+        if (count === 0) {
+            throw new Error("No stream cards found on the Stream tab.");
+        }
+        for (let i = 0; i < count; i++) {
+            const card = streamCards.nth(i);
+            // span.f-10.text-dark contains the date/time info
+            const dateTimeSpan = card.locator('span.f-10.text-dark');
+            await expect(dateTimeSpan).toBeVisible({ timeout: 10000 });
+            const text = await dateTimeSpan.textContent();
+            if (!text || !text.trim()) {
+                throw new Error(`Stream card #${i + 1} does not display date/time.`);
+            }
+        }
+        await this.closeModalIfVisible();
     }
 
     /**
@@ -4011,10 +4012,10 @@ export class ContactActions {
         await this.openFirstContact();
         await this.openStreamTab();
         const firstStreamCard = this.page.locator('div.stream-body').first();
-        await firstStreamCard.waitFor({ state: "visible"});
+        await firstStreamCard.waitFor({ state: "visible" });
         const searchInput = this.page.locator('input[placeholder*="Search by keyword"]').first();
         await expect(searchInput).toBeVisible({ timeout: 10000 });
-        await searchInput.fill(""); 
+        await searchInput.fill("");
         await searchInput.fill(keyword);
         await searchInput.press("Enter");
         await this.page.waitForTimeout(1000);
@@ -4026,10 +4027,291 @@ export class ContactActions {
                 throw new Error(`No stream cards were found for the search keyword: "${keyword}".`);
             }
         } else {
-            const noRecordsText = this.page.getByText(/no records available/i);
+            const noRecordsText = this.page.getByText(/No Updates Yet/i);
             await expect(noRecordsText).toBeVisible({ timeout: 10000 });
         }
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Verify Stream updates in real time.
+     */
+    async verifyStreamUpdatesInRealTime() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openStreamTab();
+        const firstStreamCard = this.page.locator('div.stream-body').first();
+        await firstStreamCard.waitFor({ state: "visible" });
+        const searchInput = this.page.locator('input[placeholder*="Search by keyword"]').first();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.fill("");
+        await searchInput.fill("Task Added");
+        await searchInput.press("Enter");
+        const streamCards = this.page.locator('div.stream-body');
+        await expect(streamCards.first()).toContainText(/task added/i);
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Ensures related contact "11 22" is deleted if already present, then verifies it is absent in stream.
+     */
+    async addAndDeleteContact() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open Stream tab to ensure we're starting at the right place
+        const streamTab = this.page.getByRole('tab', { name: /Stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.evaluate(el => el.scrollIntoView({ block: 'center', inline: 'center' }));
+        await streamTab.click();
+
+        // Open Related contacts tab
+        const relatedTab = this.page.getByText('Related contacts').first();
+        await expect(relatedTab).toBeVisible({ timeout: 10000 });
+        await relatedTab.click();
+
+        // Try to locate the related contact row up to maxRowLoadAttempts times, waiting in between
+        let associatedContactRow: any = null;
+        const maxRowLoadAttempts = 4;
+        for (let i = 0; i < maxRowLoadAttempts; i++) {
+            associatedContactRow = this.page.locator('table tr').filter({
+                has: this.page.locator('td.cdk-drop-list[cdkdroplist]'),
+                hasText: '11 22'
+            }).first();
+
+            if (await associatedContactRow.count() > 0 && await associatedContactRow.isVisible()) {
+                break;
+            }
+            if (i < maxRowLoadAttempts - 1) {
+                await this.page.waitForTimeout(1200);
+            }
+        }
+
+        if (await associatedContactRow.count() > 0 && await associatedContactRow.isVisible()) {
+            await associatedContactRow.scrollIntoViewIfNeeded();
+
+            // Try twice to click the delete button and confirm deletion
+            let hasDeleted = false;
+            for (let attempt = 0; attempt < 2 && !hasDeleted; attempt++) {
+                try {
+                    const deleteButton = associatedContactRow.locator('button:has(img[alt="delete"])').first();
+                    await deleteButton.waitFor({ state: 'visible', timeout: 30000 });
+                    await deleteButton.click();
+
+                    const confirmButton = this.page.getByRole('button', { name: /Yes/i }).first();
+                    await expect(confirmButton).toBeVisible({ timeout: 10000 });
+                    await confirmButton.click();
+
+                    // Wait for the toast to confirm deletion OR for row to disappear
+                    const removeToast = this.page.getByText(/related Contact deleted successfully/i).first();
+                    // Ensure both toast disappears (toast confirmed) and row is no longer visible
+                    await Promise.all([
+                        expect(removeToast).toBeVisible({ timeout: 10000 }),
+                        expect(associatedContactRow).not.toBeVisible({ timeout: 10000 }),
+                    ]);
+                    hasDeleted = true;
+                } catch (err) {
+                    if (attempt === 0) {
+                        await this.page.waitForTimeout(1000);
+                    } else {
+                        throw err;
+                    }
+                }
+            }
+        }
+
+        // Go back to Stream tab
+        await streamTab.evaluate(el => el.scrollIntoView({ block: 'center', inline: 'center' }));
+        await streamTab.waitFor({ state: 'visible' });
+        await streamTab.click();
+
+        // Search for the previously removed contact in the stream
+        const searchBox = this.page.getByRole('textbox', { name: 'Search by keyword' });
+        await searchBox.waitFor({ state: 'visible' });
+        await searchBox.fill('');
+        await searchBox.fill('11 22');
+
+        // Verify that "Related Contact Attached" entry is NOT visible, confirming deletion
+        const relatedContactEntry = this.page.locator('div.stream-body').filter({
+            hasText: 'Related Contact Attached'
+        }).first();
+        await expect(relatedContactEntry).not.toBeVisible({ timeout: 10000 });
+
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Opens the "Lead" tab 
+     */
+    async openLead(): Promise<void> {
+        const leadTab = this.page.getByRole('tab', { name: /Lead/i });
+        await leadTab.waitFor({ state: 'visible' });
+        await leadTab.click();
+    }
+
+    async openLeadTab() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+    }
+
+    /**
+     * Verify new lead button
+     */
+    async verifyNewLeadButton(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await expect(newLeadButton).toBeEnabled();
+    }
+
+    /**
+     * Verifies that a lead appears in the Lead tab/module after creation.
+     */
+    async verifyLeadAppearsInLeadModule(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.leadCreation();
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies the details and status of a lead in the Lead tab/module.
+     */
+    async verifyLeadStatusDetails(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+        const firstLeadRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await firstLeadRow.waitFor({ state: "visible" });
+
+        // Verify "Date" cell
+        const dateCell = firstLeadRow.locator('td').nth(1);
+        await expect(dateCell).toBeVisible();
+        const dateText = await dateCell.textContent();
+        if (!dateText || !dateText.trim()) {
+            throw new Error("Lead 'Date' cell is empty or not found.");
+        }
+
+        // Verify "Status" cell (should be 'New')
+        const statusCell = firstLeadRow.locator('td').nth(2);
+        await expect(statusCell).toBeVisible();
+        const statusText = await statusCell.textContent();
+        if (!statusText || !statusText.trim()) {
+            throw new Error("Lead 'Status' cell is empty or not found.");
+        }
+
+        // Verify "Lead Source" cell (should be 'Billboard')
+        const leadSourceCell = firstLeadRow.locator('td').nth(4);
+        await expect(leadSourceCell).toBeVisible();
+        const leadSourceText = await leadSourceCell.textContent();
+        if (!leadSourceText || !leadSourceText.trim()) {
+            throw new Error("Lead 'Lead Source' cell is empty or not found.");
+        }
+
+        // Verify "Name" cell
+        const nameCell = firstLeadRow.locator('td').nth(5);
+        await expect(nameCell).toBeVisible();
+        const nameText = await nameCell.textContent();
+        if (!nameText || !nameText.trim()) {
+            throw new Error("Lead 'Name' cell is empty or not found.");
+        }
+        
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify duplicate lead creation
+     */
+    async verifyDuplicateLeadCreation() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+         // Verify the first table row is visible after saving new lead
+         const firstTableRow = this.page.locator('#customentitydatalist table tbody tr').first();
+         await firstTableRow.waitFor({ state: 'visible' });
+         // Wait for duplicate icons to appear before the click
+         const duplicateIconsLocator = this.page.locator('i[ptooltip="Duplicate"].pi.pi-clone');
+         await duplicateIconsLocator.first().waitFor({ state: 'visible' });
+         const initialCount = await duplicateIconsLocator.count();
+         expect(initialCount).toBeGreaterThan(0);
+ 
+         // Click the first duplicate icon
+         const duplicateIcon = duplicateIconsLocator.first();
+         await duplicateIcon.waitFor({ state: 'visible' });
+         await duplicateIcon.click();
+ 
+         // Wait for the success message after duplication
+         const duplicateSuccessMessage = this.page.getByText('Duplicated', { exact: true });
+         await duplicateSuccessMessage.waitFor({ state: 'visible' });
+         await this.page.waitForTimeout(3000);
+ 
+         // Count the duplicate icons again after duplication
+         const finalCount = await duplicateIconsLocator.count();
+         expect(finalCount).toBeGreaterThan(initialCount);
+
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify lead source details 
+     */
+    async verifyLeadSourceDetails() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        const firstRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await firstRow.waitFor({ state: 'visible' });
+        const leadSourceCell = firstRow.locator('td').nth(4);
+        await leadSourceCell.waitFor({ state: 'visible' });
+        const leadSourceText = await leadSourceCell.textContent();
+        if (!leadSourceText || !/Billboard/i.test(leadSourceText)) {
+            throw new Error("Lead 'Lead Source' cell does not show value 'Billboard'.");
+        }
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify duplicate lead creation does not merge records
+     */
+    async verifyDuplicateLeadDoesNotMergeRecords() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+        // Count the number of rows before duplication
+        const tableRowsLocator = this.page.locator('#customentitydatalist table tbody tr');
+        await tableRowsLocator.first().waitFor({ state: 'visible' });
+        const initialRowCount = await tableRowsLocator.count();
+
+        // Count duplicate icons before duplication
+        const duplicateIconsLocator = this.page.locator('i[ptooltip="Duplicate"].pi.pi-clone');
+        await duplicateIconsLocator.first().waitFor({ state: 'visible' });
+        const initialDuplicateCount = await duplicateIconsLocator.count();
+        expect(initialDuplicateCount).toBeGreaterThan(0);
+
+        // Click the first duplicate icon
+        const duplicateIcon = duplicateIconsLocator.first();
+        await duplicateIcon.waitFor({ state: 'visible' });
+        await duplicateIcon.click();
+
+        // Wait for success message after duplication
+        const duplicateSuccessMessage = this.page.getByText('Duplicated', { exact: true });
+        await duplicateSuccessMessage.waitFor({ state: 'visible' });
+
+        const finalRowCount = await tableRowsLocator.count();
+        const finalDuplicateCount = await duplicateIconsLocator.count();
+        if (finalRowCount < initialRowCount) {
+            throw new Error("Duplicate lead creation did not add a new record, possible merge occurred.");
+        }
+
+        await this.closeModalIfVisible();
+    }
+
+
 }
 

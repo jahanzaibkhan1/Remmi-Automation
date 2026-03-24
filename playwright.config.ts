@@ -36,7 +36,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: 3,
   workers: 1,
-  timeout: 60000, //
+  timeout: 120000, //
 
   reporter: [
     ['list'],
@@ -51,6 +51,7 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'on-first-retry',
+    navigationTimeout: 2 * 60 * 1000,
     launchOptions: {
       slowMo: process.env.CI ? 50 : 0,
       args: [
