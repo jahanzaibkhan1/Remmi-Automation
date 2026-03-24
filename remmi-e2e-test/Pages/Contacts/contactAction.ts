@@ -4223,6 +4223,40 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify duplicate lead creation
+     */
+    async verifyDuplicateLeadCreation() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+         // Verify the first table row is visible after saving new lead
+         const firstTableRow = this.page.locator('#customentitydatalist table tbody tr').first();
+         await firstTableRow.waitFor({ state: 'visible' });
+         // Wait for duplicate icons to appear before the click
+         const duplicateIconsLocator = this.page.locator('i[ptooltip="Duplicate"].pi.pi-clone');
+         await duplicateIconsLocator.first().waitFor({ state: 'visible' });
+         const initialCount = await duplicateIconsLocator.count();
+         expect(initialCount).toBeGreaterThan(0);
+ 
+         // Click the first duplicate icon
+         const duplicateIcon = duplicateIconsLocator.first();
+         await duplicateIcon.waitFor({ state: 'visible' });
+         await duplicateIcon.click();
+ 
+         // Wait for the success message after duplication
+         const duplicateSuccessMessage = this.page.getByText('Duplicated', { exact: true });
+         await duplicateSuccessMessage.waitFor({ state: 'visible' });
+         await this.page.waitForTimeout(3000);
+ 
+         // Count the duplicate icons again after duplication
+         const finalCount = await duplicateIconsLocator.count();
+         expect(finalCount).toBeGreaterThan(initialCount);
+
+        await this.closeModalIfVisible();
+    }
+
 
 }
 

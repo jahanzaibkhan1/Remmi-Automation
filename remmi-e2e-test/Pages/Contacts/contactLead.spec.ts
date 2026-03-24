@@ -39,5 +39,10 @@ test.describe('Contacts "Lead" Tab - E2E Tests', () => {
         const contact = new ContactActions(sessionPage);
         await contact.verifyLeadStatusDetails();
     });
+
+    test('Verify duplicate lead creation', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyDuplicateLeadCreation();
+    });
  
 });
