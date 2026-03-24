@@ -4050,5 +4050,94 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Ensures related contact "11 22" is deleted if already present, then verifies it is absent in stream.
+     */
+    async addAndDeleteContact() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open Stream tab to ensure we're starting at the right place
+        const streamTab = this.page.getByRole('tab', { name: /Stream/i });
+        await expect(streamTab).toBeVisible({ timeout: 10000 });
+        await streamTab.evaluate(el => el.scrollIntoView({ block: 'center', inline: 'center' }));
+        await streamTab.click();
+
+        // Open Related contacts tab
+        const relatedTab = this.page.getByText('Related contacts').first();
+        await expect(relatedTab).toBeVisible({ timeout: 10000 });
+        await relatedTab.click();
+
+        // Try to locate the related contact row up to maxRowLoadAttempts times, waiting in between
+        let associatedContactRow: any = null;
+        const maxRowLoadAttempts = 4;
+        for (let i = 0; i < maxRowLoadAttempts; i++) {
+            associatedContactRow = this.page.locator('table tr').filter({
+                has: this.page.locator('td.cdk-drop-list[cdkdroplist]'),
+                hasText: '11 22'
+            }).first();
+
+            if (await associatedContactRow.count() > 0 && await associatedContactRow.isVisible()) {
+                break;
+            }
+            if (i < maxRowLoadAttempts - 1) {
+                await this.page.waitForTimeout(1200); 
+            }
+        }
+
+        if (await associatedContactRow.count() > 0 && await associatedContactRow.isVisible()) {
+            await associatedContactRow.scrollIntoViewIfNeeded();
+
+            // Try twice to click the delete button and confirm deletion
+            let hasDeleted = false;
+            for (let attempt = 0; attempt < 2 && !hasDeleted; attempt++) {
+                try {
+                    const deleteButton = associatedContactRow.locator('button:has(img[alt="delete"])').first();
+                    await deleteButton.waitFor({ state: 'visible', timeout: 30000 });
+                    await deleteButton.click();
+
+                    const confirmButton = this.page.getByRole('button', { name: /Yes/i }).first();
+                    await expect(confirmButton).toBeVisible({ timeout: 10000 });
+                    await confirmButton.click();
+
+                    // Wait for the toast to confirm deletion OR for row to disappear
+                    const removeToast = this.page.getByText(/related Contact deleted successfully/i).first();
+                    // Ensure both toast disappears (toast confirmed) and row is no longer visible
+                    await Promise.all([
+                        expect(removeToast).toBeVisible({ timeout: 10000 }),
+                        expect(associatedContactRow).not.toBeVisible({ timeout: 10000 }),
+                    ]);
+                    hasDeleted = true;
+                } catch (err) {
+                    if (attempt === 0) {
+                        await this.page.waitForTimeout(1000);
+                    } else {
+                        throw err;
+                    }
+                }
+            }
+        }
+
+        // Go back to Stream tab
+        await streamTab.evaluate(el => el.scrollIntoView({ block: 'center', inline: 'center' }));
+        await streamTab.waitFor({ state: 'visible' });
+        await streamTab.click();
+
+        // Search for the previously removed contact in the stream
+        const searchBox = this.page.getByRole('textbox', { name: 'Search by keyword' });
+        await searchBox.waitFor({ state: 'visible' });
+        await searchBox.fill('');
+        await searchBox.fill('11 22');
+
+        // Verify that "Related Contact Attached" entry is NOT visible, confirming deletion
+        const relatedContactEntry = this.page.locator('div.stream-body').filter({
+            hasText: 'Related Contact Attached'
+        }).first();
+        await expect(relatedContactEntry).not.toBeVisible({ timeout: 10000 });
+
+        await this.closeModalIfVisible();
+    }
+
+
 }
 
