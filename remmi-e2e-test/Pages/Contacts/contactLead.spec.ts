@@ -65,4 +65,9 @@ test.describe('Contacts "Lead" Tab - E2E Tests', () => {
         await contact.verifyLeadListingProjectDetails();
     });
 
+    test('Verify lead modification', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadModification();
+    });
+
 });
