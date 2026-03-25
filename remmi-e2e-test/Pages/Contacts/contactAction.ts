@@ -4367,6 +4367,7 @@ export class ContactActions {
     async waitForLeadUpdatedSuccessMessage() {
         const successMessageLocator = this.page.getByText('Lead updated successfully', { exact: true });
         await successMessageLocator.waitFor({ state: 'visible' });
+        await successMessageLocator.waitFor({ state: 'hidden' });
     }
 
     /**
@@ -4611,6 +4612,31 @@ export class ContactActions {
         const statusText = await leadStatusCell.textContent();
         if (!statusText || !/Contact Started/i.test(statusText)) {
             throw new Error("Lead 'Status' cell does not show value 'Contact Started'.");
+        }
+    }
+
+    /**
+     * Verifies the lead record's created time and date in the contact table.
+     */
+    async verifyLeadRecordTimeAndDate(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openContactByNameAA();
+        const firstStreamRecord = this.page.locator('div.stream-body').first();
+        await firstStreamRecord.waitFor({ state: 'visible' });
+        await this.openLead();
+        const tableRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await tableRow.waitFor({ state: 'visible' });
+        const dateCell = tableRow.locator('td').nth(1);
+        await dateCell.waitFor({ state: 'visible' });
+        const dateText = await dateCell.textContent();
+
+        if (!dateText || !dateText.trim()) {
+            throw new Error("Lead 'Created Date' cell is empty.");
+        }
+        
+        const datePattern = /^\d{2}\/\d{2}\/\d{2}$/;
+        if (!datePattern.test(dateText.trim())) {
+            throw new Error(`Lead 'Created Date' cell does not match expected date format (MM/DD/YY): "${dateText}"`);
         }
     }
 
