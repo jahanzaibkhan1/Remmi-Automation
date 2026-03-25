@@ -75,4 +75,9 @@ test.describe('Contacts "Lead" Tab - E2E Tests', () => {
         await contact.verifyLeadStatusChange();
     });
 
+    test('Verify lead record time and date', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadRecordTimeAndDate();
+    });
+
 });
