@@ -4472,6 +4472,55 @@ export class ContactActions {
         }
     }
 
+    /**
+     * Verifies that the lead was successfully modified by checking all cell values in the grid.
+     */
+    async verifyLeadModification() {
+
+        await this.NavigateToContacts();
+        await this.openContactByNameAA();
+        const firstStreamRecord = this.page.locator('div.stream-body').first();
+        await firstStreamRecord.waitFor({ state: 'visible' });
+        await this.openLead();
+
+        const tableRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await tableRow.waitFor({ state: 'visible' });
+
+        // Lead Status
+        const leadStatusCell = tableRow.locator('td').nth(2);
+        await leadStatusCell.waitFor({ state: 'visible' });
+        const leadStatusText = (await leadStatusCell.textContent())?.trim() || '';
+        if (!/New/i.test(leadStatusText)) {
+            throw new Error("Lead 'Status' cell does not show value 'New'.");
+        }
+
+        // Project
+        const projectCell = tableRow.locator('td').nth(3);
+        await projectCell.waitFor({ state: 'visible' });
+        const projectText = (await projectCell.textContent())?.trim() || '';
+        if (!/East Village Vila/i.test(projectText)) {
+            throw new Error("Lead 'Project' cell does not show value 'East Village Vila'.");
+        }
+
+        // Lead Source
+        const leadSourceCell = tableRow.locator('td').nth(4);
+        await leadSourceCell.waitFor({ state: 'visible' });
+        const leadSourceText = (await leadSourceCell.textContent())?.trim() || '';
+        if (!/Billboard/i.test(leadSourceText)) {
+            throw new Error("Lead 'Source' cell does not show value 'Billboard'.");
+        }
+
+        // Owner
+        const ownerCell = tableRow.locator('td').nth(5);
+        await ownerCell.waitFor({ state: 'visible' });
+        const ownerText = (await ownerCell.textContent())?.trim() || '';
+        if (!/jahanzaib xenex/i.test(ownerText)) {
+            throw new Error("Lead 'Owner' cell does not show value 'jahanzaib xenex'.");
+        }
+
+
+    }
+
 
 }
 
