@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.04599299999699">
-<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-25T10:54:26.024Z" hostname="chromium" tests="1" failures="0" skipped="0" time="60.748" errors="0">
-<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that selecting an Existing Client removes contact creation fields" classname="Pages\Contacts\leadForm.spec.ts" time="60.748">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.68127500000224">
+<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-25T11:05:15.808Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.715" errors="0">
+<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that removing an Existing Client brings back contact creation fields" classname="Pages\Contacts\leadForm.spec.ts" time="44.715">
 </testcase>
 </testsuite>
 </testsuites>
