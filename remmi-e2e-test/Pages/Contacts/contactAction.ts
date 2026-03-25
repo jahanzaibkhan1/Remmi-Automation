@@ -4668,6 +4668,40 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify that selecting an Existing Client removes contact creation fields
+     */
+    async verifyExistingClientRemovesContactFields(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+        const createLeadText = this.page.getByText(/create lead/i);
+        await expect(createLeadText).toBeVisible({ timeout: 10000 });
+        const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
+        await existingClientParagraph.waitFor({ state: 'visible' });
+       // The following fields should NOT be visible for an existing client
+       const fieldsShouldNotExist = [
+           '[formcontrolname="first_name"]',
+           '[formcontrolname="last_name"]',
+           '[formcontrolname="mobile_phone"]',
+           '[formcontrolname="telephone"]',
+           '[formcontrolname="email"]',
+           '[formcontrolname="suburb"]',
+           '[formcontrolname="postcode"]',
+           '[formcontrolname="countryregion"] .ng-select-container',
+           '[formcontrolname="countryregion"] input'
+       ];
+
+       for (const selector of fieldsShouldNotExist) {
+           await expect(this.page.locator(selector)).not.toBeVisible();
+       }
+        await this.closeModalIfVisible();
+    }
+
 
 }
 
