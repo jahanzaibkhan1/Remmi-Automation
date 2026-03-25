@@ -36,4 +36,9 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifyContactFieldsReturnOnExistingClientRemoval();
     });
 
+    test('Verify that selecting an Existing Client links the contact to the contact field', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyExistingClientSelectionLinksContact();
+    });
+
 });
