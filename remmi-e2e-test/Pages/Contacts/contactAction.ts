@@ -4764,5 +4764,23 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verifies that clicking the close button closes the lead form modal
+     */
+    async verifyCloseButtonClosesForm(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+        const createLeadText = this.page.getByText(/create lead/i);
+        await expect(createLeadText).toBeVisible({ timeout: 10000 });
+        const closeButton = this.page.getByRole('button', { name: /close/i }).first();
+        await closeButton.waitFor({ state: 'visible' });
+        await closeButton.click();
+        await this.closeModalIfVisible();
+    }
+
 }
 

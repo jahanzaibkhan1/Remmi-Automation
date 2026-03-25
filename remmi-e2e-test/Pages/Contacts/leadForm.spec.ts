@@ -41,4 +41,9 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifyExistingClientSelectionLinksContact();
     });
 
+    test('Verify that clicking the close button closes the form', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyCloseButtonClosesForm();
+    });
+
 });

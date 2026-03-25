@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="61.85082899999991">
-<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-25T11:17:01.279Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.944" errors="0">
-<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that selecting an Existing Client links the contact to the contact field" classname="Pages\Contacts\leadForm.spec.ts" time="58.944">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.63133200000227">
+<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-25T11:24:16.032Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.167" errors="0">
+<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that clicking the close button closes the form" classname="Pages\Contacts\leadForm.spec.ts" time="54.167">
 </testcase>
 </testsuite>
 </testsuites>
