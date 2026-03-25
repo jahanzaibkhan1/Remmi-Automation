@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="67.75780000000074">
-<testsuite name="Pages\Contacts\contactLead.spec.ts" timestamp="2026-03-25T10:12:59.424Z" hostname="chromium" tests="1" failures="0" skipped="0" time="65.176" errors="0">
-<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify navigation between tabs" classname="Pages\Contacts\contactLead.spec.ts" time="65.176">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="54.36439999999851">
+<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-25T10:37:02.186Z" hostname="chromium" tests="1" failures="0" skipped="0" time="52.122" errors="0">
+<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that clicking the create new button opens the lead form" classname="Pages\Contacts\leadForm.spec.ts" time="52.122">
 </testcase>
 </testsuite>
 </testsuites>
