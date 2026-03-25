@@ -4653,6 +4653,21 @@ export class ContactActions {
         await leadTableRows.first().waitFor({ state: 'visible' });
     }
 
+    /**
+     * Verify that clicking the new lead button opens the lead form.
+     */
+    async verifyNewLeadButtonOpensForm() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+        const createLeadText = this.page.getByText(/create lead/i);
+        await expect(createLeadText).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
 
 }
 
