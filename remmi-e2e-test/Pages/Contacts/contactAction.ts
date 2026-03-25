@@ -4702,6 +4702,51 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify that removing an Existing Client brings back contact creation fields
+     */
+    async verifyContactFieldsReturnOnExistingClientRemoval(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+
+        const createLeadText = this.page.getByText(/create lead/i);
+        await expect(createLeadText).toBeVisible({ timeout: 10000 });
+
+        const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
+        await existingClientParagraph.waitFor({ state: 'visible' });
+     
+        const removeIcon = this.page.locator('span.pi.pi-times-circle.f-12.ng-star-inserted').first();
+        await removeIcon.waitFor({ state: 'visible' });
+        await removeIcon.click();
+
+        await existingClientParagraph.waitFor({state:'hidden'});
+
+        const firstNameField = this.page.locator('[formcontrolname="first_name"]').last();
+        const lastNameField = this.page.locator('[formcontrolname="last_name"]').last();
+        const mobilePhoneField = this.page.locator('[formcontrolname="mobile_phone"]').last();
+        const telephoneField = this.page.locator('[formcontrolname="telephone"]').last();
+        const emailField = this.page.locator('[formcontrolname="email"]').last();
+        const suburbField = this.page.locator('[formcontrolname="suburb"]').last();
+        const postcodeField = this.page.locator('[formcontrolname="postcode"]').last();
+        const countryRegionSelect = this.page.locator('[formcontrolname="countryregion"] .ng-select-container').last();
+        const countryRegionInput = this.page.locator('[formcontrolname="countryregion"] input').last();
+
+        await firstNameField.waitFor({ state: 'visible' });
+        await lastNameField.waitFor({ state: 'visible' });
+        await mobilePhoneField.waitFor({ state: 'visible' });
+        await telephoneField.waitFor({ state: 'visible' });
+        await emailField.waitFor({ state: 'visible' });
+        await suburbField.waitFor({ state: 'visible' });
+        await postcodeField.waitFor({ state: 'visible' });
+        await countryRegionSelect.waitFor({ state: 'visible' });
+        await countryRegionInput.waitFor({ state: 'visible' });
+        await this.closeModalIfVisible();
+    }
+
 
 }
 
