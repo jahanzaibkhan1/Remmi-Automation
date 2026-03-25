@@ -3891,6 +3891,12 @@ export class ContactActions {
         const leadTab = this.page.getByRole('tab', { name: 'Lead' });
         await leadTab.waitFor({ state: 'visible' });
         await leadTab.click();
+
+        // Count rows before creation
+        const tableRowsLocator = this.page.locator('#customentitydatalist table tbody tr');
+        await tableRowsLocator.first().waitFor({ state: 'visible' });
+        const initialRowCount = await tableRowsLocator.count();
+
         // Look for the "New Lead" button
         const newLeadButton = this.page.getByRole('button', { name: /new lead/i });
         await newLeadButton.waitFor({ state: 'visible' });
@@ -3960,10 +3966,15 @@ export class ContactActions {
         // Get the "lead added successfully" toast message
         const leadAddedSuccessMsg = this.page.getByText(/lead added successfully/i);
         await leadAddedSuccessMsg.waitFor({ state: 'visible' });
+        await leadAddedSuccessMsg.waitFor({state:'hidden'});
 
-        // Verify the first table row is visible after saving new lead
-        const firstTableRow = this.page.locator('#customentitydatalist table tbody tr').first();
-        await firstTableRow.waitFor({ state: "visible" });
+        // Count the rows after creation
+        await tableRowsLocator.first().waitFor({ state: "visible" });
+        const finalRowCount = await tableRowsLocator.count();
+        // Ensure the row count increased
+        if (finalRowCount <= initialRowCount) {
+            throw new Error("Lead creation did not increase the number of records in the table.");
+        }
     }
 
     /**
@@ -4312,6 +4323,16 @@ export class ContactActions {
             throw new Error("Duplicate lead creation did not add a new record, possible merge occurred.");
         }
         await expect(finalDuplicateCount).toBeGreaterThan(initialDuplicateCount);
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that the lead list updates after a new lead is added.
+     */
+    async verifyLeadListUpdatesAfterAdd() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.leadCreation();
         await this.closeModalIfVisible();
     }
 

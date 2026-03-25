@@ -55,4 +55,9 @@ test.describe('Contacts "Lead" Tab - E2E Tests', () => {
         await contact.verifyDuplicateLeadDoesNotMergeRecords();
     });
 
+    test('Verify lead list updates after a new lead is added', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadListUpdatesAfterAdd();
+    });
+
 });
