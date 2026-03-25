@@ -3966,7 +3966,7 @@ export class ContactActions {
         // Get the "lead added successfully" toast message
         const leadAddedSuccessMsg = this.page.getByText(/lead added successfully/i);
         await leadAddedSuccessMsg.waitFor({ state: 'visible' });
-        await leadAddedSuccessMsg.waitFor({state:'hidden'});
+        await leadAddedSuccessMsg.waitFor({ state: 'hidden' });
 
         // Count the rows after creation
         await tableRowsLocator.first().waitFor({ state: "visible" });
@@ -4232,7 +4232,7 @@ export class ContactActions {
         if (!nameText || !nameText.trim()) {
             throw new Error("Lead 'Name' cell is empty or not found.");
         }
-        
+
         await this.closeModalIfVisible();
     }
 
@@ -4244,28 +4244,28 @@ export class ContactActions {
         await this.openFirstContact();
         await this.openLead();
 
-         // Verify the first table row is visible after saving new lead
-         const firstTableRow = this.page.locator('#customentitydatalist table tbody tr').first();
-         await firstTableRow.waitFor({ state: 'visible' });
-         // Wait for duplicate icons to appear before the click
-         const duplicateIconsLocator = this.page.locator('i[ptooltip="Duplicate"].pi.pi-clone');
-         await duplicateIconsLocator.first().waitFor({ state: 'visible' });
-         const initialCount = await duplicateIconsLocator.count();
-         expect(initialCount).toBeGreaterThan(0);
- 
-         // Click the first duplicate icon
-         const duplicateIcon = duplicateIconsLocator.first();
-         await duplicateIcon.waitFor({ state: 'visible' });
-         await duplicateIcon.click();
- 
-         // Wait for the success message after duplication
-         const duplicateSuccessMessage = this.page.getByText('Duplicated', { exact: true });
-         await duplicateSuccessMessage.waitFor({ state: 'visible' });
-         await duplicateSuccessMessage.waitFor({state:'hidden'});
- 
-         // Count the duplicate icons again after duplication
-         const finalCount = await duplicateIconsLocator.count();
-         expect(finalCount).toBeGreaterThan(initialCount);
+        // Verify the first table row is visible after saving new lead
+        const firstTableRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await firstTableRow.waitFor({ state: 'visible' });
+        // Wait for duplicate icons to appear before the click
+        const duplicateIconsLocator = this.page.locator('i[ptooltip="Duplicate"].pi.pi-clone');
+        await duplicateIconsLocator.first().waitFor({ state: 'visible' });
+        const initialCount = await duplicateIconsLocator.count();
+        expect(initialCount).toBeGreaterThan(0);
+
+        // Click the first duplicate icon
+        const duplicateIcon = duplicateIconsLocator.first();
+        await duplicateIcon.waitFor({ state: 'visible' });
+        await duplicateIcon.click();
+
+        // Wait for the success message after duplication
+        const duplicateSuccessMessage = this.page.getByText('Duplicated', { exact: true });
+        await duplicateSuccessMessage.waitFor({ state: 'visible' });
+        await duplicateSuccessMessage.waitFor({ state: 'hidden' });
+
+        // Count the duplicate icons again after duplication
+        const finalCount = await duplicateIconsLocator.count();
+        expect(finalCount).toBeGreaterThan(initialCount);
 
         await this.closeModalIfVisible();
     }
@@ -4315,7 +4315,7 @@ export class ContactActions {
         // Wait for success message after duplication
         const duplicateSuccessMessage = this.page.getByText('Duplicated', { exact: true });
         await duplicateSuccessMessage.waitFor({ state: 'visible' });
-        await duplicateSuccessMessage.waitFor({state:'hidden'});
+        await duplicateSuccessMessage.waitFor({ state: 'hidden' });
 
         const finalRowCount = await tableRowsLocator.count();
         const finalDuplicateCount = await duplicateIconsLocator.count();
@@ -4334,6 +4334,142 @@ export class ContactActions {
         await this.openFirstContact();
         await this.leadCreation();
         await this.closeModalIfVisible();
+    }
+
+    /**
+     * Opens the contact with the name "AA AA".
+     * Navigates to Contacts, searches for "AA AA", and opens the contact details page.
+     */
+    async openContactByNameAA() {
+        const contactRow = this.page.locator('tr').filter({ hasText: 'AA AA' }).first();
+        await contactRow.waitFor({ state: 'visible' });
+        await contactRow.click();
+    }
+    async clickFirstLeadTableRow() {
+        const tableRowsLocator = this.page.locator('#customentitydatalist table tbody tr');
+        await tableRowsLocator.first().waitFor({ state: 'visible' });
+        const firstRow = tableRowsLocator.first();
+        await firstRow.click();
+    }
+
+    async clickLeadEditIcon() {
+        const editIcon = this.page.locator("//button[@class='_addNew p-2']//img[@class='cursor-pointer']");
+        await editIcon.waitFor({ state: 'visible' });
+        await editIcon.click();
+    }
+
+    async clickSaveButton() {
+        const saveButton = this.page.getByRole('button', { name: 'Save' });
+        await saveButton.waitFor({ state: 'visible' });
+        await saveButton.click({ force: true });
+    }
+    // Success message for lead update
+    async waitForLeadUpdatedSuccessMessage() {
+        const successMessageLocator = this.page.getByText('Lead updated successfully', { exact: true });
+        await successMessageLocator.waitFor({ state: 'visible' });
+    }
+
+    /**
+     * Closes the lead modal window if it is visible.
+     */
+    async closeLeadModalIfVisible() {
+        const closeBtn = this.page.locator('.pi.pi-times').nth(2);
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify lead's listing or project details are correctly displayed for a contact.
+     */
+    async verifyLeadListingProjectDetails() {
+        await this.NavigateToContacts();
+        await this.openContactByNameAA();
+        const firstStreamRecord = this.page.locator('div.stream-body').first();
+        await firstStreamRecord.waitFor({ state: 'visible' });
+        await this.openLead();
+        await this.clickFirstLeadTableRow();
+        const leadLink = this.page.locator('a').filter({ hasText: 'Lead - AA AA' });
+        await leadLink.waitFor({ state: 'visible' });
+        await this.clickLeadEditIcon();
+
+        // wait for load contact 
+        const contactLoaded = this.page.locator('p.cursor-pointer');
+        await contactLoaded.waitFor({ state: 'visible' });
+
+        const relatedLead = this.page.locator('[formcontrolname="lead_category"]');
+        await relatedLead.waitFor({ state: 'visible' });
+        await relatedLead.click();
+        const relatedLeadOption = this.page.getByRole('option', { name: 'Project' });
+        await relatedLeadOption.waitFor({ state: 'visible' });
+        await relatedLeadOption.click();
+
+        const leadEnquiry = this.page.locator('[formcontrolname="project"], [formcontrolname="listing"]');
+        await leadEnquiry.waitFor({ state: 'visible' });
+        await leadEnquiry.click();
+        const eastVillageOption = this.page.getByRole('option', { name: 'East Village Vila' });
+        await eastVillageOption.waitFor({ state: 'visible' });
+        await eastVillageOption.click();
+
+        // Agent Responsible
+        const agentResponsible = this.page.locator('[formcontrolname="agent_responsible"]');
+        await agentResponsible.waitFor({ state: 'visible' });
+        await agentResponsible.click();
+        const agentResponsibleSearchField = this.page.locator('[formcontrolname="agent_responsible"] input');
+        await agentResponsibleSearchField.waitFor({ state: 'visible' });
+        await agentResponsibleSearchField.fill('jahanzaib xenex');
+        const jahanzaibAgentOption = this.page.getByRole('option', { name: /jahanzaib xenex/i });
+        await jahanzaibAgentOption.waitFor({ state: 'visible' });
+        await jahanzaibAgentOption.click();
+
+        // Click Owner field, search for 'jahanzaib xenex', and select it
+        const owner = this.page.locator('[formcontrolname="Owner"]');
+        await owner.waitFor({ state: 'visible' });
+        await owner.click();
+        const ownerSearchField = this.page.locator('[formcontrolname="Owner"] input');
+        await ownerSearchField.waitFor({ state: 'visible' });
+        await ownerSearchField.fill('jahanzaib xenex');
+        const jahanzaibOption = this.page.getByRole('option', { name: /jahanzaib xenex/i });
+        await jahanzaibOption.waitFor({ state: 'visible' });
+        await jahanzaibOption.click();
+
+        // Lead Type
+        const leadType = this.page.locator('[formcontrolname="lead_type"]');
+        await leadType.waitFor({ state: 'visible' });
+        await leadType.click();
+        const buyerOption = this.page.getByRole('option', { name: 'Buyer' });
+        await buyerOption.waitFor({ state: 'visible' });
+        await buyerOption.click();
+
+        // Lead Status
+        const leadStatus = this.page.locator('[formcontrolname="lead_status"]');
+        await leadStatus.waitFor({ state: 'visible' });
+        await leadStatus.click();
+        const newOption = this.page.getByRole('option', { name: 'New' });
+        await newOption.waitFor({ state: 'visible' });
+        await newOption.click();
+
+        // Lead Source
+        const leadSource = this.page.locator('[formcontrolname="lead_source"]');
+        await leadSource.waitFor({ state: 'visible' });
+        await leadSource.click();
+        const billboardOption = this.page.getByRole('option', { name: 'Billboard' });
+        await billboardOption.waitFor({ state: 'visible' });
+        await billboardOption.click();
+
+
+
+        await this.clickSaveButton();
+        await this.waitForLeadUpdatedSuccessMessage();
+        await this.closeLeadModalIfVisible();
+        const tableRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await tableRow.waitFor({ state: 'visible' });
+        const projects = tableRow.locator('td').nth(3);
+        await projects.waitFor({ state: 'visible' });
+        const projectsText = await projects.textContent();
+        if (!projectsText || !/East Village Vila/i.test(projectsText)) {
+            throw new Error("Lead 'Lead Source' cell does not show value 'East Village Vila'.");
+        }
     }
 
 
