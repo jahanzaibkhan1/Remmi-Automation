@@ -3891,6 +3891,12 @@ export class ContactActions {
         const leadTab = this.page.getByRole('tab', { name: 'Lead' });
         await leadTab.waitFor({ state: 'visible' });
         await leadTab.click();
+
+        // Count rows before creation
+        const tableRowsLocator = this.page.locator('#customentitydatalist table tbody tr');
+        await tableRowsLocator.first().waitFor({ state: 'visible' });
+        const initialRowCount = await tableRowsLocator.count();
+
         // Look for the "New Lead" button
         const newLeadButton = this.page.getByRole('button', { name: /new lead/i });
         await newLeadButton.waitFor({ state: 'visible' });
@@ -3960,10 +3966,15 @@ export class ContactActions {
         // Get the "lead added successfully" toast message
         const leadAddedSuccessMsg = this.page.getByText(/lead added successfully/i);
         await leadAddedSuccessMsg.waitFor({ state: 'visible' });
+        await leadAddedSuccessMsg.waitFor({ state: 'hidden' });
 
-        // Verify the first table row is visible after saving new lead
-        const firstTableRow = this.page.locator('#customentitydatalist table tbody tr').first();
-        await firstTableRow.waitFor({ state: "visible" });
+        // Count the rows after creation
+        await tableRowsLocator.first().waitFor({ state: "visible" });
+        const finalRowCount = await tableRowsLocator.count();
+        // Ensure the row count increased
+        if (finalRowCount <= initialRowCount) {
+            throw new Error("Lead creation did not increase the number of records in the table.");
+        }
     }
 
     /**
@@ -4153,6 +4164,7 @@ export class ContactActions {
         await this.NavigateToContacts();
         await this.openFirstContact();
         await this.openLead();
+        await this.closeModalIfVisible();
     }
 
     /**
@@ -4165,6 +4177,7 @@ export class ContactActions {
         const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
         await newLeadButton.waitFor({ state: 'visible' });
         await expect(newLeadButton).toBeEnabled();
+        await this.closeModalIfVisible();
     }
 
     /**
@@ -4219,7 +4232,7 @@ export class ContactActions {
         if (!nameText || !nameText.trim()) {
             throw new Error("Lead 'Name' cell is empty or not found.");
         }
-        
+
         await this.closeModalIfVisible();
     }
 
@@ -4231,28 +4244,28 @@ export class ContactActions {
         await this.openFirstContact();
         await this.openLead();
 
-         // Verify the first table row is visible after saving new lead
-         const firstTableRow = this.page.locator('#customentitydatalist table tbody tr').first();
-         await firstTableRow.waitFor({ state: 'visible' });
-         // Wait for duplicate icons to appear before the click
-         const duplicateIconsLocator = this.page.locator('i[ptooltip="Duplicate"].pi.pi-clone');
-         await duplicateIconsLocator.first().waitFor({ state: 'visible' });
-         const initialCount = await duplicateIconsLocator.count();
-         expect(initialCount).toBeGreaterThan(0);
- 
-         // Click the first duplicate icon
-         const duplicateIcon = duplicateIconsLocator.first();
-         await duplicateIcon.waitFor({ state: 'visible' });
-         await duplicateIcon.click();
- 
-         // Wait for the success message after duplication
-         const duplicateSuccessMessage = this.page.getByText('Duplicated', { exact: true });
-         await duplicateSuccessMessage.waitFor({ state: 'visible' });
-         await this.page.waitForTimeout(3000);
- 
-         // Count the duplicate icons again after duplication
-         const finalCount = await duplicateIconsLocator.count();
-         expect(finalCount).toBeGreaterThan(initialCount);
+        // Verify the first table row is visible after saving new lead
+        const firstTableRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await firstTableRow.waitFor({ state: 'visible' });
+        // Wait for duplicate icons to appear before the click
+        const duplicateIconsLocator = this.page.locator('i[ptooltip="Duplicate"].pi.pi-clone');
+        await duplicateIconsLocator.first().waitFor({ state: 'visible' });
+        const initialCount = await duplicateIconsLocator.count();
+        expect(initialCount).toBeGreaterThan(0);
+
+        // Click the first duplicate icon
+        const duplicateIcon = duplicateIconsLocator.first();
+        await duplicateIcon.waitFor({ state: 'visible' });
+        await duplicateIcon.click();
+
+        // Wait for the success message after duplication
+        const duplicateSuccessMessage = this.page.getByText('Duplicated', { exact: true });
+        await duplicateSuccessMessage.waitFor({ state: 'visible' });
+        await duplicateSuccessMessage.waitFor({ state: 'hidden' });
+
+        // Count the duplicate icons again after duplication
+        const finalCount = await duplicateIconsLocator.count();
+        expect(finalCount).toBeGreaterThan(initialCount);
 
         await this.closeModalIfVisible();
     }
@@ -4302,16 +4315,472 @@ export class ContactActions {
         // Wait for success message after duplication
         const duplicateSuccessMessage = this.page.getByText('Duplicated', { exact: true });
         await duplicateSuccessMessage.waitFor({ state: 'visible' });
+        await duplicateSuccessMessage.waitFor({ state: 'hidden' });
 
         const finalRowCount = await tableRowsLocator.count();
         const finalDuplicateCount = await duplicateIconsLocator.count();
         if (finalRowCount < initialRowCount) {
             throw new Error("Duplicate lead creation did not add a new record, possible merge occurred.");
         }
-
+        await expect(finalDuplicateCount).toBeGreaterThan(initialDuplicateCount);
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify that the lead list updates after a new lead is added.
+     */
+    async verifyLeadListUpdatesAfterAdd() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.leadCreation();
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Opens the contact with the name "AA AA".
+     * Navigates to Contacts, searches for "AA AA", and opens the contact details page.
+     */
+    async openContactByNameAA() {
+        const contactRow = this.page.locator('tr').filter({ hasText: 'AA AA' }).first();
+        await contactRow.waitFor({ state: 'visible' });
+        await contactRow.click();
+    }
+    async clickFirstLeadTableRow() {
+        const tableRowsLocator = this.page.locator('#customentitydatalist table tbody tr');
+        await tableRowsLocator.first().waitFor({ state: 'visible' });
+        const firstRow = tableRowsLocator.first();
+        await firstRow.click();
+    }
+
+    async clickLeadEditIcon() {
+        const editIcon = this.page.locator("//button[@class='_addNew p-2']//img[@class='cursor-pointer']");
+        await editIcon.waitFor({ state: 'visible' });
+        await editIcon.click();
+    }
+
+    async clickSaveButton() {
+        const saveButton = this.page.getByRole('button', { name: 'Save' });
+        await saveButton.waitFor({ state: 'visible' });
+        await saveButton.click({ force: true });
+    }
+    // Success message for lead update
+    async waitForLeadUpdatedSuccessMessage() {
+        const successMessageLocator = this.page.getByText('Lead updated successfully', { exact: true });
+        await successMessageLocator.waitFor({ state: 'visible' });
+        await successMessageLocator.waitFor({ state: 'hidden' });
+    }
+
+    /**
+     * Closes the lead modal window if it is visible.
+     */
+    async closeLeadModalIfVisible() {
+        const closeBtn = this.page.locator('.pi.pi-times').nth(2);
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+    }
+
+    /**
+     * Verify lead's listing or project details are correctly displayed for a contact.
+     */
+    async verifyLeadListingProjectDetails() {
+        await this.NavigateToContacts();
+        await this.openContactByNameAA();
+        const firstStreamRecord = this.page.locator('div.stream-body').first();
+        await firstStreamRecord.waitFor({ state: 'visible' });
+        await this.openLead();
+        await this.clickFirstLeadTableRow();
+        const leadLink = this.page.locator('a').filter({ hasText: 'Lead - AA AA' });
+        await leadLink.waitFor({ state: 'visible' });
+        await this.clickLeadEditIcon();
+
+        // wait for load contact 
+        const contactLoaded = this.page.locator('p.cursor-pointer');
+        await contactLoaded.waitFor({ state: 'visible' });
+
+        const relatedLead = this.page.locator('[formcontrolname="lead_category"]');
+        await relatedLead.waitFor({ state: 'visible' });
+        await relatedLead.click();
+        const relatedLeadOption = this.page.getByRole('option', { name: 'Project' });
+        await relatedLeadOption.waitFor({ state: 'visible' });
+        await relatedLeadOption.click();
+
+        const leadEnquiry = this.page.locator('[formcontrolname="project"], [formcontrolname="listing"]');
+        await leadEnquiry.waitFor({ state: 'visible' });
+        await leadEnquiry.click();
+        const eastVillageOption = this.page.getByRole('option', { name: 'East Village Vila' });
+        await eastVillageOption.waitFor({ state: 'visible' });
+        await eastVillageOption.click();
+
+        // Agent Responsible
+        const agentResponsible = this.page.locator('[formcontrolname="agent_responsible"]');
+        await agentResponsible.waitFor({ state: 'visible' });
+        await agentResponsible.click();
+        const agentResponsibleSearchField = this.page.locator('[formcontrolname="agent_responsible"] input');
+        await agentResponsibleSearchField.waitFor({ state: 'visible' });
+        await agentResponsibleSearchField.fill('jahanzaib xenex');
+        const jahanzaibAgentOption = this.page.getByRole('option', { name: /jahanzaib xenex/i });
+        await jahanzaibAgentOption.waitFor({ state: 'visible' });
+        await jahanzaibAgentOption.click();
+
+        // Click Owner field, search for 'jahanzaib xenex', and select it
+        const owner = this.page.locator('[formcontrolname="Owner"]');
+        await owner.waitFor({ state: 'visible' });
+        await owner.click();
+        const ownerSearchField = this.page.locator('[formcontrolname="Owner"] input');
+        await ownerSearchField.waitFor({ state: 'visible' });
+        await ownerSearchField.fill('jahanzaib xenex');
+        const jahanzaibOption = this.page.getByRole('option', { name: /jahanzaib xenex/i });
+        await jahanzaibOption.waitFor({ state: 'visible' });
+        await jahanzaibOption.click();
+
+        // Lead Type
+        const leadType = this.page.locator('[formcontrolname="lead_type"]');
+        await leadType.waitFor({ state: 'visible' });
+        await leadType.click();
+        const buyerOption = this.page.getByRole('option', { name: 'Buyer' });
+        await buyerOption.waitFor({ state: 'visible' });
+        await buyerOption.click();
+
+        // Lead Status
+        const leadStatus = this.page.locator('[formcontrolname="lead_status"]');
+        await leadStatus.waitFor({ state: 'visible' });
+        await leadStatus.click();
+        const newOption = this.page.getByRole('option', { name: 'New' });
+        await newOption.waitFor({ state: 'visible' });
+        await newOption.click();
+
+        // Lead Source
+        const leadSource = this.page.locator('[formcontrolname="lead_source"]');
+        await leadSource.waitFor({ state: 'visible' });
+        await leadSource.click();
+        const billboardOption = this.page.getByRole('option', { name: 'Billboard' });
+        await billboardOption.waitFor({ state: 'visible' });
+        await billboardOption.click();
+
+
+
+        await this.clickSaveButton();
+        await this.waitForLeadUpdatedSuccessMessage();
+        await this.closeLeadModalIfVisible();
+        const tableRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await tableRow.waitFor({ state: 'visible' });
+        const projects = tableRow.locator('td').nth(3);
+        await projects.waitFor({ state: 'visible' });
+        const projectsText = await projects.textContent();
+        if (!projectsText || !/East Village Vila/i.test(projectsText)) {
+            throw new Error("Lead 'Lead Source' cell does not show value 'East Village Vila'.");
+        }
+    }
+
+    /**
+     * Verifies that the lead was successfully modified by checking all cell values in the grid.
+     */
+    async verifyLeadModification() {
+
+        await this.NavigateToContacts();
+        await this.openContactByNameAA();
+        const firstStreamRecord = this.page.locator('div.stream-body').first();
+        await firstStreamRecord.waitFor({ state: 'visible' });
+        await this.openLead();
+
+        const tableRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await tableRow.waitFor({ state: 'visible' });
+
+        // Lead Status
+        const leadStatusCell = tableRow.locator('td').nth(2);
+        await leadStatusCell.waitFor({ state: 'visible' });
+        const leadStatusText = (await leadStatusCell.textContent())?.trim() || '';
+        if (!/New/i.test(leadStatusText)) {
+            throw new Error("Lead 'Status' cell does not show value 'New'.");
+        }
+
+        // Project
+        const projectCell = tableRow.locator('td').nth(3);
+        await projectCell.waitFor({ state: 'visible' });
+        const projectText = (await projectCell.textContent())?.trim() || '';
+        if (!/East Village Vila/i.test(projectText)) {
+            throw new Error("Lead 'Project' cell does not show value 'East Village Vila'.");
+        }
+
+        // Lead Source
+        const leadSourceCell = tableRow.locator('td').nth(4);
+        await leadSourceCell.waitFor({ state: 'visible' });
+        const leadSourceText = (await leadSourceCell.textContent())?.trim() || '';
+        if (!/Billboard/i.test(leadSourceText)) {
+            throw new Error("Lead 'Source' cell does not show value 'Billboard'.");
+        }
+
+        // Owner
+        const ownerCell = tableRow.locator('td').nth(5);
+        await ownerCell.waitFor({ state: 'visible' });
+        const ownerText = (await ownerCell.textContent())?.trim() || '';
+        if (!/jahanzaib xenex/i.test(ownerText)) {
+            throw new Error("Lead 'Owner' cell does not show value 'jahanzaib xenex'.");
+        }
+
+
+    }
+
+    /**
+     * Verifies that the lead status has changed in the grid.
+     */
+    async verifyLeadStatusChange() {
+        await this.NavigateToContacts();
+        await this.openContactByNameAA();
+        const firstStreamRecord = this.page.locator('div.stream-body').first();
+        await firstStreamRecord.waitFor({ state: 'visible' });
+        await this.openLead();
+        await this.clickFirstLeadTableRow();
+        const leadLink = this.page.locator('a').filter({ hasText: 'Lead - AA AA' });
+        await leadLink.waitFor({ state: 'visible' });
+        await this.clickLeadEditIcon();
+
+        // wait for load contact 
+        const contactLoaded = this.page.locator('p.cursor-pointer');
+        await contactLoaded.waitFor({ state: 'visible' });
+
+        const relatedLead = this.page.locator('[formcontrolname="lead_category"]');
+        await relatedLead.waitFor({ state: 'visible' });
+        await relatedLead.click();
+        const relatedLeadOption = this.page.getByRole('option', { name: 'Project' });
+        await relatedLeadOption.waitFor({ state: 'visible' });
+        await relatedLeadOption.click();
+
+        const leadEnquiry = this.page.locator('[formcontrolname="project"], [formcontrolname="listing"]');
+        await leadEnquiry.waitFor({ state: 'visible' });
+        await leadEnquiry.click();
+        const eastVillageOption = this.page.getByRole('option', { name: 'East Village Vila' });
+        await eastVillageOption.waitFor({ state: 'visible' });
+        await eastVillageOption.click();
+
+        // Agent Responsible
+        const agentResponsible = this.page.locator('[formcontrolname="agent_responsible"]');
+        await agentResponsible.waitFor({ state: 'visible' });
+        await agentResponsible.click();
+        const agentResponsibleSearchField = this.page.locator('[formcontrolname="agent_responsible"] input');
+        await agentResponsibleSearchField.waitFor({ state: 'visible' });
+        await agentResponsibleSearchField.fill('jahanzaib xenex');
+        const jahanzaibAgentOption = this.page.getByRole('option', { name: /jahanzaib xenex/i });
+        await jahanzaibAgentOption.waitFor({ state: 'visible' });
+        await jahanzaibAgentOption.click();
+
+        // Click Owner field, search for 'jahanzaib xenex', and select it
+        const owner = this.page.locator('[formcontrolname="Owner"]');
+        await owner.waitFor({ state: 'visible' });
+        await owner.click();
+        const ownerSearchField = this.page.locator('[formcontrolname="Owner"] input');
+        await ownerSearchField.waitFor({ state: 'visible' });
+        await ownerSearchField.fill('jahanzaib xenex');
+        const jahanzaibOption = this.page.getByRole('option', { name: /jahanzaib xenex/i });
+        await jahanzaibOption.waitFor({ state: 'visible' });
+        await jahanzaibOption.click();
+
+        // Lead Type
+        const leadType = this.page.locator('[formcontrolname="lead_type"]');
+        await leadType.waitFor({ state: 'visible' });
+        await leadType.click();
+        const buyerOption = this.page.getByRole('option', { name: 'Buyer' });
+        await buyerOption.waitFor({ state: 'visible' });
+        await buyerOption.click();
+
+        // Lead Status
+        const leadStatus = this.page.locator('[formcontrolname="lead_status"]');
+        await leadStatus.waitFor({ state: 'visible' });
+        await leadStatus.click();
+        const newOption = this.page.getByRole('option', { name: 'Contact Started' });
+        await newOption.waitFor({ state: 'visible' });
+        await newOption.click();
+
+        // Lead Source
+        const leadSource = this.page.locator('[formcontrolname="lead_source"]');
+        await leadSource.waitFor({ state: 'visible' });
+        await leadSource.click();
+        const billboardOption = this.page.getByRole('option', { name: 'Billboard' });
+        await billboardOption.waitFor({ state: 'visible' });
+        await billboardOption.click();
+
+        await this.clickSaveButton();
+        const successMessageLocator = this.page.getByText('Lead updated successfully', { exact: true });
+        await successMessageLocator.waitFor({ state: 'visible' });
+        await successMessageLocator.waitFor({state:'hidden'});
+        await this.closeLeadModalIfVisible();
+        const tableRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await tableRow.waitFor({ state: 'visible' });
+        const leadStatusCell = tableRow.locator('td').nth(2);
+        await leadStatusCell.waitFor({ state: 'visible' });
+        const statusText = await leadStatusCell.textContent();
+        if (!statusText || !/Contact Started/i.test(statusText)) {
+            throw new Error("Lead 'Status' cell does not show value 'Contact Started'.");
+        }
+    }
+
+    /**
+     * Verifies the lead record's created time and date in the contact table.
+     */
+    async verifyLeadRecordTimeAndDate(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openContactByNameAA();
+        const firstStreamRecord = this.page.locator('div.stream-body').first();
+        await firstStreamRecord.waitFor({ state: 'visible' });
+        await this.openLead();
+        const tableRow = this.page.locator('#customentitydatalist table tbody tr').first();
+        await tableRow.waitFor({ state: 'visible' });
+        const dateCell = tableRow.locator('td').nth(1);
+        await dateCell.waitFor({ state: 'visible' });
+        const dateText = await dateCell.textContent();
+
+        if (!dateText || !dateText.trim()) {
+            throw new Error("Lead 'Created Date' cell is empty.");
+        }
+        const datePattern = /^\d{2}\/\d{2}\/\d{2}$/;
+        if (!datePattern.test(dateText.trim())) {
+            throw new Error(`Lead 'Created Date' cell does not match expected date format (MM/DD/YY): "${dateText}"`);
+        }
+    }
+
+    /**
+     * Verify navigation between tabs
+     */
+    async verifyNavigationBetweenTabsAndLeadPresence() {
+        await this.NavigateToContacts();
+        await this.openContactByNameAA();
+        const tasksTab = this.page.getByRole('tab', { name: /Tasks/i });
+        await tasksTab.waitFor({ state: 'visible' });
+        await tasksTab.click();
+        await this.openLead();
+        const leadTableRows = this.page.locator('#customentitydatalist table tbody tr');
+        await leadTableRows.first().waitFor({ state: 'visible' });
+    }
+
+    /**
+     * Verify that clicking the new lead button opens the lead form.
+     */
+    async verifyNewLeadButtonOpensForm() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+        const createLeadText = this.page.getByText(/create lead/i);
+        await expect(createLeadText).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that selecting an Existing Client removes contact creation fields
+     */
+    async verifyExistingClientRemovesContactFields(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+        const createLeadText = this.page.getByText(/create lead/i);
+        await expect(createLeadText).toBeVisible({ timeout: 10000 });
+        const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
+        await existingClientParagraph.waitFor({ state: 'visible' });
+       // The following fields should NOT be visible for an existing client
+       const fieldsShouldNotExist = [
+           '[formcontrolname="first_name"]',
+           '[formcontrolname="last_name"]',
+           '[formcontrolname="mobile_phone"]',
+           '[formcontrolname="telephone"]',
+           '[formcontrolname="email"]',
+           '[formcontrolname="suburb"]',
+           '[formcontrolname="postcode"]',
+           '[formcontrolname="countryregion"] .ng-select-container',
+           '[formcontrolname="countryregion"] input'
+       ];
+
+       for (const selector of fieldsShouldNotExist) {
+           await expect(this.page.locator(selector)).not.toBeVisible();
+       }
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that removing an Existing Client brings back contact creation fields
+     */
+    async verifyContactFieldsReturnOnExistingClientRemoval(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+
+        const createLeadText = this.page.getByText(/create lead/i);
+        await expect(createLeadText).toBeVisible({ timeout: 10000 });
+
+        const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
+        await existingClientParagraph.waitFor({ state: 'visible' });
+     
+        const removeIcon = this.page.locator('span.pi.pi-times-circle.f-12.ng-star-inserted').first();
+        await removeIcon.waitFor({ state: 'visible' });
+        await removeIcon.click();
+
+        await existingClientParagraph.waitFor({state:'hidden'});
+
+        const firstNameField = this.page.locator('[formcontrolname="first_name"]').last();
+        const lastNameField = this.page.locator('[formcontrolname="last_name"]').last();
+        const mobilePhoneField = this.page.locator('[formcontrolname="mobile_phone"]').last();
+        const telephoneField = this.page.locator('[formcontrolname="telephone"]').last();
+        const emailField = this.page.locator('[formcontrolname="email"]').last();
+        const suburbField = this.page.locator('[formcontrolname="suburb"]').last();
+        const postcodeField = this.page.locator('[formcontrolname="postcode"]').last();
+        const countryRegionSelect = this.page.locator('[formcontrolname="countryregion"] .ng-select-container').last();
+        const countryRegionInput = this.page.locator('[formcontrolname="countryregion"] input').last();
+
+        await firstNameField.waitFor({ state: 'visible' });
+        await lastNameField.waitFor({ state: 'visible' });
+        await mobilePhoneField.waitFor({ state: 'visible' });
+        await telephoneField.waitFor({ state: 'visible' });
+        await emailField.waitFor({ state: 'visible' });
+        await suburbField.waitFor({ state: 'visible' });
+        await postcodeField.waitFor({ state: 'visible' });
+        await countryRegionSelect.waitFor({ state: 'visible' });
+        await countryRegionInput.waitFor({ state: 'visible' });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that selecting an Existing Client links the contact to the contact field
+     */
+    async verifyExistingClientSelectionLinksContact(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+        const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
+        await existingClientParagraph.waitFor({ state: 'visible' });
+        const firstNameField = this.page.locator('[formcontrolname="first_name"]').last();
+        await firstNameField.waitFor({ state: 'hidden' });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that clicking the close button closes the lead form modal
+     */
+    async verifyCloseButtonClosesForm(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+        const createLeadText = this.page.getByText(/create lead/i);
+        await expect(createLeadText).toBeVisible({ timeout: 10000 });
+        const closeButton = this.page.getByRole('button', { name: /close/i }).first();
+        await closeButton.waitFor({ state: 'visible' });
+        await closeButton.click();
+        await this.closeModalIfVisible();
+    }
 
 }
 

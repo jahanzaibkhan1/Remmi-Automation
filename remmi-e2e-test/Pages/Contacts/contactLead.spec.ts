@@ -55,4 +55,34 @@ test.describe('Contacts "Lead" Tab - E2E Tests', () => {
         await contact.verifyDuplicateLeadDoesNotMergeRecords();
     });
 
+    test('Verify lead list updates after a new lead is added', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadListUpdatesAfterAdd();
+    });
+
+    test('Verify lead listing/project details', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadListingProjectDetails();
+    });
+
+    test('Verify lead modification', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadModification();
+    });
+
+    test('Verify lead status can be changed and displayed correctly', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadStatusChange();
+    });
+
+    test('Verify lead record time and date', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadRecordTimeAndDate();
+    });
+
+    test('Verify navigation between tabs', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyNavigationBetweenTabsAndLeadPresence();
+    });
+
 });
