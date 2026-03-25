@@ -4633,11 +4633,24 @@ export class ContactActions {
         if (!dateText || !dateText.trim()) {
             throw new Error("Lead 'Created Date' cell is empty.");
         }
-        
         const datePattern = /^\d{2}\/\d{2}\/\d{2}$/;
         if (!datePattern.test(dateText.trim())) {
             throw new Error(`Lead 'Created Date' cell does not match expected date format (MM/DD/YY): "${dateText}"`);
         }
+    }
+
+    /**
+     * Verify navigation between tabs
+     */
+    async verifyNavigationBetweenTabsAndLeadPresence() {
+        await this.NavigateToContacts();
+        await this.openContactByNameAA();
+        const tasksTab = this.page.getByRole('tab', { name: /Tasks/i });
+        await tasksTab.waitFor({ state: 'visible' });
+        await tasksTab.click();
+        await this.openLead();
+        const leadTableRows = this.page.locator('#customentitydatalist table tbody tr');
+        await leadTableRows.first().waitFor({ state: 'visible' });
     }
 
 

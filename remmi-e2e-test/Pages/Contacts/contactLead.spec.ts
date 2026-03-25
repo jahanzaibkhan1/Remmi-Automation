@@ -80,4 +80,9 @@ test.describe('Contacts "Lead" Tab - E2E Tests', () => {
         await contact.verifyLeadRecordTimeAndDate();
     });
 
+    test('Verify navigation between tabs', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyNavigationBetweenTabsAndLeadPresence();
+    });
+
 });

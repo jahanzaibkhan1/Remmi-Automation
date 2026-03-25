@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.57044200000167">
-<testsuite name="Pages\Contacts\contactLead.spec.ts" timestamp="2026-03-25T10:07:59.126Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.006" errors="0">
-<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead record time and date" classname="Pages\Contacts\contactLead.spec.ts" time="41.006">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="67.75780000000074">
+<testsuite name="Pages\Contacts\contactLead.spec.ts" timestamp="2026-03-25T10:12:59.424Z" hostname="chromium" tests="1" failures="0" skipped="0" time="65.176" errors="0">
+<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify navigation between tabs" classname="Pages\Contacts\contactLead.spec.ts" time="65.176">
 </testcase>
 </testsuite>
 </testsuites>
