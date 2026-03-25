@@ -4153,6 +4153,7 @@ export class ContactActions {
         await this.NavigateToContacts();
         await this.openFirstContact();
         await this.openLead();
+        await this.closeModalIfVisible();
     }
 
     /**
@@ -4165,6 +4166,7 @@ export class ContactActions {
         const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
         await newLeadButton.waitFor({ state: 'visible' });
         await expect(newLeadButton).toBeEnabled();
+        await this.closeModalIfVisible();
     }
 
     /**
@@ -4248,7 +4250,7 @@ export class ContactActions {
          // Wait for the success message after duplication
          const duplicateSuccessMessage = this.page.getByText('Duplicated', { exact: true });
          await duplicateSuccessMessage.waitFor({ state: 'visible' });
-         await this.page.waitForTimeout(3000);
+         await duplicateSuccessMessage.waitFor({state:'hidden'});
  
          // Count the duplicate icons again after duplication
          const finalCount = await duplicateIconsLocator.count();
@@ -4302,13 +4304,14 @@ export class ContactActions {
         // Wait for success message after duplication
         const duplicateSuccessMessage = this.page.getByText('Duplicated', { exact: true });
         await duplicateSuccessMessage.waitFor({ state: 'visible' });
+        await duplicateSuccessMessage.waitFor({state:'hidden'});
 
         const finalRowCount = await tableRowsLocator.count();
         const finalDuplicateCount = await duplicateIconsLocator.count();
         if (finalRowCount < initialRowCount) {
             throw new Error("Duplicate lead creation did not add a new record, possible merge occurred.");
         }
-
+        await expect(finalDuplicateCount).toBeGreaterThan(initialDuplicateCount);
         await this.closeModalIfVisible();
     }
 
