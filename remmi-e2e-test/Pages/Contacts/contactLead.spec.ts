@@ -70,4 +70,9 @@ test.describe('Contacts "Lead" Tab - E2E Tests', () => {
         await contact.verifyLeadModification();
     });
 
+    test('Verify lead status can be changed and displayed correctly', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadStatusChange();
+    });
+
 });
