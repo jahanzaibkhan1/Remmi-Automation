@@ -4747,6 +4747,22 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify that selecting an Existing Client links the contact to the contact field
+     */
+    async verifyExistingClientSelectionLinksContact(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+        const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
+        await existingClientParagraph.waitFor({ state: 'visible' });
+        const firstNameField = this.page.locator('[formcontrolname="first_name"]').last();
+        await firstNameField.waitFor({ state: 'hidden' });
+        await this.closeModalIfVisible();
+    }
 
 }
 
