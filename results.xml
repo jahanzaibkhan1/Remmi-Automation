@@ -1,18 +1,6 @@
-<testsuites id="" name="" tests="7" failures="0" skipped="0" errors="0" time="121.60165100000007">
-<testsuite name="Pages\Contacts\contactLead.spec.ts" timestamp="2026-03-25T04:07:08.695Z" hostname="chromium" tests="7" failures="0" skipped="0" time="119.085" errors="0">
-<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Open &quot;Lead&quot; tab" classname="Pages\Contacts\contactLead.spec.ts" time="79.794">
-</testcase>
-<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify new lead button" classname="Pages\Contacts\contactLead.spec.ts" time="1.706">
-</testcase>
-<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead appears in the Lead module after creation" classname="Pages\Contacts\contactLead.spec.ts" time="13.203">
-</testcase>
-<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead status details" classname="Pages\Contacts\contactLead.spec.ts" time="2.559">
-</testcase>
-<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify duplicate lead creation" classname="Pages\Contacts\contactLead.spec.ts" time="8.922">
-</testcase>
-<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead source details" classname="Pages\Contacts\contactLead.spec.ts" time="4.926">
-</testcase>
-<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify duplicate lead creation does not merge records" classname="Pages\Contacts\contactLead.spec.ts" time="7.975">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="58.95921899999958">
+<testsuite name="Pages\Contacts\contactLead.spec.ts" timestamp="2026-03-25T04:15:38.705Z" hostname="chromium" tests="1" failures="0" skipped="0" time="56.626" errors="0">
+<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead list updates after a new lead is added" classname="Pages\Contacts\contactLead.spec.ts" time="56.626">
 </testcase>
 </testsuite>
 </testsuites>
