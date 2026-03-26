@@ -66,4 +66,9 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifySellerRequirementsFields();
     });
 
+    test('Verify that saving a lead displays the data in the lead list view', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadAppearsInLeadModule();
+    });
+
 });
