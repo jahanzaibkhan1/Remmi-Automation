@@ -5008,6 +5008,89 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify that selecting Related Properties assigns the lead to the selected module
+     */
+    async verifyRelatedLeadDropdownAssignsToModule() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+        const tableRowsLocator = this.page.locator('#customentitydatalist table tbody tr');
+        await tableRowsLocator.first().waitFor({ state: "visible" });
+        const initialRowCount = await tableRowsLocator.count();
+
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+
+        const leadDetails = this.page.locator('div.popup-gray-box:has(p:text("Lead Details"))');
+        await leadDetails.waitFor({ state: 'visible' });
+        await this.page.waitForTimeout(1000);
+
+        const leadType = leadDetails.locator('ng-select[formcontrolname="lead_type"]');
+        await leadType.waitFor({ state: 'visible' });
+        await leadType.click();
+        const buyerOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Buyer' });
+        await buyerOption.waitFor({ state: 'visible' });
+        await buyerOption.click();
+        await this.page.waitForTimeout(600);
+
+        const leadStatus = leadDetails.locator('ng-select[formcontrolname="lead_status"]');
+        await leadStatus.waitFor({ state: 'visible' });
+        await leadStatus.click();
+        const leadStatusOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'New' });
+        await leadStatusOption.waitFor({ state: 'visible' });
+        await leadStatusOption.click();
+        await this.page.waitForTimeout(600);
+
+        const leadSource = leadDetails.locator('ng-select[formcontrolname="lead_source"]');
+        await leadSource.waitFor({ state: 'visible' });
+        await leadSource.click();
+        const sourceOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Billboard' });
+        await sourceOption.waitFor({ state: 'visible' });
+        await sourceOption.click();
+        await this.page.waitForTimeout(1000);
+
+        const relatedLeadDropdown = this.page.locator('ng-select[formcontrolname="lead_category"]');
+        await relatedLeadDropdown.waitFor({ state: 'visible' });
+        await relatedLeadDropdown.click();
+        const listingOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Project' });
+        await listingOption.waitFor({ state: 'visible' });
+        await listingOption.click();
+        await this.page.waitForTimeout(600);
+
+        // Project Name dropdown: click and select first option
+        const projectNameDropdown = this.page.locator('ng-select[formcontrolname="project"]');
+        await projectNameDropdown.waitFor({ state: 'visible' });
+        await projectNameDropdown.click();
+        const dropdownPanel = this.page.locator('.ng-dropdown-panel');
+        await dropdownPanel.waitFor({ state: 'visible' });
+        const firstProjectOption = dropdownPanel.locator('.ng-option', { hasText: 'East Village Vila' }).first();
+        await firstProjectOption.evaluate(el => el.scrollIntoView({ block: 'center', inline: 'center' }));
+        await firstProjectOption.waitFor({ state: 'visible' });
+        await firstProjectOption.click();
+        await this.page.waitForTimeout(600);
+
+        const contactDetails = this.page.getByText('Email:');
+        await contactDetails.waitFor({ state: 'visible' });
+
+        const saveAndCloseButton = this.page.getByRole('button', { name: /save & close/i }).first();
+        await saveAndCloseButton.waitFor({ state: 'visible' });
+        await expect(saveAndCloseButton).toBeEnabled();
+        await saveAndCloseButton.click();
+
+        const leadAddedSuccessMsg = this.page.getByText(/lead added successfully/i);
+        await leadAddedSuccessMsg.waitFor({ state: 'visible' });
+        await leadAddedSuccessMsg.waitFor({ state: 'hidden' });
+
+        await tableRowsLocator.first().waitFor({ state: "visible" });
+        const finalRowCount = await tableRowsLocator.count();
+        if (finalRowCount <= initialRowCount) {
+            throw new Error(`Lead creation did not increase the number of records in the table: before=${initialRowCount}, after=${finalRowCount}`);
+        }
+    }
+
 
 }
 
