@@ -91,4 +91,9 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifyAgentResponsibleAndOwnerAutofill();
     });
 
+    test('Verify that Agent Responsible and Owner can be changed', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyAgentResponsibleAndOwnerCanBeChanged();
+    });
+
 });
