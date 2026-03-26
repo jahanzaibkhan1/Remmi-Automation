@@ -3940,20 +3940,6 @@ export class ContactActions {
         await sourceOption.click();
         await this.page.waitForTimeout(1000);
 
-        // Click the placeholder in the tags element
-        const tagPlaceholder = this.page.locator('.d-flex > label > re-multiselect > .box > .tags');
-        await tagPlaceholder.waitFor({ state: 'visible' });
-        await tagPlaceholder.click();
-        const searchTagInput = this.page.getByRole('textbox', { name: 'Search' }).last();
-        await searchTagInput.waitFor({ state: 'visible' });
-
-        const tagDropdownPanel = this.page.locator('.drop_box');
-        await tagDropdownPanel.waitFor({ state: 'visible' });
-
-        const tagOption = tagDropdownPanel.locator('ul li').first().locator('p');
-        await tagOption.waitFor({ state: 'visible' });
-        await tagOption.click();
-
         const contactDetails = this.page.getByText('Email:');
         await contactDetails.waitFor({ state: 'visible' });
 
@@ -3967,6 +3953,8 @@ export class ContactActions {
         const leadAddedSuccessMsg = this.page.getByText(/lead added successfully/i);
         await leadAddedSuccessMsg.waitFor({ state: 'visible' });
         await leadAddedSuccessMsg.waitFor({ state: 'hidden' });
+
+        await leadLink.waitFor({state:'hidden'});
 
         // Count the rows after creation
         await tableRowsLocator.first().waitFor({ state: "visible" });
@@ -4787,6 +4775,17 @@ export class ContactActions {
         const closeButton = this.page.getByRole('button', { name: /close/i }).first();
         await closeButton.waitFor({ state: 'visible' });
         await closeButton.click();
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that clicking the "Save & Close" button on the lead form saves the lead and closes the form modal.
+     */
+    async verifySaveAndCloseButtonSavesLeadAndClosesForm(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        await this.leadCreation();
         await this.closeModalIfVisible();
     }
 
