@@ -4899,5 +4899,69 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    // Verify that selecting Seller or Prospective Seller displays the correct Requirements fields
+    async verifySellerRequirementsFields() {
+
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+        // Open the New Lead form
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+        const leadDetails = this.page.locator('div.popup-gray-box:has(p:text("Lead Details"))');
+        // Select Lead Type: Seller or Prospective Seller
+        const leadType = leadDetails.locator('ng-select[formcontrolname="lead_type"]');
+        await leadType.waitFor({ state: 'visible' });
+        await leadType.click();
+        await this.page.waitForTimeout(600);
+
+        // Pick Seller or Prospective Seller
+        const sellerOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: /Seller/ });
+        await sellerOption.waitFor({ state: 'visible' });
+        await sellerOption.click();
+        await this.page.waitForTimeout(600);
+
+        const requirementsSection = this.page.locator('div.popup-gray-box:has(p:text("Requirements"))');
+        await requirementsSection.waitFor({ state: 'visible' });
+
+        // Collect all the Seller Requirements fields to verify visible, as per UI markup
+        const requirementsFields = [
+            // Address input
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) input[formcontrolname="address"]'),
+            // Property Type dropdown
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="listing_type"]'),
+            // Price Range dropdown
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="price_range"]'),
+            // Bedrooms dropdown
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="beds"]'),
+            // Bathrooms dropdown
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="baths"]'),
+            // Selling Timeframe dropdown
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="time_frame"]'),
+            // Reason For Selling dropdown
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="reason_selling_buying"]'),
+            // Current Purpose dropdown
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="current_purpose"]'),
+            // Tenancy Details dropdown
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="tenancy_details"]'),
+            // Tenancy End Date calendar
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) p-calendar[formcontrolname="tenancy_end_date"] input[placeholder="Tenancy End Date"]'),
+            // Cars dropdown
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="car"]'),
+            // Features multiselect (look for re-multiselect)
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) re-multiselect[formcontrolname="features"]'),
+        ];
+
+        for (const field of requirementsFields) {
+            await field.evaluate((el) => {
+                el.scrollIntoView({ block: 'center', inline: 'center', behavior: 'auto' });
+            }).catch(() => {});
+            await field.waitFor({ state: 'visible' });
+        }
+    }
+
+
 }
 

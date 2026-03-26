@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="101.63075100000016">
-<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-26T05:14:34.449Z" hostname="chromium" tests="1" failures="0" skipped="0" time="99.05" errors="0">
-<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that selecting Developer or Prospective Developer displays the correct Requirements fields" classname="Pages\Contacts\leadForm.spec.ts" time="99.05">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="76.73179000000003">
+<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-26T05:21:30.555Z" hostname="chromium" tests="1" failures="0" skipped="0" time="74.82" errors="0">
+<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that selecting Seller or Prospective Seller displays the correct Requirements fields" classname="Pages\Contacts\leadForm.spec.ts" time="74.82">
 </testcase>
 </testsuite>
 </testsuites>
