@@ -4471,6 +4471,7 @@ export class ContactActions {
         if (!projectsText || !/East Village Vila/i.test(projectsText)) {
             throw new Error("Lead 'Lead Source' cell does not show value 'East Village Vila'.");
         }
+        await this.closeModalIfVisible();
     }
 
     /**
@@ -4518,6 +4519,8 @@ export class ContactActions {
         if (!/jahanzaib xenex/i.test(ownerText)) {
             throw new Error("Lead 'Owner' cell does not show value 'jahanzaib xenex'.");
         }
+
+        await this.closeModalIfVisible();
 
 
     }
@@ -4613,6 +4616,8 @@ export class ContactActions {
         if (!statusText || !/Contact Started/i.test(statusText)) {
             throw new Error("Lead 'Status' cell does not show value 'Contact Started'.");
         }
+
+        await this.closeModalIfVisible();
     }
 
     /**
@@ -4637,6 +4642,8 @@ export class ContactActions {
         if (!datePattern.test(dateText.trim())) {
             throw new Error(`Lead 'Created Date' cell does not match expected date format (MM/DD/YY): "${dateText}"`);
         }
+
+        await this.closeModalIfVisible();
     }
 
     /**
@@ -4651,6 +4658,7 @@ export class ContactActions {
         await this.openLead();
         const leadTableRows = this.page.locator('#customentitydatalist table tbody tr');
         await leadTableRows.first().waitFor({ state: 'visible' });
+        await this.closeModalIfVisible();
     }
 
     /**
