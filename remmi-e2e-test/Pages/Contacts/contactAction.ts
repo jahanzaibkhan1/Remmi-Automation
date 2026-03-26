@@ -4844,5 +4844,60 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify that selecting Developer or Prospective Developer displays the correct Requirements fields
+     */
+    async verifyDeveloperRequirementsFields() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+        // Open the New Lead form
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+
+        const leadDetails = this.page.locator('div.popup-gray-box:has(p:text("Lead Details"))');
+        await leadDetails.waitFor({ state: 'visible' });
+
+        // Select Lead Type: Developer or Prospective Developer
+        const leadType = leadDetails.locator('ng-select[formcontrolname="lead_type"]');
+        await leadType.waitFor({ state: 'visible' });
+        await leadType.click();
+        await this.page.waitForTimeout(600);
+        // Pick Developer or Prospective Developer
+        const developerOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: /Developer/ });
+        await developerOption.waitFor({ state: 'visible' });
+        await developerOption.click();
+        await this.page.waitForTimeout(600);
+
+        const requirementsSection = this.page.locator('div.popup-gray-box:has(p:text("Requirements"))');
+        await requirementsSection.waitFor({ state: 'visible' });
+
+        // Collect all the Developer Requirements fields to verify visible
+        const requirementsFields = [
+            this.page.locator('div.popup-gray-box:has(p:text("Developer Requirements")) ng-select[formcontrolname="development_type"]'),
+            this.page.locator('div.popup-gray-box:has(p:text("Developer Requirements")) input[formcontrolname="project_address"]'),
+            this.page.locator('div.popup-gray-box:has(p:text("Developer Requirements")) input[formcontrolname="project_suburb"]'),
+            this.page.locator('div.popup-gray-box:has(p:text("Developer Requirements")) ng-select[formcontrolname="project_status"]'),
+            this.page.locator('div.popup-gray-box:has(p:text("Developer Requirements")) input[formcontrolname="lot_quantity"]'),
+            this.page.locator('div.popup-gray-box:has(p:text("Developer Requirements")) ng-select[formcontrolname="current_market"]'),
+            this.page.locator('div.popup-gray-box:has(p:text("Developer Requirements")) input[formcontrolname="product_mix"]'),
+            this.page.locator('div.popup-gray-box:has(p:text("Developer Requirements")) ng-select[formcontrolname="price_range"]'),
+            this.page.locator('div.popup-gray-box:has(p:text("Developer Requirements")) ng-select[formcontrolname="time_frame"]'),
+            this.page.locator('div.popup-gray-box:has(p:text("Developer Requirements")) input[formcontrolname="levels"]'),
+            this.page.locator('div.popup-gray-box:has(p:text("Developer Requirements")) input[formcontrolname="amenities"]'),
+        ];
+
+        for (const field of requirementsFields) {
+            await field.evaluate((el) => {
+                el.scrollIntoView({ block: 'center', inline: 'center', behavior: 'auto' });
+            }).catch(() => {});
+            await field.waitFor({ state: 'visible' });
+        }
+
+        await this.closeModalIfVisible();
+    }
+
 }
 
