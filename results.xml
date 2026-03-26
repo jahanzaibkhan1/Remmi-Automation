@@ -1,6 +1,30 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="71.54097899999842">
-<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-26T08:33:16.602Z" hostname="chromium" tests="1" failures="0" skipped="0" time="68.476" errors="0">
-<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that Agent Responsible and Owner can be changed" classname="Pages\Contacts\leadForm.spec.ts" time="68.476">
+<testsuites id="" name="" tests="13" failures="0" skipped="0" errors="0" time="187.28087299999967">
+<testsuite name="Pages\Contacts\contactLead.spec.ts" timestamp="2026-03-26T11:09:13.425Z" hostname="chromium" tests="13" failures="0" skipped="0" time="185.126" errors="0">
+<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Open &quot;Lead&quot; tab" classname="Pages\Contacts\contactLead.spec.ts" time="68.371">
+</testcase>
+<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify new lead button" classname="Pages\Contacts\contactLead.spec.ts" time="0.939">
+</testcase>
+<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead appears in the Lead module after creation" classname="Pages\Contacts\contactLead.spec.ts" time="16.766">
+</testcase>
+<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead status details" classname="Pages\Contacts\contactLead.spec.ts" time="2.63">
+</testcase>
+<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify duplicate lead creation" classname="Pages\Contacts\contactLead.spec.ts" time="8.362">
+</testcase>
+<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead source details" classname="Pages\Contacts\contactLead.spec.ts" time="2.886">
+</testcase>
+<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify duplicate lead creation does not merge records" classname="Pages\Contacts\contactLead.spec.ts" time="10.617">
+</testcase>
+<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead list updates after a new lead is added" classname="Pages\Contacts\contactLead.spec.ts" time="18.432">
+</testcase>
+<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead listing/project details" classname="Pages\Contacts\contactLead.spec.ts" time="26.022">
+</testcase>
+<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead modification" classname="Pages\Contacts\contactLead.spec.ts" time="6.244">
+</testcase>
+<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead status can be changed and displayed correctly" classname="Pages\Contacts\contactLead.spec.ts" time="16.218">
+</testcase>
+<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead record time and date" classname="Pages\Contacts\contactLead.spec.ts" time="5.17">
+</testcase>
+<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify navigation between tabs" classname="Pages\Contacts\contactLead.spec.ts" time="2.469">
 </testcase>
 </testsuite>
 </testsuites>
