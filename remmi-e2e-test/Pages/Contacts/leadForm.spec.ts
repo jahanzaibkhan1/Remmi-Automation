@@ -71,4 +71,9 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifyLeadAppearsInLeadModule();
     });
 
+    test('Verify that selecting Related Properties displays a new dropdown', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyRelatedLeadDropdownVisible();
+    });
+
 });

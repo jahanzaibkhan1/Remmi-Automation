@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="57.16708999999985">
-<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-26T06:20:49.432Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.912" errors="0">
-<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that saving a lead displays the data in the lead list view" classname="Pages\Contacts\leadForm.spec.ts" time="54.912">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="99.16185799999907">
+<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-26T07:03:12.066Z" hostname="chromium" tests="1" failures="0" skipped="0" time="97.177" errors="0">
+<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that selecting Related Properties displays a new dropdown" classname="Pages\Contacts\leadForm.spec.ts" time="97.177">
 </testcase>
 </testsuite>
 </testsuites>
