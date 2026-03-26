@@ -3954,7 +3954,7 @@ export class ContactActions {
         await leadAddedSuccessMsg.waitFor({ state: 'visible' });
         await leadAddedSuccessMsg.waitFor({ state: 'hidden' });
 
-        await leadLink.waitFor({state:'hidden'});
+        await leadLink.waitFor({ state: 'hidden' });
 
         // Count the rows after creation
         await tableRowsLocator.first().waitFor({ state: "visible" });
@@ -4381,10 +4381,15 @@ export class ContactActions {
         const leadLink = this.page.locator('a').filter({ hasText: 'Lead - AA AA' });
         await leadLink.waitFor({ state: 'visible' });
         await this.clickLeadEditIcon();
+        // Wait for the contact with name 'AA AA' and its cross icon to be visible
+        const contactContainer = this.page.locator('div.selected_one', { hasText: 'AA AA' }).last();
+        await contactContainer.waitFor({ state: 'visible' });
 
-        // wait for load contact 
-        const contactLoaded = this.page.locator('p.cursor-pointer');
-        await contactLoaded.waitFor({ state: 'visible' });
+        const contactName = contactContainer.locator('p.cursor-pointer', { hasText: 'AA AA' });
+        await contactName.waitFor({ state: 'visible' });
+
+        const crossIcon = contactContainer.locator('span.pi.pi-times-circle');
+        await crossIcon.waitFor({ state: 'visible' });
 
         const relatedLead = this.page.locator('[formcontrolname="lead_category"]');
         await relatedLead.waitFor({ state: 'visible' });
@@ -4527,9 +4532,15 @@ export class ContactActions {
         await leadLink.waitFor({ state: 'visible' });
         await this.clickLeadEditIcon();
 
-        // wait for load contact 
-        const contactLoaded = this.page.locator('p.cursor-pointer');
-        await contactLoaded.waitFor({ state: 'visible' });
+        // Wait for the contact with name 'AA AA' and its cross icon to be visible
+        const contactContainer = this.page.locator('div.selected_one', { hasText: 'AA AA' }).last();
+        await contactContainer.waitFor({ state: 'visible' });
+
+        const contactName = contactContainer.locator('p.cursor-pointer', { hasText: 'AA AA' });
+        await contactName.waitFor({ state: 'visible' });
+
+        const crossIcon = contactContainer.locator('span.pi.pi-times-circle');
+        await crossIcon.waitFor({ state: 'visible' });
 
         const relatedLead = this.page.locator('[formcontrolname="lead_category"]');
         await relatedLead.waitFor({ state: 'visible' });
@@ -4594,7 +4605,7 @@ export class ContactActions {
         await this.clickSaveButton();
         const successMessageLocator = this.page.getByText('Lead updated successfully', { exact: true });
         await successMessageLocator.waitFor({ state: 'visible' });
-        await successMessageLocator.waitFor({state:'hidden'});
+        await successMessageLocator.waitFor({ state: 'hidden' });
         await this.closeLeadModalIfVisible();
         const tableRow = this.page.locator('#customentitydatalist table tbody tr').first();
         await tableRow.waitFor({ state: 'visible' });
@@ -4679,22 +4690,22 @@ export class ContactActions {
         await expect(createLeadText).toBeVisible({ timeout: 10000 });
         const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
         await existingClientParagraph.waitFor({ state: 'visible' });
-       // The following fields should NOT be visible for an existing client
-       const fieldsShouldNotExist = [
-           '[formcontrolname="first_name"]',
-           '[formcontrolname="last_name"]',
-           '[formcontrolname="mobile_phone"]',
-           '[formcontrolname="telephone"]',
-           '[formcontrolname="email"]',
-           '[formcontrolname="suburb"]',
-           '[formcontrolname="postcode"]',
-           '[formcontrolname="countryregion"] .ng-select-container',
-           '[formcontrolname="countryregion"] input'
-       ];
+        // The following fields should NOT be visible for an existing client
+        const fieldsShouldNotExist = [
+            '[formcontrolname="first_name"]',
+            '[formcontrolname="last_name"]',
+            '[formcontrolname="mobile_phone"]',
+            '[formcontrolname="telephone"]',
+            '[formcontrolname="email"]',
+            '[formcontrolname="suburb"]',
+            '[formcontrolname="postcode"]',
+            '[formcontrolname="countryregion"] .ng-select-container',
+            '[formcontrolname="countryregion"] input'
+        ];
 
-       for (const selector of fieldsShouldNotExist) {
-           await expect(this.page.locator(selector)).not.toBeVisible();
-       }
+        for (const selector of fieldsShouldNotExist) {
+            await expect(this.page.locator(selector)).not.toBeVisible();
+        }
         await this.closeModalIfVisible();
     }
 
@@ -4714,12 +4725,12 @@ export class ContactActions {
 
         const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
         await existingClientParagraph.waitFor({ state: 'visible' });
-     
+
         const removeIcon = this.page.locator('span.pi.pi-times-circle.f-12.ng-star-inserted').first();
         await removeIcon.waitFor({ state: 'visible' });
         await removeIcon.click();
 
-        await existingClientParagraph.waitFor({state:'hidden'});
+        await existingClientParagraph.waitFor({ state: 'hidden' });
 
         const firstNameField = this.page.locator('[formcontrolname="first_name"]').last();
         const lastNameField = this.page.locator('[formcontrolname="last_name"]').last();
@@ -4837,7 +4848,7 @@ export class ContactActions {
         for (const field of requirementsFields) {
             await field.evaluate((el) => {
                 el.scrollIntoView({ block: 'center', inline: 'center', behavior: 'auto' });
-            }).catch(() => {});
+            }).catch(() => { });
             await field.waitFor({ state: 'visible' });
         }
 
@@ -4892,7 +4903,7 @@ export class ContactActions {
         for (const field of requirementsFields) {
             await field.evaluate((el) => {
                 el.scrollIntoView({ block: 'center', inline: 'center', behavior: 'auto' });
-            }).catch(() => {});
+            }).catch(() => { });
             await field.waitFor({ state: 'visible' });
         }
 
@@ -4957,9 +4968,11 @@ export class ContactActions {
         for (const field of requirementsFields) {
             await field.evaluate((el) => {
                 el.scrollIntoView({ block: 'center', inline: 'center', behavior: 'auto' });
-            }).catch(() => {});
+            }).catch(() => { });
             await field.waitFor({ state: 'visible' });
         }
+
+        await this.closeModalIfVisible();
     }
 
     /**
@@ -5055,7 +5068,7 @@ export class ContactActions {
         const relatedLeadDropdown = this.page.locator('ng-select[formcontrolname="lead_category"]');
         await relatedLeadDropdown.waitFor({ state: 'visible' });
         await relatedLeadDropdown.click();
-        const listingOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Project' });
+        const listingOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'Project' }).first();
         await listingOption.waitFor({ state: 'visible' });
         await listingOption.click();
         await this.page.waitForTimeout(600);
@@ -5089,6 +5102,8 @@ export class ContactActions {
         if (finalRowCount <= initialRowCount) {
             throw new Error(`Lead creation did not increase the number of records in the table: before=${initialRowCount}, after=${finalRowCount}`);
         }
+
+        await this.closeModalIfVisible();
     }
 
 
@@ -5106,8 +5121,8 @@ export class ContactActions {
         await newLeadButton.click();
         const agentResponsibleLocator = this.page.locator('span').filter({ hasText: 'Jahanzaib Xenex' }).first();
         await agentResponsibleLocator.waitFor({ state: 'visible' });
-        const owner =  this.page.locator('span').filter({ hasText: 'Jahanzaib Xenex' }).last();
-        await owner.waitFor({state:'visible'});
+        const owner = this.page.locator('span').filter({ hasText: 'Jahanzaib Xenex' }).last();
+        await owner.waitFor({ state: 'visible' });
         await this.closeLeadModalIfVisible();
         await this.closeModalIfVisible();
 
