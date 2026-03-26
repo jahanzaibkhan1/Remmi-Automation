@@ -4962,6 +4962,52 @@ export class ContactActions {
         }
     }
 
+    /**
+     * Verifies the visibility and contents of the "Related Lead" dropdown in the Lead form.
+     */
+    async verifyRelatedLeadDropdownVisible() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+        // Open New Lead form
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+
+        // Locate and open the Related Lead dropdown
+        const relatedLeadDropdown = this.page.locator('ng-select[formcontrolname="lead_category"]');
+        await relatedLeadDropdown.waitFor({ state: 'visible' });
+        await relatedLeadDropdown.click();
+
+        // Gather all dropdown options
+        const dropdownOptions = this.page.locator('ng-dropdown-panel .ng-option');
+        await dropdownOptions.first().waitFor({ state: 'visible' });
+        const allOptions: string[] = [];
+        const totalOptions = await dropdownOptions.count();
+        for (let i = 0; i < totalOptions; i++) {
+            const optText = (await dropdownOptions.nth(i).innerText())?.trim();
+            if (optText) allOptions.push(optText);
+        }
+
+        // Define and verify required options
+        const expectedOptions = ['Listing', 'Project', 'Property', 'Client Requirements'];
+        for (const expected of expectedOptions) {
+            if (!allOptions.includes(expected)) {
+                throw new Error(
+                    `Related Lead dropdown missing expected option "${expected}". Options found: ${JSON.stringify(allOptions)}`
+                );
+            }
+        }
+        if (allOptions.length !== expectedOptions.length) {
+            throw new Error(
+                `Related Lead dropdown option count mismatch. Expected ${expectedOptions.length}, got ${allOptions.length}: ${JSON.stringify(allOptions)}`
+            );
+        }
+
+        await this.closeModalIfVisible();
+    }
+
 
 }
 
