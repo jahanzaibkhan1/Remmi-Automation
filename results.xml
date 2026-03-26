@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="77.28699800000014">
-<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-26T04:19:26.042Z" hostname="chromium" tests="1" failures="0" skipped="0" time="75.369" errors="0">
-<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that clicking the save &amp; close button saves the lead and closes the form" classname="Pages\Contacts\leadForm.spec.ts" time="75.369">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="76.80049799999968">
+<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-26T04:54:33.188Z" hostname="chromium" tests="1" failures="0" skipped="0" time="74.26" errors="0">
+<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that selecting Buyer or Prospective Buyer displays the correct Requirements fields" classname="Pages\Contacts\leadForm.spec.ts" time="74.26">
 </testcase>
 </testsuite>
 </testsuites>
