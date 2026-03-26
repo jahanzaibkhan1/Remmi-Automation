@@ -81,4 +81,9 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifyRelatedLeadDropdownAssignsToModule();
     });
 
+    test('Verify that lead status , lead source, and Agent Responsible fields update correctly', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadStatusChange();
+    });
+
 });

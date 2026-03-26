@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="104.60580299999937">
-<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-26T07:33:53.571Z" hostname="chromium" tests="1" failures="0" skipped="0" time="102.274" errors="0">
-<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that selecting Related Properties assigns the lead to the selected module" classname="Pages\Contacts\leadForm.spec.ts" time="102.274">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="104.70905700000003">
+<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-26T07:45:02.275Z" hostname="chromium" tests="1" failures="0" skipped="0" time="101.718" errors="0">
+<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify lead status can be changed and displayed correctly" classname="Pages\Contacts\leadForm.spec.ts" time="101.718">
 </testcase>
 </testsuite>
 </testsuites>
