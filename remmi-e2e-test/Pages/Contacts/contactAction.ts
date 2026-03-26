@@ -4789,5 +4789,60 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verifies that selecting "Buyer" or "Prospective Buyer" displays the correct Requirements fields in the lead form.
+     */
+    async verifyBuyerRequirementsFields(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+        // Open the New Lead form
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+
+        const leadDetails = this.page.locator('div.popup-gray-box:has(p:text("Lead Details"))');
+        await leadDetails.waitFor({ state: 'visible' });
+
+        // Select Lead Type: Buyer
+        const leadType = leadDetails.locator('ng-select[formcontrolname="lead_type"]');
+        await leadType.waitFor({ state: 'visible' });
+        await leadType.click();
+        await this.page.waitForTimeout(600);
+        const buyerOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: /Buyer|Prospective Buyer/ });
+        await buyerOption.waitFor({ state: 'visible' });
+        await buyerOption.click();
+        await this.page.waitForTimeout(600);
+
+        const requirementsSection = this.page.locator('div.popup-gray-box:has(p:text("Requirements"))');
+        await requirementsSection.waitFor({ state: 'visible' });
+
+        const requirementsFields = [
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) div:has(label:text("Property Type")) ng-select'),
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) div:has(label:text("Price Range")) ng-select'),
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) div:has(label:text("Bedrooms")) ng-select'),
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) div:has(label:text("Bathrooms")) ng-select'),
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) div:has(label:text("Car Parks")) ng-select'),
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) div:has(label:text("Timeframe")) ng-select'),
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="min_land_area"]'),
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="max_land_area"]'),
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="established_property"]'),
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="intended_use"]'),
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) re-multiselect[formcontrolname="outdoor_feature"]'),
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) re-multiselect[formcontrolname="indoor_feature"]'),
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="reason_selling_buying"]'),
+        ];
+
+        for (const field of requirementsFields) {
+            await field.evaluate((el) => {
+                el.scrollIntoView({ block: 'center', inline: 'center', behavior: 'auto' });
+            }).catch(() => {});
+            await field.waitFor({ state: 'visible' });
+        }
+
+        await this.closeModalIfVisible();
+    }
+
 }
 

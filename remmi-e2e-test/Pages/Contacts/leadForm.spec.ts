@@ -51,4 +51,9 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifySaveAndCloseButtonSavesLeadAndClosesForm();
     });
 
+    test('Verify that selecting Buyer or Prospective Buyer displays the correct Requirements fields', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyBuyerRequirementsFields();
+    });
+
 });
