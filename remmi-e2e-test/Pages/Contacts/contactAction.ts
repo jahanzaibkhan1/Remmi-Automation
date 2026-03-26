@@ -5113,6 +5113,58 @@ export class ContactActions {
 
     }
 
+    /**
+     * Verify that Agent Responsible and Owner fields can be changed to different users.
+     */
+    async verifyAgentResponsibleAndOwnerCanBeChanged() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        const tableRowsLocator = this.page.locator('#customentitydatalist table tbody tr');
+        await tableRowsLocator.first().waitFor({ state: "visible" });
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+        const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
+        await existingClientParagraph.waitFor({ state: 'visible' });
+        // Change Agent Responsible
+        const agentResponsible = this.page.locator('[formcontrolname="agent_responsible"]');
+        await agentResponsible.waitFor({ state: 'visible' });
+        await agentResponsible.click();
+        const agentResponsibleInput = this.page.locator('[formcontrolname="agent_responsible"] input');
+        await agentResponsibleInput.waitFor({ state: 'visible' });
+        await agentResponsibleInput.fill('Automation Test');
+        const agentOption = this.page.getByRole('option', { name: /Automation Test/i });
+        await agentOption.waitFor({ state: 'visible' });
+        await agentOption.click();
+
+        // Change Owner
+        const owner = this.page.locator('[formcontrolname="Owner"]');
+        await owner.waitFor({ state: 'visible' });
+        await owner.click();
+        const ownerInput = this.page.locator('[formcontrolname="Owner"] input');
+        await ownerInput.waitFor({ state: 'visible' });
+        await ownerInput.fill('Sales Agent');
+        const ownerOption = this.page.getByRole('option', { name: /Sales Agent/i });
+        await ownerOption.waitFor({ state: 'visible' });
+        await ownerOption.click();
+
+        // Verify the fields display the changed values
+        const agentResponsibleSpan = this.page.locator('span').filter({ hasText: 'Automation Test' }).first();
+        await agentResponsibleSpan.waitFor({ state: 'visible' });
+        const ownerSpan = this.page.locator('span').filter({ hasText: 'Sales Agent' }).first();
+        await ownerSpan.waitFor({ state: 'visible' });
+        const saveButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveButton.waitFor({ state: 'visible' });
+        await saveButton.click({ force: true });
+        const leadAddedSuccessMsg = this.page.getByText(/lead added successfully/i);
+        await leadAddedSuccessMsg.waitFor({ state: 'visible' });
+        await leadAddedSuccessMsg.waitFor({ state: 'hidden' });
+        const agentTextLocator = this.page.locator('table tbody tr td', { hasText: 'Automation Test' });
+        await expect(agentTextLocator.first()).toBeVisible();
+        await this.closeModalIfVisible();
+    }
+
 
 }
 

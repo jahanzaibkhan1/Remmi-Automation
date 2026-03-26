@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="65.927569000002">
-<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-26T08:10:24.950Z" hostname="chromium" tests="1" failures="0" skipped="0" time="62.821" errors="0">
-<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that Agent Responsible and Owner fields auto fill with the logged in user" classname="Pages\Contacts\leadForm.spec.ts" time="62.821">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="71.54097899999842">
+<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-26T08:33:16.602Z" hostname="chromium" tests="1" failures="0" skipped="0" time="68.476" errors="0">
+<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that Agent Responsible and Owner can be changed" classname="Pages\Contacts\leadForm.spec.ts" time="68.476">
 </testcase>
 </testsuite>
 </testsuites>
