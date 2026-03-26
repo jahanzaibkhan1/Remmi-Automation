@@ -46,4 +46,54 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifyCloseButtonClosesForm();
     });
 
+    test('Verify that clicking the save & close button saves the lead and closes the form', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifySaveAndCloseButtonSavesLeadAndClosesForm();
+    });
+
+    test('Verify that selecting Buyer or Prospective Buyer displays the correct Requirements fields', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyBuyerRequirementsFields();
+    });
+
+    test('Verify that selecting Developer or Prospective Developer displays the correct Requirements fields', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyDeveloperRequirementsFields();
+    });
+
+    test('Verify that selecting Seller or Prospective Seller displays the correct Requirements fields', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifySellerRequirementsFields();
+    });
+
+    test('Verify that saving a lead displays the data in the lead list view', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadAppearsInLeadModule();
+    });
+
+    test('Verify that selecting Related Properties displays a new dropdown', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyRelatedLeadDropdownVisible();
+    });
+
+    test('Verify that selecting Related Properties assigns the lead to the selected module', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyRelatedLeadDropdownAssignsToModule();
+    });
+
+    test('Verify that lead status , lead source, and Agent Responsible fields update correctly', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadStatusChange();
+    });
+
+    test('Verify that Agent Responsible and Owner fields auto fill with the logged in user', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyAgentResponsibleAndOwnerAutofill();
+    });
+
+    test('Verify that Agent Responsible and Owner can be changed', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyAgentResponsibleAndOwnerCanBeChanged();
+    });
+
 });
