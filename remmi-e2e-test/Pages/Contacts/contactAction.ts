@@ -5092,5 +5092,27 @@ export class ContactActions {
     }
 
 
+    /**
+     * Verify that Agent Responsible and Owner auto fill with the logged in user
+     */
+    async verifyAgentResponsibleAndOwnerAutofill() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        const tableRowsLocator = this.page.locator('#customentitydatalist table tbody tr');
+        await tableRowsLocator.first().waitFor({ state: "visible" });
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+        const agentResponsibleLocator = this.page.locator('span').filter({ hasText: 'Jahanzaib Xenex' }).first();
+        await agentResponsibleLocator.waitFor({ state: 'visible' });
+        const owner =  this.page.locator('span').filter({ hasText: 'Jahanzaib Xenex' }).last();
+        await owner.waitFor({state:'visible'});
+        await this.closeLeadModalIfVisible();
+        await this.closeModalIfVisible();
+
+    }
+
+
 }
 
