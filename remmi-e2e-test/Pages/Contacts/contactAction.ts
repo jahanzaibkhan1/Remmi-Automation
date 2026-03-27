@@ -5180,6 +5180,42 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify that an error message appears when entering an invalid email format
+     */
+    async verifyInvalidEmailShowsError() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+
+        const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
+        await existingClientParagraph.waitFor({ state: 'visible' });
+
+        const removeIcon = this.page.locator('span.pi.pi-times-circle.f-12.ng-star-inserted').first();
+        await removeIcon.waitFor({ state: 'visible' });
+        await removeIcon.click();
+
+        // Fill an invalid email in the email field
+        const emailInput = this.page.locator('[formcontrolname="email"], input[type="email"]').last();
+        await emailInput.waitFor({ state: 'visible' });
+        await emailInput.fill('notanemail'); 
+
+        // Click the "Save & Close" button to attempt to save the lead with invalid email
+        const saveAndCloseBtn = this.page.getByRole('button', { name: /Save & Close/i }).first();
+        await saveAndCloseBtn.waitFor({ state: 'visible' });
+        await saveAndCloseBtn.click({ force: true });
+
+        // Expect an error message to appear
+        const errorMsg = this.page.getByText(/please enter a valid email address/i, { exact: false });
+        await errorMsg.waitFor({ state: 'visible', timeout: 5000 });
+
+        // Optionally, close the modal if visible
+        await this.closeModalIfVisible();
+    }
+
 
 }
 
