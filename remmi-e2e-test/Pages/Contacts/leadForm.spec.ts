@@ -121,4 +121,9 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifyRelatedPropertiesDropdownResetsAfterRemovingSelection();
     });
 
+    test('Verify that a lead can be saved with only a lead type selected', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadCanBeSavedWithOnlyLeadTypeSelected();
+    });
+
 });
