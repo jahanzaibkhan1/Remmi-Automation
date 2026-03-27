@@ -111,4 +111,9 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifyFormDataNotRetainedOnClose();
     });
 
+    test('Verify that a lead remains linked to the correct client after editing', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadRemainsLinkedToClientAfterEdit();
+    });
+
 });

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.23898699999973">
-<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-27T06:39:52.482Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.238" errors="0">
-<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that closing the form without saving does not retain data" classname="Pages\Contacts\leadForm.spec.ts" time="32.238">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="76.1926550000012">
+<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-27T06:50:30.799Z" hostname="chromium" tests="1" failures="0" skipped="0" time="73.615" errors="0">
+<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that a lead remains linked to the correct client after editing" classname="Pages\Contacts\leadForm.spec.ts" time="73.615">
 </testcase>
 </testsuite>
 </testsuites>
