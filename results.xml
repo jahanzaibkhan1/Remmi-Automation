@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.30699100000039">
-<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-27T07:43:36.819Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.01" errors="0">
-<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that a lead can be saved with only a lead type selected" classname="Pages\Contacts\leadForm.spec.ts" time="35.01">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="45.249528999999164">
+<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-27T07:47:05.013Z" hostname="chromium" tests="1" failures="0" skipped="0" time="43.005" errors="0">
+<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that saving a lead updates the timestamp correctly" classname="Pages\Contacts\leadForm.spec.ts" time="43.005">
 </testcase>
 </testsuite>
 </testsuites>

@@ -126,4 +126,9 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifyLeadCanBeSavedWithOnlyLeadTypeSelected();
     });
 
+    test('Verify that saving a lead updates the timestamp correctly', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadRecordTimeAndDate();
+    });
+
 });
