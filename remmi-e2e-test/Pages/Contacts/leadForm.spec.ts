@@ -106,4 +106,9 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifyExistingClientAutofillsContactFields();
     });
 
+    test('Verify that closing the form without saving does not retain data', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyFormDataNotRetainedOnClose();
+    });
+
 });

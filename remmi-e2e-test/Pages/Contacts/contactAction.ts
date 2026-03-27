@@ -5238,6 +5238,61 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify that closing the form without saving does not retain data
+     */
+    async verifyFormDataNotRetainedOnClose() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+        // Open the new lead form
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+
+        const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
+        await existingClientParagraph.waitFor({ state: 'visible' });
+
+        const removeIcon = this.page.locator('span.pi.pi-times-circle.f-12.ng-star-inserted').first();
+        await removeIcon.waitFor({ state: 'visible' });
+        await removeIcon.click();
+
+        // Fill out first name and email fields with some test data
+        const firstNameInput = this.page.locator('[formcontrolname="first_name"]').last();
+        const emailInput = this.page.locator('[formcontrolname="email"], input[type="email"]').last();
+        await firstNameInput.waitFor({ state: 'visible' });
+        await emailInput.waitFor({ state: 'visible' });
+
+        await firstNameInput.fill('ShouldNotBeRetained');
+        await emailInput.fill('shouldnot@beretained.com');
+
+        // Close the modal without saving
+        const closeButton = this.page.getByRole('button', { name: /close/i }).first();
+        await closeButton.waitFor({ state: 'visible' });
+        await closeButton.click();
+
+        // Reopen the form and check that previous data is not retained
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+
+        await existingClientParagraph.waitFor({ state: 'visible' });
+        await removeIcon.waitFor({ state: 'visible' });
+        await removeIcon.click();
+
+        await firstNameInput.waitFor({ state: 'visible' });
+        await emailInput.waitFor({ state: 'visible' });
+
+        const firstNameValue = await firstNameInput.inputValue();
+        const emailValue = await emailInput.inputValue();
+
+        if (firstNameValue === 'ShouldNotBeRetained' || emailValue === 'shouldnot@beretained.com') {
+            throw new Error("Form data was retained after closing without saving.");
+        }
+
+        await this.closeModalIfVisible();
+    }
+
 
 }
 
