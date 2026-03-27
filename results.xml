@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="57.92549700000137">
-<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-27T06:35:50.846Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.97" errors="0">
-<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that selecting an Existing Client auto fills Contact Name, Mobile, Email, and Suburb" classname="Pages\Contacts\leadForm.spec.ts" time="55.97">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.23898699999973">
+<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-27T06:39:52.482Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.238" errors="0">
+<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that closing the form without saving does not retain data" classname="Pages\Contacts\leadForm.spec.ts" time="32.238">
 </testcase>
 </testsuite>
 </testsuites>
