@@ -116,4 +116,9 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifyLeadRemainsLinkedToClientAfterEdit();
     });
 
+    test('Verify that related properties dropdown resets after removing selection', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyRelatedPropertiesDropdownResetsAfterRemovingSelection();
+    });
+
 });

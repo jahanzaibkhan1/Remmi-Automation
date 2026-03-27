@@ -5337,6 +5337,41 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify that related properties dropdown resets after removing selection
+     */
+    async verifyRelatedPropertiesDropdownResetsAfterRemovingSelection(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openContactByNameAA();
+        await this.openLead();
+        await this.clickFirstLeadTableRow();
+        const leadLink = this.page.locator('a').filter({ hasText: 'Lead - AA AA' });
+        await leadLink.waitFor({ state: 'visible' });
+        await this.clickLeadEditIcon();
+
+        const contactContainer = this.page.locator('div.selected_one', { hasText: 'AA AA' }).last();
+        await contactContainer.waitFor({ state: 'visible' });
+
+        const contactName = contactContainer.locator('p.cursor-pointer', { hasText: 'AA AA' });
+        await contactName.waitFor({ state: 'visible' });
+
+        const relatedLeadDropdown = this.page.locator('ng-select[formcontrolname="lead_category"]');
+        await relatedLeadDropdown.waitFor({ state: 'visible' });
+        await relatedLeadDropdown.click({force: true});
+
+        const option = this.page.getByRole('option', { name: 'Property' });
+        await option.waitFor({ state: 'visible' });
+        await option.click();
+        const selectedTag = this.page.locator('.ng-select .ng-value-label', { hasText: 'Property' });
+        await selectedTag.waitFor({ state: 'visible' });
+
+        const clearIcon = this.page.locator('#lead_category').getByTitle('Clear all');
+        await clearIcon.waitFor({ state: 'visible' });
+        await clearIcon.click();
+        await clearIcon.waitFor({state: 'hidden'});
+        await this.closeModalIfVisible();
+    }
+
 
 }
 
