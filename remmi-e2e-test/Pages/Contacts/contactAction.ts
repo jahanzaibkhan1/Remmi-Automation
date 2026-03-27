@@ -5201,7 +5201,7 @@ export class ContactActions {
         // Fill an invalid email in the email field
         const emailInput = this.page.locator('[formcontrolname="email"], input[type="email"]').last();
         await emailInput.waitFor({ state: 'visible' });
-        await emailInput.fill('notanemail'); 
+        await emailInput.fill('notanemail');
 
         // Click the "Save & Close" button to attempt to save the lead with invalid email
         const saveAndCloseBtn = this.page.getByRole('button', { name: /Save & Close/i }).first();
@@ -5289,6 +5289,50 @@ export class ContactActions {
         if (firstNameValue === 'ShouldNotBeRetained' || emailValue === 'shouldnot@beretained.com') {
             throw new Error("Form data was retained after closing without saving.");
         }
+
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that a lead remains linked to the correct client after editing the lead
+     */
+    async verifyLeadRemainsLinkedToClientAfterEdit(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openContactByNameAA();
+        await this.openLead();
+        await this.clickFirstLeadTableRow();
+        const leadLink = this.page.locator('a').filter({ hasText: 'Lead - AA AA' });
+        await leadLink.waitFor({ state: 'visible' });
+        await this.clickLeadEditIcon();
+        // Wait for the contact with name 'AA AA' and its cross icon to be visible
+        const contactContainer = this.page.locator('div.selected_one', { hasText: 'AA AA' }).last();
+        await contactContainer.waitFor({ state: 'visible' });
+
+        const contactName = contactContainer.locator('p.cursor-pointer', { hasText: 'AA AA' });
+        await contactName.waitFor({ state: 'visible' });
+
+        const crossIcon = contactContainer.locator('span.pi.pi-times-circle');
+        await crossIcon.waitFor({ state: 'visible' });
+
+        // Click Owner field, search for 'jahanzaib xenex', and select it
+        const owner = this.page.locator('[formcontrolname="Owner"]');
+        await owner.waitFor({ state: 'visible' });
+        await owner.click();
+        const ownerSearchField = this.page.locator('[formcontrolname="Owner"] input');
+        await ownerSearchField.waitFor({ state: 'visible' });
+        await ownerSearchField.fill('jahanzaib xenex');
+        const jahanzaibOption = this.page.getByRole('option', { name: /jahanzaib xenex/i });
+        await jahanzaibOption.waitFor({ state: 'visible' });
+        await jahanzaibOption.click();
+
+        // Click the Save button to save changes in the lead edit modal
+        const saveButton = this.page.getByRole('button', { name: /save/i }).first();
+        await saveButton.waitFor({ state: 'visible' });
+        await saveButton.click();
+
+        await contactContainer.waitFor({ state: 'visible' });
+        await contactName.waitFor({ state: 'visible' });
+        await crossIcon.waitFor({ state: 'visible' });
 
         await this.closeModalIfVisible();
     }
