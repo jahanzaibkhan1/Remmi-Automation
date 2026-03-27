@@ -126,14 +126,14 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifyLeadCanBeSavedWithOnlyLeadTypeSelected();
     });
 
-    test('Verify that saving a lead updates the timestamp correctly', async ({ sessionPage }) => {
-        const contact = new ContactActions(sessionPage);
-        await contact.verifyLeadRecordTimeAndDate();
-    });
-
     test('Verify that clicking the contact name opens the contact form in a new tab', async ({ sessionPage }) => {
         const contact = new ContactActions(sessionPage);
         await contact.verifyContactNameOpensContactFormInNewTab();
+    });
+
+    test('Verify that saving a lead updates the timestamp correctly', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadRecordTimeAndDate();
     });
 
 });

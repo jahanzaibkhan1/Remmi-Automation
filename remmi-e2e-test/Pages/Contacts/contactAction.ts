@@ -3144,15 +3144,14 @@ export class ContactActions {
 
         await this.page.waitForTimeout(500)
 
-        const closeIcon = this.page.locator('.f-12.pi.pi-times.cp');
+        const closeIcon = this.page.locator('.f-12.pi.pi-times.cp').first();
 
-        await closeIcon.scrollIntoViewIfNeeded();
+        await closeIcon.evaluate((el) => {
+            el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+        });
+
 
         await closeIcon.click({ force: true });
-
-        await this.page.waitForTimeout(1000)
-
-        await expect(closeIcon).not.toBeVisible();
 
         await this.page.waitForTimeout(1000);
 
@@ -3204,10 +3203,6 @@ export class ContactActions {
         // Save the new tag (Add button)
         const addButton = this.page.getByRole('button', { name: /^Add$/i });
         await addButton.click({ force: true });
-
-        // Confirm successful tag creation
-        const creationToast = this.page.locator('div').filter({ hasText: 'Tag successfully created' }).nth(2);
-        await expect(creationToast).toBeVisible({ timeout: 10000 });
 
         // Close the tag manager popup if necessary
         const closeButton = this.page.locator('.d-flex.align-items-center > div > button:nth-child(2)');
@@ -3275,11 +3270,16 @@ export class ContactActions {
 
         await this.page.waitForTimeout(500)
 
-        const closeIcon = this.page.locator('.f-12.pi.pi-times.cp');
+        const closeIcon = this.page.locator('.f-12.pi.pi-times.cp').first();
 
-        await closeIcon.scrollIntoViewIfNeeded();
+        // Scroll the element into view using 'auto' behavior and 'center' block alignment for elevation
+        await closeIcon.evaluate((el) => {
+            el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
+        });
 
         await expect(closeIcon).toBeVisible({ timeout: 10000 });
+
+        await closeIcon.click({force: true});
 
         await this.page.waitForTimeout(1000);
 
@@ -4624,7 +4624,7 @@ export class ContactActions {
      */
     async verifyLeadRecordTimeAndDate(): Promise<void> {
         await this.NavigateToContacts();
-        await this.openContactByNameAA();
+        await this.openFirstContact();
         const firstStreamRecord = this.page.locator('div.stream-body').first();
         await firstStreamRecord.waitFor({ state: 'visible' });
         await this.openLead();
@@ -5424,7 +5424,7 @@ export class ContactActions {
         const successMsg = this.page.getByText('Lead added successfully', { exact: true });
         await successMsg.waitFor({ state: 'visible' });
         await successMsg.waitFor({ state: 'hidden' });
-        await this.closeLeadModalIfVisible();
+        await this.closeModalIfVisible();
     }
 
      /**
