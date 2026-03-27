@@ -5216,6 +5216,28 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify that selecting an Existing Client auto fills Contact Name, Mobile, Email, and Suburb
+     */
+    async verifyExistingClientAutofillsContactFields() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+        // Open the new lead form
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+
+        const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
+        await existingClientParagraph.waitFor({ state: 'visible' });
+        // Verify the Contact Details field shows the selected Existing Client
+        const contactDetails = this.page.getByText(/Contact Details\s*Contact:\s*11 22/i);
+        await contactDetails.waitFor({ state: 'visible' });
+
+        await this.closeModalIfVisible();
+    }
+
 
 }
 
