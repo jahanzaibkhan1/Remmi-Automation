@@ -5427,6 +5427,30 @@ export class ContactActions {
         await this.closeLeadModalIfVisible();
     }
 
+     /**
+     * Verifies that clicking the "New Lead" button opens the lead form.
+     */
+     async verifyContactNameOpensContactFormInNewTab(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+        // Open the new lead form
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+
+        const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
+        await existingClientParagraph.waitFor({ state: 'visible' });
+        const ele = this.page.locator('p').filter({ hasText: '11 22' }).last()
+        await ele.waitFor({ state: 'visible' });
+        await ele.click();
+        const detailsSection = this.page.locator('section.body-details.h-100.border-0:visible');
+        await detailsSection.waitFor({ state: 'visible' });
+        await this.closeModalIfVisible();
+    }
+
+
 
 }
 

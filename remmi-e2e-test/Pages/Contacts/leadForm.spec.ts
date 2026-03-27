@@ -131,4 +131,9 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifyLeadRecordTimeAndDate();
     });
 
+    test('Verify that clicking the contact name opens the contact form in a new tab', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyContactNameOpensContactFormInNewTab();
+    });
+
 });
