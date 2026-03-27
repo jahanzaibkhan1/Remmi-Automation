@@ -101,4 +101,9 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifyInvalidEmailShowsError();
     });
 
+    test('Verify that selecting an Existing Client auto fills Contact Name, Mobile, Email, and Suburb', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyExistingClientAutofillsContactFields();
+    });
+
 });
