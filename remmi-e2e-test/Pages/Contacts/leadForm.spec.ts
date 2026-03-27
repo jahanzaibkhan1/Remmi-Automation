@@ -96,4 +96,9 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifyAgentResponsibleAndOwnerCanBeChanged();
     });
 
+    test('Verify that an error message appears when entering an invalid email format', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyInvalidEmailShowsError();
+    });
+
 });
