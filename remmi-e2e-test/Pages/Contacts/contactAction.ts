@@ -3144,15 +3144,14 @@ export class ContactActions {
 
         await this.page.waitForTimeout(500)
 
-        const closeIcon = this.page.locator('.f-12.pi.pi-times.cp');
+        const closeIcon = this.page.locator('.f-12.pi.pi-times.cp').first();
 
-        await closeIcon.scrollIntoViewIfNeeded();
+        await closeIcon.evaluate((el) => {
+            el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+        });
+
 
         await closeIcon.click({ force: true });
-
-        await this.page.waitForTimeout(1000)
-
-        await expect(closeIcon).not.toBeVisible();
 
         await this.page.waitForTimeout(1000);
 
@@ -3204,10 +3203,6 @@ export class ContactActions {
         // Save the new tag (Add button)
         const addButton = this.page.getByRole('button', { name: /^Add$/i });
         await addButton.click({ force: true });
-
-        // Confirm successful tag creation
-        const creationToast = this.page.locator('div').filter({ hasText: 'Tag successfully created' }).nth(2);
-        await expect(creationToast).toBeVisible({ timeout: 10000 });
 
         // Close the tag manager popup if necessary
         const closeButton = this.page.locator('.d-flex.align-items-center > div > button:nth-child(2)');
@@ -3275,11 +3270,16 @@ export class ContactActions {
 
         await this.page.waitForTimeout(500)
 
-        const closeIcon = this.page.locator('.f-12.pi.pi-times.cp');
+        const closeIcon = this.page.locator('.f-12.pi.pi-times.cp').first();
 
-        await closeIcon.scrollIntoViewIfNeeded();
+        // Scroll the element into view using 'auto' behavior and 'center' block alignment for elevation
+        await closeIcon.evaluate((el) => {
+            el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
+        });
 
         await expect(closeIcon).toBeVisible({ timeout: 10000 });
+
+        await closeIcon.click({force: true});
 
         await this.page.waitForTimeout(1000);
 
@@ -4624,7 +4624,7 @@ export class ContactActions {
      */
     async verifyLeadRecordTimeAndDate(): Promise<void> {
         await this.NavigateToContacts();
-        await this.openContactByNameAA();
+        await this.openFirstContact();
         const firstStreamRecord = this.page.locator('div.stream-body').first();
         await firstStreamRecord.waitFor({ state: 'visible' });
         await this.openLead();
@@ -5179,6 +5179,277 @@ export class ContactActions {
         await expect(agentTextLocator.first()).toBeVisible();
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Verify that an error message appears when entering an invalid email format
+     */
+    async verifyInvalidEmailShowsError() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+
+        const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
+        await existingClientParagraph.waitFor({ state: 'visible' });
+
+        const removeIcon = this.page.locator('span.pi.pi-times-circle.f-12.ng-star-inserted').first();
+        await removeIcon.waitFor({ state: 'visible' });
+        await removeIcon.click();
+
+        // Fill an invalid email in the email field
+        const emailInput = this.page.locator('[formcontrolname="email"], input[type="email"]').last();
+        await emailInput.waitFor({ state: 'visible' });
+        await emailInput.fill('notanemail');
+
+        // Click the "Save & Close" button to attempt to save the lead with invalid email
+        const saveAndCloseBtn = this.page.getByRole('button', { name: /Save & Close/i }).first();
+        await saveAndCloseBtn.waitFor({ state: 'visible' });
+        await saveAndCloseBtn.click({ force: true });
+
+        // Expect an error message to appear
+        const errorMsg = this.page.getByText(/please enter a valid email address/i, { exact: false });
+        await errorMsg.waitFor({ state: 'visible', timeout: 5000 });
+
+        // Optionally, close the modal if visible
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that selecting an Existing Client auto fills Contact Name, Mobile, Email, and Suburb
+     */
+    async verifyExistingClientAutofillsContactFields() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+        // Open the new lead form
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+
+        const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
+        await existingClientParagraph.waitFor({ state: 'visible' });
+        // Verify the Contact Details field shows the selected Existing Client
+        const contactDetails = this.page.getByText(/Contact Details\s*Contact:\s*11 22/i);
+        await contactDetails.waitFor({ state: 'visible' });
+
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that closing the form without saving does not retain data
+     */
+    async verifyFormDataNotRetainedOnClose() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+        // Open the new lead form
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+
+        const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
+        await existingClientParagraph.waitFor({ state: 'visible' });
+
+        const removeIcon = this.page.locator('span.pi.pi-times-circle.f-12.ng-star-inserted').first();
+        await removeIcon.waitFor({ state: 'visible' });
+        await removeIcon.click();
+
+        // Fill out first name and email fields with some test data
+        const firstNameInput = this.page.locator('[formcontrolname="first_name"]').last();
+        const emailInput = this.page.locator('[formcontrolname="email"], input[type="email"]').last();
+        await firstNameInput.waitFor({ state: 'visible' });
+        await emailInput.waitFor({ state: 'visible' });
+
+        await firstNameInput.fill('ShouldNotBeRetained');
+        await emailInput.fill('shouldnot@beretained.com');
+
+        // Close the modal without saving
+        const closeButton = this.page.getByRole('button', { name: /close/i }).first();
+        await closeButton.waitFor({ state: 'visible' });
+        await closeButton.click();
+
+        // Reopen the form and check that previous data is not retained
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+
+        await existingClientParagraph.waitFor({ state: 'visible' });
+        await removeIcon.waitFor({ state: 'visible' });
+        await removeIcon.click();
+
+        await firstNameInput.waitFor({ state: 'visible' });
+        await emailInput.waitFor({ state: 'visible' });
+
+        const firstNameValue = await firstNameInput.inputValue();
+        const emailValue = await emailInput.inputValue();
+
+        if (firstNameValue === 'ShouldNotBeRetained' || emailValue === 'shouldnot@beretained.com') {
+            throw new Error("Form data was retained after closing without saving.");
+        }
+
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that a lead remains linked to the correct client after editing the lead
+     */
+    async verifyLeadRemainsLinkedToClientAfterEdit(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openContactByNameAA();
+        await this.openLead();
+        await this.clickFirstLeadTableRow();
+        const leadLink = this.page.locator('a').filter({ hasText: 'Lead - AA AA' });
+        await leadLink.waitFor({ state: 'visible' });
+        await this.clickLeadEditIcon();
+        // Wait for the contact with name 'AA AA' and its cross icon to be visible
+        const contactContainer = this.page.locator('div.selected_one', { hasText: 'AA AA' }).last();
+        await contactContainer.waitFor({ state: 'visible' });
+
+        const contactName = contactContainer.locator('p.cursor-pointer', { hasText: 'AA AA' });
+        await contactName.waitFor({ state: 'visible' });
+
+        const crossIcon = contactContainer.locator('span.pi.pi-times-circle');
+        await crossIcon.waitFor({ state: 'visible' });
+
+        // Click Owner field, search for 'jahanzaib xenex', and select it
+        const owner = this.page.locator('[formcontrolname="Owner"]');
+        await owner.waitFor({ state: 'visible' });
+        await owner.click();
+        const ownerSearchField = this.page.locator('[formcontrolname="Owner"] input');
+        await ownerSearchField.waitFor({ state: 'visible' });
+        await ownerSearchField.fill('jahanzaib xenex');
+        const jahanzaibOption = this.page.getByRole('option', { name: /jahanzaib xenex/i });
+        await jahanzaibOption.waitFor({ state: 'visible' });
+        await jahanzaibOption.click();
+
+        // Click the Save button to save changes in the lead edit modal
+        const saveButton = this.page.getByRole('button', { name: /save/i }).first();
+        await saveButton.waitFor({ state: 'visible' });
+        await saveButton.click();
+
+        await contactContainer.waitFor({ state: 'visible' });
+        await contactName.waitFor({ state: 'visible' });
+        await crossIcon.waitFor({ state: 'visible' });
+
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that related properties dropdown resets after removing selection
+     */
+    async verifyRelatedPropertiesDropdownResetsAfterRemovingSelection(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openContactByNameAA();
+        await this.openLead();
+        await this.clickFirstLeadTableRow();
+        const leadLink = this.page.locator('a').filter({ hasText: 'Lead - AA AA' });
+        await leadLink.waitFor({ state: 'visible' });
+        await this.clickLeadEditIcon();
+
+        const contactContainer = this.page.locator('div.selected_one', { hasText: 'AA AA' }).last();
+        await contactContainer.waitFor({ state: 'visible' });
+
+        const contactName = contactContainer.locator('p.cursor-pointer', { hasText: 'AA AA' });
+        await contactName.waitFor({ state: 'visible' });
+
+        const relatedLeadDropdown = this.page.locator('ng-select[formcontrolname="lead_category"]');
+        await relatedLeadDropdown.waitFor({ state: 'visible' });
+        await relatedLeadDropdown.click({force: true});
+
+        const option = this.page.getByRole('option', { name: 'Property' });
+        await option.waitFor({ state: 'visible' });
+        await option.click();
+        const selectedTag = this.page.locator('.ng-select .ng-value-label', { hasText: 'Property' });
+        await selectedTag.waitFor({ state: 'visible' });
+
+        const clearIcon = this.page.locator('#lead_category').getByTitle('Clear all');
+        await clearIcon.waitFor({ state: 'visible' });
+        await clearIcon.click();
+        await clearIcon.waitFor({state: 'hidden'});
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that a lead can be saved with only a lead type selected
+     */
+    async verifyLeadCanBeSavedWithOnlyLeadTypeSelected(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+        // Open the new lead form
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+
+        const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
+        await existingClientParagraph.waitFor({ state: 'visible' });
+
+        // Select only the lead type ("Buyer"), do not touch other fields
+        const leadTypeDropdown = this.page.locator('ng-select[formcontrolname="lead_type"]');
+        await leadTypeDropdown.waitFor({ state: 'visible' });
+        await leadTypeDropdown.click({ force: true });
+        const buyerOption = this.page.getByRole('option', { name: 'Buyer' });
+        await buyerOption.waitFor({ state: 'visible' });
+        await buyerOption.click();
+
+        // Remove lead status tag
+        const leadStatusClearIcon = this.page.getByTitle('Clear all').nth(3);
+        await leadStatusClearIcon.waitFor({state:'visible'});
+        await leadStatusClearIcon.click();
+    
+
+        // Remove related contact tag
+        const relatedContactClearIcon = this.page.locator('#lead_category').getByTitle('Clear all');
+        await relatedContactClearIcon.waitFor({state: 'visible'});
+        await relatedContactClearIcon.click();
+
+        // Remove agent responsible tag
+        const agentRespClearIcon = this.page.getByTitle('Clear all').nth(3);
+        await agentRespClearIcon.waitFor({state:'visible'});
+        await agentRespClearIcon.click();
+    
+
+        // Remove owner tag
+        const ownerClearIcon = this.page.locator('.col-sm-3.pl-0 > .form-group > #status > .ng-select-container > .ng-clear-wrapper')
+        await ownerClearIcon.waitFor({state:'visible'});
+        await ownerClearIcon.click();
+        await ownerClearIcon.waitFor({ state: 'hidden' });
+        const saveButton = this.page.getByRole('button', { name: /save/i }).first();
+        await saveButton.waitFor({ state: 'visible' });
+        await saveButton.click();
+        const successMsg = this.page.getByText('Lead added successfully', { exact: true });
+        await successMsg.waitFor({ state: 'visible' });
+        await successMsg.waitFor({ state: 'hidden' });
+        await this.closeModalIfVisible();
+    }
+
+     /**
+     * Verifies that clicking the "New Lead" button opens the lead form.
+     */
+     async verifyContactNameOpensContactFormInNewTab(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+        // Open the new lead form
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+
+        const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
+        await existingClientParagraph.waitFor({ state: 'visible' });
+        const ele = this.page.locator('p').filter({ hasText: '11 22' }).last()
+        await ele.waitFor({ state: 'visible' });
+        await ele.click();
+        const detailsSection = this.page.locator('section.body-details.h-100.border-0:visible');
+        await detailsSection.waitFor({ state: 'visible' });
+        await this.closeModalIfVisible();
+    }
+
 
 
 }

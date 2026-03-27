@@ -96,4 +96,44 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifyAgentResponsibleAndOwnerCanBeChanged();
     });
 
+    test('Verify that an error message appears when entering an invalid email format', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyInvalidEmailShowsError();
+    });
+
+    test('Verify that selecting an Existing Client auto fills Contact Name, Mobile, Email, and Suburb', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyExistingClientAutofillsContactFields();
+    });
+
+    test('Verify that closing the form without saving does not retain data', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyFormDataNotRetainedOnClose();
+    });
+
+    test('Verify that a lead remains linked to the correct client after editing', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadRemainsLinkedToClientAfterEdit();
+    });
+
+    test('Verify that related properties dropdown resets after removing selection', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyRelatedPropertiesDropdownResetsAfterRemovingSelection();
+    });
+
+    test('Verify that a lead can be saved with only a lead type selected', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadCanBeSavedWithOnlyLeadTypeSelected();
+    });
+
+    test('Verify that clicking the contact name opens the contact form in a new tab', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyContactNameOpensContactFormInNewTab();
+    });
+
+    test('Verify that saving a lead updates the timestamp correctly', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadRecordTimeAndDate();
+    });
+
 });
