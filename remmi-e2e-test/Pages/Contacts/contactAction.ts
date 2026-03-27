@@ -5372,6 +5372,61 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify that a lead can be saved with only a lead type selected
+     */
+    async verifyLeadCanBeSavedWithOnlyLeadTypeSelected(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+        // Open the new lead form
+        const newLeadButton = this.page.getByRole('button', { name: /New Lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await newLeadButton.click();
+
+        const existingClientParagraph = this.page.getByRole('paragraph').filter({ hasText: /^11 22$/ }).first();
+        await existingClientParagraph.waitFor({ state: 'visible' });
+
+        // Select only the lead type ("Buyer"), do not touch other fields
+        const leadTypeDropdown = this.page.locator('ng-select[formcontrolname="lead_type"]');
+        await leadTypeDropdown.waitFor({ state: 'visible' });
+        await leadTypeDropdown.click({ force: true });
+        const buyerOption = this.page.getByRole('option', { name: 'Buyer' });
+        await buyerOption.waitFor({ state: 'visible' });
+        await buyerOption.click();
+
+        // Remove lead status tag
+        const leadStatusClearIcon = this.page.getByTitle('Clear all').nth(3);
+        await leadStatusClearIcon.waitFor({state:'visible'});
+        await leadStatusClearIcon.click();
+    
+
+        // Remove related contact tag
+        const relatedContactClearIcon = this.page.locator('#lead_category').getByTitle('Clear all');
+        await relatedContactClearIcon.waitFor({state: 'visible'});
+        await relatedContactClearIcon.click();
+
+        // Remove agent responsible tag
+        const agentRespClearIcon = this.page.getByTitle('Clear all').nth(3);
+        await agentRespClearIcon.waitFor({state:'visible'});
+        await agentRespClearIcon.click();
+    
+
+        // Remove owner tag
+        const ownerClearIcon = this.page.locator('.col-sm-3.pl-0 > .form-group > #status > .ng-select-container > .ng-clear-wrapper')
+        await ownerClearIcon.waitFor({state:'visible'});
+        await ownerClearIcon.click();
+        await ownerClearIcon.waitFor({ state: 'hidden' });
+        const saveButton = this.page.getByRole('button', { name: /save/i }).first();
+        await saveButton.waitFor({ state: 'visible' });
+        await saveButton.click();
+        const successMsg = this.page.getByText('Lead added successfully', { exact: true });
+        await successMsg.waitFor({ state: 'visible' });
+        await successMsg.waitFor({ state: 'hidden' });
+        await this.closeLeadModalIfVisible();
+    }
+
 
 }
 
