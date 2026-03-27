@@ -1,35 +1,8 @@
-<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="23.393579999998213">
-<testsuite name="Pages\Contacts\leadForm.spec.ts" timestamp="2026-03-27T09:59:39.160Z" hostname="chromium" tests="1" failures="1" skipped="0" time="21.231" errors="0">
-<testcase name="Contacts &quot;Lead Form&quot; Tab - E2E Tests › Verify that saving a lead updates the timestamp correctly" classname="Pages\Contacts\leadForm.spec.ts" time="21.231">
-<failure message="leadForm.spec.ts:134:5 Verify that saving a lead updates the timestamp correctly" type="FAILURE">
-<![CDATA[  [chromium] › Pages\Contacts\leadForm.spec.ts:134:5 › Contacts "Lead Form" Tab - E2E Tests › Verify that saving a lead updates the timestamp correctly 
-
-    Error: Lead 'Created Date' cell is empty.
-
-       at Pages\Contacts\contactAction.ts:4638
-
-      4636 |
-      4637 |         if (!dateText || !dateText.trim()) {
-    > 4638 |             throw new Error("Lead 'Created Date' cell is empty.");
-           |                   ^
-      4639 |         }
-      4640 |         const datePattern = /^\d{2}\/\d{2}\/\d{2}$/;
-      4641 |         if (!datePattern.test(dateText.trim())) {
-        at ContactActions.verifyLeadRecordTimeAndDate (E:\Remmi-E2E-Test\remmi-qa-automation\remmi-e2e-test\Pages\Contacts\contactAction.ts:4638:19)
-        at E:\Remmi-E2E-Test\remmi-qa-automation\remmi-e2e-test\Pages\Contacts\leadForm.spec.ts:136:9
-
-    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ..\test-results\Pages-Contacts-leadForm-Co-f6655-tes-the-timestamp-correctly-chromium\test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Error Context: ..\test-results\Pages-Contacts-leadForm-Co-f6655-tes-the-timestamp-correctly-chromium\error-context.md
-]]>
-</failure>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.95156799999997">
+<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-03-27T11:19:56.598Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.99" errors="0">
+<testcase name="Dashboard Module Boards Display › Verify that EOI board displays correct data on dashboard" classname="Pages\Dashboard\dashboard.spec.ts" time="23.99">
 <system-out>
-<![CDATA[
-[[ATTACHMENT|test-results\Pages-Contacts-leadForm-Co-f6655-tes-the-timestamp-correctly-chromium\test-failed-1.png]]
-
-[[ATTACHMENT|test-results\Pages-Contacts-leadForm-Co-f6655-tes-the-timestamp-correctly-chromium\error-context.md]]
+<![CDATA[EOI count from dashboard: 0, EOI table visible rows: 1
 ]]>
 </system-out>
 </testcase>
