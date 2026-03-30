@@ -1,53 +1,78 @@
-<testsuites id="" name="" tests="15" failures="0" skipped="0" errors="0" time="104.3224160000002">
-<testsuite name="Pages\MyProfile\MyProfileImagesTest.spec.ts" timestamp="2026-03-30T04:40:06.668Z" hostname="chromium" tests="15" failures="0" skipped="0" time="102.131" errors="0">
-<testcase name="My Profile Image Tests - Remmi E2E › Test 1: User can upload a profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="42.256">
-</testcase>
-<testcase name="My Profile Image Tests - Remmi E2E › Test 2: User can open the upload multiple images flow" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0.835">
-</testcase>
-<testcase name="My Profile Image Tests - Remmi E2E › Test 3: Verify selected image is set as the profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0.252">
-</testcase>
-<testcase name="My Profile Image Tests - Remmi E2E › Test 4: Verify thumbnails appear after image upload" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0.241">
-</testcase>
-<testcase name="My Profile Image Tests - Remmi E2E › Test 5: Verify thumbnails are removed when clicking cross button" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="2.256">
-</testcase>
-<testcase name="My Profile Image Tests - Remmi E2E › Test 6: User can edit and delete low resolution and agent face thumbnails" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="4.526">
-</testcase>
-<testcase name="My Profile Image Tests - Remmi E2E › Test 7: Verify system shows a warning when low resolution image is too small" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="19.431">
-</testcase>
-<testcase name="My Profile Image Tests - Remmi E2E › Test 8: Verify invalid image formats cannot be uploaded" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="1.839">
-</testcase>
-<testcase name="My Profile Image Tests - Remmi E2E › Test 9: Verify system allows changing profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="2.031">
+<testsuites id="" name="" tests="8" failures="0" skipped="0" errors="0" time="29.286873999999838">
+<testsuite name="Pages\MyProfile\MyProfileTest.spec.ts" timestamp="2026-03-30T05:40:11.642Z" hostname="chromium" tests="8" failures="0" skipped="0" time="26.995" errors="0">
+<testcase name="My Profile Tests - Remmi E2E › 1. Profile fields show data &amp; are non-editable" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="14.664">
 <system-out>
-<![CDATA[☑️ Last visible checkbox clicked successfully
+<![CDATA[First Name value: "EMPTY"
+First Name non-editable? ✅ Yes
+Last Name value: "Xenex"
+Last Name non-editable? ✅ Yes
+Email value: "jahanzaib@xenex-media.com.au"
+Email non-editable? ✅ Yes
+Mobile Number value: "EMPTY"
+Mobile Number non-editable? ✅ Yes
+Telephone value: "Telephone"
+Telephone non-editable? ✅ Yes
+Job Title value: "EMPTY"
+Job Title non-editable? ✅ Yes
+Biography value: "EMPTY"
+Biography non-editable? ✅ Yes
+Role value: "Operations Manager"
+Role non-editable? ✅ Yes
+Group value: "QA"
+Group non-editable? ✅ Yes
+Office value: "QA Tester"
+Office non-editable? ✅ Yes
 ]]>
 </system-out>
 </testcase>
-<testcase name="My Profile Image Tests - Remmi E2E › Test 10: Verified profile image persists after reload" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="15.446">
-</testcase>
-<testcase name="My Profile Image Tests - Remmi E2E › Test 11: Verify the default placeholder is visible when no image is uploaded" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0.221">
-</testcase>
-<testcase name="My Profile Image Tests - Remmi E2E › Test 12: Verify user can remove the selected profile image" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="1.115">
+<testcase name="My Profile Tests - Remmi E2E › 2. Fields remain non-editable if data missing" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0.537">
 <system-out>
-<![CDATA[✅ Default profile image deleted successfully.
+<![CDATA[First Name value: "Jahanzaib"
+First Name non-editable? ✅ Yes
+Last Name value: "Xenex"
+Last Name non-editable? ✅ Yes
+Email value: "jahanzaib@xenex-media.com.au"
+Email non-editable? ✅ Yes
+Mobile Number value: "EMPTY"
+Mobile Number non-editable? ✅ Yes
+Telephone value: "Telephone"
+Telephone non-editable? ✅ Yes
+Job Title value: "EMPTY"
+Job Title non-editable? ✅ Yes
+Biography value: "EMPTY"
+Biography non-editable? ✅ Yes
+Role value: "Operations Manager"
+Role non-editable? ✅ Yes
+Group value: "QA"
+Group non-editable? ✅ Yes
+Office value: "QA Tester"
+Office non-editable? ✅ Yes
 ]]>
 </system-out>
 </testcase>
-<testcase name="My Profile Image Tests - Remmi E2E › Test 13: Verify correct aspect ratio is maintained for uploaded images" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="2.709">
-</testcase>
-<testcase name="My Profile Image Tests - Remmi E2E › Test 14: Verify system does not allow uploading broken/corrupt image files" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="0.612">
-</testcase>
-<testcase name="My Profile Image Tests - Remmi E2E › Test 15: Verify system allows only specific file formats (e.g., JPG, PNG)" classname="Pages\MyProfile\MyProfileImagesTest.spec.ts" time="8.361">
+<testcase name="My Profile Tests - Remmi E2E › 3. PIN field allows input and updates profile" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0.197">
 <system-out>
-<![CDATA[🟢 Uploading valid image: E:\Remmi-E2E-Test\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Images\Profile.jpg
-✅ Toast appeared with message:  images updated successfully 
-🟢 Uploading valid image: E:\Remmi-E2E-Test\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Images\premium.png
-✅ Toast appeared with message:  images updated successfully 
-🔴 Uploading invalid or corrupted image: E:\Remmi-E2E-Test\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Images\invalidImage.webp
-✅ Invalid/Corrupted image correctly rejected with message: "Unsupported file format! Please upload a valid image"
-🔴 Uploading invalid or corrupted image: E:\Remmi-E2E-Test\remmi-qa-automation\remmi-e2e-test\Pages\MyProfile\Images\broken_image.jpg
-✅ Invalid/Corrupted image correctly rejected with message: "Corrupted image file! Please upload a valid image"
+<![CDATA[🟢 Clicked Update button
 ]]>
 </system-out>
+<system-err>
+<![CDATA[⚠️ No toast visible — may auto-save or reload silently
+]]>
+</system-err>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 4. Calendar color selection updates correctly" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="1.468">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 5. Correct PIN allows private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="5.985">
+<system-out>
+<![CDATA[Image already uploaded and visible, skipping upload.
+]]>
+</system-out>
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 6. PIN is required for private download (empty PIN case)" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="2.61">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 7. PIN is required for private download (validation)" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="1.41">
+</testcase>
+<testcase name="My Profile Tests - Remmi E2E › 8. Incorrect PIN prevents private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0.124">
 </testcase>
 </testsuite>
 </testsuites>
