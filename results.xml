@@ -1,38 +1,117 @@
-<testsuites id="" name="" tests="5" failures="0" skipped="0" errors="0" time="43.59748699999973">
-<testsuite name="Pages\MyProfile\profileAccess.spec.ts" timestamp="2026-03-30T05:49:19.833Z" hostname="chromium" tests="5" failures="0" skipped="0" time="40.867" errors="0">
-<testcase name="Access Tab Tests - Remmi E2E › Test case 2: The user can successfully select a user from Access tab" classname="Pages\MyProfile\profileAccess.spec.ts" time="17.325">
+<testsuites id="" name="" tests="41" failures="0" skipped="0" errors="0" time="143.12984900000131">
+<testsuite name="Pages\MyProfile\teams.test.spec.ts" timestamp="2026-03-30T06:03:03.956Z" hostname="chromium" tests="41" failures="0" skipped="0" time="139.814" errors="0">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 0: Delete all existing teams" classname="Pages\MyProfile\teams.test.spec.ts" time="34.981">
 <system-out>
-<![CDATA[ℹ️ User "Dawood Ahmad" is already selected — clicking Save only.
+<![CDATA[🟢 All teams have been deleted.
 ]]>
 </system-out>
 </testcase>
-<testcase name="Access Tab Tests - Remmi E2E › Test 4: Verify multiple users can be granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="9.422">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 1: Verify search works for existing team names" classname="Pages\MyProfile\teams.test.spec.ts" time="0.803">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 2: Verify no results message appears for invalid team name." classname="Pages\MyProfile\teams.test.spec.ts" time="0.285">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 3: Verify Add button remains disabled when no team is selected." classname="Pages\MyProfile\teams.test.spec.ts" time="0.154">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 4: Verify clicking disabled Add button performs no action." classname="Pages\MyProfile\teams.test.spec.ts" time="0.192">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 5: Verify selecting a team enables Add button." classname="Pages\MyProfile\teams.test.spec.ts" time="0.357">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 6: Verify Add button doesn’t enable due to dropdown lag." classname="Pages\MyProfile\teams.test.spec.ts" time="0.377">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 7: Verify selected teams appear as tags below the dropdown." classname="Pages\MyProfile\teams.test.spec.ts" time="0.41">
 <system-out>
-<![CDATA[Hina Agent selected for access.
-Hina Tahir selected for access.
-Calendar access updated toast message appeared
-Hina Agent verified in granted access list.
-Hina Tahir verified in granted access list.
+<![CDATA[🟢 Tag for team "Team 1" is visible below dropdown.
 ]]>
 </system-out>
 </testcase>
-<testcase name="Access Tab Tests - Remmi E2E › Test 6: Verify user can remove granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="2.899">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 8: Verify removing a tag updates the list" classname="Pages\MyProfile\teams.test.spec.ts" time="0.364">
 <system-out>
-<![CDATA[Calendar access updated toast message appeared
+<![CDATA[🟢 Tag for team "Team 2" is visible below dropdown.
 ]]>
 </system-out>
 </testcase>
-<testcase name="Access Tab Tests - Remmi E2E › Test 7: Verify that selecting Select All grants access to all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="5.635">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 9: Verify user can select multiple teams from dropdown." classname="Pages\MyProfile\teams.test.spec.ts" time="1.232">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 10: Verify clicking Add adds selected teams to list." classname="Pages\MyProfile\teams.test.spec.ts" time="0.461">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 11: Verify “Create New” opens Add Team popup." classname="Pages\MyProfile\teams.test.spec.ts" time="0.3">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 12: Verify popup close (X) closes Add Team popup." classname="Pages\MyProfile\teams.test.spec.ts" time="0.319">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 13: Verify JPG and PNG formats are accepted, and invalid image format is rejected for team upload." classname="Pages\MyProfile\teams.test.spec.ts" time="0.949">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 14: Verify unsupported file formats show validation error." classname="Pages\MyProfile\teams.test.spec.ts" time="0.752">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 15: Verify required field validation for Team Name, Office, and Members." classname="Pages\MyProfile\teams.test.spec.ts" time="0.834">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 16: Verify team cannot be created with missing required field." classname="Pages\MyProfile\teams.test.spec.ts" time="0.614">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 17: Verify selecting office filters available members." classname="Pages\MyProfile\teams.test.spec.ts" time="0.685">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 19: Verify selecting members activates Team Leader dropdown." classname="Pages\MyProfile\teams.test.spec.ts" time="2.652">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 20: Verify team creation fails if no Team Leader is selected." classname="Pages\MyProfile\teams.test.spec.ts" time="3.7">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 21: Verify successful team creation with all valid details." classname="Pages\MyProfile\teams.test.spec.ts" time="19.815">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 22: Verify Cancel button closes popup without saving." classname="Pages\MyProfile\teams.test.spec.ts" time="5.219">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 23: Verify unsaved data does not persist after closing popup" classname="Pages\MyProfile\teams.test.spec.ts" time="4.292">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 24: Verify newly created team appears in dropdown and team list." classname="Pages\MyProfile\teams.test.spec.ts" time="6.992">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 25: Verify failed team creation doesn’t reflect in list." classname="Pages\MyProfile\teams.test.spec.ts" time="5.046">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 26: Verify failed team creation doesn’t reflect in list." classname="Pages\MyProfile\teams.test.spec.ts" time="1.275">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 27: Verify sort button on empty list doesn’t crash UI." classname="Pages\MyProfile\teams.test.spec.ts" time="1.646">
 <system-out>
-<![CDATA[Calendar access updated toast message appeared
-All users selected and saved.
+<![CDATA[✅ Sort button clicked successfully on empty list - no crash detected.
 ]]>
 </system-out>
 </testcase>
-<testcase name="Access Tab Tests - Remmi E2E › Test 8: Verify that selecting Deselect All removes access from all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="5.586">
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 28: Verify Edit icon opens existing team for update" classname="Pages\MyProfile\teams.test.spec.ts" time="0.291">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 29: Verify Delete icon opens confirmation popup." classname="Pages\MyProfile\teams.test.spec.ts" time="1.138">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 30: Verify clicking Cancel on Delete popup keeps team." classname="Pages\MyProfile\teams.test.spec.ts" time="1.401">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 31: Verify confirming Delete removes team permanently." classname="Pages\MyProfile\teams.test.spec.ts" time="1.14">
 <system-out>
-<![CDATA[Calendar access updated toast message appeared
-All users deselected and saved.
+<![CDATA[🟠 Name of the team to be deleted: Team 4
+🟣 Delete confirmation dialog is visible.
+🟢 Confirmed team deletion from dialog.
+🟢 The team was deleted and is no longer present in the list: "Team 4"
+]]>
+</system-out>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 32: Verify team created in My Profile also appears in Team module" classname="Pages\MyProfile\teams.test.spec.ts" time="6.247">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 33: Verify alignment of Add button with Team dropdown." classname="Pages\MyProfile\teams.test.spec.ts" time="0.651">
+<system-out>
+<![CDATA[📏 Vertical alignment difference: 11.67px
+📐 Horizontal gap between dropdown and Add button: 221.71px
+🟢 Add button is horizontally aligned and properly placed next to the Team dropdown.
+]]>
+</system-out>
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 34: Verify dropdown supports search for large team lists." classname="Pages\MyProfile\teams.test.spec.ts" time="0.187">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 35: Verify dropdown search with invalid keyword." classname="Pages\MyProfile\teams.test.spec.ts" time="0.238">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 36: Verify toast notification appears after team creation." classname="Pages\MyProfile\teams.test.spec.ts" time="4.819">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 37: Verify no duplicate toast shown for single event." classname="Pages\MyProfile\teams.test.spec.ts" time="6.202">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 38: Verify validation message color (red for errors)." classname="Pages\MyProfile\teams.test.spec.ts" time="0.853">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 39: Verify confirmation message color (green for success)" classname="Pages\MyProfile\teams.test.spec.ts" time="6.231">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 40: Verify data remains after page refresh." classname="Pages\MyProfile\teams.test.spec.ts" time="8.203">
+</testcase>
+<testcase name="Teams Tab Tests - Remmi E2E › Test case 41: Verify unsaved popup data lost on refresh." classname="Pages\MyProfile\teams.test.spec.ts" time="7.507">
+<system-out>
+<![CDATA[✅ Verified: Unsaved Add Team popup data is lost after page refresh.
 ]]>
 </system-out>
 </testcase>

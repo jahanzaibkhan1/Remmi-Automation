@@ -590,12 +590,8 @@ export class MyProfileActions {
   }
 
   private async SelectTeamLeaderFromDropdown(leaderName: string) {
-    const option = this.locators.SelectTeamLeaderOption().filter({ hasText: leaderName });
-
-    // Wait until at least one matching option appears
-    await expect(option.first()).toBeVisible({ timeout: 10000 });
-
-    // Scroll & click safely
+    const option = this.page.getByRole('option', { name: /Jahanzaib Xenex \(jahanzaib@/i });
+    await option.first().waitFor({ state: 'visible' });
     await option.first().scrollIntoViewIfNeeded();
     await option.first().click({ force: true });
   }
