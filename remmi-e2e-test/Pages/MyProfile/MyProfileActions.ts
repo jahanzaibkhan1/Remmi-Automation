@@ -1213,9 +1213,6 @@ export class MyProfileActions {
 
     if (await alreadySelected.isVisible().catch(() => false)) {
       console.log(`ℹ️ User "${userName}" is already selected — clicking Save only.`);
-      await this.SaveButton();
-      await this.calendarUpdateToast();
-      await this.calendarAccessUserName(userName);
     } else {
       await this.openUserDropdown();
       await this.searchforUserName(userName);
