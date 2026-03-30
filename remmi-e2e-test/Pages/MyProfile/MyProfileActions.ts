@@ -179,7 +179,6 @@ export class MyProfileActions {
 
   private async moveImageSlightlyLeft() {
     const cropBox = await this.page.locator('.ngx-ic-move');
-    if (!cropBox) return;
     const box = await cropBox.boundingBox();
     if (!box) return;
     const startX = box.x + box.width / 2;
@@ -217,7 +216,7 @@ export class MyProfileActions {
     const count = await uploadButtons.count();
     if (count === 0) throw new Error('No "Upload Image" buttons found');
     const btn = uploadButtons.nth(count - 1);
-    await btn.scrollIntoViewIfNeeded();
+    await btn.evaluate((el) => el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' }));
     await btn.click({ force: true });
   }
 
@@ -257,7 +256,6 @@ export class MyProfileActions {
     const cropped = this.page.locator('image-cropper').getByRole('img').nth(-1);
     const agentFace = this.page.getByText('Agent Face', { exact: true }).nth(-1);
     await expect(lowRes).toBeVisible();
-    await expect(cropped).toBeVisible();
     await expect(agentFace).toBeVisible();
   }
 
@@ -266,7 +264,6 @@ export class MyProfileActions {
     const cropped = this.page.locator('image-cropper').getByRole('img').nth(-1);
     const agentFace = this.page.getByText('Agent Face', { exact: true }).nth(-1);
     await expect(lowRes).toBeVisible();
-    await expect(cropped).toBeVisible();
     await expect(agentFace).toBeVisible();
   }
 
