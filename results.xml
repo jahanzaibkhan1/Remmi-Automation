@@ -1,78 +1,40 @@
-<testsuites id="" name="" tests="8" failures="0" skipped="0" errors="0" time="29.286873999999838">
-<testsuite name="Pages\MyProfile\MyProfileTest.spec.ts" timestamp="2026-03-30T05:40:11.642Z" hostname="chromium" tests="8" failures="0" skipped="0" time="26.995" errors="0">
-<testcase name="My Profile Tests - Remmi E2E › 1. Profile fields show data &amp; are non-editable" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="14.664">
+<testsuites id="" name="" tests="5" failures="0" skipped="0" errors="0" time="43.59748699999973">
+<testsuite name="Pages\MyProfile\profileAccess.spec.ts" timestamp="2026-03-30T05:49:19.833Z" hostname="chromium" tests="5" failures="0" skipped="0" time="40.867" errors="0">
+<testcase name="Access Tab Tests - Remmi E2E › Test case 2: The user can successfully select a user from Access tab" classname="Pages\MyProfile\profileAccess.spec.ts" time="17.325">
 <system-out>
-<![CDATA[First Name value: "EMPTY"
-First Name non-editable? ✅ Yes
-Last Name value: "Xenex"
-Last Name non-editable? ✅ Yes
-Email value: "jahanzaib@xenex-media.com.au"
-Email non-editable? ✅ Yes
-Mobile Number value: "EMPTY"
-Mobile Number non-editable? ✅ Yes
-Telephone value: "Telephone"
-Telephone non-editable? ✅ Yes
-Job Title value: "EMPTY"
-Job Title non-editable? ✅ Yes
-Biography value: "EMPTY"
-Biography non-editable? ✅ Yes
-Role value: "Operations Manager"
-Role non-editable? ✅ Yes
-Group value: "QA"
-Group non-editable? ✅ Yes
-Office value: "QA Tester"
-Office non-editable? ✅ Yes
+<![CDATA[ℹ️ User "Dawood Ahmad" is already selected — clicking Save only.
 ]]>
 </system-out>
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › 2. Fields remain non-editable if data missing" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0.537">
+<testcase name="Access Tab Tests - Remmi E2E › Test 4: Verify multiple users can be granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="9.422">
 <system-out>
-<![CDATA[First Name value: "Jahanzaib"
-First Name non-editable? ✅ Yes
-Last Name value: "Xenex"
-Last Name non-editable? ✅ Yes
-Email value: "jahanzaib@xenex-media.com.au"
-Email non-editable? ✅ Yes
-Mobile Number value: "EMPTY"
-Mobile Number non-editable? ✅ Yes
-Telephone value: "Telephone"
-Telephone non-editable? ✅ Yes
-Job Title value: "EMPTY"
-Job Title non-editable? ✅ Yes
-Biography value: "EMPTY"
-Biography non-editable? ✅ Yes
-Role value: "Operations Manager"
-Role non-editable? ✅ Yes
-Group value: "QA"
-Group non-editable? ✅ Yes
-Office value: "QA Tester"
-Office non-editable? ✅ Yes
+<![CDATA[Hina Agent selected for access.
+Hina Tahir selected for access.
+Calendar access updated toast message appeared
+Hina Agent verified in granted access list.
+Hina Tahir verified in granted access list.
 ]]>
 </system-out>
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › 3. PIN field allows input and updates profile" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0.197">
+<testcase name="Access Tab Tests - Remmi E2E › Test 6: Verify user can remove granted calendar access" classname="Pages\MyProfile\profileAccess.spec.ts" time="2.899">
 <system-out>
-<![CDATA[🟢 Clicked Update button
-]]>
-</system-out>
-<system-err>
-<![CDATA[⚠️ No toast visible — may auto-save or reload silently
-]]>
-</system-err>
-</testcase>
-<testcase name="My Profile Tests - Remmi E2E › 4. Calendar color selection updates correctly" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="1.468">
-</testcase>
-<testcase name="My Profile Tests - Remmi E2E › 5. Correct PIN allows private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="5.985">
-<system-out>
-<![CDATA[Image already uploaded and visible, skipping upload.
+<![CDATA[Calendar access updated toast message appeared
 ]]>
 </system-out>
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › 6. PIN is required for private download (empty PIN case)" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="2.61">
+<testcase name="Access Tab Tests - Remmi E2E › Test 7: Verify that selecting Select All grants access to all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="5.635">
+<system-out>
+<![CDATA[Calendar access updated toast message appeared
+All users selected and saved.
+]]>
+</system-out>
 </testcase>
-<testcase name="My Profile Tests - Remmi E2E › 7. PIN is required for private download (validation)" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="1.41">
-</testcase>
-<testcase name="My Profile Tests - Remmi E2E › 8. Incorrect PIN prevents private download" classname="Pages\MyProfile\MyProfileTest.spec.ts" time="0.124">
+<testcase name="Access Tab Tests - Remmi E2E › Test 8: Verify that selecting Deselect All removes access from all users" classname="Pages\MyProfile\profileAccess.spec.ts" time="5.586">
+<system-out>
+<![CDATA[Calendar access updated toast message appeared
+All users deselected and saved.
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
