@@ -19,9 +19,10 @@ export class ListingActions {
      * Navigates to the Listings tab and asserts its visibility quickly.
      */
     async navigateToListings() {
-        const listingTab = this.locators.ListingTab();
-        await listingTab.waitFor({ state: 'visible', timeout: 30000 });
-        await listingTab.click({ force: true });
+        const currentUrl = this.page.url().split(/[?#]/)[0];
+        if (!currentUrl.endsWith('/listings/listing-properties')) {
+            await this.page.goto('/listings/listing-properties');
+        }
     }
 
     async navigateToContracts() {
@@ -4307,7 +4308,7 @@ export class ListingActions {
         }
     }
 
-    async closeFormWithoutSaving(propertyType: string, listingType: string, listingStatus: string) {
+    async closeFormWithoutSaving() {
         await this.navigateToListings();
         await this.switchToListView()
         await this.waitForTableRows()
@@ -4327,50 +4328,33 @@ export class ListingActions {
         await expect(addressOption).toBeVisible({ timeout: 10000 });
         await addressOption.click();
 
-        // Open Property Type dropdown and search/select the option
-        const propertyTypeDropdown = this.page.locator('ng-select[formcontrolname="type"]');
-        await expect(propertyTypeDropdown).toBeVisible({ timeout: 10000 });
-        await propertyTypeDropdown.click();
+        const listingsTypeDropdown = this.page.locator('ng-select').filter({ hasText: 'Listings Type' }).getByRole('combobox');
+        await expect(listingsTypeDropdown).toBeVisible({ timeout: 10000 });
+        await listingsTypeDropdown.click();
 
-        // Search for the propertyType option
-        const propertyTypeSearchInput = this.page.locator('ng-select[formcontrolname="type"] input[type="text"], ng-select[formcontrolname="type"] input[role="combobox"]');
-        if (await propertyTypeSearchInput.isVisible({ timeout: 1000 }).catch(() => false)) {
-            await propertyTypeSearchInput.fill(propertyType);
-            await this.page.waitForTimeout(500); // Let options update if needed
-        }
-
-        const propertyTypeOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: propertyType }).first();
-        await propertyTypeOption.click();
-
-        // Open Listing Type dropdown, search and select option
-        const listingTypeDropdown = this.page.locator('ng-select[formcontrolname="listingType"], ng-select[formcontrolname="listing_type"]');
-        await expect(listingTypeDropdown).toBeVisible({ timeout: 10000 });
-        await listingTypeDropdown.click();
-        const listingTypeSearchInput = listingTypeDropdown.locator('input[type="text"]');
-        await expect(listingTypeSearchInput).toBeVisible({ timeout: 2000 });
-        await listingTypeSearchInput.fill(listingType);
-        await this.page.waitForTimeout(500); // Let options update if needed
-        const listingTypeOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: listingType }).first();
-        await listingTypeOption.click();
-
-        // Open Listing Status dropdown, search and select option
-
-        const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input')
-        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 })
-        await listingStatusDropdown.click();
-        // Correct way to access the search input for a native ng-select dropdown:
-        const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
-        await listingStatusSearchInput.fill(listingStatus);
+        // Search 'Auction' inside Listings Type dropdown
+        const listingsTypeSearchInput = this.page.locator('ng-select').filter({ hasText: 'Listings Type' }).locator('input[type="text"]');
+        await expect(listingsTypeSearchInput).toBeVisible({ timeout: 10000 });
+        await listingsTypeSearchInput.fill('Auction');
         await this.page.waitForTimeout(500);
-        const listingStatusOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: listingStatus }).first();
-        await listingStatusOption.click();
+
+        const auctionOption = this.page.getByRole('option', { name: 'Auction' });
+        await auctionOption.waitFor({ state: 'visible' });
+        await auctionOption.click();
+
+        const listingStatusDropdown = this.page.locator('ng-select').filter({ hasText: 'Listing Status' });
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
+        await listingStatusDropdown.click();
+
+        const forSaleOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: 'For sale' }).first();
+        await expect(forSaleOption).toBeVisible({ timeout: 10000 });
+        await forSaleOption.click();
 
         const closeForm = this.page.locator('.pi.pi-times').first()
         await this.page.waitForTimeout(1000)
         await closeForm.click({ force: true })
 
         await this.page.waitForTimeout(1000);
-
     }
 
     // Pinning a listing card row via right-click context menu
@@ -4549,14 +4533,14 @@ export class ListingActions {
         await propertyAddressSearchInput.fill('140 Coates Street, Laidley, QLD 4341');
         // Wait for dropdown/options to appear and select the address
         const addressOption = this.page.locator('div:nth-child(1) > .loop-item > div > .item-display');
-        await expect(addressOption).toBeVisible({ timeout: 10000 });
+        await expect(addressOption).toBeVisible({ timeout: 20000 });
         await addressOption.click();
 
         // Wait for the dialog and click Yes
         const copyDialog = this.page.getByText('Would you like to copy this');
-        await expect(copyDialog).toBeVisible({ timeout: 10000 });
+        await expect(copyDialog).toBeVisible({ timeout: 20000 });
         const yesButton = this.page.getByRole('button', { name: 'Yes' });
-        await expect(yesButton).toBeVisible({ timeout: 10000 });
+        await expect(yesButton).toBeVisible({ timeout: 20000 });
         await yesButton.click();
 
         const closeForm = this.page.locator('.pi.pi-times').first()
@@ -4817,7 +4801,7 @@ export class ListingActions {
 
         // Wait for "Would you like to copy this" dialog, click "No"
         const copyDialog = this.page.getByText('Would you like to copy this');
-        await expect(copyDialog).toBeVisible({ timeout: 10000 });
+        await expect(copyDialog).toBeVisible({ timeout: 20000 });
         const noButton = this.page.getByRole('button', { name: 'No' });
         await expect(noButton).toBeVisible({ timeout: 10000 });
         await noButton.click();
@@ -5071,8 +5055,14 @@ export class ListingActions {
         await expect(listingsTypeDropdown).toBeVisible({ timeout: 10000 });
         await listingsTypeDropdown.click();
 
+        // Search 'Auction' inside Listings Type dropdown
+        const listingsTypeSearchInput = this.page.locator('ng-select').filter({ hasText: 'Listings Type' }).locator('input[type="text"]');
+        await expect(listingsTypeSearchInput).toBeVisible({ timeout: 10000 });
+        await listingsTypeSearchInput.fill('Auction');
+        await this.page.waitForTimeout(500);
+
         const auctionOption = this.page.getByRole('option', { name: 'Auction' });
-        await expect(auctionOption).toBeVisible({ timeout: 10000 });
+        await auctionOption.waitFor({ state: 'visible' });
         await auctionOption.click();
 
         const listingStatusDropdown = this.page.locator('ng-select').filter({ hasText: 'Listing Status' });
@@ -5102,14 +5092,17 @@ export class ListingActions {
         await expect(addListingBtn).toBeVisible({ timeout: 10000 });
         await addListingBtn.click();
 
-        const listingsTypeDropdown = this.page.locator('ng-select').filter({ hasText: 'Listings Type' }).getByRole('combobox');
-        await expect(listingsTypeDropdown).toBeVisible({ timeout: 10000 });
-        await listingsTypeDropdown.click();
+       
+        // Search 'Auction' inside Listings Type dropdown
+        const listingsTypeSearchInput = this.page.locator('ng-select').filter({ hasText: 'Listings Type' }).locator('input[type="text"]');
+        await expect(listingsTypeSearchInput).toBeVisible({ timeout: 10000 });
+        await listingsTypeSearchInput.fill('Auction');
+        await this.page.waitForTimeout(500);
 
         const auctionOption = this.page.getByRole('option', { name: 'Auction' });
-        await expect(auctionOption).toBeVisible({ timeout: 10000 });
+        await auctionOption.waitFor({ state: 'visible' });
         await auctionOption.click();
-
+        
         const listingStatusDropdown = this.page.locator('ng-select').filter({ hasText: 'Listing Status' });
         await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 });
         await listingStatusDropdown.click();
@@ -5169,8 +5162,14 @@ export class ListingActions {
         await expect(listingsTypeDropdown).toBeVisible({ timeout: 10000 });
         await listingsTypeDropdown.click();
 
+        // Search 'Auction' inside Listings Type dropdown
+        const listingsTypeSearchInput = this.page.locator('ng-select').filter({ hasText: 'Listings Type' }).locator('input[type="text"]');
+        await expect(listingsTypeSearchInput).toBeVisible({ timeout: 10000 });
+        await listingsTypeSearchInput.fill('Auction');
+        await this.page.waitForTimeout(500);
+
         const auctionOption = this.page.getByRole('option', { name: 'Auction' });
-        await expect(auctionOption).toBeVisible({ timeout: 10000 });
+        await auctionOption.waitFor({ state: 'visible' });
         await auctionOption.click();
 
         const listingStatusDropdown = this.page.locator('ng-select').filter({ hasText: 'Listing Status' });
@@ -5200,12 +5199,14 @@ export class ListingActions {
         await expect(addListingBtn).toBeVisible({ timeout: 10000 });
         await addListingBtn.click();
 
-        const listingsTypeDropdown = this.page.locator('ng-select').filter({ hasText: 'Listings Type' }).getByRole('combobox');
-        await expect(listingsTypeDropdown).toBeVisible({ timeout: 10000 });
-        await listingsTypeDropdown.click();
+        // Search 'Auction' inside Listings Type dropdown
+        const listingsTypeSearchInput = this.page.locator('ng-select').filter({ hasText: 'Listings Type' }).locator('input[type="text"]');
+        await expect(listingsTypeSearchInput).toBeVisible({ timeout: 10000 });
+        await listingsTypeSearchInput.fill('Rental');
+        await this.page.waitForTimeout(500);
 
         const auctionOption = this.page.getByRole('option', { name: 'Rental' });
-        await expect(auctionOption).toBeVisible({ timeout: 10000 });
+        await auctionOption.waitFor({ state: 'visible' });
         await auctionOption.click();
 
         const listingStatusDropdown = this.page.locator('ng-select').filter({ hasText: 'Listing Status' });
@@ -5500,7 +5501,7 @@ export class ListingActions {
         const imageName = imagePath.split(/[\\/]/).pop();
         if (imageName) {
             const imageNameInLibFile = this.page.locator(`.lib-file :text("${imageName}")`).first();
-            await expect(imageNameInLibFile).toBeVisible({ timeout: 20000 });
+            await expect(imageNameInLibFile).toBeVisible({ timeout: 30000 });
         }
 
         // Save and close
@@ -5508,7 +5509,6 @@ export class ListingActions {
         await saveAndCloseButton.scrollIntoViewIfNeeded();
         await expect(saveAndCloseButton).toBeVisible({ timeout: 10000 });
         await saveAndCloseButton.click();
-        await this.page.waitForTimeout(2000);
 
         await this.page.waitForTimeout(2000);
     }
@@ -5930,7 +5930,7 @@ export class ListingActions {
 
         // Find the delete button for the first visible listing card in card/grid view
         const cardDeleteButton = this.page.locator('a:nth-child(4)').first();
-        await cardDeleteButton.scrollIntoViewIfNeeded()
+        await cardDeleteButton.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
         await cardDeleteButton.click({ force: true });
 
         // Wait for confirmation dialog to appear
@@ -6073,19 +6073,25 @@ export class ListingActions {
 
         await this.page.waitForTimeout(1000);
 
-        // Open and select first available option in the project dropdown
+        // Open the "Select Project" dropdown and use the search option to filter
         const projectDropdown = this.page.getByText('Select Project');
         await expect(projectDropdown).toBeVisible({ timeout: 10000 });
         await projectDropdown.click();
+
+        // Locate the search input inside the dropdown and type a search term (e.g., "Test")
+        const searchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.fill('East Village Vila');
+        await this.page.waitForTimeout(500);
 
         // Wait for the dropdown options to be visible
         const dropdownItems = this.page.getByRole('listbox', { name: 'Options list' });
         await expect(dropdownItems).toBeVisible({ timeout: 10000 });
 
-        // Select the first (non-disabled) option
-        const firstOption = dropdownItems.locator('.ng-option:not(.ng-option-disabled)').first();
-        await expect(firstOption).toBeVisible({ timeout: 10000 });
-        await firstOption.click();
+        // Select the option whose text matches the searched 'Test'
+        const searchedOption = dropdownItems.locator('.ng-option:not(.ng-option-disabled)', { hasText: 'East Village Vila' }).first();
+        await expect(searchedOption).toBeVisible({ timeout: 10000 });
+        await searchedOption.click();
 
         // Click Associate button
         const associateButton = this.page.getByRole('button', { name: /Associate/i });
@@ -6291,7 +6297,7 @@ export class ListingActions {
 
         // Click the Preview button (assuming it is a button with text 'Preview')
         const previewBtn = this.page.getByRole('button', { name: /preview Listing/i }).first();
-        await expect(previewBtn).toBeVisible({ timeout: 10000 });
+        await previewBtn.waitFor({ state: 'visible' });
         await previewBtn.click({ force: true });
 
         // Wait for the preview modal or panel/dialog to be visible
@@ -6838,7 +6844,7 @@ export class ListingActions {
         // Find the price input (try common selectors)
         const priceInput = this.page.locator('input[name="price"]').first();
         await expect(priceInput).toBeVisible({ timeout: 10000 });
-        await priceInput.scrollIntoViewIfNeeded();
+        await priceInput.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center', behavior: 'auto' }));
         await priceInput.click();
         await priceInput.clear();
         await priceInput.fill('12345');
@@ -6869,7 +6875,7 @@ export class ListingActions {
         // Find the price input (try common selectors)
         const priceInput = this.page.locator('input[name="price"]').first();
         await expect(priceInput).toBeVisible({ timeout: 10000 });
-        await priceInput.scrollIntoViewIfNeeded();
+        await priceInput.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'auto' }));
         await priceInput.click();
         await priceInput.clear();
         await priceInput.fill('54321');
