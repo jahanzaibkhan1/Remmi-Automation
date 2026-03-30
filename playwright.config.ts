@@ -47,7 +47,7 @@ export default defineConfig({
   use: {
     baseURL: BASE_URL, // ✅ FIXED (now guaranteed to load)
     headless: true,
-    viewport: { width: 1320, height: 620 },
+    viewport: { width: 1260, height: 580 },
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'on-first-retry',

@@ -4,7 +4,7 @@ export class ListingLocators {
     constructor(private page: Page) { }
 
     ListingTab(): Locator {
-        return this.page.locator("li.list.sideMenu.justify-center[data-label='Listings']");
+        return this.page.locator("//li[@data-label='Listings' and contains(@class, 'sideMenu') and .//img[@src='assets/img/dashboadIcon/listing.svg']]");
     }
     SearchBox(): Locator {
         return this.page.locator('#keywordInput, [role="textbox"][name="Search"]');

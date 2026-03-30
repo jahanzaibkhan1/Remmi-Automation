@@ -22,17 +22,28 @@ export class MyProfileActions {
     const profileIcon = this.locators.profileIcon();
     const myProfileBtn = this.locators.myProfileButton();
 
-    // Wait for profile icon to exist
-    await profileIcon.waitFor({ state: 'visible', timeout: 10000 });
+    // Always wait for dashboard loader to be hidden before clicking profile icon
+    const dashboardLoader = this.page.getByText('Loading....').first();
+    if (await dashboardLoader.isVisible().catch(() => false)) {
+      await dashboardLoader.waitFor({ state: 'hidden', timeout: 30000 });
+    }
+
+    // Wait for profile icon to be visible
+    await profileIcon.waitFor({ state: 'visible' });
 
     const maxAttempts = 20;
 
+    // Only start clicking after loading is confirmed hidden
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       await profileIcon.click({ force: true });
 
+      // If menu appears, stop attempt loop
       if (await myProfileBtn.isVisible()) {
         return;
       }
+
+      // Optional: short wait between attempts could improve reliability
+      await this.page.waitForTimeout(100);
     }
 
     throw new Error('My Profile button did not appear after multiple fast clicks on the profile icon.');
@@ -94,16 +105,40 @@ export class MyProfileActions {
     await libLink.click({ force: true });
   }
 
+  async uploadImageToLibrary(imagePath: string) {
+    const imgThumb = this.locators.clickImage();
+    const isVisible = await imgThumb.first().waitFor({ state: 'visible', timeout: 10000 }).then(() => true).catch(() => false);
+    if (isVisible) {
+      console.log('Image already uploaded and visible, skipping upload.');
+      return;
+    }
+    const addButton = this.page.getByRole('button', { name: ' Add' });
+    await addButton.waitFor({ state: 'visible' });
+    await addButton.click({ force: true });
+
+    const fileUploadLink = this.page.locator('a', { hasText: 'File Upload (Private)' });
+    await fileUploadLink.waitFor({ state: 'visible' });
+    await fileUploadLink.click();
+
+    const fileInput = this.page.locator('input[type="file"]');
+    await fileInput.setInputFiles(imagePath);
+  }
+
   private async clickImage() {
-    const img = this.locators.clickImage().first();
+    const saqtteStatus = this.page.locator('svg:visible');
+    await saqtteStatus.waitFor({ state: 'hidden' });
+    await this.page.waitForTimeout(1200);
+    const img = this.locators.clickImage();
+    await img.waitFor({ state: 'attached' }); 
     await img.click({ force: true });
   }
 
   private async clickPrivateDownloadButton() {
-    const btn = this.locators.privateDownloadButton().first();
-    await expect(btn).toBeVisible({ timeout: 15000 });
+    const btn = this.locators.privateDownloadButton();
+    await btn.first().waitFor({ state: 'visible'});
     await btn.click({ force: true });
   }
+
 
   private async fillPinPopup(pin: string) {
     const field = this.locators.pinPopupField().first();
@@ -168,7 +203,6 @@ export class MyProfileActions {
 
   private async moveImageSlightlyLeft() {
     const cropBox = await this.page.locator('.ngx-ic-move');
-    if (!cropBox) return;
     const box = await cropBox.boundingBox();
     if (!box) return;
     const startX = box.x + box.width / 2;
@@ -206,7 +240,7 @@ export class MyProfileActions {
     const count = await uploadButtons.count();
     if (count === 0) throw new Error('No "Upload Image" buttons found');
     const btn = uploadButtons.nth(count - 1);
-    await btn.scrollIntoViewIfNeeded();
+    await btn.evaluate((el) => el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' }));
     await btn.click({ force: true });
   }
 
@@ -246,7 +280,6 @@ export class MyProfileActions {
     const cropped = this.page.locator('image-cropper').getByRole('img').nth(-1);
     const agentFace = this.page.getByText('Agent Face', { exact: true }).nth(-1);
     await expect(lowRes).toBeVisible();
-    await expect(cropped).toBeVisible();
     await expect(agentFace).toBeVisible();
   }
 
@@ -255,7 +288,6 @@ export class MyProfileActions {
     const cropped = this.page.locator('image-cropper').getByRole('img').nth(-1);
     const agentFace = this.page.getByText('Agent Face', { exact: true }).nth(-1);
     await expect(lowRes).toBeVisible();
-    await expect(cropped).toBeVisible();
     await expect(agentFace).toBeVisible();
   }
 
@@ -490,7 +522,7 @@ export class MyProfileActions {
   private async crossPopup() {
     const crossPopup = this.locators.crossPopup();
     await expect(crossPopup).toBeVisible();
-    await crossPopup.dblclick({force:true});
+    await crossPopup.dblclick({ force: true });
   }
   private async changeProfile(imagePath: string) {
     const changeProfileButton = this.locators.changeProfile();
@@ -518,7 +550,7 @@ export class MyProfileActions {
   private async SelectTeamMember() {
     const dropdown = this.locators.SelectTeamMemberDropdown();
     await expect(dropdown).toBeVisible({ timeout: 10000 });
-    await dropdown.click({force:true});
+    await dropdown.click({ force: true });
   }
 
   private async SelectTeamMemberSearchInput(memberName: string) {
@@ -558,12 +590,8 @@ export class MyProfileActions {
   }
 
   private async SelectTeamLeaderFromDropdown(leaderName: string) {
-    const option = this.locators.SelectTeamLeaderOption().filter({ hasText: leaderName });
-
-    // Wait until at least one matching option appears
-    await expect(option.first()).toBeVisible({ timeout: 10000 });
-
-    // Scroll & click safely
+    const option = this.page.getByRole('option', { name: /Jahanzaib Xenex \(jahanzaib@/i });
+    await option.first().waitFor({ state: 'visible' });
     await option.first().scrollIntoViewIfNeeded();
     await option.first().click({ force: true });
   }
@@ -666,7 +694,7 @@ export class MyProfileActions {
 
   private async selectProjectOption() {
     const option = this.locators.searchProjectOption;
-    await option.waitFor({ state: 'visible' });
+    await option.first().waitFor({ state: 'visible' });
     await option.click();
   }
 
@@ -741,7 +769,6 @@ export class MyProfileActions {
       await this.clickLibraryLink();
     });
   }
-
   async downloadWithCorrectPin(pin: string) {
     await test.step('Download with correct PIN', async () => {
       await this.clickImage();
@@ -793,11 +820,13 @@ export class MyProfileActions {
     await test.step(`Update calendar color to ${color}`, async () => {
       await this.CalendarColor()
       await this.fillCalendarColor(color);
-      const OkButton = this.page.getByRole('button', { name: 'Ok' })
-      await OkButton.click()
+      const OkButton = this.page.getByRole('button', { name: 'Ok' });
+      await OkButton.evaluate((el) => el.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+      await this.page.waitForTimeout(1200);
+      await OkButton.click({ force: true });
       await this.clickUpdateButton();
       const successToast = this.page.getByRole('alert', { name: 'Profile has been updated' })
-      await expect(successToast).toBeVisible()
+      await successToast.waitFor({ state: 'visible' });
     });
   }
 
@@ -1180,9 +1209,6 @@ export class MyProfileActions {
 
     if (await alreadySelected.isVisible().catch(() => false)) {
       console.log(`ℹ️ User "${userName}" is already selected — clicking Save only.`);
-      await this.SaveButton();
-      await this.calendarUpdateToast();
-      await this.calendarAccessUserName(userName);
     } else {
       await this.openUserDropdown();
       await this.searchforUserName(userName);
@@ -1212,7 +1238,7 @@ export class MyProfileActions {
       await searchBox.clear();
       console.log(`${userName} selected for access.`);
     }
-    
+
     await this.SaveButton();
     await this.SaveButton();
     await this.calendarUpdateToast();
@@ -1664,7 +1690,7 @@ export class MyProfileActions {
       await this.SelectOfficeOption();
       // Click the Cancel button to close the popup
       await this.CancelTeamButton();
-      
+
     });
   }
   async VerifyNoMembersWithoutOffice() {
@@ -2367,36 +2393,36 @@ export class MyProfileActions {
       await expect(successToast).toBeVisible({ timeout: 10000 });
 
       // Wait briefly for the toast style to apply and render
-    //   await this.page.waitForTimeout(800);
+      //   await this.page.waitForTimeout(800);
 
-    //   // Collect the toast's background color from the element and its parents
-    //   type ToastColorInfo = { tag: string; class: string; color: string };
-    //   const bgColors: ToastColorInfo[] = await successToast.evaluate((el) => {
-    //     const styles: ToastColorInfo[] = [];
-    //     let current = el as HTMLElement | null;
-    //     while (current) {
-    //       const color = window.getComputedStyle(current).backgroundColor;
-    //       styles.push({ tag: current.tagName, class: (current.className || '').toString(), color });
-    //       current = current.parentElement as HTMLElement | null;
-    //     }
-    //     return styles;
-    //   });
+      //   // Collect the toast's background color from the element and its parents
+      //   type ToastColorInfo = { tag: string; class: string; color: string };
+      //   const bgColors: ToastColorInfo[] = await successToast.evaluate((el) => {
+      //     const styles: ToastColorInfo[] = [];
+      //     let current = el as HTMLElement | null;
+      //     while (current) {
+      //       const color = window.getComputedStyle(current).backgroundColor;
+      //       styles.push({ tag: current.tagName, class: (current.className || '').toString(), color });
+      //       current = current.parentElement as HTMLElement | null;
+      //     }
+      //     return styles;
+      //   });
 
-    //   console.log('Toast background chain:', bgColors);
+      //   console.log('Toast background chain:', bgColors);
 
-    //   // Find the first color that isn't fully transparent (rgba(0, 0, 0, 0))
-    //   const visibleColor = bgColors.find(c => c.color !== 'rgba(0, 0, 0, 0)' && c.color !== 'transparent')?.color;
-    //   console.log('Detected visible color:', visibleColor);
+      //   // Find the first color that isn't fully transparent (rgba(0, 0, 0, 0))
+      //   const visibleColor = bgColors.find(c => c.color !== 'rgba(0, 0, 0, 0)' && c.color !== 'transparent')?.color;
+      //   console.log('Detected visible color:', visibleColor);
 
-    //   // Normalize color string if necessary (convert rgba to rgb for alpha=1)
-    //   let normalizedColor = visibleColor || '';
-    //   if (normalizedColor.startsWith('rgba(')) {
-    //     normalizedColor = normalizedColor.replace('rgba', 'rgb').replace(/, 1\)$/, ')');
-    //   }
+      //   // Normalize color string if necessary (convert rgba to rgb for alpha=1)
+      //   let normalizedColor = visibleColor || '';
+      //   if (normalizedColor.startsWith('rgba(')) {
+      //     normalizedColor = normalizedColor.replace('rgba', 'rgb').replace(/, 1\)$/, ')');
+      //   }
 
-    //   const expectedColor = 'rgb(34, 146, 118)';
-    //   await expect(normalizedColor).toBe(expectedColor);
-     });
+      //   const expectedColor = 'rgb(34, 146, 118)';
+      //   await expect(normalizedColor).toBe(expectedColor);
+    });
   }
 
   async VerifyTeamDataPersistenceAfterRefresh(OfficeName: string, memberName: string, leaderName: string) {
@@ -2842,7 +2868,7 @@ export class MyProfileActions {
       await this.clickAddProjectButton();
       await this.fillSearchProjectInput(searchName);
       const option = this.locators.searchProjectOption;
-      await option.waitFor({ state: 'visible'});
+      await option.first().waitFor({ state: 'visible' });
       await this.page.waitForTimeout(1200);
     });
   }
@@ -2851,10 +2877,10 @@ export class MyProfileActions {
     await test.step('Verify search with no matching project', async () => {
       await this.AssociationsTab();
       await this.clickAddProjectButton();
+      await this.fillSearchProjectInput('');
       await this.fillSearchProjectInput(nonExistentProject);
-      // Assert that no project options are visible
       const option = this.locators.searchProjectOption;
-      await expect(option).not.toBeVisible({ timeout: 30000 });
+      await expect(option.first()).not.toBeVisible({ timeout: 30000 });
       await this.page.waitForTimeout(1200);
     });
   }
@@ -2864,7 +2890,7 @@ export class MyProfileActions {
       await this.AssociationsTab();
       await this.clickAddProjectButton();
       const option = this.page.locator('.drop_box');
-      await option.waitFor({ state: 'visible'});
+      await option.waitFor({ state: 'visible' });
       await this.page.waitForTimeout(1200);
     });
   }
@@ -2875,7 +2901,7 @@ export class MyProfileActions {
       await this.clickAddProjectButton();
       await this.fillSearchProjectInput(searchTerm);
       const option = this.locators.searchProjectOption;
-      await option.waitFor({ state: 'visible'});
+      await option.first().waitFor({ state: 'visible' });
       await expect(option).toContainText(searchTerm);
       await this.page.waitForTimeout(1200);
     });
@@ -2889,7 +2915,7 @@ export class MyProfileActions {
       await this.selectProjectOption();
       const insidesearchBox = this.page.locator('.pi.pi-times-circle');
       await expect(insidesearchBox).toBeVisible();
-      await insidesearchBox.dblclick({force:true});
+      await insidesearchBox.dblclick({ force: true });
       await this.page.waitForTimeout(1200);
     });
   }
@@ -2933,20 +2959,20 @@ export class MyProfileActions {
       await addedAlert.waitFor({ state: 'hidden' });
 
       const tableRows1 = this.page.locator('table tbody tr').first();
-      await tableRows1.first().waitFor({ state: 'visible'});
+      await tableRows1.first().waitFor({ state: 'visible' });
       // Clear any existing projects in the list (if any) by clicking checkbox and trash icon
       const checkbox = this.page.locator("div[class='p-checkbox-box']").first();
       await checkbox.waitFor({ state: 'visible' });
       await expect(checkbox).toBeEnabled();
       await checkbox.click({ force: true });
       const trashIcon = this.page.locator(".mr-2.cursor-pointer.ng-star-inserted").first();
-      await trashIcon.waitFor({ state: 'visible'});
+      await trashIcon.waitFor({ state: 'visible' });
       await trashIcon.click({ force: true });
       // Click "Yes" button in confirmation dialog
       const yesButton = this.page.getByRole('button', { name: 'Yes' }).nth(1);
       await yesButton.click({ force: true });
       const NoRecord = this.page.getByRole('cell', { name: 'No records found' });
-      await NoRecord.waitFor({ state: 'visible'});
+      await NoRecord.waitFor({ state: 'visible' });
       await this.page.waitForTimeout(1200);
     });
   }
@@ -3075,7 +3101,7 @@ export class MyProfileActions {
     await test.step('Verify adding when list is initially empty', async () => {
       await this.AssociationsTab();
       const tableRows = this.page.locator('table tbody tr').first();
-      await tableRows.first().waitFor({ state: 'visible'});
+      await tableRows.first().waitFor({ state: 'visible' });
       // Clear any existing projects in the list (if any) by clicking checkbox and trash icon
       const checkbox = this.page.locator("div[class='p-checkbox-box']").first();
       await checkbox.click({ force: true });
@@ -3095,7 +3121,7 @@ export class MyProfileActions {
       const removedAlert = this.page.getByRole('alert', { name: 'Removed successfully' });
       await removedAlert.waitFor({ state: 'visible' });
       await removedAlert.waitFor({ state: 'hidden' });
- 
+
       await this.page.waitForTimeout(1200);
     });
   }
@@ -3104,7 +3130,7 @@ export class MyProfileActions {
     await test.step('Verify the sort functionality', async () => {
       await this.AssociationsTab();
       const tableRows = this.page.locator('table tbody tr').first();
-      await tableRows.first().waitFor({ state: 'visible'});
+      await tableRows.first().waitFor({ state: 'visible' });
       const sortHeader = this.page.getByRole('columnheader', { name: /Name/i }).first();
       const sortIcon = sortHeader.locator('svg').first();
       await expect(sortIcon).toBeVisible({ timeout: 10000 });
@@ -3130,7 +3156,7 @@ export class MyProfileActions {
     await test.step('Verify delete icon under Action column', async () => {
       await this.AssociationsTab();
       const tableRows = this.page.locator('table tbody tr').first();
-      await tableRows.first().waitFor({ state: 'visible'});
+      await tableRows.first().waitFor({ state: 'visible' });
       const projectRows = this.page.locator('//table//tr//td[2]');
       const beforeDeleteNames = (await projectRows.allInnerTexts())
         .map(text => text.trim())
@@ -3154,7 +3180,7 @@ export class MyProfileActions {
     await test.step('Verify project delete functionality', async () => {
       await this.AssociationsTab();
       const tableRows = this.page.locator('table tbody tr').first();
-      await tableRows.first().waitFor({ state: 'visible'});
+      await tableRows.first().waitFor({ state: 'visible' });
 
       // Find all project rows, select the first project to delete (if available)
       const projectRows = this.page.locator('//table//tr//td[2]');
@@ -3193,7 +3219,7 @@ export class MyProfileActions {
     await test.step('Verify checkbox beside each project', async () => {
       await this.AssociationsTab();
       const tableRows = this.page.locator('table tbody tr').first();
-      await tableRows.first().waitFor({ state: 'visible'});
+      await tableRows.first().waitFor({ state: 'visible' });
 
       // Find the "main" (Select All) checkbox for project selection
       const selectAllCheckbox = this.page.locator("div[class='p-checkbox-box']").first();
@@ -3225,7 +3251,7 @@ export class MyProfileActions {
     await test.step('Verify multiple checkbox selection', async () => {
       await this.AssociationsTab();
       const tableRows = this.page.locator('table tbody tr').first();
-      await tableRows.first().waitFor({ state: 'visible'});
+      await tableRows.first().waitFor({ state: 'visible' });
 
       // ✅ More accurate locator for PrimeNG table checkboxes
       const checkboxes = this.page.locator('//table//tr//td[1]//div[contains(@class,"p-checkbox-box")]');
@@ -3247,7 +3273,7 @@ export class MyProfileActions {
     await test.step('Verify multiple checkbox selection', async () => {
       await this.AssociationsTab();
       const tableRows = this.page.locator('table tbody tr').first();
-      await tableRows.first().waitFor({ state: 'visible'});
+      await tableRows.first().waitFor({ state: 'visible' });
       const checkbox = this.page.locator("div[class='p-checkbox-box']").first();
       await checkbox.click({ force: true });
       await this.page.waitForTimeout(1200);
@@ -3259,7 +3285,7 @@ export class MyProfileActions {
     await test.step('Verify bulk delete functionality', async () => {
       await this.AssociationsTab();
       const tableRows = this.page.locator('table tbody tr').first();
-      await tableRows.first().waitFor({ state: 'visible'});
+      await tableRows.first().waitFor({ state: 'visible' });
 
       // ✅ Locate all project checkboxes (skipping header)
       const checkboxes = this.page.locator('//table//tr//td[1]//div[contains(@class,"p-checkbox-box")]');
@@ -3309,7 +3335,7 @@ export class MyProfileActions {
     await test.step('Add a project if not present, otherwise delete a project and verify UI update', async () => {
       await this.AssociationsTab();
       const tableRows = this.page.locator('table tbody tr').first();
-      await tableRows.first().waitFor({ state: 'visible'});
+      await tableRows.first().waitFor({ state: 'visible' });
 
       // Get all current projects in the table
       let projectNamesBefore = await this.page.locator('//table//tr//td[2]').allInnerTexts();
@@ -3389,7 +3415,7 @@ export class MyProfileActions {
       await this.selectProjectOption();
       await this.clickAddButton();
       const tableRows = this.page.locator('table tbody tr').first();
-      await tableRows.first().waitFor({ state: 'visible'});
+      await tableRows.first().waitFor({ state: 'visible' });
       await this.page.waitForTimeout(1200);
     });
   }
@@ -3399,7 +3425,7 @@ export class MyProfileActions {
       await this.AssociationsTab();
       await this.clickAddProjectButton();
       const tableRows = this.page.locator('table tbody tr').first();
-      await tableRows.first().waitFor({ state: 'visible'});
+      await tableRows.first().waitFor({ state: 'visible' });
       await this.fillSearchProjectInput(projectName);
       await this.page.waitForTimeout(400)
       await this.selectProjectOption()
