@@ -22,17 +22,28 @@ export class MyProfileActions {
     const profileIcon = this.locators.profileIcon();
     const myProfileBtn = this.locators.myProfileButton();
 
-    // Wait for profile icon to exist
-    await profileIcon.waitFor({ state: 'visible', timeout: 10000 });
+    // Always wait for dashboard loader to be hidden before clicking profile icon
+    const dashboardLoader = this.page.getByText('Loading....').first();
+    if (await dashboardLoader.isVisible().catch(() => false)) {
+      await dashboardLoader.waitFor({ state: 'hidden', timeout: 30000 });
+    }
+    
+    // Wait for profile icon to be visible
+    await profileIcon.waitFor({ state: 'visible' });
 
     const maxAttempts = 20;
 
+    // Only start clicking after loading is confirmed hidden
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       await profileIcon.click({ force: true });
 
+      // If menu appears, stop attempt loop
       if (await myProfileBtn.isVisible()) {
         return;
       }
+
+      // Optional: short wait between attempts could improve reliability
+      await this.page.waitForTimeout(100); 
     }
 
     throw new Error('My Profile button did not appear after multiple fast clicks on the profile icon.');
@@ -666,7 +677,7 @@ export class MyProfileActions {
 
   private async selectProjectOption() {
     const option = this.locators.searchProjectOption;
-    await option.waitFor({ state: 'visible' });
+    await option.first().waitFor({ state: 'visible' });
     await option.click();
   }
 
@@ -2842,7 +2853,7 @@ export class MyProfileActions {
       await this.clickAddProjectButton();
       await this.fillSearchProjectInput(searchName);
       const option = this.locators.searchProjectOption;
-      await option.waitFor({ state: 'visible'});
+      await option.first().waitFor({ state: 'visible'});
       await this.page.waitForTimeout(1200);
     });
   }
@@ -2851,10 +2862,10 @@ export class MyProfileActions {
     await test.step('Verify search with no matching project', async () => {
       await this.AssociationsTab();
       await this.clickAddProjectButton();
+      await this.fillSearchProjectInput('');
       await this.fillSearchProjectInput(nonExistentProject);
-      // Assert that no project options are visible
       const option = this.locators.searchProjectOption;
-      await expect(option).not.toBeVisible({ timeout: 30000 });
+      await expect(option.first()).not.toBeVisible({ timeout: 30000 });
       await this.page.waitForTimeout(1200);
     });
   }
@@ -2875,7 +2886,7 @@ export class MyProfileActions {
       await this.clickAddProjectButton();
       await this.fillSearchProjectInput(searchTerm);
       const option = this.locators.searchProjectOption;
-      await option.waitFor({ state: 'visible'});
+      await option.first().waitFor({ state: 'visible'});
       await expect(option).toContainText(searchTerm);
       await this.page.waitForTimeout(1200);
     });
