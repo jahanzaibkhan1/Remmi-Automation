@@ -1,56 +1,70 @@
-<testsuites id="" name="" tests="26" failures="0" skipped="0" errors="0" time="251.1976370000001">
-<testsuite name="Pages\Listing\AListingForm.spec.ts" timestamp="2026-03-31T08:04:26.470Z" hostname="chromium" tests="26" failures="0" skipped="0" time="246.655" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 54: Verify thumbnail selection changes main image" classname="Pages\Listing\AListingForm.spec.ts" time="27.979">
+<testsuites id="" name="" tests="29" failures="0" skipped="0" errors="0" time="144.19271299999951">
+<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-03-31T10:07:29.772Z" hostname="chromium" tests="29" failures="0" skipped="0" time="139.77" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Verify that clicking the Add button in the Legal tab opens the contract popup in a new tab" classname="Pages\Listing\listingLegal.spec.ts" time="23.463">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 55: Verify listing status display in preview" classname="Pages\Listing\AListingForm.spec.ts" time="5.21">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Verify that the listing dropdown auto populates the selected listing in the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="3.571">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 56: Verify total images count in preview" classname="Pages\Listing\AListingForm.spec.ts" time="3.714">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Verify that the Seller field auto populates in the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="3.492">
+<system-out>
+<![CDATA[Owner is: Automation testing
+]]>
+</system-out>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 57: Verify image days count in preview" classname="Pages\Listing\AListingForm.spec.ts" time="4.204">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Verify that the listing dropdown auto selects the primary listing for the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="7.603">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 58: Verify sale type display in preview listing" classname="Pages\Listing\AListingForm.spec.ts" time="3.384">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Verify that the Managing Contact dropdown auto selects the primary Contact for the contact" classname="Pages\Listing\listingLegal.spec.ts" time="7.024">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 59: Verify all listing details display correctly in preview" classname="Pages\Listing\AListingForm.spec.ts" time="10.661">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Verify that no field is marked as required in the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="1.35">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 60: Verify fields are not editable in preview listing" classname="Pages\Listing\AListingForm.spec.ts" time="5.118">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that the contract is displayed in the Legal tab after saving the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="7.289">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 61: Verify Save button functionality in listing form" classname="Pages\Listing\AListingForm.spec.ts" time="2.778">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Verify that the contract status displays Purchaser, Offer Price, Offer Date, Selling Contact, etc." classname="Pages\Listing\listingLegal.spec.ts" time="2.384">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 62: Verify Save &amp; Close button functionality in listing form" classname="Pages\Listing\AListingForm.spec.ts" time="3.004">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Verify that clicking the checkbox in the Legal tab shows a dropdown with Present, Accept, and Decline buttons" classname="Pages\Listing\listingLegal.spec.ts" time="3.068">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 63: Verify Save &amp; Close button functionality on listing form" classname="Pages\Listing\AListingForm.spec.ts" time="3.748">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Verify that clicking the Accept button updates the Offer Status to &quot;Accepted&quot;" classname="Pages\Listing\listingLegal.spec.ts" time="3.021">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 64: Verify correct error message for missing property type" classname="Pages\Listing\AListingForm.spec.ts" time="5.523">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Verify that clicking the Decline button updates the Offer Status to &quot;Declined&quot;" classname="Pages\Listing\listingLegal.spec.ts" time="2.619">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 65: Verify correct error message for missing listing type" classname="Pages\Listing\AListingForm.spec.ts" time="4.548">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Verify that the Offer Status can be updated multiple times in the Legal tab" classname="Pages\Listing\listingLegal.spec.ts" time="6.097">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 66: Verify &apos;Sold&apos; status popup appears when selecting &apos;Sold&apos; in listing status dropdown" classname="Pages\Listing\AListingForm.spec.ts" time="7.468">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Verify that the Offer Status is retained correctly after refreshing the page" classname="Pages\Listing\listingLegal.spec.ts" time="12.184">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 67: Verify listing appears at the top of the grid after creation" classname="Pages\Listing\AListingForm.spec.ts" time="22.653">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Verify that clicking on the &quot;Selling Agreement Start Date&quot; field opens a calendar for selecting a date" classname="Pages\Listing\listingLegal.spec.ts" time="2.557">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 68: Verify &apos;Sold&apos; status popup contains correct fields" classname="Pages\Listing\AListingForm.spec.ts" time="7.438">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Verify that clicking the Present button opens the Present Contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="5.116">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 69: Verify &apos;Sold&apos; status popup can be closed without saving changes" classname="Pages\Listing\AListingForm.spec.ts" time="7.308">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that closing the Present Contract popup does not change the Offer Status" classname="Pages\Listing\listingLegal.spec.ts" time="4.81">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 70: Verify &apos;Sold&apos; status popup saves data correctly with valid inputs" classname="Pages\Listing\AListingForm.spec.ts" time="9.795">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Verify that clicking on the &quot;Selling Agreement End Date&quot; field opens a calendar for selecting a date" classname="Pages\Listing\listingLegal.spec.ts" time="2.523">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 71: Verify if updating &apos;Date Sold&apos; and &apos;Sold Price&apos; reflects the correct changes." classname="Pages\Listing\AListingForm.spec.ts" time="10.973">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Verify that the &quot;Agreed Marketing Spend&quot; field accepts numeric input" classname="Pages\Listing\listingLegal.spec.ts" time="1.896">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 72: Verify if clicking &apos;Save &amp; Close&apos; saves the details and closes the popup" classname="Pages\Listing\AListingForm.spec.ts" time="9.704">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Verify that the &quot;Marketing Payable By&quot; dropdown allows selection" classname="Pages\Listing\listingLegal.spec.ts" time="2.562">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 73: Verify if listing disappears from grid/list view after changing status to &apos;Sold&apos;" classname="Pages\Listing\AListingForm.spec.ts" time="15.635">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Verify that the &quot;Commission % Inclusive of GST&quot; field accepts percentage input" classname="Pages\Listing\listingLegal.spec.ts" time="1.778">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 74: Verify if invalid data in &apos;Sold Price&apos; field (e.g., letters) is handled correctly." classname="Pages\Listing\AListingForm.spec.ts" time="8.688">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Verify that the &quot;$ Amount Inclusive of GST&quot; field accepts numeric input" classname="Pages\Listing\listingLegal.spec.ts" time="2.144">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 75: Verify if the &apos;Disclose Price&apos; checkbox can be selected/deselected." classname="Pages\Listing\AListingForm.spec.ts" time="8.191">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Verify that clicking on the &quot;Document&quot; button opens a popup to add a new document" classname="Pages\Listing\listingLegal.spec.ts" time="2.938">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 76: Verify if selecting &apos;Disclose Price&apos; correctly reflects in the saved listing details." classname="Pages\Listing\AListingForm.spec.ts" time="20.906">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Verify that the &quot;Property Legal Details&quot; section displays fields for Lot, On Subdivision, Title Reference, and Legal Address, and none of the fields are required" classname="Pages\Listing\listingLegal.spec.ts" time="2.375">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 77:Verify if listings marked as &apos;Sold&apos; do not appear in active searches." classname="Pages\Listing\AListingForm.spec.ts" time="15.609">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Verify that the &quot;Legal Name&quot; dropdown auto-populates with the property owner&apos;s name and allows creating a new contact" classname="Pages\Listing\listingLegal.spec.ts" time="2.425">
+<system-out>
+<![CDATA[Legal Dropdown Name : Automation testing
+]]>
+</system-out>
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 78: Verify if navigating away from the form without saving discards changes." classname="Pages\Listing\AListingForm.spec.ts" time="8.366">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 26: Verify that the &quot;Solicitor&quot; dropdown allows selecting a company and creating a new company" classname="Pages\Listing\listingLegal.spec.ts" time="3.851">
 </testcase>
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 79: Verify if undoing &apos;Sold&apos; status brings the contact back to grid/list view." classname="Pages\Listing\AListingForm.spec.ts" time="14.05">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Verify that selecting a company from the &quot;Solicitor&quot; dropdown populates the &quot;Solicitor&apos;s Contact&quot; dropdown with relevant contacts" classname="Pages\Listing\listingLegal.spec.ts" time="4.603">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Verify that clicking the selected name in the &quot;Legal Name&quot; dropdown opens the owner&apos;s details in a new tab" classname="Pages\Listing\listingLegal.spec.ts" time="6.095">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 29: Verify that clicking the selected company in the &quot;Solicitor&quot; dropdown opens the company&apos;s details in a new tab" classname="Pages\Listing\listingLegal.spec.ts" time="4.279">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 30: Verify that clicking the selected contact in the &quot;Solicitor&apos;s Contact&quot; dropdown opens the contact&apos;s details in a new tab" classname="Pages\Listing\listingLegal.spec.ts" time="6.653">
 </testcase>
 </testsuite>
 </testsuites>
