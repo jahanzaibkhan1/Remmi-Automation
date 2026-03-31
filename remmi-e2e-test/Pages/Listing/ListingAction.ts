@@ -12158,19 +12158,20 @@ export class ListingActions {
 
         await primaryAgent.scrollIntoViewIfNeeded();
 
-        await expect(primaryAgent).toBeVisible();
+        // Wait until the primaryAgent is attached to the DOM and visible
+        await primaryAgent.waitFor({ state: 'visible', timeout: 10000 });
         await primaryAgent.click();
 
         const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
-        await expect(primaryInput).toBeVisible({ timeout: 3000 });
-        await primaryInput.click();
+        // Wait until the input is visible and interactable
+        await primaryInput.waitFor({ state: 'visible' });
         await primaryInput.fill('Jahanzaib Xenex');
 
         const primaryOption = this.page.locator(
             '.ng-dropdown-panel .ng-option',
             { hasText: 'Jahanzaib Xenex' }
         ).first();
-        await expect(primaryOption).toBeVisible({ timeout: 20000 });
+        await primaryOption.waitFor({ state: 'visible', timeout: 20000 });
         await primaryOption.click({ force: true });
         await this.page.waitForTimeout(1200);
 
@@ -12309,7 +12310,6 @@ export class ListingActions {
 
         const primaryInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']");
         await expect(primaryInput).toBeVisible({ timeout: 3000 });
-        await primaryInput.click();
         await primaryInput.fill('Jahanzaib Xenex');
 
         const primaryOption = this.page.locator(
