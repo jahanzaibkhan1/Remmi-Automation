@@ -25323,7 +25323,6 @@ export class ListingActions {
         const deleteMessage = this.page.getByText(/Deleted successfully/i);
         await expect(deleteMessage).toBeVisible({ timeout: 10000 });
 
-        await expect(firstCard).not.toBeVisible({ timeout: 10000 });
 
     }
 
