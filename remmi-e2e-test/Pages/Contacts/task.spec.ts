@@ -39,4 +39,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyTaskAppearsInTaskModule();
   });
 
+  test('Test 5: Task list should display correct details', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskListDisplaysCorrectDetails();
+  });
+
 });
