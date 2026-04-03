@@ -5491,6 +5491,22 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verifies that the created task also appears in the global Task module.
+     */
+    async verifyTaskAppearsInTaskModule(taskTitle: string = 'Testing Task'): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const tasksTab = this.page.getByRole('tab', { name: /Tasks?/i });
+        await tasksTab.waitFor({ state: 'visible' });
+        await tasksTab.click();
+        const taskRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).first();
+        await taskRow.waitFor({ state: "visible" });
+        const taskTitleCell = taskRow.locator('td').filter({ hasText: taskTitle });
+        await expect(taskTitleCell).toBeVisible();
+        await this.closeModalIfVisible();
+    }
+
 
 }
 
