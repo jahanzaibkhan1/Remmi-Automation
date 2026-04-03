@@ -5450,6 +5450,24 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verifies that the Tasks tab displays existing task records for a contact.
+     */
+    async verifyTasksTabDisplaysExistingTasks(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Switch to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Tasks?/i });
+        await tasksTab.waitFor({ state: 'visible' });
+        await tasksTab.click();
+
+        const tasksTable = this.page.locator('#customentitydatalist table tbody tr').last();
+        await tasksTable.first().waitFor({ state: 'visible' });
+
+        await this.closeModalIfVisible();
+    }
+
 
 
 }
