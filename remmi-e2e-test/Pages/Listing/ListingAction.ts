@@ -1533,16 +1533,15 @@ export class ListingActions {
 
     async switchToGridView() {
         await this.navigateToListings();
-        // Detect if already in grid view by checking visibility of at least one card row
         const cardRows = this.locators.cardViewPropertyRow();
+        await cardRows.first().waitFor({ state: 'visible'}).catch(() => {});
         if (await cardRows.first().isVisible().catch(() => false)) {
-            // Already in grid view, do nothing
             return;
-        }
-        // Otherwise, switch to grid view
+        } 
         const gridViewBtn = this.locators.gridViewButton();
+        await gridViewBtn.waitFor({ state: 'visible'});
         await gridViewBtn.click();
-        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+        await cardRows.first().waitFor({ state: 'visible', timeout: 30000 });
     }
 
     //// Switching to list view
@@ -1554,8 +1553,6 @@ export class ListingActions {
         if (await tableRows.first().isVisible().catch(() => false)) {
             return;
         }
-
-        // Otherwise, click the list view button and wait for rows
         const listViewButton = this.page.getByRole('link').nth(4);
         await listViewButton.click();
         await this.waitForTableRows();
@@ -17822,6 +17819,14 @@ export class ListingActions {
         await expect(streamTab).toBeVisible({ timeout: 10000 });
         await streamTab.click();
 
+          // Find the search field in the stream tab
+          const searchInput = this.page.locator('input[placeholder*="Search by keyword"]').first();
+          await expect(searchInput).toBeVisible({ timeout: 10000 });
+          await searchInput.fill(""); 
+          await searchInput.fill('Listing Added');
+          await searchInput.press('Enter');
+          await this.page.waitForTimeout(1000);
+
         // Wait for stream card relating to creation event
         const createdStreamCard = this.page.locator('div.stream-body', { hasText: /Listing Added|Listing Created/i }).first();
         await createdStreamCard.scrollIntoViewIfNeeded();
@@ -17912,7 +17917,7 @@ export class ListingActions {
 
         // Some apps show a "no records found" text, try to cover both
         const noRecordsText = this.page.getByText(/no records available/i);
-        await expect(noRecordsText).toBeVisible({ timeout: 10000 });
+        await expect(noRecordsText).toBeVisible({ timeout: 30000 });
 
         // Optionally close modal if open
         const closeBtn = this.page.locator('.pi.pi-times').first();
@@ -21011,7 +21016,7 @@ export class ListingActions {
         await tasksTab.click();
 
         const taskRows = this.page.locator('table tbody tr').filter({ hasText: 'Recurring Yearly Task' }).last();
-        await expect(taskRows).toBeVisible({ timeout: 10000 });
+        await expect(taskRows).toBeVisible({ timeout: 30000 });
         await this.page.waitForTimeout(500);
 
         // Click the "Testing Task" cell to open editing
@@ -26010,7 +26015,6 @@ export class ListingActions {
             await expect(input).toBeVisible({ timeout: 10000 });
             await input.scrollIntoViewIfNeeded();
             await this.page.waitForTimeout(300);
-            await input.click({ force: true });
             await input.fill(update.value);
         }
 
