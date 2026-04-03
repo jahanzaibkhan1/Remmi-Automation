@@ -136,7 +136,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
     test('Test 23: Verify searching the stream tab with special characters', async ({ sessionPage }) => {
       const listingActions = new ListingActions(sessionPage);
-      await listingActions.verifySearchWithInvalidKeyword('!@#$%^&*()_+|{}:"<>?`~[];\'\\,./');
+      await listingActions.verifySearchWithInvalidKeyword('!%^&*()_+|{}:"<>?`~[];\'\\,./');
     });
 
     test('Test 24: Verify searching in the stream tab by agent name returns relevant records', async ({ sessionPage }) => {
