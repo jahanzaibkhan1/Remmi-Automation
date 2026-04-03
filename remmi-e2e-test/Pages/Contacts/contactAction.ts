@@ -5507,6 +5507,24 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    async verifyTaskListDisplaysCorrectDetails(taskTitle: string = 'Testing Task'): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const tasksTab = this.page.getByRole('tab', { name: /Tasks?/i });
+        await tasksTab.waitFor({ state: 'visible' });
+        await tasksTab.click();
+        const table = this.page.locator('#customentitydatalist').last();
+        const rows = table.locator('tbody tr');
+        const taskRow = rows.filter({ hasText: taskTitle }).first();
+        await taskRow.waitFor({ state: 'visible' });
+        const columns = taskRow.locator('td');
+        console.log(await columns.allTextContents());
+        await expect(columns.nth(1)).toContainText(taskTitle);             
+        await expect(columns.nth(2)).toContainText(/door knocks/i);        
+        await expect(columns.nth(3)).toContainText(/not started/i);        
+        await expect(columns.nth(4)).toContainText(/\d{2}\/\d{2}\/\d{2}/);  
+        await this.closeModalIfVisible();
+    }
 
 }
 
