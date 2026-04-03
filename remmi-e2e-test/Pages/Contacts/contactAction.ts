@@ -5468,6 +5468,29 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verifies that clicking the "New Task" button opens the task creation form.
+     */
+    async verifyNewTaskButtonOpensTaskCreationForm(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Switch to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Tasks?/i });
+        await tasksTab.waitFor({ state: 'visible' });
+        await tasksTab.click();
+
+        // Click the "New Task" button
+        const newTaskButton = this.page.getByRole('button', { name: /New Task/i });
+        await newTaskButton.waitFor({ state: 'visible' });
+        await newTaskButton.click();
+
+        const taskForm = this.page.locator('div.d-flex.justify-content-between.taskCreatedList')
+        await taskForm.waitFor({ state: 'visible' });
+
+        await this.closeModalIfVisible();
+    }
+
 
 
 }

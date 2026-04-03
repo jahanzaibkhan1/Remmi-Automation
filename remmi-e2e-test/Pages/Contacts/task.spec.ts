@@ -23,5 +23,10 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyTasksTabDisplaysExistingTasks();
   });
-  
+
+  test('Test 2: "New Task" button should open the task creation form', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyNewTaskButtonOpensTaskCreationForm();
+  });
+
 });

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="19.881680000000166">
-<testsuite name="Pages\Contacts\task.spec.ts" timestamp="2026-04-03T08:31:34.066Z" hostname="chromium" tests="1" failures="0" skipped="0" time="17.202" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 1: Tasks tab should display existing task records" classname="Pages\Contacts\task.spec.ts" time="17.202">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="16.901742999999783">
+<testsuite name="Pages\Contacts\task.spec.ts" timestamp="2026-04-03T08:41:33.045Z" hostname="chromium" tests="1" failures="0" skipped="0" time="14.953" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 2: &quot;New Task&quot; button should open the task creation form" classname="Pages\Contacts\task.spec.ts" time="14.953">
 </testcase>
 </testsuite>
 </testsuites>
