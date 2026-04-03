@@ -54,4 +54,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyTaskCannotBeCreatedWithoutValidData();
   });
 
+  test('Test 8: Task status updates should be logged correctly', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskUpdatesReflectImmediately();
+  });
+
 });
