@@ -49,4 +49,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyTaskUpdatesReflectImmediately();
   });
 
+  test('Test 7: Task should not be created without valid data', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskCannotBeCreatedWithoutValidData();
+  });
+
 });
