@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.895487999999897">
-<testsuite name="Pages\Contacts\task.spec.ts" timestamp="2026-04-03T08:45:01.212Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.929" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 3: Task should appear in the list after creation" classname="Pages\Contacts\task.spec.ts" time="23.929">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="23.213203999999912">
+<testsuite name="Pages\Contacts\task.spec.ts" timestamp="2026-04-03T08:50:37.090Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.268" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 4: Task should also appear in the Task module" classname="Pages\Contacts\task.spec.ts" time="21.268">
 </testcase>
 </testsuite>
 </testsuites>
