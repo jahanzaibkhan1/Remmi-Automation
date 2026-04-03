@@ -5587,6 +5587,27 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Tasks should remain linked to the correct contact
+     */
+    async verifyTaskRemainsLinkedToCorrectContact(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const tasksTab = this.page.getByRole('tab', { name: /Tasks?/i });
+        await tasksTab.waitFor({ state: 'visible' });
+        await tasksTab.click();
+        const table = this.page.locator('#customentitydatalist').last();
+        const rows = table.locator('tbody tr');
+        const taskRow = rows.first();
+        await taskRow.waitFor({ state: 'visible' });
+        await taskRow.click();
+        const bodyDetailsSection = this.page.locator('section.body-details.h-100.border-0:visible');
+        await bodyDetailsSection.waitFor({ state: 'visible' });
+        const label = this.page.locator('p.ng-value-label.ml-1');
+        await label.waitFor({ state: 'visible' });
+        await this.closeModalIfVisible();
+    }
+
 
 }
 

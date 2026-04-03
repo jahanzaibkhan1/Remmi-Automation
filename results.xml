@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.765412999998777">
-<testsuite name="Pages\Contacts\task.spec.ts" timestamp="2026-04-03T10:58:03.461Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.726" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 8: Task status updates should be logged correctly" classname="Pages\Contacts\task.spec.ts" time="29.726">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.827255000000818">
+<testsuite name="Pages\Contacts\task.spec.ts" timestamp="2026-04-03T11:01:41.769Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.765" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 9: Tasks should remain linked to the correct contact" classname="Pages\Contacts\task.spec.ts" time="23.765">
 </testcase>
 </testsuite>
 </testsuites>
