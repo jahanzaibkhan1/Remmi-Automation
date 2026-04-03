@@ -46,6 +46,11 @@ test.describe('Contacts "Lead Form" Tab - E2E Tests', () => {
         await contact.verifyCloseButtonClosesForm();
     });
 
+    test('Verify that clicking the save button saves the lead but does not close the form', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyLeadAssignmentRecordAppears();
+    });
+
     test('Verify that clicking the save & close button saves the lead and closes the form', async ({ sessionPage }) => {
         const contact = new ContactActions(sessionPage);
         await contact.verifySaveAndCloseButtonSavesLeadAndClosesForm();
