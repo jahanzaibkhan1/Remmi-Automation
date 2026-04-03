@@ -29,4 +29,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyNewTaskButtonOpensTaskCreationForm();
   });
 
+  test('Test 3: Task should appear in the list after creation', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskAppearsInList();
+  });
+
 });

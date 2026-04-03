@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="16.901742999999783">
-<testsuite name="Pages\Contacts\task.spec.ts" timestamp="2026-04-03T08:41:33.045Z" hostname="chromium" tests="1" failures="0" skipped="0" time="14.953" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 2: &quot;New Task&quot; button should open the task creation form" classname="Pages\Contacts\task.spec.ts" time="14.953">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.895487999999897">
+<testsuite name="Pages\Contacts\task.spec.ts" timestamp="2026-04-03T08:45:01.212Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.929" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 3: Task should appear in the list after creation" classname="Pages\Contacts\task.spec.ts" time="23.929">
 </testcase>
 </testsuite>
 </testsuites>
