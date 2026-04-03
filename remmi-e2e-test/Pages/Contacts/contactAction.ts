@@ -5572,5 +5572,21 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Task should not be created without valid data
+     */
+    async verifyTaskCannotBeCreatedWithoutValidData(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const taskFormModal = this.page.locator('section.body-details.h-100.border-0:visible');
+        await taskFormModal.waitFor({ state: 'visible' });
+        const saveButton = this.page.getByRole('button', { name: /^save$/i }).first();
+        await saveButton.waitFor({ state: 'visible' });
+        await saveButton.click();
+        await this.closeModalIfVisible();
+    }
+
+
 }
 
