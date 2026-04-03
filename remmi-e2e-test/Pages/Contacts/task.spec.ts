@@ -44,4 +44,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyTaskListDisplaysCorrectDetails();
   });
 
+  test('Test 6: Task updates should reflect immediately', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskUpdatesReflectImmediately();
+  });
+
 });

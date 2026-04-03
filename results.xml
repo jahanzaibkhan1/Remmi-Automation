@@ -1,16 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="18.976580000000073">
-<testsuite name="Pages\Contacts\task.spec.ts" timestamp="2026-04-03T09:18:39.365Z" hostname="chromium" tests="1" failures="0" skipped="0" time="16.429" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 5: Task list should display correct details" classname="Pages\Contacts\task.spec.ts" time="16.429">
-<system-out>
-<![CDATA[[
-  [32m''[39m,
-  [32m' Testing Task '[39m,
-  [32m' Door Knocks '[39m,
-  [32m' Not Started '[39m,
-  [32m' 04/04/26 '[39m
-]
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="28.110688000001012">
+<testsuite name="Pages\Contacts\task.spec.ts" timestamp="2026-04-03T10:49:48.935Z" hostname="chromium" tests="1" failures="0" skipped="0" time="26.062" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 6: Task updates should reflect immediately" classname="Pages\Contacts\task.spec.ts" time="26.062">
 </testcase>
 </testsuite>
 </testsuites>
