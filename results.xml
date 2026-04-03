@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="22.220835999999196">
-<testsuite name="Pages\Contacts\task.spec.ts" timestamp="2026-04-03T10:56:26.713Z" hostname="chromium" tests="1" failures="0" skipped="0" time="19.409" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 7: Task should not be created without valid data" classname="Pages\Contacts\task.spec.ts" time="19.409">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.765412999998777">
+<testsuite name="Pages\Contacts\task.spec.ts" timestamp="2026-04-03T10:58:03.461Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.726" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 8: Task status updates should be logged correctly" classname="Pages\Contacts\task.spec.ts" time="29.726">
 </testcase>
 </testsuite>
 </testsuites>
