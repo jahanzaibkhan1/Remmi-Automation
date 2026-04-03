@@ -59,4 +59,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyTaskUpdatesReflectImmediately();
   });
 
+  test('Test 9: Tasks should remain linked to the correct contact', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskRemainsLinkedToCorrectContact();
+  });
+
 });
