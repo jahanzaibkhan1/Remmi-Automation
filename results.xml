@@ -1,6 +1,136 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.827255000000818">
-<testsuite name="Pages\Contacts\task.spec.ts" timestamp="2026-04-03T11:01:41.769Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.765" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 9: Tasks should remain linked to the correct contact" classname="Pages\Contacts\task.spec.ts" time="23.765">
+<testsuites id="" name="" tests="37" failures="0" skipped="14" errors="0" time="416.364152999999">
+<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2026-04-06T07:47:18.395Z" hostname="chromium" tests="37" failures="0" skipped="14" time="413.882" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 1: Verify that the contact form opens successfully" classname="Pages\Contacts\contactForm.spec.ts" time="23.606">
+<system-out>
+<![CDATA[Contact Form open successfully
+]]>
+</system-out>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 2: Verify that the contact form can be closed with the X icon" classname="Pages\Contacts\contactForm.spec.ts" time="3.546">
+<system-out>
+<![CDATA[Contact form was closed using the X icon successfully
+]]>
+</system-out>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 3: Verify image upload functionality is removed from the contact form" classname="Pages\Contacts\contactForm.spec.ts" time="3.66">
+<system-out>
+<![CDATA[Verified: Image upload functionality is not displayed on the contact form.
+]]>
+</system-out>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 4: Verify that the contact initials placeholder is displayed" classname="Pages\Contacts\contactForm.spec.ts" time="3.831">
+<system-out>
+<![CDATA[✅ Verified initials: HD
+]]>
+</system-out>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 5: Verify that selecting a contact type updates the type dropdown" classname="Pages\Contacts\contactForm.spec.ts" time="5.279">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 6: Verify required fields validation for Company contact type" classname="Pages\Contacts\contactForm.spec.ts" time="5.372">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 7: Verify that the first word of each error message starts with a capital letter" classname="Pages\Contacts\contactForm.spec.ts" time="6.611">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 8: Verify required fields validation for Individual contact type" classname="Pages\Contacts\contactForm.spec.ts" time="6.032">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 9: Verify that clicking &quot;Save&quot; button saves the contact form" classname="Pages\Contacts\contactForm.spec.ts" time="7.395">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 10: Verify that clicking &quot;Save &amp; Close&quot; saves and closes the contact form" classname="Pages\Contacts\contactForm.spec.ts" time="6.352">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 11: Verify that &quot;Select All&quot; changes to &quot;Deselect All&quot; after selecting all check circles" classname="Pages\Contacts\contactForm.spec.ts" time="6.737">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 12: Verify validation for invalid email format in contact form" classname="Pages\Contacts\contactForm.spec.ts" time="7.268">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 13: Verify that clicking the &quot;+&quot; icon adds a new email field" classname="Pages\Contacts\contactForm.spec.ts" time="5.414">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 14: Verify that clicking the &quot;+&quot; icon adds a new phone field" classname="Pages\Contacts\contactForm.spec.ts" time="5.316">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 15: Verify that an email or phone field can be deleted" classname="Pages\Contacts\contactForm.spec.ts" time="8.184">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 16: Verify that clicking the correct (✔) button sets an email as the primary email" classname="Pages\Contacts\contactForm.spec.ts" time="6.327">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 17: Attempt to save a tag without entering a name" classname="Pages\Contacts\contactForm.spec.ts" time="8.851">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 18: Verify that a company is successfully associated with the contact" classname="Pages\Contacts\contactForm.spec.ts" time="14.666">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 19: Try to associate the same company twice" classname="Pages\Contacts\contactForm.spec.ts" time="23.085">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 20: Verify that clicking on a company tag opens the company form" classname="Pages\Contacts\contactForm.spec.ts" time="52.041">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 21: Verify that a company tag can be removed" classname="Pages\Contacts\contactForm.spec.ts" time="20.531">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 22: Verify that address suggestions appear while typing in the address field" classname="Pages\Contacts\contactForm.spec.ts" time="55.009">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 23: Verify that entering an address auto-fills the relevant fields" classname="Pages\Contacts\contactForm.spec.ts" time="28.628">
+<system-out>
+<![CDATA[Contact Form open successfully
+Autofilled Address Values: {
+  building_name: [32m''[39m,
+  unit_no: [32m''[39m,
+  streetNo: [32m'1600'[39m,
+  streetName: [32m'Amphitheatre Road'[39m,
+  suburb: [32m''[39m,
+  state: [32m'VIC'[39m,
+  postCode: [32m'3468'[39m,
+  country: [32m'Australia'[39m
+}
+]]>
+</system-out>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 24: Verify that entering data in address fields updates the main address field" classname="Pages\Contacts\contactForm.spec.ts" time="100.141">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 25: Verify that all address fields are displayed correctly" classname="Pages\Contacts\contactForm.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 26: Verify that the Tag Manager popup opens" classname="Pages\Contacts\contactForm.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 27: Verify that a new tag type can be added" classname="Pages\Contacts\contactForm.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 28: Search for a non-existent tag in Tag Manager" classname="Pages\Contacts\contactForm.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 29: Verify that entering a valid tag and pressing &quot;Enter&quot; creates a tag" classname="Pages\Contacts\contactForm.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 30: Verify that removing a tag updates the tag list" classname="Pages\Contacts\contactForm.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 31: Verify that a tag remains in the list after form save" classname="Pages\Contacts\contactForm.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 32: Verify that double clicking a tag adds it to the tag field" classname="Pages\Contacts\contactForm.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 33: Verify that tags can be searched in the Tag Manager" classname="Pages\Contacts\contactForm.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 34: Verify that clicking &quot;X&quot; on the Tag Manager popup closes it" classname="Pages\Contacts\contactForm.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 35: Verify that clicking &quot;Cancel&quot; on the tag creation popup closes it" classname="Pages\Contacts\contactForm.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 36: Verify that clicking &quot;Save&quot; after filling all required fields in tag creation successfully saves the tag" classname="Pages\Contacts\contactForm.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 37: Verify that clicking &quot;Save &amp; Close&quot; after filling all required fields in tag creation saves and closes the form" classname="Pages\Contacts\contactForm.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
 </testsuites>

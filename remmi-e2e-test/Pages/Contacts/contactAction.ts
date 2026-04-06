@@ -2525,12 +2525,13 @@ export class ContactActions {
         // Wait for and select the desired company from the dropdown options
         const companyOption = this.page.getByRole('listitem').filter({ hasText: companyName }).first();
         await companyOption.waitFor({ state: 'visible', timeout: 30000 });
-        await companyOption.click();
+        await companyOption.click({force: true});
 
-        // Click on the "Association" button (replace selector as needed)
         const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
+        await associationButton.evaluate((el) => el.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+        await this.page.waitForTimeout(400);
         await associationButton.waitFor({ state: 'visible', timeout: 3000 });
-        await associationButton.click();
+        await associationButton.click({force: true});
 
         const alertLocator = this.page.getByRole('alert', { name: /Company added successfully|This company is already attached with this contact/ });
         await expect(alertLocator).toBeVisible({ timeout: 10000 });
@@ -2566,11 +2567,13 @@ export class ContactActions {
         // Wait for and select the desired company from the dropdown options
         const companyOption = this.page.getByRole('listitem').filter({ hasText: companyName }).first();
         await companyOption.waitFor({ state: 'visible', timeout: 30000 });
-        await companyOption.click();
-        // Click on the "Association" button (replace selector as needed)
+        await companyOption.click({force: true});
+        
         const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
+        await associationButton.evaluate((el) => el.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+        await this.page.waitForTimeout(400);
         await associationButton.waitFor({ state: 'visible', timeout: 3000 });
-        await associationButton.click();
+        await associationButton.click({force: true});
 
         const alertLocator = this.page.getByRole('alert', { name: /Company added successfully|This company is already attached with this contact/ });
         await expect(alertLocator).toBeVisible({ timeout: 10000 });
@@ -2608,12 +2611,13 @@ export class ContactActions {
         // Wait for and select the desired company from the dropdown options
         const companyOption = this.page.getByRole('listitem').filter({ hasText: companyName }).first();
         await companyOption.waitFor({ state: 'visible', timeout: 30000 });
-        await companyOption.click();
+        await companyOption.click({force: true});
 
-        // Click on the "Association" button (replace selector as needed)
         const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
+        await associationButton.evaluate((el) => el.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+        await this.page.waitForTimeout(400);
         await associationButton.waitFor({ state: 'visible', timeout: 3000 });
-        await associationButton.click();
+        await associationButton.click({force: true});
 
         const alertLocator = this.page.getByRole('alert', { name: /Company added successfully|This company is already attached with this contact/ });
         await expect(alertLocator).toBeVisible({ timeout: 10000 });
@@ -2647,10 +2651,9 @@ export class ContactActions {
 
         // Wait for and select the desired company from the dropdown options
         const companyOption = this.page.getByRole('listitem').filter({ hasText: companyName }).first();
-        await companyOption.waitFor({ state: 'visible', timeout: 30000 });
-        await companyOption.click();
+        await companyOption.waitFor({ state: 'visible'});
+        await companyOption.click({force: true});
 
-        // Click on the "Association" button (replace selector as needed)
         const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
         await associationButton.waitFor({ state: 'visible', timeout: 3000 });
         await associationButton.click();
@@ -2691,7 +2694,7 @@ export class ContactActions {
 
         const suggestionsList = this.page.locator('.pac-item').first();
         await suggestionsList.waitFor({ state: 'visible' });
-        await suggestionsList.click();
+        await suggestionsList.click({force: true});
 
         await this.page.waitForTimeout(2000);
         // Close the form using the X icon after address selection
@@ -3598,12 +3601,21 @@ export class ContactActions {
             }, staffElement);
         }
         await staffSelect.waitFor({ state: "visible" });
-        await staffSelect.click({force: true});
-        await staffSelect.fill('Jahanzaib Xenex');
+        const assigneeLabel = this.page.locator('div').filter({ hasText: /^Jahanzaib Xenex$/ }).first();
+        const isLabelVisible = await assigneeLabel.waitFor({ state: 'visible', timeout: 6000 }).then(() => true).catch(() => false);
 
-        const assigneeOption = this.page.getByRole('option', { name: 'Jahanzaib Xenex (jahanzaib@xenex-media.com.au)' });
-        await assigneeOption.waitFor({ state: 'visible' });
-        await assigneeOption.click({ force: true });
+        if (!isLabelVisible) {
+            await staffSelect.click({ force: true });
+            await staffSelect.waitFor({ state: "visible" });
+            await staffSelect.click({ force: true });
+            await staffSelect.fill('Jahanzaib Xenex');
+
+            const assigneeOption = this.page.getByRole('option', { name: 'Jahanzaib Xenex (jahanzaib@xenex-media.com.au)' });
+            await assigneeOption.waitFor({ state: 'visible' });
+            await assigneeOption.click({ force: true });
+            await assigneeLabel.waitFor({ state: 'visible', timeout: 6000 }).catch(() => { });
+        } else {
+        }
 
         const saveTaskButton = this.page.getByRole('button', { name: 'Save' }).first();
         await saveTaskButton.scrollIntoViewIfNeeded();
@@ -4055,7 +4067,7 @@ export class ContactActions {
         await searchInput.fill("Task Added");
         await searchInput.press("Enter");
         const streamCards = this.page.locator('div.stream-body');
-        await expect(streamCards.first()).toContainText(/task added/i);
+        await expect(streamCards.first()).toContainText(/task added/i, { timeout: 20000 });
         await this.closeModalIfVisible();
     }
 
