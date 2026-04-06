@@ -5620,6 +5620,25 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    async verifyTaskMandatoryFields(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const taskFormModal = this.page.locator('section.body-details.h-100.border-0:visible');
+        await taskFormModal.waitFor({ state: 'visible', timeout: 10000 });
+        const saveButton = this.page.getByRole('button', { name: /^save$/i }).first();
+        await saveButton.waitFor({ state: 'visible' });
+        await saveButton.click();
+        const titleErrorLocator = this.page.locator('input[formcontrolname="title"].ng-invalid');
+        const selectDateErrorLocator = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        const staffErrorLocator = this.page.locator('ng-select[formcontrolname="assignedUsers"].ng-invalid');
+        await expect(titleErrorLocator).toBeVisible({ timeout: 10000 });
+        await expect(selectDateErrorLocator).toBeVisible({ timeout: 10000 });
+        await expect(staffErrorLocator).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+
+    }
+
 
 }
 
