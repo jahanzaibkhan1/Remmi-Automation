@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.515982999999075">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-06T10:04:04.545Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.059" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 3: Verify that a task is created for the selected lead when lead Name is selected from the dropdown." classname="Pages\Contacts\taskForm.spec.ts" time="37.059">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.05262000000104">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-06T10:37:59.786Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.146" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 6: Verify that selecting a module shows a relevant dropdown list for that module (e.g., Contacts, Properties, Projects)." classname="Pages\Contacts\taskForm.spec.ts" time="32.146">
 </testcase>
 </testsuite>
 </testsuites>

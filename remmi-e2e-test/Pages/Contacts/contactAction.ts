@@ -2525,13 +2525,13 @@ export class ContactActions {
         // Wait for and select the desired company from the dropdown options
         const companyOption = this.page.getByRole('listitem').filter({ hasText: companyName }).first();
         await companyOption.waitFor({ state: 'visible', timeout: 30000 });
-        await companyOption.click({force: true});
+        await companyOption.click({ force: true });
 
         const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
         await associationButton.evaluate((el) => el.scrollIntoView({ behavior: 'smooth', block: 'center' }));
         await this.page.waitForTimeout(400);
         await associationButton.waitFor({ state: 'visible', timeout: 3000 });
-        await associationButton.click({force: true});
+        await associationButton.click({ force: true });
 
         const alertLocator = this.page.getByRole('alert', { name: /Company added successfully|This company is already attached with this contact/ });
         await expect(alertLocator).toBeVisible({ timeout: 10000 });
@@ -2567,13 +2567,13 @@ export class ContactActions {
         // Wait for and select the desired company from the dropdown options
         const companyOption = this.page.getByRole('listitem').filter({ hasText: companyName }).first();
         await companyOption.waitFor({ state: 'visible', timeout: 30000 });
-        await companyOption.click({force: true});
-        
+        await companyOption.click({ force: true });
+
         const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
         await associationButton.evaluate((el) => el.scrollIntoView({ behavior: 'smooth', block: 'center' }));
         await this.page.waitForTimeout(400);
         await associationButton.waitFor({ state: 'visible', timeout: 3000 });
-        await associationButton.click({force: true});
+        await associationButton.click({ force: true });
 
         const alertLocator = this.page.getByRole('alert', { name: /Company added successfully|This company is already attached with this contact/ });
         await expect(alertLocator).toBeVisible({ timeout: 10000 });
@@ -2611,13 +2611,13 @@ export class ContactActions {
         // Wait for and select the desired company from the dropdown options
         const companyOption = this.page.getByRole('listitem').filter({ hasText: companyName }).first();
         await companyOption.waitFor({ state: 'visible', timeout: 30000 });
-        await companyOption.click({force: true});
+        await companyOption.click({ force: true });
 
         const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
         await associationButton.evaluate((el) => el.scrollIntoView({ behavior: 'smooth', block: 'center' }));
         await this.page.waitForTimeout(400);
         await associationButton.waitFor({ state: 'visible', timeout: 3000 });
-        await associationButton.click({force: true});
+        await associationButton.click({ force: true });
 
         const alertLocator = this.page.getByRole('alert', { name: /Company added successfully|This company is already attached with this contact/ });
         await expect(alertLocator).toBeVisible({ timeout: 10000 });
@@ -2651,8 +2651,8 @@ export class ContactActions {
 
         // Wait for and select the desired company from the dropdown options
         const companyOption = this.page.getByRole('listitem').filter({ hasText: companyName }).first();
-        await companyOption.waitFor({ state: 'visible'});
-        await companyOption.click({force: true});
+        await companyOption.waitFor({ state: 'visible' });
+        await companyOption.click({ force: true });
 
         const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
         await associationButton.waitFor({ state: 'visible', timeout: 3000 });
@@ -2694,7 +2694,7 @@ export class ContactActions {
 
         const suggestionsList = this.page.locator('.pac-item').first();
         await suggestionsList.waitFor({ state: 'visible' });
-        await suggestionsList.click({force: true});
+        await suggestionsList.click({ force: true });
 
         await this.page.waitForTimeout(2000);
         // Close the form using the X icon after address selection
@@ -5692,6 +5692,21 @@ export class ContactActions {
         await leadManagementOption.click();
         const leadNameDropdown = this.page.locator('ng-select[formcontrolname="lead_id"]');
         await expect(leadNameDropdown).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that selecting a module shows a relevant dropdown list for that module
+     */
+    async verifyModuleDropdownsAppearForSelectedModule(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const selectModule = this.page.locator("//ng-select[@placeholder='Select Module']//div[@role='combobox']");
+        await selectModule.waitFor({ state: 'visible', timeout: 10000 });
+        await selectModule.click();
+        let moduleOptionLocator = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: /listings?/i });
+        await expect(moduleOptionLocator).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
     }
 
