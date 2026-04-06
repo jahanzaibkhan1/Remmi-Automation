@@ -5726,5 +5726,29 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verifies that the contact form displays correctly when opening or creating a contact from a task.
+     */
+    async verifyContactFormDisplaysFromTask(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const selectModule = this.page.locator("//ng-select[@placeholder='Select Module']//div[@role='combobox']");
+        await selectModule.waitFor({ state: 'visible', timeout: 20000 });
+        await selectModule.click();
+        let moduleOptionLocator = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: /property/i });
+        await expect(moduleOptionLocator).toBeVisible({ timeout: 20000 });
+        await moduleOptionLocator.click();
+        let propertyDropdownLocator = this.page.getByText('Select Property', { exact: true })
+        await propertyDropdownLocator.waitFor({ state: 'visible' });
+        await propertyDropdownLocator.click();
+        const propertyOption = this.page.locator('div.drop_box.ng-star-inserted');
+        await propertyOption.waitFor({ state: 'visible'});
+        const firstOption = this.page.locator('div.drop_box.ng-star-inserted li').first();
+        await firstOption.waitFor({ state: 'visible', timeout: 10000 });
+        await firstOption.click();
+        await this.closeModalIfVisible();
+    }
+
 }
 

@@ -59,5 +59,10 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyContactTagIsDisplayed();
   });
 
+  test('Test 9: Verify that selecting the "Property" module shows a dropdown list for selecting a property.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyContactFormDisplaysFromTask();
+  });
+
 
 });
