@@ -39,4 +39,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyLeadNameDropdownAppearsOnLeadManagementTaskType();
   });
 
+  test('Test 3: Verify that a task is created for the selected lead when lead Name is selected from the dropdown.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskAppearsInList();
+  });
+
 });
