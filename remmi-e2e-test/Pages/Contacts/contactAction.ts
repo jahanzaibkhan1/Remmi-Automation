@@ -5710,5 +5710,21 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verifies that the contact tag is displayed correctly in the task form.
+     */
+    async verifyContactTagIsDisplayed(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const taskFormModal = this.page.locator('section.body-details.h-100.border-0:visible');
+        await taskFormModal.waitFor({ state: 'visible', timeout: 10000 });
+        const label = this.page.locator('p.ng-value-label.ml-1');
+        await label.waitFor({ state: 'visible' });
+        const contactTag = this.page.locator('p').filter({ hasText: '11 22' }).first();
+        await contactTag.waitFor({state: 'visible'});
+        await this.closeModalIfVisible();
+    }
+
 }
 
