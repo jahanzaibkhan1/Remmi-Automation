@@ -231,6 +231,8 @@ export class MyProfileActions {
 
   private async clickAddMoreImagesButton() {
     const btn = this.locators.AddMoreImagesButton().first();
+    await btn.evaluate(node => node.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+    await btn.evaluate(node => node.style.zIndex = '9999');
     await expect(btn).toBeVisible({ timeout: 10000 });
     await btn.click({ force: true });
   }
@@ -782,9 +784,10 @@ export class MyProfileActions {
 
   async downloadWithIncorrectPin(pin: string) {
     await test.step('Download with incorrect PIN', async () => {
-      const img = this.locators.clickImage().first();
-      await img.dblclick({ force: true });
+      await this.clickImage();
+      await this.clickPrivateDownloadButton();
       await this.fillPinPopup(pin);
+      await this.clickConfirmButton();
       await this.clickSaveButton();
     });
   }
