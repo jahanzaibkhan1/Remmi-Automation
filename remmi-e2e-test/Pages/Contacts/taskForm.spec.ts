@@ -29,4 +29,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyTaskTypeDropdownOpens();
   });
 
+  test('Test 3: Verify that a dropdown list opens when clicking on Task Status field.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskStatusDropdownOpens();
+  });
+
 });
