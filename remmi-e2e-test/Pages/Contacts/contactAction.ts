@@ -5673,5 +5673,27 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verifies that selecting "Lead Management" from Task Type triggers the Lead Name dropdown in the task form.
+     */
+    async verifyLeadNameDropdownAppearsOnLeadManagementTaskType(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const taskFormModal = this.page.locator('section.body-details.h-100.border-0:visible');
+        await taskFormModal.waitFor({ state: 'visible', timeout: 10000 });
+        const taskTypeSelector = this.page.locator('ng-select[formcontrolname="job_type_id"] .ng-select-container');
+        await expect(taskTypeSelector).toBeVisible({ timeout: 10000 });
+        await taskTypeSelector.click();
+        const dropdownOptions = this.page.locator('.ng-dropdown-panel .ng-option');
+        await expect(dropdownOptions.first()).toBeVisible({ timeout: 10000 });
+        const leadManagementOption = dropdownOptions.filter({ hasText: /lead management/i }).first();
+        await expect(leadManagementOption).toBeVisible({ timeout: 10000 });
+        await leadManagementOption.click();
+        const leadNameDropdown = this.page.locator('ng-select[formcontrolname="lead_id"]');
+        await expect(leadNameDropdown).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
 }
 
