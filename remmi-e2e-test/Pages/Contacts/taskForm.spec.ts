@@ -49,4 +49,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyModuleDropdownsAppearForSelectedModule();
   });
 
+  test('Test 7: Verify that selecting a contact from the dropdown creates a task linked to that contact.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskAppearsInList();
+  });
+
 });
