@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="59.960550000000744">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-06T09:44:05.299Z" hostname="chromium" tests="1" failures="0" skipped="0" time="56.951" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 1: Tasks tab should display existing task records" classname="Pages\Contacts\taskForm.spec.ts" time="56.951">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.32601999999955">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-06T09:49:26.970Z" hostname="chromium" tests="1" failures="0" skipped="0" time="49.127" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 2: Verify that a dropdown list opens when clicking on Task Type field." classname="Pages\Contacts\taskForm.spec.ts" time="49.127">
 </testcase>
 </testsuite>
 </testsuites>
