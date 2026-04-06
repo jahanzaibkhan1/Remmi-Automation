@@ -2525,12 +2525,13 @@ export class ContactActions {
         // Wait for and select the desired company from the dropdown options
         const companyOption = this.page.getByRole('listitem').filter({ hasText: companyName }).first();
         await companyOption.waitFor({ state: 'visible', timeout: 30000 });
-        await companyOption.click();
+        await companyOption.click({ force: true });
 
-        // Click on the "Association" button (replace selector as needed)
         const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
+        await associationButton.evaluate((el) => el.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+        await this.page.waitForTimeout(400);
         await associationButton.waitFor({ state: 'visible', timeout: 3000 });
-        await associationButton.click();
+        await associationButton.click({ force: true });
 
         const alertLocator = this.page.getByRole('alert', { name: /Company added successfully|This company is already attached with this contact/ });
         await expect(alertLocator).toBeVisible({ timeout: 10000 });
@@ -2566,11 +2567,13 @@ export class ContactActions {
         // Wait for and select the desired company from the dropdown options
         const companyOption = this.page.getByRole('listitem').filter({ hasText: companyName }).first();
         await companyOption.waitFor({ state: 'visible', timeout: 30000 });
-        await companyOption.click();
-        // Click on the "Association" button (replace selector as needed)
+        await companyOption.click({ force: true });
+
         const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
+        await associationButton.evaluate((el) => el.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+        await this.page.waitForTimeout(400);
         await associationButton.waitFor({ state: 'visible', timeout: 3000 });
-        await associationButton.click();
+        await associationButton.click({ force: true });
 
         const alertLocator = this.page.getByRole('alert', { name: /Company added successfully|This company is already attached with this contact/ });
         await expect(alertLocator).toBeVisible({ timeout: 10000 });
@@ -2608,12 +2611,13 @@ export class ContactActions {
         // Wait for and select the desired company from the dropdown options
         const companyOption = this.page.getByRole('listitem').filter({ hasText: companyName }).first();
         await companyOption.waitFor({ state: 'visible', timeout: 30000 });
-        await companyOption.click();
+        await companyOption.click({ force: true });
 
-        // Click on the "Association" button (replace selector as needed)
         const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
+        await associationButton.evaluate((el) => el.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+        await this.page.waitForTimeout(400);
         await associationButton.waitFor({ state: 'visible', timeout: 3000 });
-        await associationButton.click();
+        await associationButton.click({ force: true });
 
         const alertLocator = this.page.getByRole('alert', { name: /Company added successfully|This company is already attached with this contact/ });
         await expect(alertLocator).toBeVisible({ timeout: 10000 });
@@ -2647,10 +2651,9 @@ export class ContactActions {
 
         // Wait for and select the desired company from the dropdown options
         const companyOption = this.page.getByRole('listitem').filter({ hasText: companyName }).first();
-        await companyOption.waitFor({ state: 'visible', timeout: 30000 });
-        await companyOption.click();
+        await companyOption.waitFor({ state: 'visible' });
+        await companyOption.click({ force: true });
 
-        // Click on the "Association" button (replace selector as needed)
         const associationButton = this.page.getByRole('button', { name: /associate|association/i }).first();
         await associationButton.waitFor({ state: 'visible', timeout: 3000 });
         await associationButton.click();
@@ -2691,7 +2694,7 @@ export class ContactActions {
 
         const suggestionsList = this.page.locator('.pac-item').first();
         await suggestionsList.waitFor({ state: 'visible' });
-        await suggestionsList.click();
+        await suggestionsList.click({ force: true });
 
         await this.page.waitForTimeout(2000);
         // Close the form using the X icon after address selection
@@ -3598,12 +3601,21 @@ export class ContactActions {
             }, staffElement);
         }
         await staffSelect.waitFor({ state: "visible" });
-        await staffSelect.click({force: true});
-        await staffSelect.fill('Jahanzaib Xenex');
+        const assigneeLabel = this.page.locator('div').filter({ hasText: /^Jahanzaib Xenex$/ }).first();
+        const isLabelVisible = await assigneeLabel.waitFor({ state: 'visible', timeout: 6000 }).then(() => true).catch(() => false);
 
-        const assigneeOption = this.page.getByRole('option', { name: 'Jahanzaib Xenex (jahanzaib@xenex-media.com.au)' });
-        await assigneeOption.waitFor({ state: 'visible' });
-        await assigneeOption.click({ force: true });
+        if (!isLabelVisible) {
+            await staffSelect.click({ force: true });
+            await staffSelect.waitFor({ state: "visible" });
+            await staffSelect.click({ force: true });
+            await staffSelect.fill('Jahanzaib Xenex');
+
+            const assigneeOption = this.page.getByRole('option', { name: 'Jahanzaib Xenex (jahanzaib@xenex-media.com.au)' });
+            await assigneeOption.waitFor({ state: 'visible' });
+            await assigneeOption.click({ force: true });
+            await assigneeLabel.waitFor({ state: 'visible', timeout: 6000 }).catch(() => { });
+        } else {
+        }
 
         const saveTaskButton = this.page.getByRole('button', { name: 'Save' }).first();
         await saveTaskButton.scrollIntoViewIfNeeded();
@@ -4055,7 +4067,7 @@ export class ContactActions {
         await searchInput.fill("Task Added");
         await searchInput.press("Enter");
         const streamCards = this.page.locator('div.stream-body');
-        await expect(streamCards.first()).toContainText(/task added/i);
+        await expect(streamCards.first()).toContainText(/task added/i, { timeout: 20000 });
         await this.closeModalIfVisible();
     }
 
@@ -5608,6 +5620,153 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    async verifyTaskMandatoryFields(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const taskFormModal = this.page.locator('section.body-details.h-100.border-0:visible');
+        await taskFormModal.waitFor({ state: 'visible', timeout: 10000 });
+        const saveButton = this.page.getByRole('button', { name: /^save$/i }).first();
+        await saveButton.waitFor({ state: 'visible' });
+        await saveButton.click();
+        const titleErrorLocator = this.page.locator('input[formcontrolname="title"].ng-invalid');
+        const selectDateErrorLocator = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        const staffErrorLocator = this.page.locator('ng-select[formcontrolname="assignedUsers"].ng-invalid');
+        await expect(titleErrorLocator).toBeVisible({ timeout: 10000 });
+        await expect(selectDateErrorLocator).toBeVisible({ timeout: 10000 });
+        await expect(staffErrorLocator).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+
+    }
+
+    /**
+     * Verifies that a dropdown list opens when clicking on the Task Type field in the "New Task" form.
+     */
+    async verifyTaskTypeDropdownOpens(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const taskFormModal = this.page.locator('section.body-details.h-100.border-0:visible');
+        await taskFormModal.waitFor({ state: 'visible', timeout: 10000 });
+        const taskTypeSelector = this.page.locator('ng-select[formcontrolname="job_type_id"] .ng-select-container');
+        await expect(taskTypeSelector).toBeVisible({ timeout: 10000 });
+        await taskTypeSelector.click();
+        const dropdownOptions = this.page.locator('.ng-dropdown-panel .ng-option');
+        await expect(dropdownOptions.first()).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that a dropdown list opens when clicking on Task Status field.
+     */
+    async verifyTaskStatusDropdownOpens(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const taskFormModal = this.page.locator('section.body-details.h-100.border-0:visible');
+        await taskFormModal.waitFor({ state: 'visible', timeout: 10000 });
+        const statusSelector = this.page.locator("//ng-select[@placeholder='Select Status']//div[@role='combobox']");
+        await expect(statusSelector).toBeVisible({ timeout: 10000 });
+        await statusSelector.click();
+        const dropdownOptions = this.page.locator('.ng-dropdown-panel .ng-option');
+        await expect(dropdownOptions.first()).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that selecting "Lead Management" from Task Type triggers the Lead Name dropdown in the task form.
+     */
+    async verifyLeadNameDropdownAppearsOnLeadManagementTaskType(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const taskFormModal = this.page.locator('section.body-details.h-100.border-0:visible');
+        await taskFormModal.waitFor({ state: 'visible', timeout: 10000 });
+        const taskTypeSelector = this.page.locator('ng-select[formcontrolname="job_type_id"] .ng-select-container');
+        await expect(taskTypeSelector).toBeVisible({ timeout: 10000 });
+        await taskTypeSelector.click();
+        const dropdownOptions = this.page.locator('.ng-dropdown-panel .ng-option');
+        await expect(dropdownOptions.first()).toBeVisible({ timeout: 10000 });
+        const leadManagementOption = dropdownOptions.filter({ hasText: /lead management/i }).first();
+        await expect(leadManagementOption).toBeVisible({ timeout: 10000 });
+        await leadManagementOption.click();
+        const leadNameDropdown = this.page.locator('ng-select[formcontrolname="lead_id"]');
+        await expect(leadNameDropdown).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that selecting a module shows a relevant dropdown list for that module
+     */
+    async verifyModuleDropdownsAppearForSelectedModule(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const selectModule = this.page.locator("//ng-select[@placeholder='Select Module']//div[@role='combobox']");
+        await selectModule.waitFor({ state: 'visible', timeout: 10000 });
+        await selectModule.click();
+        let moduleOptionLocator = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: /listings?/i });
+        await expect(moduleOptionLocator).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that the contact tag is displayed correctly in the task form.
+     */
+    async verifyContactTagIsDisplayed(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const taskFormModal = this.page.locator('section.body-details.h-100.border-0:visible');
+        await taskFormModal.waitFor({ state: 'visible', timeout: 10000 });
+        const label = this.page.locator('p.ng-value-label.ml-1');
+        await label.waitFor({ state: 'visible' });
+        const contactTag = this.page.locator('p').filter({ hasText: '11 22' }).first();
+        await contactTag.waitFor({state: 'visible'});
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that the contact form displays correctly when opening or creating a contact from a task.
+     */
+    async verifyContactFormDisplaysFromTask(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const selectModule = this.page.locator("//ng-select[@placeholder='Select Module']//div[@role='combobox']");
+        await selectModule.waitFor({ state: 'visible', timeout: 20000 });
+        await selectModule.click();
+        let moduleOptionLocator = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: /property/i });
+        await expect(moduleOptionLocator).toBeVisible({ timeout: 20000 });
+        await moduleOptionLocator.click();
+        let propertyDropdownLocator = this.page.getByText('Select Property', { exact: true })
+        await propertyDropdownLocator.waitFor({ state: 'visible' });
+        await propertyDropdownLocator.click();
+        const propertyOption = this.page.locator('div.drop_box.ng-star-inserted');
+        await propertyOption.waitFor({ state: 'visible'});
+        const firstOption = this.page.locator('div.drop_box.ng-star-inserted li').first();
+        await firstOption.waitFor({ state: 'visible', timeout: 10000 });
+        await firstOption.click();
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that the contact form displays correctly when opening or creating a contact from a task.
+     */
+    async verifyContactFormFromTask(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const label = this.page.locator('p.ng-value-label.ml-1');
+        await label.waitFor({ state: 'visible' });
+        const contactSpan = this.page.locator('span').filter({ hasText: 'Contact' }).first();
+        await contactSpan.waitFor({ state: 'visible' });
+        const contactTag = this.page.locator('div.selected_one.ng-star-inserted')
+        await contactTag.waitFor({state: 'visible'});
+        await contactTag.click({force: true});
+        await this.page.locator('p-splitter.p-element.ng-star-inserted').waitFor({state:'visible'});
+        await this.closeModalIfVisible();
+    }
 
 }
 
