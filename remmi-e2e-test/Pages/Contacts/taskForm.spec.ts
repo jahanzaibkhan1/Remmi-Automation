@@ -64,5 +64,10 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyContactFormDisplaysFromTask();
   });
 
+  test('Test 10: Verify that the contact form displays correctly when opening or creating a contact from a task.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyContactFormFromTask();
+  });
+
 
 });

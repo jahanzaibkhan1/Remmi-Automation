@@ -5750,5 +5750,23 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verifies that the contact form displays correctly when opening or creating a contact from a task.
+     */
+    async verifyContactFormFromTask(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const label = this.page.locator('p.ng-value-label.ml-1');
+        await label.waitFor({ state: 'visible' });
+        const contactSpan = this.page.locator('span').filter({ hasText: 'Contact' }).first();
+        await contactSpan.waitFor({ state: 'visible' });
+        const contactTag = this.page.locator('div.selected_one.ng-star-inserted')
+        await contactTag.waitFor({state: 'visible'});
+        await contactTag.click({force: true});
+        await this.page.locator('p-splitter.p-element.ng-star-inserted').waitFor({state:'visible'});
+        await this.closeModalIfVisible();
+    }
+
 }
 

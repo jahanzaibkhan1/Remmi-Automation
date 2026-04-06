@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.15717700000107">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-06T11:02:30.940Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.056" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 9: Verify that selecting the &quot;Property&quot; module shows a dropdown list for selecting a property." classname="Pages\Contacts\taskForm.spec.ts" time="35.056">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.29329399999976">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-06T11:10:52.728Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.379" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 10: Verify that the contact form displays correctly when opening or creating a contact from a task." classname="Pages\Contacts\taskForm.spec.ts" time="34.379">
 </testcase>
 </testsuite>
 </testsuites>
