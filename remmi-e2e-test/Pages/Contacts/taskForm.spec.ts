@@ -23,4 +23,10 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyTaskMandatoryFields();
   });
+
+  test('Test 2: Verify that a dropdown list opens when clicking on Task Type field.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskTypeDropdownOpens();
+  });
+
 });
