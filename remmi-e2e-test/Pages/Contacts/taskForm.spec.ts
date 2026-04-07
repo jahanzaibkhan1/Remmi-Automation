@@ -94,5 +94,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyTaskLinkedToSelectedProject();
   });
 
+  test('Test 16: Verify that selecting the "Listing" module shows a dropdown list for selecting a listing.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyListingDropdownIsVisible();
+  });
 
 });
