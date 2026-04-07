@@ -68,6 +68,60 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyContactFormFromTask();
   });
+  
+  test('Test 11: Verify that selecting a property from the dropdown creates a task linked to that property.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskLinkedToSelectedProperty();
+  });
 
+  test('Test 12: Verify that after creating a task, the associated property is correctly shown when the task is opened', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskRemainsLinkedToCorrectContact();
+  });
+
+  test('Test 13: Verify that a task created for a specific property is only visible within that property and the task module', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyContactFormDisplaysFromTask();
+  });
+
+  test('Test 14: Verify that selecting the "Project" module shows a dropdown list for selecting a project.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyProjectDropdownIsVisible();
+  });
+
+  test('Test 15: Verify that selecting a project from the dropdown creates a task linked to that project.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskLinkedToSelectedProject();
+  });
+
+  test('Test 16: Verify that selecting the "Listing" module shows a dropdown list for selecting a listing.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyListingDropdownIsVisible();
+  });
+
+  test('Test 17: Verify that selecting a listing from the dropdown creates a task linked to that listing.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskLinkedToSelectedListing();
+  });
+
+  test('Test 18: Verify that after creating a task, the associated listing is correctly shown when the task is opened', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskRemainsLinkedToCorrectContact();
+  });
+
+  test('Test 19: Verify that a task created for a specific listing is only visible within that listing and the task module', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskLinkedToSelectedListing();
+  });
+
+  test('Test 20: Verify that recurring task checkbox shows a dropdown with "Weekly," "Monthly," and "Yearly" options.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyRecurringTaskOptions();
+  });
+
+  test('Test 21: Verify that selecting "Weekly" from the recurring task dropdown sends email/notifications weekly.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyRecurringTaskSendsEmailNotifications('Recurring Weekly Task');
+  });
 
 });
