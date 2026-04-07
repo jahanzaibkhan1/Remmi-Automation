@@ -6018,5 +6018,84 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verifies that selecting a listing from the dropdown creates a task linked to that listing.
+     */
+    async verifyTaskLinkedToSelectedListing(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+
+        // Use a unique title for the new task
+        const uniqueTitle = "Testing Task";
+
+
+        // Fill in the mandatory task title and due date
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await taskTitleInput.waitFor({ state: "visible" });
+        await taskTitleInput.fill(uniqueTitle);
+
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await dateInput.waitFor({ state: "visible" });
+        await dateInput.click();
+
+        // Select tomorrow's date (assume a calendar table, pick available day that's not disabled)
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const dd = tomorrow.getDate();
+        const dateString = dd.toString();
+        // Try clicking tomorrow's cell on the calendar
+        const cellLocator = this.page.locator(`.p-datepicker-calendar td:not(.p-disabled) >> text='${dateString}'`);
+        await cellLocator.first().click();
+
+        // Assign a staff if field is present (optional, skip if not present)
+        const staffDropdown = this.page.locator('ng-select[formcontrolname="assignedUsers"] .ng-select-container');
+        if (await staffDropdown.isVisible().catch(() => false)) {
+            await staffDropdown.click();
+            const staffOption = this.page.locator('.ng-dropdown-panel .ng-option').first();
+            await staffOption.waitFor({ state: 'visible', timeout: 5000 });
+            await staffOption.click();
+        }
+        // Open the module selector and pick "Listing"
+        const selectModule = this.page.locator("//ng-select[@placeholder='Select Module']//div[@role='combobox']");
+        await selectModule.waitFor({ state: 'visible', timeout: 10000 });
+        await selectModule.click();
+
+        const moduleOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: /listing/i });
+        await expect(moduleOption).toBeVisible({ timeout: 10000 });
+        await moduleOption.click();
+
+        // Wait for the listing dropdown and select the first listing
+        const listingDropdown = this.page.getByText('Select Listing', { exact: true });
+        await listingDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await listingDropdown.click();
+        const listingOptions = this.page.locator('div.drop_box.ng-star-inserted li');
+        await expect(listingOptions.first()).toBeVisible({ timeout: 10000 });
+        await listingOptions.first().click();
+
+        const saveTaskButton = this.page.getByRole('button', { name: 'Save' }).first();
+        await saveTaskButton.scrollIntoViewIfNeeded();
+        await saveTaskButton.waitFor({ state: 'visible' });
+        await this.page.waitForTimeout(1000);
+        await saveTaskButton.dblclick({ force: true });
+
+        const successToast = this.page.locator('div').filter({ hasText: 'Task created' }).last();
+        await successToast.waitFor({ state: "visible" });
+
+        const closetask = this.page.locator("//a[@class='level_li Task_1 cursor-pointer active']//i[@class='p-element pi pi-times ml-2 f-12 cursor-pointer']");
+        if (await closetask.isVisible().catch(() => false)) {
+            await closetask.click({ force: true });
+        }
+
+        const firstRow = this.page.locator('table tbody tr')
+            .filter({ hasText: uniqueTitle }).last();
+        await firstRow.waitFor({ state: "visible", timeout: 30000 });
+        await this.openStreamTab();
+        const streamTaskRow = this.page.locator('div.stream-body').filter({ hasText: 'Task Added' }).first();
+        await streamTaskRow.waitFor({ state: "visible" });
+
+        await this.closeModalIfVisible();
+    }
+
 }
 

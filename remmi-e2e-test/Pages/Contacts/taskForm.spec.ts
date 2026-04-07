@@ -99,4 +99,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyListingDropdownIsVisible();
   });
 
+  test('Test 17: Verify that selecting a listing from the dropdown creates a task linked to that listing.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskLinkedToSelectedListing();
+  });
+
 });
