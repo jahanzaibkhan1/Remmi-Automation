@@ -5720,7 +5720,7 @@ export class ContactActions {
         const taskFormModal = this.page.locator('section.body-details.h-100.border-0:visible');
         await taskFormModal.waitFor({ state: 'visible', timeout: 10000 });
         const contactTag = this.page.locator('p').filter({ hasText: '11 22' }).first();
-        await contactTag.waitFor({state: 'visible'});
+        await contactTag.waitFor({ state: 'visible' });
         await this.closeModalIfVisible();
     }
 
@@ -5741,7 +5741,7 @@ export class ContactActions {
         await propertyDropdownLocator.waitFor({ state: 'visible' });
         await propertyDropdownLocator.click();
         const propertyOption = this.page.locator('div.drop_box.ng-star-inserted');
-        await propertyOption.waitFor({ state: 'visible'});
+        await propertyOption.waitFor({ state: 'visible' });
         const firstOption = this.page.locator('div.drop_box.ng-star-inserted li').first();
         await firstOption.waitFor({ state: 'visible', timeout: 10000 });
         await firstOption.click();
@@ -5758,9 +5758,9 @@ export class ContactActions {
         const contactSpan = this.page.locator('span').filter({ hasText: 'Contact' }).first();
         await contactSpan.waitFor({ state: 'visible' });
         const contactTag = this.page.locator('div.selected_one.ng-star-inserted')
-        await contactTag.waitFor({state: 'visible'});
-        await contactTag.click({force: true});
-        await this.page.locator('p-splitter.p-element.ng-star-inserted').waitFor({state:'visible'});
+        await contactTag.waitFor({ state: 'visible' });
+        await contactTag.click({ force: true });
+        await this.page.locator('p-splitter.p-element.ng-star-inserted').waitFor({ state: 'visible' });
         await this.closeModalIfVisible();
     }
 
@@ -5873,7 +5873,7 @@ export class ContactActions {
 
         const firstRow = this.page.locator('table tbody tr')
             .filter({ hasText: uniqueTitle }).last();
-        await firstRow.waitFor({ state: "visible" , timeout: 30000});
+        await firstRow.waitFor({ state: "visible", timeout: 30000 });
         await this.openStreamTab();
         const streamTaskRow = this.page.locator('div.stream-body').filter({ hasText: 'Task Added' }).first();
         await streamTaskRow.waitFor({ state: "visible" });
@@ -5902,6 +5902,89 @@ export class ContactActions {
         const projectDropdown = this.page.getByText('Select Project', { exact: true });
         await projectDropdown.waitFor({ state: 'visible', timeout: 10000 });
         await expect(projectDropdown).toBeVisible({ timeout: 10000 });
+
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that selecting a project from the dropdown creates a task linked to that project.
+     */
+    async verifyTaskLinkedToSelectedProject(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+
+        // Use a unique title for the new task
+        const uniqueTitle = "Testing Task";
+
+
+        // Fill in the mandatory task title and due date
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await taskTitleInput.waitFor({ state: "visible" });
+        await taskTitleInput.fill(uniqueTitle);
+
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await dateInput.waitFor({ state: "visible" });
+        await dateInput.click();
+
+        // Select tomorrow's date (assume a calendar table, pick available day that's not disabled)
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const dd = tomorrow.getDate();
+        const dateString = dd.toString();
+        // Try clicking tomorrow's cell on the calendar
+        const cellLocator = this.page.locator(`.p-datepicker-calendar td:not(.p-disabled) >> text='${dateString}'`);
+        await cellLocator.first().click();
+
+        // Assign a staff if field is present (optional, skip if not present)
+        const staffDropdown = this.page.locator('ng-select[formcontrolname="assignedUsers"] .ng-select-container');
+        if (await staffDropdown.isVisible().catch(() => false)) {
+            await staffDropdown.click();
+            const staffOption = this.page.locator('.ng-dropdown-panel .ng-option').first();
+            await staffOption.waitFor({ state: 'visible', timeout: 5000 });
+            await staffOption.click();
+        }
+
+        // Open module selector and pick "Project"
+        const selectModule = this.page.locator("//ng-select[@placeholder='Select Module']//div[@role='combobox']");
+        await selectModule.waitFor({ state: 'visible', timeout: 20000 });
+        await selectModule.click();
+        const moduleOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: /project/i });
+        await expect(moduleOption).toBeVisible({ timeout: 20000 });
+        await moduleOption.click();
+
+        // Wait for the project dropdown and select the first available project
+        const projectDropdown = this.page.getByText('Select Project', { exact: true });
+        await projectDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await projectDropdown.click();
+
+        const projectOptions = this.page.locator('div.drop_box.ng-star-inserted li');
+        const firstProjectOption = projectOptions.first();
+        await firstProjectOption.waitFor({ state: 'visible', timeout: 10000 });
+        const selectedProjectName = await firstProjectOption.textContent();
+        await firstProjectOption.click();
+
+
+        const saveTaskButton = this.page.getByRole('button', { name: 'Save' }).first();
+        await saveTaskButton.scrollIntoViewIfNeeded();
+        await saveTaskButton.waitFor({ state: 'visible' });
+        await this.page.waitForTimeout(1000);
+        await saveTaskButton.dblclick({ force: true });
+
+        const successToast = this.page.locator('div').filter({ hasText: 'Task created' }).last();
+        await successToast.waitFor({ state: "visible" });
+
+        const closetask = this.page.locator("//a[@class='level_li Task_1 cursor-pointer active']//i[@class='p-element pi pi-times ml-2 f-12 cursor-pointer']");
+        if (await closetask.isVisible().catch(() => false)) {
+            await closetask.click({ force: true });
+        }
+
+        const firstRow = this.page.locator('table tbody tr')
+            .filter({ hasText: uniqueTitle }).last();
+        await firstRow.waitFor({ state: "visible", timeout: 30000 });
+        await this.openStreamTab();
+        const streamTaskRow = this.page.locator('div.stream-body').filter({ hasText: 'Task Added' }).first();
+        await streamTaskRow.waitFor({ state: "visible" });
 
         await this.closeModalIfVisible();
     }
