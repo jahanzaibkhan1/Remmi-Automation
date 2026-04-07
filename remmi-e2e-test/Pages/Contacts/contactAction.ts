@@ -5881,5 +5881,30 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify that selecting the "Project" module shows a dropdown list for selecting a project.
+     */
+    async verifyProjectDropdownIsVisible(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+
+        // Open the module selector and pick "Project"
+        const selectModule = this.page.locator("//ng-select[@placeholder='Select Module']//div[@role='combobox']");
+        await selectModule.waitFor({ state: 'visible', timeout: 20000 });
+        await selectModule.click();
+
+        const moduleOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: /project/i });
+        await expect(moduleOption).toBeVisible({ timeout: 20000 });
+        await moduleOption.click();
+
+        // The project dropdown should now be present (look for "Select Project")
+        const projectDropdown = this.page.getByText('Select Project', { exact: true });
+        await projectDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await expect(projectDropdown).toBeVisible({ timeout: 10000 });
+
+        await this.closeModalIfVisible();
+    }
+
 }
 
