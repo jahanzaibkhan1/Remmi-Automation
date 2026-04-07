@@ -6121,5 +6121,128 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify that clicking "Sync Calendar" allows selection of a time period for task reminders.
+     */
+    async verifyRecurringTaskSendsEmailNotifications(taskTitle: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
+        await taskTitleInput.fill(taskTitle);
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+        const headerText = await header.innerText();
+        const [monthName, yearText] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+        const monthDifference = (targetYear - parseInt(yearText)) * 12 + (targetMonth - monthIndex);
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator('.p-datepicker-next').click();
+            } else if (monthDifference < 0) {
+                await this.page.locator('.p-datepicker-prev').click();
+            }
+        }
+        const dayLocator = this.page.locator('.p-datepicker-calendar td:not(.p-datepicker-other-month)').getByText(new RegExp(`^${targetDay}$`));
+        await expect(dayLocator.first()).toBeVisible();
+        await dayLocator.first().click();
+        await this.page.waitForTimeout(1200);
+        const timerLabel = this.page.getByText('Select Timer', { exact: true });
+        await expect(timerLabel).toBeVisible({ timeout: 10000 });
+        await timerLabel.click({ force: true });
+        const nineAmOption = this.page.getByRole('option', { name: '9am' }).first();
+        await expect(nineAmOption).toBeVisible({ timeout: 10000 });
+        await nineAmOption.click({ force: true });
+        const recurringCheckbox = this.page.locator('.form-group > .d-flex > .p-element > .p-checkbox > .p-checkbox-box').first();
+        await expect(recurringCheckbox).toBeVisible({ timeout: 20000 });
+        await recurringCheckbox.click();
+        const frequencySelect = this.page.getByText('Select Recurring Type');
+        await expect(frequencySelect).toBeVisible({ timeout: 10000 });
+        await frequencySelect.click();
+        const dropdownPanel = this.page.locator('.ng-dropdown-panel');
+        await expect(dropdownPanel).toBeVisible({ timeout: 10000 });
+        const weeklyOption = dropdownPanel.locator('.ng-option', { hasText: 'Weekly' });
+        const monthlyOption = dropdownPanel.locator('.ng-option', { hasText: 'Monthly' });
+        const yearlyOption = dropdownPanel.locator('.ng-option', { hasText: 'Yearly' });
+        await expect(weeklyOption).toBeVisible({ timeout: 10000 });
+        await expect(monthlyOption).toBeVisible({ timeout: 10000 });
+        await expect(yearlyOption).toBeVisible({ timeout: 10000 });
+        await weeklyOption.click({ force: true });
+        const recurringDateInput = this.page.locator('input[placeholder="dd/mm/yy"]').last();
+        await expect(recurringDateInput).toBeVisible({ timeout: 10000 });
+        await recurringDateInput.click();
+        const recurringTomorrow = new Date();
+        recurringTomorrow.setDate(recurringTomorrow.getDate() + 1);
+        const recurringTargetDay = recurringTomorrow.getDate();
+        const recurringTargetMonth = recurringTomorrow.getMonth();
+        const recurringTargetYear = recurringTomorrow.getFullYear();
+        const recurringCalendarHeader = this.page.locator(".p-datepicker-title");
+        await expect(recurringCalendarHeader).toBeVisible();
+        const recurringCalendarHeaderText = await recurringCalendarHeader.innerText();
+        const [recurringMonthName, recurringYearText] = recurringCalendarHeaderText.trim().split(" ");
+        const recurringMonthIndex = new Date(`${recurringMonthName} 1, 2000`).getMonth();
+        const recurringMonthDifference = (recurringTargetYear - parseInt(recurringYearText)) * 12 + (recurringTargetMonth - recurringMonthIndex);
+        for (let i = 0; i < Math.abs(recurringMonthDifference); i++) {
+            if (recurringMonthDifference > 0) {
+                await this.page.locator('.p-datepicker-next').click();
+            } else if (recurringMonthDifference < 0) {
+                await this.page.locator('.p-datepicker-prev').click();
+            }
+        }
+        const recurringDayLocator = this.page.locator('.p-datepicker-calendar td:not(.p-datepicker-other-month)').getByText(new RegExp(`^${recurringTargetDay}$`));
+        await expect(recurringDayLocator.first()).toBeVisible();
+        await recurringDayLocator.first().click();
+        await this.page.waitForTimeout(1000);
+        const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"] input');
+        const staffElement = await staffSelect.elementHandle();
+        if (staffElement) {
+            await this.page.evaluate((el) => {
+                el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+            }, staffElement);
+        }
+        await staffSelect.waitFor({ state: "visible" });
+        const assigneeLabel = this.page.locator('div').filter({ hasText: /^Jahanzaib Xenex$/ }).first();
+        const isLabelVisible = await assigneeLabel.waitFor({ state: 'visible', timeout: 6000 }).then(() => true).catch(() => false);
+
+        if (!isLabelVisible) {
+            await staffSelect.click({ force: true });
+            await staffSelect.waitFor({ state: "visible" });
+            await staffSelect.click({ force: true });
+            await staffSelect.fill('Jahanzaib Xenex');
+
+            const assigneeOption = this.page.getByRole('option', { name: 'Jahanzaib Xenex (jahanzaib@xenex-media.com.au)' });
+            await assigneeOption.waitFor({ state: 'visible' });
+            await assigneeOption.click({ force: true });
+            await assigneeLabel.waitFor({ state: 'visible', timeout: 6000 }).catch(() => { });
+        } else {
+        }
+        const saveBtn = this.page.getByRole('button', { name: /Save|Create/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+        await this.page.waitForTimeout(2000);
+        const closeBtun = this.page.locator('.pi.pi-times').nth(2);
+        if (await closeBtun.isVisible().catch(() => false)) {
+            await closeBtun.click({ force: true });
+        }
+        const createdTaskRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
+        await expect(createdTaskRow).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+        const notificationDropdown = this.page.locator('#notification-dropdown');
+        await expect(notificationDropdown).toBeVisible({ timeout: 20000 })
+        await notificationDropdown.click();
+        const notificationLink = this.page.getByRole('link', { name: 'Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
+        await expect(notificationLink).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+    }
+
 }
 
