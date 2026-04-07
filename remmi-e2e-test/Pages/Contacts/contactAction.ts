@@ -5989,5 +5989,34 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify that selecting the "Listing" module shows a dropdown list for selecting a listing.
+     */
+    async verifyListingDropdownIsVisible(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+
+        // Open the module selector and pick "Listing"
+        const selectModule = this.page.locator("//ng-select[@placeholder='Select Module']//div[@role='combobox']");
+        await selectModule.waitFor({ state: 'visible', timeout: 10000 });
+        await selectModule.click();
+
+        const moduleOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: /listing/i });
+        await expect(moduleOption).toBeVisible({ timeout: 10000 });
+        await moduleOption.click();
+
+        // Wait for the listing dropdown to become visible
+        const listingDropdown = this.page.getByText('Select Listing', { exact: true });
+        await listingDropdown.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Optionally, check that at least one listing option is present
+        await listingDropdown.click();
+        const listingOptions = this.page.locator('div.drop_box.ng-star-inserted li');
+        await expect(listingOptions.first()).toBeVisible({ timeout: 10000 });
+
+        await this.closeModalIfVisible();
+    }
+
 }
 
