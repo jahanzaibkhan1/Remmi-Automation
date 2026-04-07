@@ -104,4 +104,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyTaskLinkedToSelectedListing();
   });
 
+  test('Test 18: Verify that after creating a task, the associated listing is correctly shown when the task is opened', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskRemainsLinkedToCorrectContact();
+  });
+
 });
