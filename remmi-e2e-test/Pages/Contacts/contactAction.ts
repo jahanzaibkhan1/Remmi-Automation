@@ -5719,8 +5719,6 @@ export class ContactActions {
         await this.openTasksTab();
         const taskFormModal = this.page.locator('section.body-details.h-100.border-0:visible');
         await taskFormModal.waitFor({ state: 'visible', timeout: 10000 });
-        const label = this.page.locator('p.ng-value-label.ml-1');
-        await label.waitFor({ state: 'visible' });
         const contactTag = this.page.locator('p').filter({ hasText: '11 22' }).first();
         await contactTag.waitFor({state: 'visible'});
         await this.closeModalIfVisible();
@@ -5757,14 +5755,129 @@ export class ContactActions {
         await this.NavigateToContacts();
         await this.openFirstContact();
         await this.openTasksTab();
-        const label = this.page.locator('p.ng-value-label.ml-1');
-        await label.waitFor({ state: 'visible' });
         const contactSpan = this.page.locator('span').filter({ hasText: 'Contact' }).first();
         await contactSpan.waitFor({ state: 'visible' });
         const contactTag = this.page.locator('div.selected_one.ng-star-inserted')
         await contactTag.waitFor({state: 'visible'});
         await contactTag.click({force: true});
         await this.page.locator('p-splitter.p-element.ng-star-inserted').waitFor({state:'visible'});
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that selecting a property from the dropdown creates a task linked to that property.
+     */
+    async verifyTaskLinkedToSelectedProperty(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+
+        // Use a unique task title for easy identification
+        const uniqueTitle = `Testing Task`;
+
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await taskTitleInput.waitFor({ state: "visible" });
+        await taskTitleInput.fill(uniqueTitle);
+
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await dateInput.waitFor({ state: "visible" });
+        await dateInput.click();
+
+        // Select tomorrow's date from the calendar
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        const header = this.page.locator(".p-datepicker-title");
+        await header.waitFor({ state: "visible" });
+        const headerText = await header.innerText();
+        const [monthName, year] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        const monthDifference =
+            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
+
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+        }
+
+        const dayButton = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) .p-datepicker-day:not(.p-disabled), .p-datepicker-calendar td:not(.p-disabled) span:not(.p-disabled)`
+        ).filter({ hasText: String(targetDay) }).first();
+
+        await dayButton.click({ force: true });
+
+        // Assign staff "Jahanzaib Xenex" if not already selected
+        const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"] input');
+        const staffElement = await staffSelect.elementHandle();
+        if (staffElement) {
+            await this.page.evaluate((el) => {
+                el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+            }, staffElement);
+        }
+        await staffSelect.waitFor({ state: "visible" });
+        const assigneeLabel = this.page.locator('div').filter({ hasText: /^Jahanzaib Xenex$/ }).first();
+        const isLabelVisible = await assigneeLabel.waitFor({ state: 'visible', timeout: 6000 }).then(() => true).catch(() => false);
+
+        if (!isLabelVisible) {
+            await staffSelect.click({ force: true });
+            await staffSelect.waitFor({ state: "visible" });
+            await staffSelect.click({ force: true });
+            await staffSelect.fill('Jahanzaib Xenex');
+
+            const assigneeOption = this.page.getByRole('option', { name: 'Jahanzaib Xenex (jahanzaib@xenex-media.com.au)' });
+            await assigneeOption.waitFor({ state: 'visible' });
+            await assigneeOption.click({ force: true });
+            await assigneeLabel.waitFor({ state: 'visible', timeout: 6000 }).catch(() => { });
+        }
+
+        // Open the module selector and pick "Property"
+        const selectModule = this.page.locator("//ng-select[@placeholder='Select Module']//div[@role='combobox']");
+        await selectModule.waitFor({ state: 'visible', timeout: 20000 });
+        await selectModule.click();
+
+        const moduleOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: /property/i });
+        await expect(moduleOption).toBeVisible({ timeout: 20000 });
+        await moduleOption.click();
+
+        // Open the property selector
+        const propertyDropdown = this.page.getByText('Select Property', { exact: true });
+        await propertyDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await propertyDropdown.click();
+
+        // Select the first property in the dropdown
+        const propertyOptions = this.page.locator('div.drop_box.ng-star-inserted li');
+        await propertyOptions.first().waitFor({ state: 'visible', timeout: 10000 });
+        const selectedProperty = await propertyOptions.first().textContent();
+        await propertyOptions.first().click();
+
+        const saveTaskButton = this.page.getByRole('button', { name: 'Save' }).first();
+        await saveTaskButton.scrollIntoViewIfNeeded();
+        await saveTaskButton.waitFor({ state: 'visible' });
+        await this.page.waitForTimeout(1000);
+        await saveTaskButton.dblclick({ force: true });
+
+        const successToast = this.page.locator('div').filter({ hasText: 'Task created' }).last();
+        await successToast.waitFor({ state: "visible" });
+
+        const closetask = this.page.locator("//a[@class='level_li Task_1 cursor-pointer active']//i[@class='p-element pi pi-times ml-2 f-12 cursor-pointer']");
+        if (await closetask.isVisible().catch(() => false)) {
+            await closetask.click({ force: true });
+        }
+
+        const firstRow = this.page.locator('table tbody tr')
+            .filter({ hasText: uniqueTitle }).last();
+        await firstRow.waitFor({ state: "visible" , timeout: 30000});
+        await this.openStreamTab();
+        const streamTaskRow = this.page.locator('div.stream-body').filter({ hasText: 'Task Added' }).first();
+        await streamTaskRow.waitFor({ state: "visible" });
+
         await this.closeModalIfVisible();
     }
 

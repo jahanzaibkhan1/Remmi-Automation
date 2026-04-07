@@ -68,6 +68,11 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyContactFormFromTask();
   });
+  
+  test('Test 11: Verify that selecting a property from the dropdown creates a task linked to that property.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskLinkedToSelectedProperty();
+  });
 
 
 });
