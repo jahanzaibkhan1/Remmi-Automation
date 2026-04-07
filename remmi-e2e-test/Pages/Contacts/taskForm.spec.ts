@@ -74,5 +74,10 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyTaskLinkedToSelectedProperty();
   });
 
+  test('Test 12: Verify that after creating a task, the associated property is correctly shown when the task is opened', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskRemainsLinkedToCorrectContact();
+  });
+
 
 });
