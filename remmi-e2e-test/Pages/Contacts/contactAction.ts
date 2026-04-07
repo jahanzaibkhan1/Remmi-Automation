@@ -6097,5 +6097,29 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verifies that the recurring task checkbox shows a dropdown with "Weekly," "Monthly," and "Yearly" options.
+     */
+    async verifyRecurringTaskOptions() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const recurringCheckbox = this.page.locator('.form-group > .d-flex > .p-element > .p-checkbox > .p-checkbox-box').first();
+        await expect(recurringCheckbox).toBeVisible({ timeout: 20000 });
+        await recurringCheckbox.click();
+        const frequencySelect = this.page.getByText('Select Recurring Type');
+        await expect(frequencySelect).toBeVisible({ timeout: 10000 });
+        await frequencySelect.click();
+        const dropdownPanel = this.page.locator('.ng-dropdown-panel');
+        await expect(dropdownPanel).toBeVisible({ timeout: 10000 });
+        const weeklyOption = dropdownPanel.locator('.ng-option', { hasText: 'Weekly' });
+        const monthlyOption = dropdownPanel.locator('.ng-option', { hasText: 'Monthly' });
+        const yearlyOption = dropdownPanel.locator('.ng-option', { hasText: 'Yearly' });
+        await expect(weeklyOption).toBeVisible({ timeout: 2000 });
+        await expect(monthlyOption).toBeVisible({ timeout: 2000 });
+        await expect(yearlyOption).toBeVisible({ timeout: 2000 });
+        await this.closeModalIfVisible();
+    }
+
 }
 

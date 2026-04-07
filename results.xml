@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="113.73315899999999">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-07T10:05:53.291Z" hostname="chromium" tests="1" failures="0" skipped="0" time="111.436" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 17: Verify that selecting a listing from the dropdown creates a task linked to that listing." classname="Pages\Contacts\taskForm.spec.ts" time="111.436">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.865709999999034">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-07T11:02:12.992Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.643" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 20: Verify that recurring task checkbox shows a dropdown with &quot;Weekly,&quot; &quot;Monthly,&quot; and &quot;Yearly&quot; options." classname="Pages\Contacts\taskForm.spec.ts" time="36.643">
 </testcase>
 </testsuite>
 </testsuites>
