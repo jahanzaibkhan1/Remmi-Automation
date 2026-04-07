@@ -79,5 +79,10 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyTaskRemainsLinkedToCorrectContact();
   });
 
+  test('Test 13: Verify that a task created for a specific property is only visible within that property and the task module', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyContactFormDisplaysFromTask();
+  });
+
 
 });
