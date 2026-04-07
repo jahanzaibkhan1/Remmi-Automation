@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.29329399999976">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-06T11:10:52.728Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.379" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 10: Verify that the contact form displays correctly when opening or creating a contact from a task." classname="Pages\Contacts\taskForm.spec.ts" time="34.379">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.19019200000004">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-07T08:25:43.456Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.127" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 11: Verify that selecting a property from the dropdown creates a task linked to that property." classname="Pages\Contacts\taskForm.spec.ts" time="45.127">
 </testcase>
 </testsuite>
 </testsuites>
