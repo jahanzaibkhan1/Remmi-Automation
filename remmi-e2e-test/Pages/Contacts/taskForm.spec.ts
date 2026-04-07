@@ -114,4 +114,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyTaskLinkedToSelectedListing();
   });
 
+  test('Test 20: Verify that recurring task checkbox shows a dropdown with "Weekly," "Monthly," and "Yearly" options.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyRecurringTaskOptions();
+  });
+
 });
