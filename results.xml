@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.50118200000003">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-07T08:46:14.457Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.28" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 13: Verify that a task created for a specific property is only visible within that property and the task module" classname="Pages\Contacts\taskForm.spec.ts" time="36.28">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.76867600000044">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-07T08:57:35.474Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.187" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 14: Verify that selecting the &quot;Project&quot; module shows a dropdown list for selecting a project." classname="Pages\Contacts\taskForm.spec.ts" time="31.187">
 </testcase>
 </testsuite>
 </testsuites>
