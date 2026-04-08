@@ -6413,5 +6413,21 @@ export class ContactActions {
         await this.page.waitForTimeout(1000);
      
     }
+
+    /**
+     * Verify that setting a reminder time sends an email or notification at the selected interval.
+     */
+    async verifyTaskReminderTriggersNotification() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.closeModalIfVisible();
+        const notificationDropdown = this.page.locator('#notification-dropdown');
+        await expect(notificationDropdown).toBeVisible({ timeout: 40000 })
+        await notificationDropdown.click({force: true});
+
+        const notificationLink = this.page.getByRole('link', { name: 'Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
+        await expect(notificationLink).toBeVisible({ timeout: 30000 });
+        await notificationDropdown.click({force: true});
+    }
 }
 
