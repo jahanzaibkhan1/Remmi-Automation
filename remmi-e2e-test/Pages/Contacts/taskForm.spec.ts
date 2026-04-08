@@ -134,4 +134,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyTaskReminderTriggersNotification();
   });
 
+  test('Test 24: Verify that syncing the calendar with selected days sends email/notifications for the chosen period.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifySyncCalendarAllowsTimePeriodSelection('Task Reminder');
+  });
+
 });
