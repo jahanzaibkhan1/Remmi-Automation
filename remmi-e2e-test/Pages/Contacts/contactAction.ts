@@ -6664,6 +6664,7 @@ export class ContactActions {
         await saveBtn.scrollIntoViewIfNeeded();
         await expect(saveBtn).toBeVisible({ timeout: 10000 });
         await saveBtn.dblclick();
+        await this.closeLeadModalIfVisible
         await this.closeModalIfVisible();
     }
 
