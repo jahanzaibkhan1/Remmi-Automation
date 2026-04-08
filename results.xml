@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.622955999998375">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-08T09:33:50.589Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.003" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 27: Verify that when a comment is added in the &quot;Additional Comments&quot; section, a notification is sent to the selected staff member." classname="Pages\Contacts\taskForm.spec.ts" time="38.003">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="36.05790300000086">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-08T09:40:59.559Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.441" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 28: Verify that the added comment appears below the &quot;Additional Comments&quot; section once the task is saved." classname="Pages\Contacts\taskForm.spec.ts" time="33.441">
 </testcase>
 </testsuite>
 </testsuites>

@@ -6574,7 +6574,7 @@ export class ContactActions {
 
         // Click the "Testing Task" cell to open editing
         const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
-        await testingTaskCell.waitFor({state:'visible'});
+        await testingTaskCell.waitFor({ state: 'visible' });
         await testingTaskCell.click();
 
         // Fill in Additional Comments
@@ -6603,6 +6603,35 @@ export class ContactActions {
         const notificationLink = this.page.getByRole('link', { name: 'Task Comment Jahanzaib' }).first();
         await expect(notificationLink).toBeVisible({ timeout: 30000 });
         await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verifies that the added comment appears below the "Additional Comments" section once the task is saved.
+     * Assumes the comment to verify is 'Comment Added To Task'.
+     */
+    async verifyCommentAppearsUnderAdditionalComments() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Click the "Testing Task" cell to open editing
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await testingTaskCell.waitFor({ state: 'visible' });
+        await testingTaskCell.click();
+
+        // Fill in Additional Comments
+        const commentsInput = this.page.getByRole('textbox', { name: 'Send comments to the Assignee' });
+        await commentsInput.scrollIntoViewIfNeeded();
+        await expect(commentsInput).toBeVisible({ timeout: 10000 });
+
+        // Wait for the comments container to appear below the header
+        const addedComment = this.page.getByText('Comment Added To Task').first();
+        await expect(addedComment).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+
     }
 }
 

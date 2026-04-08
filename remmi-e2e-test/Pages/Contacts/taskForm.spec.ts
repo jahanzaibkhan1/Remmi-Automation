@@ -153,5 +153,10 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyCommentNotificationToStaff();
   });
+  
+  test('Test 28: Verify that the added comment appears below the "Additional Comments" section once the task is saved.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyCommentAppearsUnderAdditionalComments();
+  });
 
 });
