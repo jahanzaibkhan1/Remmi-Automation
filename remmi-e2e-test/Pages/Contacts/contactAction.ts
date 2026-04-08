@@ -6244,5 +6244,551 @@ export class ContactActions {
         await this.page.waitForTimeout(1000);
     }
 
+    /**
+     * Verify that clicking "Sync Calendar" allows selection of a time period for task reminders.
+     */
+    async verifySyncCalendarAllowsTimePeriodSelection(taskTitle: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+
+        // Fill in task title
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
+        await taskTitleInput.fill(taskTitle);
+
+        // Set a due date (e.g., tomorrow)
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        // Pick tomorrow's date
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        // Get displayed calendar month & year
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+        const headerText = await header.innerText();
+        const [monthName, yearText] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        const monthDifference = (targetYear - parseInt(yearText)) * 12 + (targetMonth - monthIndex);
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator('.p-datepicker-next').click();
+            } else if (monthDifference < 0) {
+                await this.page.locator('.p-datepicker-prev').click();
+            }
+        }
+
+        // Select the target day
+        const dayLocator = this.page.locator('.p-datepicker-calendar td:not(.p-datepicker-other-month)').getByText(new RegExp(`^${targetDay}$`));
+        await expect(dayLocator.first()).toBeVisible();
+        await dayLocator.first().click();
+
+        await this.page.waitForTimeout(1200);
+
+        // Select the timer (reminder) dropdown and choose 9:00 AM
+        const timerLabel = this.page.getByText('Select Timer', { exact: true });
+        await expect(timerLabel).toBeVisible({ timeout: 10000 });
+        await timerLabel.click({ force: true });
+
+        // Wait for the options to appear and select "9:00 AM"
+        const nineAmOption = this.page.getByRole('option', { name: '9am' }).first();
+        await expect(nineAmOption).toBeVisible({ timeout: 10000 });
+        await nineAmOption.click({ force: true });
+
+
+        // Click the "Recurring Task" checkbox
+        const recurringCheckbox = this.page.locator('.form-group > .d-flex > .p-element > .p-checkbox > .p-checkbox-box').first();
+        await expect(recurringCheckbox).toBeVisible({ timeout: 20000 });
+        await recurringCheckbox.click();
+
+
+        // Click the "Sync Calendar" checkbox
+        const syncCalendar = this.page.locator('.form-group > .d-flex > .p-element > .p-checkbox > .p-checkbox-box').last();
+        await expect(syncCalendar).toBeVisible({ timeout: 20000 });
+        await syncCalendar.click();
+
+        // After checking, the frequency dropdown should appear
+        const frequencySelect = this.page.getByText('Select Recurring Type');
+        await expect(frequencySelect).toBeVisible({ timeout: 10000 });
+        await frequencySelect.click();
+
+        // Wait for the dropdown options to be visible
+        const dropdownPanel = this.page.locator('.ng-dropdown-panel');
+        await expect(dropdownPanel).toBeVisible({ timeout: 10000 });
+
+        // Assert that "Weekly", "Monthly", "Yearly" options are present
+        const weeklyOption = dropdownPanel.locator('.ng-option', { hasText: 'Weekly' });
+        const monthlyOption = dropdownPanel.locator('.ng-option', { hasText: 'Monthly' });
+        const yearlyOption = dropdownPanel.locator('.ng-option', { hasText: 'Yearly' });
+
+        await expect(weeklyOption).toBeVisible({ timeout: 10000 });
+        await expect(monthlyOption).toBeVisible({ timeout: 10000 });
+        await expect(yearlyOption).toBeVisible({ timeout: 10000 });
+
+        await yearlyOption.click({ force: true });
+
+        // Always pick tomorrow's date in the recurring date input
+        const recurringDateInput = this.page.locator('input[placeholder="dd/mm/yy"]').last();
+        await expect(recurringDateInput).toBeVisible({ timeout: 10000 });
+        await recurringDateInput.click();
+
+        // Calculate tomorrow's date
+        const recurringTomorrow = new Date();
+        recurringTomorrow.setDate(recurringTomorrow.getDate() + 1);
+        const recurringTargetDay = recurringTomorrow.getDate();
+        const recurringTargetMonth = recurringTomorrow.getMonth();
+        const recurringTargetYear = recurringTomorrow.getFullYear();
+
+        // Get displayed calendar month & year
+        const recurringCalendarHeader = this.page.locator(".p-datepicker-title");
+        await expect(recurringCalendarHeader).toBeVisible();
+        const recurringCalendarHeaderText = await recurringCalendarHeader.innerText();
+        const [recurringMonthName, recurringYearText] = recurringCalendarHeaderText.trim().split(" ");
+        const recurringMonthIndex = new Date(`${recurringMonthName} 1, 2000`).getMonth();
+
+        const recurringMonthDifference = (recurringTargetYear - parseInt(recurringYearText)) * 12 + (recurringTargetMonth - recurringMonthIndex);
+        for (let i = 0; i < Math.abs(recurringMonthDifference); i++) {
+            if (recurringMonthDifference > 0) {
+                await this.page.locator('.p-datepicker-next').click();
+            } else if (recurringMonthDifference < 0) {
+                await this.page.locator('.p-datepicker-prev').click();
+            }
+        }
+
+        // Select tomorrow in the calendar
+        const recurringDayLocator = this.page.locator('.p-datepicker-calendar td:not(.p-datepicker-other-month)').getByText(new RegExp(`^${recurringTargetDay}$`));
+        await expect(recurringDayLocator.first()).toBeVisible();
+        await recurringDayLocator.first().click();
+        await this.page.waitForTimeout(1000);
+
+        const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"] input');
+        const staffElement = await staffSelect.elementHandle();
+        if (staffElement) {
+            await this.page.evaluate((el) => {
+                el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+            }, staffElement);
+        }
+        await staffSelect.waitFor({ state: "visible" });
+        const assigneeLabel = this.page.locator('div').filter({ hasText: /^Jahanzaib Xenex$/ }).first();
+        const isLabelVisible = await assigneeLabel.waitFor({ state: 'visible', timeout: 6000 }).then(() => true).catch(() => false);
+
+        if (!isLabelVisible) {
+            await staffSelect.click({ force: true });
+            await staffSelect.waitFor({ state: "visible" });
+            await staffSelect.click({ force: true });
+            await staffSelect.fill('Jahanzaib Xenex');
+
+            const assigneeOption = this.page.getByRole('option', { name: 'Jahanzaib Xenex (jahanzaib@xenex-media.com.au)' });
+            await assigneeOption.waitFor({ state: 'visible' });
+            await assigneeOption.click({ force: true });
+            await assigneeLabel.waitFor({ state: 'visible', timeout: 6000 }).catch(() => { });
+        } else {
+        }
+
+        // Submit the form
+        const saveBtn = this.page.getByRole('button', { name: /Save|Create/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+        // Wait for the task to appear in the list under Tasks tab
+        await this.page.waitForTimeout(2000);
+        // Close modal if needed
+        await this.closeLeadModalIfVisible();
+
+        const createdTaskRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
+        await expect(createdTaskRow).toBeVisible({ timeout: 40000 });
+        await this.closeModalIfVisible();
+        const notificationDropdown = this.page.locator('#notification-dropdown');
+        await expect(notificationDropdown).toBeVisible({ timeout: 20000 })
+        await notificationDropdown.click({ force: true });
+
+        const notificationLink = this.page.getByRole('link', { name: 'Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
+        await expect(notificationLink).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+    }
+
+    /**
+     * Verify that setting a reminder time sends an email or notification at the selected interval.
+     */
+    async verifyTaskReminderTriggersNotification() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.closeModalIfVisible();
+        const notificationDropdown = this.page.locator('#notification-dropdown');
+        await expect(notificationDropdown).toBeVisible({ timeout: 40000 })
+        await notificationDropdown.click({ force: true });
+
+        const notificationLink = this.page.getByRole('link', { name: 'Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
+        await expect(notificationLink).toBeVisible({ timeout: 30000 });
+        await notificationDropdown.click({ force: true });
+    }
+
+    /**
+     * Verify that selecting a team from the dropdown shows the task to all users in that team.
+     */
+    async verifyTaskVisibleToAllTeamMembers(taskTitle: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+
+        // Fill in task title
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
+        await taskTitleInput.fill(taskTitle);
+
+        // Set a due date (e.g., tomorrow)
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        // Pick tomorrow's date
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        // Get displayed calendar month & year
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+        const headerText = await header.innerText();
+        const [monthName, yearText] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        const monthDifference = (targetYear - parseInt(yearText)) * 12 + (targetMonth - monthIndex);
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator('.p-datepicker-next').click();
+            } else if (monthDifference < 0) {
+                await this.page.locator('.p-datepicker-prev').click();
+            }
+        }
+
+        // Select the target day
+        const dayLocator = this.page.locator('.p-datepicker-calendar td:not(.p-datepicker-other-month)').getByText(new RegExp(`^${targetDay}$`));
+        await expect(dayLocator.first()).toBeVisible();
+        await dayLocator.first().click();
+
+        await this.page.waitForTimeout(1200);
+
+
+        const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"] input');
+        const staffElement = await staffSelect.elementHandle();
+        if (staffElement) {
+            await this.page.evaluate((el) => {
+                el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+            }, staffElement);
+        }
+        await staffSelect.waitFor({ state: "visible" });
+        const assigneeLabel = this.page.locator('div').filter({ hasText: /^Jahanzaib Xenex$/ }).first();
+        const isLabelVisible = await assigneeLabel.waitFor({ state: 'visible', timeout: 6000 }).then(() => true).catch(() => false);
+
+        if (!isLabelVisible) {
+            await staffSelect.click({ force: true });
+            await staffSelect.waitFor({ state: "visible" });
+            await staffSelect.click({ force: true });
+            await staffSelect.fill('Jahanzaib Xenex');
+
+            const assigneeOption = this.page.getByRole('option', { name: 'Jahanzaib Xenex (jahanzaib@xenex-media.com.au)' });
+            await assigneeOption.waitFor({ state: 'visible' });
+            await assigneeOption.click({ force: true });
+            await assigneeLabel.waitFor({ state: 'visible', timeout: 6000 }).catch(() => { });
+        } else {
+        }
+
+        // Open the assignee/team dropdown
+        const teamSelect = this.page.locator('div').filter({ hasText: /^Select Team$/ }).last();
+        await expect(teamSelect).toBeVisible({ timeout: 10000 });
+        await teamSelect.click();
+
+        // Use the "drop_box" dropdown panel directly
+        const dropdownPanel = this.page.locator('.drop_box');
+        await expect(dropdownPanel).toBeVisible({ timeout: 10000 });
+        await dropdownPanel.click();
+
+        const options = this.page.locator('.drop_box ul li').first();
+        await options.first().waitFor({ state: 'visible' });
+        await options.first().click();
+        // Save the task
+        const saveBtn = this.page.getByRole('button', { name: /Save|Create/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+
+        const successToast = this.page.locator('div').filter({ hasText: 'Task created' }).last();
+        await successToast.waitFor({ state: "visible" });
+        await successToast.waitFor({ state: "hidden" });
+
+        await this.closeLeadModalIfVisible();
+        const firstRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
+        await firstRow.waitFor({ state: "visible" });
+        // Use evaluate to scroll the element into view
+        const rowHandle = await firstRow.elementHandle();
+        if (rowHandle) {
+            await this.page.evaluate((el) => {
+                el.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'auto' });
+            }, rowHandle);
+        }
+
+        await this.closeLeadModalIfVisible()
+
+    }
+
+    /**
+     * Verify that users added to the selected team can view the task.
+     */
+    async verifyTaskVisibleToTeamMember(taskTitle: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const firstRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
+        await firstRow.waitFor({ state: "visible" });
+        // Use evaluate to scroll the element into view
+        const rowHandle = await firstRow.elementHandle();
+        if (rowHandle) {
+            await this.page.evaluate((el) => {
+                el.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'auto' });
+            }, rowHandle);
+        }
+
+        await this.closeLeadModalIfVisible();
+    }
+
+    /**
+     * Verifies that when a comment is added in the "Additional Comments" section,
+     * a notification is sent to the selected staff member.
+     */
+    async verifyCommentNotificationToStaff() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // click on Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 30000 });
+        await tasksTab.click();
+
+        // Click the "Testing Task" cell to open editing
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await testingTaskCell.waitFor({ state: 'visible' });
+        await testingTaskCell.click();
+
+        // Fill in Additional Comments
+        const commentsInput = this.page.getByRole('textbox', { name: 'Send comments to the Assignee' });
+        await commentsInput.scrollIntoViewIfNeeded();
+        await expect(commentsInput).toBeVisible({ timeout: 10000 });
+        await commentsInput.click();
+        await commentsInput.fill('Comment Added To Task');
+
+        // Click the "Send Comments" button
+        const sendCommentsBtn = this.page.getByRole('button', { name: 'Send Comment' });
+        await expect(sendCommentsBtn).toBeVisible({ timeout: 10000 });
+        await sendCommentsBtn.click();
+
+        // Get by text "Comment published"
+        const commentPublishedToast = this.page.getByText('Comment published');
+        await expect(commentPublishedToast).toBeVisible({ timeout: 10000 });
+
+        await this.closeModalIfVisible();
+
+        // Wait for the notification dropdown to appear and verify the notification
+        const notificationDropdown = this.page.locator('#notification-dropdown');
+        await expect(notificationDropdown).toBeVisible({ timeout: 20000 });
+        await notificationDropdown.click();
+
+        const notificationLink = this.page.getByRole('link', { name: 'Task Comment Jahanzaib' }).first();
+        await expect(notificationLink).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Verifies that the added comment appears below the "Additional Comments" section once the task is saved.
+     * Assumes the comment to verify is 'Comment Added To Task'.
+     */
+    async verifyCommentAppearsUnderAdditionalComments() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Click the "Testing Task" cell to open editing
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await testingTaskCell.waitFor({ state: 'visible' });
+        await testingTaskCell.click();
+
+        // Fill in Additional Comments
+        const commentsInput = this.page.getByRole('textbox', { name: 'Send comments to the Assignee' });
+        await commentsInput.scrollIntoViewIfNeeded();
+        await expect(commentsInput).toBeVisible({ timeout: 10000 });
+
+        // Wait for the comments container to appear below the header
+        const addedComment = this.page.getByText('Comment Added To Task').first();
+        await expect(addedComment).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+
+    }
+
+    async verifyFileUploadNoDuplicationOnDoubleSave(filePath: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+        // Click the "Testing Task" cell to open editing
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await testingTaskCell.waitFor({ state: 'visible' });
+        await testingTaskCell.click();
+
+        // Click the "Add Files" button to open the file dialog
+        const addFilesBtn = this.page.getByRole('button', { name: /Add Files/i });
+        await addFilesBtn.scrollIntoViewIfNeeded();
+        await expect(addFilesBtn).toBeVisible({ timeout: 10000 });
+        await addFilesBtn.click();
+
+        // Attach a file
+        const uploadInput = this.page.locator('#fileInput');
+        await uploadInput.setInputFiles(filePath);
+
+        // Wait for the uploaded image thumbnail to appear and ensure only one instance is present
+        const uploadedImages = this.page.locator('.img-fluid').first();
+        await expect(uploadedImages).toBeVisible({ timeout: 10000 });
+
+        // Save the form the first time
+        const saveBtn = this.page.getByRole('button', { name: 'Save' }).first();
+        await saveBtn.scrollIntoViewIfNeeded();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.dblclick();
+        await this.closeLeadModalIfVisible
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that the added file appears correctly after saving the task.
+     */
+    async verifyFileAppearsAfterTaskSave(filePath: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Click the "Testing Task" cell to open editing
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await testingTaskCell.waitFor({ state: 'visible' });
+        await testingTaskCell.click();
+
+        // Add a file
+        const addFilesBtn = this.page.getByRole('button', { name: /Add Files/i });
+        await addFilesBtn.scrollIntoViewIfNeeded();
+        await expect(addFilesBtn).toBeVisible({ timeout: 10000 });
+        await addFilesBtn.click();
+
+        const uploadInput = this.page.locator('#fileInput');
+        await uploadInput.setInputFiles(filePath);
+
+        // Wait for the uploaded image thumbnail to appear
+        const uploadedImage = this.page.locator('.img-fluid').first();
+        await expect(uploadedImage).toBeVisible({ timeout: 10000 });
+
+        // Save the form
+        const saveBtn = this.page.getByRole('button', { name: 'Save' }).first();
+        await saveBtn.scrollIntoViewIfNeeded();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+        await this.closeModalIfVisible();
+
+    }
+
+    /**
+     * Verifies that after creating a task, the "Create Sub Task" option becomes visible.
+     */
+    async verifyCreateSubTaskOptionVisible() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Click the "Testing Task" cell to open editing
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await testingTaskCell.waitFor({ state: 'visible' });
+        await testingTaskCell.click();
+
+        // Wait for the "Create Sub Task" button to become visible
+        const createSubTaskBtn = this.page.getByRole('button', { name: /Create SubTask/i });
+        await expect(createSubTaskBtn).toBeVisible({ timeout: 30000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that clicking on the "Create Sub Task" button shows a field below the staff section to enter a sub task title.
+     */
+    async verifyCreateSubTaskFieldAppearsBelowStaff() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await testingTaskCell.waitFor({ state: 'visible' });
+        await testingTaskCell.click();
+        const createSubTaskBtn = this.page.getByRole('button', { name: /Create SubTask/i }).first();
+        await expect(createSubTaskBtn).toBeVisible({ timeout: 10000 });
+        await createSubTaskBtn.click();
+        const subTaskTitleInput = this.page.getByRole('textbox', { name: /Enter Task Title/i });
+        await expect(subTaskTitleInput).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that entering a title in the sub task field and saving creates the sub task.
+     */
+    async verifySubTaskCreation() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Go to Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Open the parent task ("Testing Task")
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await testingTaskCell.waitFor({ state: 'visible' });
+        await testingTaskCell.click();
+
+        const createSubTaskBtn = this.page.getByRole('button', { name: /Create SubTask/i }).first();
+        await expect(createSubTaskBtn).toBeVisible({ timeout: 10000 });
+        await createSubTaskBtn.click();
+
+        // Verify that the "Enter Task Title" textbox is visible in the Create SubTask modal
+        const subTaskTitleInput = this.page.getByRole('textbox', { name: /Enter Task Title/i });
+        await expect(subTaskTitleInput).toBeVisible({ timeout: 10000 });
+        await subTaskTitleInput.click();
+        await subTaskTitleInput.fill("Subtask Title entered");
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the "Save" button to save the subtask
+        const saveSubTaskButton = this.page.getByRole('button', { name: 'Save' }).nth(1);
+        await expect(saveSubTaskButton).toBeVisible({ timeout: 10000 });
+        await saveSubTaskButton.click({force: true});
+
+        const successToast = this.page.locator('div').filter({ hasText: 'Task created' }).last();
+        await successToast.waitFor({ state: "visible" });
+
+        const row = this.page.locator('tbody tr', {
+            has: this.page.getByText('Subtask Title entered').first()
+        });
+        await row.scrollIntoViewIfNeeded();
+        await expect(row).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
 }
 

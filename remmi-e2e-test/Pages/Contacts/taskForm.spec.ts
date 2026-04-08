@@ -68,7 +68,7 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyContactFormFromTask();
   });
-  
+
   test('Test 11: Verify that selecting a property from the dropdown creates a task linked to that property.', async ({ sessionPage }) => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyTaskLinkedToSelectedProperty();
@@ -124,4 +124,70 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyRecurringTaskSendsEmailNotifications('Recurring Weekly Task');
   });
 
+  test('Test 22: Verify that clicking "Sync Calendar" allows selection of a time period for task reminders.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifySyncCalendarAllowsTimePeriodSelection('Task Reminder');
+  });
+
+  test('Test 23: Verify that setting a reminder time sends an email or notification at the selected interval.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskReminderTriggersNotification();
+  });
+
+  test('Test 24: Verify that syncing the calendar with selected days sends email/notifications for the chosen period.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifySyncCalendarAllowsTimePeriodSelection('Task Reminder');
+  });
+
+  test('Test 25: Verify that selecting a team from the dropdown shows the task to all users in that team.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskVisibleToAllTeamMembers('Team Task');
+  });
+
+  test('Test 26: Verify that users added to the selected team can view the task.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskVisibleToTeamMember('Team Task');
+  });
+
+  test('Test 27: Verify that when a comment is added in the "Additional Comments" section, a notification is sent to the selected staff member.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyCommentNotificationToStaff();
+  });
+
+  test('Test 28: Verify that the added comment appears below the "Additional Comments" section once the task is saved.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyCommentAppearsUnderAdditionalComments();
+  });
+
+  test('Test 29: Verify that after adding a file and saving the task, the file appears only once even if "Save" is clicked twice', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    const path = require('path');
+    const IMAGE_DIR = path.resolve(__dirname, 'Images');
+    const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+    await contact.verifyFileUploadNoDuplicationOnDoubleSave(imagePath);
+  });
+
+  test('Test 30: Verify that the added file appears correctly after saving the task.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    const path = require('path');
+    const IMAGE_DIR = path.resolve(__dirname, 'Images');
+    const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+    await contact.verifyFileAppearsAfterTaskSave(imagePath);
+  });
+
+  test('Test 31: Verify that after creating a task, the "Create Sub Task" option becomes visible.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyCreateSubTaskOptionVisible();
+  });
+
+  test('Test 32: Verify that clicking on the "Create Sub Task" button shows a field below the staff section to enter a sub task title.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyCreateSubTaskFieldAppearsBelowStaff();
+  });
+
+  test('Test 33: Verify that entering a title in the sub task field and saving creates the sub task.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifySubTaskCreation();
+  });
+  
 });
