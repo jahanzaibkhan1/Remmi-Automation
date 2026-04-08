@@ -184,5 +184,10 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyCreateSubTaskFieldAppearsBelowStaff();
   });
+
+  test('Test 33: Verify that entering a title in the sub task field and saving creates the sub task.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifySubTaskCreation();
+  });
   
 });
