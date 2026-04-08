@@ -6539,5 +6539,25 @@ export class ContactActions {
         await this.closeLeadModalIfVisible()
 
     }
+
+    /**
+     * Verify that users added to the selected team can view the task.
+     */
+    async verifyTaskVisibleToTeamMember(taskTitle: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+        const firstRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
+        await firstRow.waitFor({ state: "visible" });
+        // Use evaluate to scroll the element into view
+        const rowHandle = await firstRow.elementHandle();
+        if (rowHandle) {
+            await this.page.evaluate((el) => {
+                el.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'auto' });
+            }, rowHandle);
+        }
+
+        await this.closeLeadModalIfVisible();
+    }
 }
 
