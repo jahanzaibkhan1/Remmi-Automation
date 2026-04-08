@@ -6744,5 +6744,50 @@ export class ContactActions {
         await expect(subTaskTitleInput).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Verifies that entering a title in the sub task field and saving creates the sub task.
+     */
+    async verifySubTaskCreation() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Go to Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Open the parent task ("Testing Task")
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await testingTaskCell.waitFor({ state: 'visible' });
+        await testingTaskCell.click();
+
+        const createSubTaskBtn = this.page.getByRole('button', { name: /Create SubTask/i }).first();
+        await expect(createSubTaskBtn).toBeVisible({ timeout: 10000 });
+        await createSubTaskBtn.click();
+
+        // Verify that the "Enter Task Title" textbox is visible in the Create SubTask modal
+        const subTaskTitleInput = this.page.getByRole('textbox', { name: /Enter Task Title/i });
+        await expect(subTaskTitleInput).toBeVisible({ timeout: 10000 });
+        await subTaskTitleInput.click();
+        await subTaskTitleInput.fill("Subtask Title entered");
+
+        await this.page.waitForTimeout(1000);
+
+        // Click the "Save" button to save the subtask
+        const saveSubTaskButton = this.page.getByRole('button', { name: 'Save' }).nth(1);
+        await expect(saveSubTaskButton).toBeVisible({ timeout: 10000 });
+        await saveSubTaskButton.click({force: true});
+
+        const successToast = this.page.locator('div').filter({ hasText: 'Task created' }).last();
+        await successToast.waitFor({ state: "visible" });
+
+        const row = this.page.locator('tbody tr', {
+            has: this.page.getByText('Subtask Title entered').first()
+        });
+        await row.scrollIntoViewIfNeeded();
+        await expect(row).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
 }
 
