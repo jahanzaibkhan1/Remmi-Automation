@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.132506999999286">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-08T09:21:35.171Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.206" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 26: Verify that users added to the selected team can view the task." classname="Pages\Contacts\taskForm.spec.ts" time="28.206">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.622955999998375">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-08T09:33:50.589Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.003" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 27: Verify that when a comment is added in the &quot;Additional Comments&quot; section, a notification is sent to the selected staff member." classname="Pages\Contacts\taskForm.spec.ts" time="38.003">
 </testcase>
 </testsuite>
 </testsuites>

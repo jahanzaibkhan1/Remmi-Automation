@@ -149,4 +149,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyTaskVisibleToTeamMember('Team Task');
   });
 
+  test('Test 27: Verify that when a comment is added in the "Additional Comments" section, a notification is sent to the selected staff member.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyCommentNotificationToStaff();
+  });
+
 });
