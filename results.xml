@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.823289000000806">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-08T09:16:24.103Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.076" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 25: Verify that selecting a team from the dropdown shows the task to all users in that team." classname="Pages\Contacts\taskForm.spec.ts" time="30.076">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.132506999999286">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-08T09:21:35.171Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.206" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 26: Verify that users added to the selected team can view the task." classname="Pages\Contacts\taskForm.spec.ts" time="28.206">
 </testcase>
 </testsuite>
 </testsuites>

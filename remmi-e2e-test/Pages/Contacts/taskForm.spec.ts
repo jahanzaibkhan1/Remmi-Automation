@@ -144,4 +144,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyTaskVisibleToAllTeamMembers('Team Task');
   });
 
+  test('Test 26: Verify that users added to the selected team can view the task.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskVisibleToTeamMember('Team Task');
+  });
+
 });
