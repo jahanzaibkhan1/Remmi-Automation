@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.865709999999034">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-07T11:02:12.992Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.643" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 20: Verify that recurring task checkbox shows a dropdown with &quot;Weekly,&quot; &quot;Monthly,&quot; and &quot;Yearly&quot; options." classname="Pages\Contacts\taskForm.spec.ts" time="36.643">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.419944000000136">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-08T08:03:27.928Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.788" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 22: Verify that clicking &quot;Sync Calendar&quot; allows selection of a time period for task reminders." classname="Pages\Contacts\taskForm.spec.ts" time="46.788">
 </testcase>
 </testsuite>
 </testsuites>
