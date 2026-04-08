@@ -6633,5 +6633,38 @@ export class ContactActions {
         await this.closeModalIfVisible();
 
     }
+
+    async verifyFileUploadNoDuplicationOnDoubleSave(filePath: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+        // Click the "Testing Task" cell to open editing
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await testingTaskCell.waitFor({ state: 'visible' });
+        await testingTaskCell.click();
+
+        // Click the "Add Files" button to open the file dialog
+        const addFilesBtn = this.page.getByRole('button', { name: /Add Files/i });
+        await addFilesBtn.scrollIntoViewIfNeeded();
+        await expect(addFilesBtn).toBeVisible({ timeout: 10000 });
+        await addFilesBtn.click();
+
+        // Attach a file
+        const uploadInput = this.page.locator('#fileInput');
+        await uploadInput.setInputFiles(filePath);
+
+        // Wait for the uploaded image thumbnail to appear and ensure only one instance is present
+        const uploadedImages = this.page.locator('.img-fluid').first();
+        await expect(uploadedImages).toBeVisible({ timeout: 10000 });
+
+        // Save the form the first time
+        const saveBtn = this.page.getByRole('button', { name: 'Save' }).first();
+        await saveBtn.scrollIntoViewIfNeeded();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.dblclick();
+        await this.closeModalIfVisible();
+    }
 }
 
