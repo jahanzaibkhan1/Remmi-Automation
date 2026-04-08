@@ -174,5 +174,10 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
     await contact.verifyFileAppearsAfterTaskSave(imagePath);
   });
+
+  test('Test 31: Verify that after creating a task, the "Create Sub Task" option becomes visible.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyCreateSubTaskOptionVisible();
+  });
   
 });

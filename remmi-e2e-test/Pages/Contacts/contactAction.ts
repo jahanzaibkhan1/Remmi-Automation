@@ -6703,5 +6703,26 @@ export class ContactActions {
         await this.closeModalIfVisible();
 
     }
+
+    /**
+     * Verifies that after creating a task, the "Create Sub Task" option becomes visible.
+     */
+    async verifyCreateSubTaskOptionVisible() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Click the "Testing Task" cell to open editing
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await testingTaskCell.waitFor({ state: 'visible' });
+        await testingTaskCell.click();
+
+        // Wait for the "Create Sub Task" button to become visible
+        const createSubTaskBtn = this.page.getByRole('button', { name: /Create SubTask/i });
+        await expect(createSubTaskBtn).toBeVisible({ timeout: 30000 });
+        await this.closeModalIfVisible();
+    }
 }
 
