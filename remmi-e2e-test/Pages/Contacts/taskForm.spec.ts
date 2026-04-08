@@ -129,4 +129,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifySyncCalendarAllowsTimePeriodSelection('Task Reminder');
   });
 
+  test('Test 23: Verify that setting a reminder time sends an email or notification at the selected interval.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskReminderTriggersNotification();
+  });
+
 });

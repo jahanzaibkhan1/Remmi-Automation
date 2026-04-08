@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.419944000000136">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-08T08:03:27.928Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.788" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 22: Verify that clicking &quot;Sync Calendar&quot; allows selection of a time period for task reminders." classname="Pages\Contacts\taskForm.spec.ts" time="46.788">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="24.64419299999997">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-08T08:53:21.715Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.992" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 23: Verify that setting a reminder time sends an email or notification at the selected interval." classname="Pages\Contacts\taskForm.spec.ts" time="21.992">
 </testcase>
 </testsuite>
 </testsuites>
