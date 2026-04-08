@@ -6666,5 +6666,42 @@ export class ContactActions {
         await saveBtn.dblclick();
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Verifies that the added file appears correctly after saving the task.
+     */
+    async verifyFileAppearsAfterTaskSave(filePath: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Click the "Testing Task" cell to open editing
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await testingTaskCell.waitFor({ state: 'visible' });
+        await testingTaskCell.click();
+
+        // Add a file
+        const addFilesBtn = this.page.getByRole('button', { name: /Add Files/i });
+        await addFilesBtn.scrollIntoViewIfNeeded();
+        await expect(addFilesBtn).toBeVisible({ timeout: 10000 });
+        await addFilesBtn.click();
+
+        const uploadInput = this.page.locator('#fileInput');
+        await uploadInput.setInputFiles(filePath);
+
+        // Wait for the uploaded image thumbnail to appear
+        const uploadedImage = this.page.locator('.img-fluid').first();
+        await expect(uploadedImage).toBeVisible({ timeout: 10000 });
+
+        // Save the form
+        const saveBtn = this.page.getByRole('button', { name: 'Save' }).first();
+        await saveBtn.scrollIntoViewIfNeeded();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+        await this.closeModalIfVisible();
+
+    }
 }
 

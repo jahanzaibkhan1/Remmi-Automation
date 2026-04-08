@@ -166,5 +166,13 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
     await contact.verifyFileUploadNoDuplicationOnDoubleSave(imagePath);
   });
+
+  test('Test 30: Verify that the added file appears correctly after saving the task.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    const path = require('path');
+    const IMAGE_DIR = path.resolve(__dirname, 'Images');
+    const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+    await contact.verifyFileAppearsAfterTaskSave(imagePath);
+  });
   
 });
