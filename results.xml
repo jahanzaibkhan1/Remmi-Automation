@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="24.64419299999997">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-08T08:53:21.715Z" hostname="chromium" tests="1" failures="0" skipped="0" time="21.992" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 23: Verify that setting a reminder time sends an email or notification at the selected interval." classname="Pages\Contacts\taskForm.spec.ts" time="21.992">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.63421299999953">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-08T08:55:47.526Z" hostname="chromium" tests="1" failures="0" skipped="0" time="49.693" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 24: Verify that syncing the calendar with selected days sends email/notifications for the chosen period." classname="Pages\Contacts\taskForm.spec.ts" time="49.693">
 </testcase>
 </testsuite>
 </testsuites>
