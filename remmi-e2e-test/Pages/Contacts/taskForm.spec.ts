@@ -68,7 +68,7 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyContactFormFromTask();
   });
-  
+
   test('Test 11: Verify that selecting a property from the dropdown creates a task linked to that property.', async ({ sessionPage }) => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyTaskLinkedToSelectedProperty();
@@ -153,10 +153,18 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyCommentNotificationToStaff();
   });
-  
+
   test('Test 28: Verify that the added comment appears below the "Additional Comments" section once the task is saved.', async ({ sessionPage }) => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyCommentAppearsUnderAdditionalComments();
   });
 
+  test('Test 29: Verify that after adding a file and saving the task, the file appears only once even if "Save" is clicked twice', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    const path = require('path');
+    const IMAGE_DIR = path.resolve(__dirname, 'Images');
+    const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
+    await contact.verifyFileUploadNoDuplicationOnDoubleSave(imagePath);
+  });
+  
 });
