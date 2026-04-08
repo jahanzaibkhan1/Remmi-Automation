@@ -124,4 +124,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifyRecurringTaskSendsEmailNotifications('Recurring Weekly Task');
   });
 
+  test('Test 22: Verify that clicking "Sync Calendar" allows selection of a time period for task reminders.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifySyncCalendarAllowsTimePeriodSelection('Task Reminder');
+  });
+
 });
