@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.97530700000003">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-08T09:50:47.639Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.004" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 29: Verify that after adding a file and saving the task, the file appears only once even if &quot;Save&quot; is clicked twice" classname="Pages\Contacts\taskForm.spec.ts" time="33.004">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.61998599999957">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-08T09:52:58.015Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.705" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 30: Verify that the added file appears correctly after saving the task." classname="Pages\Contacts\taskForm.spec.ts" time="32.705">
 </testcase>
 </testsuite>
 </testsuites>
