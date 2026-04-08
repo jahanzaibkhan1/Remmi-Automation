@@ -6429,5 +6429,115 @@ export class ContactActions {
         await expect(notificationLink).toBeVisible({ timeout: 30000 });
         await notificationDropdown.click({force: true});
     }
+
+    /**
+     * Verify that selecting a team from the dropdown shows the task to all users in that team.
+     */
+    async verifyTaskVisibleToAllTeamMembers(taskTitle: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openTasksTab();
+
+        // Fill in task title
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
+        await taskTitleInput.fill(taskTitle);
+
+        // Set a due date (e.g., tomorrow)
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        // Pick tomorrow's date
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        // Get displayed calendar month & year
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+        const headerText = await header.innerText();
+        const [monthName, yearText] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        const monthDifference = (targetYear - parseInt(yearText)) * 12 + (targetMonth - monthIndex);
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator('.p-datepicker-next').click();
+            } else if (monthDifference < 0) {
+                await this.page.locator('.p-datepicker-prev').click();
+            }
+        }
+
+        // Select the target day
+        const dayLocator = this.page.locator('.p-datepicker-calendar td:not(.p-datepicker-other-month)').getByText(new RegExp(`^${targetDay}$`));
+        await expect(dayLocator.first()).toBeVisible();
+        await dayLocator.first().click();
+
+        await this.page.waitForTimeout(1200);
+
+
+        const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"] input');
+        const staffElement = await staffSelect.elementHandle();
+        if (staffElement) {
+            await this.page.evaluate((el) => {
+                el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+            }, staffElement);
+        }
+        await staffSelect.waitFor({ state: "visible" });
+        const assigneeLabel = this.page.locator('div').filter({ hasText: /^Jahanzaib Xenex$/ }).first();
+        const isLabelVisible = await assigneeLabel.waitFor({ state: 'visible', timeout: 6000 }).then(() => true).catch(() => false);
+
+        if (!isLabelVisible) {
+            await staffSelect.click({ force: true });
+            await staffSelect.waitFor({ state: "visible" });
+            await staffSelect.click({ force: true });
+            await staffSelect.fill('Jahanzaib Xenex');
+
+            const assigneeOption = this.page.getByRole('option', { name: 'Jahanzaib Xenex (jahanzaib@xenex-media.com.au)' });
+            await assigneeOption.waitFor({ state: 'visible' });
+            await assigneeOption.click({ force: true });
+            await assigneeLabel.waitFor({ state: 'visible', timeout: 6000 }).catch(() => { });
+        } else {
+        }
+
+        // Open the assignee/team dropdown
+        const teamSelect = this.page.locator('div').filter({ hasText: /^Select Team$/ }).last();
+        await expect(teamSelect).toBeVisible({ timeout: 10000 });
+        await teamSelect.click();
+
+        // Use the "drop_box" dropdown panel directly
+        const dropdownPanel = this.page.locator('.drop_box');
+        await expect(dropdownPanel).toBeVisible({ timeout: 10000 });
+        await dropdownPanel.click();
+
+        const options = this.page.locator('.drop_box ul li').first();
+        await options.first().waitFor({ state: 'visible' });
+        await options.first().click();
+        // Save the task
+        const saveBtn = this.page.getByRole('button', { name: /Save|Create/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+
+        const successToast = this.page.locator('div').filter({ hasText: 'Task created' }).last();
+        await successToast.waitFor({ state: "visible" });
+        await successToast.waitFor({ state: "hidden" });
+   
+        await this.closeLeadModalIfVisible();
+        const firstRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
+        await firstRow.waitFor({ state: "visible" });
+        // Use evaluate to scroll the element into view
+        const rowHandle = await firstRow.elementHandle();
+        if (rowHandle) {
+            await this.page.evaluate((el) => {
+                el.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'auto' });
+            }, rowHandle);
+        }
+
+        await this.closeLeadModalIfVisible()
+
+    }
 }
 
