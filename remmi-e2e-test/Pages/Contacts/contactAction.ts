@@ -6399,19 +6399,19 @@ export class ContactActions {
         // Wait for the task to appear in the list under Tasks tab
         await this.page.waitForTimeout(2000);
         // Close modal if needed
-       await this.closeLeadModalIfVisible();
+        await this.closeLeadModalIfVisible();
 
         const createdTaskRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
         await expect(createdTaskRow).toBeVisible({ timeout: 40000 });
         await this.closeModalIfVisible();
         const notificationDropdown = this.page.locator('#notification-dropdown');
         await expect(notificationDropdown).toBeVisible({ timeout: 20000 })
-        await notificationDropdown.click({force: true});
+        await notificationDropdown.click({ force: true });
 
         const notificationLink = this.page.getByRole('link', { name: 'Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
         await expect(notificationLink).toBeVisible({ timeout: 30000 });
         await this.page.waitForTimeout(1000);
-     
+
     }
 
     /**
@@ -6423,11 +6423,11 @@ export class ContactActions {
         await this.closeModalIfVisible();
         const notificationDropdown = this.page.locator('#notification-dropdown');
         await expect(notificationDropdown).toBeVisible({ timeout: 40000 })
-        await notificationDropdown.click({force: true});
+        await notificationDropdown.click({ force: true });
 
         const notificationLink = this.page.getByRole('link', { name: 'Task Created Jahanzaib Xenex has assigned a task with you.' }).first();
         await expect(notificationLink).toBeVisible({ timeout: 30000 });
-        await notificationDropdown.click({force: true});
+        await notificationDropdown.click({ force: true });
     }
 
     /**
@@ -6524,7 +6524,7 @@ export class ContactActions {
         const successToast = this.page.locator('div').filter({ hasText: 'Task created' }).last();
         await successToast.waitFor({ state: "visible" });
         await successToast.waitFor({ state: "hidden" });
-   
+
         await this.closeLeadModalIfVisible();
         const firstRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
         await firstRow.waitFor({ state: "visible" });
@@ -6558,6 +6558,51 @@ export class ContactActions {
         }
 
         await this.closeLeadModalIfVisible();
+    }
+
+    /**
+     * Verifies that when a comment is added in the "Additional Comments" section,
+     * a notification is sent to the selected staff member.
+     */
+    async verifyCommentNotificationToStaff() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // click on Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 30000 });
+        await tasksTab.click();
+
+        // Click the "Testing Task" cell to open editing
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await testingTaskCell.waitFor({state:'visible'});
+        await testingTaskCell.click();
+
+        // Fill in Additional Comments
+        const commentsInput = this.page.getByRole('textbox', { name: 'Send comments to the Assignee' });
+        await commentsInput.scrollIntoViewIfNeeded();
+        await expect(commentsInput).toBeVisible({ timeout: 10000 });
+        await commentsInput.click();
+        await commentsInput.fill('Comment Added To Task');
+
+        // Click the "Send Comments" button
+        const sendCommentsBtn = this.page.getByRole('button', { name: 'Send Comment' });
+        await expect(sendCommentsBtn).toBeVisible({ timeout: 10000 });
+        await sendCommentsBtn.click();
+
+        // Get by text "Comment published"
+        const commentPublishedToast = this.page.getByText('Comment published');
+        await expect(commentPublishedToast).toBeVisible({ timeout: 10000 });
+
+        await this.closeModalIfVisible();
+
+        // Wait for the notification dropdown to appear and verify the notification
+        const notificationDropdown = this.page.locator('#notification-dropdown');
+        await expect(notificationDropdown).toBeVisible({ timeout: 20000 });
+        await notificationDropdown.click();
+
+        const notificationLink = this.page.getByRole('link', { name: 'Task Comment Jahanzaib' }).first();
+        await expect(notificationLink).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
     }
 }
 
