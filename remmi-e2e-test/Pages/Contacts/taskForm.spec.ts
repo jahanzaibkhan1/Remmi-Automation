@@ -139,4 +139,9 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     await contact.verifySyncCalendarAllowsTimePeriodSelection('Task Reminder');
   });
 
+  test('Test 25: Verify that selecting a team from the dropdown shows the task to all users in that team.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskVisibleToAllTeamMembers('Team Task');
+  });
+
 });
