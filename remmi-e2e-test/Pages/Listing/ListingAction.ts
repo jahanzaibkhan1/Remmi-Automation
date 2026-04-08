@@ -1534,12 +1534,10 @@ export class ListingActions {
     async switchToGridView() {
         await this.navigateToListings();
         const cardRows = this.locators.cardViewPropertyRow();
-        await cardRows.first().waitFor({ state: 'visible'}).catch(() => {});
         if (await cardRows.first().isVisible().catch(() => false)) {
             return;
-        } 
-        const gridViewBtn = this.locators.gridViewButton();
-        await gridViewBtn.waitFor({ state: 'visible'});
+        }
+        const gridViewBtn = this.page.locator('img.grid-svg-image');
         await gridViewBtn.click();
         await cardRows.first().waitFor({ state: 'visible', timeout: 30000 });
     }
