@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.71429400000162">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-08T09:56:40.894Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.909" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 31: Verify that after creating a task, the &quot;Create Sub Task&quot; option becomes visible." classname="Pages\Contacts\taskForm.spec.ts" time="29.909">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.771199999999254">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-08T09:59:14.624Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.864" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 32: Verify that clicking on the &quot;Create Sub Task&quot; button shows a field below the staff section to enter a sub task title." classname="Pages\Contacts\taskForm.spec.ts" time="40.864">
 </testcase>
 </testsuite>
 </testsuites>

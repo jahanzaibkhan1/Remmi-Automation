@@ -6724,5 +6724,25 @@ export class ContactActions {
         await expect(createSubTaskBtn).toBeVisible({ timeout: 30000 });
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Verifies that clicking on the "Create Sub Task" button shows a field below the staff section to enter a sub task title.
+     */
+    async verifyCreateSubTaskFieldAppearsBelowStaff() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await testingTaskCell.waitFor({ state: 'visible' });
+        await testingTaskCell.click();
+        const createSubTaskBtn = this.page.getByRole('button', { name: /Create SubTask/i }).first();
+        await expect(createSubTaskBtn).toBeVisible({ timeout: 10000 });
+        await createSubTaskBtn.click();
+        const subTaskTitleInput = this.page.getByRole('textbox', { name: /Enter Task Title/i });
+        await expect(subTaskTitleInput).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
 }
 
