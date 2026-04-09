@@ -214,5 +214,10 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyOriginalTaskNotAffectCopiedTask();
   });
+
+  test('Test 39: Verify that the task is visible in the task list after it is saved.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskAppearsInListAfterSave();
+  });
   
 });

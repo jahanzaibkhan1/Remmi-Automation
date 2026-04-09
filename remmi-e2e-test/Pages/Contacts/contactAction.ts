@@ -7111,7 +7111,7 @@ export class ContactActions {
         // ---- STEP 3: Open "Task copied v2" and check field is unchanged ----
         const copiedV2Cell = this.page.getByRole('cell', { name: uniqueCopyTitle }).first();
         await copiedV2Cell.evaluate(node => node.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
-   
+
         await copiedV2Cell.waitFor({ state: 'visible', timeout: 10000 });
         await copiedV2Cell.click();
         await expect(rightSidebar).toBeVisible({ timeout: 10000 });
@@ -7122,6 +7122,28 @@ export class ContactActions {
         await this.page.waitForTimeout(500);
 
         // Cleanup: close modal
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that the task is visible in the task list after it is saved.
+     */
+    async verifyTaskAppearsInListAfterSave() {
+        // Navigate to Contacts and open the first contact
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Tasks?/i });
+        await tasksTab.waitFor({ state: "visible", timeout: 10000 });
+        await tasksTab.click();
+
+        // Find the "Task copied v2" cell
+        const copiedTaskCell = this.page.getByRole('cell', { name: 'Task copied v2' }).first();
+        await copiedTaskCell.evaluate(node =>
+            node.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' })
+        );
+        await copiedTaskCell.waitFor({ state: 'visible', timeout: 50000 });
         await this.closeModalIfVisible();
     }
 

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.53093200000003">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-09T10:37:26.267Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.799" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 38: Verify that changes to the original task do not affect the copied task after it has been created." classname="Pages\Contacts\taskForm.spec.ts" time="45.799">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.906949999999256">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-09T10:47:31.393Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.192" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 39: Verify that the task is visible in the task list after it is saved." classname="Pages\Contacts\taskForm.spec.ts" time="41.192">
 </testcase>
 </testsuite>
 </testsuites>
