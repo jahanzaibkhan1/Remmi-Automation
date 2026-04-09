@@ -189,5 +189,10 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(sessionPage);
     await contact.verifySubTaskCreation();
   });
+
+  test('Test 34: Verify that the sub task is visible within the parent task after creation.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifySubTaskVisibleInParentTask();
+  });
   
 });

@@ -6822,5 +6822,30 @@ export class ContactActions {
         await expect(row).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Verifies that the sub task is visible within the parent task after creation.
+     */
+    async verifySubTaskVisibleInParentTask(subTaskTitle: string = "Subtask Title entered") {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Open the parent task ("Testing Task")
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await expect(testingTaskCell).toBeVisible({ timeout: 10000 });
+        await testingTaskCell.click();
+
+        // Wait for the subtasks section to appear (could be a list/table of subtasks)
+        const subTaskRow = this.page.getByText(subTaskTitle).first();
+        await subTaskRow.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+        await expect(subTaskRow).toBeVisible({ timeout: 10000 });
+
+        await this.closeModalIfVisible();
+    }
 }
 
