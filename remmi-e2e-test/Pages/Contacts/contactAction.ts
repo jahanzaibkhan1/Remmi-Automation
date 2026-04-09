@@ -7242,5 +7242,28 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verifies that the status of an associated listing is displayed and aligned properly in the UI.
+     */
+    async verifyAssociatedListingStatusAlignment() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open Related Property tab and then Listing tab
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible', timeout: 8000 });
+        await relatedPropertyTab.click();
+
+        const listingTab = this.page.locator("#pills-listing0-tab");
+        await listingTab.waitFor({ state: 'visible', timeout: 8000 });
+        await listingTab.click();
+
+        const associatedListingCell = this.page.getByRole('cell', { name: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880'}).first();
+        await associatedListingCell.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+        await associatedListingCell.waitFor({ state: 'visible', timeout: 10000 });
+        await this.closeModalIfVisible();
+
+    }
+
 }
 
