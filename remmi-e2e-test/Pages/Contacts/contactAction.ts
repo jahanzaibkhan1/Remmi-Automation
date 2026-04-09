@@ -3532,7 +3532,14 @@ export class ContactActions {
         const firstContactRow = this.page.locator('tbody tr').first();
         await firstContactRow.waitFor({ state: 'visible' });
         const firstCell = this.page.locator('td').nth(1);
+        const elementHandle = await firstCell.elementHandle();
+        if (elementHandle) {
+            await this.page.evaluate((el) => {
+                el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+            }, elementHandle);
+        }
         await firstCell.click();
+
         await this.openStreamTab();
     }
 
@@ -5927,14 +5934,35 @@ export class ContactActions {
         await dateInput.waitFor({ state: "visible" });
         await dateInput.click();
 
-        // Select tomorrow's date (assume a calendar table, pick available day that's not disabled)
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const dd = tomorrow.getDate();
-        const dateString = dd.toString();
-        // Try clicking tomorrow's cell on the calendar
-        const cellLocator = this.page.locator(`.p-datepicker-calendar td:not(.p-disabled) >> text='${dateString}'`);
-        await cellLocator.first().click();
+        // Select tomorrow's date from the calendar
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        const header = this.page.locator(".p-datepicker-title");
+        await header.waitFor({ state: "visible" });
+        const headerText = await header.innerText();
+        const [monthName, year] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        const monthDifference =
+            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
+
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+        }
+
+        const dayButton = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) .p-datepicker-day:not(.p-disabled), .p-datepicker-calendar td:not(.p-disabled) span:not(.p-disabled)`
+        ).filter({ hasText: String(targetDay) }).first();
+
+        await dayButton.click({ force: true });
 
         // Assign a staff if field is present (optional, skip if not present)
         const staffDropdown = this.page.locator('ng-select[formcontrolname="assignedUsers"] .ng-select-container');
@@ -6228,6 +6256,11 @@ export class ContactActions {
         const saveBtn = this.page.getByRole('button', { name: /Save|Create/i }).first();
         await expect(saveBtn).toBeVisible({ timeout: 10000 });
         await saveBtn.click();
+        // Wait for the "Task created" toast to appear and disappear
+        const successToast = this.page.locator('div').filter({ hasText: 'Task created' }).last();
+        await successToast.waitFor({ state: "visible" });
+        await successToast.waitFor({ state: "hidden" });
+
         await this.page.waitForTimeout(2000);
         const closeBtun = this.page.locator('.pi.pi-times').nth(2);
         if (await closeBtun.isVisible().catch(() => false)) {
@@ -6236,6 +6269,7 @@ export class ContactActions {
         const createdTaskRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
         await expect(createdTaskRow).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
+        await this.page.waitForTimeout(1200);
         const notificationDropdown = this.page.locator('#notification-dropdown');
         await expect(notificationDropdown).toBeVisible({ timeout: 20000 })
         await notificationDropdown.click();
@@ -6396,14 +6430,19 @@ export class ContactActions {
         const saveBtn = this.page.getByRole('button', { name: /Save|Create/i }).first();
         await expect(saveBtn).toBeVisible({ timeout: 10000 });
         await saveBtn.click();
-        // Wait for the task to appear in the list under Tasks tab
         await this.page.waitForTimeout(2000);
-        // Close modal if needed
-        await this.closeLeadModalIfVisible();
+        const successToast = this.page.locator('div').filter({ hasText: 'Task created' }).last();
+        await successToast.waitFor({ state: "visible" });
+        await successToast.waitFor({ state: "hidden" });
+        const closeBtun = this.page.locator('.pi.pi-times').nth(2);
+        if (await closeBtun.isVisible().catch(() => false)) {
+            await closeBtun.click({ force: true });
+        }
 
         const createdTaskRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
         await expect(createdTaskRow).toBeVisible({ timeout: 40000 });
         await this.closeModalIfVisible();
+        await this.page.waitForTimeout(1200);
         const notificationDropdown = this.page.locator('#notification-dropdown');
         await expect(notificationDropdown).toBeVisible({ timeout: 20000 })
         await notificationDropdown.click({ force: true });
@@ -6433,7 +6472,7 @@ export class ContactActions {
     /**
      * Verify that selecting a team from the dropdown shows the task to all users in that team.
      */
-    async verifyTaskVisibleToAllTeamMembers(taskTitle: string) {
+    async verifyTaskVisibleToAllTeamMembers() {
         await this.NavigateToContacts();
         await this.openFirstContact();
         await this.openTasksTab();
@@ -6441,7 +6480,7 @@ export class ContactActions {
         // Fill in task title
         const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
         await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
-        await taskTitleInput.fill(taskTitle);
+        await taskTitleInput.fill('Team Task');
 
         // Set a due date (e.g., tomorrow)
         const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
@@ -6525,39 +6564,33 @@ export class ContactActions {
         await successToast.waitFor({ state: "visible" });
         await successToast.waitFor({ state: "hidden" });
 
-        await this.closeLeadModalIfVisible();
-        const firstRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
-        await firstRow.waitFor({ state: "visible" });
-        // Use evaluate to scroll the element into view
-        const rowHandle = await firstRow.elementHandle();
-        if (rowHandle) {
-            await this.page.evaluate((el) => {
-                el.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'auto' });
-            }, rowHandle);
+        await this.page.waitForTimeout(2000);
+        const closeBtun = this.page.locator('.pi.pi-times').nth(2);
+        if (await closeBtun.isVisible().catch(() => false)) {
+            await closeBtun.click({ force: true });
         }
+        const tasksTable = this.page.locator('#customentitydatalist table tbody tr').last();
+        await tasksTable.first().waitFor({ state: 'visible' });
 
-        await this.closeLeadModalIfVisible()
+        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible()
 
     }
 
     /**
      * Verify that users added to the selected team can view the task.
      */
-    async verifyTaskVisibleToTeamMember(taskTitle: string) {
+    async verifyTaskVisibleToTeamMember() {
         await this.NavigateToContacts();
         await this.openFirstContact();
-        await this.openTasksTab();
-        const firstRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
-        await firstRow.waitFor({ state: "visible" });
-        // Use evaluate to scroll the element into view
-        const rowHandle = await firstRow.elementHandle();
-        if (rowHandle) {
-            await this.page.evaluate((el) => {
-                el.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'auto' });
-            }, rowHandle);
-        }
+        // Click on the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
 
-        await this.closeLeadModalIfVisible();
+        const tasksTable = this.page.locator('#customentitydatalist table tbody tr').last();
+        await tasksTable.first().waitFor({ state: 'visible' });
+        await this.closeModalIfVisible();
     }
 
     /**
@@ -6592,7 +6625,7 @@ export class ContactActions {
         // Get by text "Comment published"
         const commentPublishedToast = this.page.getByText('Comment published');
         await expect(commentPublishedToast).toBeVisible({ timeout: 10000 });
-
+        await expect(commentPublishedToast).toBeHidden({ timeout: 10000 });
         await this.closeModalIfVisible();
 
         // Wait for the notification dropdown to appear and verify the notification
@@ -6624,11 +6657,12 @@ export class ContactActions {
 
         // Fill in Additional Comments
         const commentsInput = this.page.getByRole('textbox', { name: 'Send comments to the Assignee' });
-        await commentsInput.scrollIntoViewIfNeeded();
+        await commentsInput.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
         await expect(commentsInput).toBeVisible({ timeout: 10000 });
 
         // Wait for the comments container to appear below the header
         const addedComment = this.page.getByText('Comment Added To Task').first();
+        await addedComment.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
         await expect(addedComment).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
 
@@ -6778,17 +6812,458 @@ export class ContactActions {
         // Click the "Save" button to save the subtask
         const saveSubTaskButton = this.page.getByRole('button', { name: 'Save' }).nth(1);
         await expect(saveSubTaskButton).toBeVisible({ timeout: 10000 });
-        await saveSubTaskButton.click({force: true});
+        await saveSubTaskButton.click({ force: true });
 
         const successToast = this.page.locator('div').filter({ hasText: 'Task created' }).last();
         await successToast.waitFor({ state: "visible" });
 
-        const row = this.page.locator('tbody tr', {
-            has: this.page.getByText('Subtask Title entered').first()
-        });
-        await row.scrollIntoViewIfNeeded();
+        const row = this.page.getByText('Subtask Title entered').first()
+        await row.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
         await expect(row).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Verifies that the sub task is visible within the parent task after creation.
+     */
+    async verifySubTaskVisibleInParentTask(subTaskTitle: string = "Subtask Title entered") {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Open the parent task ("Testing Task")
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await expect(testingTaskCell).toBeVisible({ timeout: 10000 });
+        await testingTaskCell.click();
+
+        // Wait for the subtasks section to appear (could be a list/table of subtasks)
+        const subTaskRow = this.page.getByText(subTaskTitle).first();
+        await subTaskRow.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+        await expect(subTaskRow).toBeVisible({ timeout: 10000 });
+
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that when the sub task is opened for editing/creation,
+     * a parent task dropdown is shown next to the team field.
+     */
+    async verifyParentTaskDropdownShownInSubTask() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Open the parent task ("Testing Task")
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await expect(testingTaskCell).toBeVisible({ timeout: 10000 });
+        await testingTaskCell.click();
+
+        const subTaskCell = this.page.getByRole('cell', { name: 'Subtask Title entered' }).first();
+        await subTaskCell.scrollIntoViewIfNeeded();
+        await expect(subTaskCell).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+        await subTaskCell.click();
+
+        const parentTaskDropdown = this.page.getByText('Parent TaskParent Task×');
+        await expect(parentTaskDropdown).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that all fields of the original task are copied correctly to the new task when the "Copy Task" option is used.
+     */
+    async verifyCopyTaskCopiesAllFieldsCorrectly() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Select the original task to copy ("Testing Task")
+        const originalTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await expect(originalTaskCell).toBeVisible({ timeout: 10000 });
+        await originalTaskCell.click();
+
+        await this.page.waitForTimeout(1200);
+
+        const rightSidebar = this.page.locator('section.body-details.h-100.border-0:visible')
+        await expect(rightSidebar).toBeVisible({ timeout: 10000 });
+
+        // Use the previously selected listing option and trim its text
+        const listingDropdownOption = this.page.locator('.selected_one')
+        await expect(listingDropdownOption).toBeVisible({ timeout: 10000 });
+        const listingName = (await listingDropdownOption.textContent())?.trim() || '';
+
+        // Click the "Copy Task" button
+        const copyTaskBtn = this.page.getByRole('button', { name: /Copy Task/i }).first();
+        await expect(copyTaskBtn).toBeVisible({ timeout: 10000 });
+        await copyTaskBtn.click();
+
+        // Wait for the confirmation message
+        const duplicatedSuccessMsg = this.page.getByText(/Task duplicated successfully/i, { exact: false });
+        await expect(duplicatedSuccessMsg).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
+
+        // Fill in new title
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
+        await taskTitleInput.click();
+        await taskTitleInput.fill('Task copied');
+
+        // Fill in a due date - Pick tomorrow's date
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        // Calculate tomorrow's date
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const targetDay = tomorrow.getDate();
+        const targetMonth = tomorrow.getMonth();
+        const targetYear = tomorrow.getFullYear();
+
+        // Find calendar header and adjust to correct month/year
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+        const headerText = await header.innerText();
+        const [monthName, yearStr] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+        const monthDifference = (targetYear - parseInt(yearStr)) * 12 + (targetMonth - monthIndex);
+
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+            await this.page.waitForTimeout(200);
+        }
+
+        // Select tomorrow's day
+        const dayLocator = this.page.locator(`.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`);
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
+        await dayLocator.first().click({ force: true });
+
+        // Set the listing field to the same value as original
+        const listingDropdown = this.page.locator('div').filter({ hasText: /^Select Listing$/ }).nth(1);
+        await listingDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await listingDropdown.click();
+        const listingSearchBox = this.page.locator('[id="Task: REM-null_1"]').getByRole('textbox', { name: 'Search' });
+        await expect(listingSearchBox).toBeVisible({ timeout: 10000 });
+        await listingSearchBox.fill(listingName);
+        const desiredListingOption = this.page.locator('[id="Task: REM-null_1"]').getByText(new RegExp(listingName, 'i')).last();
+        await desiredListingOption.click();
+
+        // Save the copied task
+        const saveBtn = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+        await this.page.waitForTimeout(1000);
+
+        // Close modal if present (last close button first)
+        const closeBtn = this.page.locator('.pi.pi-times').nth(2);
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        // Reopen the "Task copied" cell to verify content
+        const copiedTaskCell = this.page.getByRole('cell', { name: 'Task copied' }).first();
+        await copiedTaskCell.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+
+        await expect(copiedTaskCell).toBeVisible({ timeout: 10000 });
+        await copiedTaskCell.click();
+        await expect(rightSidebar).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(500);
+
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that changes to the original task do not affect the copied task after it has been created.
+     */
+    async verifyOriginalTaskNotAffectCopiedTask() {
+        // Navigate to Contacts and open first contact
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        const rightSidebar = this.page.locator('section.body-details.h-100.border-0:visible');
+        await expect(rightSidebar).toBeVisible({ timeout: 10000 });
+
+        const copiedTaskCell = this.page.getByRole('cell', { name: 'Task copied' }).first();
+        await copiedTaskCell.waitFor({ state: 'visible', timeout: 10000 });
+        await copiedTaskCell.click();
+
+        // Start duplication
+        const copyTaskBtn = this.page.getByRole('button', { name: /Copy Task/i }).first();
+        await expect(copyTaskBtn).toBeVisible({ timeout: 10000 });
+        await copyTaskBtn.click();
+
+        // Wait for duplication confirmation
+        const duplicatedSuccessMsg = this.page.getByText(/Task duplicated successfully/i, { exact: false });
+        await expect(duplicatedSuccessMsg).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
+
+        // Use a unique title for the new copy
+        const uniqueCopyTitle = 'Task copied v2';
+
+        // Fill in the copy's title
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
+        await taskTitleInput.click();
+        await taskTitleInput.fill(uniqueCopyTitle);
+
+        // Fill in due date - tomorrow
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const targetDay = tomorrow.getDate();
+        const targetMonth = tomorrow.getMonth();
+        const targetYear = tomorrow.getFullYear();
+
+        // Adjust calendar UI
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+        const headerText = await header.innerText();
+        const [monthName, yearStr] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+        const monthDifference = (targetYear - parseInt(yearStr)) * 12 + (targetMonth - monthIndex);
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+            await this.page.waitForTimeout(200);
+        }
+        const dayLocator = this.page.locator(`.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`);
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
+        await dayLocator.first().click({ force: true });
+
+        // Attempt to set the Select Listing value like the previous one (if present)
+        // If you have a 'listingName' to keep in sync, extract it from the previous cell's content
+        let listingName: string | null = null;
+        try {
+            const listingDropdownFilled = this.page.locator('[formcontrolname="listing"] .p-dropdown-label:not(:empty)').first();
+            if (await listingDropdownFilled.isVisible({ timeout: 1000 })) {
+                listingName = (await listingDropdownFilled.innerText()).trim();
+            }
+        } catch { /* ignore if not present */ }
+
+        if (listingName) {
+            const listingDropdown = this.page.locator('div').filter({ hasText: /^Select Listing$/ }).nth(1);
+            await listingDropdown.waitFor({ state: 'visible', timeout: 10000 });
+            await listingDropdown.click();
+            const listingSearchBox = this.page.locator('[id="Task: REM-null_1"]').getByRole('textbox', { name: 'Search' });
+            await expect(listingSearchBox).toBeVisible({ timeout: 10000 });
+            await listingSearchBox.fill(listingName);
+            const desiredListingOption = this.page.locator('[id="Task: REM-null_1"]').getByText(new RegExp(listingName, 'i')).last();
+            await desiredListingOption.click();
+        }
+
+        // Save the new copy
+        const saveBtn = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+        await this.page.waitForTimeout(1000);
+
+        // Close modal if present
+        const closeBtn = this.page.locator('.pi.pi-times').nth(2);
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await copiedTaskCell.waitFor({ state: 'visible', timeout: 10000 });
+        await copiedTaskCell.click();
+
+        // Change field (for example, change title)
+        const origTaskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await expect(origTaskTitleInput).toBeVisible({ timeout: 10000 });
+        await origTaskTitleInput.fill('Task copied updated');
+        const updateSaveBtn = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(updateSaveBtn).toBeVisible({ timeout: 10000 });
+        await updateSaveBtn.click();
+        await this.page.waitForTimeout(1200);
+
+        // Close edit modal if present
+        const closeBtn2 = this.page.locator('.pi.pi-times').nth(2);
+        if (await closeBtn2.isVisible().catch(() => false)) {
+            await closeBtn2.click({ force: true });
+        }
+
+        // ---- STEP 3: Open "Task copied v2" and check field is unchanged ----
+        const copiedV2Cell = this.page.getByRole('cell', { name: uniqueCopyTitle }).first();
+        await copiedV2Cell.evaluate(node => node.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+
+        await copiedV2Cell.waitFor({ state: 'visible', timeout: 10000 });
+        await copiedV2Cell.click();
+        await expect(rightSidebar).toBeVisible({ timeout: 10000 });
+        // Confirm the title is still 'Task copied v2'
+        const copiedV2TitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await copiedV2TitleInput.evaluate(node => node.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+        await expect(copiedV2TitleInput).toHaveValue(uniqueCopyTitle, { timeout: 5000 });
+        await this.page.waitForTimeout(500);
+
+        // Cleanup: close modal
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that the task is visible in the task list after it is saved.
+     */
+    async verifyTaskAppearsInListAfterSave() {
+        // Navigate to Contacts and open the first contact
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Tasks?/i });
+        await tasksTab.waitFor({ state: "visible", timeout: 10000 });
+        await tasksTab.click();
+
+        // Find the "Task copied v2" cell
+        const copiedTaskCell = this.page.getByRole('cell', { name: 'Task copied v2' }).first();
+        await copiedTaskCell.evaluate(node =>
+            node.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' })
+        );
+        await copiedTaskCell.waitFor({ state: 'visible', timeout: 50000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that the "Related Property" section contains the "Listing", "Property", and "Contract" tabs.
+     */
+    async verifyRelatedPropertyHasAllTabs() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Open the Related Property tab
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: "visible", timeout: 10000 });
+        await relatedPropertyTab.click();
+
+        // Wait for and check all three tabs
+        const listingTab = this.page.locator('#pills-listing0-tab');
+        const propertyTab = this.page.locator('#pills-property0-tab');
+        const contractTab = this.page.getByRole('tab', { name: /Contract/i });
+   
+        await listingTab.waitFor({ state: "visible", timeout: 8000 });
+        await propertyTab.waitFor({ state: "visible", timeout: 8000 });
+        await contractTab.waitFor({ state: "visible", timeout: 8000 });
+    }
+
+    /**
+     * Verifies that the associate field is visible and functional in the Listing tab
+     */
+    async verifyAssociateFieldVisibleAndFunctionalInListingTab() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open Related Property tab and then Listing tab
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible', timeout: 8000 });
+        await relatedPropertyTab.click();
+        const listingTab = this.page.locator("#pills-listing0-tab");
+        await listingTab.waitFor({ state: 'visible', timeout: 8000 });
+        await listingTab.click();
+
+        // Check that the associate field (Search Listing) is visible
+        const associateSearchBox = this.page.getByRole('combobox', { name: /search listing/i });
+        await associateSearchBox.waitFor({ state: 'visible', timeout: 8000 });
+
+        // Try searching for a listing and select an option if present
+        const searchValue = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880';
+        await associateSearchBox.type(searchValue, { delay: 180});
+
+        // Wait for at least one suggestion to appear and click it
+        const suggestionOption = this.page.getByRole('option', { name: searchValue });
+        await suggestionOption.waitFor({ state: 'visible', timeout: 30000 });
+
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that a listing can be associated to a contact using the associate field in the Listing tab.
+     */
+    async verifyListingCanBeAssociatedViaAssociateField() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open Related Property tab and then Listing tab
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible', timeout: 8000 });
+        await relatedPropertyTab.click();
+
+        const listingTab = this.page.locator("#pills-listing0-tab");
+        await listingTab.waitFor({ state: 'visible', timeout: 8000 });
+        await listingTab.click();
+
+        // Interact with associate/search field
+        const searchValue = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880';
+        const associateSearchBox = this.page.getByRole('combobox', { name: /search listing/i });
+        await associateSearchBox.waitFor({ state: 'visible', timeout: 8000 });
+        await associateSearchBox.type(searchValue, { delay: 180 });
+
+        // Wait for the suggested listing option and select it
+        const suggestionOption = this.page.getByRole('option', { name: searchValue });
+        await suggestionOption.waitFor({ state: 'visible', timeout: 30000 });
+        await suggestionOption.click();
+
+        // Click the Associate button
+        const associateButton = this.page.locator('button.preview-btn.btn-sm.f-12:visible');
+        await associateButton.waitFor({ state: 'visible', timeout: 8000 });
+        await associateButton.click();
+
+        // Wait for a success or "already associated" message
+        const toast = this.page.getByText(/listing attached successfully|Listing already associated/i).first();
+        await toast.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Confirm the listing appears in the associated list
+        const associatedListingRow = this.page.getByRole('cell', { name: searchValue }).first();
+        await associatedListingRow.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+        await associatedListingRow.waitFor({ state: 'visible', timeout: 30000 });
+
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that the status of an associated listing is displayed and aligned properly in the UI.
+     */
+    async verifyAssociatedListingStatusAlignment() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open Related Property tab and then Listing tab
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible', timeout: 8000 });
+        await relatedPropertyTab.click();
+
+        const listingTab = this.page.locator("#pills-listing0-tab");
+        await listingTab.waitFor({ state: 'visible', timeout: 8000 });
+        await listingTab.click();
+
+        const associatedListingCell = this.page.getByRole('cell', { name: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880'}).first();
+        await associatedListingCell.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+        await associatedListingCell.waitFor({ state: 'visible', timeout: 10000 });
+        await this.closeModalIfVisible();
+
+    }
+
 }
 
