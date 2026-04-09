@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="61.30711100000143">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-09T10:25:53.847Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.55" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 37: Verify that all fields of the original task are copied correctly to the new task when the &quot;Copy Task&quot; option is used." classname="Pages\Contacts\taskForm.spec.ts" time="58.55">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.53093200000003">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-09T10:37:26.267Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.799" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 38: Verify that changes to the original task do not affect the copied task after it has been created." classname="Pages\Contacts\taskForm.spec.ts" time="45.799">
 </testcase>
 </testsuite>
 </testsuites>

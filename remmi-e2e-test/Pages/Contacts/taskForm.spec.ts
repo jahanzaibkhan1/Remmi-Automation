@@ -209,5 +209,10 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyCopyTaskCopiesAllFieldsCorrectly();
   });
+
+  test('Test 38: Verify that changes to the original task do not affect the copied task after it has been created.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyOriginalTaskNotAffectCopiedTask();
+  });
   
 });

@@ -6979,7 +6979,7 @@ export class ContactActions {
         // Reopen the "Task copied" cell to verify content
         const copiedTaskCell = this.page.getByRole('cell', { name: 'Task copied' }).first();
         await copiedTaskCell.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
-   
+
         await expect(copiedTaskCell).toBeVisible({ timeout: 10000 });
         await copiedTaskCell.click();
         await expect(rightSidebar).toBeVisible({ timeout: 10000 });
@@ -6987,5 +6987,143 @@ export class ContactActions {
 
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Verify that changes to the original task do not affect the copied task after it has been created.
+     */
+    async verifyOriginalTaskNotAffectCopiedTask() {
+        // Navigate to Contacts and open first contact
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        const rightSidebar = this.page.locator('section.body-details.h-100.border-0:visible');
+        await expect(rightSidebar).toBeVisible({ timeout: 10000 });
+
+        const copiedTaskCell = this.page.getByRole('cell', { name: 'Task copied' }).first();
+        await copiedTaskCell.waitFor({ state: 'visible', timeout: 10000 });
+        await copiedTaskCell.click();
+
+        // Start duplication
+        const copyTaskBtn = this.page.getByRole('button', { name: /Copy Task/i }).first();
+        await expect(copyTaskBtn).toBeVisible({ timeout: 10000 });
+        await copyTaskBtn.click();
+
+        // Wait for duplication confirmation
+        const duplicatedSuccessMsg = this.page.getByText(/Task duplicated successfully/i, { exact: false });
+        await expect(duplicatedSuccessMsg).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
+
+        // Use a unique title for the new copy
+        const uniqueCopyTitle = 'Task copied v2';
+
+        // Fill in the copy's title
+        const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
+        await taskTitleInput.click();
+        await taskTitleInput.fill(uniqueCopyTitle);
+
+        // Fill in due date - tomorrow
+        const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
+        await expect(dateInput).toBeVisible({ timeout: 10000 });
+        await dateInput.click();
+
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const targetDay = tomorrow.getDate();
+        const targetMonth = tomorrow.getMonth();
+        const targetYear = tomorrow.getFullYear();
+
+        // Adjust calendar UI
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+        const headerText = await header.innerText();
+        const [monthName, yearStr] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+        const monthDifference = (targetYear - parseInt(yearStr)) * 12 + (targetMonth - monthIndex);
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+            await this.page.waitForTimeout(200);
+        }
+        const dayLocator = this.page.locator(`.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`);
+        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
+        await dayLocator.first().click({ force: true });
+
+        // Attempt to set the Select Listing value like the previous one (if present)
+        // If you have a 'listingName' to keep in sync, extract it from the previous cell's content
+        let listingName: string | null = null;
+        try {
+            const listingDropdownFilled = this.page.locator('[formcontrolname="listing"] .p-dropdown-label:not(:empty)').first();
+            if (await listingDropdownFilled.isVisible({ timeout: 1000 })) {
+                listingName = (await listingDropdownFilled.innerText()).trim();
+            }
+        } catch { /* ignore if not present */ }
+
+        if (listingName) {
+            const listingDropdown = this.page.locator('div').filter({ hasText: /^Select Listing$/ }).nth(1);
+            await listingDropdown.waitFor({ state: 'visible', timeout: 10000 });
+            await listingDropdown.click();
+            const listingSearchBox = this.page.locator('[id="Task: REM-null_1"]').getByRole('textbox', { name: 'Search' });
+            await expect(listingSearchBox).toBeVisible({ timeout: 10000 });
+            await listingSearchBox.fill(listingName);
+            const desiredListingOption = this.page.locator('[id="Task: REM-null_1"]').getByText(new RegExp(listingName, 'i')).last();
+            await desiredListingOption.click();
+        }
+
+        // Save the new copy
+        const saveBtn = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+        await this.page.waitForTimeout(1000);
+
+        // Close modal if present
+        const closeBtn = this.page.locator('.pi.pi-times').nth(2);
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await copiedTaskCell.waitFor({ state: 'visible', timeout: 10000 });
+        await copiedTaskCell.click();
+
+        // Change field (for example, change title)
+        const origTaskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await expect(origTaskTitleInput).toBeVisible({ timeout: 10000 });
+        await origTaskTitleInput.fill('Task copied updated');
+        const updateSaveBtn = this.page.getByRole('button', { name: /Save/i }).first();
+        await expect(updateSaveBtn).toBeVisible({ timeout: 10000 });
+        await updateSaveBtn.click();
+        await this.page.waitForTimeout(1200);
+
+        // Close edit modal if present
+        const closeBtn2 = this.page.locator('.pi.pi-times').nth(2);
+        if (await closeBtn2.isVisible().catch(() => false)) {
+            await closeBtn2.click({ force: true });
+        }
+
+        // ---- STEP 3: Open "Task copied v2" and check field is unchanged ----
+        const copiedV2Cell = this.page.getByRole('cell', { name: uniqueCopyTitle }).first();
+        await copiedV2Cell.evaluate(node => node.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+   
+        await copiedV2Cell.waitFor({ state: 'visible', timeout: 10000 });
+        await copiedV2Cell.click();
+        await expect(rightSidebar).toBeVisible({ timeout: 10000 });
+        // Confirm the title is still 'Task copied v2'
+        const copiedV2TitleInput = this.page.locator('input[formcontrolname="title"]').first();
+        await copiedV2TitleInput.evaluate(node => node.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+        await expect(copiedV2TitleInput).toHaveValue(uniqueCopyTitle, { timeout: 5000 });
+        await this.page.waitForTimeout(500);
+
+        // Cleanup: close modal
+        await this.closeModalIfVisible();
+    }
+
 }
 
