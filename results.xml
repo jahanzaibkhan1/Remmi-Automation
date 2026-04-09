@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.14959800000116">
-<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-09T10:55:55.269Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.202" errors="0">
-<testcase name="Contact Related Property Tabs - Remmi E2E › Verify all three tabs (Listing, Property, Contract) appear under Related Property" classname="Pages\Contacts\relatedProperty.spec.ts" time="40.202">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.720265000000595">
+<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-09T10:59:58.430Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.004" errors="0">
+<testcase name="Contact Related Property Tabs - Remmi E2E › Verify associate field is visible and functional in Listing tab" classname="Pages\Contacts\relatedProperty.spec.ts" time="46.004">
 </testcase>
 </testsuite>
 </testsuites>
