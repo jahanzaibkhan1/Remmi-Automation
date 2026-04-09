@@ -141,12 +141,12 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
 
   test('Test 25: Verify that selecting a team from the dropdown shows the task to all users in that team.', async ({ sessionPage }) => {
     const contact = new ContactActions(sessionPage);
-    await contact.verifyTaskVisibleToAllTeamMembers('Team Task');
+    await contact.verifyTaskVisibleToAllTeamMembers();
   });
 
   test('Test 26: Verify that users added to the selected team can view the task.', async ({ sessionPage }) => {
     const contact = new ContactActions(sessionPage);
-    await contact.verifyTaskVisibleToTeamMember('Team Task');
+    await contact.verifyTaskVisibleToTeamMember();
   });
 
   test('Test 27: Verify that when a comment is added in the "Additional Comments" section, a notification is sent to the selected staff member.', async ({ sessionPage }) => {
@@ -188,6 +188,36 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
   test('Test 33: Verify that entering a title in the sub task field and saving creates the sub task.', async ({ sessionPage }) => {
     const contact = new ContactActions(sessionPage);
     await contact.verifySubTaskCreation();
+  });
+
+  test('Test 34: Verify that the sub task is visible within the parent task after creation.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifySubTaskVisibleInParentTask();
+  });
+
+  test('Test 35: Verify that when the sub task is opened, a parent task dropdown is shown next to the team field.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyParentTaskDropdownShownInSubTask();
+  });
+
+  test('Test 36: Verify that selecting a different parent task from the parent task dropdown updates the sub task’s parent task.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyParentTaskDropdownShownInSubTask();
+  });
+
+  test('Test 37: Verify that all fields of the original task are copied correctly to the new task when the "Copy Task" option is used.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyCopyTaskCopiesAllFieldsCorrectly();
+  });
+
+  test('Test 38: Verify that changes to the original task do not affect the copied task after it has been created.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyOriginalTaskNotAffectCopiedTask();
+  });
+
+  test('Test 39: Verify that the task is visible in the task list after it is saved.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyTaskAppearsInListAfterSave();
   });
   
 });

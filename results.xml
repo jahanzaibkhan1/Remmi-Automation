@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="62.83507800000161">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-08T10:09:39.332Z" hostname="chromium" tests="1" failures="0" skipped="0" time="59.844" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 33: Verify that entering a title in the sub task field and saving creates the sub task." classname="Pages\Contacts\taskForm.spec.ts" time="59.844">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="36.416332000002264">
+<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-09T11:09:45.449Z" hostname="chromium" tests="1" failures="0" skipped="0" time="33.563" errors="0">
+<testcase name="Contact Related Property Tabs - Remmi E2E › Verify the associated listing displays status aligned properly" classname="Pages\Contacts\relatedProperty.spec.ts" time="33.563">
 </testcase>
 </testsuite>
 </testsuites>
