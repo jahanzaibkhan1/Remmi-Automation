@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.906949999999256">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-09T10:47:31.393Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.192" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 39: Verify that the task is visible in the task list after it is saved." classname="Pages\Contacts\taskForm.spec.ts" time="41.192">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.14959800000116">
+<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-09T10:55:55.269Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.202" errors="0">
+<testcase name="Contact Related Property Tabs - Remmi E2E › Verify all three tabs (Listing, Property, Contract) appear under Related Property" classname="Pages\Contacts\relatedProperty.spec.ts" time="40.202">
 </testcase>
 </testsuite>
 </testsuites>
