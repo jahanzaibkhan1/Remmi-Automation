@@ -8511,7 +8511,7 @@ export class ListingActions {
         await floorPlanArea.scrollIntoViewIfNeeded();
         await floorPlanArea.waitFor({ state: 'visible', timeout: 30000 });
 
-         await this.page.waitForTimeout(1200);
+        await this.page.waitForTimeout(1200);
         // Find the 'Add' button (usually a plus icon or labeled 'Add')
         const addButton = this.page.getByRole('button', { name: /add/i }).first();
         await expect(addButton).toBeVisible({ timeout: 10000 });
@@ -17817,13 +17817,13 @@ export class ListingActions {
         await expect(streamTab).toBeVisible({ timeout: 10000 });
         await streamTab.click();
 
-          // Find the search field in the stream tab
-          const searchInput = this.page.locator('input[placeholder*="Search by keyword"]').first();
-          await expect(searchInput).toBeVisible({ timeout: 10000 });
-          await searchInput.fill(""); 
-          await searchInput.fill('Listing Added');
-          await searchInput.press('Enter');
-          await this.page.waitForTimeout(1000);
+        // Find the search field in the stream tab
+        const searchInput = this.page.locator('input[placeholder*="Search by keyword"]').first();
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.fill("");
+        await searchInput.fill('Listing Added');
+        await searchInput.press('Enter');
+        await this.page.waitForTimeout(1000);
 
         // Wait for stream card relating to creation event
         const createdStreamCard = this.page.locator('div.stream-body', { hasText: /Listing Added|Listing Created/i }).first();
@@ -24398,8 +24398,8 @@ export class ListingActions {
 
         // Click the Edit icon/button (assume .pi-pencil or a button with Edit)
         const editBtn = this.page.locator('.pi.pi-pencil, button:has-text("Edit")').first();
-        await expect(editBtn).toBeVisible({ timeout: 10000 });
-        await editBtn.click({ force: true });
+        await editBtn.waitFor({ state: 'visible' });
+        await editBtn.click();
 
         // Wait for the task edit dialog or form to be fully visible/loaded before continuing.
         const staffAgent = this.page.locator('[id="Task: REM-null_1"]').getByText('Jahanzaib Xenex', { exact: true });
@@ -24409,6 +24409,21 @@ export class ListingActions {
         const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
         await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
         await taskTitleInput.fill(newTitle);
+
+        // Edit Job Type (Task Type) field, wait for dropdown state, select "Door Knocks"
+        const jobTypeSelector = this.page.locator('ng-select[formcontrolname="job_type_id"] .ng-select-container');
+        await jobTypeSelector.waitFor({ state: 'visible' });
+   
+        await jobTypeSelector.click();
+
+        // Wait for dropdown to be active/expanded
+        const dropdownPanel = this.page.locator('.ng-dropdown-panel');
+        await dropdownPanel.waitFor({ state: 'visible'});
+   
+        // Find and select "Door Knocks" from the options
+        const doorKnocksOption = dropdownPanel.locator('.ng-option', { hasText: 'Door Knocks' });
+        await doorKnocksOption.waitFor({ state: 'visible' });
+        await doorKnocksOption.click();
 
         const saveTaskButton = this.page.getByRole('button', { name: /Save/i }).first();
         await expect(saveTaskButton).toBeVisible({ timeout: 10000 });
