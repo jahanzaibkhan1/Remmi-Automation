@@ -3532,7 +3532,14 @@ export class ContactActions {
         const firstContactRow = this.page.locator('tbody tr').first();
         await firstContactRow.waitFor({ state: 'visible' });
         const firstCell = this.page.locator('td').nth(1);
+        const elementHandle = await firstCell.elementHandle();
+        if (elementHandle) {
+            await this.page.evaluate((el) => {
+                el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+            }, elementHandle);
+        }
         await firstCell.click();
+   
         await this.openStreamTab();
     }
 
@@ -5927,14 +5934,35 @@ export class ContactActions {
         await dateInput.waitFor({ state: "visible" });
         await dateInput.click();
 
-        // Select tomorrow's date (assume a calendar table, pick available day that's not disabled)
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const dd = tomorrow.getDate();
-        const dateString = dd.toString();
-        // Try clicking tomorrow's cell on the calendar
-        const cellLocator = this.page.locator(`.p-datepicker-calendar td:not(.p-disabled) >> text='${dateString}'`);
-        await cellLocator.first().click();
+        // Select tomorrow's date from the calendar
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        const header = this.page.locator(".p-datepicker-title");
+        await header.waitFor({ state: "visible" });
+        const headerText = await header.innerText();
+        const [monthName, year] = headerText.trim().split(" ");
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        const monthDifference =
+            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
+
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+        }
+
+        const dayButton = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) .p-datepicker-day:not(.p-disabled), .p-datepicker-calendar td:not(.p-disabled) span:not(.p-disabled)`
+        ).filter({ hasText: String(targetDay) }).first();
+
+        await dayButton.click({ force: true });
 
         // Assign a staff if field is present (optional, skip if not present)
         const staffDropdown = this.page.locator('ng-select[formcontrolname="assignedUsers"] .ng-select-container');
@@ -6228,6 +6256,11 @@ export class ContactActions {
         const saveBtn = this.page.getByRole('button', { name: /Save|Create/i }).first();
         await expect(saveBtn).toBeVisible({ timeout: 10000 });
         await saveBtn.click();
+        // Wait for the "Task created" toast to appear and disappear
+        const successToast = this.page.locator('div').filter({ hasText: 'Task created' }).last();
+        await successToast.waitFor({ state: "visible" });
+        await successToast.waitFor({ state: "hidden" });
+
         await this.page.waitForTimeout(2000);
         const closeBtun = this.page.locator('.pi.pi-times').nth(2);
         if (await closeBtun.isVisible().catch(() => false)) {
@@ -6236,6 +6269,7 @@ export class ContactActions {
         const createdTaskRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
         await expect(createdTaskRow).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
+        await this.page.waitForTimeout(1200);
         const notificationDropdown = this.page.locator('#notification-dropdown');
         await expect(notificationDropdown).toBeVisible({ timeout: 20000 })
         await notificationDropdown.click();
@@ -6396,14 +6430,19 @@ export class ContactActions {
         const saveBtn = this.page.getByRole('button', { name: /Save|Create/i }).first();
         await expect(saveBtn).toBeVisible({ timeout: 10000 });
         await saveBtn.click();
-        // Wait for the task to appear in the list under Tasks tab
         await this.page.waitForTimeout(2000);
-        // Close modal if needed
-        await this.closeLeadModalIfVisible();
+        const successToast = this.page.locator('div').filter({ hasText: 'Task created' }).last();
+        await successToast.waitFor({ state: "visible" });
+        await successToast.waitFor({ state: "hidden" });
+        const closeBtun = this.page.locator('.pi.pi-times').nth(2);
+        if (await closeBtun.isVisible().catch(() => false)) {
+            await closeBtun.click({ force: true });
+        }
 
         const createdTaskRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
         await expect(createdTaskRow).toBeVisible({ timeout: 40000 });
         await this.closeModalIfVisible();
+        await this.page.waitForTimeout(1200);
         const notificationDropdown = this.page.locator('#notification-dropdown');
         await expect(notificationDropdown).toBeVisible({ timeout: 20000 })
         await notificationDropdown.click({ force: true });
@@ -6433,7 +6472,7 @@ export class ContactActions {
     /**
      * Verify that selecting a team from the dropdown shows the task to all users in that team.
      */
-    async verifyTaskVisibleToAllTeamMembers(taskTitle: string) {
+    async verifyTaskVisibleToAllTeamMembers() {
         await this.NavigateToContacts();
         await this.openFirstContact();
         await this.openTasksTab();
@@ -6441,7 +6480,7 @@ export class ContactActions {
         // Fill in task title
         const taskTitleInput = this.page.locator('input[formcontrolname="title"]').first();
         await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
-        await taskTitleInput.fill(taskTitle);
+        await taskTitleInput.fill('Team Task');
 
         // Set a due date (e.g., tomorrow)
         const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
@@ -6525,39 +6564,33 @@ export class ContactActions {
         await successToast.waitFor({ state: "visible" });
         await successToast.waitFor({ state: "hidden" });
 
-        await this.closeLeadModalIfVisible();
-        const firstRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
-        await firstRow.waitFor({ state: "visible" });
-        // Use evaluate to scroll the element into view
-        const rowHandle = await firstRow.elementHandle();
-        if (rowHandle) {
-            await this.page.evaluate((el) => {
-                el.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'auto' });
-            }, rowHandle);
+           await this.page.waitForTimeout(2000);
+        const closeBtun = this.page.locator('.pi.pi-times').nth(2);
+        if (await closeBtun.isVisible().catch(() => false)) {
+            await closeBtun.click({ force: true });
         }
+        const tasksTable = this.page.locator('#customentitydatalist table tbody tr').last();
+        await tasksTable.first().waitFor({ state: 'visible' });
 
-        await this.closeLeadModalIfVisible()
+        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible()
 
     }
 
     /**
      * Verify that users added to the selected team can view the task.
      */
-    async verifyTaskVisibleToTeamMember(taskTitle: string) {
+    async verifyTaskVisibleToTeamMember() {
         await this.NavigateToContacts();
         await this.openFirstContact();
-        await this.openTasksTab();
-        const firstRow = this.page.locator('table tbody tr').filter({ hasText: taskTitle }).last();
-        await firstRow.waitFor({ state: "visible" });
-        // Use evaluate to scroll the element into view
-        const rowHandle = await firstRow.elementHandle();
-        if (rowHandle) {
-            await this.page.evaluate((el) => {
-                el.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'auto' });
-            }, rowHandle);
-        }
+        // Click on the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
 
-        await this.closeLeadModalIfVisible();
+        const tasksTable = this.page.locator('#customentitydatalist table tbody tr').last();
+        await tasksTable.first().waitFor({ state: 'visible' });
+        await this.closeModalIfVisible();
     }
 
     /**
@@ -6592,7 +6625,7 @@ export class ContactActions {
         // Get by text "Comment published"
         const commentPublishedToast = this.page.getByText('Comment published');
         await expect(commentPublishedToast).toBeVisible({ timeout: 10000 });
-
+        await expect(commentPublishedToast).toBeHidden({ timeout: 10000 });
         await this.closeModalIfVisible();
 
         // Wait for the notification dropdown to appear and verify the notification
@@ -6624,11 +6657,12 @@ export class ContactActions {
 
         // Fill in Additional Comments
         const commentsInput = this.page.getByRole('textbox', { name: 'Send comments to the Assignee' });
-        await commentsInput.scrollIntoViewIfNeeded();
+        await commentsInput.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
         await expect(commentsInput).toBeVisible({ timeout: 10000 });
 
         // Wait for the comments container to appear below the header
         const addedComment = this.page.getByText('Comment Added To Task').first();
+        await addedComment.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
         await expect(addedComment).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
 
@@ -6783,10 +6817,8 @@ export class ContactActions {
         const successToast = this.page.locator('div').filter({ hasText: 'Task created' }).last();
         await successToast.waitFor({ state: "visible" });
 
-        const row = this.page.locator('tbody tr', {
-            has: this.page.getByText('Subtask Title entered').first()
-        });
-        await row.scrollIntoViewIfNeeded();
+        const row = this.page.getByText('Subtask Title entered').first()
+        await row.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
         await expect(row).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
     }

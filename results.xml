@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.72039300000016">
-<testsuite name="Pages\Listing\listingHistory.spec.ts" timestamp="2026-04-09T05:01:09.615Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.543" errors="0">
-<testcase name="Listing History Tab - Remmi E2E › Test 13: Verify special characters in fields are displayed correctly in history" classname="Pages\Listing\listingHistory.spec.ts" time="35.543">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.56691299999878">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-09T10:04:20.357Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.914" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 33: Verify that entering a title in the sub task field and saving creates the sub task." classname="Pages\Contacts\taskForm.spec.ts" time="29.914">
 </testcase>
 </testsuite>
 </testsuites>
