@@ -204,5 +204,10 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyParentTaskDropdownShownInSubTask();
   });
+
+  test('Test 37: Verify that all fields of the original task are copied correctly to the new task when the "Copy Task" option is used.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyCopyTaskCopiesAllFieldsCorrectly();
+  });
   
 });
