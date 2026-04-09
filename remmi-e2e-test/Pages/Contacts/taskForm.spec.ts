@@ -199,5 +199,10 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyParentTaskDropdownShownInSubTask();
   });
+
+  test('Test 36: Verify that selecting a different parent task from the parent task dropdown updates the sub task’s parent task.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyParentTaskDropdownShownInSubTask();
+  });
   
 });
