@@ -7147,5 +7147,26 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verifies that the "Related Property" section contains the "Listing", "Property", and "Contract" tabs.
+     */
+    async verifyRelatedPropertyHasAllTabs() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Open the Related Property tab
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: "visible", timeout: 10000 });
+        await relatedPropertyTab.click();
+
+        // Wait for and check all three tabs
+        const listingTab = this.page.locator('#pills-listing0-tab');
+        const propertyTab = this.page.locator('#pills-property0-tab');
+        const contractTab = this.page.getByRole('tab', { name: /Contract/i });
+   
+        await listingTab.waitFor({ state: "visible", timeout: 8000 });
+        await propertyTab.waitFor({ state: "visible", timeout: 8000 });
+        await contractTab.waitFor({ state: "visible", timeout: 8000 });
+    }
+
 }
 
