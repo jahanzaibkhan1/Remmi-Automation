@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.720265000000595">
-<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-09T10:59:58.430Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.004" errors="0">
-<testcase name="Contact Related Property Tabs - Remmi E2E › Verify associate field is visible and functional in Listing tab" classname="Pages\Contacts\relatedProperty.spec.ts" time="46.004">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.400607000000775">
+<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-09T11:02:42.182Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.504" errors="0">
+<testcase name="Contact Related Property Tabs - Remmi E2E › Verify a listing can be associated using the associate field" classname="Pages\Contacts\relatedProperty.spec.ts" time="45.504">
 </testcase>
 </testsuite>
 </testsuites>

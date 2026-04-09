@@ -7198,5 +7198,49 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verifies that a listing can be associated to a contact using the associate field in the Listing tab.
+     */
+    async verifyListingCanBeAssociatedViaAssociateField() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open Related Property tab and then Listing tab
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible', timeout: 8000 });
+        await relatedPropertyTab.click();
+
+        const listingTab = this.page.locator("#pills-listing0-tab");
+        await listingTab.waitFor({ state: 'visible', timeout: 8000 });
+        await listingTab.click();
+
+        // Interact with associate/search field
+        const searchValue = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880';
+        const associateSearchBox = this.page.getByRole('combobox', { name: /search listing/i });
+        await associateSearchBox.waitFor({ state: 'visible', timeout: 8000 });
+        await associateSearchBox.type(searchValue, { delay: 180 });
+
+        // Wait for the suggested listing option and select it
+        const suggestionOption = this.page.getByRole('option', { name: searchValue });
+        await suggestionOption.waitFor({ state: 'visible', timeout: 30000 });
+        await suggestionOption.click();
+
+        // Click the Associate button
+        const associateButton = this.page.locator('button.preview-btn.btn-sm.f-12:visible');
+        await associateButton.waitFor({ state: 'visible', timeout: 8000 });
+        await associateButton.click();
+
+        // Wait for a success or "already associated" message
+        const toast = this.page.getByText(/listing attached successfully|Listing already associated/i).first();
+        await toast.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Confirm the listing appears in the associated list
+        const associatedListingRow = this.page.getByRole('cell', { name: searchValue }).first();
+        await associatedListingRow.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+        await associatedListingRow.waitFor({ state: 'visible', timeout: 30000 });
+
+        await this.closeModalIfVisible();
+    }
+
 }
 
