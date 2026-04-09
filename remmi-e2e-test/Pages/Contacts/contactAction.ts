@@ -3539,7 +3539,7 @@ export class ContactActions {
             }, elementHandle);
         }
         await firstCell.click();
-   
+
         await this.openStreamTab();
     }
 
@@ -6564,7 +6564,7 @@ export class ContactActions {
         await successToast.waitFor({ state: "visible" });
         await successToast.waitFor({ state: "hidden" });
 
-           await this.page.waitForTimeout(2000);
+        await this.page.waitForTimeout(2000);
         const closeBtun = this.page.locator('.pi.pi-times').nth(2);
         if (await closeBtun.isVisible().catch(() => false)) {
             await closeBtun.click({ force: true });
@@ -6812,7 +6812,7 @@ export class ContactActions {
         // Click the "Save" button to save the subtask
         const saveSubTaskButton = this.page.getByRole('button', { name: 'Save' }).nth(1);
         await expect(saveSubTaskButton).toBeVisible({ timeout: 10000 });
-        await saveSubTaskButton.click({force: true});
+        await saveSubTaskButton.click({ force: true });
 
         const successToast = this.page.locator('div').filter({ hasText: 'Task created' }).last();
         await successToast.waitFor({ state: "visible" });
@@ -6845,6 +6845,35 @@ export class ContactActions {
         await subTaskRow.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
         await expect(subTaskRow).toBeVisible({ timeout: 10000 });
 
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that when the sub task is opened for editing/creation,
+     * a parent task dropdown is shown next to the team field.
+     */
+    async verifyParentTaskDropdownShownInSubTask() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Go to the Tasks tab
+        const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
+        await expect(tasksTab).toBeVisible({ timeout: 10000 });
+        await tasksTab.click();
+
+        // Open the parent task ("Testing Task")
+        const testingTaskCell = this.page.getByRole('cell', { name: 'Testing Task' }).first();
+        await expect(testingTaskCell).toBeVisible({ timeout: 10000 });
+        await testingTaskCell.click();
+
+        const subTaskCell = this.page.getByRole('cell', { name: 'Subtask Title entered' }).first();
+        await subTaskCell.scrollIntoViewIfNeeded();
+        await expect(subTaskCell).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+        await subTaskCell.click();
+
+        const parentTaskDropdown = this.page.getByText('Parent TaskParent Task×');
+        await expect(parentTaskDropdown).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
     }
 }
