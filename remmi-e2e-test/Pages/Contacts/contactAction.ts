@@ -7168,5 +7168,35 @@ export class ContactActions {
         await contractTab.waitFor({ state: "visible", timeout: 8000 });
     }
 
+    /**
+     * Verifies that the associate field is visible and functional in the Listing tab
+     */
+    async verifyAssociateFieldVisibleAndFunctionalInListingTab() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open Related Property tab and then Listing tab
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible', timeout: 8000 });
+        await relatedPropertyTab.click();
+        const listingTab = this.page.locator("#pills-listing0-tab");
+        await listingTab.waitFor({ state: 'visible', timeout: 8000 });
+        await listingTab.click();
+
+        // Check that the associate field (Search Listing) is visible
+        const associateSearchBox = this.page.getByRole('combobox', { name: /search listing/i });
+        await associateSearchBox.waitFor({ state: 'visible', timeout: 8000 });
+
+        // Try searching for a listing and select an option if present
+        const searchValue = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880';
+        await associateSearchBox.type(searchValue, { delay: 180});
+
+        // Wait for at least one suggestion to appear and click it
+        const suggestionOption = this.page.getByRole('option', { name: searchValue });
+        await suggestionOption.waitFor({ state: 'visible', timeout: 30000 });
+
+        await this.closeModalIfVisible();
+    }
+
 }
 
