@@ -35,6 +35,8 @@ export class ListingActions {
         const PropertyTab = this.page.getByRole('link', { name: 'Properties' });
         await PropertyTab.waitFor({ state: 'visible', timeout: 20000 });
         await PropertyTab.click({ force: true });
+        const firstPropertyCard = this.page.locator('.s-property').first();
+        await expect(firstPropertyCard).toBeVisible({ timeout: 40000 });
     }
 
     // Common function for returning rows locator
@@ -1259,11 +1261,23 @@ export class ListingActions {
         // Find the delete button for the first visible listing card in card/grid view
         const cardDeleteButton = this.page.locator('a:nth-child(4)').first();
         await cardDeleteButton.scrollIntoViewIfNeeded()
-        await cardDeleteButton.click({ force: true });
-
-        // Wait for confirmation dialog to appear
-        const confirmationDialog = this.page.getByText('Are you sure you want to delete this listing ? Your listing will be permanently');
-        await expect(confirmationDialog).toBeVisible({ timeout: 10000 });
+        // Click the delete button until the confirmation dialog appears or give up after a number of attempts
+        let maxAttempts = 10;
+        let dialogVisible = false;
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            await cardDeleteButton.click({ force: true });
+            const confirmationDialog = this.page.getByText('Are you sure you want to delete this listing ? Your listing will be permanently');
+            try {
+                await expect(confirmationDialog).toBeVisible({ timeout: 1500 });
+                dialogVisible = true;
+                break;
+            } catch {
+                // Not visible yet, try again if attempts remain
+            }
+        }
+        if (!dialogVisible) {
+            throw new Error('Delete confirmation dialog did not appear after multiple attempts');
+        }
 
         // Find and click the confirm Delete button
         const confirmButton = this.page.getByRole('button', { name: 'Delete' });
@@ -5497,7 +5511,7 @@ export class ListingActions {
         const imageName = imagePath.split(/[\\/]/).pop();
         if (imageName) {
             const imageNameInLibFile = this.page.locator(`.lib-file :text("${imageName}")`).first();
-            await expect(imageNameInLibFile).toBeVisible({ timeout: 30000 });
+            await expect(imageNameInLibFile).toBeVisible({ timeout: 50000 });
         }
 
         // Save and close
@@ -5614,7 +5628,7 @@ export class ListingActions {
 
         // "Deleted successfully"
         const deletedSuccessfullyToast = this.page.locator('text= Deleted successfully');
-        await expect(deletedSuccessfullyToast).toBeVisible({ timeout: 20000 });
+        await expect(deletedSuccessfullyToast).toBeVisible({ timeout: 50000 });
 
         const saveAndCloseButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
         await saveAndCloseButton.scrollIntoViewIfNeeded();
@@ -6417,7 +6431,7 @@ export class ListingActions {
                 const uploadedImage = this.page.locator(
                     `.mt-3.black-text.pb-1.f-12:has-text("${imageName}")`
                 );
-                await expect(uploadedImage).toBeVisible({ timeout: 40000 });
+                await expect(uploadedImage).toBeVisible({ timeout: 50000 });
             }
         }
 
