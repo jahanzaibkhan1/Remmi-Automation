@@ -194,5 +194,10 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
     const contact = new ContactActions(sessionPage);
     await contact.verifySubTaskVisibleInParentTask();
   });
+
+  test('Test 35: Verify that when the sub task is opened, a parent task dropdown is shown next to the team field.', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyParentTaskDropdownShownInSubTask();
+  });
   
 });

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.003055999998004">
-<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-09T10:08:30.433Z" hostname="chromium" tests="1" failures="0" skipped="0" time="61.079" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 34: Verify that the sub task is visible within the parent task after creation." classname="Pages\Contacts\taskForm.spec.ts" time="61.079">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.01492399999872">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-04-09T10:12:23.015Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.058" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 35: Verify that when the sub task is opened, a parent task dropdown is shown next to the team field." classname="Pages\Contacts\taskForm.spec.ts" time="35.058">
 </testcase>
 </testsuite>
 </testsuites>
