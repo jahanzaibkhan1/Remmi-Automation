@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.244754000000654">
-<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-10T10:10:41.456Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.291" errors="0">
-<testcase name="Contact Related Property Tabs - Remmi E2E › Verify contract list displays status aligned properly" classname="Pages\Contacts\relatedProperty.spec.ts" time="47.291">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.99826399999857">
+<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-10T10:15:04.598Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.043" errors="0">
+<testcase name="Contact Related Property Tabs - Remmi E2E › Verify contract can be opened from contract tab with listing tab" classname="Pages\Contacts\relatedProperty.spec.ts" time="45.043">
 </testcase>
 </testsuite>
 </testsuites>
