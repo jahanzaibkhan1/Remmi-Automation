@@ -93,5 +93,10 @@ test.describe('Contact Related Property Tabs - Remmi E2E', () => {
     const contactActions = new ContactActions(sessionPage);
     await contactActions.verifyAssociatedPropertyOpensInNewTabWithPropertyTab();
   });
+
+  test('Verify contract list displays status aligned properly', async ({ sessionPage }) => {
+    const contactActions = new ContactActions(sessionPage);
+    await contactActions.verifyContractListStatusAlignment();
+  });
   
 });

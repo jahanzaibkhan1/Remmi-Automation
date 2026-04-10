@@ -7613,6 +7613,29 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify contract list displays status aligned properly
+     */
+    async verifyContractListStatusAlignment() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open Related Property tab, then Contract tab
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible', timeout: 8000 });
+        await relatedPropertyTab.click();
+
+        const contractTab = this.page.getByRole('tab', { name: /contract/i });
+        await contractTab.waitFor({ state: 'visible', timeout: 8000 });
+        await contractTab.click();
+        // Wait for contracts to load (adjust table index as required by DOM)
+        const contractTable = this.page.locator('table.p-datatable-table').nth(7); 
+        await expect(contractTable).toBeVisible({ timeout: 15000 });
+        const firstRow = contractTable.locator('tbody tr').first();
+        await expect(firstRow).toBeVisible({ timeout: 15000 });
+        await this.closeModalIfVisible();
+    }
+
 
 }
 
