@@ -7549,6 +7549,46 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verifies that the sort icon exists beside the property statuses in the property tab.
+     */
+    async verifySortIconExistsBesidePropertyStatuses() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open Related Property tab, then Property tab
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible', timeout: 8000 });
+        await relatedPropertyTab.click();
+
+        const propertyTab = this.page.locator("#pills-property0-tab");
+        await propertyTab.waitFor({ state: 'visible', timeout: 8000 });
+        await propertyTab.click();
+
+        const associatedListingRow = this.page.getByRole('cell', { name: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880' }).first();
+        await associatedListingRow.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+        await associatedListingRow.waitFor({ state: 'visible', timeout: 30000 });
+        const table = this.page.locator('table.p-datatable-table').nth(6);
+        await expect(table).toBeVisible({ timeout: 30000 });
+        const headers = [
+            table.getByRole('columnheader', { name: 'Tags' }),
+            table.getByRole('columnheader', { name: 'Address' }),
+            table.getByRole('columnheader', { name: 'type' }),
+            table.getByRole('columnheader', { name: 'Settlement date' }),
+        ];
+
+        for (const header of headers) {
+            await expect(header).toBeVisible();
+            await header.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+            await header.click();
+            const sortIcon = header.locator('svg');
+            await expect(sortIcon).toBeVisible();
+        }
+
+        await this.closeModalIfVisible();
+
+    }
+
 
 }
 
