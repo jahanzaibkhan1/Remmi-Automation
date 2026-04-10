@@ -63,5 +63,10 @@ test.describe('Contact Related Property Tabs - Remmi E2E', () => {
     const contactActions = new ContactActions(sessionPage);
     await contactActions.verifySortIconInStatusColumnHeaderInListingTab();
   });
+
+  test('Verify property can be associated via associate field in Property tab', async ({ sessionPage }) => {
+    const contactActions = new ContactActions(sessionPage);
+    await contactActions.verifyPropertyCanBeAssociatedViaAssociateField();
+  });
   
 });
