@@ -7636,6 +7636,38 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify contract can be opened from contract tab with listing tab
+     */
+    async verifyContractCanBeOpenedFromContractTabWithListingTab() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open Related Property tab
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible', timeout: 8000 });
+        await relatedPropertyTab.click();
+
+        // Open Contract tab
+        const contractTab = this.page.getByRole('tab', { name: /contract/i });
+        await contractTab.waitFor({ state: 'visible', timeout: 8000 });
+        await contractTab.click();
+
+        // Find the associated contract row/cell (adjust selector as needed)
+        const contractRow = this.page.locator('table.p-datatable-table').nth(7).locator('tbody tr').first();
+        await contractRow.waitFor({ state: 'visible', timeout: 15000 });
+        await contractRow.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+
+        // Click the contract row/cell
+        await contractRow.click({ force: true });
+
+        // Expect contract details section to appear (adjust selector as needed)
+        const contractDetailSection = this.page.locator('section').nth(1);
+        await expect(contractDetailSection).toBeVisible({ timeout: 10000 });
+
+        await this.closeModalIfVisible();
+    }
+
 
 }
 
