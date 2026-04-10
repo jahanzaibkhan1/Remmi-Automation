@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="90.35478500000015">
-<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-10T05:21:34.305Z" hostname="chromium" tests="1" failures="0" skipped="0" time="88.236" errors="0">
-<testcase name="Contact Related Property Tabs - Remmi E2E › Verify a listing can be removed from the associated list" classname="Pages\Contacts\relatedProperty.spec.ts" time="88.236">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="84.4413329999987">
+<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-10T07:25:26.065Z" hostname="chromium" tests="1" failures="0" skipped="0" time="82.133" errors="0">
+<testcase name="Contact Related Property Tabs - Remmi E2E › Verify listing type or related tag can be dragged into a listing" classname="Pages\Contacts\relatedProperty.spec.ts" time="82.133">
 </testcase>
 </testsuite>
 </testsuites>

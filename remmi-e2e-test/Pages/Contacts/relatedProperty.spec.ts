@@ -43,5 +43,10 @@ test.describe('Contact Related Property Tabs - Remmi E2E', () => {
     const contactActions = new ContactActions(sessionPage);
     await contactActions.removeAssociatedListing();
   });
+
+  test('Verify listing type or related tag can be dragged into a listing', async ({ sessionPage }) => {
+    const contactActions = new ContactActions(sessionPage);
+    await contactActions.verifyDragAndDropToListing();
+  });
   
 });
