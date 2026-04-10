@@ -3813,6 +3813,8 @@ export class ContactActions {
      * Verifies that a related contact can be associated successfully.
      */
     async verifyRelatedContactCanBeAssociated() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
         const relatedTab = this.page.getByText('Related contacts').first();
         await expect(relatedTab).toBeVisible({ timeout: 10000 });
         await relatedTab.click();
@@ -7270,7 +7272,6 @@ export class ContactActions {
      * Removes a listing from the associated list and verifies its removal.
      */
     async removeAssociatedListing() {
-        const searchValue = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880';
 
         await this.NavigateToContacts();
         await this.openFirstContact();
@@ -7297,6 +7298,88 @@ export class ContactActions {
         const toast = this.page.getByText(/removed successfully|deleted successfully/i).first();
         await toast.waitFor({ state: 'visible', timeout: 10000 });
 
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that a listing type or related tag can be dragged into a listing.
+     */
+    async verifyDragAndDropToListing() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open Related Property tab and then Listing tab
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible', timeout: 8000 });
+        await relatedPropertyTab.click();
+
+        const listingTab = this.page.locator("#pills-listing0-tab");
+        await listingTab.waitFor({ state: 'visible', timeout: 8000 });
+        await listingTab.click();
+
+        // Interact with associate/search field
+        const searchValue = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880';
+        const associateSearchBox = this.page.getByRole('combobox', { name: /search listing/i });
+        await associateSearchBox.waitFor({ state: 'visible', timeout: 8000 });
+        await associateSearchBox.type(searchValue, { delay: 180 });
+
+        // Wait for the suggested listing option and select it
+        const suggestionOption = this.page.getByRole('option', { name: searchValue });
+        await suggestionOption.waitFor({ state: 'visible', timeout: 30000 });
+        await suggestionOption.click();
+
+        // Click the Associate button
+        const associateButton = this.page.locator('button.preview-btn.btn-sm.f-12:visible');
+        await associateButton.waitFor({ state: 'visible', timeout: 8000 });
+        await associateButton.click();
+
+        // Wait for a success or "already associated" message
+        const toast = this.page.getByText(/listing attached successfully|Listing already associated/i).first();
+        await toast.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Confirm the listing appears in the associated list
+        const associatedListingRow = this.page.getByRole('cell', { name: searchValue }).first();
+        await associatedListingRow.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+        await associatedListingRow.waitFor({ state: 'visible', timeout: 30000 });
+        const dropList = this.page.locator('td.cdk-drop-list[cdkdroplist]');
+        await expect(dropList).toBeVisible({ timeout: 10000 });
+        const getBuyerChip = () =>
+            associatedListingRow.locator('[data-pc-name="chip"][aria-label="Buyer"]');
+        if (await getBuyerChip().count() > 0) {
+            return;
+        }
+        const maxAttempts = 4;
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                const buyerTag = this.page
+                    .locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Wife' })
+                    .last();
+                await expect(buyerTag).toBeVisible({ timeout: 10000 });
+                const sourceBox = await buyerTag.boundingBox();
+                const dropBox = await dropList.boundingBox();
+                if (!sourceBox || !dropBox) {
+                    throw new Error('Bounding box not available');
+                }
+                await this.page.mouse.move(
+                    sourceBox.x + sourceBox.width / 2,
+                    sourceBox.y + sourceBox.height / 2
+                );
+                await this.page.mouse.down();
+                await this.page.mouse.move(
+                    dropBox.x + dropBox.width / 2,
+                    dropBox.y + dropBox.height / 2,
+                    { steps: 12 }
+                );
+                await this.page.waitForTimeout(150);
+                await this.page.mouse.up();
+                break;
+            } catch (error) {
+                if (attempt === maxAttempts) {
+                    throw new Error('Buyer tag drag failed after multiple attempts.');
+                }
+                await this.page.waitForTimeout(1000);
+            }
+        }
         await this.closeModalIfVisible();
     }
 
