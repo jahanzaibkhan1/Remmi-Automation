@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="95.35540100000054">
-<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-10T09:32:46.768Z" hostname="chromium" tests="1" failures="0" skipped="0" time="93.426" errors="0">
-<testcase name="Contact Related Property Tabs - Remmi E2E › Verify sort icon exists beside property statuses in Property tab" classname="Pages\Contacts\relatedProperty.spec.ts" time="93.426">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.00371900000051">
+<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-10T09:59:50.336Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.293" errors="0">
+<testcase name="Contact Related Property Tabs - Remmi E2E › Verify clicking associated property opens it in new tab with property tab active" classname="Pages\Contacts\relatedProperty.spec.ts" time="45.293">
 </testcase>
 </testsuite>
 </testsuites>
