@@ -7518,6 +7518,37 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Removes a specific property from the associated property list and verifies its removal.
+     */
+    async removeAssociatedProperty() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open Related Property tab, then Property tab
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible', timeout: 8000 });
+        await relatedPropertyTab.click();
+
+        const propertyTab = this.page.locator("#pills-property0-tab");
+        await propertyTab.waitFor({ state: 'visible', timeout: 8000 });
+        await propertyTab.click();
+        const propertyName = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880';
+        const associatedPropertyCell = this.page.getByRole('cell', { name: propertyName }).first();
+        await associatedPropertyCell.waitFor({ state: 'visible', timeout: 10000 });
+        await associatedPropertyCell.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+        const removeIcon = this.page.getByRole('button', { name: 'delete' });
+        await removeIcon.waitFor({ state: 'visible', timeout: 6000 });
+        await removeIcon.click({ force: true });
+        const confirmButton = this.page.getByRole('button', { name: /yes|confirm/i }).first();
+        if (await confirmButton.isVisible().catch(() => false)) {
+            await confirmButton.click();
+        }
+        const toast = this.page.getByText(/deleted successfully/i).first();
+        await toast.waitFor({ state: 'visible', timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
 
 }
 
