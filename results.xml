@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="87.83030900000036">
-<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-10T07:37:50.929Z" hostname="chromium" tests="1" failures="0" skipped="0" time="84.626" errors="0">
-<testcase name="Contact Related Property Tabs - Remmi E2E › Verify tag can be removed using the cross icon" classname="Pages\Contacts\relatedProperty.spec.ts" time="84.626">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="92.15165799999983">
+<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-10T08:06:18.215Z" hostname="chromium" tests="1" failures="0" skipped="0" time="89.895" errors="0">
+<testcase name="Contact Related Property Tabs - Remmi E2E › Verify clicking a listing opens it in a new tab and closes listing tab" classname="Pages\Contacts\relatedProperty.spec.ts" time="89.895">
 </testcase>
 </testsuite>
 </testsuites>
