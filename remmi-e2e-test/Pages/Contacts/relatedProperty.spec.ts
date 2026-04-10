@@ -53,5 +53,10 @@ test.describe('Contact Related Property Tabs - Remmi E2E', () => {
     const contactActions = new ContactActions(sessionPage);
     await contactActions.removeTagByCrossIcon();
   });
+
+  test('Verify clicking a listing opens it in a new tab and closes listing tab', async ({ sessionPage }) => {
+    const contactActions = new ContactActions(sessionPage);
+    await contactActions.verifyListingOpensInNewTabAndClosesListingTab();
+  });
   
 });

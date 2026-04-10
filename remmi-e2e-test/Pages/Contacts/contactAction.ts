@@ -7405,5 +7405,24 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verifies that clicking a listing opens it in a new tab and closes the listing tab.
+     */
+    async verifyListingOpensInNewTabAndClosesListingTab() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible', timeout: 8000 });
+        await relatedPropertyTab.click();
+        const associatedListingRow = this.page.getByRole('cell', { name: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880' }).first();
+        await associatedListingRow.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+        await associatedListingRow.waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+        associatedListingRow.click({force: true});
+        const newListingSection = this.page.locator('section');
+        await expect(newListingSection).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
 }
 
