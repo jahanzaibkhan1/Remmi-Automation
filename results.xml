@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="111.56315200000256">
-<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-10T09:10:31.889Z" hostname="chromium" tests="1" failures="0" skipped="0" time="109.576" errors="0">
-<testcase name="Contact Related Property Tabs - Remmi E2E › Verify associated property appears at end of list" classname="Pages\Contacts\relatedProperty.spec.ts" time="109.576">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="88.5211799999997">
+<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-10T09:18:03.127Z" hostname="chromium" tests="1" failures="0" skipped="0" time="85.706" errors="0">
+<testcase name="Contact Related Property Tabs - Remmi E2E › Verify a property can be removed from associated list" classname="Pages\Contacts\relatedProperty.spec.ts" time="85.706">
 </testcase>
 </testsuite>
 </testsuites>
