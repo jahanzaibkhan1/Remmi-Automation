@@ -7418,9 +7418,42 @@ export class ContactActions {
         await associatedListingRow.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
         await associatedListingRow.waitFor({ state: 'visible', timeout: 30000 });
         await this.page.waitForTimeout(1000);
-        associatedListingRow.click({force: true});
+        associatedListingRow.click({ force: true });
         const newListingSection = this.page.locator('section');
         await expect(newListingSection).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Clicks each header, verifies sort icon visibility, and scrolls header into view.
+     */
+    async verifySortIconInStatusColumnHeaderInListingTab() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible', timeout: 20000 });
+        await relatedPropertyTab.click();
+        const associatedListingRow = this.page.getByRole('cell', { name: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880' }).first();
+        await associatedListingRow.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+        await associatedListingRow.waitFor({ state: 'visible', timeout: 30000 });
+        const table = this.page.locator('table.p-datatable-table').nth(5);
+        await expect(table).toBeVisible({ timeout: 30000 });
+        const headers = [
+            table.getByRole('columnheader', { name: 'Tags' }),
+            table.getByRole('columnheader', { name: 'Address' }),
+            table.getByRole('columnheader', { name: 'Status' }),
+            table.getByRole('columnheader', { name: 'Price' }),
+            table.getByRole('columnheader', { name: 'Created Date' }),
+        ];
+
+        for (const header of headers) {
+            await expect(header).toBeVisible();
+            await header.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+            await header.click();
+            const sortIcon = header.locator('svg');
+            await expect(sortIcon).toBeVisible();
+        }
+
         await this.closeModalIfVisible();
     }
 
