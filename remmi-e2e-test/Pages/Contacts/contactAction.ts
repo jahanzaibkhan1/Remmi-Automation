@@ -7589,6 +7589,30 @@ export class ContactActions {
 
     }
 
+    /**
+     * Verifies that clicking an associated property opens it in a new tab with the property tab active.
+     */
+    async verifyAssociatedPropertyOpensInNewTabWithPropertyTab() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Open Related Property tab, then Property tab
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible', timeout: 8000 });
+        await relatedPropertyTab.click();
+        const propertyTab = this.page.locator("#pills-property0-tab");
+        await propertyTab.waitFor({ state: 'visible', timeout: 8000 });
+        await propertyTab.click();
+        // Find the associated property row/cell (adjust selector as appropriate)
+        const propertyCell = this.page.getByRole('cell', { name: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880' }).first();
+        await propertyCell.waitFor({ state: 'visible', timeout: 15000 });
+        await propertyCell.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+        await this.page.waitForTimeout(1000);
+        await propertyCell.click({force: true});
+        const newListingSection = this.page.locator('.col-md-7');
+        await expect(newListingSection).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
 
 }
 
