@@ -90,7 +90,7 @@ export class MyProfileLocators {
   }
 
   clickImage(): Locator {
-    return this.page.locator("(//img[@class='img-hub2 ng-star-inserted'])[1]");
+    return this.page.locator('div.thumb-bg.position-relative').locator('img').nth(0);
   }
 
   privateDownloadButton(): Locator {

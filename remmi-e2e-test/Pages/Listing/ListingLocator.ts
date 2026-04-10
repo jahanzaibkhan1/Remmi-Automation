@@ -4,7 +4,7 @@ export class ListingLocators {
     constructor(private page: Page) { }
 
     ListingTab(): Locator {
-        return this.page.locator("li.list.sideMenu.justify-center[data-label='Listings']");
+        return this.page.locator("//li[@data-label='Listings' and contains(@class, 'sideMenu') and .//img[@src='assets/img/dashboadIcon/listing.svg']]");
     }
     SearchBox(): Locator {
         return this.page.locator('#keywordInput, [role="textbox"][name="Search"]');
@@ -67,14 +67,14 @@ export class ListingLocators {
 
     // Select By Agent Filters
     selectByAgentDropdown(): Locator {
-        return this.page.locator("//div[@class='p-multiselect-label p-placeholder']");
+        return this.page.locator('//span[@class="placeHolder ng-star-inserted" and text()="Select by Agent"]');
     }
     selectByAgentSearchInput(): Locator {
         // Try common search input patterns (fallback to a broad match for stability)
-        return this.page.locator("//input[@role='textbox']").first();
+        return this.page.locator('re-multiselect').filter({ hasText: 'Select by Agent Abdul Live' }).getByPlaceholder('Search').first();
     }
     selectByAgentSelectAll(): Locator {
-        return this.page.getByRole('checkbox').nth(1); // May need .first() if multiple checkmarks on page
+        return this.page.locator('.checkbox__checkmark').first(); // May need .first() if multiple checkmarks on page
     }
     selectByAgentOption(label: string) {
         return this.page.locator('li.p-element', { hasText: label });

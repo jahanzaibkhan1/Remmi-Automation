@@ -151,13 +151,13 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
     test('Test 22: Verify that deleted projects can be re-added', async ({ sessionPage }) => {
       const profile = new MyProfileActions(sessionPage);
       await profile.navigateToProfilePage();
-      await profile.verifyDeletedProjectsCanBeReadded("New Staging Project");
+      await profile.verifyDeletedProjectsCanBeReadded("lahore centre");
     });
 
     test('Test 23: Verify empty list message', async ({ sessionPage }) => {
       const profile = new MyProfileActions(sessionPage);
       await profile.navigateToProfilePage();
-      await profile.verifyEmptyListMessage("New Staging Project");
+      await profile.verifyEmptyListMessage("lahore centre");
     });
 
     test('Test 24: Try adding project without selecting any', async ({ sessionPage }) => {

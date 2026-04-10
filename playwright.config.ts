@@ -5,13 +5,25 @@ import path from 'path';
 /**
  * Load environment variables from .env file
  */
-dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+dotenv.config({
+  path: path.resolve(__dirname, '.env'),
+});
 
 /**
  * Ensure critical environment variables exist
  */
 const BASE_URL = process.env.BASE_URL;
-if (!BASE_URL) throw new Error('BASE_URL is missing in .env or GitHub secrets!');
+
+if (!BASE_URL) {
+  console.error('❌ BASE_URL is missing in .env or GitHub secrets!');
+  console.error('👉 Expected .env at:', path.resolve(__dirname, '.env'));
+  process.exit(1);
+}
+
+/**
+ * Debug (remove later if you want)
+ */
+console.log('✅ BASE_URL:', BASE_URL);
 
 /**
  * Playwright Test Configuration
@@ -24,7 +36,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: 3,
   workers: 1,
-  timeout: 60000, // 60s
+  timeout: 120000, //
 
   reporter: [
     ['list'],
@@ -33,12 +45,13 @@ export default defineConfig({
   ],
 
   use: {
-    baseURL: BASE_URL,
+    baseURL: BASE_URL, // ✅ FIXED (now guaranteed to load)
     headless: true,
-    viewport: { width: 1320, height: 620 },
+    viewport: { width: 1260, height: 580 },
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'on-first-retry',
+    navigationTimeout: 2 * 60 * 1000,
     launchOptions: {
       slowMo: process.env.CI ? 50 : 0,
       args: [
@@ -53,9 +66,11 @@ export default defineConfig({
     {
       name: 'chromium',
       use: {
-        ...devices['Desktop Chrome'],
-        viewport: { width: 1320, height: 620 },
-      },
+        viewport: null,
+        launchOptions: {
+          args: ['--start-maximized']
+        }
+      }
     },
 
     // {

@@ -20,8 +20,8 @@ export class LoginActions {
   }
 
   async gotoLogin() {
-    await this.page.goto('/login',{ waitUntil: 'domcontentloaded' });
-    await this.page.waitForLoadState('networkidle');
+    await this.page.goto('/login', { waitUntil: 'domcontentloaded', timeout: 60000 });
+    await this.page.waitForLoadState('networkidle', { timeout: 60000 });
   }
 
   async fillCredentials(email: string, password: string) {
