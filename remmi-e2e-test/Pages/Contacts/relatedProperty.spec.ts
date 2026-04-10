@@ -48,5 +48,10 @@ test.describe('Contact Related Property Tabs - Remmi E2E', () => {
     const contactActions = new ContactActions(sessionPage);
     await contactActions.verifyDragAndDropToListing();
   });
+
+  test('Verify tag can be removed using the cross icon', async ({ sessionPage }) => {
+    const contactActions = new ContactActions(sessionPage);
+    await contactActions.removeTagByCrossIcon();
+  });
   
 });

@@ -7164,7 +7164,7 @@ export class ContactActions {
         const listingTab = this.page.locator('#pills-listing0-tab');
         const propertyTab = this.page.locator('#pills-property0-tab');
         const contractTab = this.page.getByRole('tab', { name: /Contract/i });
-   
+
         await listingTab.waitFor({ state: "visible", timeout: 8000 });
         await propertyTab.waitFor({ state: "visible", timeout: 8000 });
         await contractTab.waitFor({ state: "visible", timeout: 8000 });
@@ -7192,7 +7192,7 @@ export class ContactActions {
 
         // Try searching for a listing and select an option if present
         const searchValue = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880';
-        await associateSearchBox.type(searchValue, { delay: 180});
+        await associateSearchBox.type(searchValue, { delay: 180 });
 
         // Wait for at least one suggestion to appear and click it
         const suggestionOption = this.page.getByRole('option', { name: searchValue });
@@ -7261,7 +7261,7 @@ export class ContactActions {
         await listingTab.waitFor({ state: 'visible', timeout: 8000 });
         await listingTab.click();
 
-        const associatedListingCell = this.page.getByRole('cell', { name: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880'}).first();
+        const associatedListingCell = this.page.getByRole('cell', { name: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880' }).first();
         await associatedListingCell.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
         await associatedListingCell.waitFor({ state: 'visible', timeout: 10000 });
         await this.closeModalIfVisible();
@@ -7283,7 +7283,7 @@ export class ContactActions {
         const listingTab = this.page.locator("#pills-listing0-tab");
         await listingTab.waitFor({ state: 'visible', timeout: 8000 });
         await listingTab.click();
-        const associatedListingCell = this.page.getByRole('cell', { name: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880'}).first();
+        const associatedListingCell = this.page.getByRole('cell', { name: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880' }).first();
         await associatedListingCell.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
         await associatedListingCell.waitFor({ state: 'visible', timeout: 10000 });
         const removeButton = this.page.getByRole('button', { name: 'delete' });
@@ -7380,6 +7380,28 @@ export class ContactActions {
                 await this.page.waitForTimeout(1000);
             }
         }
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that a tag can be removed using the cross (remove) icon.
+     */
+    async removeTagByCrossIcon() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Open Related Property tab and then Listing tab
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible', timeout: 8000 });
+        await relatedPropertyTab.click();
+        const associatedListingRow = this.page.getByRole('cell', { name: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880' }).first();
+        await associatedListingRow.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+        await associatedListingRow.waitFor({ state: 'visible', timeout: 30000 });
+        const tagChip = this.page.locator(`[data-pc-name="chip"][aria-label="Wife"]`).first();
+        await expect(tagChip).toBeVisible({ timeout: 5000 });
+        const crossIcon = this.page.locator('.pi-times').last();
+        await expect(crossIcon).toBeVisible({ timeout: 10000 });
+        await crossIcon.click();
+        await expect(tagChip).toBeHidden({ timeout: 30000 });
         await this.closeModalIfVisible();
     }
 
