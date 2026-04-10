@@ -55,6 +55,8 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     const profile = new MyProfileActions(sessionPage);
 
     await profile.navigateToLibrary();
+    const imagePath = path.join(__dirname, '../MyProfile/Images/Profile.jpg');
+    await profile.uploadImageToLibrary(imagePath);
     await profile.downloadWithCorrectPin('1234');
   });
 

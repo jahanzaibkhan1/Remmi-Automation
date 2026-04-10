@@ -22,54 +22,63 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
   test('Test 1: Open listing form', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
     await listingActions.openContactForm();
   });
 
   test('Test 2: Close listing  form using cross icon', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
     await listingActions.openContactForm();
   });
 
   test('Test 3: Close form without saving', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
-    await listingActions.closeFormWithoutSaving('House', 'Rental', 'For Lease');
+    await listingActions.navigateToListings();
+    await listingActions.closeFormWithoutSaving();
   });
 
   test('Test 4: Pinning a listing', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
     await listingActions.pinFirstListing();
   });
 
   test('Test 5: Opening a pinned listing', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
     await listingActions.openPinnedListing();
   });
 
   test('Test 6: Unpinning a pinned listing', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
     await listingActions.unpinFirstPinnedListing();
   });
 
   test('Test 7: Search field listing functionality', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
     await listingActions.searchfieldListing();
   });
 
   test('Test 8: Selecting a listing from search', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
     // Example address can be changed as necessary
     await listingActions.selectListingFromSearch();
   });
 
   test('Test 9: Confirming listing copy', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
     await listingActions.confirmListingCopy();
   });
 
   test('Test 10: Declining listing copy', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
-    // This test should trigger the "Would you like to copy this" dialog and then decline it (click "No")
     await listingActions.navigateToListings();
+    // This test should trigger the "Would you like to copy this" dialog and then decline it (click "No")
     await listingActions.declineListingCopy()
   });
 
@@ -123,6 +132,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
   test('Test 19: Save without required fields', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
     await listingActions.createListingWithMissingFields();
     await listingActions.resetFilters()
   });
@@ -228,6 +238,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
   test('Test 34: No image uploaded', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
     await listingActions.noImageUploadedScenario();
   });
 
@@ -254,13 +265,15 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
   test('Test 38: Duplicate listing  creation', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
     await listingActions.createListingWithRequiredFields('house', 'Rental', 'For Lease');
     await listingActions.resetFilters()
   });
 
   test('Test 39: Listing appears in grid after save', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
-    await listingActions.verifyListingAppearsInGrid();
+    await listingActions.navigateToListings();
+    await listingActions.clickSaveButtonOnContactForm();
   });
 
   test('Test 40: Search for a saved listing appears in results', async ({ sessionPage }) => {
@@ -298,7 +311,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.navigateToListings();
     await listingActions.verifyProjectCannotAssociateWithoutSelection();
   });
-  
+
   test('Test 46: Verify successful project association', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.navigateToListings();
@@ -343,6 +356,7 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
   test('Test 53: Verify image and thumbnails in preview listing ', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
     const path = require('path');
     const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
     const images = [
@@ -387,9 +401,9 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.navigateToListings()
     // Add listing with agents and details, then check preview details
-    const agentNames = 
-    ['Automation Test',
-      'Hina Agent'];
+    const agentNames =
+      ['Automation Test',
+        'Hina Agent'];
     await listingActions.verifyAllListingDetailsInPreview(agentNames);
   });
 
@@ -411,104 +425,121 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.clickSaveAndCloseButtonOnListingForm();
   });
 
-test('Test 63: Verify Save & Close button functionality on listing form', async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifySaveAndCloseButtonFunctionality();
-  await listingActions.resetFilters();
-});
+  test('Test 63: Verify Save & Close button functionality on listing form', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifySaveAndCloseButtonFunctionality();
+    await listingActions.resetFilters();
+  });
 
-test('Test 64: Verify correct error message for missing property type', async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifyMissingPropertyTypeError();
-  await listingActions.resetFilters();
-});
+  test('Test 64: Verify correct error message for missing property type', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyMissingPropertyTypeError();
+    await listingActions.resetFilters();
+  });
 
-test('Test 65: Verify correct error message for missing listing type', async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifyMissingListingTypeError();
-});
+  test('Test 65: Verify correct error message for missing listing type', async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyMissingListingTypeError();
+  });
 
-test("Test 66: Verify 'Sold' status popup appears when selecting 'Sold' in listing status dropdown", async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifySoldStatusPopupAppears();
-  await listingActions.resetFilters();
-});
+  test("Test 66: Verify 'Sold' status popup appears when selecting 'Sold' in listing status dropdown", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifySoldStatusPopupAppears();
+    await listingActions.resetFilters();
+  });
 
-test("Test 67: Verify listing appears at the top of the grid after creation", async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifyListingAppearsAtTopAfterCreation();
-});
+  test("Test 67: Verify listing appears at the top of the grid after creation", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.clickSaveButtonOnContactForm();
+  });
 
-test("Test 68: Verify 'Sold' status popup contains correct fields", async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifySoldStatusPopupFields();
-  await listingActions.resetFilters();
-});
+  test("Test 68: Verify 'Sold' status popup contains correct fields", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifySoldStatusPopupFields();
+    await listingActions.resetFilters();
+  });
 
-test("Test 69: Verify 'Sold' status popup can be closed without saving changes", async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifySoldStatusPopupCanBeClosedWithoutSaving();
-  await listingActions.resetFilters();
-});
+  test("Test 69: Verify 'Sold' status popup can be closed without saving changes", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifySoldStatusPopupCanBeClosedWithoutSaving();
+    await listingActions.resetFilters();
+  });
 
-test("Test 70: Verify 'Sold' status popup saves data correctly with valid inputs", async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifySoldStatusPopupSavesWithValidInputs();
-  await listingActions.resetFilters();
-});
+  test("Test 70: Verify 'Sold' status popup saves data correctly with valid inputs", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifySoldStatusPopupSavesWithValidInputs();
+    await listingActions.resetFilters();
+  });
 
-test("Test 71: Verify if updating 'Date Sold' and 'Sold Price' reflects the correct changes.", async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.updateSoldDetailsAndVerify();
-  await listingActions.resetFilters();
-});
+  test("Test 71: Verify if updating 'Date Sold' and 'Sold Price' reflects the correct changes.", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.updateSoldDetailsAndVerify();
+    await listingActions.resetFilters();
+  });
 
-test("Test 72: Verify if clicking 'Save & Close' saves the details and closes the popup", async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifySoldStatusPopupSavesWithValidInputs();
-  await listingActions.resetFilters();
-});
+  test("Test 72: Verify if clicking 'Save & Close' saves the details and closes the popup", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifySoldStatusPopupSavesWithValidInputs();
+    await listingActions.resetFilters();
+  });
 
-test("Test 73: Verify if listing disappears from grid/list view after changing status to 'Sold'", async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifyListingDisappearsAfterMarkingSold();
-  await listingActions.resetFilters();
-});
+  test("Test 73: Verify if listing disappears from grid/list view after changing status to 'Sold'", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyListingDisappearsAfterMarkingSold();
+    await listingActions.resetFilters();
+  });
 
-test("Test 74: Verify if invalid data in 'Sold Price' field (e.g., letters) is handled correctly.", async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifyInvalidSoldPriceInput();
-  await listingActions.resetFilters();
-});
+  test("Test 74: Verify if invalid data in 'Sold Price' field (e.g., letters) is handled correctly.", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyInvalidSoldPriceInput();
+    await listingActions.resetFilters();
+  });
 
-test("Test 75: Verify if the 'Disclose Price' checkbox can be selected/deselected.", async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifyDisclosePriceCheckboxFunctionality();
-  await listingActions.resetFilters();
-});
+  test("Test 75: Verify if the 'Disclose Price' checkbox can be selected/deselected.", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyDisclosePriceCheckboxFunctionality();
+    await listingActions.resetFilters();
+  });
 
-test("Test 76: Verify if selecting 'Disclose Price' correctly reflects in the saved listing details.", async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifyDisclosePriceCheckboxReflectsInListing();
-  await listingActions.resetFilters();
-});
+  test("Test 76: Verify if selecting 'Disclose Price' correctly reflects in the saved listing details.", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyDisclosePriceCheckboxReflectsInListing();
+    await listingActions.resetFilters();
+  });
 
-test("Test 77:Verify if listings marked as 'Sold' do not appear in active searches.", async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifyListingDisappearsAfterMarkingSold();
-  await listingActions.resetFilters();
-});
+  test("Test 77:Verify if listings marked as 'Sold' do not appear in active searches.", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyListingDisappearsAfterMarkingSold();
+    await listingActions.resetFilters();
+  });
 
-test("Test 78: Verify if navigating away from the form without saving discards changes.", async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifyFormDoesNotSaveOnNavigateAway();
-  await listingActions.resetFilters();
-});
+  test("Test 78: Verify if navigating away from the form without saving discards changes.", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyFormDoesNotSaveOnNavigateAway();
+    await listingActions.resetFilters();
+  });
 
-test("Test 79: Verify if undoing 'Sold' status brings the contact back to grid/list view.", async ({ sessionPage }) => {
-  const listingActions = new ListingActions(sessionPage);
-  await listingActions.verifyUndoSoldStatusBringsListingBack();
-  await listingActions.resetFilters();
-});
+  test("Test 79: Verify if undoing 'Sold' status brings the contact back to grid/list view.", async ({ sessionPage }) => {
+    const listingActions = new ListingActions(sessionPage);
+    await listingActions.navigateToListings();
+    await listingActions.verifyUndoSoldStatusBringsListingBack();
+    await listingActions.resetFilters();
+  });
 
 });

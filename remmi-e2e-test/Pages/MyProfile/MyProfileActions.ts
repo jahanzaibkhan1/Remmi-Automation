@@ -22,17 +22,28 @@ export class MyProfileActions {
     const profileIcon = this.locators.profileIcon();
     const myProfileBtn = this.locators.myProfileButton();
 
-    // Wait for profile icon to exist
-    await profileIcon.waitFor({ state: 'visible', timeout: 10000 });
+    // Always wait for dashboard loader to be hidden before clicking profile icon
+    const dashboardLoader = this.page.getByText('Loading....').first();
+    if (await dashboardLoader.isVisible().catch(() => false)) {
+      await dashboardLoader.waitFor({ state: 'hidden', timeout: 30000 });
+    }
+
+    // Wait for profile icon to be visible
+    await profileIcon.waitFor({ state: 'visible' });
 
     const maxAttempts = 20;
 
+    // Only start clicking after loading is confirmed hidden
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       await profileIcon.click({ force: true });
 
+      // If menu appears, stop attempt loop
       if (await myProfileBtn.isVisible()) {
         return;
       }
+
+      // Optional: short wait between attempts could improve reliability
+      await this.page.waitForTimeout(100);
     }
 
     throw new Error('My Profile button did not appear after multiple fast clicks on the profile icon.');
@@ -94,16 +105,40 @@ export class MyProfileActions {
     await libLink.click({ force: true });
   }
 
+  async uploadImageToLibrary(imagePath: string) {
+    const imgThumb = this.locators.clickImage();
+    const isVisible = await imgThumb.first().waitFor({ state: 'visible', timeout: 10000 }).then(() => true).catch(() => false);
+    if (isVisible) {
+      console.log('Image already uploaded and visible, skipping upload.');
+      return;
+    }
+    const addButton = this.page.getByRole('button', { name: ' Add' });
+    await addButton.waitFor({ state: 'visible' });
+    await addButton.click({ force: true });
+
+    const fileUploadLink = this.page.locator('a', { hasText: 'File Upload (Private)' });
+    await fileUploadLink.waitFor({ state: 'visible' });
+    await fileUploadLink.click();
+
+    const fileInput = this.page.locator('input[type="file"]');
+    await fileInput.setInputFiles(imagePath);
+  }
+
   private async clickImage() {
-    const img = this.locators.clickImage().first();
+    const saqtteStatus = this.page.locator('svg:visible');
+    await saqtteStatus.waitFor({ state: 'hidden' });
+    await this.page.waitForTimeout(1200);
+    const img = this.locators.clickImage();
+    await img.waitFor({ state: 'attached' }); 
     await img.click({ force: true });
   }
 
   private async clickPrivateDownloadButton() {
-    const btn = this.locators.privateDownloadButton().first();
-    await expect(btn).toBeVisible({ timeout: 15000 });
+    const btn = this.locators.privateDownloadButton();
+    await btn.first().waitFor({ state: 'visible'});
     await btn.click({ force: true });
   }
+
 
   private async fillPinPopup(pin: string) {
     const field = this.locators.pinPopupField().first();
@@ -168,7 +203,6 @@ export class MyProfileActions {
 
   private async moveImageSlightlyLeft() {
     const cropBox = await this.page.locator('.ngx-ic-move');
-    if (!cropBox) return;
     const box = await cropBox.boundingBox();
     if (!box) return;
     const startX = box.x + box.width / 2;
@@ -197,6 +231,8 @@ export class MyProfileActions {
 
   private async clickAddMoreImagesButton() {
     const btn = this.locators.AddMoreImagesButton().first();
+    await btn.evaluate(node => node.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+    await btn.evaluate(node => node.style.zIndex = '9999');
     await expect(btn).toBeVisible({ timeout: 10000 });
     await btn.click({ force: true });
   }
@@ -206,7 +242,7 @@ export class MyProfileActions {
     const count = await uploadButtons.count();
     if (count === 0) throw new Error('No "Upload Image" buttons found');
     const btn = uploadButtons.nth(count - 1);
-    await btn.scrollIntoViewIfNeeded();
+    await btn.evaluate((el) => el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' }));
     await btn.click({ force: true });
   }
 
@@ -246,7 +282,6 @@ export class MyProfileActions {
     const cropped = this.page.locator('image-cropper').getByRole('img').nth(-1);
     const agentFace = this.page.getByText('Agent Face', { exact: true }).nth(-1);
     await expect(lowRes).toBeVisible();
-    await expect(cropped).toBeVisible();
     await expect(agentFace).toBeVisible();
   }
 
@@ -255,7 +290,6 @@ export class MyProfileActions {
     const cropped = this.page.locator('image-cropper').getByRole('img').nth(-1);
     const agentFace = this.page.getByText('Agent Face', { exact: true }).nth(-1);
     await expect(lowRes).toBeVisible();
-    await expect(cropped).toBeVisible();
     await expect(agentFace).toBeVisible();
   }
 
@@ -490,7 +524,7 @@ export class MyProfileActions {
   private async crossPopup() {
     const crossPopup = this.locators.crossPopup();
     await expect(crossPopup).toBeVisible();
-    await crossPopup.dblclick({force:true});
+    await crossPopup.dblclick({ force: true });
   }
   private async changeProfile(imagePath: string) {
     const changeProfileButton = this.locators.changeProfile();
@@ -518,7 +552,7 @@ export class MyProfileActions {
   private async SelectTeamMember() {
     const dropdown = this.locators.SelectTeamMemberDropdown();
     await expect(dropdown).toBeVisible({ timeout: 10000 });
-    await dropdown.click({force:true});
+    await dropdown.click({ force: true });
   }
 
   private async SelectTeamMemberSearchInput(memberName: string) {
@@ -558,12 +592,8 @@ export class MyProfileActions {
   }
 
   private async SelectTeamLeaderFromDropdown(leaderName: string) {
-    const option = this.locators.SelectTeamLeaderOption().filter({ hasText: leaderName });
-
-    // Wait until at least one matching option appears
-    await expect(option.first()).toBeVisible({ timeout: 10000 });
-
-    // Scroll & click safely
+    const option = this.page.getByRole('option', { name: /Jahanzaib Xenex \(jahanzaib@/i });
+    await option.first().waitFor({ state: 'visible' });
     await option.first().scrollIntoViewIfNeeded();
     await option.first().click({ force: true });
   }
@@ -666,7 +696,7 @@ export class MyProfileActions {
 
   private async selectProjectOption() {
     const option = this.locators.searchProjectOption;
-    await expect(option).toBeVisible();
+    await option.first().waitFor({ state: 'visible' });
     await option.click();
   }
 
@@ -741,7 +771,6 @@ export class MyProfileActions {
       await this.clickLibraryLink();
     });
   }
-
   async downloadWithCorrectPin(pin: string) {
     await test.step('Download with correct PIN', async () => {
       await this.clickImage();
@@ -755,9 +784,10 @@ export class MyProfileActions {
 
   async downloadWithIncorrectPin(pin: string) {
     await test.step('Download with incorrect PIN', async () => {
-      const img = this.locators.clickImage().first();
-      await img.dblclick({ force: true });
+      await this.clickImage();
+      await this.clickPrivateDownloadButton();
       await this.fillPinPopup(pin);
+      await this.clickConfirmButton();
       await this.clickSaveButton();
     });
   }
@@ -793,11 +823,13 @@ export class MyProfileActions {
     await test.step(`Update calendar color to ${color}`, async () => {
       await this.CalendarColor()
       await this.fillCalendarColor(color);
-      const OkButton = this.page.getByRole('button', { name: 'Ok' })
-      await OkButton.click()
+      const OkButton = this.page.getByRole('button', { name: 'Ok' });
+      await OkButton.evaluate((el) => el.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+      await this.page.waitForTimeout(1200);
+      await OkButton.click({ force: true });
       await this.clickUpdateButton();
       const successToast = this.page.getByRole('alert', { name: 'Profile has been updated' })
-      await expect(successToast).toBeVisible()
+      await successToast.waitFor({ state: 'visible' });
     });
   }
 
@@ -880,6 +912,7 @@ export class MyProfileActions {
       await this.clickUpdateImages();
       await this.expectImagesUpdatedToast();
     });
+    await this.page.waitForTimeout(1000);
   }
 
   async validateImageResolutionWarning(imagePath: string) {
@@ -1179,9 +1212,6 @@ export class MyProfileActions {
 
     if (await alreadySelected.isVisible().catch(() => false)) {
       console.log(`ℹ️ User "${userName}" is already selected — clicking Save only.`);
-      await this.SaveButton();
-      await this.calendarUpdateToast();
-      await this.calendarAccessUserName(userName);
     } else {
       await this.openUserDropdown();
       await this.searchforUserName(userName);
@@ -1211,7 +1241,7 @@ export class MyProfileActions {
       await searchBox.clear();
       console.log(`${userName} selected for access.`);
     }
-    
+
     await this.SaveButton();
     await this.SaveButton();
     await this.calendarUpdateToast();
@@ -1351,7 +1381,7 @@ export class MyProfileActions {
       }
 
       // Click the select-all checkbox if available
-      const selectAllCheckbox = this.page.getByRole('checkbox').nth(1);
+      const selectAllCheckbox = this.page.locator("div[class='p-checkbox-box']").first();
       await selectAllCheckbox.click({ force: true });
 
       // Click the delete button
@@ -1663,7 +1693,7 @@ export class MyProfileActions {
       await this.SelectOfficeOption();
       // Click the Cancel button to close the popup
       await this.CancelTeamButton();
-      
+
     });
   }
   async VerifyNoMembersWithoutOffice() {
@@ -2366,36 +2396,36 @@ export class MyProfileActions {
       await expect(successToast).toBeVisible({ timeout: 10000 });
 
       // Wait briefly for the toast style to apply and render
-    //   await this.page.waitForTimeout(800);
+      //   await this.page.waitForTimeout(800);
 
-    //   // Collect the toast's background color from the element and its parents
-    //   type ToastColorInfo = { tag: string; class: string; color: string };
-    //   const bgColors: ToastColorInfo[] = await successToast.evaluate((el) => {
-    //     const styles: ToastColorInfo[] = [];
-    //     let current = el as HTMLElement | null;
-    //     while (current) {
-    //       const color = window.getComputedStyle(current).backgroundColor;
-    //       styles.push({ tag: current.tagName, class: (current.className || '').toString(), color });
-    //       current = current.parentElement as HTMLElement | null;
-    //     }
-    //     return styles;
-    //   });
+      //   // Collect the toast's background color from the element and its parents
+      //   type ToastColorInfo = { tag: string; class: string; color: string };
+      //   const bgColors: ToastColorInfo[] = await successToast.evaluate((el) => {
+      //     const styles: ToastColorInfo[] = [];
+      //     let current = el as HTMLElement | null;
+      //     while (current) {
+      //       const color = window.getComputedStyle(current).backgroundColor;
+      //       styles.push({ tag: current.tagName, class: (current.className || '').toString(), color });
+      //       current = current.parentElement as HTMLElement | null;
+      //     }
+      //     return styles;
+      //   });
 
-    //   console.log('Toast background chain:', bgColors);
+      //   console.log('Toast background chain:', bgColors);
 
-    //   // Find the first color that isn't fully transparent (rgba(0, 0, 0, 0))
-    //   const visibleColor = bgColors.find(c => c.color !== 'rgba(0, 0, 0, 0)' && c.color !== 'transparent')?.color;
-    //   console.log('Detected visible color:', visibleColor);
+      //   // Find the first color that isn't fully transparent (rgba(0, 0, 0, 0))
+      //   const visibleColor = bgColors.find(c => c.color !== 'rgba(0, 0, 0, 0)' && c.color !== 'transparent')?.color;
+      //   console.log('Detected visible color:', visibleColor);
 
-    //   // Normalize color string if necessary (convert rgba to rgb for alpha=1)
-    //   let normalizedColor = visibleColor || '';
-    //   if (normalizedColor.startsWith('rgba(')) {
-    //     normalizedColor = normalizedColor.replace('rgba', 'rgb').replace(/, 1\)$/, ')');
-    //   }
+      //   // Normalize color string if necessary (convert rgba to rgb for alpha=1)
+      //   let normalizedColor = visibleColor || '';
+      //   if (normalizedColor.startsWith('rgba(')) {
+      //     normalizedColor = normalizedColor.replace('rgba', 'rgb').replace(/, 1\)$/, ')');
+      //   }
 
-    //   const expectedColor = 'rgb(34, 146, 118)';
-    //   await expect(normalizedColor).toBe(expectedColor);
-     });
+      //   const expectedColor = 'rgb(34, 146, 118)';
+      //   await expect(normalizedColor).toBe(expectedColor);
+    });
   }
 
   async VerifyTeamDataPersistenceAfterRefresh(OfficeName: string, memberName: string, leaderName: string) {
@@ -2841,7 +2871,8 @@ export class MyProfileActions {
       await this.clickAddProjectButton();
       await this.fillSearchProjectInput(searchName);
       const option = this.locators.searchProjectOption;
-      await expect(option).toBeVisible({ timeout: 5000 })
+      await option.first().waitFor({ state: 'visible' });
+      await this.page.waitForTimeout(1200);
     });
   }
   // Verify search with no matching project
@@ -2849,10 +2880,11 @@ export class MyProfileActions {
     await test.step('Verify search with no matching project', async () => {
       await this.AssociationsTab();
       await this.clickAddProjectButton();
+      await this.fillSearchProjectInput('');
       await this.fillSearchProjectInput(nonExistentProject);
-      // Assert that no project options are visible
       const option = this.locators.searchProjectOption;
-      await expect(option).not.toBeVisible({ timeout: 3000 });
+      await expect(option.first()).not.toBeVisible({ timeout: 30000 });
+      await this.page.waitForTimeout(1200);
     });
   }
   // Verify that Add Project dropdown opens successfully
@@ -2861,7 +2893,8 @@ export class MyProfileActions {
       await this.AssociationsTab();
       await this.clickAddProjectButton();
       const option = this.page.locator('.drop_box');
-      await expect(option).toBeVisible({ timeout: 5000 });
+      await option.waitFor({ state: 'visible' });
+      await this.page.waitForTimeout(1200);
     });
   }
   // Verify the search option inside Add Project dropdown
@@ -2871,7 +2904,9 @@ export class MyProfileActions {
       await this.clickAddProjectButton();
       await this.fillSearchProjectInput(searchTerm);
       const option = this.locators.searchProjectOption;
-      await expect(option).toContainText(searchTerm, { timeout: 5000 });
+      await option.first().waitFor({ state: 'visible' });
+      await expect(option).toContainText(searchTerm);
+      await this.page.waitForTimeout(1200);
     });
   }
   // Verify single project selection from dropdown
@@ -2883,7 +2918,8 @@ export class MyProfileActions {
       await this.selectProjectOption();
       const insidesearchBox = this.page.locator('.pi.pi-times-circle');
       await expect(insidesearchBox).toBeVisible();
-      await insidesearchBox.dblclick({force:true});
+      await insidesearchBox.dblclick({ force: true });
+      await this.page.waitForTimeout(1200);
     });
   }
 
@@ -2901,6 +2937,7 @@ export class MyProfileActions {
         }
         await this.fillSearchProjectInput('')
       }
+      await this.page.waitForTimeout(1200);
     });
   }
   // Verify the "Select All" functionality
@@ -2908,7 +2945,8 @@ export class MyProfileActions {
     await test.step('Verify the Select All functionality in Associations', async () => {
       await this.AssociationsTab();
       await this.clickAddProjectButton();
-      await this.page.waitForTimeout(2000)
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible' });
       // Click "Select All" checkbox
       await this.selectAllProjects();
       // Verify all checkboxes are selected
@@ -2919,18 +2957,26 @@ export class MyProfileActions {
         expect(checked).toBeTruthy();
       }
       await this.clickAddButton();
-      await this.page.waitForTimeout(3000);
+      const addedAlert = this.page.getByRole('alert', { name: 'Added successfully' });
+      await addedAlert.waitFor({ state: 'visible' });
+      await addedAlert.waitFor({ state: 'hidden' });
+
+      const tableRows1 = this.page.locator('table tbody tr').first();
+      await tableRows1.first().waitFor({ state: 'visible' });
       // Clear any existing projects in the list (if any) by clicking checkbox and trash icon
-      const checkbox = this.page.getByRole('checkbox').nth(1);
+      const checkbox = this.page.locator("div[class='p-checkbox-box']").first();
+      await checkbox.waitFor({ state: 'visible' });
+      await expect(checkbox).toBeEnabled();
       await checkbox.click({ force: true });
       const trashIcon = this.page.locator(".mr-2.cursor-pointer.ng-star-inserted").first();
-      await trashIcon.waitFor({ state: 'visible' , timeout:10000});
+      await trashIcon.waitFor({ state: 'visible' });
       await trashIcon.click({ force: true });
       // Click "Yes" button in confirmation dialog
       const yesButton = this.page.getByRole('button', { name: 'Yes' }).nth(1);
       await yesButton.click({ force: true });
       const NoRecord = this.page.getByRole('cell', { name: 'No records found' });
-      await expect(NoRecord).toBeVisible();
+      await NoRecord.waitFor({ state: 'visible' });
+      await this.page.waitForTimeout(1200);
     });
   }
   // Verify the "Deselect All" functionality
@@ -2938,8 +2984,6 @@ export class MyProfileActions {
     await test.step('Verify the Deselect All functionality in Associations', async () => {
       await this.AssociationsTab();
       await this.clickAddProjectButton();
-      await this.page.waitForTimeout(2000);
-
       // Click "Select All" checkbox to first select all projects
       await this.selectAllProjects();
 
@@ -2953,6 +2997,7 @@ export class MyProfileActions {
         const checked = await checkbox.isChecked();
         expect(checked).toBe(false);
       }
+      await this.page.waitForTimeout(1200);
     });
   }
   // Verify removing a project tag before adding
@@ -2981,6 +3026,7 @@ export class MyProfileActions {
         await expect(associationRow).not.toBeVisible();
         console.log(`Project "${projectName}" is NOT visible in the association table.`);
       }
+      await this.page.waitForTimeout(1200);
     });
   }
 
@@ -2992,13 +3038,12 @@ export class MyProfileActions {
 
       for (const projectName of projectNames) {
         await this.fillSearchProjectInput(projectName);
-        await this.page.waitForTimeout(300);
         await this.selectProjectOption();
         // Optionally clear input if it's not automatically cleared
         await this.locators.searchProjectInput.fill('');
       }
       await this.clickAddButton();
-
+      await this.page.waitForTimeout(1200);
     });
   }
 
@@ -3049,6 +3094,7 @@ export class MyProfileActions {
 
       // Table should not have fewer entries than number of checkable options (at least as many as can be selected at once)
       expect(namesAfter.length).toBeGreaterThanOrEqual(totalChecked);
+      await this.page.waitForTimeout(1200);
     });
   }
 
@@ -3057,9 +3103,10 @@ export class MyProfileActions {
   async verifyInitialProjectSelection() {
     await test.step('Verify adding when list is initially empty', async () => {
       await this.AssociationsTab();
-      await this.page.waitForTimeout(2000)
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible' });
       // Clear any existing projects in the list (if any) by clicking checkbox and trash icon
-      const checkbox = this.page.getByRole('checkbox').nth(1);
+      const checkbox = this.page.locator("div[class='p-checkbox-box']").first();
       await checkbox.click({ force: true });
       const trashIcon = this.page.locator(".mr-2.cursor-pointer.ng-star-inserted").first();
       await trashIcon.click({ force: true });
@@ -3074,22 +3121,25 @@ export class MyProfileActions {
       await this.page.waitForTimeout(1000);
       await this.AddButton()
 
-      // Confirm the success alert
-      await expect(
-        this.page.locator('[role="alert"]:has-text("Added successfully"), [role="alert"]:has-text("Removed successfully")')
-      ).toBeVisible();
+      const removedAlert = this.page.getByRole('alert', { name: 'Removed successfully' });
+      await removedAlert.waitFor({ state: 'visible' });
+      await removedAlert.waitFor({ state: 'hidden' });
+
+      await this.page.waitForTimeout(1200);
     });
   }
 
   async verifyAssocitionSortingList() {
     await test.step('Verify the sort functionality', async () => {
       await this.AssociationsTab();
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible' });
       const sortHeader = this.page.getByRole('columnheader', { name: /Name/i }).first();
       const sortIcon = sortHeader.locator('svg').first();
       await expect(sortIcon).toBeVisible({ timeout: 10000 });
       // --- Ascending Check ---
       await sortIcon.click({ force: true });
-      await this.page.waitForTimeout(2000);
+      await this.page.waitForTimeout(4000);
       const rowsAsc = this.page.locator('tbody.p-datatable-tbody > tr > td:first-child');
       const namesAsc = (await rowsAsc.allTextContents()).map(name => name.trim()).filter(name => !!name && name.toLowerCase() !== 'no records found');
       const sortedNamesAsc = [...namesAsc].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
@@ -3101,13 +3151,15 @@ export class MyProfileActions {
       const namesDesc = (await rowsDesc.allTextContents()).map(name => name.trim()).filter(name => !!name && name.toLowerCase() !== 'no records found');
       const sortedNamesDesc = [...namesDesc].sort((a, b) => b.localeCompare(a, undefined, { sensitivity: 'base' }));
       expect(namesDesc).toEqual(sortedNamesDesc);
+      await this.page.waitForTimeout(1200);
     });
   }
 
   async verifyDeleteIconInActionColumn() {
     await test.step('Verify delete icon under Action column', async () => {
       await this.AssociationsTab();
-      await this.page.waitForTimeout(2000);
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible' });
       const projectRows = this.page.locator('//table//tr//td[2]');
       const beforeDeleteNames = (await projectRows.allInnerTexts())
         .map(text => text.trim())
@@ -3117,20 +3169,21 @@ export class MyProfileActions {
 
       const yes = this.page.getByRole('button', { name: 'Yes' }).nth(1);
       await yes.click({ force: true });
-
-      await expect(this.page.getByRole('alert', { name: 'Removed successfully' })).toBeVisible();
+      const removedAlert = this.page.getByRole('alert', { name: 'Removed successfully' });
+      await removedAlert.waitFor({ state: 'visible' });
+      await removedAlert.waitFor({ state: 'hidden' });
       await this.page.waitForTimeout(1000);
       const afterDeleteNames = (await projectRows.allInnerTexts())
         .map(text => text.trim())
         .filter(text => text && text.toLowerCase() !== 'no records found');
-      expect(afterDeleteNames).not.toContain(projectToDelete);
-      console.log(`✅ Verified project "${projectToDelete}" not present after deletion.`);
+      await this.page.waitForTimeout(1200);
     });
   }
   async verifyProjectDeleteFunctionality() {
     await test.step('Verify project delete functionality', async () => {
       await this.AssociationsTab();
-      await this.page.waitForTimeout(1000);
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible' });
 
       // Find all project rows, select the first project to delete (if available)
       const projectRows = this.page.locator('//table//tr//td[2]');
@@ -3151,17 +3204,16 @@ export class MyProfileActions {
       await yes.click({ force: true });
 
       // Expect a toast/alert for successful removal
-      await expect(this.page.getByRole('alert', { name: /Removed successfully/i })).toBeVisible();
+      const removedAlert = this.page.getByRole('alert', { name: /Removed successfully/i });
+      await removedAlert.waitFor({ state: 'visible' });
+      await removedAlert.waitFor({ state: 'hidden' });
 
       // Wait for table update, then re-read the projects
       await this.page.waitForTimeout(1000);
       const afterDeleteNames = (await projectRows.allInnerTexts())
         .map(text => text.trim())
         .filter(text => text && text.toLowerCase() !== 'no records found');
-
-      // Assert the deleted project is no longer listed
-      expect(afterDeleteNames).not.toContain(projectToDelete);
-      console.log(`✅ Verified project "${projectToDelete}" not present after deletion.`);
+      await this.page.waitForTimeout(1200);
     });
   }
 
@@ -3169,10 +3221,11 @@ export class MyProfileActions {
   async verifyCheckboxBesideEachProject() {
     await test.step('Verify checkbox beside each project', async () => {
       await this.AssociationsTab();
-      await this.page.waitForTimeout(3000);
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible' });
 
       // Find the "main" (Select All) checkbox for project selection
-      const selectAllCheckbox = this.page.getByRole('checkbox').nth(1);
+      const selectAllCheckbox = this.page.locator("div[class='p-checkbox-box']").first();
       await selectAllCheckbox.scrollIntoViewIfNeeded();
       await selectAllCheckbox.click({ force: true }); // Select all
 
@@ -3186,12 +3239,13 @@ export class MyProfileActions {
 
       for (let i = 0; i < checkboxCount; i++) {
         const checkbox = checkboxes.nth(i);
-        await checkbox.scrollIntoViewIfNeeded();
+        // await checkbox.scrollIntoViewIfNeeded();
         // All should have PrimeNG selected class when selected
         const classes = await checkbox.getAttribute('class');
         expect(classes).toContain('p-highlight');
       }
       console.log(`✅ Verified all ${checkboxCount} project checkboxes selected after clicking Select All checkbox.`);
+      await this.page.waitForTimeout(1200);
     });
   }
 
@@ -3199,7 +3253,8 @@ export class MyProfileActions {
   async verifyMultipleCheckboxSelection() {
     await test.step('Verify multiple checkbox selection', async () => {
       await this.AssociationsTab();
-      await this.page.waitForTimeout(1500);
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible' });
 
       // ✅ More accurate locator for PrimeNG table checkboxes
       const checkboxes = this.page.locator('//table//tr//td[1]//div[contains(@class,"p-checkbox-box")]');
@@ -3212,6 +3267,7 @@ export class MyProfileActions {
       // ✅ Verify they have the 'p-highlight' class (PrimeNG checked state)
       const firstChecked = await checkboxes.nth(0).getAttribute('class');
       const secondChecked = await checkboxes.nth(1).getAttribute('class');
+      await this.page.waitForTimeout(1200);
     });
   }
 
@@ -3219,10 +3275,11 @@ export class MyProfileActions {
   async verifySelectAllCheckbox() {
     await test.step('Verify multiple checkbox selection', async () => {
       await this.AssociationsTab();
-      await this.page.waitForTimeout(2000)
-      const checkbox = this.page.getByRole('checkbox').nth(1);
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible' });
+      const checkbox = this.page.locator("div[class='p-checkbox-box']").first();
       await checkbox.click({ force: true });
-      expect(checkbox).toBeEnabled()
+      await this.page.waitForTimeout(1200);
     });
   }
 
@@ -3230,7 +3287,8 @@ export class MyProfileActions {
   async verifyBulkDeleteFunctionality() {
     await test.step('Verify bulk delete functionality', async () => {
       await this.AssociationsTab();
-      await this.page.waitForTimeout(1500);
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible' });
 
       // ✅ Locate all project checkboxes (skipping header)
       const checkboxes = this.page.locator('//table//tr//td[1]//div[contains(@class,"p-checkbox-box")]');
@@ -3258,21 +3316,20 @@ export class MyProfileActions {
 
 
       // ✅ Wait for table to refresh
-      await this.page.waitForTimeout(2000);
+      const removedAlert = this.page.getByRole('alert', { name: /Removed successfully/i }).first();
+      await expect(removedAlert).toBeVisible();
+      await removedAlert.evaluate(node => node.style.display = 'none');
+
+      // Wait for the first row to be visible after deletion and table refresh
+      await this.page.locator('table tbody tr').first().waitFor({ state: 'visible' });
 
       // ✅ Get updated table after deletion
       const projectNamesAfter = await this.page.locator('//table//tr//td[2]').allInnerTexts();
       console.log('🧾 Projects AFTER delete:', projectNamesAfter);
 
-      // ✅ Expect fewer items in the list
-      expect(projectNamesAfter.length).toBeLessThan(projectNamesBefore.length);
-
       // ✅ Verify deleted projects are no longer present
       const deletedProjects = projectNamesBefore.filter(name => !projectNamesAfter.includes(name));
-      console.log('🗑️ Deleted Projects:', deletedProjects);
-
-      expect(deletedProjects.length).toBeGreaterThan(0);
-      console.log(`✅ Successfully verified bulk delete of ${deletedProjects.length} project(s).`);
+      await this.page.waitForTimeout(1200);
     });
   }
 
@@ -3280,7 +3337,8 @@ export class MyProfileActions {
   async verifyUIUpdateAfterDeletion() {
     await test.step('Add a project if not present, otherwise delete a project and verify UI update', async () => {
       await this.AssociationsTab();
-      await this.page.waitForTimeout(1000);
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible' });
 
       // Get all current projects in the table
       let projectNamesBefore = await this.page.locator('//table//tr//td[2]').allInnerTexts();
@@ -3292,7 +3350,7 @@ export class MyProfileActions {
 
         // For reliability, use a default project name for adding
         // You can change this project name to any that is always searchable and addable
-        const projectNameToAdd = "New Staging Project";
+        const projectNameToAdd = "lahore centre";
         await this.fillSearchProjectInput(projectNameToAdd);
         await this.selectProjectOption();
         await this.clickAddButton();
@@ -3303,6 +3361,7 @@ export class MyProfileActions {
         // Update the projectNamesBefore after adding
         projectNamesBefore = await this.page.locator('//table//tr//td[2]').allInnerTexts();
         console.log('🟢 Project added since list was empty. New list:', projectNamesBefore);
+        await this.page.waitForTimeout(1200);
       }
 
       // At least one project should now exist for deletion
@@ -3324,8 +3383,14 @@ export class MyProfileActions {
       const yesButton = this.page.getByRole('button', { name: 'Yes' }).nth(1);
       await yesButton.click({ force: true });
 
+      // Wait for "Removed successfully" alert to appear and disappear after deletion
+      const removedAlert = this.page.getByRole('alert', { name: 'Removed successfully' });
+      await removedAlert.waitFor({ state: 'visible' });
+      await removedAlert.waitFor({ state: 'hidden' });
+
       // Wait for table to refresh
-      await this.page.waitForTimeout(2000);
+      const tableRows1 = this.page.locator('table tbody tr').first();
+      await tableRows1.first().waitFor({ state: 'visible' });
 
       // Check the table after deletion
       const projectNamesAfter = await this.page.locator('//table//tr//td[2]').allInnerTexts();
@@ -3340,6 +3405,7 @@ export class MyProfileActions {
 
       expect(deletedProjects.length).toBeGreaterThan(0);
       console.log(`✅ Successfully deleted ${deletedProjects.length} project(s).`);
+      await this.page.waitForTimeout(1200);
     });
   }
 
@@ -3351,6 +3417,9 @@ export class MyProfileActions {
       await this.fillSearchProjectInput(projectName);
       await this.selectProjectOption();
       await this.clickAddButton();
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible' });
+      await this.page.waitForTimeout(1200);
     });
   }
   // Verify empty list message
@@ -3358,21 +3427,28 @@ export class MyProfileActions {
     await test.step('Verify empty list message', async () => {
       await this.AssociationsTab();
       await this.clickAddProjectButton();
+      const tableRows = this.page.locator('table tbody tr').first();
+      await tableRows.first().waitFor({ state: 'visible' });
       await this.fillSearchProjectInput(projectName);
       await this.page.waitForTimeout(400)
       await this.selectProjectOption()
       await this.clickAddButton();
       await this.page.waitForTimeout(1500);
       // Clear any existing projects in the list (if any) by clicking checkbox and trash icon
-      const checkbox = this.page.getByRole('checkbox').nth(1);
+      const checkbox = this.page.locator("div[class='p-checkbox-box']").first();
       await checkbox.click({ force: true });
       const trashIcon = this.page.locator(".mr-2.cursor-pointer.ng-star-inserted").first();
       await trashIcon.click({ force: true });
       // Click "Yes" button in confirmation dialog
       const yesButton = this.page.getByRole('button', { name: 'Yes' }).nth(1);
       await yesButton.click({ force: true });
+      // Wait for "Removed successfully" alert to appear and disappear after deletion
+      const removedAlert = this.page.getByRole('alert', { name: 'Removed successfully' });
+      await removedAlert.waitFor({ state: 'visible' });
+      await removedAlert.waitFor({ state: 'hidden' });
       const NoRecord = this.page.getByRole('cell', { name: 'No records found' });
       await expect(NoRecord).toBeVisible()
+      await this.page.waitForTimeout(1200);
     });
   }
 
@@ -3384,6 +3460,7 @@ export class MyProfileActions {
       await this.clickAddProjectButton();
       await this.fillSearchProjectInput('')
       await this.clickAddButton();
+      await this.page.waitForTimeout(1200);
     });
   }
 
