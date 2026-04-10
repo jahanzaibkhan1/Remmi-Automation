@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.662576999999583">
-<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-10T08:55:27.586Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.884" errors="0">
-<testcase name="Contact Related Property Tabs - Remmi E2E › Verify sort icon is present next to each status in listing tab" classname="Pages\Contacts\relatedProperty.spec.ts" time="27.884">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.31391400000081">
+<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-10T09:06:33.318Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.604" errors="0">
+<testcase name="Contact Related Property Tabs - Remmi E2E › Verify property can be associated via associate field in Property tab" classname="Pages\Contacts\relatedProperty.spec.ts" time="45.604">
 </testcase>
 </testsuite>
 </testsuites>
