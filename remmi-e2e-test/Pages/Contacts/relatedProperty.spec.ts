@@ -39,4 +39,9 @@ test.describe('Contact Related Property Tabs - Remmi E2E', () => {
     await contactActions.verifyAssociatedListingStatusAlignment();
   });
 
+  test('Verify a listing can be removed from the associated list', async ({ sessionPage }) => {
+    const contactActions = new ContactActions(sessionPage);
+    await contactActions.removeAssociatedListing();
+  });
+  
 });

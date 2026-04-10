@@ -7166,6 +7166,7 @@ export class ContactActions {
         await listingTab.waitFor({ state: "visible", timeout: 8000 });
         await propertyTab.waitFor({ state: "visible", timeout: 8000 });
         await contractTab.waitFor({ state: "visible", timeout: 8000 });
+        await this.closeModalIfVisible();
     }
 
     /**
@@ -7263,6 +7264,40 @@ export class ContactActions {
         await associatedListingCell.waitFor({ state: 'visible', timeout: 10000 });
         await this.closeModalIfVisible();
 
+    }
+
+    /**
+     * Removes a listing from the associated list and verifies its removal.
+     */
+    async removeAssociatedListing() {
+        const searchValue = 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880';
+
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open Related Property tab and then Listing tab
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible', timeout: 8000 });
+        await relatedPropertyTab.click();
+        const listingTab = this.page.locator("#pills-listing0-tab");
+        await listingTab.waitFor({ state: 'visible', timeout: 8000 });
+        await listingTab.click();
+        const associatedListingCell = this.page.getByRole('cell', { name: 'Sauer LLC"" 453/37 Eliseo Brook, East Albury, Nebraska 34880'}).first();
+        await associatedListingCell.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+        await associatedListingCell.waitFor({ state: 'visible', timeout: 10000 });
+        const removeButton = this.page.getByRole('button', { name: 'delete' });
+        await removeButton.waitFor({ state: 'visible', timeout: 5000 });
+        await removeButton.click();
+        // Confirm the removal action if a modal/dialog appears
+        const confirmButton = this.page.locator('button:has-text("Yes")').first();
+        if (await confirmButton.isVisible({ timeout: 10000 }).catch(() => false)) {
+            await confirmButton.click();
+        }
+        // Wait for a deletion toast/message
+        const toast = this.page.getByText(/removed successfully|deleted successfully/i).first();
+        await toast.waitFor({ state: 'visible', timeout: 10000 });
+
+        await this.closeModalIfVisible();
     }
 
 }
