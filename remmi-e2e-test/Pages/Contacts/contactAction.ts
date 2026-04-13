@@ -7766,6 +7766,7 @@ export class ContactActions {
         ).first();
         const alertOrSuccessLocator = duplicateAlert.or(successToast);
         await alertOrSuccessLocator.waitFor({ state: "visible" });
+        await alertOrSuccessLocator.waitFor({ state: "hidden" });
         await this.closeModalIfVisible();
     }
 

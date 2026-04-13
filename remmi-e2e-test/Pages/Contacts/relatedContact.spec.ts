@@ -69,4 +69,9 @@ test.describe('Related Contact', () => {
         await contactActions.verifyRelationshipTagCanBeRemoved();
     });
 
+    test('Delete icon should remove a contact from the list', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.associateContactAndVerify();
+    });
+
 });
