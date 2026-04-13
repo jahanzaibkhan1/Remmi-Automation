@@ -7735,7 +7735,7 @@ export class ContactActions {
     async verifySearchAndSelectRelatedContact() {
         await this.NavigateToContacts();
         await this.openFirstContact();
-        let relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        const relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
         await relatedContactTab.waitFor({ state: "visible" });
         await relatedContactTab.click();
 
@@ -7760,10 +7760,10 @@ export class ContactActions {
         await associateButton.click();
         const duplicateAlert = this.page.getByRole('alert', {
             name: /user is already associate to this contact/i
-        });
+        }).first();
         const successToast = this.page.getByText(
             /Contact attached successfully/i
-        );
+        ).first();
         const alertOrSuccessLocator = duplicateAlert.or(successToast);
         await alertOrSuccessLocator.waitFor({ state: "visible" });
         await this.closeModalIfVisible();
@@ -7775,12 +7775,11 @@ export class ContactActions {
     async associateContactAndVerify() {
         await this.NavigateToContacts();
         await this.openFirstContact();
-        let relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        const relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
         await relatedContactTab.waitFor({ state: "visible" });
         await relatedContactTab.click();
         const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
         await selectDropdown.waitFor({ state: "visible" });
-        await selectDropdown.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
         await selectDropdown.click({ force: true });
         const searchInputInRelatedTab = this.page.locator('#rContact0').getByRole('textbox', { name: 'Search' })
         await searchInputInRelatedTab.waitFor({ state: "visible" });
@@ -7794,28 +7793,13 @@ export class ContactActions {
         await associateButton.click();
         const duplicateAlert = this.page.getByRole('alert', {
             name: /user is already associate to this contact/i
-        });
+        }).first();
         const successToast = this.page.getByText(
             /Contact attached successfully/i
-        );
+        ).first();
         const alertOrSuccessLocator = duplicateAlert.or(successToast);
-        await expect(alertOrSuccessLocator).toBeVisible({ timeout: 10000 });
-        const remainingContactRow = this.page.locator('table tr').filter({ hasText: 'seller' }).last();
-        if (await remainingContactRow.isVisible().catch(() => false)) {
-            await remainingContactRow.scrollIntoViewIfNeeded();
-            const deleteIcon2 = remainingContactRow.getByRole('img', { name: 'delete' }).first();
-            if (await deleteIcon2.isVisible().catch(() => false)) {
-                await deleteIcon2.click();
-                const yesButton2 = this.page.getByRole('button', { name: /^Yes$/i }).first();
-                if (await yesButton2.isVisible().catch(() => false)) {
-                    await yesButton2.click();
-                    await this.page.waitForTimeout(500);
-                    const removedToast2 = this.page.getByText(/Contact deleted successfully/i);
-                    await expect(removedToast2).toBeVisible({ timeout: 10000 });
-                }
-            }
-            await expect(remainingContactRow).not.toBeVisible({ timeout: 30000 });
-        }
+        await alertOrSuccessLocator.waitFor({ state: "visible" });
+         
         const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).last();
         await associatedContactRow.scrollIntoViewIfNeeded();
         await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
@@ -7828,14 +7812,14 @@ export class ContactActions {
         await this.page.waitForTimeout(500);
         const removedToast = this.page.getByText(/Contact deleted successfully/i).first();
         await expect(removedToast).toBeVisible({ timeout: 30000 });
-        await this.closeLeadModalIfVisible();
+        await this.closeModalIfVisible();
     }
 
     // Verify that the search icon is correctly displayed inside the Associate field
     async verifySearchIconInAssociateField() {
         await this.NavigateToContacts();
         await this.openFirstContact();
-        let relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        const relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
         await relatedContactTab.waitFor({ state: "visible" });
         await relatedContactTab.click();
         const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
@@ -7853,7 +7837,7 @@ export class ContactActions {
     async verifyAgentsListIsDisplayedCorrectly() {
         await this.NavigateToContacts();
         await this.openFirstContact();
-        let relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        const relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
         await relatedContactTab.waitFor({ state: "visible" });
         await relatedContactTab.click();
         const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
@@ -7981,7 +7965,7 @@ export class ContactActions {
     async verifyTagsAreDraggable() {
         await this.NavigateToContacts();
         await this.openFirstContact();
-        let relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        const relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
         await relatedContactTab.waitFor({ state: "visible" });
         await relatedContactTab.click();
         const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
@@ -8039,7 +8023,7 @@ export class ContactActions {
         await expect(dropList).toBeVisible({ timeout: 10000 });
 
         const getBuyerChip = () =>
-            associatedContactRow.locator('[data-pc-name="chip"][aria-label="Agent"]');
+            associatedContactRow.locator('[data-pc-name="chip"][aria-label="Buyer"]');
 
         // If already added, exit early (prevents flake)
         if (await getBuyerChip().count() > 0) {
@@ -8051,7 +8035,7 @@ export class ContactActions {
         for (let attempt = 1; attempt <= maxAttempts; attempt++) {
             try {
                 const buyerTag = this.page
-                    .locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Agent' })
+                    .locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Buyer' })
                     .last();
 
                 await expect(buyerTag).toBeVisible({ timeout: 10000 });
