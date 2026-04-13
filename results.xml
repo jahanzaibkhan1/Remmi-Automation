@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="75.94901299999934">
-<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-13T05:11:34.945Z" hostname="chromium" tests="1" failures="0" skipped="0" time="73.914" errors="0">
-<testcase name="Related Contact › Clicking &quot;Add New Contact&quot; should open a new contact form" classname="Pages\Contacts\relatedContact.spec.ts" time="73.914">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="58.591526000000535">
+<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-13T05:41:43.422Z" hostname="chromium" tests="1" failures="0" skipped="0" time="56.489" errors="0">
+<testcase name="Related Contact › Newly created contact should appear in the search list" classname="Pages\Contacts\relatedContact.spec.ts" time="56.489">
 </testcase>
 </testsuite>
 </testsuites>

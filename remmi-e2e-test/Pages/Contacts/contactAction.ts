@@ -7902,5 +7902,78 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    // Newly created contact should appear in the list
+    async verifyNewlyCreatedContactIsAddedToRelatedList() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Click the "Related Contact" tab
+        const relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        await relatedContactTab.waitFor({ state: "visible" });
+        await relatedContactTab.click();
+
+        // Open the contact selection dropdown
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+        await selectDropdown.click();
+
+        // Use '@faker-js/faker' to generate random contact info
+        const faker = require('@faker-js/faker').faker;
+        const firstName = faker.person.firstName();
+        const lastName = faker.person.lastName();
+        const email = faker.internet.email({ firstName, lastName });
+
+        // Locate the search input in the "Related" tab
+        const searchInput = this.page.locator('#rContact0').getByRole('textbox', { name: 'Search' });
+        await searchInput.waitFor({ state: "visible" });
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+
+        // Click "Create New" button
+        const createNewBtn = this.page.getByText('Create New').last();
+        await expect(createNewBtn).toBeVisible({ timeout: 10000 });
+        await createNewBtn.click();
+
+        const addNewModel = this.page.locator('section').last();
+        await addNewModel.waitFor({ state: "visible" });
+        await this.page.locator('input[formcontrolname="first_name"]').last().fill(firstName);
+        await this.page.locator('input[formcontrolname="last_name"]').last().fill(lastName);
+        await this.page.locator('input[formcontrolname="email"]').last().fill(email);
+
+        // Save the new contact
+        const saveButton = this.page.getByRole('button', { name: 'Save' }).first();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click({ force: true });
+
+        // Confirm that the contact was created (wait for toast message)
+        const successToast = this.page.getByText(/Contact has been created|Contact has been updated/i);
+        await expect(successToast).toBeVisible({ timeout: 10000 });
+
+        // Close the new contact tab/modal
+        const closeBtn = this.page.locator('.pi.pi-times').nth(2);
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click({ force: true });
+        }
+
+        await expect(selectDropdown).toBeVisible({ timeout: 10000 });
+        await selectDropdown.click();
+
+        const fullName = `${firstName} ${lastName}`;
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+        await searchInput.click();
+        await searchInput.fill(fullName);
+        const relatedContactEntry = this.page
+            .locator('.drop_box li p')
+            .filter({
+                hasText: `${fullName} (${email})`
+            })
+            .first();
+
+        await expect(relatedContactEntry).toBeVisible({ timeout: 15000 });
+        await this.closeModalIfVisible();
+        await this.page.waitForTimeout(1000);
+    }
+
 }
 
