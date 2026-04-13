@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="59.146194999999366">
-<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-13T04:33:17.591Z" hostname="chromium" tests="1" failures="0" skipped="0" time="56.201" errors="0">
-<testcase name="Related Contact › Search and select an existing contact" classname="Pages\Contacts\relatedContact.spec.ts" time="56.201">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.778259999999776">
+<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-13T04:47:53.962Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.801" errors="0">
+<testcase name="Related Contact › Associate button should add contact to the list" classname="Pages\Contacts\relatedContact.spec.ts" time="35.801">
 </testcase>
 </testsuite>
 </testsuites>
