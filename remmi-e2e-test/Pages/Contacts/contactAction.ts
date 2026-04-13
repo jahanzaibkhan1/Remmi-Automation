@@ -8151,5 +8151,56 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Removes a relationship tag from a related contact and verifies it is removed.
+     */
+    async verifyRelationshipTagCanBeRemoved() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open the Related Contact tab
+        const relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        await relatedContactTab.waitFor({ state: "visible" });
+        await relatedContactTab.click();
+
+        // Find the associated contact row containing '11 22'
+        const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).last();
+        await associatedContactRow.scrollIntoViewIfNeeded();
+        await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
+
+        // Find the Buyer relationship chip
+        const relationshipChip = associatedContactRow.locator('[data-pc-name="chip"][aria-label="Buyer"]');
+        await expect(relationshipChip).toBeVisible({ timeout: 10000 });
+
+        // Hover over the chip to make the remove icon visible
+        await relationshipChip.hover();
+
+        // Click the remove icon inside the chip
+        const removeIcon = relationshipChip.locator('[data-pc-section="removeicon"]');
+        await expect(removeIcon).toBeVisible({ timeout: 10000 });
+        await removeIcon.click({ force: true });
+
+        // Verify the chip is removed
+        await expect(
+            associatedContactRow.locator('[data-pc-name="chip"][aria-label="Buyer"]')
+        ).toHaveCount(0);
+
+        await this.page.waitForTimeout(1000);
+
+        // Clean up: Delete the associated contact itself
+        const deleteIcon = associatedContactRow.getByRole('img', { name: 'delete' }).first();
+        await expect(deleteIcon).toBeVisible({ timeout: 10000 });
+        await deleteIcon.click();
+
+        const yesButton = this.page.getByRole('button', { name: /^Yes$/i }).first();
+        await expect(yesButton).toBeVisible({ timeout: 10000 });
+        await yesButton.click();
+        // Check for success message and make sure the row disappears
+        const removedToast = this.page.getByText(/Contact deleted successfully/i);
+        await expect(removedToast).toBeVisible({ timeout: 10000 });
+
+        await this.closeModalIfVisible();
+    }
+
 }
 
