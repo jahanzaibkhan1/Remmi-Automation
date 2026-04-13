@@ -59,4 +59,9 @@ test.describe('Related Contact', () => {
         await contactActions.verifyTagsAreDraggable();
     });
 
+    test('Duplicate relationship tags should not be allowed', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.verifyDuplicateRelationshipTagsCannotBeAdded();
+    });
+
 });

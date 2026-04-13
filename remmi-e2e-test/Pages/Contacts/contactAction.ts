@@ -7799,7 +7799,7 @@ export class ContactActions {
         ).first();
         const alertOrSuccessLocator = duplicateAlert.or(successToast);
         await alertOrSuccessLocator.waitFor({ state: "visible" });
-         
+
         const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).last();
         await associatedContactRow.scrollIntoViewIfNeeded();
         await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
@@ -8065,7 +8065,7 @@ export class ContactActions {
 
                 // Wait for DOM update and verify chip contains "friend"
                 await expect(getBuyerChip()).toHaveCount(1, { timeout: 10000 });
-        
+
 
                 break; // success
             } catch (error) {
@@ -8077,6 +8077,77 @@ export class ContactActions {
             }
         }
         await expect(getBuyerChip()).toHaveCount(1, { timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies that duplicate relationship tags cannot be added for a related contact.
+     */
+    async verifyDuplicateRelationshipTagsCannotBeAdded() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Go to Related Contact tab
+        const relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        await relatedContactTab.waitFor({ state: "visible" });
+        await relatedContactTab.click();
+
+        // Ensure a contact is already associated (should see a delete button)
+        const associatedContactDeleteBtn = this.page.getByRole('button', { name: 'delete' });
+        await associatedContactDeleteBtn.scrollIntoViewIfNeeded();
+        await expect(associatedContactDeleteBtn).toBeVisible({ timeout: 20000 });
+
+        // Locate cdk-drop-list and ensure visibility
+        const dropList = this.page.locator('td.cdk-drop-list[cdkdroplist]');
+        await expect(dropList).toBeVisible({ timeout: 10000 });
+
+        // Helper for Buyer chip locator
+        const getBuyerChip = () =>
+            this.page.locator('[data-pc-name="chip"][aria-label="Buyer"]');
+
+        // Ensure Buyer chip already exists
+        await expect(getBuyerChip()).toHaveCount(1, { timeout: 10000 });
+
+        // Locate the Buyer tag for drag
+        const buyerTag = this.page
+            .locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Buyer' })
+            .last();
+
+        await expect(buyerTag).toBeVisible({ timeout: 10000 });
+
+        // Drag the Buyer tag onto the drop list (should be rejected as duplicate)
+        const sourceBox = await buyerTag.boundingBox();
+        const dropBox = await dropList.boundingBox();
+
+        if (!sourceBox || !dropBox) {
+            throw new Error('Bounding box not found for drag operation.');
+        }
+
+        await this.page.mouse.move(
+            sourceBox.x + sourceBox.width / 2,
+            sourceBox.y + sourceBox.height / 2
+        );
+        await this.page.mouse.down();
+
+        await this.page.mouse.move(
+            dropBox.x + dropBox.width / 2,
+            dropBox.y + dropBox.height / 2,
+            { steps: 12 }
+        );
+
+        await this.page.waitForTimeout(150);
+        await this.page.mouse.up();
+
+        // Expect only one Buyer chip (no duplicate added)
+        await expect(getBuyerChip()).toHaveCount(1, { timeout: 5000 });
+
+        // Duplicate association alert should appear
+        const duplicateError = this.page
+            .getByRole('alert')
+            .filter({ hasText: /already associate/i });
+
+        await expect(duplicateError).toBeVisible({ timeout: 10000 });
+
         await this.closeModalIfVisible();
     }
 
