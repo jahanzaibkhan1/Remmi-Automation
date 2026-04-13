@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.718507000000216">
-<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-13T04:58:04.047Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.661" errors="0">
-<testcase name="Related Contact › The search icon is visible inside the Associate contact field" classname="Pages\Contacts\relatedContact.spec.ts" time="30.661">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.27118400000036">
+<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-13T05:02:43.480Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.199" errors="0">
+<testcase name="Related Contact › Verify that the agents list is displayed correctly" classname="Pages\Contacts\relatedContact.spec.ts" time="37.199">
 </testcase>
 </testsuite>
 </testsuites>
