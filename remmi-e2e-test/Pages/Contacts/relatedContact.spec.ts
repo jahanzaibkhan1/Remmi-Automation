@@ -44,4 +44,9 @@ test.describe('Related Contact', () => {
         await contactActions.verifyCreateNewContactOptionWhenNoResults();
     });
 
+    test('Clicking "Add New Contact" should open a new contact form', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.verifyAddNewContactOpensForm();
+    });
+
 });

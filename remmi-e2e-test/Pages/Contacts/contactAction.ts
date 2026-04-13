@@ -7882,5 +7882,25 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    // Clicking "Add New Contact" should open a new contact form
+    async verifyAddNewContactOpensForm() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        await relatedContactTab.waitFor({ state: "visible" });
+        await relatedContactTab.click();
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await selectDropdown.waitFor({ state: "visible" });
+        await selectDropdown.click({ force: true });
+        const searchInput = this.page.locator('#rContact0').getByRole('textbox', { name: 'Search' });
+        await searchInput.waitFor({ state: "visible" });
+        const addNewContactOption = this.page.getByText(/add new contact|create new/i).last();
+        await addNewContactOption.waitFor({ state: "visible" });
+        await addNewContactOption.click();
+        const addNewModel = this.page.locator('section').last();
+        await addNewModel.waitFor({ state: "visible" });
+        await this.closeModalIfVisible();
+    }
+
 }
 
