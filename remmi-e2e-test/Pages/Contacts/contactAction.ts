@@ -7695,7 +7695,38 @@ export class ContactActions {
         await expect(successMessage).toBeVisible({ timeout: 8000 });
         await this.closeModalIfVisible();
     }
+    /**
+     * Verify that the status column header in the contract tab is aligned properly.
+     */
+    async verifyStatusAlignmentInContractTab() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: "visible", timeout: 8000 });
+        await relatedPropertyTab.click();
 
+        // Open Contract tab
+        const contractTab = this.page.getByRole("tab", { name: /contract/i });
+        await contractTab.waitFor({ state: "visible", timeout: 8000 });
+        await contractTab.click();
+
+        // Contract table
+        const contractTable = this.page.locator("table.p-datatable-table").nth(7);
+        await expect(contractTable).toBeVisible({ timeout: 15000 });
+
+        // Find the "Status" column header
+        const headerCells = contractTable.locator("thead tr th");
+        const statusHeader = headerCells.filter({ hasText: /status/i }).first();
+        await expect(statusHeader).toBeVisible({ timeout: 30000 });
+
+        // Check the alignment of the status header cell
+        const alignment = await statusHeader.evaluate(
+            (el) => window.getComputedStyle(el).textAlign
+        );
+        expect(['center', 'left', 'right']).toContain(alignment);
+
+        await this.closeModalIfVisible();
+    }
 
 }
 

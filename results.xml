@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="36.85677300000005">
-<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-13T03:16:50.406Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.435" errors="0">
-<testcase name="Contact Related Property Tabs - Remmi E2E › Verify contract can be deleted from contract tab" classname="Pages\Contacts\relatedProperty.spec.ts" time="34.435">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.5708330000001">
+<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-13T03:30:57.884Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.692" errors="0">
+<testcase name="Contact Related Property Tabs - Remmi E2E › Verify status alignment and sorting in contract tab" classname="Pages\Contacts\relatedProperty.spec.ts" time="27.692">
 </testcase>
 </testsuite>
 </testsuites>
