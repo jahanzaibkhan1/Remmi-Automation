@@ -5,28 +5,33 @@ const managerSessionPath = require('path').join(__dirname, '../../sessions/manag
 const DASHBOARD_URL = process.env.DASHBOARD_URL;
 
 const test = base.extend<{ sessionPage: any }>({
-  sessionPage: [async ({ browser }, use) => {
-    const context = await browser.newContext({ storageState: managerSessionPath });
-    try {
-      const page = await context.newPage();
-      await page.goto(DASHBOARD_URL);
-      await use(page);
-    } finally {
+    sessionPage: [async ({ browser }, use) => {
+        const context = await browser.newContext({ storageState: managerSessionPath });
+        try {
+            const page = await context.newPage();
+            await page.goto(DASHBOARD_URL);
+            await use(page);
+        } finally {
 
-    }
-  }, { scope: 'worker' }]
+        }
+    }, { scope: 'worker' }]
 });
 
 test.describe('Related Contact', () => {
 
-  test('Search and select an existing contact', async ({ sessionPage }) => {
-    const contactActions = new ContactActions(sessionPage);
-    await contactActions.verifySearchAndSelectRelatedContact();
-  });
+    test('Search and select an existing contact', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.verifySearchAndSelectRelatedContact();
+    });
 
-  test('Associate button should add contact to the list', async ({ sessionPage }) => {
-    const contactActions = new ContactActions(sessionPage);
-    await contactActions.associateContactAndVerify();
-  });
+    test('Associate button should add contact to the list', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.associateContactAndVerify();
+    });
+
+    test('The search icon is visible inside the Associate contact field', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.verifySearchIconInAssociateField();
+    });
 
 });

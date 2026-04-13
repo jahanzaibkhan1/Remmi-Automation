@@ -7831,5 +7831,23 @@ export class ContactActions {
         await this.closeLeadModalIfVisible();
     }
 
+    // Verify that the search icon is correctly displayed inside the Associate field
+    async verifySearchIconInAssociateField() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        let relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        await relatedContactTab.waitFor({ state: "visible" });
+        await relatedContactTab.click();
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await selectDropdown.waitFor({ state: "visible" });
+        await selectDropdown.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
+        await selectDropdown.click({ force: true });
+        const searchInputInRelatedTab = this.page.locator('#rContact0').getByRole('textbox', { name: 'Search' })
+        await searchInputInRelatedTab.waitFor({ state: "visible" });
+        const searchIcon = this.page.locator('.pi.pi-search.search');
+        await searchIcon.waitFor({ state: "visible" });
+        await this.closeModalIfVisible();
+    }
+
 }
 
