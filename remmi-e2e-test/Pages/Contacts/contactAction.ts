@@ -7849,5 +7849,21 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    // Verify that the agents list is displayed correctly
+    async verifyAgentsListIsDisplayedCorrectly() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        let relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        await relatedContactTab.waitFor({ state: "visible" });
+        await relatedContactTab.click();
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await selectDropdown.waitFor({ state: "visible" });
+        await selectDropdown.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
+        await selectDropdown.click({ force: true });
+        const suggestedContact = this.page.getByRole('listitem').filter({ hasText: '22 (11@22.com.au)' }).last();
+        await suggestedContact.waitFor({ state: "visible" });
+        await this.closeModalIfVisible();
+    }
+
 }
 

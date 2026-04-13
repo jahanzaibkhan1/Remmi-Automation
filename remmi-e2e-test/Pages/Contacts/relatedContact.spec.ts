@@ -34,4 +34,9 @@ test.describe('Related Contact', () => {
         await contactActions.verifySearchIconInAssociateField();
     });
 
+    test('Verify that the agents list is displayed correctly', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.verifyAgentsListIsDisplayedCorrectly();
+    });
+
 });
