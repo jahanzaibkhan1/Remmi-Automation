@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.778259999999776">
-<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-13T04:47:53.962Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.801" errors="0">
-<testcase name="Related Contact › Associate button should add contact to the list" classname="Pages\Contacts\relatedContact.spec.ts" time="35.801">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.718507000000216">
+<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-13T04:58:04.047Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.661" errors="0">
+<testcase name="Related Contact › The search icon is visible inside the Associate contact field" classname="Pages\Contacts\relatedContact.spec.ts" time="30.661">
 </testcase>
 </testsuite>
 </testsuites>
