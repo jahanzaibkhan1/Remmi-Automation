@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.5708330000001">
-<testsuite name="Pages\Contacts\relatedProperty.spec.ts" timestamp="2026-04-13T03:30:57.884Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.692" errors="0">
-<testcase name="Contact Related Property Tabs - Remmi E2E › Verify status alignment and sorting in contract tab" classname="Pages\Contacts\relatedProperty.spec.ts" time="27.692">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="59.146194999999366">
+<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-13T04:33:17.591Z" hostname="chromium" tests="1" failures="0" skipped="0" time="56.201" errors="0">
+<testcase name="Related Contact › Search and select an existing contact" classname="Pages\Contacts\relatedContact.spec.ts" time="56.201">
 </testcase>
 </testsuite>
 </testsuites>
