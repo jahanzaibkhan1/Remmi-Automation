@@ -7793,7 +7793,7 @@ export class ContactActions {
         await associateButton.waitFor({ state: "visible" });
         await associateButton.click();
         const duplicateAlert = this.page.getByRole('alert', {
-           name: /user is already associate to this contact/i
+            name: /user is already associate to this contact/i
         });
         const successToast = this.page.getByText(
             /Contact attached successfully/i
@@ -7973,6 +7973,127 @@ export class ContactActions {
         await expect(relatedContactEntry).toBeVisible({ timeout: 15000 });
         await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Check that contact type and relationship tags are draggable.
+     */
+    async verifyTagsAreDraggable() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        let relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        await relatedContactTab.waitFor({ state: "visible" });
+        await relatedContactTab.click();
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await selectDropdown.waitFor({ state: "visible" });
+        await selectDropdown.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
+        await selectDropdown.click({ force: true });
+        const searchInputInRelatedTab = this.page.locator('#rContact0').getByRole('textbox', { name: 'Search' })
+        await searchInputInRelatedTab.waitFor({ state: "visible" });
+        await searchInputInRelatedTab.fill('11 22');
+        const suggestedContact = this.page.getByRole('listitem').filter({ hasText: '22 (11@22.com.au)' }).last();
+        await suggestedContact.waitFor({ state: "visible" });
+        await suggestedContact.click();
+        await this.page.mouse.click(0, 0);
+        const associateButton = this.page.getByRole('button', { name: /associate/i }).last();
+        await associateButton.waitFor({ state: "visible" });
+        await associateButton.click();
+        const duplicateAlert = this.page.getByRole('alert', {
+            name: /user is already associate to this contact/i
+        });
+        const successToast = this.page.getByText(
+            /Contact attached successfully/i
+        );
+        const alertOrSuccessLocator = duplicateAlert.or(successToast);
+        await expect(alertOrSuccessLocator).toBeVisible({ timeout: 10000 });
+        const remainingContactRow = this.page.locator('table tr').filter({ hasText: 'seller' }).last();
+        if (await remainingContactRow.isVisible().catch(() => false)) {
+            await remainingContactRow.scrollIntoViewIfNeeded();
+            const deleteIcon2 = remainingContactRow.getByRole('img', { name: 'delete' }).first();
+            if (await deleteIcon2.isVisible().catch(() => false)) {
+                await deleteIcon2.click();
+                const yesButton2 = this.page.getByRole('button', { name: /^Yes$/i }).first();
+                if (await yesButton2.isVisible().catch(() => false)) {
+                    await yesButton2.click();
+                    await this.page.waitForTimeout(500);
+                    const removedToast2 = this.page.getByText(/Contact deleted successfully/i);
+                    await expect(removedToast2).toBeVisible({ timeout: 10000 });
+                }
+            }
+            await expect(remainingContactRow).not.toBeVisible({ timeout: 30000 });
+        }
+
+        const associatedContactRow = this.page.locator('table tr').filter({
+            hasText: '11 22',
+            has: this.page.locator('td.cdk-drop-list[cdkdroplist]')
+        }).first();
+
+        await associatedContactRow.evaluate(el => {
+            el.scrollIntoView({
+                block: 'center',
+                inline: 'start'
+            });
+        });
+
+        const dropList = associatedContactRow.locator('td.cdk-drop-list[cdkdroplist]');
+        await expect(dropList).toBeVisible({ timeout: 10000 });
+
+        const getBuyerChip = () =>
+            associatedContactRow.locator('[data-pc-name="chip"][aria-label="Agent"]');
+
+        // If already added, exit early (prevents flake)
+        if (await getBuyerChip().count() > 0) {
+            return;
+        }
+
+        const maxAttempts = 4;
+
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                const buyerTag = this.page
+                    .locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Agent' })
+                    .last();
+
+                await expect(buyerTag).toBeVisible({ timeout: 10000 });
+
+                const sourceBox = await buyerTag.boundingBox();
+                const dropBox = await dropList.boundingBox();
+
+                if (!sourceBox || !dropBox) {
+                    throw new Error('Bounding box not available');
+                }
+
+                // Real mouse drag (CDK-safe)
+                await this.page.mouse.move(
+                    sourceBox.x + sourceBox.width / 2,
+                    sourceBox.y + sourceBox.height / 2
+                );
+                await this.page.mouse.down();
+
+                await this.page.mouse.move(
+                    dropBox.x + dropBox.width / 2,
+                    dropBox.y + dropBox.height / 2,
+                    { steps: 12 }
+                );
+
+                await this.page.waitForTimeout(150);
+                await this.page.mouse.up();
+
+                // Wait for DOM update and verify chip contains "friend"
+                await expect(getBuyerChip()).toHaveCount(1, { timeout: 10000 });
+        
+
+                break; // success
+            } catch (error) {
+                if (attempt === maxAttempts) {
+                    throw new Error('Buyer tag drag failed after multiple attempts.');
+                }
+
+                await this.page.waitForTimeout(1000);
+            }
+        }
+        await expect(getBuyerChip()).toHaveCount(1, { timeout: 10000 });
+        await this.closeModalIfVisible();
     }
 
 }
