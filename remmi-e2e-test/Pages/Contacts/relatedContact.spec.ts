@@ -49,4 +49,9 @@ test.describe('Related Contact', () => {
         await contactActions.verifyAddNewContactOpensForm();
     });
 
+    test('Newly created contact should appear in the search list', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.verifyNewlyCreatedContactIsAddedToRelatedList();
+    });
+
 });
