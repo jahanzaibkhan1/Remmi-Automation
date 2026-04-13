@@ -64,4 +64,9 @@ test.describe('Related Contact', () => {
         await contactActions.verifyDuplicateRelationshipTagsCannotBeAdded();
     });
 
+    test('Relationship tags should be removable', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.verifyRelationshipTagCanBeRemoved();
+    });
+
 });

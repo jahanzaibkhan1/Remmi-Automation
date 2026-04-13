@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.67217799999984">
-<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-13T08:32:31.889Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.622" errors="0">
-<testcase name="Related Contact › Duplicate relationship tags should not be allowed" classname="Pages\Contacts\relatedContact.spec.ts" time="23.622">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="45.692332999999635">
+<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-13T08:58:06.080Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.298" errors="0">
+<testcase name="Related Contact › Relationship tags should be removable" classname="Pages\Contacts\relatedContact.spec.ts" time="42.298">
 </testcase>
 </testsuite>
 </testsuites>
