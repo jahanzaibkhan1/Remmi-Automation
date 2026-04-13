@@ -39,4 +39,9 @@ test.describe('Related Contact', () => {
         await contactActions.verifyAgentsListIsDisplayedCorrectly();
     });
 
+    test('Search field should show "Add New Contact" when no results found', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.verifyCreateNewContactOptionWhenNoResults();
+    });
+
 });

@@ -7865,5 +7865,22 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    // Search field should show "Create New Contact" when no results found
+    async verifyCreateNewContactOptionWhenNoResults() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        await relatedContactTab.waitFor({ state: "visible" });
+        await relatedContactTab.click();
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await selectDropdown.waitFor({ state: "visible" });
+        await selectDropdown.click({ force: true });
+        const searchInput = this.page.locator('#rContact0').getByRole('textbox', { name: 'Search' });
+        await searchInput.waitFor({ state: "visible" });
+        const createNewContactOption = this.page.getByText('Create New').last();
+        await createNewContactOption.waitFor({ state: "visible" });
+        await this.closeModalIfVisible();
+    }
+
 }
 

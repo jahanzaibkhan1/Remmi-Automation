@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.27118400000036">
-<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-13T05:02:43.480Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.199" errors="0">
-<testcase name="Related Contact › Verify that the agents list is displayed correctly" classname="Pages\Contacts\relatedContact.spec.ts" time="37.199">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.62923900000006">
+<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-13T05:07:11.263Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.583" errors="0">
+<testcase name="Related Contact › Search field should show &quot;Add New Contact&quot; when no results found" classname="Pages\Contacts\relatedContact.spec.ts" time="32.583">
 </testcase>
 </testsuite>
 </testsuites>
