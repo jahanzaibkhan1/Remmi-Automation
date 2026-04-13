@@ -7668,6 +7668,34 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify contract can be deleted from contract tab
+     */
+    async verifyContractCanBeDeletedFromContractTab(){
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const relatedPropertyTab=this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({state:'visible',timeout:8000});
+        await relatedPropertyTab.click();
+        const contractTab=this.page.getByRole('tab',{name:/contract/i});
+        await contractTab.waitFor({state:'visible',timeout:8000});
+        await contractTab.click();
+        const contractTable=this.page.locator('table.p-datatable-table').nth(7);
+        await expect(contractTable).toBeVisible({timeout:15000});
+        const firstRow=contractTable.locator('tbody tr').first();
+        await expect(firstRow).toBeVisible({timeout:15000});
+        const deleteButton=this.page.getByRole('button',{name:/delete/i}).first();
+        await deleteButton.evaluate(el=>el.scrollIntoView({behavior:'auto',block:'center',inline:'center'}));
+        await expect(deleteButton).toBeVisible({timeout:8000});
+        await deleteButton.click();
+        const confirmButton=this.page.getByRole('button',{name:'yes'});
+        await expect(confirmButton).toBeVisible({timeout:8000});
+        await confirmButton.click();
+        const successMessage = this.page.getByText(/deleted successfully/i).last();
+        await expect(successMessage).toBeVisible({ timeout: 8000 });
+        await this.closeModalIfVisible();
+    }
+
 
 }
 
