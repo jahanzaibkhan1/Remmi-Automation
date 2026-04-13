@@ -54,4 +54,9 @@ test.describe('Related Contact', () => {
         await contactActions.verifyNewlyCreatedContactIsAddedToRelatedList();
     });
 
+    test('Contact type and relationship tags should be draggable', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.verifyTagsAreDraggable();
+    });
+
 });

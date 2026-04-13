@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="58.591526000000535">
-<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-13T05:41:43.422Z" hostname="chromium" tests="1" failures="0" skipped="0" time="56.489" errors="0">
-<testcase name="Related Contact › Newly created contact should appear in the search list" classname="Pages\Contacts\relatedContact.spec.ts" time="56.489">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="28.1628479999993">
+<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-13T06:09:34.434Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.26" errors="0">
+<testcase name="Related Contact › Contact type and relationship tags should be draggable" classname="Pages\Contacts\relatedContact.spec.ts" time="25.26">
 </testcase>
 </testsuite>
 </testsuites>
