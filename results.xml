@@ -1,20 +1,6 @@
-<testsuites id="" name="" tests="8" failures="0" skipped="0" errors="0" time="47.12881400000001">
-<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-13T08:17:35.799Z" hostname="chromium" tests="8" failures="0" skipped="0" time="44.977" errors="0">
-<testcase name="Related Contact › Search and select an existing contact" classname="Pages\Contacts\relatedContact.spec.ts" time="22.096">
-</testcase>
-<testcase name="Related Contact › Associate button should add contact to the list" classname="Pages\Contacts\relatedContact.spec.ts" time="3.848">
-</testcase>
-<testcase name="Related Contact › The search icon is visible inside the Associate contact field" classname="Pages\Contacts\relatedContact.spec.ts" time="1.577">
-</testcase>
-<testcase name="Related Contact › Verify that the agents list is displayed correctly" classname="Pages\Contacts\relatedContact.spec.ts" time="2.92">
-</testcase>
-<testcase name="Related Contact › Search field should show &quot;Add New Contact&quot; when no results found" classname="Pages\Contacts\relatedContact.spec.ts" time="1.996">
-</testcase>
-<testcase name="Related Contact › Clicking &quot;Add New Contact&quot; should open a new contact form" classname="Pages\Contacts\relatedContact.spec.ts" time="1.549">
-</testcase>
-<testcase name="Related Contact › Newly created contact should appear in the search list" classname="Pages\Contacts\relatedContact.spec.ts" time="7.231">
-</testcase>
-<testcase name="Related Contact › Contact type and relationship tags should be draggable" classname="Pages\Contacts\relatedContact.spec.ts" time="3.76">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.67217799999984">
+<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-13T08:32:31.889Z" hostname="chromium" tests="1" failures="0" skipped="0" time="23.622" errors="0">
+<testcase name="Related Contact › Duplicate relationship tags should not be allowed" classname="Pages\Contacts\relatedContact.spec.ts" time="23.622">
 </testcase>
 </testsuite>
 </testsuites>
