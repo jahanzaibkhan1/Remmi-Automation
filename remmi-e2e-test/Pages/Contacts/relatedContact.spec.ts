@@ -24,4 +24,9 @@ test.describe('Related Contact', () => {
     await contactActions.verifySearchAndSelectRelatedContact();
   });
 
+  test('Associate button should add contact to the list', async ({ sessionPage }) => {
+    const contactActions = new ContactActions(sessionPage);
+    await contactActions.associateContactAndVerify();
+  });
+
 });

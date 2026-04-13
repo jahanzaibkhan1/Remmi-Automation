@@ -7743,7 +7743,7 @@ export class ContactActions {
         await selectDropdown.waitFor({ state: "visible" });
         await selectDropdown.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
         await selectDropdown.click({ force: true });
-   
+
         // Locate the search input for the contact within the "Related" tab
         const searchInputInRelatedTab = this.page.locator('#rContact0').getByRole('textbox', { name: 'Search' })
         await searchInputInRelatedTab.waitFor({ state: "visible" });
@@ -7767,6 +7767,68 @@ export class ContactActions {
         const alertOrSuccessLocator = duplicateAlert.or(successToast);
         await alertOrSuccessLocator.waitFor({ state: "visible" });
         await this.closeModalIfVisible();
+    }
+
+    /**
+     * Clicks the Associate button and verifies that the contact is added to the related contacts list.
+     */
+    async associateContactAndVerify() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        let relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        await relatedContactTab.waitFor({ state: "visible" });
+        await relatedContactTab.click();
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await selectDropdown.waitFor({ state: "visible" });
+        await selectDropdown.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
+        await selectDropdown.click({ force: true });
+        const searchInputInRelatedTab = this.page.locator('#rContact0').getByRole('textbox', { name: 'Search' })
+        await searchInputInRelatedTab.waitFor({ state: "visible" });
+        await searchInputInRelatedTab.fill('11 22');
+        const suggestedContact = this.page.getByRole('listitem').filter({ hasText: '22 (11@22.com.au)' }).last();
+        await suggestedContact.waitFor({ state: "visible" });
+        await suggestedContact.click();
+        await this.page.mouse.click(0, 0);
+        const associateButton = this.page.getByRole('button', { name: /associate/i }).last();
+        await associateButton.waitFor({ state: "visible" });
+        await associateButton.click();
+        const duplicateAlert = this.page.getByRole('alert', {
+           name: /user is already associate to this contact/i
+        });
+        const successToast = this.page.getByText(
+            /Contact attached successfully/i
+        );
+        const alertOrSuccessLocator = duplicateAlert.or(successToast);
+        await expect(alertOrSuccessLocator).toBeVisible({ timeout: 10000 });
+        const remainingContactRow = this.page.locator('table tr').filter({ hasText: 'seller' }).last();
+        if (await remainingContactRow.isVisible().catch(() => false)) {
+            await remainingContactRow.scrollIntoViewIfNeeded();
+            const deleteIcon2 = remainingContactRow.getByRole('img', { name: 'delete' }).first();
+            if (await deleteIcon2.isVisible().catch(() => false)) {
+                await deleteIcon2.click();
+                const yesButton2 = this.page.getByRole('button', { name: /^Yes$/i }).first();
+                if (await yesButton2.isVisible().catch(() => false)) {
+                    await yesButton2.click();
+                    await this.page.waitForTimeout(500);
+                    const removedToast2 = this.page.getByText(/Contact deleted successfully/i);
+                    await expect(removedToast2).toBeVisible({ timeout: 10000 });
+                }
+            }
+            await expect(remainingContactRow).not.toBeVisible({ timeout: 30000 });
+        }
+        const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).last();
+        await associatedContactRow.scrollIntoViewIfNeeded();
+        await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
+        const deleteIcon = associatedContactRow.getByRole('img', { name: 'delete' }).first();
+        await expect(deleteIcon).toBeVisible({ timeout: 10000 });
+        await deleteIcon.click();
+        const yesButton = this.page.getByRole('button', { name: /^Yes$/i }).first();
+        await expect(yesButton).toBeVisible({ timeout: 10000 });
+        await yesButton.click();
+        await this.page.waitForTimeout(500);
+        const removedToast = this.page.getByText(/Contact deleted successfully/i).first();
+        await expect(removedToast).toBeVisible({ timeout: 30000 });
+        await this.closeLeadModalIfVisible();
     }
 
 }
