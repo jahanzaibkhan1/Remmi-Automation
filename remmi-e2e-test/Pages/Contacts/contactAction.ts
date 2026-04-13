@@ -7607,7 +7607,7 @@ export class ContactActions {
         await propertyCell.waitFor({ state: 'visible', timeout: 15000 });
         await propertyCell.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
         await this.page.waitForTimeout(1000);
-        await propertyCell.click({force: true});
+        await propertyCell.click({ force: true });
         const newListingSection = this.page.locator('.col-md-7');
         await expect(newListingSection).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
@@ -7629,7 +7629,7 @@ export class ContactActions {
         await contractTab.waitFor({ state: 'visible', timeout: 8000 });
         await contractTab.click();
         // Wait for contracts to load (adjust table index as required by DOM)
-        const contractTable = this.page.locator('table.p-datatable-table').nth(7); 
+        const contractTable = this.page.locator('table.p-datatable-table').nth(7);
         await expect(contractTable).toBeVisible({ timeout: 15000 });
         const firstRow = contractTable.locator('tbody tr').first();
         await expect(firstRow).toBeVisible({ timeout: 15000 });
@@ -7671,25 +7671,25 @@ export class ContactActions {
     /**
      * Verify contract can be deleted from contract tab
      */
-    async verifyContractCanBeDeletedFromContractTab(){
+    async verifyContractCanBeDeletedFromContractTab() {
         await this.NavigateToContacts();
         await this.openFirstContact();
-        const relatedPropertyTab=this.page.locator("#pills-relatedProperty");
-        await relatedPropertyTab.waitFor({state:'visible',timeout:8000});
+        const relatedPropertyTab = this.page.locator("#pills-relatedProperty");
+        await relatedPropertyTab.waitFor({ state: 'visible', timeout: 8000 });
         await relatedPropertyTab.click();
-        const contractTab=this.page.getByRole('tab',{name:/contract/i});
-        await contractTab.waitFor({state:'visible',timeout:8000});
+        const contractTab = this.page.getByRole('tab', { name: /contract/i });
+        await contractTab.waitFor({ state: 'visible', timeout: 8000 });
         await contractTab.click();
-        const contractTable=this.page.locator('table.p-datatable-table').nth(7);
-        await expect(contractTable).toBeVisible({timeout:15000});
-        const firstRow=contractTable.locator('tbody tr').first();
-        await expect(firstRow).toBeVisible({timeout:15000});
-        const deleteButton=this.page.getByRole('button',{name:/delete/i}).first();
-        await deleteButton.evaluate(el=>el.scrollIntoView({behavior:'auto',block:'center',inline:'center'}));
-        await expect(deleteButton).toBeVisible({timeout:8000});
+        const contractTable = this.page.locator('table.p-datatable-table').nth(7);
+        await expect(contractTable).toBeVisible({ timeout: 15000 });
+        const firstRow = contractTable.locator('tbody tr').first();
+        await expect(firstRow).toBeVisible({ timeout: 15000 });
+        const deleteButton = this.page.getByRole('button', { name: /delete/i }).first();
+        await deleteButton.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
+        await expect(deleteButton).toBeVisible({ timeout: 8000 });
         await deleteButton.click();
-        const confirmButton=this.page.getByRole('button',{name:'yes'});
-        await expect(confirmButton).toBeVisible({timeout:8000});
+        const confirmButton = this.page.getByRole('button', { name: 'yes' });
+        await expect(confirmButton).toBeVisible({ timeout: 8000 });
         await confirmButton.click();
         const successMessage = this.page.getByText(/deleted successfully/i).last();
         await expect(successMessage).toBeVisible({ timeout: 8000 });
@@ -7725,6 +7725,47 @@ export class ContactActions {
         );
         expect(['center', 'left', 'right']).toContain(alignment);
 
+        await this.closeModalIfVisible();
+    }
+
+
+    /**
+     * Search and select an existing contact in the Related Contact tab.
+     */
+    async verifySearchAndSelectRelatedContact() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        let relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        await relatedContactTab.waitFor({ state: "visible" });
+        await relatedContactTab.click();
+
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await selectDropdown.waitFor({ state: "visible" });
+        await selectDropdown.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
+        await selectDropdown.click({ force: true });
+   
+        // Locate the search input for the contact within the "Related" tab
+        const searchInputInRelatedTab = this.page.locator('#rContact0').getByRole('textbox', { name: 'Search' })
+        await searchInputInRelatedTab.waitFor({ state: "visible" });
+        await searchInputInRelatedTab.fill('11 22');
+
+        // Wait for and select the matching contact option from the dropdown
+        const suggestedContact = this.page.getByRole('listitem').filter({ hasText: '22 (11@22.com.au)' }).last();
+        await suggestedContact.waitFor({ state: "visible" });
+        await suggestedContact.click();
+        await this.page.mouse.click(0, 0);
+        // In the Contact section, click "Associate Contact" or similar
+        const associateButton = this.page.getByRole('button', { name: /associate/i }).last();
+        await associateButton.waitFor({ state: "visible" });
+        await associateButton.click();
+        const duplicateAlert = this.page.getByRole('alert', {
+            name: /user is already associate to this contact/i
+        });
+        const successToast = this.page.getByText(
+            /Contact attached successfully/i
+        );
+        const alertOrSuccessLocator = duplicateAlert.or(successToast);
+        await alertOrSuccessLocator.waitFor({ state: "visible" });
         await this.closeModalIfVisible();
     }
 
