@@ -8245,5 +8245,35 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Deletes a contact after confirmation and verifies successful deletion.
+     */
+    async deleteContactAfterConfirmation() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        await relatedContactTab.waitFor({ state: "visible" });
+        await relatedContactTab.click();
+
+        const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).last();
+        await associatedContactRow.scrollIntoViewIfNeeded();
+        await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
+
+        const deleteIcon = associatedContactRow.getByRole('img', { name: 'delete' }).first();
+        await expect(deleteIcon).toBeVisible({ timeout: 10000 });
+        await deleteIcon.click();
+
+        // Confirm deletion in confirmation dialog
+        const yesButton = this.page.getByRole('button', { name: /^Yes$/i }).first();
+        await expect(yesButton).toBeVisible({ timeout: 10000 });
+        await yesButton.click();
+
+        // Wait for success message and verify the contact row is gone
+        const removedToast = this.page.getByText(/Contact deleted successfully/i);
+        await expect(removedToast).toBeVisible({ timeout: 10000 });
+
+        await this.closeModalIfVisible();
+    }
+
 }
 

@@ -79,4 +79,9 @@ test.describe('Related Contact', () => {
         await contactActions.verifyDeletingContactRequiresConfirmation();
     });
 
+    test('Contact should be deleted after confirmation', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.deleteContactAfterConfirmation();
+    });
+
 });
