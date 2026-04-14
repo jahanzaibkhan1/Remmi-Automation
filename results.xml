@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="29.45520699999854">
-<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-14T10:13:36.115Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.479" errors="0">
-<testcase name="Related Contact › UI should not allow blank contact selection" classname="Pages\Contacts\relatedContact.spec.ts" time="27.479">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.73814600000158">
+<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-14T10:16:57.342Z" hostname="chromium" tests="1" failures="0" skipped="0" time="32.753" errors="0">
+<testcase name="Related Contact › Search should return accurate results" classname="Pages\Contacts\relatedContact.spec.ts" time="32.753">
 </testcase>
 </testsuite>
 </testsuites>
