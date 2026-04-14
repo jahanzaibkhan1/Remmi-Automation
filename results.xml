@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.60066500000097">
-<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-13T10:17:46.945Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.615" errors="0">
-<testcase name="Related Contact › Delete icon should remove a contact from the list" classname="Pages\Contacts\relatedContact.spec.ts" time="29.615">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.69793099999987">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-04-14T03:57:10.935Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.592" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Verify that tasks can be deleted and removed from both calendar and task list" classname="Pages\Listing\listingCalendar.spec.ts" time="47.592">
 </testcase>
 </testsuite>
 </testsuites>
