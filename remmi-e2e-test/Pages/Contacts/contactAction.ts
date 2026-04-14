@@ -8301,5 +8301,47 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Search should return accurate results for related contact search.
+     * Verifies that searching with a keyword returns only relevant results in the dropdown.
+     */
+    async verifySearchReturnsAccurateResults(searchKeyword: string, expectedResults: string[]) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        await relatedContactTab.waitFor({ state: "visible" });
+        await relatedContactTab.click();
+
+        // Open the related contact dropdown
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await selectDropdown.waitFor({ state: "visible" });
+        await selectDropdown.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
+        await selectDropdown.click({ force: true });
+
+        // Fill the search input
+        const searchInputInRelatedTab = this.page.locator('#rContact0').getByRole('textbox', { name: 'Search' })
+        await searchInputInRelatedTab.waitFor({ state: "visible" });
+        await searchInputInRelatedTab.fill(searchKeyword);
+
+        // Wait for dropdown results to appear
+        const resultItems = this.page.getByRole('listitem');
+        await expect(resultItems.first()).toBeVisible({ timeout: 10000 });
+
+        // Collect result texts
+        const count = await resultItems.count();
+        const resultLabels: string[] = [];
+        for (let i = 0; i < count; i++) {
+            const text = await resultItems.nth(i).innerText();
+            resultLabels.push(text.trim());
+        }
+
+        // Ensure every expected result appears in results
+        for (const expected of expectedResults) {
+            expect(resultLabels).toContainEqual(expect.stringContaining(expected));
+        }
+
+        await this.closeModalIfVisible();
+    }
+
 }
 

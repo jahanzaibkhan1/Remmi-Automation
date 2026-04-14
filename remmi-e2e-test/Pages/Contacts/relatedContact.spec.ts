@@ -94,4 +94,9 @@ test.describe('Related Contact', () => {
         await contactActions.verifyBlankContactCannotBeSelected();
     });
 
+    test('Search should return accurate results', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.verifySearchReturnsAccurateResults('11 22', ['11 22']);
+    });
+
 });
