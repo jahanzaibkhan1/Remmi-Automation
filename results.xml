@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.58452599999681">
-<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-14T10:03:10.830Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.516" errors="0">
-<testcase name="Related Contact › Deleting a contact should require confirmation" classname="Pages\Contacts\relatedContact.spec.ts" time="28.516">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="28.170096999999135">
+<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-14T10:07:20.636Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.258" errors="0">
+<testcase name="Related Contact › Contact should be deleted after confirmation" classname="Pages\Contacts\relatedContact.spec.ts" time="25.258">
 </testcase>
 </testsuite>
 </testsuites>
