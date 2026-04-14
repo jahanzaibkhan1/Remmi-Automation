@@ -8355,5 +8355,21 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    public async verifyAccessRemmiButtonDisplaysPasswordField(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const associationsTab = this.page.getByRole("tab", { name: /associations/i });
+        await associationsTab.waitFor({ state: "visible" });
+        await associationsTab.click();
+        const accessRemmiButton = this.page.getByRole('button', { name: /access remmi/i });
+        await accessRemmiButton.waitFor({ state: "visible" });
+        await accessRemmiButton.click();
+        const passwordField = this.page.getByText('Password', { exact: true });
+        await expect(passwordField).toBeVisible({ timeout: 10000 });
+        const passwordInput = this.page.locator('label:has-text("Password") + input')
+        await expect(passwordInput).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
 }
 
