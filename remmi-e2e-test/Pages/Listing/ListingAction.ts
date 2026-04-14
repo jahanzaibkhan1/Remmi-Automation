@@ -24424,6 +24424,7 @@ export class ListingActions {
         await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
         await taskTitleInput.fill(newTitle);
 
+        await this.page.waitForTimeout(1200);
         // Edit Job Type (Task Type) field, wait for dropdown state, select "Door Knocks"
         const jobTypeSelector = this.page.locator('ng-select[formcontrolname="job_type_id"] .ng-select-container');
         await jobTypeSelector.waitFor({ state: 'visible' });
@@ -24446,6 +24447,7 @@ export class ListingActions {
         // Wait for confirmation that the task was updated successfully (alert or toast)
         const successToast = this.page.getByText(/task has been updated/i).last();
         await expect(successToast).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
 
         // Optionally close modal/popover if present
         const closetask = this.page.locator('.pi.pi-times').last();
