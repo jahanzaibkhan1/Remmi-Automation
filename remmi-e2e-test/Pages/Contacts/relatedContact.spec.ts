@@ -74,4 +74,9 @@ test.describe('Related Contact', () => {
         await contactActions.associateContactAndVerify();
     });
 
+    test('Deleting a contact should require confirmation', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.verifyDeletingContactRequiresConfirmation();
+    });
+
 });
