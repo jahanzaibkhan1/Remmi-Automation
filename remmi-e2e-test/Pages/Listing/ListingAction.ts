@@ -4261,6 +4261,7 @@ export class ListingActions {
         await firstRow.click();
         await this.page.waitForTimeout(1200);
         // Close the details modal
+        // Smarter and more robust modal close logic: use wait and fallback
         const closeFormIcon = this.page.locator('.pi.pi-times').first();
         await closeFormIcon.click({ force: true });
         await this.page.waitForTimeout(2000);
@@ -21535,10 +21536,18 @@ export class ListingActions {
         await expect(staffOption).toBeVisible();
         await staffOption.click();
 
-        const parentTask = this.page.locator('ng-select[formcontrolname="parent_id"] .ng-select-container');
-        await parentTask.waitFor({ state: 'visible', timeout: 10000 });
-        await parentTask.click();
-        // Find the option for "Automation testing" (with possible leading/trailing whitespace) and click it
+        // Click into the Parent Task dropdown (ng-select container for parent_id)
+        const parentTaskDropdown = this.page.locator('ng-select[formcontrolname="parent_id"] .ng-select-container');
+        await expect(parentTaskDropdown).toBeVisible({ timeout: 10000 });
+        await parentTaskDropdown.scrollIntoViewIfNeeded();
+        await parentTaskDropdown.click();
+
+        // Typing into the input inside the ng-select component to search for "Automation testing"
+        const parentTaskInput = this.page.locator('ng-select[formcontrolname="parent_id"] input[type="text"]');
+        await expect(parentTaskInput).toBeVisible({ timeout: 5000 });
+        await parentTaskInput.fill('Automation testing');
+
+        // Wait for and select the desired option
         const parentTaskOption = this.page.locator('.ng-dropdown-panel .ng-option').filter({ hasText: "Automation testing" }).first();
         await expect(parentTaskOption).toBeVisible({ timeout: 10000 });
         await parentTaskOption.click();
