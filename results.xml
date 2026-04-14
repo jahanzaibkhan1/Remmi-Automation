@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.2775549999997">
-<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-14T10:22:01.893Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.418" errors="0">
-<testcase name="Related Contact › Contacts should be sorted correctly when clicking the sort icon" classname="Pages\Contacts\relatedContact.spec.ts" time="40.418">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="26.273188000001014">
+<testsuite name="Pages\Contacts\Association.spec.ts" timestamp="2026-04-14T10:31:11.645Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.27" errors="0">
+<testcase name="Associations Tab Tests - Remmi E2E › Verify that the Associations tab opens correctly" classname="Pages\Contacts\Association.spec.ts" time="24.27">
 </testcase>
 </testsuite>
 </testsuites>
