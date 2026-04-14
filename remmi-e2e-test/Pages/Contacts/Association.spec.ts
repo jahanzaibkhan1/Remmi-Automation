@@ -24,4 +24,9 @@ test.describe('Associations Tab Tests - Remmi E2E', () => {
     await contact.verifyAssociationsTabOpensCorrectly();
   });
 
+  test('Verify that the "Access Remmi" button displays the password field', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyAccessRemmiButtonDisplaysPasswordField();
+  });
+
 });
