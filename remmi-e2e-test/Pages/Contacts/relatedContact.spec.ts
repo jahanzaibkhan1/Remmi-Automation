@@ -84,4 +84,9 @@ test.describe('Related Contact', () => {
         await contactActions.deleteContactAfterConfirmation();
     });
 
+    test('Contact deletion should not affect other contacts', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.associateContactAndVerify();
+    });
+
 });
