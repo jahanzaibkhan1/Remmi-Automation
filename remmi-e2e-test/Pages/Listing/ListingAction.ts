@@ -1304,16 +1304,19 @@ export class ListingActions {
         // Find and click the edit icon
         const editIcon = this.page.locator('.ml-3.cp.ng-star-inserted').first(); // adjust selector if needed
         await editIcon.scrollIntoViewIfNeeded();
+        await editIcon.waitFor({ state: 'visible', timeout: 10000 });
+        await this.page.waitForTimeout(1000);
         await editIcon.click({ force: true });
+   
 
         // Optionally, add further steps to interact with the edit modal or form
         const editForm = this.page.locator('#rightbarwithscroll');
         await expect(editForm).toBeVisible({ timeout: 10000 });
 
-        const close = this.page.locator('.pi.pi-times').first()
-
-        await close.click({ force: true })
-
+        const close = this.page.locator('.pi.pi-times').first();
+        if (await close.isVisible().catch(() => false)) {
+            await close.click();
+        }
         await this.page.waitForTimeout(1000);
         await this.resetFilters()
 
@@ -4258,6 +4261,7 @@ export class ListingActions {
         await firstRow.click();
         await this.page.waitForTimeout(1200);
         // Close the details modal
+        // Smarter and more robust modal close logic: use wait and fallback
         const closeFormIcon = this.page.locator('.pi.pi-times').first();
         await closeFormIcon.click({ force: true });
         await this.page.waitForTimeout(2000);
@@ -21532,10 +21536,18 @@ export class ListingActions {
         await expect(staffOption).toBeVisible();
         await staffOption.click();
 
-        const parentTask = this.page.locator('ng-select[formcontrolname="parent_id"] .ng-select-container');
-        await parentTask.waitFor({ state: 'visible', timeout: 10000 });
-        await parentTask.click();
-        // Find the option for "Automation testing" (with possible leading/trailing whitespace) and click it
+        // Click into the Parent Task dropdown (ng-select container for parent_id)
+        const parentTaskDropdown = this.page.locator('ng-select[formcontrolname="parent_id"] .ng-select-container');
+        await expect(parentTaskDropdown).toBeVisible({ timeout: 10000 });
+        await parentTaskDropdown.scrollIntoViewIfNeeded();
+        await parentTaskDropdown.click();
+
+        // Typing into the input inside the ng-select component to search for "Automation testing"
+        const parentTaskInput = this.page.locator('ng-select[formcontrolname="parent_id"] input[type="text"]');
+        await expect(parentTaskInput).toBeVisible({ timeout: 5000 });
+        await parentTaskInput.fill('Automation testing');
+
+        // Wait for and select the desired option
         const parentTaskOption = this.page.locator('.ng-dropdown-panel .ng-option').filter({ hasText: "Automation testing" }).first();
         await expect(parentTaskOption).toBeVisible({ timeout: 10000 });
         await parentTaskOption.click();
@@ -24424,6 +24436,7 @@ export class ListingActions {
         await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
         await taskTitleInput.fill(newTitle);
 
+        await this.page.waitForTimeout(1200);
         // Edit Job Type (Task Type) field, wait for dropdown state, select "Door Knocks"
         const jobTypeSelector = this.page.locator('ng-select[formcontrolname="job_type_id"] .ng-select-container');
         await jobTypeSelector.waitFor({ state: 'visible' });
@@ -24446,6 +24459,7 @@ export class ListingActions {
         // Wait for confirmation that the task was updated successfully (alert or toast)
         const successToast = this.page.getByText(/task has been updated/i).last();
         await expect(successToast).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
 
         // Optionally close modal/popover if present
         const closetask = this.page.locator('.pi.pi-times').last();
