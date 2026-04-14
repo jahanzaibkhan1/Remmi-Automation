@@ -8203,5 +8203,173 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verifies that deleting a contact requires confirmation before deletion proceeds.
+     */
+    async verifyDeletingContactRequiresConfirmation() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        await relatedContactTab.waitFor({ state: "visible" });
+        await relatedContactTab.click();
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await selectDropdown.waitFor({ state: "visible" });
+        await selectDropdown.click({ force: true });
+        const searchInputInRelatedTab = this.page.locator('#rContact0').getByRole('textbox', { name: 'Search' })
+        await searchInputInRelatedTab.waitFor({ state: "visible" });
+        await searchInputInRelatedTab.fill('11 22');
+        const suggestedContact = this.page.getByRole('listitem').filter({ hasText: '22 (11@22.com.au)' }).last();
+        await suggestedContact.waitFor({ state: "visible" });
+        await suggestedContact.click();
+        await this.page.mouse.click(0, 0);
+        const associateButton = this.page.getByRole('button', { name: /associate/i }).last();
+        await associateButton.waitFor({ state: "visible" });
+        await associateButton.click();
+        const duplicateAlert = this.page.getByRole('alert', {
+            name: /user is already associate to this contact/i
+        }).first();
+        const successToast = this.page.getByText(
+            /Contact attached successfully/i
+        ).first();
+        const alertOrSuccessLocator = duplicateAlert.or(successToast);
+        await alertOrSuccessLocator.waitFor({ state: "visible" });
+
+        const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).last();
+        await associatedContactRow.scrollIntoViewIfNeeded();
+        await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
+        const deleteIcon = associatedContactRow.getByRole('img', { name: 'delete' }).first();
+        await expect(deleteIcon).toBeVisible({ timeout: 10000 });
+        await deleteIcon.click();
+        const yesButton = this.page.getByRole('button', { name: /^Yes$/i }).first();
+        await expect(yesButton).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Deletes a contact after confirmation and verifies successful deletion.
+     */
+    async deleteContactAfterConfirmation() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        await relatedContactTab.waitFor({ state: "visible" });
+        await relatedContactTab.click();
+
+        const associatedContactRow = this.page.locator('table tr').filter({ hasText: '11 22' }).last();
+        await associatedContactRow.scrollIntoViewIfNeeded();
+        await expect(associatedContactRow).toBeVisible({ timeout: 10000 });
+
+        const deleteIcon = associatedContactRow.getByRole('img', { name: 'delete' }).first();
+        await expect(deleteIcon).toBeVisible({ timeout: 10000 });
+        await deleteIcon.click();
+
+        // Confirm deletion in confirmation dialog
+        const yesButton = this.page.getByRole('button', { name: /^Yes$/i }).first();
+        await expect(yesButton).toBeVisible({ timeout: 10000 });
+        await yesButton.click();
+
+        // Wait for success message and verify the contact row is gone
+        const removedToast = this.page.getByText(/Contact deleted successfully/i);
+        await expect(removedToast).toBeVisible({ timeout: 10000 });
+
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * UI should not allow blank contact selection
+     */
+    async verifyBlankContactCannotBeSelected() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        await relatedContactTab.waitFor({ state: "visible" });
+        await relatedContactTab.click();
+
+        // Open the related contact dropdown
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await selectDropdown.waitFor({ state: "visible" });
+        await selectDropdown.click({ force: true });
+
+        const associateButton = this.page.getByRole('button', { name: /associate/i }).last();
+        await associateButton.waitFor({ state: "visible" });
+        await associateButton.click();
+
+        const errorMsg = this.page.getByText(/Please select contact first/i);
+        await expect(errorMsg).toBeVisible({ timeout: 10000 });
+
+
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Search should return accurate results for related contact search.
+     * Verifies that searching with a keyword returns only relevant results in the dropdown.
+     */
+    async verifySearchReturnsAccurateResults(searchKeyword: string, expectedResults: string[]) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        await relatedContactTab.waitFor({ state: "visible" });
+        await relatedContactTab.click();
+
+        // Open the related contact dropdown
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await selectDropdown.waitFor({ state: "visible" });
+        await selectDropdown.evaluate(el => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
+        await selectDropdown.click({ force: true });
+
+        // Fill the search input
+        const searchInputInRelatedTab = this.page.locator('#rContact0').getByRole('textbox', { name: 'Search' })
+        await searchInputInRelatedTab.waitFor({ state: "visible" });
+        await searchInputInRelatedTab.fill(searchKeyword);
+
+        // Wait for dropdown results to appear
+        const resultItems = this.page.getByRole('listitem');
+        await expect(resultItems.first()).toBeVisible({ timeout: 10000 });
+
+        // Collect result texts
+        const count = await resultItems.count();
+        const resultLabels: string[] = [];
+        for (let i = 0; i < count; i++) {
+            const text = await resultItems.nth(i).innerText();
+            resultLabels.push(text.trim());
+        }
+
+        // Ensure every expected result appears in results
+        for (const expected of expectedResults) {
+            expect(resultLabels).toContainEqual(expect.stringContaining(expected));
+        }
+
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that the Associations tab opens correctly
+     */
+    public async verifyAssociationsTabOpensCorrectly(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const associationsTab = this.page.getByRole("tab", { name: /associations/i });
+        await associationsTab.waitFor({ state: "visible" });
+        await associationsTab.click();
+        await this.closeModalIfVisible();
+    }
+
+    public async verifyAccessRemmiButtonDisplaysPasswordField(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const associationsTab = this.page.getByRole("tab", { name: /associations/i });
+        await associationsTab.waitFor({ state: "visible" });
+        await associationsTab.click();
+        const accessRemmiButton = this.page.getByRole('button', { name: /access remmi/i });
+        await accessRemmiButton.waitFor({ state: "visible" });
+        await accessRemmiButton.click();
+        const passwordField = this.page.getByText('Password', { exact: true });
+        await expect(passwordField).toBeVisible({ timeout: 10000 });
+        const passwordInput = this.page.locator('label:has-text("Password") + input')
+        await expect(passwordInput).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
 }
 

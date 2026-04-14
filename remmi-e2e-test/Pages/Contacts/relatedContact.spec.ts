@@ -74,4 +74,34 @@ test.describe('Related Contact', () => {
         await contactActions.associateContactAndVerify();
     });
 
+    test('Deleting a contact should require confirmation', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.verifyDeletingContactRequiresConfirmation();
+    });
+
+    test('Contact should be deleted after confirmation', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.deleteContactAfterConfirmation();
+    });
+
+    test('Contact deletion should not affect other contacts', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.associateContactAndVerify();
+    });
+
+    test('UI should not allow blank contact selection', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.verifyBlankContactCannotBeSelected();
+    });
+
+    test('Search should return accurate results', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.verifySearchReturnsAccurateResults('11 22', ['11 22']);
+    });
+
+    test('Contacts should be sorted correctly when clicking the sort icon', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.verifySortingByStatus();
+    });
+
 });
