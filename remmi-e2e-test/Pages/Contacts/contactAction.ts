@@ -8275,5 +8275,31 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * UI should not allow blank contact selection
+     */
+    async verifyBlankContactCannotBeSelected() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
+        await relatedContactTab.waitFor({ state: "visible" });
+        await relatedContactTab.click();
+
+        // Open the related contact dropdown
+        const selectDropdown = this.page.locator('div.tags:has-text("Select")').last();
+        await selectDropdown.waitFor({ state: "visible" });
+        await selectDropdown.click({ force: true });
+
+        const associateButton = this.page.getByRole('button', { name: /associate/i }).last();
+        await associateButton.waitFor({ state: "visible" });
+        await associateButton.click();
+
+        const errorMsg = this.page.getByText(/Please select contact first/i);
+        await expect(errorMsg).toBeVisible({ timeout: 10000 });
+
+
+        await this.closeModalIfVisible();
+    }
+
 }
 
