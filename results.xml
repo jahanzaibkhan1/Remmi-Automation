@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="28.253984999999403">
-<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-14T10:09:24.478Z" hostname="chromium" tests="1" failures="0" skipped="0" time="26.265" errors="0">
-<testcase name="Related Contact › Contact deletion should not affect other contacts" classname="Pages\Contacts\relatedContact.spec.ts" time="26.265">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="29.45520699999854">
+<testsuite name="Pages\Contacts\relatedContact.spec.ts" timestamp="2026-04-14T10:13:36.115Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.479" errors="0">
+<testcase name="Related Contact › UI should not allow blank contact selection" classname="Pages\Contacts\relatedContact.spec.ts" time="27.479">
 </testcase>
 </testsuite>
 </testsuites>

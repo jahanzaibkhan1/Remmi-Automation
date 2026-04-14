@@ -89,4 +89,9 @@ test.describe('Related Contact', () => {
         await contactActions.associateContactAndVerify();
     });
 
+    test('UI should not allow blank contact selection', async ({ sessionPage }) => {
+        const contactActions = new ContactActions(sessionPage);
+        await contactActions.verifyBlankContactCannotBeSelected();
+    });
+
 });
