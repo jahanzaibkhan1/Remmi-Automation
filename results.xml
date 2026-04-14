@@ -1,6 +1,140 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.69793099999987">
-<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-04-14T03:57:10.935Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.592" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Verify that tasks can be deleted and removed from both calendar and task list" classname="Pages\Listing\listingCalendar.spec.ts" time="47.592">
+<testsuites id="" name="" tests="46" failures="0" skipped="0" errors="0" time="257.2638160000006">
+<testsuite name="Pages\Listing\ListingGridView.spec.ts" timestamp="2026-04-14T05:01:59.317Z" hostname="chromium" tests="46" failures="0" skipped="0" time="254.727" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 1: Searching for a valid contact" classname="Pages\Listing\ListingGridView.spec.ts" time="42.273">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 2: Searching for an invalid contact" classname="Pages\Listing\ListingGridView.spec.ts" time="2.474">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 3: Searching with special characters" classname="Pages\Listing\ListingGridView.spec.ts" time="2.366">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 4: Searching with an empty search field" classname="Pages\Listing\ListingGridView.spec.ts" time="2.331">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 5: Selecting a single property type filters listings correctly" classname="Pages\Listing\ListingGridView.spec.ts" time="3.429">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 6: Selecting multiple property types filters listings correctly" classname="Pages\Listing\ListingGridView.spec.ts" time="3.852">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Using &quot;Select All&quot; option selects all property types and filters listings accordingly" classname="Pages\Listing\ListingGridView.spec.ts" time="3.446">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 8: Using &quot;Deselect All&quot; option deselects all property types and resets filter" classname="Pages\Listing\ListingGridView.spec.ts" time="4.012">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 9: Searching within property type filter displays correct filtered property types" classname="Pages\Listing\ListingGridView.spec.ts" time="4.346">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 10: Closing the property type dropdown works as expected" classname="Pages\Listing\ListingGridView.spec.ts" time="2.42">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 11: Selecting a single suburb with assertions" classname="Pages\Listing\ListingGridView.spec.ts" time="3.452">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 12: Selecting multiple suburbs filters listings correctly" classname="Pages\Listing\ListingGridView.spec.ts" time="4.923">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 13: Using &quot;Select All&quot; in suburb dropdown selects all suburbs and displays all listings" classname="Pages\Listing\ListingGridView.spec.ts" time="4.465">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 14: Using &quot;Deselect All&quot; in suburb dropdown deselects all suburbs and resets filter" classname="Pages\Listing\ListingGridView.spec.ts" time="3.485">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 15: Searching for a suburb in the dropdown filters listings" classname="Pages\Listing\ListingGridView.spec.ts" time="4.343">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Selecting a single listing status filters the listings correctly" classname="Pages\Listing\ListingGridView.spec.ts" time="3.481">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 17: Selecting multiple listing statuses filters listings correctly" classname="Pages\Listing\ListingGridView.spec.ts" time="3.775">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 18: Using &quot;Select All&quot; in status filter selects all listing statuses and displays all listings" classname="Pages\Listing\ListingGridView.spec.ts" time="3.45">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 19: Using &quot;Deselect All&quot; in status filter deselects all statuses and resets filter" classname="Pages\Listing\ListingGridView.spec.ts" time="4.321">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 20: Searching within listing status filter filters status options" classname="Pages\Listing\ListingGridView.spec.ts" time="4.554">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 21: Selecting a single listing type filters listings correctly" classname="Pages\Listing\ListingGridView.spec.ts" time="4.182">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 22: Selecting multiple listing types filters listings correctly" classname="Pages\Listing\ListingGridView.spec.ts" time="5.057">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 23: Selecting a single agent filters listings to show only those for the chosen agent" classname="Pages\Listing\ListingGridView.spec.ts" time="2.93">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 24: Selecting multiple agents filters listings to show only those for the chosen agents" classname="Pages\Listing\ListingGridView.spec.ts" time="3.76">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 25: Selecting a single contract status" classname="Pages\Listing\ListingGridView.spec.ts" time="3.102">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 26: Selecting multiple contract statuses filters listings correctly" classname="Pages\Listing\ListingGridView.spec.ts" time="3.599">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 27: Selecting a contact creation date" classname="Pages\Listing\ListingGridView.spec.ts" time="1.721">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Selecting an invalid date" classname="Pages\Listing\ListingGridView.spec.ts" time="1.405">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 29: Checking grid view display" classname="Pages\Listing\ListingGridView.spec.ts" time="0.006">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 30: Checking contact details in grid view" classname="Pages\Listing\ListingGridView.spec.ts" time="1.336">
+<system-out>
+<![CDATA[Heading: 4/934 Sauer Ford, East Albury, North Dakota 53901
+Status: For Lease
+Beds: 0
+Baths: 0
+Cars: 0
+Area: 0m2
+Price: 
+]]>
+</system-out>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 31: Expanding a Listing card" classname="Pages\Listing\ListingGridView.spec.ts" time="1.053">
+<system-out>
+<![CDATA[Expanded Card Details (trimmed): Property TypeAlpineListing TypeAuctionAgentCompare Listing
+]]>
+</system-out>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 32: Collapsing an expanded Listing card" classname="Pages\Listing\ListingGridView.spec.ts" time="3.317">
+<system-out>
+<![CDATA[Expanded Card Details (trimmed): Property TypeHouseListing TypeRentalAgentAutomation TestCompare Listing
+]]>
+</system-out>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 33: Deleting a listing card" classname="Pages\Listing\ListingGridView.spec.ts" time="5.485">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 34: Editing a listing card" classname="Pages\Listing\ListingGridView.spec.ts" time="9.715">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 35: Editing and saving changes on a listing card" classname="Pages\Listing\ListingGridView.spec.ts" time="7.13">
+<system-out>
+<![CDATA[Selected Property Type: House
+]]>
+</system-out>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 36: Opening a listing portal" classname="Pages\Listing\ListingGridView.spec.ts" time="9.5">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 37: Comparing two listing cards" classname="Pages\Listing\ListingGridView.spec.ts" time="7.639">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 38: Comparing more than two listing cards" classname="Pages\Listing\ListingGridView.spec.ts" time="10.58">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 39: Resetting all filters restores listing defaults" classname="Pages\Listing\ListingGridView.spec.ts" time="4.262">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 40: Switching to grid view displays" classname="Pages\Listing\ListingGridView.spec.ts" time="0.006">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 41: Switching to list view displays" classname="Pages\Listing\ListingGridView.spec.ts" time="2.193">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 42: Opening the contact form" classname="Pages\Listing\ListingGridView.spec.ts" time="6.845">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 43: Fill required fields and click &quot;Save&quot;" classname="Pages\Listing\ListingGridView.spec.ts" time="11.217">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 44: Creating a Listing with missing required fields shows validation error" classname="Pages\Listing\ListingGridView.spec.ts" time="5.177">
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 45: Scrolling down should load more listings" classname="Pages\Listing\ListingGridView.spec.ts" time="14.098">
+<system-out>
+<![CDATA[Total Records Label: [33m155[39m
+Initial cards: [33m15[39m
+Loaded so far: 30
+Loaded so far: 45
+Loaded so far: 45
+Loaded so far: 60
+Loaded so far: 60
+Loaded so far: 75
+Loaded so far: 75
+Loaded so far: 90
+Loaded so far: 90
+Loaded so far: 105
+Loaded so far: 105
+Loaded so far: 120
+Loaded so far: 120
+Loaded so far: 135
+Loaded so far: 150
+Loaded so far: 155
+Total cards loaded: [33m155[39m
+]]>
+</system-out>
+</testcase>
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 46: Searching and then applying filters" classname="Pages\Listing\ListingGridView.spec.ts" time="18.214">
 </testcase>
 </testsuite>
 </testsuites>

@@ -1304,16 +1304,19 @@ export class ListingActions {
         // Find and click the edit icon
         const editIcon = this.page.locator('.ml-3.cp.ng-star-inserted').first(); // adjust selector if needed
         await editIcon.scrollIntoViewIfNeeded();
+        await editIcon.waitFor({ state: 'visible', timeout: 10000 });
+        await this.page.waitForTimeout(1000);
         await editIcon.click({ force: true });
+   
 
         // Optionally, add further steps to interact with the edit modal or form
         const editForm = this.page.locator('#rightbarwithscroll');
         await expect(editForm).toBeVisible({ timeout: 10000 });
 
-        const close = this.page.locator('.pi.pi-times').first()
-
-        await close.click({ force: true })
-
+        const close = this.page.locator('.pi.pi-times').first();
+        if (await close.isVisible().catch(() => false)) {
+            await close.click();
+        }
         await this.page.waitForTimeout(1000);
         await this.resetFilters()
 
