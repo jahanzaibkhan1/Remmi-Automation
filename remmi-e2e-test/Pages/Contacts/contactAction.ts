@@ -8343,5 +8343,17 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify that the Associations tab opens correctly
+     */
+    public async verifyAssociationsTabOpensCorrectly(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const associationsTab = this.page.getByRole("tab", { name: /associations/i });
+        await associationsTab.waitFor({ state: "visible" });
+        await associationsTab.click();
+        await this.closeModalIfVisible();
+    }
+
 }
 
