@@ -8021,7 +8021,7 @@ export class ContactActions {
                 const buyerTag = this.page
                     .locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Buyer' })
                     .last();
-                    await buyerTag.scrollIntoViewIfNeeded();
+                await buyerTag.scrollIntoViewIfNeeded();
 
                 await expect(buyerTag).toBeVisible({ timeout: 10000 });
 
@@ -8097,7 +8097,7 @@ export class ContactActions {
         const buyerTag = this.page
             .locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Buyer' })
             .last();
-            await buyerTag.scrollIntoViewIfNeeded();
+        await buyerTag.scrollIntoViewIfNeeded();
 
         await expect(buyerTag).toBeVisible({ timeout: 10000 });
 
@@ -8412,6 +8412,24 @@ export class ContactActions {
         await noteTab.click();
         const noteTabPanel = this.page.locator('div[role="tabpanel"]').filter({ hasText: /note/i });
         await expect(noteTabPanel).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+    /**
+     * Verify that clicking the "+" button in the Notes section displays the note fields
+     */
+    public async verifyAddNoteButtonDisplaysNoteFields(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const noteTab = this.page.getByRole("tab", { name: /note/i });
+        await noteTab.waitFor({ state: "visible", timeout: 8000 });
+        await noteTab.click();
+        const addButton = this.page.getByRole('button', { name: '' }).last();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+        const noteTitleInput = this.page.getByRole('textbox', { name: 'Add note name or search' });
+        const noteContentInput = this.page.locator('.editor');
+        await expect(noteTitleInput).toBeVisible({ timeout: 10000 });
+        await expect(noteContentInput).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
     }
 }

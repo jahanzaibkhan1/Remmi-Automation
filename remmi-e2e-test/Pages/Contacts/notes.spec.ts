@@ -19,9 +19,14 @@ const test = base.extend<{ sessionPage: any }>({
 
 test.describe('Notes Tab Tests - Remmi E2E', () => {
 
-  test('Verify that the NOTE Tab opens correctly', async ({ sessionPage }) => {
+  test('Test 1: Verify that the NOTE Tab opens correctly', async ({ sessionPage }) => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyNoteTabOpensCorrectly();
   });
-  
+
+  test('Test 2: Verify that clicking the "+" button in the Notes section displays the note fields', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyAddNoteButtonDisplaysNoteFields();
+  });
+
 });
