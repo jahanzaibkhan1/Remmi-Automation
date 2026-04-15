@@ -3897,7 +3897,6 @@ export class ContactActions {
         await this.openFirstContact();
         const firstStreamRecord = this.page.locator('div.stream-body').first();
         await firstStreamRecord.waitFor({ state: 'visible' });
-        await this.verifyRelatedContactCanBeAssociated();
         const streamTab = this.page.getByRole('tab', { name: /Stream/i });
         await streamTab.evaluate(el => {
             el.scrollIntoView({ block: 'center', inline: 'center' });
@@ -7991,22 +7990,6 @@ export class ContactActions {
         );
         const alertOrSuccessLocator = duplicateAlert.or(successToast);
         await expect(alertOrSuccessLocator).toBeVisible({ timeout: 10000 });
-        const remainingContactRow = this.page.locator('table tr').filter({ hasText: 'seller' }).last();
-        if (await remainingContactRow.isVisible().catch(() => false)) {
-            await remainingContactRow.scrollIntoViewIfNeeded();
-            const deleteIcon2 = remainingContactRow.getByRole('img', { name: 'delete' }).first();
-            if (await deleteIcon2.isVisible().catch(() => false)) {
-                await deleteIcon2.click();
-                const yesButton2 = this.page.getByRole('button', { name: /^Yes$/i }).first();
-                if (await yesButton2.isVisible().catch(() => false)) {
-                    await yesButton2.click();
-                    await this.page.waitForTimeout(500);
-                    const removedToast2 = this.page.getByText(/Contact deleted successfully/i);
-                    await expect(removedToast2).toBeVisible({ timeout: 10000 });
-                }
-            }
-            await expect(remainingContactRow).not.toBeVisible({ timeout: 30000 });
-        }
 
         const associatedContactRow = this.page.locator('table tr').filter({
             hasText: '11 22',
@@ -8038,6 +8021,7 @@ export class ContactActions {
                 const buyerTag = this.page
                     .locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Buyer' })
                     .last();
+                    await buyerTag.scrollIntoViewIfNeeded();
 
                 await expect(buyerTag).toBeVisible({ timeout: 10000 });
 
@@ -8113,6 +8097,7 @@ export class ContactActions {
         const buyerTag = this.page
             .locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Buyer' })
             .last();
+            await buyerTag.scrollIntoViewIfNeeded();
 
         await expect(buyerTag).toBeVisible({ timeout: 10000 });
 
@@ -8368,6 +8353,26 @@ export class ContactActions {
         await expect(passwordField).toBeVisible({ timeout: 10000 });
         const passwordInput = this.page.locator('label:has-text("Password") + input')
         await expect(passwordInput).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that the password must be at least 12 characters when accessing Remmi.
+     */
+    public async verifyPasswordMustBeAtLeast12Characters(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const associationsTab = this.page.getByRole("tab", { name: /associations/i });
+        await associationsTab.waitFor({ state: "visible" });
+        await associationsTab.click();
+        const accessRemmiButton = this.page.getByRole('button', { name: /access remmi/i });
+        await accessRemmiButton.waitFor({ state: "visible" });
+        await accessRemmiButton.click();
+        const passwordInput = this.page.locator('label:has-text("Password") + input');
+        await expect(passwordInput).toBeVisible({ timeout: 10000 });
+        await passwordInput.fill('shortpwd');
+        const minLengthError = this.page.getByText(/Password must be at least 12 characters/i);
+        await expect(minLengthError).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
     }
 

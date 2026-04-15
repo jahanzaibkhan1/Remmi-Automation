@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.55592500000075">
-<testsuite name="Pages\Contacts\Association.spec.ts" timestamp="2026-04-14T10:51:43.906Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.606" errors="0">
-<testcase name="Associations Tab Tests - Remmi E2E › Verify that the &quot;Access Remmi&quot; button displays the password field" classname="Pages\Contacts\Association.spec.ts" time="35.606">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.040560000000525">
+<testsuite name="Pages\Contacts\Association.spec.ts" timestamp="2026-04-15T06:20:11.743Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.941" errors="0">
+<testcase name="Associations Tab Tests - Remmi E2E › Verify password must be at least 12 characters " classname="Pages\Contacts\Association.spec.ts" time="36.941">
 </testcase>
 </testsuite>
 </testsuites>
