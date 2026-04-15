@@ -8526,5 +8526,58 @@ export class ContactActions {
         await updatedNoteCell.waitFor({ state: 'visible', timeout: 10000 });
         await this.closeModalIfVisible();
     }
+
+    public async verifyNotesRenderListsCorrectly(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible();
+        await noteTab.click();
+        const addButton = this.page.getByRole('button', { name: '' }).last();
+        await expect(addButton).toBeVisible();
+        await addButton.click();
+        const noteTitle = 'List Test Note';
+        const noteTitleInput = this.page.getByRole('textbox', { name: 'Add note name or search' });
+        const editor = this.page.locator('.editor');
+        const toolbar = this.page.locator('.editControls');
+        await expect(noteTitleInput).toBeVisible();
+        await noteTitleInput.fill(noteTitle);
+        const optionList = this.page.locator("//div[contains(@class,'list_')]//ul");
+        if (await optionList.isVisible().catch(() => false)) {
+            const matchedOption = this.page.locator('p.ml-2', { hasText: noteTitle });
+            if (await matchedOption.isVisible().catch(() => false)) {
+                await matchedOption.click({ force: true });
+            }
+        }
+        await expect(editor).toBeVisible();
+        await editor.click();
+        const listButtons = toolbar.locator('.note-btn').filter({
+            has: this.page.locator('.pi-list')
+        });
+        const bulletBtn = listButtons.first();
+        const numberedBtn = listButtons.nth(1);
+        await bulletBtn.click();
+        await this.page.waitForTimeout(200);
+        await this.page.keyboard.type('Bullet 1');
+        await this.page.keyboard.press('Enter');
+        await this.page.keyboard.type('Bullet 2');
+        await this.page.keyboard.press('Enter');
+        await this.page.keyboard.press('Enter');
+        await this.page.waitForTimeout(200);
+        await editor.click();
+        await numberedBtn.click();
+        await this.page.waitForTimeout(200);
+        await this.page.keyboard.type('Number 1');
+        await this.page.keyboard.press('Enter');
+        await this.page.keyboard.type('Number 2');
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).last();
+        await expect(saveButton).toBeVisible();
+        await saveButton.click();
+        await expect(this.page.getByText('Saved successfully')).toBeVisible();
+        await this.page.waitForTimeout(300);
+        const allListItems = this.page.getByRole('cell', { name: 'Bullet 1 Bullet 2 Number 1 Number' }).first();
+        await expect(allListItems).toBeVisible({timeout:10000});
+        await this.closeModalIfVisible();
+    }
 }
 
