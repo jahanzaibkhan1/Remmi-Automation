@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.117648000000045">
-<testsuite name="Pages\Contacts\notes.spec.ts" timestamp="2026-04-15T06:42:46.846Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.936" errors="0">
-<testcase name="Notes Tab Tests - Remmi E2E › Test 4: Verify that clicking &quot;Save&quot; saves the note successfully" classname="Pages\Contacts\notes.spec.ts" time="28.936">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.86886400000006">
+<testsuite name="Pages\Contacts\notes.spec.ts" timestamp="2026-04-15T06:47:00.550Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.864" errors="0">
+<testcase name="Notes Tab Tests - Remmi E2E › Test 5: Verify that clicking the edit icon allows updating a note" classname="Pages\Contacts\notes.spec.ts" time="29.864">
 </testcase>
 </testsuite>
 </testsuites>

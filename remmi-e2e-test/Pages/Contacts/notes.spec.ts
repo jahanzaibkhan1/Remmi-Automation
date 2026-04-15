@@ -39,4 +39,9 @@ test.describe('Notes Tab Tests - Remmi E2E', () => {
     await contact.verifyNotesSaveAddsNoteSuccessfully();
   });
 
+  test('Test 5: Verify that clicking the edit icon allows updating a note', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyNoteEditFunctionality();
+  });
+
 });
