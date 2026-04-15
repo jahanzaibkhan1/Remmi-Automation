@@ -69,4 +69,9 @@ test.describe('Notes Tab Tests - Remmi E2E', () => {
     await contact.verifyNoteCanBeAddedToOtherModulesFromNotesTab();
   });
 
+  test('Test 11: Verify that the list is properly aligned with the status column', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyListAlignmentWithStatusColumn();
+  });
+
 });
