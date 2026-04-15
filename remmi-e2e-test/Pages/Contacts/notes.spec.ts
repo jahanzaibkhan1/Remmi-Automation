@@ -49,4 +49,9 @@ test.describe('Notes Tab Tests - Remmi E2E', () => {
     await contact.verifyNotesRenderListsCorrectly();
   });
 
+  test('Test 7: Verify that clicking the delete icon removes a note', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyDeleteNoteRemovesNote();
+  });
+
 });

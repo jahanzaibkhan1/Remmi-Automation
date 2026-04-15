@@ -8579,5 +8579,24 @@ export class ContactActions {
         await expect(allListItems).toBeVisible({timeout:10000});
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Verify that clicking the delete icon removes a note
+     */
+    async verifyDeleteNoteRemovesNote() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible();
+        await noteTab.click();
+        const firstNoteCell = this.page.locator('tr.cursor-pointer').first();
+        await firstNoteCell.waitFor({ state: 'visible', timeout: 10000 });
+        const firstDeleteIcon = this.page.getByRole('img', { name: 'delete' }).first();
+        await firstDeleteIcon.waitFor({ state: 'visible', timeout: 10000 });
+        await firstDeleteIcon.click();
+        const successMessage = this.page.getByText(/Deleted successfully/i);
+        await expect(successMessage).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
 }
 
