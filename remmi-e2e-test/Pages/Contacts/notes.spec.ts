@@ -54,4 +54,9 @@ test.describe('Notes Tab Tests - Remmi E2E', () => {
     await contact.verifyDeleteNoteRemovesNote();
   });
 
+  test('Test 8: Added note should also appear in Diary notes and Personal Notes', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyNoteAppearsInDiaryAndPersonalNotes();
+  });
+
 });
