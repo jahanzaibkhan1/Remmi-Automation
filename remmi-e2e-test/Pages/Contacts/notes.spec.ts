@@ -44,4 +44,9 @@ test.describe('Notes Tab Tests - Remmi E2E', () => {
     await contact.verifyNoteEditFunctionality();
   });
 
+  test('Test 6: Verify that numbered lists and bullet points display correctly in notes', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyNotesRenderListsCorrectly();
+  });
+
 });
