@@ -64,4 +64,9 @@ test.describe('Notes Tab Tests - Remmi E2E', () => {
     await contact.verifyEditingSavedNoteUpdatesCorrectly();
   });
 
+  test('Test 10: Verify that notes can be added to other modules from the Notes tab', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyNoteCanBeAddedToOtherModulesFromNotesTab();
+  });
+
 });
