@@ -24,4 +24,9 @@ test.describe('History Tab Tests - Remmi E2E', () => {
     await contact.verifyHistoryTabDisplaysNewContactDetails();
   });
 
+  test('Test 2: Verify if changes to a contact field are reflected in history', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyContactFieldChangeIsReflectedInHistory();
+  });
+
 }); 
