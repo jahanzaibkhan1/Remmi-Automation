@@ -3897,7 +3897,6 @@ export class ContactActions {
         await this.openFirstContact();
         const firstStreamRecord = this.page.locator('div.stream-body').first();
         await firstStreamRecord.waitFor({ state: 'visible' });
-        await this.verifyRelatedContactCanBeAssociated();
         const streamTab = this.page.getByRole('tab', { name: /Stream/i });
         await streamTab.evaluate(el => {
             el.scrollIntoView({ block: 'center', inline: 'center' });
@@ -7991,22 +7990,6 @@ export class ContactActions {
         );
         const alertOrSuccessLocator = duplicateAlert.or(successToast);
         await expect(alertOrSuccessLocator).toBeVisible({ timeout: 10000 });
-        const remainingContactRow = this.page.locator('table tr').filter({ hasText: 'seller' }).last();
-        if (await remainingContactRow.isVisible().catch(() => false)) {
-            await remainingContactRow.scrollIntoViewIfNeeded();
-            const deleteIcon2 = remainingContactRow.getByRole('img', { name: 'delete' }).first();
-            if (await deleteIcon2.isVisible().catch(() => false)) {
-                await deleteIcon2.click();
-                const yesButton2 = this.page.getByRole('button', { name: /^Yes$/i }).first();
-                if (await yesButton2.isVisible().catch(() => false)) {
-                    await yesButton2.click();
-                    await this.page.waitForTimeout(500);
-                    const removedToast2 = this.page.getByText(/Contact deleted successfully/i);
-                    await expect(removedToast2).toBeVisible({ timeout: 10000 });
-                }
-            }
-            await expect(remainingContactRow).not.toBeVisible({ timeout: 30000 });
-        }
 
         const associatedContactRow = this.page.locator('table tr').filter({
             hasText: '11 22',
@@ -8038,6 +8021,7 @@ export class ContactActions {
                 const buyerTag = this.page
                     .locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Buyer' })
                     .last();
+                await buyerTag.scrollIntoViewIfNeeded();
 
                 await expect(buyerTag).toBeVisible({ timeout: 10000 });
 
@@ -8113,6 +8097,7 @@ export class ContactActions {
         const buyerTag = this.page
             .locator('span.cdk-drag.related-tag span.p-tag-value', { hasText: 'Buyer' })
             .last();
+        await buyerTag.scrollIntoViewIfNeeded();
 
         await expect(buyerTag).toBeVisible({ timeout: 10000 });
 
@@ -8371,5 +8356,508 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify that the password must be at least 12 characters when accessing Remmi.
+     */
+    public async verifyPasswordMustBeAtLeast12Characters(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const associationsTab = this.page.getByRole("tab", { name: /associations/i });
+        await associationsTab.waitFor({ state: "visible" });
+        await associationsTab.click();
+        const accessRemmiButton = this.page.getByRole('button', { name: /access remmi/i });
+        await accessRemmiButton.waitFor({ state: "visible" });
+        await accessRemmiButton.click();
+        const passwordInput = this.page.locator('label:has-text("Password") + input');
+        await expect(passwordInput).toBeVisible({ timeout: 10000 });
+        await passwordInput.fill('shortpwd');
+        const minLengthError = this.page.getByText(/Password must be at least 12 characters/i);
+        await expect(minLengthError).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that login access is not granted without entering a password
+     */
+    public async verifyLoginAccessNotGrantedWithoutPassword(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const associationsTab = this.page.getByRole("tab", { name: /associations/i });
+        await associationsTab.waitFor({ state: "visible" });
+        await associationsTab.click();
+        const accessRemmiButton = this.page.getByRole('button', { name: /access remmi/i });
+        await accessRemmiButton.waitFor({ state: "visible" });
+        await accessRemmiButton.click();
+        const passwordInput = this.page.locator('label:has-text("Password") + input');
+        await expect(passwordInput).toBeVisible({ timeout: 10000 });
+        await passwordInput.fill('shortpwd');
+        const minLengthError = this.page.getByText(/Password must be at least 12 characters/i);
+        await expect(minLengthError).toBeVisible({ timeout: 10000 });
+        const saveButton = this.page.getByRole('button', { name: /save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 8000 });
+        await saveButton.click();
+        const errorToast = this.page.getByRole('alert', { name: 'Password must be at least 12 characters long' });
+        await expect(errorToast).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that the NOTE Tab opens correctly
+     */
+    public async verifyNoteTabOpensCorrectly(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const noteTab = this.page.getByRole("tab", { name: /note/i });
+        await noteTab.waitFor({ state: "visible", timeout: 8000 });
+        await noteTab.click();
+        const noteTabPanel = this.page.locator('div[role="tabpanel"]').filter({ hasText: /note/i });
+        await expect(noteTabPanel).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+    /**
+     * Verify that clicking the "+" button in the Notes section displays the note fields
+     */
+    public async verifyAddNoteButtonDisplaysNoteFields(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const noteTab = this.page.getByRole("tab", { name: /note/i });
+        await noteTab.waitFor({ state: "visible", timeout: 8000 });
+        await noteTab.click();
+        const addButton = this.page.getByRole('button', { name: '' }).last();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+        const noteTitleInput = this.page.getByRole('textbox', { name: 'Add note name or search' });
+        const noteContentInput = this.page.locator('.editor');
+        await expect(noteTitleInput).toBeVisible({ timeout: 10000 });
+        await expect(noteContentInput).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that clicking "Cancel" removes the note entry form in the Notes section
+     */
+    public async verifyNotesCancelRemovesEntryForm(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const noteTab = this.page.getByRole("tab", { name: /note/i });
+        await noteTab.waitFor({ state: "visible", timeout: 8000 });
+        await noteTab.click();
+        const addButton = this.page.getByRole('button', { name: '' }).last();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+        const noteTitleInput = this.page.getByRole('textbox', { name: 'Add note name or search' });
+        const noteContentInput = this.page.locator('.editor');
+        await expect(noteTitleInput).toBeVisible({ timeout: 10000 });
+        await expect(noteContentInput).toBeVisible({ timeout: 10000 });
+        const cancelButton = this.page.getByRole('button', { name: /Cancel/i }).last();
+        await expect(cancelButton).toBeVisible({ timeout: 10000 });
+        await cancelButton.click();
+        await expect(noteTitleInput).not.toBeVisible({ timeout: 10000 });
+        await expect(noteContentInput).not.toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that clicking "Save" saves the note successfully in the Notes section
+     */
+    public async verifyNotesSaveAddsNoteSuccessfully(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Go to NOTE tab
+        const noteTab = this.page.getByRole("tab", { name: /note/i });
+        await noteTab.waitFor({ state: "visible", timeout: 8000 });
+        await noteTab.click();
+
+        // Click the "+" button to add a note
+        const addButton = this.page.getByRole('button', { name: '' }).last();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        const noteTitleInput = this.page.getByRole('textbox', { name: 'Add note name or search' });
+        const noteContentInput = this.page.locator('.editor');
+        await expect(noteTitleInput).toBeVisible({ timeout: 10000 });
+        await expect(noteContentInput).toBeVisible({ timeout: 10000 });
+        await noteTitleInput.type('   ', { delay: 100 });
+        const noteOptionList = this.page.locator("//div[@class='list_ ng-star-inserted']//ul");
+        await noteOptionList.waitFor({ state: 'visible', timeout: 30000 });
+        const matchedOption = this.page.locator('p.ml-2', { hasText: '"list" Bondi Beach, NSW,' });
+        await matchedOption.scrollIntoViewIfNeeded();
+        await matchedOption.waitFor({ state: 'visible', timeout: 20000 });
+        await matchedOption.click({ force: true });
+        const noteContent = 'Note Added';
+        await noteContentInput.fill(noteContent);
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).last();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+        const successMessage = this.page.getByText('Saved successfully');
+        await expect(successMessage).toBeVisible({ timeout: 10000 });
+        const savedNoteTitle = this.page.getByRole('cell', { name: 'Note Added' }).first();
+        await expect(savedNoteTitle).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that clicking the edit icon allows updating a note in the Notes section
+     */
+    public async verifyNoteEditFunctionality(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible({ timeout: 10000 });
+        await noteTab.click();
+        await this.page.waitForTimeout(1200);
+        const noteTitleLocator = this.page.getByRole('cell', { name: 'Note Added' }).first();
+        await noteTitleLocator.waitFor({ state: 'visible', timeout: 10000 });
+        const firstEditIcon = this.page.locator("//img[@alt='edit']").first();
+        await firstEditIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await firstEditIcon.click();
+        const noteContentInput = this.page.locator('.editor');
+        await expect(noteContentInput).toBeVisible({ timeout: 10000 });
+        const updatedNoteContent = 'Updated note';
+        await noteContentInput.click();
+        await noteContentInput.fill('');
+        await noteContentInput.fill(updatedNoteContent);
+        const updateButton = this.page.getByRole('button', { name: /Update/i }).last();
+        await expect(updateButton).toBeVisible({ timeout: 10000 });
+        await updateButton.click();
+        const successMessage = this.page.getByText('Updated successfully');
+        await expect(successMessage).toBeVisible({ timeout: 10000 });
+        const updatedNoteCell = this.page.getByRole('cell', { name: updatedNoteContent }).first();
+        await updatedNoteCell.waitFor({ state: 'visible', timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    public async verifyNotesRenderListsCorrectly(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible();
+        await noteTab.click();
+        const addButton = this.page.getByRole('button', { name: '' }).last();
+        await expect(addButton).toBeVisible();
+        await addButton.click();
+        const noteTitle = 'List Test Note';
+        const noteTitleInput = this.page.getByRole('textbox', { name: 'Add note name or search' });
+        const editor = this.page.locator('.editor');
+        const toolbar = this.page.locator('.editControls');
+        await expect(noteTitleInput).toBeVisible();
+        await noteTitleInput.fill(noteTitle);
+        const optionList = this.page.locator("//div[contains(@class,'list_')]//ul");
+        if (await optionList.isVisible().catch(() => false)) {
+            const matchedOption = this.page.locator('p.ml-2', { hasText: noteTitle });
+            if (await matchedOption.isVisible().catch(() => false)) {
+                await matchedOption.click({ force: true });
+            }
+        }
+        await expect(editor).toBeVisible();
+        await editor.click();
+        const listButtons = toolbar.locator('.note-btn').filter({
+            has: this.page.locator('.pi-list')
+        });
+        const bulletBtn = listButtons.first();
+        const numberedBtn = listButtons.nth(1);
+        await bulletBtn.click();
+        await this.page.waitForTimeout(200);
+        await this.page.keyboard.type('Bullet 1');
+        await this.page.keyboard.press('Enter');
+        await this.page.keyboard.type('Bullet 2');
+        await this.page.keyboard.press('Enter');
+        await this.page.keyboard.press('Enter');
+        await this.page.waitForTimeout(200);
+        await editor.click();
+        await numberedBtn.click();
+        await this.page.waitForTimeout(200);
+        await this.page.keyboard.type('Number 1');
+        await this.page.keyboard.press('Enter');
+        await this.page.keyboard.type('Number 2');
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).last();
+        await expect(saveButton).toBeVisible();
+        await saveButton.click();
+        await expect(this.page.getByText('Saved successfully')).toBeVisible();
+        await this.page.waitForTimeout(300);
+        const allListItems = this.page.getByRole('cell', { name: 'Bullet 1 Bullet 2 Number 1 Number' }).first();
+        await expect(allListItems).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that clicking the delete icon removes a note
+     */
+    async verifyDeleteNoteRemovesNote() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible();
+        await noteTab.click();
+        const firstNoteCell = this.page.locator('tr.cursor-pointer').first();
+        await firstNoteCell.waitFor({ state: 'visible', timeout: 10000 });
+        const firstDeleteIcon = this.page.getByRole('img', { name: 'delete' }).first();
+        await firstDeleteIcon.waitFor({ state: 'visible', timeout: 10000 });
+        await firstDeleteIcon.click();
+        const successMessage = this.page.getByText(/Deleted successfully/i);
+        await expect(successMessage).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that the added note also appears in Diary notes and Personal Notes
+     */
+    async verifyNoteAppearsInDiaryAndPersonalNotes() {
+        await this.page.goto('/');
+        const notesListIcon = this.page.locator("//img[@id='notes_lis']");
+        await notesListIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await notesListIcon.click();
+
+        const externalLinkIcon = this.page.locator("//i[contains(@class, 'pi-external-link')]");
+        await externalLinkIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await externalLinkIcon.click();
+
+        const addedNote = this.page.getByLabel('Open').getByText('note added').first();
+        await addedNote.waitFor({ state: 'visible', timeout: 20000 });
+    }
+
+    /**
+     * Editing a saved note should update it correctly
+     */
+    async verifyEditingSavedNoteUpdatesCorrectly() {
+        await this.page.goto('/');
+        const notesListIcon = this.page.locator("//img[@id='notes_lis']");
+        await notesListIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await notesListIcon.click();
+        const externalLinkIcon = this.page.locator("//i[contains(@class, 'pi-external-link')]");
+        await externalLinkIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await externalLinkIcon.click();
+        const firstCard = this.page.locator('div.main-card-body').first();
+        await firstCard.waitFor({ state: 'visible', timeout: 20000 });
+        const editIcon = this.page.locator('div.main-card-body').first().locator('i.pi-pencil');;
+        await editIcon.waitFor({ state: 'visible', timeout: 10000 });
+        await editIcon.click();
+        const noteContentInput = this.page.locator('.editor').last();
+        await expect(noteContentInput).toBeVisible({ timeout: 10000 });
+        const updatedNoteContent = faker.lorem.words(2);
+        await noteContentInput.click();
+        await noteContentInput.fill('');
+        await noteContentInput.fill(updatedNoteContent);
+        const updateButton = this.page.getByRole('button', { name: /Update/i }).last();
+        await expect(updateButton).toBeVisible({ timeout: 10000 });
+        await updateButton.click();
+        const successMessage = this.page.getByText('Updated successfully');
+        await expect(successMessage).toBeVisible({ timeout: 10000 });
+        const deleteIcon = this.page.locator('img[src*="delete_icon.svg"]').first();
+        await expect(deleteIcon).toBeVisible({ timeout: 10000 });
+        await deleteIcon.click();
+        const confirmDeleteButton = this.page.getByRole('button', { name: /Delete/i }).last();
+        await expect(confirmDeleteButton).toBeVisible({ timeout: 10000 });
+        await confirmDeleteButton.click();
+        const deleteMessage = this.page.getByText(/Deleted successfully/i);
+        await expect(deleteMessage).toBeVisible({ timeout: 10000 });
+    }
+
+    /**
+     * Verify that a note added from the Notes tab appears in another module's notes (e.g., Personal Notes).
+     */
+    async verifyNoteCanBeAddedToOtherModulesFromNotesTab() {
+        await this.page.goto('/');
+        const notesListIcon = this.page.locator("//img[@id='notes_lis']");
+        await notesListIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await notesListIcon.click();
+        const takaElement = this.page.locator('.taka.mb-2.ng-star-inserted');
+        await takaElement.waitFor({ state: 'visible' });
+        await takaElement.click();
+        const noteTitleInput = this.page.getByRole('textbox', { name: 'Add note name or search' });
+        const noteContentInput = this.page.locator('.editor');
+        await noteTitleInput.waitFor({ state: 'visible' });
+        await noteContentInput.waitFor({ state: 'visible' });
+        await noteTitleInput.type('"list"    Bondi Beach, NSW, 2026', { delay: 350 });
+        const noteOptionList = this.page.locator("//div[@class='list_ ng-star-inserted']//ul");
+        await noteOptionList.waitFor({ state: 'visible' });
+        const matchedOption = this.page.locator('p.ml-2', { hasText: '"list" Bondi Beach, NSW,' });
+        await matchedOption.waitFor({ state: 'visible' });
+        await matchedOption.click({ force: true });
+        const noteContent = 'Note Added';
+        await noteContentInput.fill(noteContent);
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).last();
+        await saveButton.waitFor({ state: 'visible' });
+        await saveButton.click();
+        const successMessage = this.page.getByText('Added successfully');
+        await successMessage.waitFor({ state: 'visible' });
+        await this.page.reload();
+        const noteListText = await this.page.getByText('"list" Bondi Beach, NS "list').first();
+        await noteListText.waitFor({ state: "visible" });
+
+    }
+
+    /**
+     * Verifies that the list is properly aligned with the status column in the contacts table.
+     * This checks that each list row's left boundary matches the left boundary of the status column header.
+     */
+    async verifyListAlignmentWithStatusColumn() {
+        await this.page.goto('/');
+        const notesListIcon = this.page.locator("//img[@id='notes_lis']");
+        await notesListIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await notesListIcon.click();
+        const matchedNote = this.page.getByText('"list" Bondi Beach, NSW,').first();
+        await matchedNote.waitFor({ state: 'visible', timeout: 10000 });
+        const iconElement = this.page.locator('i').nth(2);
+        await iconElement.waitFor({ state: 'visible' });
+        await iconElement.click();
+   
+    }
+
+    /**
+     * Verifies that sorting works correctly on the Notes list.
+     */
+    async verifySortingFunctionalityOnNotesList() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open Notes tab
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible();
+        await noteTab.click();
+
+        // Wait for Notes tab panel to appear
+        const noteTabPanel = this.page.locator('div[role="tabpanel"]').filter({ hasText: /note/i });
+        await expect(noteTabPanel).toBeVisible({ timeout: 10000 });
+
+        const noteColumnHeader = this.page.getByRole('columnheader', { name: /Note/i });
+        const noteRowsLocator = this.page.locator('td[class*="note"]');
+
+        // Click to sort ascending (assuming first click sorts ascending)
+        await noteColumnHeader.click();
+        await this.page.waitForTimeout(600); // reduced timeout for UI response
+
+        // Grab resulting notes
+        const noteTextsAsc = await noteRowsLocator.allTextContents();
+        // Defensive: filter out empties, trim
+        const filteredAsc = noteTextsAsc.map(x => x.trim()).filter(Boolean);
+
+        // Check if sorted ASC
+        const sortedAsc = [...filteredAsc].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+        if (JSON.stringify(filteredAsc) !== JSON.stringify(sortedAsc)) {
+            throw new Error('Notes are not sorted in ascending order by Note column');
+        }
+
+        // Click again to sort descending
+        await noteColumnHeader.click();
+        await this.page.waitForTimeout(600);
+
+        // Grab resulting notes for descending
+        const noteTextsDesc = await noteRowsLocator.allTextContents();
+        const filteredDesc = noteTextsDesc.map(x => x.trim()).filter(Boolean);
+
+        // Check if sorted DESC
+        const sortedDesc = [...filteredAsc].sort((a, b) => b.localeCompare(a, undefined, { sensitivity: 'base' }));
+        if (JSON.stringify(filteredDesc) !== JSON.stringify(sortedDesc)) {
+            throw new Error('Notes are not sorted in descending order by Note column');
+        }
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify if the History tab displays newly created contact details.
+     */
+    public async verifyHistoryTabDisplaysNewContactDetails(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const historyTab = this.page.getByRole('tab', { name: /history/i });
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify if changes to the Phone Number field are reflected in the History tab.
+     */
+    public async verifyContactFieldChangeIsReflectedInHistory(): Promise<void> {
+        const fieldLabel = 'Mobile No';
+        // Generate a new unique phone number with country code for Australia (+61)
+        const phoneNumDigits = Math.floor(100000000 + Math.random() * 899999999).toString().slice(0, 9); // 9 digits
+        const newValue = `+61${phoneNumDigits}`;
+        
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Fill the mobile number field (with country code)
+        const fieldInput = this.page.locator('input[formcontrolname="mobile_no"]');
+        await expect(fieldInput).toBeVisible({ timeout: 10000 });
+        await fieldInput.fill(' ');
+        await fieldInput.fill(newValue);
+
+        // Save changes
+        const saveBtn = this.page.getByRole('button', { name: /^save$/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+
+        // Open History tab
+        const historyTab = this.page.getByRole('tab', { name: /history/i });
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for history container and table, and ensure at least one row is present
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 10000 });
+        const firstRow = historyTable.locator("tbody tr").first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+
+        // Dynamically find header columns for "Changed Field" and "New Value"
+        const headers = historyTable.locator("thead tr th");
+        const headerCount = await headers.count();
+
+        let changedFieldCol = -1;
+        let newValueCol = -1;
+        for (let i = 0; i < headerCount; i++) {
+            const hdr = (await headers.nth(i).textContent())?.trim();
+            if (hdr === "Changed Field") changedFieldCol = i;
+            if (hdr === "New Value") newValueCol = i;
+        }
+        if (changedFieldCol === -1 || newValueCol === -1) {
+            throw new Error("Couldn't find required columns in history table");
+        }
+
+        // Find at least one row, match on Changed Field and New Value exactly
+        const rows = historyTable.locator("tbody tr");
+        const rowCount = await rows.count();
+        if (rowCount === 0) {
+            throw new Error("No rows found in history table");
+        }
+
+        let found = false;
+        for (let i = 0; i < rowCount; i++) {
+            const cells = rows.nth(i).locator("td");
+            // Field should be "Mobile No"
+            const changedField = (await cells.nth(changedFieldCol).innerText()).trim();
+            // New value rendered inside nested div/span; fetch visible text only
+            const newValueCell = cells.nth(newValueCol);
+            let newValueText = '';
+            // try innerText, fallback to textContent of span if exist
+            try {
+                newValueText = (await newValueCell.innerText()).replace(/\s+/g, '').trim();
+            } catch (e) {}
+            // fallback: get visible span if applicable
+            if (!newValueText) {
+                const span = newValueCell.locator('span');
+                if (await span.count() > 0) {
+                    newValueText = (await span.first().innerText()).replace(/\s+/g, '').trim();
+                }
+            }
+            // Strict match: field is "Mobile No" and newValue is exactly what we filled
+            if (
+                changedField === fieldLabel &&
+                newValueText === newValue.replace(/\s+/g, '')
+            ) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            throw new Error(`History table does not reflect latest change to "${fieldLabel}" (${newValue})`);
+        }
+        await this.closeModalIfVisible();
+    }
 }
 

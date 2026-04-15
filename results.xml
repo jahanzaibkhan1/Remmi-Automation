@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.55592500000075">
-<testsuite name="Pages\Contacts\Association.spec.ts" timestamp="2026-04-14T10:51:43.906Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.606" errors="0">
-<testcase name="Associations Tab Tests - Remmi E2E › Verify that the &quot;Access Remmi&quot; button displays the password field" classname="Pages\Contacts\Association.spec.ts" time="35.606">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.9352340000011">
+<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-15T11:07:20.731Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.182" errors="0">
+<testcase name="History Tab Tests - Remmi E2E › Test 2: Verify if changes to a contact field are reflected in history" classname="Pages\Contacts\historyTab.spec.ts" time="31.182">
 </testcase>
 </testsuite>
 </testsuites>

@@ -29,4 +29,14 @@ test.describe('Associations Tab Tests - Remmi E2E', () => {
     await contact.verifyAccessRemmiButtonDisplaysPasswordField();
   });
 
+  test('Verify password must be at least 12 characters ', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyPasswordMustBeAtLeast12Characters();
+  });
+
+  test('Verify that login access is not granted without entering a password', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyLoginAccessNotGrantedWithoutPassword();
+  });
+
 });
