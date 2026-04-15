@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="27.83129699999839">
-<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-15T10:43:36.694Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.291" errors="0">
-<testcase name="History Tab Tests - Remmi E2E › Test 1: Verify if the history tab displays newly created contact details" classname="Pages\Contacts\historyTab.spec.ts" time="25.291">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.9352340000011">
+<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-15T11:07:20.731Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.182" errors="0">
+<testcase name="History Tab Tests - Remmi E2E › Test 2: Verify if changes to a contact field are reflected in history" classname="Pages\Contacts\historyTab.spec.ts" time="31.182">
 </testcase>
 </testsuite>
 </testsuites>

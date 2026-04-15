@@ -8767,5 +8767,97 @@ export class ContactActions {
         await expect(historyContainer).toBeVisible({ timeout: 15000 });
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Verify if changes to the Phone Number field are reflected in the History tab.
+     */
+    public async verifyContactFieldChangeIsReflectedInHistory(): Promise<void> {
+        const fieldLabel = 'Mobile No';
+        // Generate a new unique phone number with country code for Australia (+61)
+        const phoneNumDigits = Math.floor(100000000 + Math.random() * 899999999).toString().slice(0, 9); // 9 digits
+        const newValue = `+61${phoneNumDigits}`;
+        
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Fill the mobile number field (with country code)
+        const fieldInput = this.page.locator('input[formcontrolname="mobile_no"]');
+        await expect(fieldInput).toBeVisible({ timeout: 10000 });
+        await fieldInput.fill(' ');
+        await fieldInput.fill(newValue);
+
+        // Save changes
+        const saveBtn = this.page.getByRole('button', { name: /^save$/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10000 });
+        await saveBtn.click();
+
+        // Open History tab
+        const historyTab = this.page.getByRole('tab', { name: /history/i });
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for history container and table, and ensure at least one row is present
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 10000 });
+        const firstRow = historyTable.locator("tbody tr").first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+
+        // Dynamically find header columns for "Changed Field" and "New Value"
+        const headers = historyTable.locator("thead tr th");
+        const headerCount = await headers.count();
+
+        let changedFieldCol = -1;
+        let newValueCol = -1;
+        for (let i = 0; i < headerCount; i++) {
+            const hdr = (await headers.nth(i).textContent())?.trim();
+            if (hdr === "Changed Field") changedFieldCol = i;
+            if (hdr === "New Value") newValueCol = i;
+        }
+        if (changedFieldCol === -1 || newValueCol === -1) {
+            throw new Error("Couldn't find required columns in history table");
+        }
+
+        // Find at least one row, match on Changed Field and New Value exactly
+        const rows = historyTable.locator("tbody tr");
+        const rowCount = await rows.count();
+        if (rowCount === 0) {
+            throw new Error("No rows found in history table");
+        }
+
+        let found = false;
+        for (let i = 0; i < rowCount; i++) {
+            const cells = rows.nth(i).locator("td");
+            // Field should be "Mobile No"
+            const changedField = (await cells.nth(changedFieldCol).innerText()).trim();
+            // New value rendered inside nested div/span; fetch visible text only
+            const newValueCell = cells.nth(newValueCol);
+            let newValueText = '';
+            // try innerText, fallback to textContent of span if exist
+            try {
+                newValueText = (await newValueCell.innerText()).replace(/\s+/g, '').trim();
+            } catch (e) {}
+            // fallback: get visible span if applicable
+            if (!newValueText) {
+                const span = newValueCell.locator('span');
+                if (await span.count() > 0) {
+                    newValueText = (await span.first().innerText()).replace(/\s+/g, '').trim();
+                }
+            }
+            // Strict match: field is "Mobile No" and newValue is exactly what we filled
+            if (
+                changedField === fieldLabel &&
+                newValueText === newValue.replace(/\s+/g, '')
+            ) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            throw new Error(`History table does not reflect latest change to "${fieldLabel}" (${newValue})`);
+        }
+        await this.closeModalIfVisible();
+    }
 }
 
