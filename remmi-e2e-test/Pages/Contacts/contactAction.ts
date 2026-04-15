@@ -8576,7 +8576,7 @@ export class ContactActions {
         await expect(this.page.getByText('Saved successfully')).toBeVisible();
         await this.page.waitForTimeout(300);
         const allListItems = this.page.getByRole('cell', { name: 'Bullet 1 Bullet 2 Number 1 Number' }).first();
-        await expect(allListItems).toBeVisible({timeout:10000});
+        await expect(allListItems).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
     }
 
@@ -8597,6 +8597,23 @@ export class ContactActions {
         const successMessage = this.page.getByText(/Deleted successfully/i);
         await expect(successMessage).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that the added note also appears in Diary notes and Personal Notes
+     */
+    async verifyNoteAppearsInDiaryAndPersonalNotes() {
+        await this.page.goto('/');
+        const notesListIcon = this.page.locator("//img[@id='notes_lis']");
+        await notesListIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await notesListIcon.click();
+
+        const externalLinkIcon = this.page.locator("//i[contains(@class, 'pi-external-link')]");
+        await externalLinkIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await externalLinkIcon.click();
+
+        const addedNote = this.page.getByLabel('Open').getByText('note added').first();
+        await addedNote.waitFor({ state: 'visible', timeout: 20000 });
     }
 }
 

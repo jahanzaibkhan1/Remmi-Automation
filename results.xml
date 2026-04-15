@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="52.07717799999937">
-<testsuite name="Pages\Contacts\notes.spec.ts" timestamp="2026-04-15T08:06:55.462Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.835" errors="0">
-<testcase name="Notes Tab Tests - Remmi E2E › Test 7: Verify that clicking the delete icon removes a note" classname="Pages\Contacts\notes.spec.ts" time="48.835">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.48213599999994">
+<testsuite name="Pages\Contacts\notes.spec.ts" timestamp="2026-04-15T08:27:23.604Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.946" errors="0">
+<testcase name="Notes Tab Tests - Remmi E2E › Test 8: Added note should also appear in Diary notes and Personal Notes" classname="Pages\Contacts\notes.spec.ts" time="58.946">
 </testcase>
 </testsuite>
 </testsuites>
