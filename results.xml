@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.0892910000002">
-<testsuite name="Pages\Contacts\Association.spec.ts" timestamp="2026-04-15T06:25:52.113Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.032" errors="0">
-<testcase name="Associations Tab Tests - Remmi E2E › Verify that login access is not granted without entering a password" classname="Pages\Contacts\Association.spec.ts" time="38.032">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="26.196474999999626">
+<testsuite name="Pages\Contacts\notes.spec.ts" timestamp="2026-04-15T06:31:34.355Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.128" errors="0">
+<testcase name="Notes Tab Tests - Remmi E2E › Verify that the NOTE Tab opens correctly" classname="Pages\Contacts\notes.spec.ts" time="24.128">
 </testcase>
 </testsuite>
 </testsuites>

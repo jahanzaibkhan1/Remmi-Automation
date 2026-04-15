@@ -8400,5 +8400,19 @@ export class ContactActions {
         await expect(errorToast).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Verify that the NOTE Tab opens correctly
+     */
+    public async verifyNoteTabOpensCorrectly(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const noteTab = this.page.getByRole("tab", { name: /note/i });
+        await noteTab.waitFor({ state: "visible", timeout: 8000 });
+        await noteTab.click();
+        const noteTabPanel = this.page.locator('div[role="tabpanel"]').filter({ hasText: /note/i });
+        await expect(noteTabPanel).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
 }
 
