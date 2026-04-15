@@ -8456,5 +8456,44 @@ export class ContactActions {
         await expect(noteContentInput).not.toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Verify that clicking "Save" saves the note successfully in the Notes section
+     */
+    public async verifyNotesSaveAddsNoteSuccessfully(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Go to NOTE tab
+        const noteTab = this.page.getByRole("tab", { name: /note/i });
+        await noteTab.waitFor({ state: "visible", timeout: 8000 });
+        await noteTab.click();
+
+        // Click the "+" button to add a note
+        const addButton = this.page.getByRole('button', { name: '' }).last();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+
+        const noteTitleInput = this.page.getByRole('textbox', { name: 'Add note name or search' });
+        const noteContentInput = this.page.locator('.editor');
+        await expect(noteTitleInput).toBeVisible({ timeout: 10000 });
+        await expect(noteContentInput).toBeVisible({ timeout: 10000 });
+        await noteTitleInput.type('   ', { delay: 100 });
+        const noteOptionList = this.page.locator("//div[@class='list_ ng-star-inserted']//ul");
+        await noteOptionList.waitFor({ state: 'visible', timeout: 30000 });
+        const matchedOption = this.page.locator('p.ml-2', { hasText: '"list" Bondi Beach, NSW,' });
+        await matchedOption.scrollIntoViewIfNeeded();
+        await matchedOption.waitFor({ state: 'visible', timeout: 20000 });
+        await matchedOption.click({ force: true });
+        const noteContent = 'Note Added';
+        await noteContentInput.fill(noteContent);
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).last();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click();
+        const successMessage = this.page.getByText('Saved successfully');
+        await expect(successMessage).toBeVisible({ timeout: 10000 });
+        const savedNoteTitle = this.page.getByRole('cell', { name: 'Note Added' }).first();
+        await expect(savedNoteTitle).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
 }
 
