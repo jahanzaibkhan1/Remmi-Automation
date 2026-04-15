@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="25.204285000000148">
-<testsuite name="Pages\Contacts\notes.spec.ts" timestamp="2026-04-15T10:36:56.521Z" hostname="chromium" tests="1" failures="0" skipped="0" time="22.638" errors="0">
-<testcase name="Notes Tab Tests - Remmi E2E › Test 12: Verify that sorting works correctly on the Notes list" classname="Pages\Contacts\notes.spec.ts" time="22.638">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="27.83129699999839">
+<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-15T10:43:36.694Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.291" errors="0">
+<testcase name="History Tab Tests - Remmi E2E › Test 1: Verify if the history tab displays newly created contact details" classname="Pages\Contacts\historyTab.spec.ts" time="25.291">
 </testcase>
 </testsuite>
 </testsuites>

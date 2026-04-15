@@ -8753,5 +8753,19 @@ export class ContactActions {
         }
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Verify if the History tab displays newly created contact details.
+     */
+    public async verifyHistoryTabDisplaysNewContactDetails(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const historyTab = this.page.getByRole('tab', { name: /history/i });
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+        await this.closeModalIfVisible();
+    }
 }
 
