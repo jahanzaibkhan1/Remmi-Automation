@@ -8703,5 +8703,55 @@ export class ContactActions {
         await iconElement.click();
    
     }
+
+    /**
+     * Verifies that sorting works correctly on the Notes list.
+     */
+    async verifySortingFunctionalityOnNotesList() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open Notes tab
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible();
+        await noteTab.click();
+
+        // Wait for Notes tab panel to appear
+        const noteTabPanel = this.page.locator('div[role="tabpanel"]').filter({ hasText: /note/i });
+        await expect(noteTabPanel).toBeVisible({ timeout: 10000 });
+
+        const noteColumnHeader = this.page.getByRole('columnheader', { name: /Note/i });
+        const noteRowsLocator = this.page.locator('td[class*="note"]');
+
+        // Click to sort ascending (assuming first click sorts ascending)
+        await noteColumnHeader.click();
+        await this.page.waitForTimeout(600); // reduced timeout for UI response
+
+        // Grab resulting notes
+        const noteTextsAsc = await noteRowsLocator.allTextContents();
+        // Defensive: filter out empties, trim
+        const filteredAsc = noteTextsAsc.map(x => x.trim()).filter(Boolean);
+
+        // Check if sorted ASC
+        const sortedAsc = [...filteredAsc].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+        if (JSON.stringify(filteredAsc) !== JSON.stringify(sortedAsc)) {
+            throw new Error('Notes are not sorted in ascending order by Note column');
+        }
+
+        // Click again to sort descending
+        await noteColumnHeader.click();
+        await this.page.waitForTimeout(600);
+
+        // Grab resulting notes for descending
+        const noteTextsDesc = await noteRowsLocator.allTextContents();
+        const filteredDesc = noteTextsDesc.map(x => x.trim()).filter(Boolean);
+
+        // Check if sorted DESC
+        const sortedDesc = [...filteredAsc].sort((a, b) => b.localeCompare(a, undefined, { sensitivity: 'base' }));
+        if (JSON.stringify(filteredDesc) !== JSON.stringify(sortedDesc)) {
+            throw new Error('Notes are not sorted in descending order by Note column');
+        }
+        await this.closeModalIfVisible();
+    }
 }
 
