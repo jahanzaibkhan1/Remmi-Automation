@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.48213599999994">
-<testsuite name="Pages\Contacts\notes.spec.ts" timestamp="2026-04-15T08:27:23.604Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.946" errors="0">
-<testcase name="Notes Tab Tests - Remmi E2E › Test 8: Added note should also appear in Diary notes and Personal Notes" classname="Pages\Contacts\notes.spec.ts" time="58.946">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="61.24013000000082">
+<testsuite name="Pages\Contacts\notes.spec.ts" timestamp="2026-04-15T08:36:11.179Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.885" errors="0">
+<testcase name="Notes Tab Tests - Remmi E2E › Test 9: Editing a saved note should update it correctly" classname="Pages\Contacts\notes.spec.ts" time="54.885">
 </testcase>
 </testsuite>
 </testsuites>

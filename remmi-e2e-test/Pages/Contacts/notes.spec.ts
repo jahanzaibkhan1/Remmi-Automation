@@ -59,4 +59,9 @@ test.describe('Notes Tab Tests - Remmi E2E', () => {
     await contact.verifyNoteAppearsInDiaryAndPersonalNotes();
   });
 
+  test('Test 9: Editing a saved note should update it correctly', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyEditingSavedNoteUpdatesCorrectly();
+  });
+
 });
