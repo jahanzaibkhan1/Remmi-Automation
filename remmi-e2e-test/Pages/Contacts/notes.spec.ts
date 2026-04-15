@@ -74,4 +74,9 @@ test.describe('Notes Tab Tests - Remmi E2E', () => {
     await contact.verifyListAlignmentWithStatusColumn();
   });
 
+  test('Test 12: Verify that sorting works correctly on the Notes list', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifySortingFunctionalityOnNotesList();
+  });
+
 });
