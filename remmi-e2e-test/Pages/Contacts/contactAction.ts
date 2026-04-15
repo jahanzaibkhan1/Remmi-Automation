@@ -8652,5 +8652,39 @@ export class ContactActions {
         const deleteMessage = this.page.getByText(/Deleted successfully/i);
         await expect(deleteMessage).toBeVisible({ timeout: 10000 });
     }
+
+    /**
+     * Verify that a note added from the Notes tab appears in another module's notes (e.g., Personal Notes).
+     */
+    async verifyNoteCanBeAddedToOtherModulesFromNotesTab() {
+        await this.page.goto('/');
+        const notesListIcon = this.page.locator("//img[@id='notes_lis']");
+        await notesListIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await notesListIcon.click();
+        const takaElement = this.page.locator('.taka.mb-2.ng-star-inserted');
+        await takaElement.waitFor({ state: 'visible' });
+        await takaElement.click();
+        const noteTitleInput = this.page.getByRole('textbox', { name: 'Add note name or search' });
+        const noteContentInput = this.page.locator('.editor');
+        await noteTitleInput.waitFor({ state: 'visible' });
+        await noteContentInput.waitFor({ state: 'visible' });
+        await noteTitleInput.type('"list"    Bondi Beach, NSW, 2026', { delay: 350 });
+        const noteOptionList = this.page.locator("//div[@class='list_ ng-star-inserted']//ul");
+        await noteOptionList.waitFor({ state: 'visible' });
+        const matchedOption = this.page.locator('p.ml-2', { hasText: '"list" Bondi Beach, NSW,' });
+        await matchedOption.waitFor({ state: 'visible' });
+        await matchedOption.click({ force: true });
+        const noteContent = 'Note Added';
+        await noteContentInput.fill(noteContent);
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).last();
+        await saveButton.waitFor({ state: 'visible' });
+        await saveButton.click();
+        const successMessage = this.page.getByText('Added successfully');
+        await successMessage.waitFor({ state: 'visible' });
+        await this.page.reload();
+        const noteListText = await this.page.getByText('"list" Bondi Beach, NS "list').first();
+        await noteListText.waitFor({ state: "visible" });
+
+    }
 }
 
