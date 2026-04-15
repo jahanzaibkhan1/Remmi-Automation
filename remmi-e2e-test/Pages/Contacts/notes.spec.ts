@@ -34,4 +34,9 @@ test.describe('Notes Tab Tests - Remmi E2E', () => {
     await contact.verifyNotesCancelRemovesEntryForm();
   });
 
+  test('Test 4: Verify that clicking "Save" saves the note successfully', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyNotesSaveAddsNoteSuccessfully();
+  });
+
 });
