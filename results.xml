@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="22.363811999998987">
-<testsuite name="Pages\Contacts\notes.spec.ts" timestamp="2026-04-15T06:37:12.227Z" hostname="chromium" tests="1" failures="0" skipped="0" time="20.245" errors="0">
-<testcase name="Notes Tab Tests - Remmi E2E › Test 2: Verify that clicking the &quot;+&quot; button in the Notes section displays the note fields" classname="Pages\Contacts\notes.spec.ts" time="20.245">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="29.570200999999418">
+<testsuite name="Pages\Contacts\notes.spec.ts" timestamp="2026-04-15T06:40:03.924Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.466" errors="0">
+<testcase name="Notes Tab Tests - Remmi E2E › Test 3: Verify that clicking &quot;Cancel&quot; removes the note entry form" classname="Pages\Contacts\notes.spec.ts" time="27.466">
 </testcase>
 </testsuite>
 </testsuites>

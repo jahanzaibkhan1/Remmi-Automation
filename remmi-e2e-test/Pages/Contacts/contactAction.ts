@@ -8432,5 +8432,29 @@ export class ContactActions {
         await expect(noteContentInput).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Verify that clicking "Cancel" removes the note entry form in the Notes section
+     */
+    public async verifyNotesCancelRemovesEntryForm(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const noteTab = this.page.getByRole("tab", { name: /note/i });
+        await noteTab.waitFor({ state: "visible", timeout: 8000 });
+        await noteTab.click();
+        const addButton = this.page.getByRole('button', { name: '' }).last();
+        await expect(addButton).toBeVisible({ timeout: 10000 });
+        await addButton.click();
+        const noteTitleInput = this.page.getByRole('textbox', { name: 'Add note name or search' });
+        const noteContentInput = this.page.locator('.editor');
+        await expect(noteTitleInput).toBeVisible({ timeout: 10000 });
+        await expect(noteContentInput).toBeVisible({ timeout: 10000 });
+        const cancelButton = this.page.getByRole('button', { name: /Cancel/i }).last();
+        await expect(cancelButton).toBeVisible({ timeout: 10000 });
+        await cancelButton.click();
+        await expect(noteTitleInput).not.toBeVisible({ timeout: 10000 });
+        await expect(noteContentInput).not.toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
 }
 

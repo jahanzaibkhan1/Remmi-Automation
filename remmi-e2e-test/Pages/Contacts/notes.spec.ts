@@ -29,4 +29,9 @@ test.describe('Notes Tab Tests - Remmi E2E', () => {
     await contact.verifyAddNoteButtonDisplaysNoteFields();
   });
 
+  test('Test 3: Verify that clicking "Cancel" removes the note entry form', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyNotesCancelRemovesEntryForm();
+  });
+
 });
