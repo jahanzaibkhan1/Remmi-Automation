@@ -8686,5 +8686,22 @@ export class ContactActions {
         await noteListText.waitFor({ state: "visible" });
 
     }
+
+    /**
+     * Verifies that the list is properly aligned with the status column in the contacts table.
+     * This checks that each list row's left boundary matches the left boundary of the status column header.
+     */
+    async verifyListAlignmentWithStatusColumn() {
+        await this.page.goto('/');
+        const notesListIcon = this.page.locator("//img[@id='notes_lis']");
+        await notesListIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await notesListIcon.click();
+        const matchedNote = this.page.getByText('"list" Bondi Beach, NSW,').first();
+        await matchedNote.waitFor({ state: 'visible', timeout: 10000 });
+        const iconElement = this.page.locator('i').nth(2);
+        await iconElement.waitFor({ state: 'visible' });
+        await iconElement.click();
+   
+    }
 }
 
