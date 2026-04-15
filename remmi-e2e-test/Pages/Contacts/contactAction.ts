@@ -8495,5 +8495,36 @@ export class ContactActions {
         await expect(savedNoteTitle).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Verify that clicking the edit icon allows updating a note in the Notes section
+     */
+    public async verifyNoteEditFunctionality(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const noteTab = this.page.getByRole('tab', { name: /Notes/i });
+        await expect(noteTab).toBeVisible({ timeout: 10000 });
+        await noteTab.click();
+        await this.page.waitForTimeout(1200);
+        const noteTitleLocator = this.page.getByRole('cell', { name: 'Note Added' }).first();
+        await noteTitleLocator.waitFor({ state: 'visible', timeout: 10000 });
+        const firstEditIcon = this.page.locator("//img[@alt='edit']").first();
+        await firstEditIcon.waitFor({ state: 'visible', timeout: 20000 });
+        await firstEditIcon.click();
+        const noteContentInput = this.page.locator('.editor');
+        await expect(noteContentInput).toBeVisible({ timeout: 10000 });
+        const updatedNoteContent = 'Updated note';
+        await noteContentInput.click();
+        await noteContentInput.fill('');
+        await noteContentInput.fill(updatedNoteContent);
+        const updateButton = this.page.getByRole('button', { name: /Update/i }).last();
+        await expect(updateButton).toBeVisible({ timeout: 10000 });
+        await updateButton.click();
+        const successMessage = this.page.getByText('Updated successfully');
+        await expect(successMessage).toBeVisible({ timeout: 10000 });
+        const updatedNoteCell = this.page.getByRole('cell', { name: updatedNoteContent }).first();
+        await updatedNoteCell.waitFor({ state: 'visible', timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
 }
 
