@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.040560000000525">
-<testsuite name="Pages\Contacts\Association.spec.ts" timestamp="2026-04-15T06:20:11.743Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.941" errors="0">
-<testcase name="Associations Tab Tests - Remmi E2E › Verify password must be at least 12 characters " classname="Pages\Contacts\Association.spec.ts" time="36.941">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.0892910000002">
+<testsuite name="Pages\Contacts\Association.spec.ts" timestamp="2026-04-15T06:25:52.113Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.032" errors="0">
+<testcase name="Associations Tab Tests - Remmi E2E › Verify that login access is not granted without entering a password" classname="Pages\Contacts\Association.spec.ts" time="38.032">
 </testcase>
 </testsuite>
 </testsuites>

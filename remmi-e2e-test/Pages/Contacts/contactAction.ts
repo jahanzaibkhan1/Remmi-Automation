@@ -8376,5 +8376,29 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
+    /**
+     * Verify that login access is not granted without entering a password
+     */
+    public async verifyLoginAccessNotGrantedWithoutPassword(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const associationsTab = this.page.getByRole("tab", { name: /associations/i });
+        await associationsTab.waitFor({ state: "visible" });
+        await associationsTab.click();
+        const accessRemmiButton = this.page.getByRole('button', { name: /access remmi/i });
+        await accessRemmiButton.waitFor({ state: "visible" });
+        await accessRemmiButton.click();
+        const passwordInput = this.page.locator('label:has-text("Password") + input');
+        await expect(passwordInput).toBeVisible({ timeout: 10000 });
+        await passwordInput.fill('shortpwd');
+        const minLengthError = this.page.getByText(/Password must be at least 12 characters/i);
+        await expect(minLengthError).toBeVisible({ timeout: 10000 });
+        const saveButton = this.page.getByRole('button', { name: /save/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: 8000 });
+        await saveButton.click();
+        const errorToast = this.page.getByRole('alert', { name: 'Password must be at least 12 characters long' });
+        await expect(errorToast).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
 }
 

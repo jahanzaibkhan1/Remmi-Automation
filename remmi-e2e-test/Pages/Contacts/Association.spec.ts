@@ -34,4 +34,9 @@ test.describe('Associations Tab Tests - Remmi E2E', () => {
     await contact.verifyPasswordMustBeAtLeast12Characters();
   });
 
+  test('Verify that login access is not granted without entering a password', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyLoginAccessNotGrantedWithoutPassword();
+  });
+
 });
