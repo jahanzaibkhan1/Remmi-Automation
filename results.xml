@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="77.10192500000005">
-<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-16T04:22:53.921Z" hostname="chromium" tests="1" failures="0" skipped="0" time="71.59" errors="0">
-<testcase name="History Tab Tests - Remmi E2E › Test 3: Check if the &quot;Changed Date&quot; displays the correct date and time of modification" classname="Pages\Contacts\historyTab.spec.ts" time="71.59">
-<system-out>
-<![CDATA[Changed Date : 16-04-2026 08:24 AM
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="28.740246999999975">
+<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-16T04:26:30.384Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.961" errors="0">
+<testcase name="History Tab Tests - Remmi E2E › Test 4: Verify if the &quot;Changed By&quot; field displays the correct user who made changes" classname="Pages\Contacts\historyTab.spec.ts" time="24.961">
 </testcase>
 </testsuite>
 </testsuites>
