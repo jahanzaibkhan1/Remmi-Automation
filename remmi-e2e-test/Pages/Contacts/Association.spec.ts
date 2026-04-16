@@ -44,4 +44,9 @@ test.describe('Associations Tab Tests - Remmi E2E', () => {
     await contact.verifyProjectCanBeSearchedInAddProjectDropdown('east Village Vila');
   });
 
+  test('Verify that clicking the "Select All" checkbox selects all projects in the "Add Project" dropdown', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifySelectAllCheckboxSelectsAllProjects();
+  });
+
 });

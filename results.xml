@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.199413000000174">
-<testsuite name="Pages\Contacts\Association.spec.ts" timestamp="2026-04-16T11:05:42.832Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.643" errors="0">
-<testcase name="Associations Tab Tests - Remmi E2E › Verify that projects can be searched in the &quot;Add Project&quot; dropdown" classname="Pages\Contacts\Association.spec.ts" time="25.643">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.39626000000024">
+<testsuite name="Pages\Contacts\Association.spec.ts" timestamp="2026-04-16T11:11:14.363Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.819" errors="0">
+<testcase name="Associations Tab Tests - Remmi E2E › Verify that clicking the &quot;Select All&quot; checkbox selects all projects in the &quot;Add Project&quot; dropdown" classname="Pages\Contacts\Association.spec.ts" time="27.819">
 </testcase>
 </testsuite>
 </testsuites>
