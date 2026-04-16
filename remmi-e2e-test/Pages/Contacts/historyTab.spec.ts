@@ -64,4 +64,9 @@ test.describe('History Tab Tests - Remmi E2E', () => {
     await contact.verifyHistoryDisplaysRelevantChangesForContact('Jahanzaib Xenex');
   });
 
+  test('Test 10: Check history tab with no changes made', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyHistoryTabWithNoChanges('Create');
+  });
+  
 }); 
