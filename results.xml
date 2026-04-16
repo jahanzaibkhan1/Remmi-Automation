@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.72500100000016">
-<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-16T04:40:30.846Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.186" errors="0">
-<testcase name="History Tab Tests - Remmi E2E › Test 9: Verify if history displays only relevant changes per contact" classname="Pages\Contacts\historyTab.spec.ts" time="28.186">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="45.16428800000018">
+<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-16T05:01:36.001Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.849" errors="0">
+<testcase name="History Tab Tests - Remmi E2E › Test 10: Check history tab with no changes made" classname="Pages\Contacts\historyTab.spec.ts" time="38.849">
 </testcase>
 </testsuite>
 </testsuites>

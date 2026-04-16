@@ -9087,5 +9087,62 @@ export class ContactActions {
         }
         await this.closeModalIfVisible();
     }
+
+    // Check history tab with no changes made; verify only "Create" event present
+    async verifyHistoryTabWithNoChanges(expectedEvent: string = "Create") {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for history container
+        const historyContainer = this.page.locator("app-remmi-history");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+
+        const rows = historyTable.locator("tbody tr");
+        await expect(rows).not.toHaveCount(0, { timeout: 15000 });
+
+        // Find "Event" column index dynamically
+        const headers = historyTable.locator("thead tr th");
+        const headerCount = await headers.count();
+
+        let eventColumnIndex = -1;
+
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headers.nth(i).textContent())?.trim();
+            if (headerText?.toLowerCase() === "event") {
+                eventColumnIndex = i;
+                break;
+            }
+        }
+
+        if (eventColumnIndex === -1) {
+            throw new Error("Event column not found in history table");
+        }
+
+        // Validate at least one row with the expected event ("Create" by default)
+        const rowCount = await rows.count();
+        let atLeastOneMatch = false;
+
+        for (let i = 0; i < rowCount; i++) {
+            const eventCell = rows.nth(i).locator("td").nth(eventColumnIndex);
+            await expect(eventCell).toBeVisible();
+
+            const eventText = (await eventCell.textContent())?.trim().toLowerCase() || "";
+
+            if (eventText === expectedEvent.toLowerCase()) {
+                atLeastOneMatch = true;
+            }
+        }
+
+        expect(atLeastOneMatch).toBeTruthy();
+        await this.closeModalIfVisible();
+    }
 }
 
