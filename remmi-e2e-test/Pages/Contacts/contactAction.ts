@@ -8467,6 +8467,49 @@ export class ContactActions {
     }
 
     /**
+     * Verify that clicking "Deselect All" unselects all selected projects in the "Add Project" dropdown
+     */
+    public async verifyDeselectAllUnselectsAllProjects(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Navigate to Associations tab
+        const associationsTab = this.page.getByRole("tab", { name: /associations/i });
+        await associationsTab.waitFor({ state: "visible", timeout: 10000 });
+        await associationsTab.click();
+
+        // Click "Add Project" placeholder to open the dropdown
+        const addProjectPlaceholder = this.page.locator('div.tags span.placeHolder', { hasText: /add project/i }).first();
+        await expect(addProjectPlaceholder).toBeVisible({ timeout: 8000 });
+        await addProjectPlaceholder.click();
+
+        // Ensure project dropdown is open
+        const projectDropdown = this.page.locator('div.drop_box').first();
+        await expect(projectDropdown).toBeVisible({ timeout: 10000 });
+
+        await this.page.waitForTimeout(2000);
+
+        // Click the "Select All" checkbox to select all projects
+        const selectAllCheckbox = projectDropdown.locator('.checkbox__checkmark').first();
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 10000 });
+        if (!(await selectAllCheckbox.isChecked())) {
+            await selectAllCheckbox.click({ force: true });
+        }
+
+        if (await selectAllCheckbox.isChecked()) {
+            await selectAllCheckbox.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+        const allOptions = projectDropdown.locator('li.p-element.ng-star-inserted');
+        const optionCount = await allOptions.count();
+        for (let i = 1; i < optionCount; i++) { 
+            const projectOptionCheckbox = allOptions.nth(i).locator('.checkbox__checkmark');
+            await expect(projectOptionCheckbox).not.toBeChecked();
+        }
+        await this.closeModalIfVisible();
+    }
+
+    /**
      * Verify that the NOTE Tab opens correctly
      */
     public async verifyNoteTabOpensCorrectly(): Promise<void> {
