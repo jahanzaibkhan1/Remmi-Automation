@@ -74,4 +74,9 @@ test.describe('History Tab Tests - Remmi E2E', () => {
     await contact.verifyHistoryRecordsUIAlignmentAndReadability();
   });
 
+  test('Test 12: Check system behavior when history records are too large', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.checkLargeHistoryRecordsBehavior();
+  });
+
 }); 
