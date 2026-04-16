@@ -9205,5 +9205,64 @@ export class ContactActions {
 
         await this.closeModalIfVisible();
     }
+
+    async checkLargeHistoryRecordsBehavior(){
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const historyTab=this.page.getByRole('tab',{name:/History/i}).first();
+        await expect(historyTab).toBeVisible({timeout:10000});
+        await historyTab.click();
+        const historyContainer=this.page.locator("app-remmi-history");
+        await expect(historyContainer).toBeVisible({timeout:20000});
+        const firstTableRow=historyContainer.locator("table tbody tr").first();
+        const tableIsVisible=await historyContainer.locator("table").isVisible().catch(()=>false);
+        if(tableIsVisible){
+            await expect(firstTableRow).toBeVisible({timeout:10000});
+        }
+        const tableRows=historyContainer.locator("table tbody tr");
+        const listItems=historyContainer.locator('[class*="history-item"], [class*="record"], li');
+        let totalItems=0;
+        if(!tableIsVisible){
+            const firstListItem=listItems.first();
+            await firstListItem.waitFor({state:'visible',timeout:10000}).catch(()=>{});
+        }
+        const rowCount=await tableRows.count().catch(()=>0);
+        const itemCount=await listItems.count().catch(()=>0);
+        totalItems=rowCount+itemCount;
+        expect(totalItems).toBeGreaterThan(0);
+        const showMoreBtn=historyContainer.locator('button:has-text("Show More"), button:has-text("Load More"), button:has-text("Next")');
+        const showMoreFallback=historyContainer.getByText(/show more|load more|next/i,{exact:false});
+        const warningOrNotice=historyContainer.getByText(/too many records|limited view|showing first/i,{exact:false});
+        const scrollableContainer=historyContainer.locator('[style*="overflow"], [class*="scroll"]');
+        let hasShowMore=false;
+        let showMoreLocator:import('@playwright/test').Locator|undefined;
+        if(await showMoreBtn.first().isVisible().catch(()=>false)){
+            hasShowMore=true;
+            showMoreLocator=showMoreBtn.first();
+        }else if(await showMoreFallback.first().isVisible().catch(()=>false)){
+            hasShowMore=true;
+            showMoreLocator=showMoreFallback.first();
+        }
+        const hasWarning=await warningOrNotice.isVisible().catch(()=>false);
+        const hasScrollable=await scrollableContainer.first().isVisible().catch(()=>false);
+        console.log(`History records rendered: ${totalItems}`);
+        console.log(`Scrollable container present: ${hasScrollable}`);
+        if(hasShowMore&&showMoreLocator){
+            const table=historyContainer.locator("table");
+            const hasTbl=await table.isVisible({timeout:5000}).catch(()=>false);
+            if(hasTbl){
+                const tbody=table.locator("tbody");
+                const rowToWaitFor=tbody.locator("tr").first();
+                await expect(rowToWaitFor).toBeVisible({timeout:10000});
+                const initialCount=await tbody.locator("tr").count();
+                await showMoreLocator.click();
+                await this.page.waitForTimeout(2000);
+                const updatedCount=await tbody.locator("tr").count();
+                expect(updatedCount).toBeGreaterThan(initialCount);
+                console.log(`Rows after Show More: ${updatedCount} (was ${initialCount})`);
+            }
+        }
+        await this.closeModalIfVisible();
+    }
 }
 
