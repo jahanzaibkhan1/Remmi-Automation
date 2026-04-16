@@ -1,11 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.63321399999969">
-<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-16T05:18:36.413Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.818" errors="0">
-<testcase name="History Tab Tests - Remmi E2E › Test 12: Check system behavior when history records are too large" classname="Pages\Contacts\historyTab.spec.ts" time="28.818">
-<system-out>
-<![CDATA[History records rendered: 30
-Scrollable container present: true
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.40253600000031">
+<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-16T05:24:23.419Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.422" errors="0">
+<testcase name="History Tab Tests - Remmi E2E › Test 13: Check if special characters in fields are displayed correctly in history" classname="Pages\Contacts\historyTab.spec.ts" time="45.422">
 </testcase>
 </testsuite>
 </testsuites>
