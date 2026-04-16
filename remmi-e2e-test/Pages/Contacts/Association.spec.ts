@@ -49,4 +49,9 @@ test.describe('Associations Tab Tests - Remmi E2E', () => {
     await contact.verifySelectAllCheckboxSelectsAllProjects();
   });
 
+  test('Verify that clicking "Deselect All" unselects all selected projects', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyDeselectAllUnselectsAllProjects();
+  });
+
 });

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.39626000000024">
-<testsuite name="Pages\Contacts\Association.spec.ts" timestamp="2026-04-16T11:11:14.363Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.819" errors="0">
-<testcase name="Associations Tab Tests - Remmi E2E › Verify that clicking the &quot;Select All&quot; checkbox selects all projects in the &quot;Add Project&quot; dropdown" classname="Pages\Contacts\Association.spec.ts" time="27.819">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.53331100000022">
+<testsuite name="Pages\Contacts\Association.spec.ts" timestamp="2026-04-16T11:13:55.943Z" hostname="chromium" tests="1" failures="0" skipped="0" time="26.725" errors="0">
+<testcase name="Associations Tab Tests - Remmi E2E › Verify that clicking &quot;Deselect All&quot; unselects all selected projects" classname="Pages\Contacts\Association.spec.ts" time="26.725">
 </testcase>
 </testsuite>
 </testsuites>
