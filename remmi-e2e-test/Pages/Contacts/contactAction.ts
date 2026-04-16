@@ -9298,5 +9298,32 @@ export class ContactActions {
         } else {}
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Check if the records are loading correctly when scrolling in the history tab.
+     */
+    async checkRecordsLoadOnScrollInHistoryTab(): Promise<void>{
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const historyTab=this.page.getByRole('tab',{name:/history/i}).first();
+        await expect(historyTab).toBeVisible({timeout:10000});
+        await historyTab.click();
+        const historyContainer = this.page.locator("app-remmi-history");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+        const rows = historyTable.locator("tbody tr");
+        const firstRow = rows.first();
+        await firstRow.waitFor({ state: 'visible' });
+        const rowCount = await rows.count();
+        expect(rowCount).toBeGreaterThan(0);
+        const recordLabel = historyContainer.locator("text=/Records:/i");
+        await expect(recordLabel).toBeVisible();
+        const lastRow = rows.last();
+        await lastRow.scrollIntoViewIfNeeded();
+        await lastRow.waitFor({ state: 'visible', timeout: 15000 });
+        console.log("Total records verified:", rowCount);
+        await this.closeModalIfVisible();
+    }
 }
 

@@ -84,4 +84,9 @@ test.describe('History Tab Tests - Remmi E2E', () => {
     await contact.verifySpecialCharactersInHistory('!@#$%');
   });
 
+  test('Test 14: Check if the records are loading correctly when scrolling', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.checkRecordsLoadOnScrollInHistoryTab();
+  });
+
 }); 
