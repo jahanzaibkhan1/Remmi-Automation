@@ -44,4 +44,9 @@ test.describe('History Tab Tests - Remmi E2E', () => {
     await contact.verifyEventStatusIsCorrect('Update');
   });
 
+  test('Test 6: Verify if the "Changed Field" column correctly records the modified field name', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyChangedFieldIsCorrect('Mobile No');
+  });
+
 }); 

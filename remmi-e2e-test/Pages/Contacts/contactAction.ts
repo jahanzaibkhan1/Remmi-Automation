@@ -8961,5 +8961,38 @@ export class ContactActions {
 
         await this.closeModalIfVisible();
     }
+
+    // Verify if the 'Changed Field' column correctly records the modified field name
+    async verifyChangedFieldIsCorrect(expectedField: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for the history component to appear
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        // Wait for the table inside the history container
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+
+        // Wait for the first row
+        const firstRow = historyTable.locator("tbody tr").first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+
+        // Fourth column = Changed Field (index 3, 0-based)
+        const changedFieldCell = firstRow.locator("td").nth(3);
+        await expect(changedFieldCell).toBeVisible({ timeout: 10000 });
+
+        const changedFieldText = (await changedFieldCell.textContent())?.trim();
+        expect(changedFieldText).toBeTruthy();
+        expect(changedFieldText).toContain(expectedField);
+
+        await this.closeModalIfVisible();
+    }
 }
 
