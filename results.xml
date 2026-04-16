@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="28.740246999999975">
-<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-16T04:26:30.384Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.961" errors="0">
-<testcase name="History Tab Tests - Remmi E2E › Test 4: Verify if the &quot;Changed By&quot; field displays the correct user who made changes" classname="Pages\Contacts\historyTab.spec.ts" time="24.961">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="28.184899000000208">
+<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-16T04:28:20.195Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.302" errors="0">
+<testcase name="History Tab Tests - Remmi E2E › Test 5: Check if the &quot;Event&quot; status correctly indicates the type of action" classname="Pages\Contacts\historyTab.spec.ts" time="24.302">
 </testcase>
 </testsuite>
 </testsuites>
