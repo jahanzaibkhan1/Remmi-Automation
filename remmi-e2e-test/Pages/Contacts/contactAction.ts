@@ -9057,5 +9057,35 @@ export class ContactActions {
         await expect(historyContainer.locator('text=/no record found/i')).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
     }
+
+    // Verify if history displays only relevant changes per contact
+    async verifyHistoryDisplaysRelevantChangesForContact(expectedUser: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+        // Wait for the history container and table
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+        // Wait for the first row to be visible
+        const firstRow = historyTable.locator("tbody tr").first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        // Get all rows in the history table
+        const rows = historyTable.locator("tbody tr");
+        const rowCount = await rows.count();
+        expect(rowCount).toBeGreaterThan(0);
+        for (let i = 0; i < rowCount; i++) {
+            const changedByCell = rows.nth(i).locator("td").nth(1); // 2nd column: Changed By
+            const changedByText = (await changedByCell.textContent())?.trim();
+            expect(changedByText).toBeTruthy();
+            // The cell should contain the expected user for all rows visible for the contact
+            expect(changedByText?.toLowerCase()).toContain(expectedUser.toLowerCase());
+        }
+        await this.closeModalIfVisible();
+    }
 }
 
