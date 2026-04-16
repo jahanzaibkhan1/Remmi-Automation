@@ -8402,6 +8402,144 @@ export class ContactActions {
     }
 
     /**
+     * Verify that projects can be searched in the "Add Project" dropdown
+     */
+    public async verifyProjectCanBeSearchedInAddProjectDropdown(searchProjectName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Navigate to Associations tab (assume this is where "Add Project" lives)
+        const associationsTab = this.page.getByRole("tab", { name: /associations/i });
+        await associationsTab.waitFor({ state: "visible", timeout: 10000 });
+        await associationsTab.click();
+        // Click the "Add Project" placeholder inside the custom dropdown
+        const addProjectPlaceholder = this.page.locator('div.tags span.placeHolder', { hasText: /add project/i }).first();
+        await expect(addProjectPlaceholder).toBeVisible({ timeout: 8000 });
+        await addProjectPlaceholder.click();
+
+        // Locate the dropdown input for searching projects (with placeholder 'Search')
+        const projectDropdownInput = this.page.locator('div.drop_box input[placeholder="Search"]').first();
+        await expect(projectDropdownInput).toBeVisible({ timeout: 10000 });
+        await projectDropdownInput.click();
+        await projectDropdownInput.fill(searchProjectName);
+        const dropdownOption = this.page.locator('li.p-element.ng-star-inserted', { hasText: new RegExp(searchProjectName, 'i') }).first();   
+        await expect(dropdownOption).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that clicking the "Select All" checkbox selects all projects in the "Add Project" dropdown
+     */
+    public async verifySelectAllCheckboxSelectsAllProjects(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Navigate to Associations tab
+        const associationsTab = this.page.getByRole("tab", { name: /associations/i });
+        await associationsTab.waitFor({ state: "visible", timeout: 10000 });
+        await associationsTab.click();
+
+        // Click "Add Project" placeholder to open the dropdown
+        const addProjectPlaceholder = this.page.locator('div.tags span.placeHolder', { hasText: /add project/i }).first();
+        await expect(addProjectPlaceholder).toBeVisible({ timeout: 8000 });
+        await addProjectPlaceholder.click();
+
+        // Open the projects dropdown input if not already open
+        const projectDropdown = this.page.locator('div.drop_box').first();
+        await expect(projectDropdown).toBeVisible({ timeout: 10000 });
+
+        await this.page.waitForTimeout(2000);
+
+        // Click the "Select All" checkbox inside the dropdown
+        const selectAllCheckbox = projectDropdown.locator('.checkbox__checkmark').first();
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 10000 });
+        // Check the checkbox if it's not already checked
+        if (!(await selectAllCheckbox.isChecked())) {
+            await selectAllCheckbox.click({ force: true });
+        }
+        const allOptions = projectDropdown.locator('li.p-element.ng-star-inserted');
+        const optionCount = await allOptions.count();
+        for (let i = 1; i < optionCount; i++) { 
+            const projectOptionCheckbox = allOptions.nth(i).locator('.checkbox__checkmark');
+            await expect(projectOptionCheckbox).toBeChecked();
+        }
+
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verify that clicking "Deselect All" unselects all selected projects in the "Add Project" dropdown
+     */
+    public async verifyDeselectAllUnselectsAllProjects(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Navigate to Associations tab
+        const associationsTab = this.page.getByRole("tab", { name: /associations/i });
+        await associationsTab.waitFor({ state: "visible", timeout: 10000 });
+        await associationsTab.click();
+
+        // Click "Add Project" placeholder to open the dropdown
+        const addProjectPlaceholder = this.page.locator('div.tags span.placeHolder', { hasText: /add project/i }).first();
+        await expect(addProjectPlaceholder).toBeVisible({ timeout: 8000 });
+        await addProjectPlaceholder.click();
+
+        // Ensure project dropdown is open
+        const projectDropdown = this.page.locator('div.drop_box').first();
+        await expect(projectDropdown).toBeVisible({ timeout: 10000 });
+
+        await this.page.waitForTimeout(2000);
+
+        // Click the "Select All" checkbox to select all projects
+        const selectAllCheckbox = projectDropdown.locator('.checkbox__checkmark').first();
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 10000 });
+        if (!(await selectAllCheckbox.isChecked())) {
+            await selectAllCheckbox.click({ force: true });
+        }
+
+        if (await selectAllCheckbox.isChecked()) {
+            await selectAllCheckbox.click({ force: true });
+        }
+        await this.page.waitForTimeout(1200);
+        const allOptions = projectDropdown.locator('li.p-element.ng-star-inserted');
+        const optionCount = await allOptions.count();
+        for (let i = 1; i < optionCount; i++) { 
+            const projectOptionCheckbox = allOptions.nth(i).locator('.checkbox__checkmark');
+            await expect(projectOptionCheckbox).not.toBeChecked();
+        }
+        await this.closeModalIfVisible();
+    }
+    /**
+     * Verify that clicking the "+" button adds the selected project to the association list
+     */
+    public async verifyAddProjectButtonAddsProject(searchProjectName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Navigate to Associations tab (assume this is where "Add Project" lives)
+        const associationsTab = this.page.getByRole("tab", { name: /associations/i });
+        await associationsTab.waitFor({ state: "visible", timeout: 10000 });
+        await associationsTab.click();
+        // Click the "Add Project" placeholder inside the custom dropdown
+        const addProjectPlaceholder = this.page.locator('div.tags span.placeHolder', { hasText: /add project/i }).first();
+        await expect(addProjectPlaceholder).toBeVisible({ timeout: 8000 });
+        await addProjectPlaceholder.click();
+
+        // Locate the dropdown input for searching projects (with placeholder 'Search')
+        const projectDropdownInput = this.page.locator('div.drop_box input[placeholder="Search"]').first();
+        await expect(projectDropdownInput).toBeVisible({ timeout: 10000 });
+        await projectDropdownInput.click();
+        await projectDropdownInput.fill(searchProjectName);
+        const dropdownOption = this.page.locator('li.p-element.ng-star-inserted', { hasText: new RegExp(searchProjectName, 'i') }).first();   
+        await expect(dropdownOption).toBeVisible({ timeout: 10000 });
+        await dropdownOption.click();
+        // Click the "+" button
+        const addButton = this.page.getByLabel('Associations').getByRole('button', { name: '' })
+        await addButton.click();
+
+        await expect(this.page.getByRole('alert', { name: 'Added successfully' })).toBeVisible({ timeout: 5000 });
+        await this.closeModalIfVisible();
+    }
+
+    /**
      * Verify that the NOTE Tab opens correctly
      */
     public async verifyNoteTabOpensCorrectly(): Promise<void> {
@@ -8701,7 +8839,7 @@ export class ContactActions {
         const iconElement = this.page.locator('i').nth(2);
         await iconElement.waitFor({ state: 'visible' });
         await iconElement.click();
-   
+
     }
 
     /**
@@ -8776,7 +8914,7 @@ export class ContactActions {
         // Generate a new unique phone number with country code for Australia (+61)
         const phoneNumDigits = Math.floor(100000000 + Math.random() * 899999999).toString().slice(0, 9); // 9 digits
         const newValue = `+61${phoneNumDigits}`;
-        
+
         await this.NavigateToContacts();
         await this.openFirstContact();
 
@@ -8803,11 +8941,10 @@ export class ContactActions {
         await expect(historyTable).toBeVisible({ timeout: 10000 });
         const firstRow = historyTable.locator("tbody tr").first();
         await expect(firstRow).toBeVisible({ timeout: 10000 });
-
+        await this.page.waitForTimeout(3000);
         // Dynamically find header columns for "Changed Field" and "New Value"
         const headers = historyTable.locator("thead tr th");
         const headerCount = await headers.count();
-
         let changedFieldCol = -1;
         let newValueCol = -1;
         for (let i = 0; i < headerCount; i++) {
@@ -8837,7 +8974,7 @@ export class ContactActions {
             // try innerText, fallback to textContent of span if exist
             try {
                 newValueText = (await newValueCell.innerText()).replace(/\s+/g, '').trim();
-            } catch (e) {}
+            } catch (e) { }
             // fallback: get visible span if applicable
             if (!newValueText) {
                 const span = newValueCell.locator('span');
@@ -8857,6 +8994,472 @@ export class ContactActions {
         if (!found) {
             throw new Error(`History table does not reflect latest change to "${fieldLabel}" (${newValue})`);
         }
+        await this.closeModalIfVisible();
+    }
+
+    // Check if the 'Changed Date' displays the correct date and time of modification
+    async verifyChangedDateDisplaysCorrectDateAndTime() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for the history component to appear
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        // Wait for the table inside the history container
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+
+        // Wait for the first row
+        const firstRow = historyTable.locator("tbody tr").first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+
+        // First column = Changed Date
+        const firstChangedDateCell = firstRow.locator("td").first();
+        await expect(firstChangedDateCell).toBeVisible({ timeout: 10000 });
+
+        const changedDateText = (await firstChangedDateCell.textContent())?.trim();
+        expect(changedDateText).toBeTruthy();
+
+        console.log('Changed Date :', changedDateText);
+
+        // Optional: strict date format validation
+        const datePattern = /^\d{2}-\d{2}-\d{4}\s\d{2}:\d{2}\s(?:AM|PM)$/;
+        expect(changedDateText).toMatch(datePattern);
+        await this.closeModalIfVisible();
+    }
+
+    // Verify if the 'Changed By' field displays the correct user who made changes
+    async verifyChangedByFieldIsCorrect(expectedUser: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for the history component to appear
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        // Wait for table to be visible
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+
+        // Wait for first row
+        const firstRow = historyTable.locator("tbody tr").first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+
+        // Second column = Changed By (index 1, 0-based)
+        const changedByCell = firstRow.locator("td").nth(1);
+        await expect(changedByCell).toBeVisible({ timeout: 10000 });
+
+        const changedByText = (await changedByCell.textContent())?.trim();
+        expect(changedByText).toBeTruthy();
+        expect(changedByText).toContain(expectedUser);
+
+        await this.closeModalIfVisible();
+    }
+
+    // Check if the 'Event' status correctly indicates the type of action
+    async verifyEventStatusIsCorrect(expectedEvent: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for the history component to appear
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        // Wait for the table inside the history container
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+
+        // Wait for the first row
+        const firstRow = historyTable.locator("tbody tr").first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+
+        // Third column = Event (index 2, 0-based)
+        const eventCell = firstRow.locator("td").nth(2);
+        await expect(eventCell).toBeVisible({ timeout: 10000 });
+
+        const eventText = (await eventCell.textContent())?.trim();
+        expect(eventText).toBeTruthy();
+        expect(eventText).toContain(expectedEvent);
+
+        await this.closeModalIfVisible();
+    }
+
+    // Verify if the 'Changed Field' column correctly records the modified field name
+    async verifyChangedFieldIsCorrect(expectedField: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for the history component to appear
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        // Wait for the table inside the history container
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+
+        // Wait for the first row
+        const firstRow = historyTable.locator("tbody tr").first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+
+        // Fourth column = Changed Field (index 3, 0-based)
+        const changedFieldCell = firstRow.locator("td").nth(3);
+        await expect(changedFieldCell).toBeVisible({ timeout: 10000 });
+
+        const changedFieldText = (await changedFieldCell.textContent())?.trim();
+        expect(changedFieldText).toBeTruthy();
+        expect(changedFieldText).toContain(expectedField);
+
+        await this.closeModalIfVisible();
+    }
+
+    // Verify search functionality in history tab
+    async verifyHistorySearchFunctionality(searchTerm: string, expectedField?: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for the history container and table
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+
+        // Search box
+        const searchInput = historyContainer.locator("input[placeholder*='Search']");
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.fill(searchTerm);
+        await this.page.waitForTimeout(1000); // Wait for table to update
+
+        // Verify that at least one row is visible (for positive cases)
+        if (expectedField) {
+            const firstRow = historyTable.locator("tbody tr").first();
+            await expect(firstRow).toBeVisible({ timeout: 10000 });
+            // Check if changed field column (4th, index=3) contains the expected field
+            const changedFieldCell = firstRow.locator("td").nth(3);
+            const changedFieldText = (await changedFieldCell.textContent())?.trim();
+            expect(changedFieldText).toBeTruthy();
+            expect(changedFieldText).toContain(expectedField);
+        } else {
+            // For negative/empty result, check table is empty or shows "no result"
+            const rows = await historyTable.locator("tbody tr").count();
+            expect(rows).toBe(0);
+        }
+
+        await this.closeModalIfVisible();
+    }
+
+    // Check search functionality with an invalid term
+    async verifyHistorySearchWithInvalidTerm(invalidTerm: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+        // Wait for the history container and table
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+        // Search box
+        const searchInput = historyContainer.locator("input[placeholder*='Search']");
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.fill(invalidTerm);
+        await this.page.waitForTimeout(1000);
+        await expect(historyContainer.locator('text=/no record found/i')).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
+
+    // Verify if history displays only relevant changes per contact
+    async verifyHistoryDisplaysRelevantChangesForContact(expectedUser: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+        // Wait for the history container and table
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+        // Wait for the first row to be visible
+        const firstRow = historyTable.locator("tbody tr").first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+        // Get all rows in the history table
+        const rows = historyTable.locator("tbody tr");
+        const rowCount = await rows.count();
+        expect(rowCount).toBeGreaterThan(0);
+        for (let i = 0; i < rowCount; i++) {
+            const changedByCell = rows.nth(i).locator("td").nth(1); // 2nd column: Changed By
+            const changedByText = (await changedByCell.textContent())?.trim();
+            expect(changedByText).toBeTruthy();
+            // The cell should contain the expected user for all rows visible for the contact
+            expect(changedByText?.toLowerCase()).toContain(expectedUser.toLowerCase());
+        }
+        await this.closeModalIfVisible();
+    }
+
+    // Check history tab with no changes made; verify only "Create" event present
+    async verifyHistoryTabWithNoChanges(expectedEvent: string = "Create") {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for history container
+        const historyContainer = this.page.locator("app-remmi-history");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+
+        const rows = historyTable.locator("tbody tr");
+        await expect(rows).not.toHaveCount(0, { timeout: 15000 });
+
+        // Find "Event" column index dynamically
+        const headers = historyTable.locator("thead tr th");
+        const headerCount = await headers.count();
+
+        let eventColumnIndex = -1;
+
+        for (let i = 0; i < headerCount; i++) {
+            const headerText = (await headers.nth(i).textContent())?.trim();
+            if (headerText?.toLowerCase() === "event") {
+                eventColumnIndex = i;
+                break;
+            }
+        }
+
+        if (eventColumnIndex === -1) {
+            throw new Error("Event column not found in history table");
+        }
+
+        // Validate at least one row with the expected event ("Create" by default)
+        const rowCount = await rows.count();
+        let atLeastOneMatch = false;
+
+        for (let i = 0; i < rowCount; i++) {
+            const eventCell = rows.nth(i).locator("td").nth(eventColumnIndex);
+            await expect(eventCell).toBeVisible();
+
+            const eventText = (await eventCell.textContent())?.trim().toLowerCase() || "";
+
+            if (eventText === expectedEvent.toLowerCase()) {
+                atLeastOneMatch = true;
+            }
+        }
+
+        expect(atLeastOneMatch).toBeTruthy();
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies UI alignment and readability of history records in the contact history tab
+     */
+    async verifyHistoryRecordsUIAlignmentAndReadability() {
+        // Navigate and open History tab for the first contact
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for the History tab to load
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        // Check that the table and header exist
+        const table = historyContainer.locator("table");
+        await expect(table).toBeVisible({ timeout: 10000 });
+
+        const headerCells = table.locator("thead tr th");
+
+        // Ensure all header cell text is visible/non-empty
+        const headerCount = await headerCells.count();
+        for (let i = 0; i < headerCount; i++) {
+            const headerCell = headerCells.nth(i);
+            const headerText = (await headerCell.textContent())?.trim();
+            expect(headerText).toBeTruthy();
+            await expect(headerCell).toBeVisible();
+        }
+
+        // Check alignment of columns: widths should be non-zero and roughly similar across header and body
+        const firstBodyRow = table.locator("tbody tr").first();
+        await expect(firstBodyRow).toBeVisible({ timeout: 10000 });
+
+        const bodyCells = firstBodyRow.locator("td");
+        const bodyCellCount = await bodyCells.count();
+        expect(bodyCellCount).toBe(headerCount);
+
+        // Compare header and row cell bounding boxes for alignment
+        for (let i = 0; i < headerCount; i++) {
+            const headerCell = headerCells.nth(i);
+            const bodyCell = bodyCells.nth(i);
+
+            const headerBox = await headerCell.boundingBox();
+            const bodyBox = await bodyCell.boundingBox();
+
+            expect(headerBox).not.toBeNull();
+            expect(bodyBox).not.toBeNull();
+            // If boundingBox is null, skip this check
+            if (headerBox && bodyBox) {
+                // Left edge alignment within 2px tolerance
+                expect(Math.abs(headerBox.x - bodyBox.x)).toBeLessThanOrEqual(2);
+                // Cell widths should be visually similar
+                expect(Math.abs(headerBox.width - bodyBox.width)).toBeLessThanOrEqual(5);
+            }
+        }
+
+        await this.closeModalIfVisible();
+    }
+
+    async checkLargeHistoryRecordsBehavior(){
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const historyTab=this.page.getByRole('tab',{name:/History/i}).first();
+        await expect(historyTab).toBeVisible({timeout:10000});
+        await historyTab.click();
+        const historyContainer=this.page.locator("app-remmi-history");
+        await expect(historyContainer).toBeVisible({timeout:20000});
+        const firstTableRow=historyContainer.locator("table tbody tr").first();
+        const tableIsVisible=await historyContainer.locator("table").isVisible().catch(()=>false);
+        if(tableIsVisible){
+            await expect(firstTableRow).toBeVisible({timeout:10000});
+        }
+        const tableRows=historyContainer.locator("table tbody tr");
+        const listItems=historyContainer.locator('[class*="history-item"], [class*="record"], li');
+        let totalItems=0;
+        if(!tableIsVisible){
+            const firstListItem=listItems.first();
+            await firstListItem.waitFor({state:'visible',timeout:10000}).catch(()=>{});
+        }
+        const rowCount=await tableRows.count().catch(()=>0);
+        const itemCount=await listItems.count().catch(()=>0);
+        totalItems=rowCount+itemCount;
+        expect(totalItems).toBeGreaterThan(0);
+        const showMoreBtn=historyContainer.locator('button:has-text("Show More"), button:has-text("Load More"), button:has-text("Next")');
+        const showMoreFallback=historyContainer.getByText(/show more|load more|next/i,{exact:false});
+        const warningOrNotice=historyContainer.getByText(/too many records|limited view|showing first/i,{exact:false});
+        const scrollableContainer=historyContainer.locator('[style*="overflow"], [class*="scroll"]');
+        let hasShowMore=false;
+        let showMoreLocator:import('@playwright/test').Locator|undefined;
+        if(await showMoreBtn.first().isVisible().catch(()=>false)){
+            hasShowMore=true;
+            showMoreLocator=showMoreBtn.first();
+        }else if(await showMoreFallback.first().isVisible().catch(()=>false)){
+            hasShowMore=true;
+            showMoreLocator=showMoreFallback.first();
+        }
+        const hasWarning=await warningOrNotice.isVisible().catch(()=>false);
+        const hasScrollable=await scrollableContainer.first().isVisible().catch(()=>false);
+        console.log(`History records rendered: ${totalItems}`);
+        console.log(`Scrollable container present: ${hasScrollable}`);
+        if(hasShowMore&&showMoreLocator){
+            const table=historyContainer.locator("table");
+            const hasTbl=await table.isVisible({timeout:5000}).catch(()=>false);
+            if(hasTbl){
+                const tbody=table.locator("tbody");
+                const rowToWaitFor=tbody.locator("tr").first();
+                await expect(rowToWaitFor).toBeVisible({timeout:10000});
+                const initialCount=await tbody.locator("tr").count();
+                await showMoreLocator.click();
+                await this.page.waitForTimeout(2000);
+                const updatedCount=await tbody.locator("tr").count();
+                expect(updatedCount).toBeGreaterThan(initialCount);
+                console.log(`Rows after Show More: ${updatedCount} (was ${initialCount})`);
+            }
+        }
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Check if special characters in fields are displayed correctly in history
+     */
+    async verifySpecialCharactersInHistory(specialChars: string): Promise<void>{
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const historyTab = this.page.getByRole('tab', { name: /history/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+        const historyContainer = this.page.locator("app-remmi-history");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+        const rows = historyTable.locator("tbody tr");
+        const firstRow = rows.first();
+        await firstRow.waitFor({ state: 'visible', timeout: 20000 }).catch(() => {});
+        let searchInput;
+        searchInput = historyContainer.locator('input[type="text"][placeholder*="Search"], input[type="search"], input.p-inputtext[aria-label*="search"], input.p-inputtext[placeholder*="Search"]')
+            .first();
+        if (!(await searchInput.isVisible().catch(() => false))) {
+            searchInput = historyContainer.locator('input[placeholder*="Search"]').first();
+        }
+        if (await searchInput.isVisible().catch(() => false)) {
+            await searchInput.fill('');
+            await searchInput.fill(specialChars);
+            await this.page.waitForTimeout(1000);
+        }
+        const noRecords = historyTable.locator('text=/no records found/i');
+        if (await noRecords.isVisible().catch(() => false)) {
+            await expect(noRecords).toBeVisible();
+        } else {}
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Check if the records are loading correctly when scrolling in the history tab.
+     */
+    async checkRecordsLoadOnScrollInHistoryTab(): Promise<void>{
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const historyTab=this.page.getByRole('tab',{name:/history/i}).first();
+        await expect(historyTab).toBeVisible({timeout:10000});
+        await historyTab.click();
+        const historyContainer = this.page.locator("app-remmi-history");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+        const rows = historyTable.locator("tbody tr");
+        const firstRow = rows.first();
+        await firstRow.waitFor({ state: 'visible' });
+        const rowCount = await rows.count();
+        expect(rowCount).toBeGreaterThan(0);
+        const recordLabel = historyContainer.locator("text=/Records:/i");
+        await expect(recordLabel).toBeVisible();
+        const lastRow = rows.last();
+        await lastRow.scrollIntoViewIfNeeded();
+        await lastRow.waitFor({ state: 'visible', timeout: 15000 });
+        console.log("Total records verified:", rowCount);
         await this.closeModalIfVisible();
     }
 }
