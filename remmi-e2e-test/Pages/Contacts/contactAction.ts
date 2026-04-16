@@ -8508,6 +8508,36 @@ export class ContactActions {
         }
         await this.closeModalIfVisible();
     }
+    /**
+     * Verify that clicking the "+" button adds the selected project to the association list
+     */
+    public async verifyAddProjectButtonAddsProject(searchProjectName: string): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Navigate to Associations tab (assume this is where "Add Project" lives)
+        const associationsTab = this.page.getByRole("tab", { name: /associations/i });
+        await associationsTab.waitFor({ state: "visible", timeout: 10000 });
+        await associationsTab.click();
+        // Click the "Add Project" placeholder inside the custom dropdown
+        const addProjectPlaceholder = this.page.locator('div.tags span.placeHolder', { hasText: /add project/i }).first();
+        await expect(addProjectPlaceholder).toBeVisible({ timeout: 8000 });
+        await addProjectPlaceholder.click();
+
+        // Locate the dropdown input for searching projects (with placeholder 'Search')
+        const projectDropdownInput = this.page.locator('div.drop_box input[placeholder="Search"]').first();
+        await expect(projectDropdownInput).toBeVisible({ timeout: 10000 });
+        await projectDropdownInput.click();
+        await projectDropdownInput.fill(searchProjectName);
+        const dropdownOption = this.page.locator('li.p-element.ng-star-inserted', { hasText: new RegExp(searchProjectName, 'i') }).first();   
+        await expect(dropdownOption).toBeVisible({ timeout: 10000 });
+        await dropdownOption.click();
+        // Click the "+" button
+        const addButton = this.page.getByLabel('Associations').getByRole('button', { name: '' })
+        await addButton.click();
+
+        await expect(this.page.getByRole('alert', { name: 'Added successfully' })).toBeVisible({ timeout: 5000 });
+        await this.closeModalIfVisible();
+    }
 
     /**
      * Verify that the NOTE Tab opens correctly
