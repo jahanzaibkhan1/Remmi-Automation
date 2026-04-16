@@ -54,4 +54,9 @@ test.describe('History Tab Tests - Remmi E2E', () => {
     await contact.verifyHistorySearchFunctionality('Mobile No', 'Mobile No');
   });
 
+  test('Test 8: Check search functionality with an invalid term', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyHistorySearchWithInvalidTerm('invalid_search_term_1234');
+  });
+
 }); 
