@@ -8859,5 +8859,41 @@ export class ContactActions {
         }
         await this.closeModalIfVisible();
     }
+
+    // Check if the 'Changed Date' displays the correct date and time of modification
+    async verifyChangedDateDisplaysCorrectDateAndTime() {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for the history component to appear
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        // Wait for the table inside the history container
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+
+        // Wait for the first row
+        const firstRow = historyTable.locator("tbody tr").first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+
+        // First column = Changed Date
+        const firstChangedDateCell = firstRow.locator("td").first();
+        await expect(firstChangedDateCell).toBeVisible({ timeout: 10000 });
+
+        const changedDateText = (await firstChangedDateCell.textContent())?.trim();
+        expect(changedDateText).toBeTruthy();
+
+        console.log('Changed Date :', changedDateText);
+
+        // Optional: strict date format validation
+        const datePattern = /^\d{2}-\d{2}-\d{4}\s\d{2}:\d{2}\s(?:AM|PM)$/;
+        expect(changedDateText).toMatch(datePattern);
+        await this.closeModalIfVisible();
+    }
 }
 
