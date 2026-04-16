@@ -39,4 +39,9 @@ test.describe('History Tab Tests - Remmi E2E', () => {
     await contact.verifyChangedByFieldIsCorrect('Jahanzaib Xenex');
   });
 
+  test('Test 5: Check if the "Event" status correctly indicates the type of action', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyEventStatusIsCorrect('Update');
+  });
+
 }); 

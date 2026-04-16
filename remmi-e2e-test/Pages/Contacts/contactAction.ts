@@ -8928,5 +8928,38 @@ export class ContactActions {
 
         await this.closeModalIfVisible();
     }
+
+    // Check if the 'Event' status correctly indicates the type of action
+    async verifyEventStatusIsCorrect(expectedEvent: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for the history component to appear
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        // Wait for the table inside the history container
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+
+        // Wait for the first row
+        const firstRow = historyTable.locator("tbody tr").first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+
+        // Third column = Event (index 2, 0-based)
+        const eventCell = firstRow.locator("td").nth(2);
+        await expect(eventCell).toBeVisible({ timeout: 10000 });
+
+        const eventText = (await eventCell.textContent())?.trim();
+        expect(eventText).toBeTruthy();
+        expect(eventText).toContain(expectedEvent);
+
+        await this.closeModalIfVisible();
+    }
 }
 
