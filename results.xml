@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.9352340000011">
-<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-15T11:07:20.731Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.182" errors="0">
-<testcase name="History Tab Tests - Remmi E2E › Test 2: Verify if changes to a contact field are reflected in history" classname="Pages\Contacts\historyTab.spec.ts" time="31.182">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.3046799999997">
+<testsuite name="Pages\Contacts\Association.spec.ts" timestamp="2026-04-16T11:22:03.247Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.847" errors="0">
+<testcase name="Associations Tab Tests - Remmi E2E › Verify that clicking the &quot;+&quot; button adds the selected project to the list" classname="Pages\Contacts\Association.spec.ts" time="36.847">
 </testcase>
 </testsuite>
 </testsuites>

@@ -39,4 +39,24 @@ test.describe('Associations Tab Tests - Remmi E2E', () => {
     await contact.verifyLoginAccessNotGrantedWithoutPassword();
   });
 
+  test('Verify that projects can be searched in the "Add Project" dropdown', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyProjectCanBeSearchedInAddProjectDropdown('east Village Vila');
+  });
+
+  test('Verify that clicking the "Select All" checkbox selects all projects in the "Add Project" dropdown', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifySelectAllCheckboxSelectsAllProjects();
+  });
+
+  test('Verify that clicking "Deselect All" unselects all selected projects', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyDeselectAllUnselectsAllProjects();
+  });
+
+  test('Verify that clicking the "+" button adds the selected project to the list', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyAddProjectButtonAddsProject('east Village Vila');
+  });
+
 });
