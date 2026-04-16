@@ -39,4 +39,9 @@ test.describe('Associations Tab Tests - Remmi E2E', () => {
     await contact.verifyLoginAccessNotGrantedWithoutPassword();
   });
 
+  test('Verify that projects can be searched in the "Add Project" dropdown', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyProjectCanBeSearchedInAddProjectDropdown('east Village Vila');
+  });
+
 });

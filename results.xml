@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.91484200000018">
-<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-16T09:34:19.389Z" hostname="chromium" tests="1" failures="0" skipped="0" time="56.245" errors="0">
-<testcase name="History Tab Tests - Remmi E2E › Test 15: Check if the history tab refreshes correctly" classname="Pages\Contacts\historyTab.spec.ts" time="56.245">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.199413000000174">
+<testsuite name="Pages\Contacts\Association.spec.ts" timestamp="2026-04-16T11:05:42.832Z" hostname="chromium" tests="1" failures="0" skipped="0" time="25.643" errors="0">
+<testcase name="Associations Tab Tests - Remmi E2E › Verify that projects can be searched in the &quot;Add Project&quot; dropdown" classname="Pages\Contacts\Association.spec.ts" time="25.643">
 </testcase>
 </testsuite>
 </testsuites>
