@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="45.16428800000018">
-<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-16T05:01:36.001Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.849" errors="0">
-<testcase name="History Tab Tests - Remmi E2E › Test 10: Check history tab with no changes made" classname="Pages\Contacts\historyTab.spec.ts" time="38.849">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="45.97394600000046">
+<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-16T05:05:15.496Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.581" errors="0">
+<testcase name="History Tab Tests - Remmi E2E › Test 11: Verify UI alignment and readability of history records" classname="Pages\Contacts\historyTab.spec.ts" time="41.581">
 </testcase>
 </testsuite>
 </testsuites>

@@ -8701,7 +8701,7 @@ export class ContactActions {
         const iconElement = this.page.locator('i').nth(2);
         await iconElement.waitFor({ state: 'visible' });
         await iconElement.click();
-   
+
     }
 
     /**
@@ -8776,7 +8776,7 @@ export class ContactActions {
         // Generate a new unique phone number with country code for Australia (+61)
         const phoneNumDigits = Math.floor(100000000 + Math.random() * 899999999).toString().slice(0, 9); // 9 digits
         const newValue = `+61${phoneNumDigits}`;
-        
+
         await this.NavigateToContacts();
         await this.openFirstContact();
 
@@ -8837,7 +8837,7 @@ export class ContactActions {
             // try innerText, fallback to textContent of span if exist
             try {
                 newValueText = (await newValueCell.innerText()).replace(/\s+/g, '').trim();
-            } catch (e) {}
+            } catch (e) { }
             // fallback: get visible span if applicable
             if (!newValueText) {
                 const span = newValueCell.locator('span');
@@ -9142,6 +9142,67 @@ export class ContactActions {
         }
 
         expect(atLeastOneMatch).toBeTruthy();
+        await this.closeModalIfVisible();
+    }
+
+    /**
+     * Verifies UI alignment and readability of history records in the contact history tab
+     */
+    async verifyHistoryRecordsUIAlignmentAndReadability() {
+        // Navigate and open History tab for the first contact
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for the History tab to load
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        // Check that the table and header exist
+        const table = historyContainer.locator("table");
+        await expect(table).toBeVisible({ timeout: 10000 });
+
+        const headerCells = table.locator("thead tr th");
+
+        // Ensure all header cell text is visible/non-empty
+        const headerCount = await headerCells.count();
+        for (let i = 0; i < headerCount; i++) {
+            const headerCell = headerCells.nth(i);
+            const headerText = (await headerCell.textContent())?.trim();
+            expect(headerText).toBeTruthy();
+            await expect(headerCell).toBeVisible();
+        }
+
+        // Check alignment of columns: widths should be non-zero and roughly similar across header and body
+        const firstBodyRow = table.locator("tbody tr").first();
+        await expect(firstBodyRow).toBeVisible({ timeout: 10000 });
+
+        const bodyCells = firstBodyRow.locator("td");
+        const bodyCellCount = await bodyCells.count();
+        expect(bodyCellCount).toBe(headerCount);
+
+        // Compare header and row cell bounding boxes for alignment
+        for (let i = 0; i < headerCount; i++) {
+            const headerCell = headerCells.nth(i);
+            const bodyCell = bodyCells.nth(i);
+
+            const headerBox = await headerCell.boundingBox();
+            const bodyBox = await bodyCell.boundingBox();
+
+            expect(headerBox).not.toBeNull();
+            expect(bodyBox).not.toBeNull();
+            // If boundingBox is null, skip this check
+            if (headerBox && bodyBox) {
+                // Left edge alignment within 2px tolerance
+                expect(Math.abs(headerBox.x - bodyBox.x)).toBeLessThanOrEqual(2);
+                // Cell widths should be visually similar
+                expect(Math.abs(headerBox.width - bodyBox.width)).toBeLessThanOrEqual(5);
+            }
+        }
+
         await this.closeModalIfVisible();
     }
 }
