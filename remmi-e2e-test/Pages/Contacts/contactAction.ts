@@ -8994,5 +8994,46 @@ export class ContactActions {
 
         await this.closeModalIfVisible();
     }
+
+    // Verify search functionality in history tab
+    async verifyHistorySearchFunctionality(searchTerm: string, expectedField?: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for the history container and table
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+
+        // Search box
+        const searchInput = historyContainer.locator("input[placeholder*='Search']");
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.fill(searchTerm);
+        await this.page.waitForTimeout(1000); // Wait for table to update
+
+        // Verify that at least one row is visible (for positive cases)
+        if (expectedField) {
+            const firstRow = historyTable.locator("tbody tr").first();
+            await expect(firstRow).toBeVisible({ timeout: 10000 });
+            // Check if changed field column (4th, index=3) contains the expected field
+            const changedFieldCell = firstRow.locator("td").nth(3);
+            const changedFieldText = (await changedFieldCell.textContent())?.trim();
+            expect(changedFieldText).toBeTruthy();
+            expect(changedFieldText).toContain(expectedField);
+        } else {
+            // For negative/empty result, check table is empty or shows "no result"
+            const rows = await historyTable.locator("tbody tr").count();
+            expect(rows).toBe(0);
+        }
+
+        await this.closeModalIfVisible();
+    }
 }
 

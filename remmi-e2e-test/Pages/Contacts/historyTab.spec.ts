@@ -49,4 +49,9 @@ test.describe('History Tab Tests - Remmi E2E', () => {
     await contact.verifyChangedFieldIsCorrect('Mobile No');
   });
 
+  test('Test 7: Verify search functionality in history tab', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyHistorySearchFunctionality('Mobile No', 'Mobile No');
+  });
+
 }); 
