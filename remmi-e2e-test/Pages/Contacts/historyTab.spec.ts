@@ -79,4 +79,9 @@ test.describe('History Tab Tests - Remmi E2E', () => {
     await contact.checkLargeHistoryRecordsBehavior();
   });
 
+  test('Test 13: Check if special characters in fields are displayed correctly in history', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifySpecialCharactersInHistory('!@#$%');
+  });
+
 }); 

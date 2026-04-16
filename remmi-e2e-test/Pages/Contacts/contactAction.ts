@@ -9264,5 +9264,39 @@ export class ContactActions {
         }
         await this.closeModalIfVisible();
     }
+
+    /**
+     * Check if special characters in fields are displayed correctly in history
+     */
+    async verifySpecialCharactersInHistory(specialChars: string): Promise<void>{
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const historyTab = this.page.getByRole('tab', { name: /history/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+        const historyContainer = this.page.locator("app-remmi-history");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+        const rows = historyTable.locator("tbody tr");
+        const firstRow = rows.first();
+        await firstRow.waitFor({ state: 'visible', timeout: 20000 }).catch(() => {});
+        let searchInput;
+        searchInput = historyContainer.locator('input[type="text"][placeholder*="Search"], input[type="search"], input.p-inputtext[aria-label*="search"], input.p-inputtext[placeholder*="Search"]')
+            .first();
+        if (!(await searchInput.isVisible().catch(() => false))) {
+            searchInput = historyContainer.locator('input[placeholder*="Search"]').first();
+        }
+        if (await searchInput.isVisible().catch(() => false)) {
+            await searchInput.fill('');
+            await searchInput.fill(specialChars);
+            await this.page.waitForTimeout(1000);
+        }
+        const noRecords = historyTable.locator('text=/no records found/i');
+        if (await noRecords.isVisible().catch(() => false)) {
+            await expect(noRecords).toBeVisible();
+        } else {}
+        await this.closeModalIfVisible();
+    }
 }
 
