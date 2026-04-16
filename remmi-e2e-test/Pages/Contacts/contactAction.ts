@@ -8803,11 +8803,10 @@ export class ContactActions {
         await expect(historyTable).toBeVisible({ timeout: 10000 });
         const firstRow = historyTable.locator("tbody tr").first();
         await expect(firstRow).toBeVisible({ timeout: 10000 });
-
+        await this.page.waitForTimeout(3000);
         // Dynamically find header columns for "Changed Field" and "New Value"
         const headers = historyTable.locator("thead tr th");
         const headerCount = await headers.count();
-
         let changedFieldCol = -1;
         let newValueCol = -1;
         for (let i = 0; i < headerCount; i++) {

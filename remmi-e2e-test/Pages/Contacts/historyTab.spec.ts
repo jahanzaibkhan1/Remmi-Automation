@@ -89,4 +89,9 @@ test.describe('History Tab Tests - Remmi E2E', () => {
     await contact.checkRecordsLoadOnScrollInHistoryTab();
   });
 
+  test('Test 15: Check if the history tab refreshes correctly', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyContactFieldChangeIsReflectedInHistory();
+  });
+
 }); 
