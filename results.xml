@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.40253600000031">
-<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-16T05:24:23.419Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.422" errors="0">
-<testcase name="History Tab Tests - Remmi E2E › Test 13: Check if special characters in fields are displayed correctly in history" classname="Pages\Contacts\historyTab.spec.ts" time="45.422">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.914864999999295">
+<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-16T05:30:07.511Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.677" errors="0">
+<testcase name="History Tab Tests - Remmi E2E › Test 14: Check if the records are loading correctly when scrolling" classname="Pages\Contacts\historyTab.spec.ts" time="40.677">
+<system-out>
+<![CDATA[Total records verified: [33m30[39m
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
