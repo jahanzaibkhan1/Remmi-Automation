@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="28.19781799999997">
-<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-16T04:30:30.100Z" hostname="chromium" tests="1" failures="0" skipped="0" time="24.325" errors="0">
-<testcase name="History Tab Tests - Remmi E2E › Test 6: Verify if the &quot;Changed Field&quot; column correctly records the modified field name" classname="Pages\Contacts\historyTab.spec.ts" time="24.325">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.1816669999999">
+<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-16T04:32:11.500Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.311" errors="0">
+<testcase name="History Tab Tests - Remmi E2E › Test 7: Verify search functionality in history tab" classname="Pages\Contacts\historyTab.spec.ts" time="30.311">
 </testcase>
 </testsuite>
 </testsuites>
