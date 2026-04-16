@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.9352340000011">
-<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-15T11:07:20.731Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.182" errors="0">
-<testcase name="History Tab Tests - Remmi E2E › Test 2: Verify if changes to a contact field are reflected in history" classname="Pages\Contacts\historyTab.spec.ts" time="31.182">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="77.10192500000005">
+<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-16T04:22:53.921Z" hostname="chromium" tests="1" failures="0" skipped="0" time="71.59" errors="0">
+<testcase name="History Tab Tests - Remmi E2E › Test 3: Check if the &quot;Changed Date&quot; displays the correct date and time of modification" classname="Pages\Contacts\historyTab.spec.ts" time="71.59">
+<system-out>
+<![CDATA[Changed Date : 16-04-2026 08:24 AM
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>

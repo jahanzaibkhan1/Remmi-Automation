@@ -29,4 +29,9 @@ test.describe('History Tab Tests - Remmi E2E', () => {
     await contact.verifyContactFieldChangeIsReflectedInHistory();
   });
 
+  test('Test 3: Check if the "Changed Date" displays the correct date and time of modification', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyChangedDateDisplaysCorrectDateAndTime();
+  });
+
 }); 
