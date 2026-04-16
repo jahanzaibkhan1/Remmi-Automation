@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.53331100000022">
-<testsuite name="Pages\Contacts\Association.spec.ts" timestamp="2026-04-16T11:13:55.943Z" hostname="chromium" tests="1" failures="0" skipped="0" time="26.725" errors="0">
-<testcase name="Associations Tab Tests - Remmi E2E › Verify that clicking &quot;Deselect All&quot; unselects all selected projects" classname="Pages\Contacts\Association.spec.ts" time="26.725">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.3046799999997">
+<testsuite name="Pages\Contacts\Association.spec.ts" timestamp="2026-04-16T11:22:03.247Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.847" errors="0">
+<testcase name="Associations Tab Tests - Remmi E2E › Verify that clicking the &quot;+&quot; button adds the selected project to the list" classname="Pages\Contacts\Association.spec.ts" time="36.847">
 </testcase>
 </testsuite>
 </testsuites>

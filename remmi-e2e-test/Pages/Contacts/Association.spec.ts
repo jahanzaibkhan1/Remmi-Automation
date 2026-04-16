@@ -54,4 +54,9 @@ test.describe('Associations Tab Tests - Remmi E2E', () => {
     await contact.verifyDeselectAllUnselectsAllProjects();
   });
 
+  test('Verify that clicking the "+" button adds the selected project to the list', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyAddProjectButtonAddsProject('east Village Vila');
+  });
+
 });
