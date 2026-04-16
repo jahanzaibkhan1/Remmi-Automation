@@ -34,4 +34,9 @@ test.describe('History Tab Tests - Remmi E2E', () => {
     await contact.verifyChangedDateDisplaysCorrectDateAndTime();
   });
 
+  test('Test 4: Verify if the "Changed By" field displays the correct user who made changes', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyChangedByFieldIsCorrect('Jahanzaib Xenex');
+  });
+
 }); 

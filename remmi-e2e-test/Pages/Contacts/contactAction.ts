@@ -8895,5 +8895,38 @@ export class ContactActions {
         expect(changedDateText).toMatch(datePattern);
         await this.closeModalIfVisible();
     }
+
+    // Verify if the 'Changed By' field displays the correct user who made changes
+    async verifyChangedByFieldIsCorrect(expectedUser: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+
+        // Wait for the history component to appear
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+
+        // Wait for table to be visible
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+
+        // Wait for first row
+        const firstRow = historyTable.locator("tbody tr").first();
+        await expect(firstRow).toBeVisible({ timeout: 10000 });
+
+        // Second column = Changed By (index 1, 0-based)
+        const changedByCell = firstRow.locator("td").nth(1);
+        await expect(changedByCell).toBeVisible({ timeout: 10000 });
+
+        const changedByText = (await changedByCell.textContent())?.trim();
+        expect(changedByText).toBeTruthy();
+        expect(changedByText).toContain(expectedUser);
+
+        await this.closeModalIfVisible();
+    }
 }
 
