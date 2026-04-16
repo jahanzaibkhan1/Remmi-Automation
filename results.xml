@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.1816669999999">
-<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-16T04:32:11.500Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.311" errors="0">
-<testcase name="History Tab Tests - Remmi E2E › Test 7: Verify search functionality in history tab" classname="Pages\Contacts\historyTab.spec.ts" time="30.311">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="34.90520399999991">
+<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-16T04:37:02.905Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.269" errors="0">
+<testcase name="History Tab Tests - Remmi E2E › Test 8: Check search functionality with an invalid term" classname="Pages\Contacts\historyTab.spec.ts" time="29.269">
 </testcase>
 </testsuite>
 </testsuites>

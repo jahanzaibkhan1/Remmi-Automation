@@ -9035,5 +9035,27 @@ export class ContactActions {
 
         await this.closeModalIfVisible();
     }
+
+    // Check search functionality with an invalid term
+    async verifyHistorySearchWithInvalidTerm(invalidTerm: string) {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        // Open the History tab
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
+        await historyTab.click();
+        // Wait for the history container and table
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
+        await expect(historyContainer).toBeVisible({ timeout: 15000 });
+        const historyTable = historyContainer.locator("table");
+        await expect(historyTable).toBeVisible({ timeout: 15000 });
+        // Search box
+        const searchInput = historyContainer.locator("input[placeholder*='Search']");
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.fill(invalidTerm);
+        await this.page.waitForTimeout(1000);
+        await expect(historyContainer.locator('text=/no record found/i')).toBeVisible({ timeout: 10000 });
+        await this.closeModalIfVisible();
+    }
 }
 
