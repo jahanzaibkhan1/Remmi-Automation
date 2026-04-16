@@ -68,5 +68,10 @@ test.describe('History Tab Tests - Remmi E2E', () => {
     const contact = new ContactActions(sessionPage);
     await contact.verifyHistoryTabWithNoChanges('Create');
   });
-  
+
+  test('Test 11: Verify UI alignment and readability of history records', async ({ sessionPage }) => {
+    const contact = new ContactActions(sessionPage);
+    await contact.verifyHistoryRecordsUIAlignmentAndReadability();
+  });
+
 }); 
