@@ -8427,6 +8427,46 @@ export class ContactActions {
     }
 
     /**
+     * Verify that clicking the "Select All" checkbox selects all projects in the "Add Project" dropdown
+     */
+    public async verifySelectAllCheckboxSelectsAllProjects(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+
+        // Navigate to Associations tab
+        const associationsTab = this.page.getByRole("tab", { name: /associations/i });
+        await associationsTab.waitFor({ state: "visible", timeout: 10000 });
+        await associationsTab.click();
+
+        // Click "Add Project" placeholder to open the dropdown
+        const addProjectPlaceholder = this.page.locator('div.tags span.placeHolder', { hasText: /add project/i }).first();
+        await expect(addProjectPlaceholder).toBeVisible({ timeout: 8000 });
+        await addProjectPlaceholder.click();
+
+        // Open the projects dropdown input if not already open
+        const projectDropdown = this.page.locator('div.drop_box').first();
+        await expect(projectDropdown).toBeVisible({ timeout: 10000 });
+
+        await this.page.waitForTimeout(2000);
+
+        // Click the "Select All" checkbox inside the dropdown
+        const selectAllCheckbox = projectDropdown.locator('.checkbox__checkmark').first();
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 10000 });
+        // Check the checkbox if it's not already checked
+        if (!(await selectAllCheckbox.isChecked())) {
+            await selectAllCheckbox.click({ force: true });
+        }
+        const allOptions = projectDropdown.locator('li.p-element.ng-star-inserted');
+        const optionCount = await allOptions.count();
+        for (let i = 1; i < optionCount; i++) { 
+            const projectOptionCheckbox = allOptions.nth(i).locator('.checkbox__checkmark');
+            await expect(projectOptionCheckbox).toBeChecked();
+        }
+
+        await this.closeModalIfVisible();
+    }
+
+    /**
      * Verify that the NOTE Tab opens correctly
      */
     public async verifyNoteTabOpensCorrectly(): Promise<void> {
