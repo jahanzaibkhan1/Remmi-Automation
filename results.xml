@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.471273000000046">
-<testsuite name="Pages\Listing\listingLegal.spec.ts" timestamp="2026-04-17T10:23:17.273Z" hostname="chromium" tests="1" failures="0" skipped="0" time="49.494" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 7: Verify that the contract is displayed in the Legal tab after saving the contract popup" classname="Pages\Listing\listingLegal.spec.ts" time="49.494">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.50563100000098">
+<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-04-17T11:12:27.056Z" hostname="chromium" tests="1" failures="0" skipped="0" time="49.478" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 26: Verify that all fields of the original task are copied correctly to the new task when the &quot;Copy Task&quot; option is used." classname="Pages\Listing\listingTaskForm.spec.ts" time="49.478">
 </testcase>
 </testsuite>
 </testsuites>

@@ -21441,11 +21441,15 @@ export class ListingActions {
         // Set the listing field to the same value as original
         const listingDropdown = this.page.locator('div').filter({ hasText: /^Select Listing$/ }).nth(1);
         await listingDropdown.waitFor({ state: 'visible', timeout: 10000 });
+        await listingDropdown.evaluate((el) => el.scrollIntoView({ behavior: "auto", block: "center" }));
+   
         await listingDropdown.click();
         const listingSearchBox = this.page.locator('[id="Task: REM-null_1"]').getByRole('textbox', { name: 'Search' });
         await expect(listingSearchBox).toBeVisible({ timeout: 10000 });
+        await listingSearchBox.evaluate((el) => el.scrollIntoView({ behavior: "auto", block: "center" }));
         await listingSearchBox.fill(listingName);
-        const desiredListingOption = this.page.locator('[id="Task: REM-null_1"]').getByText(new RegExp(listingName, 'i')).last();
+
+        const desiredListingOption = this.page.locator('li', { has: this.page.locator('p', { hasText: listingName }) }).last();
         await desiredListingOption.click();
 
         // Save the copied task
