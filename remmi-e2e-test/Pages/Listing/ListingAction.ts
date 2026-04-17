@@ -12458,7 +12458,9 @@ export class ListingActions {
         const rowLocator = this.page.locator('tr', { hasText: 'Dawood Ahmad' }).first();
 
         // Wait for at least one row to be visible (assuming the saved contract is added at the start)
+        await rowLocator.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
         await expect(rowLocator.first()).toBeVisible({ timeout: 10000 });
+
 
         const closeBtn = this.page.locator('.pi.pi-times').first();
         if (await closeBtn.isVisible().catch(() => false)) {
