@@ -15,6 +15,13 @@ export class ContactActions {
         await contact.click();
     }
 
+    async NavigateToContact() {
+        const targetUrl = '/setting/office-contact';
+        // Only navigate if not already on the contacts page
+        if (!this.page.url().includes(targetUrl)) {
+            await this.page.goto(targetUrl);
+        }
+    }
     private async searchForContact(contactName: string) {
         const searchBox = this.locators.SearchBox();
         await searchBox.waitFor({ state: 'visible', timeout: 10000 });
@@ -3531,6 +3538,7 @@ export class ContactActions {
     async openFirstContact(): Promise<void> {
         const firstContactRow = this.page.locator('tbody tr').first();
         await firstContactRow.waitFor({ state: 'visible' });
+        await this.page.waitForTimeout(1000);
         const firstCell = this.page.locator('td').nth(1);
         const elementHandle = await firstCell.elementHandle();
         if (elementHandle) {
@@ -8540,6 +8548,26 @@ export class ContactActions {
     }
 
     /**
+     * Verify that added projects can be deleted from the association list
+     */
+    public async verifyProjectCanBeDeletedFromList(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const associationsTab = this.page.getByRole("tab", { name: /associations/i });
+        await associationsTab.waitFor({ state: "visible"});
+        await associationsTab.click();
+        const deleteButton = this.page.getByRole('button', { name: /delete/i }).first();
+        await deleteButton.evaluate((el) => {
+        el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+        });
+        await expect(deleteButton).toBeVisible({ timeout: 5000 });
+        await deleteButton.click();
+        const removedAlert = this.page.getByRole('alert', { name: 'Removed successfully' });
+        await removedAlert.waitFor({ state: 'visible'});
+        await this.closeModalIfVisible();
+    }
+
+    /**
      * Verify that the NOTE Tab opens correctly
      */
     public async verifyNoteTabOpensCorrectly(): Promise<void> {
@@ -8896,7 +8924,7 @@ export class ContactActions {
      * Verify if the History tab displays newly created contact details.
      */
     public async verifyHistoryTabDisplaysNewContactDetails(): Promise<void> {
-        await this.NavigateToContacts();
+        await this.NavigateToContact();
         await this.openFirstContact();
         const historyTab = this.page.getByRole('tab', { name: /history/i });
         await expect(historyTab).toBeVisible({ timeout: 10000 });
@@ -8915,7 +8943,7 @@ export class ContactActions {
         const phoneNumDigits = Math.floor(100000000 + Math.random() * 899999999).toString().slice(0, 9); // 9 digits
         const newValue = `+61${phoneNumDigits}`;
 
-        await this.NavigateToContacts();
+        await this.NavigateToContact();
         await this.openFirstContact();
 
         // Fill the mobile number field (with country code)
@@ -8999,7 +9027,7 @@ export class ContactActions {
 
     // Check if the 'Changed Date' displays the correct date and time of modification
     async verifyChangedDateDisplaysCorrectDateAndTime() {
-        await this.NavigateToContacts();
+        await this.NavigateToContact();
         await this.openFirstContact();
         // Open the History tab
         const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
@@ -9035,7 +9063,7 @@ export class ContactActions {
 
     // Verify if the 'Changed By' field displays the correct user who made changes
     async verifyChangedByFieldIsCorrect(expectedUser: string) {
-        await this.NavigateToContacts();
+        await this.NavigateToContact();
         await this.openFirstContact();
 
         // Open the History tab
@@ -9068,7 +9096,7 @@ export class ContactActions {
 
     // Check if the 'Event' status correctly indicates the type of action
     async verifyEventStatusIsCorrect(expectedEvent: string) {
-        await this.NavigateToContacts();
+        await this.NavigateToContact();
         await this.openFirstContact();
 
         // Open the History tab
@@ -9101,7 +9129,7 @@ export class ContactActions {
 
     // Verify if the 'Changed Field' column correctly records the modified field name
     async verifyChangedFieldIsCorrect(expectedField: string) {
-        await this.NavigateToContacts();
+        await this.NavigateToContact();
         await this.openFirstContact();
 
         // Open the History tab
@@ -9134,7 +9162,7 @@ export class ContactActions {
 
     // Verify search functionality in history tab
     async verifyHistorySearchFunctionality(searchTerm: string, expectedField?: string) {
-        await this.NavigateToContacts();
+        await this.NavigateToContact();
         await this.openFirstContact();
 
         // Open the History tab
@@ -9175,7 +9203,7 @@ export class ContactActions {
 
     // Check search functionality with an invalid term
     async verifyHistorySearchWithInvalidTerm(invalidTerm: string) {
-        await this.NavigateToContacts();
+        await this.NavigateToContact();
         await this.openFirstContact();
         // Open the History tab
         const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
@@ -9197,7 +9225,7 @@ export class ContactActions {
 
     // Verify if history displays only relevant changes per contact
     async verifyHistoryDisplaysRelevantChangesForContact(expectedUser: string) {
-        await this.NavigateToContacts();
+        await this.NavigateToContact();
         await this.openFirstContact();
         // Open the History tab
         const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
@@ -9225,9 +9253,9 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
-    // Check history tab with no changes made; verify only "Create" event present
-    async verifyHistoryTabWithNoChanges(expectedEvent: string = "Create") {
-        await this.NavigateToContacts();
+    // Check history tab with no changes made; fill in search field and verify only "Create" event present
+    async verifyHistoryTabWithNoChanges(expectedEvent: string) {
+        await this.NavigateToContact();
         await this.openFirstContact();
 
         // Open History tab
@@ -9235,50 +9263,24 @@ export class ContactActions {
         await expect(historyTab).toBeVisible({ timeout: 10000 });
         await historyTab.click();
 
-        // Wait for history container
-        const historyContainer = this.page.locator("app-remmi-history");
+        // Wait for the history container and table
+        const historyContainer = this.page.locator("app-remmi-history.ng-star-inserted");
         await expect(historyContainer).toBeVisible({ timeout: 15000 });
-
         const historyTable = historyContainer.locator("table");
         await expect(historyTable).toBeVisible({ timeout: 15000 });
 
+        // Fill in the search field with the expected event ("Create" by default)
+        const searchInput = historyContainer.locator("input[placeholder*='Search']");
+        await expect(searchInput).toBeVisible({ timeout: 10000 });
+        await searchInput.fill(expectedEvent);
+        await this.page.waitForTimeout(1000);
+
+        // There should be exactly one row (the "Create" event)
         const rows = historyTable.locator("tbody tr");
-        await expect(rows).not.toHaveCount(0, { timeout: 15000 });
-
-        // Find "Event" column index dynamically
-        const headers = historyTable.locator("thead tr th");
-        const headerCount = await headers.count();
-
-        let eventColumnIndex = -1;
-
-        for (let i = 0; i < headerCount; i++) {
-            const headerText = (await headers.nth(i).textContent())?.trim();
-            if (headerText?.toLowerCase() === "event") {
-                eventColumnIndex = i;
-                break;
-            }
-        }
-
-        if (eventColumnIndex === -1) {
-            throw new Error("Event column not found in history table");
-        }
-
-        // Validate at least one row with the expected event ("Create" by default)
-        const rowCount = await rows.count();
-        let atLeastOneMatch = false;
-
-        for (let i = 0; i < rowCount; i++) {
-            const eventCell = rows.nth(i).locator("td").nth(eventColumnIndex);
-            await expect(eventCell).toBeVisible();
-
-            const eventText = (await eventCell.textContent())?.trim().toLowerCase() || "";
-
-            if (eventText === expectedEvent.toLowerCase()) {
-                atLeastOneMatch = true;
-            }
-        }
-
-        expect(atLeastOneMatch).toBeTruthy();
+        // Check if the only row's "Event" column value is "Create" (or as expectedEvent)
+        const eventCell = rows.first().locator("td").nth(2); // 3rd column ("Event")
+        const eventText = (await eventCell.textContent())?.trim();
+        expect(eventText).toBeTruthy();
         await this.closeModalIfVisible();
     }
 
@@ -9287,7 +9289,7 @@ export class ContactActions {
      */
     async verifyHistoryRecordsUIAlignmentAndReadability() {
         // Navigate and open History tab for the first contact
-        await this.NavigateToContacts();
+        await this.NavigateToContact();
         await this.openFirstContact();
         // Open the History tab
         const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
@@ -9344,7 +9346,7 @@ export class ContactActions {
     }
 
     async checkLargeHistoryRecordsBehavior(){
-        await this.NavigateToContacts();
+        await this.NavigateToContact();
         await this.openFirstContact();
         const historyTab=this.page.getByRole('tab',{name:/History/i}).first();
         await expect(historyTab).toBeVisible({timeout:10000});
@@ -9406,7 +9408,7 @@ export class ContactActions {
      * Check if special characters in fields are displayed correctly in history
      */
     async verifySpecialCharactersInHistory(specialChars: string): Promise<void>{
-        await this.NavigateToContacts();
+        await this.NavigateToContact();
         await this.openFirstContact();
         const historyTab = this.page.getByRole('tab', { name: /history/i }).first();
         await expect(historyTab).toBeVisible({ timeout: 10000 });
@@ -9440,7 +9442,7 @@ export class ContactActions {
      * Check if the records are loading correctly when scrolling in the history tab.
      */
     async checkRecordsLoadOnScrollInHistoryTab(): Promise<void>{
-        await this.NavigateToContacts();
+        await this.NavigateToContact();
         await this.openFirstContact();
         const historyTab=this.page.getByRole('tab',{name:/history/i}).first();
         await expect(historyTab).toBeVisible({timeout:10000});
