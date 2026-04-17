@@ -8548,6 +8548,26 @@ export class ContactActions {
     }
 
     /**
+     * Verify that added projects can be deleted from the association list
+     */
+    public async verifyProjectCanBeDeletedFromList(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        const associationsTab = this.page.getByRole("tab", { name: /associations/i });
+        await associationsTab.waitFor({ state: "visible"});
+        await associationsTab.click();
+        const deleteButton = this.page.getByRole('button', { name: /delete/i }).first();
+        await deleteButton.evaluate((el) => {
+        el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+        });
+        await expect(deleteButton).toBeVisible({ timeout: 5000 });
+        await deleteButton.click();
+        const removedAlert = this.page.getByRole('alert', { name: 'Removed successfully' });
+        await removedAlert.waitFor({ state: 'visible'});
+        await this.closeModalIfVisible();
+    }
+
+    /**
      * Verify that the NOTE Tab opens correctly
      */
     public async verifyNoteTabOpensCorrectly(): Promise<void> {
