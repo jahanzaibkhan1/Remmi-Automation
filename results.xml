@@ -1,6 +1,47 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.3046799999997">
-<testsuite name="Pages\Contacts\Association.spec.ts" timestamp="2026-04-16T11:22:03.247Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.847" errors="0">
-<testcase name="Associations Tab Tests - Remmi E2E › Verify that clicking the &quot;+&quot; button adds the selected project to the list" classname="Pages\Contacts\Association.spec.ts" time="36.847">
+<testsuites id="" name="" tests="15" failures="0" skipped="0" errors="0" time="161.45589699999988">
+<testsuite name="Pages\Contacts\historyTab.spec.ts" timestamp="2026-04-17T04:44:56.735Z" hostname="chromium" tests="15" failures="0" skipped="0" time="159.275" errors="0">
+<testcase name="History Tab Tests - Remmi E2E › Test 1: Verify if the history tab displays newly created contact details" classname="Pages\Contacts\historyTab.spec.ts" time="37.147">
+</testcase>
+<testcase name="History Tab Tests - Remmi E2E › Test 2: Verify if changes to a contact field are reflected in history" classname="Pages\Contacts\historyTab.spec.ts" time="6.407">
+</testcase>
+<testcase name="History Tab Tests - Remmi E2E › Test 3: Check if the &quot;Changed Date&quot; displays the correct date and time of modification" classname="Pages\Contacts\historyTab.spec.ts" time="3.387">
+<system-out>
+<![CDATA[Changed Date : 17-04-2026 09:45 AM
+]]>
+</system-out>
+</testcase>
+<testcase name="History Tab Tests - Remmi E2E › Test 4: Verify if the &quot;Changed By&quot; field displays the correct user who made changes" classname="Pages\Contacts\historyTab.spec.ts" time="3.004">
+</testcase>
+<testcase name="History Tab Tests - Remmi E2E › Test 5: Check if the &quot;Event&quot; status correctly indicates the type of action" classname="Pages\Contacts\historyTab.spec.ts" time="3.495">
+</testcase>
+<testcase name="History Tab Tests - Remmi E2E › Test 6: Verify if the &quot;Changed Field&quot; column correctly records the modified field name" classname="Pages\Contacts\historyTab.spec.ts" time="2.483">
+</testcase>
+<testcase name="History Tab Tests - Remmi E2E › Test 7: Verify search functionality in history tab" classname="Pages\Contacts\historyTab.spec.ts" time="3.659">
+</testcase>
+<testcase name="History Tab Tests - Remmi E2E › Test 8: Check search functionality with an invalid term" classname="Pages\Contacts\historyTab.spec.ts" time="3.737">
+</testcase>
+<testcase name="History Tab Tests - Remmi E2E › Test 9: Verify if history displays only relevant changes per contact" classname="Pages\Contacts\historyTab.spec.ts" time="3.886">
+</testcase>
+<testcase name="History Tab Tests - Remmi E2E › Test 10: Check history tab with no changes made" classname="Pages\Contacts\historyTab.spec.ts" time="8.901">
+</testcase>
+<testcase name="History Tab Tests - Remmi E2E › Test 11: Verify UI alignment and readability of history records" classname="Pages\Contacts\historyTab.spec.ts" time="24.512">
+</testcase>
+<testcase name="History Tab Tests - Remmi E2E › Test 12: Check system behavior when history records are too large" classname="Pages\Contacts\historyTab.spec.ts" time="10.053">
+<system-out>
+<![CDATA[History records rendered: 30
+Scrollable container present: true
+]]>
+</system-out>
+</testcase>
+<testcase name="History Tab Tests - Remmi E2E › Test 13: Check if special characters in fields are displayed correctly in history" classname="Pages\Contacts\historyTab.spec.ts" time="22.398">
+</testcase>
+<testcase name="History Tab Tests - Remmi E2E › Test 14: Check if the records are loading correctly when scrolling" classname="Pages\Contacts\historyTab.spec.ts" time="4.282">
+<system-out>
+<![CDATA[Total records verified: [33m30[39m
+]]>
+</system-out>
+</testcase>
+<testcase name="History Tab Tests - Remmi E2E › Test 15: Check if the history tab refreshes correctly" classname="Pages\Contacts\historyTab.spec.ts" time="21.924">
 </testcase>
 </testsuite>
 </testsuites>
