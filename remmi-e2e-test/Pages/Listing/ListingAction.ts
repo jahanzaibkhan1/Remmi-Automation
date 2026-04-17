@@ -24903,7 +24903,7 @@ export class ListingActions {
         await expect(calendarMain).toBeVisible({ timeout: 10000 });
 
         // Switch to Week view
-        const weekViewButton = this.page.getByText('Week').first();
+        const weekViewButton = this.page.getByText('Week', { exact: true }).first()
         await expect(weekViewButton).toBeVisible({ timeout: 10000 });
         await expect(calendarMain).toBeVisible({ timeout: 10000 });
 

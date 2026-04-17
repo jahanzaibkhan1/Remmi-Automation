@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.21095100000128">
-<testsuite name="Pages\Contacts\Association.spec.ts" timestamp="2026-04-17T06:09:56.641Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.774" errors="0">
-<testcase name="Associations Tab Tests - Remmi E2E › Verify that added projects can be deleted from the list" classname="Pages\Contacts\Association.spec.ts" time="30.774">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="82.13431099999976">
+<testsuite name="Pages\Listing\listingCalendar.spec.ts" timestamp="2026-04-17T09:09:30.177Z" hostname="chromium" tests="1" failures="0" skipped="0" time="80.029" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 28: Verify that switching between Day and Month changes the calendar view" classname="Pages\Listing\listingCalendar.spec.ts" time="80.029">
 </testcase>
 </testsuite>
 </testsuites>
