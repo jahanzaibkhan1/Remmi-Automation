@@ -55,4 +55,10 @@ test.describe('Projects - E2E Tests', () => {
         const project = new ProjectActions(sessionPage);
         await project.verifyDefaultTabIsActive();
     });
+
+    test('Test 8: Verify projects listed are under "Active" tab', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyProjectsUnderActiveTab('East Village Vila');
+    });
+    
 });

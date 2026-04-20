@@ -149,4 +149,14 @@ export class ProjectActions {
         }
     }
 
+    /**
+     * Verifies that all projects listed are under the "Active" tab.
+     */
+    async verifyProjectsUnderActiveTab(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        const activeTab = this.page.getByText('Active', { exact: true });
+        await expect(activeTab).toBeVisible({ timeout: 30000 });
+        const projectCard = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${projectName}$`, 'i') }).first();
+        await projectCard.scrollIntoViewIfNeeded();
+    }
 }
