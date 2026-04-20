@@ -50,13 +50,11 @@ test.describe('Access Tab Tests - Remmi E2E', () => {
     await profile.DeselectAllUsers();
   });
 
-  // ----------- New Tests -----------
-
-  // test('Verify user appears under Staff Calendar Access when granted access', async ({ sessionPage }) => {
-  //   const profile = new MyProfileActions(sessionPage);
-  //   await profile.navigateToProfilePage();
-  //   await profile.verifyUserInStaffCalendarAccess('Dawood Ahmad');
-  // });
+  test('Test 10: Verify user appears under Staff Calendar Access when granted access', async ({ sessionPage }) => {
+    const profile = new MyProfileActions(sessionPage);
+    await profile.navigateToProfilePage();
+    await profile.verifyUserInStaffCalendarAccess('Admin Admin');
+  });
 
   // test('Verify granted calendar access allows viewing calendar OFIs', async ({ sessionPage }) => {
   //   const profile = new MyProfileActions(sessionPage);
