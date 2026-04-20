@@ -100,4 +100,37 @@ export class ProjectActions {
         const productThumbnail = sgvProduct.locator('.product-thumbnail').first();
         await expect(productThumbnail).toBeVisible({ timeout: 10000 });
     }
+
+    /**
+     * Helper to click on a tab by its label
+     */
+    private async clickTabByLabel(tabLabel: string): Promise<void> {
+        const tab = this.page.getByText(tabLabel, { exact: true });
+        await expect(tab).toBeVisible({ timeout: 10000 });
+        await tab.click();
+    }
+
+    /**
+     * Helper to click the Reset button (assumes icon structure stays same)
+     */
+    private async clickResetButton(): Promise<void> {
+        const resetButton = this.page.locator('i').nth(3);
+        await expect(resetButton).toBeVisible({ timeout: 10000 });
+        await resetButton.click();
+    }
+
+    /**
+     * After search, click on Inactive tab and Active tab, then click on Reset icon
+     */
+    async verifyTabsAndResetAfterSearch(searchText: string): Promise<void> {
+        await this.navigateToProjects();
+        const input = this.projectsSearchInput;
+        await expect(input).toBeVisible({ timeout: 30000 });
+        await input.fill(searchText);
+        await this.clickTabByLabel('Inactive');
+        await this.clickTabByLabel('Active');
+        await this.clickResetButton();
+        await expect(input).toHaveValue('');
+    }
+
 }
