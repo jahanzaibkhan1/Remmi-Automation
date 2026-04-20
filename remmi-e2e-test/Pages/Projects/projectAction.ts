@@ -1,0 +1,44 @@
+import { expect, Page, Locator } from '@playwright/test';
+
+export class ProjectActions {
+    private readonly page: Page;
+
+    constructor(page: Page) {
+        this.page = page;
+    }
+
+    /**
+     * Returns the search input for projects
+     */
+    private get projectsSearchInput(): Locator {
+        return this.page.getByPlaceholder('Search').last();
+    }
+
+    /**
+     * Returns the locator for a specific project by its name.
+     */
+    private projectNameResult(projectName: string): Locator {
+        return this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${projectName}$`, 'i') });
+    }
+
+    /**
+     * Navigation to the project list page.
+     */
+    private async navigateToProjects(): Promise<void> {
+        const currentUrl = this.page.url().split(/[?#]/)[0];
+        if (!currentUrl.endsWith('/project/projects')) {
+            await this.page.goto('/project/projects');
+        }
+    }
+
+    /**
+     * verify project search by name.
+     */
+    async verifyProjectCanBeSearchedByName(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        const input = this.projectsSearchInput;
+        await expect(input).toBeVisible({ timeout: 30000 });
+        await input.fill(projectName);
+        await expect(this.projectNameResult(projectName).first()).toBeVisible({ timeout: 30000 });
+    }
+}
