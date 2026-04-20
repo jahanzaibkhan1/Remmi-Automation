@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.0868049999997">
-<testsuite name="Pages\Projects\projects.spec.ts" timestamp="2026-04-20T10:17:54.441Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.385" errors="0">
-<testcase name="Projects - E2E Tests › Test 1: Verify project search by name" classname="Pages\Projects\projects.spec.ts" time="45.385">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="45.294716000000015">
+<testsuite name="Pages\Projects\projects.spec.ts" timestamp="2026-04-20T10:22:20.264Z" hostname="chromium" tests="1" failures="0" skipped="0" time="43.718" errors="0">
+<testcase name="Projects - E2E Tests › Test 2: Search with partial project name" classname="Pages\Projects\projects.spec.ts" time="43.718">
 </testcase>
 </testsuite>
 </testsuites>

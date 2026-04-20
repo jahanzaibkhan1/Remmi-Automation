@@ -41,4 +41,18 @@ export class ProjectActions {
         await input.fill(projectName);
         await expect(this.projectNameResult(projectName).first()).toBeVisible({ timeout: 30000 });
     }
+
+    /**
+     * Search with partial project name
+     */
+    async verifyProjectCanBeSearchedByPartialName(partialName: string): Promise<void> {
+        await this.navigateToProjects();
+        const input = this.projectsSearchInput;
+        await expect(input).toBeVisible({ timeout: 30000 });
+        await input.fill(partialName);
+        const firstResult = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(partialName, 'i') }).first();
+        await expect(firstResult).toBeVisible({ timeout: 30000 });
+        const resultText = await firstResult.textContent();
+        expect(resultText?.toLowerCase()).toContain(partialName.toLowerCase());
+    }
 }
