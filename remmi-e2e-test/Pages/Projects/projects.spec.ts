@@ -66,4 +66,9 @@ test.describe('Projects - E2E Tests', () => {
         await project.verifyProjectsUnderInactiveTab('Al kabir heights');
     });
 
+    test('Test 10: Verify precinct grouping under tabs', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyPrecinctIsGroupedUnderTab('Tested');
+    });
+
 });
