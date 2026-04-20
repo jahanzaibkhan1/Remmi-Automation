@@ -170,5 +170,19 @@ export class ProjectActions {
         await expect(projectCard).toBeVisible({ timeout: 10000 });
         await projectCard.scrollIntoViewIfNeeded();
     }
-    
+
+    /**
+     * Verifies that precincts are grouped correctly under their respective tabs.
+     */
+    async verifyPrecinctIsGroupedUnderTab(precinctName: string): Promise<void> {
+        await this.navigateToProjects();
+        const nameRegex = new RegExp(`^${precinctName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
+        const container = this.page
+            .locator('.sgv-product.ng-star-inserted')
+            .filter({ has: this.page.locator('.precinct-content h3', { hasText: nameRegex }) })
+            .first();
+        await expect(container).toBeVisible({ timeout: 40000 });
+        await expect(container.locator('.product-thumbnail.cp.ng-star-inserted[style*="projectimages"]')).toBeVisible({ timeout: 10000 });
+    }
+
 }

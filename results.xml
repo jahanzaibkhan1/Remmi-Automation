@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.192494999999184">
-<testsuite name="Pages\Projects\projects.spec.ts" timestamp="2026-04-20T11:29:00.762Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.179" errors="0">
-<testcase name="Projects - E2E Tests › Test 9: Verify projects listed are under &quot;Inactive&quot; tab" classname="Pages\Projects\projects.spec.ts" time="39.179">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.364254000000656">
+<testsuite name="Pages\Projects\projects.spec.ts" timestamp="2026-04-20T11:39:57.058Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.442" errors="0">
+<testcase name="Projects - E2E Tests › Test 10: Verify precinct grouping under tabs" classname="Pages\Projects\projects.spec.ts" time="37.442">
 </testcase>
 </testsuite>
 </testsuites>
