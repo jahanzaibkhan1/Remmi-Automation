@@ -30,5 +30,10 @@ test.describe('Projects - E2E Tests', () => {
         const project = new ProjectActions(sessionPage);
         await project.verifyProjectCanBeSearchedByPartialName('East');
     });
+
+    test('Test 3: Search with invalid project name', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyProjectSearchWithInvalidName('InvalidProjectName123');
+    });
     
 });
