@@ -67,4 +67,22 @@ export class ProjectActions {
         const matchingProjects = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(invalidName, 'i') });
         await expect(matchingProjects).toHaveCount(0);
     }
+
+    /**
+     * Verify that the project image is displayed correctly in Grid View
+     */
+    async verifyProjectImageDisplayedInGridView(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        const projectCard = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${projectName}$`, 'i') }).first();
+        await projectCard.scrollIntoViewIfNeeded();
+        await expect(projectCard).toBeVisible({ timeout: 15000 });
+        const sgvProduct = projectCard.locator('..').locator('..').first();
+        const productThumbnail = sgvProduct.locator('.product-thumbnail').first();
+        await expect(productThumbnail).toBeVisible({ timeout: 10000 });
+        const styleAttr = await productThumbnail.getAttribute('style');
+        expect(styleAttr).toBeTruthy();
+        const bgUrlMatch = styleAttr?.match(/background-image:\s*url\((['"]?)(.*?)\1\)/i);
+        expect(bgUrlMatch && bgUrlMatch[2]).toBeTruthy();
+        expect(bgUrlMatch![2].trim()).not.toBe('');
+    }
 }

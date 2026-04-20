@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.20996000000089">
-<testsuite name="Pages\Projects\projects.spec.ts" timestamp="2026-04-20T10:24:32.055Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.711" errors="0">
-<testcase name="Projects - E2E Tests › Test 3: Search with invalid project name" classname="Pages\Projects\projects.spec.ts" time="40.711">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="88.89175400000066">
+<testsuite name="Pages\Projects\projects.spec.ts" timestamp="2026-04-20T10:34:39.950Z" hostname="chromium" tests="1" failures="0" skipped="0" time="87.356" errors="0">
+<testcase name="Projects - E2E Tests › Test 4: Verify that project image is displayed correctly in Grid View" classname="Pages\Projects\projects.spec.ts" time="87.356">
 </testcase>
 </testsuite>
 </testsuites>
