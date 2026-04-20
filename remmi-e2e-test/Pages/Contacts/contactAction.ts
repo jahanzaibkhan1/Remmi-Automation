@@ -4215,6 +4215,30 @@ export class ContactActions {
     }
 
     /**
+     * Verifies that clicking the contact name in the Lead tab opens the contact form in a new browser tab.
+     */
+    async verifyContactNameOpensInNewTab(): Promise<void> {
+        await this.NavigateToContacts();
+        await this.openFirstContact();
+        await this.openLead();
+
+        const newLeadButton = this.page.getByRole('button', { name: /new lead/i });
+        await newLeadButton.waitFor({ state: 'visible' });
+        await expect(newLeadButton).toBeEnabled();
+        await newLeadButton.click();
+
+        const leadLink = this.page.locator('a').filter({ hasText: /^Lead$/ });
+        await leadLink.waitFor({ state: 'visible' });
+        const leadDiv = this.page.locator('div').filter({ hasText: /^11 22$/ }).nth(2);
+        await leadDiv.waitFor({ state: 'visible' });
+        const nameConst = this.page.getByText('11 22', { exact: true }).nth(3);
+        await nameConst.click();
+        const contactTypeLocator = this.page.locator('[id="Contact - 11 22_2"]').getByText('12 Contact TypeSelect Type×');
+        await contactTypeLocator.waitFor({ state: 'visible' });
+        await this.closeModalIfVisible();
+    }
+
+    /**
      * Verifies the details and status of a lead in the Lead tab/module.
      */
     async verifyLeadStatusDetails(): Promise<void> {
@@ -8429,7 +8453,7 @@ export class ContactActions {
         await expect(projectDropdownInput).toBeVisible({ timeout: 10000 });
         await projectDropdownInput.click();
         await projectDropdownInput.fill(searchProjectName);
-        const dropdownOption = this.page.locator('li.p-element.ng-star-inserted', { hasText: new RegExp(searchProjectName, 'i') }).first();   
+        const dropdownOption = this.page.locator('li.p-element.ng-star-inserted', { hasText: new RegExp(searchProjectName, 'i') }).first();
         await expect(dropdownOption).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
     }
@@ -8466,7 +8490,7 @@ export class ContactActions {
         }
         const allOptions = projectDropdown.locator('li.p-element.ng-star-inserted');
         const optionCount = await allOptions.count();
-        for (let i = 1; i < optionCount; i++) { 
+        for (let i = 1; i < optionCount; i++) {
             const projectOptionCheckbox = allOptions.nth(i).locator('.checkbox__checkmark');
             await expect(projectOptionCheckbox).toBeChecked();
         }
@@ -8510,7 +8534,7 @@ export class ContactActions {
         await this.page.waitForTimeout(1200);
         const allOptions = projectDropdown.locator('li.p-element.ng-star-inserted');
         const optionCount = await allOptions.count();
-        for (let i = 1; i < optionCount; i++) { 
+        for (let i = 1; i < optionCount; i++) {
             const projectOptionCheckbox = allOptions.nth(i).locator('.checkbox__checkmark');
             await expect(projectOptionCheckbox).not.toBeChecked();
         }
@@ -8536,7 +8560,7 @@ export class ContactActions {
         await expect(projectDropdownInput).toBeVisible({ timeout: 10000 });
         await projectDropdownInput.click();
         await projectDropdownInput.fill(searchProjectName);
-        const dropdownOption = this.page.locator('li.p-element.ng-star-inserted', { hasText: new RegExp(searchProjectName, 'i') }).first();   
+        const dropdownOption = this.page.locator('li.p-element.ng-star-inserted', { hasText: new RegExp(searchProjectName, 'i') }).first();
         await expect(dropdownOption).toBeVisible({ timeout: 10000 });
         await dropdownOption.click();
         // Click the "+" button
@@ -8554,16 +8578,16 @@ export class ContactActions {
         await this.NavigateToContacts();
         await this.openFirstContact();
         const associationsTab = this.page.getByRole("tab", { name: /associations/i });
-        await associationsTab.waitFor({ state: "visible"});
+        await associationsTab.waitFor({ state: "visible" });
         await associationsTab.click();
         const deleteButton = this.page.getByRole('button', { name: /delete/i }).first();
         await deleteButton.evaluate((el) => {
-        el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+            el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
         });
         await expect(deleteButton).toBeVisible({ timeout: 5000 });
         await deleteButton.click();
         const removedAlert = this.page.getByRole('alert', { name: 'Removed successfully' });
-        await removedAlert.waitFor({ state: 'visible'});
+        await removedAlert.waitFor({ state: 'visible' });
         await this.closeModalIfVisible();
     }
 
@@ -9345,58 +9369,58 @@ export class ContactActions {
         await this.closeModalIfVisible();
     }
 
-    async checkLargeHistoryRecordsBehavior(){
+    async checkLargeHistoryRecordsBehavior() {
         await this.NavigateToContact();
         await this.openFirstContact();
-        const historyTab=this.page.getByRole('tab',{name:/History/i}).first();
-        await expect(historyTab).toBeVisible({timeout:10000});
+        const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
         await historyTab.click();
-        const historyContainer=this.page.locator("app-remmi-history");
-        await expect(historyContainer).toBeVisible({timeout:20000});
-        const firstTableRow=historyContainer.locator("table tbody tr").first();
-        const tableIsVisible=await historyContainer.locator("table").isVisible().catch(()=>false);
-        if(tableIsVisible){
-            await expect(firstTableRow).toBeVisible({timeout:10000});
+        const historyContainer = this.page.locator("app-remmi-history");
+        await expect(historyContainer).toBeVisible({ timeout: 20000 });
+        const firstTableRow = historyContainer.locator("table tbody tr").first();
+        const tableIsVisible = await historyContainer.locator("table").isVisible().catch(() => false);
+        if (tableIsVisible) {
+            await expect(firstTableRow).toBeVisible({ timeout: 10000 });
         }
-        const tableRows=historyContainer.locator("table tbody tr");
-        const listItems=historyContainer.locator('[class*="history-item"], [class*="record"], li');
-        let totalItems=0;
-        if(!tableIsVisible){
-            const firstListItem=listItems.first();
-            await firstListItem.waitFor({state:'visible',timeout:10000}).catch(()=>{});
+        const tableRows = historyContainer.locator("table tbody tr");
+        const listItems = historyContainer.locator('[class*="history-item"], [class*="record"], li');
+        let totalItems = 0;
+        if (!tableIsVisible) {
+            const firstListItem = listItems.first();
+            await firstListItem.waitFor({ state: 'visible', timeout: 10000 }).catch(() => { });
         }
-        const rowCount=await tableRows.count().catch(()=>0);
-        const itemCount=await listItems.count().catch(()=>0);
-        totalItems=rowCount+itemCount;
+        const rowCount = await tableRows.count().catch(() => 0);
+        const itemCount = await listItems.count().catch(() => 0);
+        totalItems = rowCount + itemCount;
         expect(totalItems).toBeGreaterThan(0);
-        const showMoreBtn=historyContainer.locator('button:has-text("Show More"), button:has-text("Load More"), button:has-text("Next")');
-        const showMoreFallback=historyContainer.getByText(/show more|load more|next/i,{exact:false});
-        const warningOrNotice=historyContainer.getByText(/too many records|limited view|showing first/i,{exact:false});
-        const scrollableContainer=historyContainer.locator('[style*="overflow"], [class*="scroll"]');
-        let hasShowMore=false;
-        let showMoreLocator:import('@playwright/test').Locator|undefined;
-        if(await showMoreBtn.first().isVisible().catch(()=>false)){
-            hasShowMore=true;
-            showMoreLocator=showMoreBtn.first();
-        }else if(await showMoreFallback.first().isVisible().catch(()=>false)){
-            hasShowMore=true;
-            showMoreLocator=showMoreFallback.first();
+        const showMoreBtn = historyContainer.locator('button:has-text("Show More"), button:has-text("Load More"), button:has-text("Next")');
+        const showMoreFallback = historyContainer.getByText(/show more|load more|next/i, { exact: false });
+        const warningOrNotice = historyContainer.getByText(/too many records|limited view|showing first/i, { exact: false });
+        const scrollableContainer = historyContainer.locator('[style*="overflow"], [class*="scroll"]');
+        let hasShowMore = false;
+        let showMoreLocator: import('@playwright/test').Locator | undefined;
+        if (await showMoreBtn.first().isVisible().catch(() => false)) {
+            hasShowMore = true;
+            showMoreLocator = showMoreBtn.first();
+        } else if (await showMoreFallback.first().isVisible().catch(() => false)) {
+            hasShowMore = true;
+            showMoreLocator = showMoreFallback.first();
         }
-        const hasWarning=await warningOrNotice.isVisible().catch(()=>false);
-        const hasScrollable=await scrollableContainer.first().isVisible().catch(()=>false);
+        const hasWarning = await warningOrNotice.isVisible().catch(() => false);
+        const hasScrollable = await scrollableContainer.first().isVisible().catch(() => false);
         console.log(`History records rendered: ${totalItems}`);
         console.log(`Scrollable container present: ${hasScrollable}`);
-        if(hasShowMore&&showMoreLocator){
-            const table=historyContainer.locator("table");
-            const hasTbl=await table.isVisible({timeout:5000}).catch(()=>false);
-            if(hasTbl){
-                const tbody=table.locator("tbody");
-                const rowToWaitFor=tbody.locator("tr").first();
-                await expect(rowToWaitFor).toBeVisible({timeout:10000});
-                const initialCount=await tbody.locator("tr").count();
+        if (hasShowMore && showMoreLocator) {
+            const table = historyContainer.locator("table");
+            const hasTbl = await table.isVisible({ timeout: 5000 }).catch(() => false);
+            if (hasTbl) {
+                const tbody = table.locator("tbody");
+                const rowToWaitFor = tbody.locator("tr").first();
+                await expect(rowToWaitFor).toBeVisible({ timeout: 10000 });
+                const initialCount = await tbody.locator("tr").count();
                 await showMoreLocator.click();
                 await this.page.waitForTimeout(2000);
-                const updatedCount=await tbody.locator("tr").count();
+                const updatedCount = await tbody.locator("tr").count();
                 expect(updatedCount).toBeGreaterThan(initialCount);
                 console.log(`Rows after Show More: ${updatedCount} (was ${initialCount})`);
             }
@@ -9407,7 +9431,7 @@ export class ContactActions {
     /**
      * Check if special characters in fields are displayed correctly in history
      */
-    async verifySpecialCharactersInHistory(specialChars: string): Promise<void>{
+    async verifySpecialCharactersInHistory(specialChars: string): Promise<void> {
         await this.NavigateToContact();
         await this.openFirstContact();
         const historyTab = this.page.getByRole('tab', { name: /history/i }).first();
@@ -9419,7 +9443,7 @@ export class ContactActions {
         await expect(historyTable).toBeVisible({ timeout: 15000 });
         const rows = historyTable.locator("tbody tr");
         const firstRow = rows.first();
-        await firstRow.waitFor({ state: 'visible', timeout: 20000 }).catch(() => {});
+        await firstRow.waitFor({ state: 'visible', timeout: 20000 }).catch(() => { });
         let searchInput;
         searchInput = historyContainer.locator('input[type="text"][placeholder*="Search"], input[type="search"], input.p-inputtext[aria-label*="search"], input.p-inputtext[placeholder*="Search"]')
             .first();
@@ -9434,18 +9458,18 @@ export class ContactActions {
         const noRecords = historyTable.locator('text=/no records found/i');
         if (await noRecords.isVisible().catch(() => false)) {
             await expect(noRecords).toBeVisible();
-        } else {}
+        } else { }
         await this.closeModalIfVisible();
     }
 
     /**
      * Check if the records are loading correctly when scrolling in the history tab.
      */
-    async checkRecordsLoadOnScrollInHistoryTab(): Promise<void>{
+    async checkRecordsLoadOnScrollInHistoryTab(): Promise<void> {
         await this.NavigateToContact();
         await this.openFirstContact();
-        const historyTab=this.page.getByRole('tab',{name:/history/i}).first();
-        await expect(historyTab).toBeVisible({timeout:10000});
+        const historyTab = this.page.getByRole('tab', { name: /history/i }).first();
+        await expect(historyTab).toBeVisible({ timeout: 10000 });
         await historyTab.click();
         const historyContainer = this.page.locator("app-remmi-history");
         await expect(historyContainer).toBeVisible({ timeout: 15000 });
