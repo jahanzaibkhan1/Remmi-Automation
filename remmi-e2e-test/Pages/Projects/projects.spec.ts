@@ -25,5 +25,10 @@ test.describe('Projects - E2E Tests', () => {
         const project = new ProjectActions(sessionPage);
         await project.verifyProjectCanBeSearchedByName('East Village Vila');
     });
+
+    test('Test 2: Search with partial project name', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyProjectCanBeSearchedByPartialName('East');
+    });
     
 });
