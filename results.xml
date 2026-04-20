@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="18.111117999999784">
-<testsuite name="Pages\MyProfile\profileAccess.spec.ts" timestamp="2026-04-20T09:16:42.897Z" hostname="chromium" tests="1" failures="0" skipped="0" time="15.538" errors="0">
-<testcase name="Access Tab Tests - Remmi E2E › Verify user appears under Staff Calendar Access when granted access" classname="Pages\MyProfile\profileAccess.spec.ts" time="15.538">
-<system-out>
-<![CDATA[✅ User "Admin Admin" appears under 'Staff Calendar Access'
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="57.60386200000159">
+<testsuite name="Pages\Contacts\contactLead.spec.ts" timestamp="2026-04-20T09:50:20.183Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.581" errors="0">
+<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify that clicking the contact name in the Lead tab opens the contact form in a new browser tab" classname="Pages\Contacts\contactLead.spec.ts" time="55.581">
 </testcase>
 </testsuite>
 </testsuites>
