@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.50563100000098">
-<testsuite name="Pages\Listing\listingTaskForm.spec.ts" timestamp="2026-04-17T11:12:27.056Z" hostname="chromium" tests="1" failures="0" skipped="0" time="49.478" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 26: Verify that all fields of the original task are copied correctly to the new task when the &quot;Copy Task&quot; option is used." classname="Pages\Listing\listingTaskForm.spec.ts" time="49.478">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="39.364254000000656">
+<testsuite name="Pages\Projects\projects.spec.ts" timestamp="2026-04-20T11:39:57.058Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.442" errors="0">
+<testcase name="Projects - E2E Tests › Test 10: Verify precinct grouping under tabs" classname="Pages\Projects\projects.spec.ts" time="37.442">
 </testcase>
 </testsuite>
 </testsuites>
