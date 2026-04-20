@@ -45,4 +45,9 @@ test.describe('Projects - E2E Tests', () => {
         const project = new ProjectActions(sessionPage);
         await project.verifyPlaceholderImageForProjectWithNoImage();
     });
+
+    test('Test 6: Verify that clicking the Reset button', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyTabsAndResetAfterSearch('East');
+    });
 });
