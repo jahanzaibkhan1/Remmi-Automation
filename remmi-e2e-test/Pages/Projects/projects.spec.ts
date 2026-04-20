@@ -35,10 +35,14 @@ test.describe('Projects - E2E Tests', () => {
         const project = new ProjectActions(sessionPage);
         await project.verifyProjectSearchWithInvalidName('InvalidProjectName123');
     });
-    
+
     test('Test 4: Verify that project image is displayed correctly in Grid View', async ({ sessionPage }) => {
         const project = new ProjectActions(sessionPage);
         await project.verifyProjectImageDisplayedInGridView('East Village Vila');
     });
     
+    test('Test 5: Verify that a placeholder image appears for projects with no uploaded image', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyPlaceholderImageForProjectWithNoImage();
+    });
 });

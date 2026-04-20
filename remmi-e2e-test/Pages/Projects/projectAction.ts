@@ -66,6 +66,8 @@ export class ProjectActions {
         await input.fill(invalidName);
         const matchingProjects = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(invalidName, 'i') });
         await expect(matchingProjects).toHaveCount(0);
+        await input.fill('');
+
     }
 
     /**
@@ -84,5 +86,18 @@ export class ProjectActions {
         const bgUrlMatch = styleAttr?.match(/background-image:\s*url\((['"]?)(.*?)\1\)/i);
         expect(bgUrlMatch && bgUrlMatch[2]).toBeTruthy();
         expect(bgUrlMatch![2].trim()).not.toBe('');
+    }
+
+    /**
+     * Verify that a placeholder image appears for projects with no uploaded image
+     */
+    async verifyPlaceholderImageForProjectWithNoImage(): Promise<void> {
+        await this.navigateToProjects();
+        const projectCard = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${'Al kabir heights'}$`, 'i') }).first();
+        await projectCard.scrollIntoViewIfNeeded();
+        await expect(projectCard).toBeVisible({ timeout: 15000 });
+        const sgvProduct = projectCard.locator('..').locator('..').first();
+        const productThumbnail = sgvProduct.locator('.product-thumbnail').first();
+        await expect(productThumbnail).toBeVisible({ timeout: 10000 });
     }
 }
