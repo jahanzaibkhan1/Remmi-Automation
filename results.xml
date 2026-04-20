@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.30077999999933">
-<testsuite name="Pages\Projects\projects.spec.ts" timestamp="2026-04-20T10:59:14.974Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.503" errors="0">
-<testcase name="Projects - E2E Tests › Test 6: Verify that clicking the Reset button" classname="Pages\Projects\projects.spec.ts" time="31.503">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="36.619868000000714">
+<testsuite name="Pages\Projects\projects.spec.ts" timestamp="2026-04-20T11:08:29.722Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.796" errors="0">
+<testcase name="Projects - E2E Tests › Test 7: Verify default tab is &quot;Active&quot;" classname="Pages\Projects\projects.spec.ts" time="34.796">
 </testcase>
 </testsuite>
 </testsuites>

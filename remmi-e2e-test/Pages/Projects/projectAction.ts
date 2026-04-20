@@ -133,4 +133,20 @@ export class ProjectActions {
         await expect(input).toHaveValue('');
     }
 
+    /**
+     * Verify that the default selected tab is "Active"
+     */
+    async verifyDefaultTabIsActive(): Promise<void> {
+        await this.navigateToProjects();
+        const activeTab = this.page.getByText('Active', { exact: true });
+        await expect(activeTab).toBeVisible({ timeout: 30000 });
+        const ariaSelected = await activeTab.getAttribute('aria-selected');
+        if (ariaSelected !== null) {
+            expect(ariaSelected).toBe('true');
+        } else {
+            const className = await activeTab.getAttribute('class');
+            expect(className).toMatch(/active/i);
+        }
+    }
+
 }
