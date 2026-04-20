@@ -159,4 +159,16 @@ export class ProjectActions {
         const projectCard = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${projectName}$`, 'i') }).first();
         await projectCard.scrollIntoViewIfNeeded();
     }
+
+    /**
+     * Verifies that all projects listed are under the "Inactive" tab.
+     */
+    async verifyProjectsUnderInactiveTab(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickTabByLabel('Inactive');
+        const projectCard = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${projectName}$`, 'i') }).first();
+        await expect(projectCard).toBeVisible({ timeout: 10000 });
+        await projectCard.scrollIntoViewIfNeeded();
+    }
+    
 }

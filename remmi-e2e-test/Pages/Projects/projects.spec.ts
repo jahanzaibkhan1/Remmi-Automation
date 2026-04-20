@@ -60,5 +60,10 @@ test.describe('Projects - E2E Tests', () => {
         const project = new ProjectActions(sessionPage);
         await project.verifyProjectsUnderActiveTab('East Village Vila');
     });
-    
+
+    test('Test 9: Verify projects listed are under "Inactive" tab', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyProjectsUnderInactiveTab('Al kabir heights');
+    });
+
 });
