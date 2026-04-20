@@ -50,4 +50,9 @@ test.describe('Projects - E2E Tests', () => {
         const project = new ProjectActions(sessionPage);
         await project.verifyTabsAndResetAfterSearch('East');
     });
+
+    test('Test 7: Verify default tab is "Active"', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyDefaultTabIsActive();
+    });
 });
