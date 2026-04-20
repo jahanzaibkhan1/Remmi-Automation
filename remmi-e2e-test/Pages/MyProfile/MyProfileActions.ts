@@ -1310,9 +1310,10 @@ export class MyProfileActions {
    * Verify a user appears under 'Staff Calendar Access'
    */
   public async verifyUserInStaffCalendarAccess(userName: string) {
-    await this.navigateToCalendar();
-    await this.page.waitForTimeout(2000)
-    const accessUser = this.locators.calendarAccessUserName(userName);
+    await this.navigateToAccessTab();
+    const accessUser = this.page.locator('tr.ng-star-inserted').filter({
+      has: this.page.locator('td .d-flex.align-items-center.gap-2', { hasText: userName })
+    });
     await expect(accessUser).toBeVisible({ timeout: 8000 });
     console.log(`✅ User "${userName}" appears under 'Staff Calendar Access'`);
   }

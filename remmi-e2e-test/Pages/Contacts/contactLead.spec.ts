@@ -35,6 +35,11 @@ test.describe('Contacts "Lead" Tab - E2E Tests', () => {
         await contact.verifyLeadAppearsInLeadModule();
     });
 
+    test('Verify that clicking the contact name in the Lead tab opens the contact form in a new browser tab', async ({ sessionPage }) => {
+        const contact = new ContactActions(sessionPage);
+        await contact.verifyContactNameOpensInNewTab();
+    });
+
     test('Verify lead status details', async ({ sessionPage }) => {
         const contact = new ContactActions(sessionPage);
         await contact.verifyLeadStatusDetails();
