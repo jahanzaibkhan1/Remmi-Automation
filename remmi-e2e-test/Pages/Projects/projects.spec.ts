@@ -91,4 +91,9 @@ test.describe('Projects - E2E Tests', () => {
         await project.switchBetweenProjectViews();
     });
 
+    test('Test 15: Click plus icon to open project popup', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyAndCloseProjectPopup();
+    });
+
 });
