@@ -1,5 +1,5 @@
 import { expect, Page, Locator } from '@playwright/test';
-
+import { faker } from '@faker-js/faker';
 export class ProjectActions {
     private readonly page: Page;
 
@@ -194,7 +194,7 @@ export class ProjectActions {
     private async clickVisibleBackButton() {
         const backButton = this.page.locator('text=/back/i').first();
         await expect(backButton).toBeEnabled({ timeout: 15000 });
-        await backButton.click({force: true});
+        await backButton.click({ force: true });
     }
 
     /**
@@ -226,7 +226,7 @@ export class ProjectActions {
         await this.projectsSearchInput.fill(insidePrecinctProjectHeading);
         const escapedName = insidePrecinctProjectHeading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         const nameRegex = new RegExp(`^\\s*${escapedName}\\s*$`, 'i');
-    
+
         const activeProjectCard = this.page
             .locator('.projects-row .sgv-product .product-content h3')
             .filter({ hasText: nameRegex });
@@ -283,7 +283,7 @@ export class ProjectActions {
             if (!hasActive) throw new Error("Grid view did not become active in time");
         }).toPass({ timeout: 20000 });
     }
-    
+
     async switchToListView(): Promise<void> {
         const listIcon = this.page.locator('.layout-changer a:not(.grid-icon)');
         await expect(listIcon).toBeVisible({ timeout: 30000 });
@@ -320,5 +320,30 @@ export class ProjectActions {
         const dialog = this.page.locator('.p-dialog-content');
         await dialog.locator('button._cancel-btn').click();
         await expect(dialog).toBeHidden({ timeout: 10000 });
+    }
+
+    async clickOnProjects(): Promise<void> {
+        await this.page.locator('p', { hasText: 'Projects' }).first().click();
+    }
+
+    /**
+     * Create a project with valid data.
+     * @param project Optional object containing project name and status.
+     */
+    async createProjectWithValidData(project?: { name?: string; status?: string }): Promise<void> {
+        await this.navigateToProjects();
+        await this.openProjectPopup();
+        const projectName = project?.name ?? faker.company.name();
+        console.log("Creating project with name:", projectName);
+        const dialog = this.page.locator('.p-dialog-content')
+            .filter({ has: this.page.locator('input[formcontrolname="Project_Name"]') });
+        await dialog.locator('input[formcontrolname="Project_Name"]').fill(projectName);
+        await dialog.locator('button._outline-btn').click();
+        await expect(dialog).toBeHidden({ timeout: 10000 });
+        await this.page.getByText('Project added successfully')
+            .waitFor({ state: 'visible', timeout: 15000 })
+            .catch(() => {});
+        await this.page.locator('p.f-24', { hasText: projectName }).waitFor({ state: 'visible', timeout: 15000 });
+        await this.clickOnProjects();
     }
 }

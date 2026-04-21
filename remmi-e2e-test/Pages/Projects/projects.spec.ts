@@ -101,4 +101,9 @@ test.describe('Projects - E2E Tests', () => {
         await project.verifyAndCloseProjectPopup();
     });
 
+    test('Test 17: Create project with valid data', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.createProjectWithValidData();
+    });
+
 });
