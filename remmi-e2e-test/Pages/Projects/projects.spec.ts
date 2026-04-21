@@ -116,4 +116,9 @@ test.describe('Projects - E2E Tests', () => {
         await project.verifyAndCloseProjectPopup();
     });
 
+    test('Test 20: Cross icon closes the project popup', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.closeProjectPopupWithCrossIcon();
+    });
+
 });
