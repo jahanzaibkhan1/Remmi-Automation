@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.2761679999996">
-<testsuite name="Pages\Projects\projects.spec.ts" timestamp="2026-04-21T07:25:01.123Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.467" errors="0">
-<testcase name="Projects - E2E Tests › Test 13: Delete precinct shows project back in active tab" classname="Pages\Projects\projects.spec.ts" time="51.467">
-<system-out>
-<![CDATA[insidePrecinctProjectHeading: Adb
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.860322000000625">
+<testsuite name="Pages\Projects\projects.spec.ts" timestamp="2026-04-21T07:45:42.886Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.136" errors="0">
+<testcase name="Projects - E2E Tests › Test 14: Switch between grid and list views" classname="Pages\Projects\projects.spec.ts" time="30.136">
 </testcase>
 </testsuite>
 </testsuites>

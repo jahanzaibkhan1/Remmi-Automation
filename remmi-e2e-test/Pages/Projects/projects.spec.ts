@@ -86,4 +86,9 @@ test.describe('Projects - E2E Tests', () => {
         await project.verifyProjectReappearsInActiveTabAfterPrecinctDeletion();
     });
 
+    test('Test 14: Switch between grid and list views', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.switchBetweenProjectViews();
+    });
+
 });
