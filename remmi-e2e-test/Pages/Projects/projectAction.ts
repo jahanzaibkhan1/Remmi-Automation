@@ -345,6 +345,7 @@ export class ProjectActions {
             .catch(() => {});
         await this.page.locator('p.f-24', { hasText: projectName }).waitFor({ state: 'visible', timeout: 15000 });
         await this.clickOnProjects();
+        await this.verifyProjectCanBeSearchedByName(projectName);
     }
 
     /**

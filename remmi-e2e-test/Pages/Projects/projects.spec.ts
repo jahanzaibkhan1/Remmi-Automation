@@ -121,4 +121,9 @@ test.describe('Projects - E2E Tests', () => {
         await project.closeProjectPopupWithCrossIcon();
     });
 
+    test('Test 21: Verify project opens with the "General" tab selected after entering project name and status', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.createProjectWithValidData();
+    });
+
 });
