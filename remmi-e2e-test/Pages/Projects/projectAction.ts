@@ -185,4 +185,32 @@ export class ProjectActions {
         await expect(container.locator('.product-thumbnail.cp.ng-star-inserted[style*="projectimages"]')).toBeVisible({ timeout: 10000 });
     }
 
+    private async getFirstVisiblePrecinctCard() {
+        const precinctCard = this.page.locator('.sgv-product').first();
+        await expect(precinctCard).toBeVisible({ timeout: 30000 });
+        await precinctCard.click();
+    }
+
+    private async clickVisibleBackButton() {
+        const backButton = this.page.locator('text=/back/i').first();
+        await expect(backButton).toBeVisible({ timeout: 15000 });
+        await backButton.click();
+    }
+
+    /**
+     * Verifies clicking a precinct card opens the Project, Lot, EOI tabs
+     */
+    async verifyClickingPrecinctOpensTabs(): Promise<void> {
+        await this.navigateToProjects();
+        await this.getFirstVisiblePrecinctCard();
+        const tabs = ['project', 'lot', 'EOI'];
+        for (const tab of tabs) {
+            const el = this.page.locator(`a#pills-${tab}`).first();
+            await expect(el).toBeVisible({ timeout: 20000 });
+            await expect(el).toHaveText(new RegExp(tab, 'i'), { timeout: 20000 });
+        }
+        await this.clickVisibleBackButton();
+        await expect(this.page.locator('.sgv-product').first()).toBeVisible({ timeout: 20000 });
+    }
+
 }

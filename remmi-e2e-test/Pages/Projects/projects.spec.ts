@@ -71,4 +71,9 @@ test.describe('Projects - E2E Tests', () => {
         await project.verifyPrecinctIsGroupedUnderTab('Tested');
     });
 
+    test('Test 11: Verify clicking precinct opens project/lot/EOI tabs', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyClickingPrecinctOpensTabs();
+    });
+
 });
