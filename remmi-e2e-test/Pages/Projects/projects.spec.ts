@@ -96,4 +96,9 @@ test.describe('Projects - E2E Tests', () => {
         await project.verifyAndCloseProjectPopup();
     });
 
+    test('Test 16: Validate popup fields - project name & status', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyAndCloseProjectPopup();
+    });
+
 });
