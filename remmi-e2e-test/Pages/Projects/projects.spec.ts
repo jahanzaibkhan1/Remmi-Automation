@@ -71,4 +71,64 @@ test.describe('Projects - E2E Tests', () => {
         await project.verifyPrecinctIsGroupedUnderTab('Tested');
     });
 
+    test('Test 11: Verify clicking precinct opens project/lot/EOI tabs', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyClickingPrecinctOpensTabs();
+    });
+
+    test('Test 12: Verify that a precinct-allocated project does not appear in the "Active" tab after viewing inside a precinct', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyPrecinctAllocatedProjectNotInActiveTabAfterPrecinctClick();
+    });
+
+    test('Test 13: Delete precinct shows project back in active tab', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyProjectReappearsInActiveTabAfterPrecinctDeletion();
+    });
+
+    test('Test 14: Switch between grid and list views', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.switchBetweenProjectViews();
+    });
+
+    test('Test 15: Click plus icon to open project popup', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyAndCloseProjectPopup();
+    });
+
+    test('Test 16: Validate popup fields - project name & status', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyAndCloseProjectPopup();
+    });
+
+    test('Test 17: Create project with valid data', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.createProjectWithValidData();
+    });
+
+    test('Test 18: Save popup with empty fields', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.saveProjectPopupWithEmptyFields();
+    });
+
+    test('Test 19: Cancel button closes the project popup', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyAndCloseProjectPopup();
+    });
+
+    test('Test 20: Cross icon closes the project popup', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.closeProjectPopupWithCrossIcon();
+    });
+
+    test('Test 21: Verify project opens with the "General" tab selected after entering project name and status', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.createProjectWithValidData();
+    });
+
+    test('Test 22: Verify that "Pin to Dashboard" option is visible on right-clicking a project card', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyPinToDashboardOptionVisibleOnRightClick('East Village Vila');
+    });
+
 });
