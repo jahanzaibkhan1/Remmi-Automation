@@ -346,4 +346,24 @@ export class ProjectActions {
         await this.page.locator('p.f-24', { hasText: projectName }).waitFor({ state: 'visible', timeout: 15000 });
         await this.clickOnProjects();
     }
+
+    /**
+     * Attempts to save a new project with empty required fields
+     */
+    async saveProjectPopupWithEmptyFields(): Promise<void> {
+        await this.navigateToProjects();
+        await this.openProjectPopup();
+        const dialog = this.page.locator('.p-dialog-content').filter({
+            has: this.page.locator('input[formcontrolname="Project_Name"]')
+        });
+        const projectNameInput = dialog.locator('input[formcontrolname="Project_Name"]');
+        await projectNameInput.fill('');
+        await dialog.locator('button._outline-btn').click();
+        const projectNameError = dialog.locator(
+            'input[formcontrolname="Project_Name"] ~ .invalid-feedback, input[formcontrolname="Project_Name"] ~ .text-danger, input[formcontrolname="Project_Name"].ng-invalid'
+        );
+        await expect(projectNameError).toBeVisible({ timeout: 5000 });
+        await dialog.locator('button._cancel-btn').click();
+        await expect(dialog).toBeHidden({ timeout: 10000 });
+    }
 }
