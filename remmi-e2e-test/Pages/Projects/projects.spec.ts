@@ -106,4 +106,9 @@ test.describe('Projects - E2E Tests', () => {
         await project.createProjectWithValidData();
     });
 
+    test('Test 18: Save popup with empty fields', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.saveProjectPopupWithEmptyFields();
+    });
+
 });
