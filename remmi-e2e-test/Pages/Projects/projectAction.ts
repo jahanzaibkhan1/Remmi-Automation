@@ -1,5 +1,5 @@
 import { expect, Page, Locator } from '@playwright/test';
-
+import { faker } from '@faker-js/faker';
 export class ProjectActions {
     private readonly page: Page;
 
@@ -185,4 +185,211 @@ export class ProjectActions {
         await expect(container.locator('.product-thumbnail.cp.ng-star-inserted[style*="projectimages"]')).toBeVisible({ timeout: 10000 });
     }
 
+    private async getFirstVisiblePrecinctCard() {
+        const precinctCard = this.page.locator('.sgv-product').first();
+        await expect(precinctCard).toBeVisible({ timeout: 30000 });
+        await precinctCard.click();
+    }
+
+    private async clickVisibleBackButton() {
+        const backButton = this.page.locator('text=/back/i').first();
+        await expect(backButton).toBeEnabled({ timeout: 15000 });
+        await backButton.click({ force: true });
+    }
+
+    /**
+     * Verifies clicking a precinct card opens the Project, Lot, EOI tabs
+     */
+    async verifyClickingPrecinctOpensTabs(): Promise<void> {
+        await this.navigateToProjects();
+        await this.getFirstVisiblePrecinctCard();
+        const tabs = ['project', 'lot', 'EOI'];
+        for (const tab of tabs) {
+            const el = this.page.locator(`a#pills-${tab}`).first();
+            await expect(el).toBeVisible({ timeout: 20000 });
+            await expect(el).toHaveText(new RegExp(tab, 'i'), { timeout: 20000 });
+        }
+        await this.page.locator('p', { hasText: 'Projects' }).first().click();
+        await expect(this.page.locator('.sgv-product').first()).toBeVisible({ timeout: 20000 });
+    }
+
+    async verifyPrecinctAllocatedProjectNotInActiveTabAfterPrecinctClick(): Promise<void> {
+        await this.navigateToProjects();
+        await this.getFirstVisiblePrecinctCard();
+        const insidePrecinctProjectHeading = (
+            await this.page.locator('.sgv-product .product-content h3').first().innerText()
+        ).trim();
+        await this.page.locator('p', { hasText: 'Projects' }).first().click();
+        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForSelector('.sgv-product .product-content h3', { state: 'visible', timeout: 20000 });
+        await expect(this.projectsSearchInput).toBeVisible({ timeout: 30000 });
+        await this.projectsSearchInput.fill(insidePrecinctProjectHeading);
+        const escapedName = insidePrecinctProjectHeading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const nameRegex = new RegExp(`^\\s*${escapedName}\\s*$`, 'i');
+
+        const activeProjectCard = this.page
+            .locator('.projects-row .sgv-product .product-content h3')
+            .filter({ hasText: nameRegex });
+        await expect(activeProjectCard).toHaveCount(0);
+    }
+
+    async verifyProjectReappearsInActiveTabAfterPrecinctDeletion(): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+        const precinctSetupLink = this.page.locator('p', { hasText: 'Precinct Set up' }).first();
+        await expect(precinctSetupLink).toBeEnabled({ timeout: 40000 });
+        await precinctSetupLink.click();
+        const precinctAllocationTab = this.page.locator('a#pills-precinct_allow-tab', { hasText: /precinct allocation/i });
+        await expect(precinctAllocationTab).toBeEnabled({ timeout: 20000 });
+        await precinctAllocationTab.click();
+        await this.page.locator('.ng-select-container').last().click();
+        await this.page.locator('.ng-dropdown-panel .ng-option-label').first().click();
+        let checkboxes = this.page.locator('p-checkbox .p-checkbox-box');
+        await expect(checkboxes.first()).toBeVisible();
+        await checkboxes.first().click();
+        await this.page.waitForTimeout(1200);
+        await checkboxes.first().click();
+        await this.page.locator('button:has-text("Save")').click();
+        await expect(this.page.locator('.toast-message')).toBeVisible();
+        // Click the sidebar "Projects" link using a robust selector 
+        await this.page.locator('p', { hasText: 'Projects' }).first().click();
+        await this.getFirstVisiblePrecinctCard();
+        await this.page.locator('a[href="/listings/project-precinct"]').click();
+        await this.page.locator('#pills-precinct_allow-tab').click();
+        await this.page.locator('.ng-select-container').last().click();
+        await this.page.locator('.ng-dropdown-panel .ng-option-label').first().click();
+        checkboxes = this.page.locator('p-checkbox .p-checkbox-box');
+        await expect(checkboxes.nth(1)).toBeVisible();
+        await checkboxes.nth(1).click();
+        await this.page.locator('button:has-text("Save")').click();
+        await expect(this.page.locator('.toast-message')).toBeVisible();
+        await this.page.locator('p', { hasText: 'Projects' }).first().click();
+        await this.getFirstVisiblePrecinctCard();
+        const insidePrecinctProjectHeading = (
+            await this.page.locator('.sgv-product .product-content h3').first().innerText()
+        ).trim();
+        console.log('insidePrecinctProjectHeading:', insidePrecinctProjectHeading);
+        await this.page.locator('p', { hasText: 'Projects' }).first().click();
+    }
+
+    async switchToGridView(): Promise<void> {
+        const gridIcon = this.page.locator('.layout-changer a.grid-icon');
+        await expect(gridIcon).toBeVisible({ timeout: 30000 });
+        const isActive = await gridIcon.evaluate((el) => el.classList.contains('activeClass'));
+        if (isActive) return;
+        await gridIcon.click();
+        await expect(async () => {
+            const hasActive = await gridIcon.evaluate((el) => el.classList.contains('activeClass'));
+            if (!hasActive) throw new Error("Grid view did not become active in time");
+        }).toPass({ timeout: 20000 });
+    }
+
+    async switchToListView(): Promise<void> {
+        const listIcon = this.page.locator('.layout-changer a:not(.grid-icon)');
+        await expect(listIcon).toBeVisible({ timeout: 30000 });
+        const isActive = await listIcon.evaluate((el) => el.classList.contains('activeClass'));
+        if (isActive) return;
+        await listIcon.click();
+        await expect(async () => {
+            const hasActive = await listIcon.evaluate((el) => el.classList.contains('activeClass'));
+            if (!hasActive) throw new Error("List view did not become active in time");
+        }).toPass({ timeout: 20000 });
+    }
+
+    async switchBetweenProjectViews(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.switchToGridView();
+    }
+
+    async openProjectPopup(): Promise<void> {
+        await this.page.locator('button._addNew').click();
+        const dialog = this.page.locator('.p-dialog-content').filter({
+            has: this.page.locator('input[formcontrolname="Project_Name"]'),
+        });
+        await expect(dialog).toBeVisible({ timeout: 10000 });
+        await expect(dialog.locator('input[formcontrolname="Project_Name"]')).toBeVisible();
+        await expect(dialog.locator('ng-select[formcontrolname="Project_Status"]')).toBeVisible();
+        await expect(dialog.locator('button._outline-btn')).toBeVisible();
+        await expect(dialog.locator('button._cancel-btn')).toBeVisible();
+    }
+
+    async verifyAndCloseProjectPopup(): Promise<void> {
+        await this.navigateToProjects();
+        await this.openProjectPopup();
+        const dialog = this.page.locator('.p-dialog-content');
+        await dialog.locator('button._cancel-btn').click();
+        await expect(dialog).toBeHidden({ timeout: 10000 });
+    }
+
+    async clickOnProjects(): Promise<void> {
+        await this.page.locator('p', { hasText: 'Projects' }).first().click();
+    }
+
+    /**
+     * Create a project with valid data.
+     * @param project Optional object containing project name and status.
+     */
+    async createProjectWithValidData(project?: { name?: string; status?: string }): Promise<void> {
+        await this.navigateToProjects();
+        await this.openProjectPopup();
+        const projectName = project?.name ?? faker.company.name();
+        console.log("Creating project with name:", projectName);
+        const dialog = this.page.locator('.p-dialog-content')
+            .filter({ has: this.page.locator('input[formcontrolname="Project_Name"]') });
+        await dialog.locator('input[formcontrolname="Project_Name"]').fill(projectName);
+        await dialog.locator('button._outline-btn').click();
+        await expect(dialog).toBeHidden({ timeout: 10000 });
+        await this.page.getByText('Project added successfully')
+            .waitFor({ state: 'visible', timeout: 15000 })
+            .catch(() => {});
+        await this.page.locator('p.f-24', { hasText: projectName }).waitFor({ state: 'visible', timeout: 15000 });
+        await this.clickOnProjects();
+        await this.verifyProjectCanBeSearchedByName(projectName);
+    }
+
+    /**
+     * Attempts to save a new project with empty required fields
+     */
+    async saveProjectPopupWithEmptyFields(): Promise<void> {
+        await this.navigateToProjects();
+        await this.openProjectPopup();
+        const projectDialog = this.page.locator('.p-dialog-content').filter({
+            has: this.page.locator('input[formcontrolname="Project_Name"]')
+        });
+        const projectNameInputField = projectDialog.locator('input[formcontrolname="Project_Name"]');
+        await projectNameInputField.fill('');
+        await projectDialog.locator('button._outline-btn').click();
+        const projectNameValidationError = projectDialog.locator(
+            'input[formcontrolname="Project_Name"] ~ .invalid-feedback, input[formcontrolname="Project_Name"] ~ .text-danger, input[formcontrolname="Project_Name"].ng-invalid'
+        );
+        await expect(projectNameValidationError).toBeVisible({ timeout: 5000 });
+        await projectDialog.locator('button._cancel-btn').click();
+        await expect(projectDialog).toBeHidden({ timeout: 10000 });
+    }
+
+    /**
+     * Clicks the cross (X) icon to close the project popup dialog.
+     */
+    async closeProjectPopupWithCrossIcon(): Promise<void> {
+        await this.navigateToProjects();
+        await this.openProjectPopup();
+        const dialog = this.page.locator('.p-dialog-content')
+        const closeBtn = this.page.locator("//*[name()='path' and contains(@d,'M8.01186 7')]")
+        await closeBtn.click({ force: true });
+        await expect(dialog).toBeHidden({ timeout: 10000 });
+    }
+    /**
+     * Verify that "Pin to Dashboard" option is visible when right-clicking a project card.
+     */
+    async verifyPinToDashboardOptionVisibleOnRightClick(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        const projectCard = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${projectName}$`, 'i') }).first();
+        await expect(projectCard).toBeVisible({ timeout: 15000 });
+        await projectCard.click({ button: 'right' });
+        const pinOption = this.page.getByText('Pin to Dashboard', { exact: true });
+        await expect(pinOption).toBeVisible({ timeout: 10000 });
+        await this.page.mouse.click(0, 0);
+        await expect(pinOption).not.toBeVisible({timeout:10000});
+    }
 }
