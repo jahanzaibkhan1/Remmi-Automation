@@ -76,4 +76,9 @@ test.describe('Projects - E2E Tests', () => {
         await project.verifyClickingPrecinctOpensTabs();
     });
 
+    test('Test 12: Verify that a precinct-allocated project does not appear in the "Active" tab after viewing inside a precinct', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyPrecinctAllocatedProjectNotInActiveTabAfterPrecinctClick();
+    });
+
 });

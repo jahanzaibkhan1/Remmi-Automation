@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.99960300000012">
-<testsuite name="Pages\Projects\projects.spec.ts" timestamp="2026-04-21T04:21:49.031Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.154" errors="0">
-<testcase name="Projects - E2E Tests › Test 11: Verify clicking precinct opens project/lot/EOI tabs" classname="Pages\Projects\projects.spec.ts" time="41.154">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.55027899999963">
+<testsuite name="Pages\Projects\projects.spec.ts" timestamp="2026-04-21T06:09:44.123Z" hostname="chromium" tests="1" failures="0" skipped="0" time="62.942" errors="0">
+<testcase name="Projects - E2E Tests › Test 12: Verify that a precinct-allocated project does not appear in the &quot;Active&quot; tab after viewing inside a precinct" classname="Pages\Projects\projects.spec.ts" time="62.942">
 </testcase>
 </testsuite>
 </testsuites>
