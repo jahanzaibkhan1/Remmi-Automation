@@ -126,4 +126,9 @@ test.describe('Projects - E2E Tests', () => {
         await project.createProjectWithValidData();
     });
 
+    test('Test 22: Verify that "Pin to Dashboard" option is visible on right-clicking a project card', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyPinToDashboardOptionVisibleOnRightClick('East Village Vila');
+    });
+
 });

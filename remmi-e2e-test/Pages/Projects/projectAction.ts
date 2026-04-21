@@ -379,4 +379,17 @@ export class ProjectActions {
         await closeBtn.click({ force: true });
         await expect(dialog).toBeHidden({ timeout: 10000 });
     }
+    /**
+     * Verify that "Pin to Dashboard" option is visible when right-clicking a project card.
+     */
+    async verifyPinToDashboardOptionVisibleOnRightClick(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        const projectCard = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${projectName}$`, 'i') }).first();
+        await expect(projectCard).toBeVisible({ timeout: 15000 });
+        await projectCard.click({ button: 'right' });
+        const pinOption = this.page.getByText('Pin to Dashboard', { exact: true });
+        await expect(pinOption).toBeVisible({ timeout: 10000 });
+        await this.page.mouse.click(0, 0);
+        await expect(pinOption).not.toBeVisible({timeout:10000});
+    }
 }
