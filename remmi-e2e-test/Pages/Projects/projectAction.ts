@@ -193,8 +193,9 @@ export class ProjectActions {
 
     private async clickVisibleBackButton() {
         const backButton = this.page.locator('text=/back/i').first();
-        await expect(backButton).toBeVisible({ timeout: 15000 });
-        await backButton.click();
+        await expect(backButton).toBeEnabled({ timeout: 15000 });
+        await backButton.click({force: true});
+        await expect(backButton).toBeHidden({ timeout: 10000 });
     }
 
     /**
@@ -211,6 +212,26 @@ export class ProjectActions {
         }
         await this.clickVisibleBackButton();
         await expect(this.page.locator('.sgv-product').first()).toBeVisible({ timeout: 20000 });
+    }
+
+    async verifyPrecinctAllocatedProjectNotInActiveTabAfterPrecinctClick(): Promise<void> {
+        await this.navigateToProjects();
+        await this.getFirstVisiblePrecinctCard();
+        const insidePrecinctProjectHeading = (
+            await this.page.locator('.sgv-product .product-content h3').first().innerText()
+        ).trim();
+        await this.clickVisibleBackButton();
+        await this.page.waitForTimeout(2000);
+        await this.page.waitForSelector('.sgv-product .product-content h3', { state: 'visible', timeout: 20000 });
+        await expect(this.projectsSearchInput).toBeVisible({ timeout: 30000 });
+        await this.projectsSearchInput.fill(insidePrecinctProjectHeading);
+        const escapedName = insidePrecinctProjectHeading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const nameRegex = new RegExp(`^\\s*${escapedName}\\s*$`, 'i');
+    
+        const activeProjectCard = this.page
+            .locator('.projects-row .sgv-product .product-content h3')
+            .filter({ hasText: nameRegex });
+        await expect(activeProjectCard).toHaveCount(0);
     }
 
 }
