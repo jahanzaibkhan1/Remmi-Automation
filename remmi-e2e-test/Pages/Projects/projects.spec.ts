@@ -81,4 +81,9 @@ test.describe('Projects - E2E Tests', () => {
         await project.verifyPrecinctAllocatedProjectNotInActiveTabAfterPrecinctClick();
     });
 
+    test('Test 13: Delete precinct shows project back in active tab', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyProjectReappearsInActiveTabAfterPrecinctDeletion();
+    });
+
 });

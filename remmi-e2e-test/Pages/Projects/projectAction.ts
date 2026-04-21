@@ -221,7 +221,7 @@ export class ProjectActions {
             await this.page.locator('.sgv-product .product-content h3').first().innerText()
         ).trim();
         await this.clickVisibleBackButton();
-        await this.page.waitForTimeout(2000);
+        await this.page.waitForLoadState('networkidle');
         await this.page.waitForSelector('.sgv-product .product-content h3', { state: 'visible', timeout: 20000 });
         await expect(this.projectsSearchInput).toBeVisible({ timeout: 30000 });
         await this.projectsSearchInput.fill(insidePrecinctProjectHeading);
@@ -234,4 +234,42 @@ export class ProjectActions {
         await expect(activeProjectCard).toHaveCount(0);
     }
 
+    async verifyProjectReappearsInActiveTabAfterPrecinctDeletion(): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+        const precinctSetupLink = this.page.locator('p', { hasText: 'Precinct Set up' }).first();
+        await expect(precinctSetupLink).toBeEnabled({ timeout: 40000 });
+        await precinctSetupLink.click();
+        const precinctAllocationTab = this.page.locator('a#pills-precinct_allow-tab', { hasText: /precinct allocation/i });
+        await expect(precinctAllocationTab).toBeEnabled({ timeout: 20000 });
+        await precinctAllocationTab.click();
+        await this.page.locator('.ng-select-container').last().click();
+        await this.page.locator('.ng-dropdown-panel .ng-option-label').first().click();
+        let checkboxes = this.page.locator('p-checkbox .p-checkbox-box');
+        await expect(checkboxes.first()).toBeVisible();
+        await checkboxes.first().click();
+        await this.page.waitForTimeout(1200);
+        await checkboxes.first().click();
+        await this.page.locator('button:has-text("Save")').click();
+        await expect(this.page.locator('.toast-message')).toBeVisible();
+        // Click the sidebar "Projects" link using a robust selector 
+        await this.page.locator('p', { hasText: 'Projects' }).first().click();
+        await this.getFirstVisiblePrecinctCard();
+        await this.page.locator('a[href="/listings/project-precinct"]').click();
+        await this.page.locator('#pills-precinct_allow-tab').click();
+        await this.page.locator('.ng-select-container').last().click();
+        await this.page.locator('.ng-dropdown-panel .ng-option-label').first().click();
+        checkboxes = this.page.locator('p-checkbox .p-checkbox-box');
+        await expect(checkboxes.nth(1)).toBeVisible();
+        await checkboxes.nth(1).click();
+        await this.page.locator('button:has-text("Save")').click();
+        await expect(this.page.locator('.toast-message')).toBeVisible();
+        await this.page.locator('p', { hasText: 'Projects' }).first().click();
+        await this.getFirstVisiblePrecinctCard();
+        const insidePrecinctProjectHeading = (
+            await this.page.locator('.sgv-product .product-content h3').first().innerText()
+        ).trim();
+        console.log('insidePrecinctProjectHeading:', insidePrecinctProjectHeading);
+        await this.page.locator('p', { hasText: 'Projects' }).first().click();
+    }
 }
