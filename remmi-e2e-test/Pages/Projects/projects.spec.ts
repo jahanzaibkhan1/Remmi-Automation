@@ -111,4 +111,9 @@ test.describe('Projects - E2E Tests', () => {
         await project.saveProjectPopupWithEmptyFields();
     });
 
+    test('Test 19: Cancel button closes the project popup', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyAndCloseProjectPopup();
+    });
+
 });
