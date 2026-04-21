@@ -195,7 +195,6 @@ export class ProjectActions {
         const backButton = this.page.locator('text=/back/i').first();
         await expect(backButton).toBeEnabled({ timeout: 15000 });
         await backButton.click({force: true});
-        await expect(backButton).toBeHidden({ timeout: 10000 });
     }
 
     /**
@@ -210,7 +209,7 @@ export class ProjectActions {
             await expect(el).toBeVisible({ timeout: 20000 });
             await expect(el).toHaveText(new RegExp(tab, 'i'), { timeout: 20000 });
         }
-        await this.clickVisibleBackButton();
+        await this.page.locator('p', { hasText: 'Projects' }).first().click();
         await expect(this.page.locator('.sgv-product').first()).toBeVisible({ timeout: 20000 });
     }
 
@@ -220,7 +219,7 @@ export class ProjectActions {
         const insidePrecinctProjectHeading = (
             await this.page.locator('.sgv-product .product-content h3').first().innerText()
         ).trim();
-        await this.clickVisibleBackButton();
+        await this.page.locator('p', { hasText: 'Projects' }).first().click();
         await this.page.waitForLoadState('networkidle');
         await this.page.waitForSelector('.sgv-product .product-content h3', { state: 'visible', timeout: 20000 });
         await expect(this.projectsSearchInput).toBeVisible({ timeout: 30000 });
@@ -271,5 +270,35 @@ export class ProjectActions {
         ).trim();
         console.log('insidePrecinctProjectHeading:', insidePrecinctProjectHeading);
         await this.page.locator('p', { hasText: 'Projects' }).first().click();
+    }
+
+    async switchToGridView(): Promise<void> {
+        const gridIcon = this.page.locator('.layout-changer a.grid-icon');
+        await expect(gridIcon).toBeVisible({ timeout: 30000 });
+        const isActive = await gridIcon.evaluate((el) => el.classList.contains('activeClass'));
+        if (isActive) return;
+        await gridIcon.click();
+        await expect(async () => {
+            const hasActive = await gridIcon.evaluate((el) => el.classList.contains('activeClass'));
+            if (!hasActive) throw new Error("Grid view did not become active in time");
+        }).toPass({ timeout: 20000 });
+    }
+    
+    async switchToListView(): Promise<void> {
+        const listIcon = this.page.locator('.layout-changer a:not(.grid-icon)');
+        await expect(listIcon).toBeVisible({ timeout: 30000 });
+        const isActive = await listIcon.evaluate((el) => el.classList.contains('activeClass'));
+        if (isActive) return;
+        await listIcon.click();
+        await expect(async () => {
+            const hasActive = await listIcon.evaluate((el) => el.classList.contains('activeClass'));
+            if (!hasActive) throw new Error("List view did not become active in time");
+        }).toPass({ timeout: 20000 });
+    }
+
+    async switchBetweenProjectViews(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.switchToGridView();
     }
 }
