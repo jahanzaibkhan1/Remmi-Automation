@@ -366,4 +366,16 @@ export class ProjectActions {
         await dialog.locator('button._cancel-btn').click();
         await expect(dialog).toBeHidden({ timeout: 10000 });
     }
+
+    /**
+     * Clicks the cross (X) icon to close the project popup dialog.
+     */
+    async closeProjectPopupWithCrossIcon(): Promise<void> {
+        await this.navigateToProjects();
+        await this.openProjectPopup();
+        const dialog = this.page.locator('.p-dialog-content')
+        const closeBtn = this.page.locator("//*[name()='path' and contains(@d,'M8.01186 7')]")
+        await closeBtn.click({ force: true });
+        await expect(dialog).toBeHidden({ timeout: 10000 });
+    }
 }

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="36.539870999999344">
-<testsuite name="Pages\Projects\projects.spec.ts" timestamp="2026-04-21T08:37:12.604Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.502" errors="0">
-<testcase name="Projects - E2E Tests › Test 19: Cancel button closes the project popup" classname="Pages\Projects\projects.spec.ts" time="34.502">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.553600999999794">
+<testsuite name="Pages\Projects\projects.spec.ts" timestamp="2026-04-21T08:56:33.228Z" hostname="chromium" tests="1" failures="0" skipped="0" time="30.445" errors="0">
+<testcase name="Projects - E2E Tests › Test 20: Cross icon closes the project popup" classname="Pages\Projects\projects.spec.ts" time="30.445">
 </testcase>
 </testsuite>
 </testsuites>
