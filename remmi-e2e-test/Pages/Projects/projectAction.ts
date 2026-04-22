@@ -346,6 +346,7 @@ export class ProjectActions {
         await this.page.locator('p.f-24', { hasText: projectName }).waitFor({ state: 'visible', timeout: 15000 });
         await this.clickOnProjects();
         await this.verifyProjectCanBeSearchedByName(projectName);
+        await this.clickResetButton();
     }
 
     /**
@@ -391,5 +392,21 @@ export class ProjectActions {
         await expect(pinOption).toBeVisible({ timeout: 10000 });
         await this.page.mouse.click(0, 0);
         await expect(pinOption).not.toBeVisible({timeout:10000});
+    }
+
+    /**
+     * Clicks "Pin to Dashboard" for a project card and verifies the pin icon appears.
+     */
+    async pinProjectAndVerifyIcon(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        const projectCard = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${projectName}$`, 'i') }).first();
+        await expect(projectCard).toBeVisible({ timeout: 15000 });
+        await projectCard.click({ button: 'right' });
+
+        const pinOption = this.page.getByText('Pin to Dashboard', { exact: true });
+        await expect(pinOption).toBeVisible({ timeout: 10000 });
+        await pinOption.click();
+        const pinnedIcon = this.page.locator('img[src="assets/img/dashboadIcon/pin-fill.svg"]');
+        await expect(pinnedIcon).toBeVisible({ timeout: 10000 });
     }
 }
