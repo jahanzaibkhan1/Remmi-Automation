@@ -281,9 +281,16 @@ export class ProjectActions {
     }
 
     async switchToListView(): Promise<void> {
-        const listIcon = this.page.locator('.layout-changer a:not(.grid-icon)');
-        await expect(listIcon).toBeVisible({ timeout: 30000 });
-        await listIcon.click();
+        await this.navigateToProjects();
+        const tableRows = this.page.locator('tbody tr');
+        if (await tableRows.first().isVisible().catch(() => false)) {
+            return;
+        }
+        const listViewButton = this.page.locator('.layout-changer a').filter({
+            has: this.page.locator('img[src*="list.svg"]')
+        });
+        await listViewButton.click();
+        await this.waitForFirstTableRow();
     }
 
     async switchBetweenProjectViews(): Promise<void> {
@@ -442,9 +449,17 @@ export class ProjectActions {
      * Waits for the first data row in the projects table to be visible.
      */
     async waitForFirstTableRow(): Promise<void> {
-        await this.page.waitForSelector('tbody tr', { state: 'attached', timeout: 30000 });
+        await this.page.waitForSelector('tbody tr', { state: 'attached', timeout: 30_000 });
+    
+        await this.page.waitForFunction(() => {
+            const rows = document.querySelectorAll('tbody tr');
+            if (rows.length === 0) return false;
+            const firstRowText = rows[0].textContent?.trim() ?? '';
+            return firstRowText.length > 5;
+        }, { timeout: 30_000 });
+    
         const firstDataRow = this.page.locator('tbody tr').first();
-        await firstDataRow.waitFor({ state: 'visible', timeout: 30000 });
+        await firstDataRow.waitFor({ state: 'visible', timeout: 30_000 });
     }
 
     /**
@@ -506,4 +521,39 @@ export class ProjectActions {
         expect(rowCount).toBeGreaterThan(0);
     }
 
+    async selectSingleProjectManagerInListView(managerName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        await this.page.waitForTimeout(1500);
+        const projectManagerDropdown = this.page.locator('re-multiselect[placeholder="Project Manager"] .box');
+        await projectManagerDropdown.click();
+        const dropdownOptionsList = this.page.locator('re-multiselect[placeholder="Project Manager"] ul');
+        await dropdownOptionsList.waitFor({ state: 'visible', timeout: 50000 });
+        const searchInput = this.page.locator('re-multiselect[placeholder="Project Manager"] input[type="text"], re-multiselect[placeholder="Project Manager"] input[type="search"]').last();
+        await searchInput.waitFor({ state: 'visible', timeout: 15_000 });
+        await searchInput.fill(managerName);
+        const managerOption = this.page
+            .locator('li')
+            .filter({ hasText: managerName })
+            .first();
+
+        await managerOption.waitFor({ state: 'visible', timeout: 15_000 });
+        await managerOption.click();
+
+        // Close the dropdown
+        await this.page.keyboard.press('Escape');
+
+        // Check tag of the selected manager
+        const selectedTag = this.page
+            .locator('re-multiselect[placeholder="Project Manager"] .tags')
+            .filter({ hasText: managerName });
+
+        await expect(selectedTag).toBeVisible({ timeout: 15_000 });
+
+        await this.waitForFirstTableRow();
+
+        const rowCount = await this.page.locator('tbody tr').count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
 }

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.49600100000016">
-<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-22T09:37:11.385Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.557" errors="0">
-<testcase name="Projects - List View Tests › Verify inactive tab filtering in List View" classname="Pages\Projects\projectListView.spec.ts" time="39.557">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="114.3349729999993">
+<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-22T10:20:22.681Z" hostname="chromium" tests="1" failures="0" skipped="0" time="112.341" errors="0">
+<testcase name="Projects - List View Tests › Select single project manager in List View" classname="Pages\Projects\projectListView.spec.ts" time="112.341">
 </testcase>
 </testsuite>
 </testsuites>
