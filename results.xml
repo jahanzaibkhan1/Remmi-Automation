@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="84.31819400000013">
-<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-22T11:14:26.985Z" hostname="chromium" tests="1" failures="0" skipped="0" time="82.366" errors="0">
-<testcase name="Projects - List View Tests › Verify default view popup opens in List View" classname="Pages\Projects\projectListView.spec.ts" time="82.366">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="121.92940799999982">
+<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-22T11:26:02.934Z" hostname="chromium" tests="1" failures="0" skipped="0" time="119.962" errors="0">
+<testcase name="Projects - List View Tests › Create a new custom view in List View" classname="Pages\Projects\projectListView.spec.ts" time="119.962">
 </testcase>
 </testsuite>
 </testsuites>
