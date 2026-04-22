@@ -334,7 +334,7 @@ export class ProjectActions {
         await expect(dialog).toBeHidden({ timeout: 10000 });
         await this.page.getByText('Project added successfully')
             .waitFor({ state: 'visible', timeout: 15000 })
-            .catch(() => {});
+            .catch(() => { });
         await this.page.locator('p.f-24', { hasText: projectName }).waitFor({ state: 'visible', timeout: 15000 });
         await this.clickOnProjects();
         await this.verifyProjectCanBeSearchedByName(projectName);
@@ -374,10 +374,10 @@ export class ProjectActions {
         await closeBtn.click({ force: true });
         await expect(dialog).toBeHidden({ timeout: 10000 });
     }
-     /**
-     * Verify that "Pin to Dashboard" option is visible when right-clicking a project card.
-     */
-     async verifyPinToDashboardOptionVisibleOnRightClick(projectName: string): Promise<void> {
+    /**
+    * Verify that "Pin to Dashboard" option is visible when right-clicking a project card.
+    */
+    async verifyPinToDashboardOptionVisibleOnRightClick(projectName: string): Promise<void> {
         await this.navigateToProjects();
         await this.page.reload();
         await this.verifyProjectCanBeSearchedByName(projectName);
@@ -436,6 +436,33 @@ export class ProjectActions {
             has: projectCard
         });
         await expect(pinnedIcon).toHaveCount(0, { timeout: 10000 });
+    }
+
+    /**
+     * Waits for the first data row in the projects table to be visible.
+     */
+    async waitForFirstTableRow(): Promise<void> {
+        await this.page.waitForSelector('tbody tr', { state: 'attached', timeout: 30000 });
+        const firstDataRow = this.page.locator('tbody tr').first();
+        await firstDataRow.waitFor({ state: 'visible', timeout: 30000 });
+    }
+
+    /**
+     * Verifies project search by name in List View
+     */
+    async verifyProjectCanBeSearchedByNameInListView(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        const searchInput = this.page.locator('input[placeholder="Search"]').last();
+        await searchInput.fill('');
+        await searchInput.fill(projectName);
+        const projectRow = this.page
+            .locator('tr')
+            .filter({ hasText: new RegExp(projectName, 'i') })
+            .first();
+        await expect(projectRow).toBeVisible({ timeout: 30000 });
+        await this.clickResetButton();
     }
 
 }
