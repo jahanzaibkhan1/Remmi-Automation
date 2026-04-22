@@ -556,4 +556,51 @@ export class ProjectActions {
         const rowCount = await this.page.locator('tbody tr').count();
         expect(rowCount).toBeGreaterThan(0);
     }
+
+    /**
+     * Select multiple project managers by their names in the list view.
+     */
+    async selectMultipleProjectManagersInListView(managerNames: string[]): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        await this.page.waitForTimeout(1500);
+
+        const projectManagerDropdown = this.page.locator('re-multiselect[placeholder="Project Manager"] .box');
+        await projectManagerDropdown.click();
+
+        const dropdownOptionsList = this.page.locator('re-multiselect[placeholder="Project Manager"] ul');
+        await dropdownOptionsList.waitFor({ state: 'visible', timeout: 50000 });
+
+        const searchInput = this.page.locator('re-multiselect[placeholder="Project Manager"] input[type="text"], re-multiselect[placeholder="Project Manager"] input[type="search"]').last();
+        await searchInput.waitFor({ state: 'visible', timeout: 15_000 });
+
+        for (const managerName of managerNames) {
+            await searchInput.fill(managerName);
+
+            const managerOption = this.page.locator('li').filter({ hasText: managerName }).first();
+            await managerOption.waitFor({ state: 'visible', timeout: 15_000 });
+            await managerOption.click();
+
+            // Optionally clear the search input for the next iteration
+            await searchInput.fill('');
+        }
+
+        // Close the dropdown
+        await this.page.keyboard.press('Escape');
+
+        // Check tags of selected managers
+        for (const managerName of managerNames) {
+            const selectedTag = this.page
+                .locator('re-multiselect[placeholder="Project Manager"] .tags')
+                .filter({ hasText: managerName });
+
+            await expect(selectedTag).toBeVisible({ timeout: 15_000 });
+        }
+
+        await this.waitForFirstTableRow();
+
+        const rowCount = await this.page.locator('tbody tr').count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
 }
