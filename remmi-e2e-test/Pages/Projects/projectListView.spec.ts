@@ -74,5 +74,10 @@ test.describe('Projects - List View Tests', () => {
         const uniqueViewName = `Test View`;
         await project.createNewCustomViewInListView(uniqueViewName);
     });
+
+    test('Share view with agent and team in List View', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.shareViewWithAgentAndTeamInListView();
+    });
    
 });
