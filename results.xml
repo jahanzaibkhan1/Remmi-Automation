@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.229150000000374">
-<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-22T09:20:09.374Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.055" errors="0">
-<testcase name="Projects - List View Tests › Verify project search by name in List View" classname="Pages\Projects\projectListView.spec.ts" time="39.055">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.621481999999844">
+<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-22T09:23:57.450Z" hostname="chromium" tests="1" failures="0" skipped="0" time="49.695" errors="0">
+<testcase name="Projects - List View Tests › Search with no matching results in List View" classname="Pages\Projects\projectListView.spec.ts" time="49.695">
 </testcase>
 </testsuite>
 </testsuites>
