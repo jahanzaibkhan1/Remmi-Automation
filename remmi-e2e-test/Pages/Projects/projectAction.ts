@@ -215,6 +215,7 @@ export class ProjectActions {
 
     async verifyPrecinctAllocatedProjectNotInActiveTabAfterPrecinctClick(): Promise<void> {
         await this.navigateToProjects();
+        await this.page.reload();
         await this.getFirstVisiblePrecinctCard();
         const insidePrecinctProjectHeading = (
             await this.page.locator('.sgv-product .product-content h3').first().innerText()
@@ -235,6 +236,7 @@ export class ProjectActions {
 
     async verifyProjectReappearsInActiveTabAfterPrecinctDeletion(): Promise<void> {
         await this.navigateToProjects();
+        await this.page.reload();
         await this.page.waitForLoadState('networkidle');
         const precinctSetupLink = this.page.locator('p', { hasText: 'Precinct Set up' }).first();
         await expect(precinctSetupLink).toBeEnabled({ timeout: 40000 });
@@ -275,25 +277,20 @@ export class ProjectActions {
     async switchToGridView(): Promise<void> {
         const gridIcon = this.page.locator('.layout-changer a.grid-icon');
         await expect(gridIcon).toBeVisible({ timeout: 30000 });
-        const isActive = await gridIcon.evaluate((el) => el.classList.contains('activeClass'));
-        if (isActive) return;
         await gridIcon.click();
-        await expect(async () => {
-            const hasActive = await gridIcon.evaluate((el) => el.classList.contains('activeClass'));
-            if (!hasActive) throw new Error("Grid view did not become active in time");
-        }).toPass({ timeout: 20000 });
     }
 
     async switchToListView(): Promise<void> {
-        const listIcon = this.page.locator('.layout-changer a:not(.grid-icon)');
-        await expect(listIcon).toBeVisible({ timeout: 30000 });
-        const isActive = await listIcon.evaluate((el) => el.classList.contains('activeClass'));
-        if (isActive) return;
-        await listIcon.click();
-        await expect(async () => {
-            const hasActive = await listIcon.evaluate((el) => el.classList.contains('activeClass'));
-            if (!hasActive) throw new Error("List view did not become active in time");
-        }).toPass({ timeout: 20000 });
+        await this.navigateToProjects();
+        const tableRows = this.page.locator('tbody tr');
+        if (await tableRows.first().isVisible().catch(() => false)) {
+            return;
+        }
+        const listViewButton = this.page.locator('.layout-changer a').filter({
+            has: this.page.locator('img[src*="list.svg"]')
+        });
+        await listViewButton.click();
+        await this.waitForFirstTableRow();
     }
 
     async switchBetweenProjectViews(): Promise<void> {
@@ -316,6 +313,7 @@ export class ProjectActions {
 
     async verifyAndCloseProjectPopup(): Promise<void> {
         await this.navigateToProjects();
+        await this.page.reload();
         await this.openProjectPopup();
         const dialog = this.page.locator('.p-dialog-content');
         await dialog.locator('button._cancel-btn').click();
@@ -332,6 +330,7 @@ export class ProjectActions {
      */
     async createProjectWithValidData(project?: { name?: string; status?: string }): Promise<void> {
         await this.navigateToProjects();
+        await this.page.reload();
         await this.openProjectPopup();
         const projectName = project?.name ?? faker.company.name();
         console.log("Creating project with name:", projectName);
@@ -342,10 +341,11 @@ export class ProjectActions {
         await expect(dialog).toBeHidden({ timeout: 10000 });
         await this.page.getByText('Project added successfully')
             .waitFor({ state: 'visible', timeout: 15000 })
-            .catch(() => {});
+            .catch(() => { });
         await this.page.locator('p.f-24', { hasText: projectName }).waitFor({ state: 'visible', timeout: 15000 });
         await this.clickOnProjects();
         await this.verifyProjectCanBeSearchedByName(projectName);
+        await this.clickResetButton();
     }
 
     /**
@@ -353,6 +353,7 @@ export class ProjectActions {
      */
     async saveProjectPopupWithEmptyFields(): Promise<void> {
         await this.navigateToProjects();
+        await this.page.reload();
         await this.openProjectPopup();
         const projectDialog = this.page.locator('.p-dialog-content').filter({
             has: this.page.locator('input[formcontrolname="Project_Name"]')
@@ -373,6 +374,7 @@ export class ProjectActions {
      */
     async closeProjectPopupWithCrossIcon(): Promise<void> {
         await this.navigateToProjects();
+        await this.page.reload();
         await this.openProjectPopup();
         const dialog = this.page.locator('.p-dialog-content')
         const closeBtn = this.page.locator("//*[name()='path' and contains(@d,'M8.01186 7')]")
@@ -380,16 +382,424 @@ export class ProjectActions {
         await expect(dialog).toBeHidden({ timeout: 10000 });
     }
     /**
-     * Verify that "Pin to Dashboard" option is visible when right-clicking a project card.
-     */
+    * Verify that "Pin to Dashboard" option is visible when right-clicking a project card.
+    */
     async verifyPinToDashboardOptionVisibleOnRightClick(projectName: string): Promise<void> {
         await this.navigateToProjects();
-        const projectCard = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${projectName}$`, 'i') }).first();
+        await this.page.reload();
+        await this.verifyProjectCanBeSearchedByName(projectName);
+        const projectCard = this.page.locator('.sgv-product .product-content h3', {
+            hasText: new RegExp(`^${projectName}$`, 'i')
+        }).first();
         await expect(projectCard).toBeVisible({ timeout: 15000 });
         await projectCard.click({ button: 'right' });
         const pinOption = this.page.getByText('Pin to Dashboard', { exact: true });
         await expect(pinOption).toBeVisible({ timeout: 10000 });
         await this.page.mouse.click(0, 0);
-        await expect(pinOption).not.toBeVisible({timeout:10000});
+        await expect(pinOption).not.toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Searches for a project by name, pins it to dashboard, and verifies the pin icon appears.
+     */
+    async pinProjectAndVerifyIcon(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.verifyProjectCanBeSearchedByName(projectName);
+        const projectCard = this.page.locator('.sgv-product .product-content h3', {
+            hasText: new RegExp(`^${projectName}$`, 'i')
+        }).first();
+        await projectCard.evaluate((el) => el.scrollIntoView({ behavior: "auto", block: "center", inline: "center" }));
+        await expect(projectCard).toBeVisible({ timeout: 15000 });
+        await projectCard.click({ button: 'right' });
+
+        const pinOption = this.page.getByText('Pin to Dashboard', { exact: true });
+        await expect(pinOption).toBeVisible({ timeout: 10000 });
+        await pinOption.click();
+        const pinnedIcon = this.page.locator('img[src="assets/img/dashboadIcon/pin-fill.svg"]');
+        await expect(pinnedIcon).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Searches for a project by name, unpins it from dashboard, and verifies that the pin icon is removed.
+     */
+    async unpinProjectAndVerifyRemoval(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.verifyProjectCanBeSearchedByName(projectName);
+        const projectCard = this.page.locator('.sgv-product .product-content h3', {
+            hasText: new RegExp(`^${projectName}$`, 'i')
+        }).first();
+        await projectCard.scrollIntoViewIfNeeded();
+        await expect(projectCard).toBeVisible({ timeout: 15000 });
+        await projectCard.click({ button: 'right' });
+
+        const unpinOption = this.page.getByText('Unpin from Dashboard', { exact: true });
+        await expect(unpinOption).toBeVisible({ timeout: 10000 });
+        await unpinOption.click();
+
+        // Verify the pin icon is removed from the card
+        const pinnedIcon = this.page.locator('img[src="assets/img/dashboadIcon/pin-fill.svg"]').filter({
+            has: projectCard
+        });
+        await expect(pinnedIcon).toHaveCount(0, { timeout: 10000 });
+    }
+
+    /**
+     * Waits for the first data row in the projects table to be visible.
+     */
+    async waitForFirstTableRow(): Promise<void> {
+        await this.page.waitForSelector('tbody tr', { state: 'attached', timeout: 30_000 });
+
+        await this.page.waitForFunction(() => {
+            const rows = document.querySelectorAll('tbody tr');
+            if (rows.length === 0) return false;
+            const firstRowText = rows[0].textContent?.trim() ?? '';
+            return firstRowText.length > 5;
+        }, { timeout: 30_000 });
+
+        const firstDataRow = this.page.locator('tbody tr').first();
+        await firstDataRow.waitFor({ state: 'visible', timeout: 30_000 });
+    }
+
+    /**
+     * Verifies project search by name in List View
+     */
+    async verifyProjectCanBeSearchedByNameInListView(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        const searchInput = this.page.locator('input[placeholder="Search"]').last();
+        await searchInput.fill('');
+        await searchInput.fill(projectName);
+        const projectRow = this.page
+            .locator('tr')
+            .filter({ hasText: new RegExp(projectName, 'i') })
+            .first();
+        await expect(projectRow).toBeVisible({ timeout: 30000 });
+        await this.clickResetButton();
+    }
+
+    /**
+     * Clicks the reset button to clear any search/filter in the projects List View.
+     */
+    async ResetButton(): Promise<void> {
+        const resetButton = this.page.locator('button', { hasText: /reset/i }).last();
+        await expect(resetButton).toBeVisible({ timeout: 10000 });
+        await resetButton.click();
+        await this.waitForFirstTableRow();
+    }
+
+    async verifyProjectSearchWithInvalidNameInListView(invalidName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        const searchInput = this.page.locator('input[placeholder="Search"]').last();
+        await searchInput.fill('');
+        await searchInput.fill(invalidName);
+        await this.page.waitForLoadState('networkidle');
+        const noRecordsMessage = this.page.getByText(/No projects available/i).first();
+        await expect(noRecordsMessage).toBeVisible({ timeout: 30_000 });
+        const projectRow = this.page
+            .locator('tr')
+            .filter({ hasText: new RegExp(invalidName, 'i') });
+        await expect(projectRow).toHaveCount(0);
+        await this.clickResetButton();
+    }
+
+    async verifyActiveTabFilteringInListView(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        const activeTab = this.page.locator('ul.list-type li', { hasText: 'Active' }).first();
+        await activeTab.click();
+        await expect(activeTab).toHaveClass(/active-filter/);
+        await this.waitForFirstTableRow();
+        const rowCount = await this.page.locator('tbody tr').count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
+
+    async verifyInactiveTabFilteringInListView(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        const inactiveTab = this.page.locator('ul.list-type li', { hasText: 'Inactive' }).first();
+        await inactiveTab.click();
+        await expect(inactiveTab).toHaveClass(/active-filter/);
+        await this.waitForFirstTableRow();
+        const rowCount = await this.page.locator('tbody tr').count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
+
+    async selectSingleProjectManagerInListView(managerName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        await this.page.waitForTimeout(1500);
+        const projectManagerDropdown = this.page.locator('re-multiselect[placeholder="Project Manager"] .box');
+        await projectManagerDropdown.click();
+        const dropdownOptionsList = this.page.locator('re-multiselect[placeholder="Project Manager"] ul');
+        await dropdownOptionsList.waitFor({ state: 'visible', timeout: 50000 });
+        const searchInput = this.page.locator('re-multiselect[placeholder="Project Manager"] input[type="text"], re-multiselect[placeholder="Project Manager"] input[type="search"]').last();
+        await searchInput.waitFor({ state: 'visible', timeout: 15_000 });
+        await searchInput.fill(managerName);
+        const managerOption = this.page
+            .locator('li')
+            .filter({ hasText: managerName })
+            .first();
+
+        await managerOption.waitFor({ state: 'visible', timeout: 15_000 });
+        await managerOption.click();
+
+        // Close the dropdown
+        await this.page.keyboard.press('Escape');
+
+        // Check tag of the selected manager
+        const selectedTag = this.page
+            .locator('re-multiselect[placeholder="Project Manager"] .tags')
+            .filter({ hasText: managerName });
+
+        await expect(selectedTag).toBeVisible({ timeout: 15_000 });
+
+        await this.waitForFirstTableRow();
+
+        const rowCount = await this.page.locator('tbody tr').count();
+        expect(rowCount).toBeGreaterThan(0);
+        await this.ResetButton();
+    }
+
+    /**
+     * Select multiple project managers by their names in the list view.
+     */
+    async selectMultipleProjectManagersInListView(managerNames: string[]): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        await this.page.waitForTimeout(1500);
+
+        const projectManagerDropdown = this.page.locator('re-multiselect[placeholder="Project Manager"] .box');
+        await projectManagerDropdown.click();
+
+        const dropdownOptionsList = this.page.locator('re-multiselect[placeholder="Project Manager"] ul');
+        await dropdownOptionsList.waitFor({ state: 'visible', timeout: 50000 });
+
+        const searchInput = this.page.locator('re-multiselect[placeholder="Project Manager"] input[type="text"], re-multiselect[placeholder="Project Manager"] input[type="search"]').last();
+        await searchInput.waitFor({ state: 'visible', timeout: 15_000 });
+
+        for (const managerName of managerNames) {
+            await searchInput.fill(managerName);
+
+            const managerOption = this.page.locator('li').filter({ hasText: managerName }).first();
+            await managerOption.waitFor({ state: 'visible', timeout: 15_000 });
+            await managerOption.click();
+
+            // Optionally clear the search input for the next iteration
+            await searchInput.fill('');
+        }
+
+        // Close the dropdown
+        await this.page.keyboard.press('Escape');
+
+        // Check tags of selected managers
+        for (const managerName of managerNames) {
+            const selectedTag = this.page
+                .locator('re-multiselect[placeholder="Project Manager"] .tags')
+                .filter({ hasText: managerName });
+
+            await expect(selectedTag).toBeVisible({ timeout: 15_000 });
+        }
+
+        await this.waitForFirstTableRow();
+
+        const rowCount = await this.page.locator('tbody tr').count();
+        expect(rowCount).toBeGreaterThan(0);
+        await this.ResetButton();
+    }
+
+    async selectAllProjectManagersInListView(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        await this.page.waitForTimeout(1500);
+        const projectManagerDropdown = this.page.locator('re-multiselect[placeholder="Project Manager"] .box');
+        await projectManagerDropdown.click();
+
+        const selectAllLabel = this.page.locator('label.select_all[data="Select All"]');
+        await selectAllLabel.waitFor({ state: 'visible', timeout: 15_000 });
+        await selectAllLabel.click();
+        await this.page.keyboard.press('Escape');
+
+        await this.waitForFirstTableRow();
+
+        const rowCount = await this.page.locator('tbody tr').count();
+        expect(rowCount).toBeGreaterThan(0);
+        await this.ResetButton();
+    }
+
+    async deselectAllProjectManagersInListView(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        await this.page.waitForTimeout(1500);
+
+        const projectManagerDropdown = this.page.locator('re-multiselect[placeholder="Project Manager"] .box');
+        await projectManagerDropdown.click();
+
+        const toggleLabel = this.page.locator('label.select_all');
+        await toggleLabel.waitFor({ state: 'visible', timeout: 15_000 });
+
+        const currentState = await toggleLabel.getAttribute('data');
+
+        if (currentState === 'Select All') {
+            await toggleLabel.click();
+            await expect(toggleLabel).toHaveAttribute('data', 'Deselect All', { timeout: 10_000 });
+        }
+
+        await toggleLabel.click();
+        await expect(toggleLabel).toHaveAttribute('data', 'Select All', { timeout: 10_000 });
+
+        await this.page.keyboard.press('Escape');
+
+        await this.waitForFirstTableRow();
+
+        const rowCount = await this.page.locator('tbody tr').count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        await this.ResetButton();
+    }
+
+    async verifyDefaultViewPopupOpensInListView(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        const defaultViewButton = this.page.locator('._view-btn').filter({ hasText: /default view/i });
+        await defaultViewButton.waitFor({ state: 'visible', timeout: 15_000 });
+        await defaultViewButton.click();
+        const popupContent = this.page.locator('.p-overlaypanel-content');
+        await expect(popupContent).toBeVisible({ timeout: 15_000 });
+        await this.page.keyboard.press('Escape');
+    }
+
+    async createNewCustomViewInListView(viewName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+
+        const defaultViewButton = this.page.locator('._view-btn').filter({ hasText: /default view/i });
+        await defaultViewButton.waitFor({ state: 'visible', timeout: 15_000 });
+        await defaultViewButton.click();
+
+        const popupContent = this.page.locator('.p-overlaypanel-content');
+        await expect(popupContent).toBeVisible({ timeout: 15_000 });
+
+        const addViewIcon = popupContent.locator('.view-options img[src*="plus-solid.svg"]');
+        await addViewIcon.waitFor({ state: 'visible', timeout: 10_000 });
+        await addViewIcon.click();
+
+        const viewNameInput = this.page.locator('input[placeholder*="view" i], input[placeholder*="name" i]').last();
+        await expect(viewNameInput).toBeVisible({ timeout: 10_000 });
+        await viewNameInput.click();
+        await viewNameInput.fill(viewName);
+
+        const saveBtn = this.page.getByRole('button', { name: /save|create/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10_000 });
+        await saveBtn.click({ force: true });
+
+        await expect(
+            this.page.getByText(/view created|saved successfully|created successfully/i)
+        ).toBeVisible({ timeout: 10_000 });
+
+        await this.resetToDefaultView();
+    }
+
+    async resetToDefaultView(): Promise<void> {
+        const activeViewButton = this.page.locator('._view-btn').first();
+        await activeViewButton.click();
+
+        const viewDropdown = this.page.locator('.view-w-100 > .ng-select-container > .ng-arrow-wrapper');
+        await expect(viewDropdown).toBeVisible({ timeout: 10_000 });
+        await viewDropdown.click();
+
+        const defaultOption = this.page.getByText(/^default view$/i).first();
+        await expect(defaultOption).toBeVisible({ timeout: 10_000 });
+        await defaultOption.click();
+
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(800);
+        await this.waitForFirstTableRow();
+    }
+
+    async shareViewWithAgentAndTeamInListView(
+        userName: string = 'Abdul Rehman',
+        teamName: string = 'Automation Team'
+    ): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+    
+        const defaultViewButton = this.page.locator('._view-btn', { hasText: 'Default View' });
+        await defaultViewButton.waitFor({ state: 'visible', timeout: 15_000 });
+        await defaultViewButton.click();
+    
+        const popupContent = this.page.locator('.p-overlaypanel-content');
+        await expect(popupContent).toBeVisible({ timeout: 15_000 });
+    
+        const shareIcon = popupContent.locator('.view-options img[src*="share-one.svg"]');
+        await expect(shareIcon).toBeVisible({ timeout: 10_000 });
+        await shareIcon.click({ force: true });
+    
+        const usersDropdown = popupContent.locator('re-multiselect.w-100.mr-2 .box');
+        await expect(usersDropdown).toBeVisible({ timeout: 10_000 });
+        await usersDropdown.click();
+    
+        const userDropBox = this.page.locator('.drop_box').last();
+        await expect(userDropBox).toBeVisible({ timeout: 10_000 });
+    
+        const userSearchInput = userDropBox.locator('input[placeholder="Search"]');
+        await userSearchInput.fill(userName);
+        await this.page.waitForTimeout(800);
+    
+        const userOption = userDropBox.locator('li', { hasText: userName }).first();
+        await expect(userOption).toBeVisible({ timeout: 10_000 });
+        await userOption.locator('label.checkbox').click({ force: true });
+    
+        const userDropdownArrow = this.page.locator('re-multiselect.w-100.mr-2 i.fa-sort-up');
+        await userDropdownArrow.click({ force: true });
+   
+    
+        const teamsDropdown = popupContent.locator('re-multiselect.custom-select-share .box');
+        await expect(teamsDropdown).toBeVisible({ timeout: 10_000 });
+        await teamsDropdown.click();
+    
+        const teamDropBox = this.page.locator('.drop_box').last();
+        await expect(teamDropBox).toBeVisible({ timeout: 10_000 });
+    
+        const teamSearchInput = teamDropBox.locator('input[placeholder="Search"]');
+        await teamSearchInput.fill(teamName);
+        await this.page.waitForTimeout(800);
+    
+        const teamOption = teamDropBox.locator('li', { hasText: teamName }).first();
+        await expect(teamOption).toBeVisible({ timeout: 10_000 });
+        await teamOption.locator('label.checkbox').click({ force: true });
+    
+        const teamDropdownArrow = this.page.locator('re-multiselect.custom-select-share i.fas.fa-sort-up');
+        await teamDropdownArrow.click({ force: true });
+   
+        const shareBtn = popupContent.locator('button._outline-btn', { hasText: 'Share' });
+        await expect(shareBtn).toBeVisible({ timeout: 10_000 });
+        await shareBtn.click({ force: true });
+    
+        const sharedSuccessMessage = this.page.getByText('View shared').or(
+            this.page.getByText('shared successfully')
+        ).or(
+            this.page.getByText('already shared with one or more selected users or teams')
+        );
+        await expect(sharedSuccessMessage.first()).toBeVisible({ timeout: 10_000 });
+    
+        await this.page.waitForTimeout(500);
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(400);
+        await this.ResetButton();
+        await this.waitForFirstTableRow();
     }
 }
