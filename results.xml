@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.88123299999908">
-<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-22T10:35:59.145Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.651" errors="0">
-<testcase name="Projects - List View Tests › Select All project managers in List View" classname="Pages\Projects\projectListView.spec.ts" time="38.651">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.922116999998686">
+<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-22T10:41:39.614Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.71" errors="0">
+<testcase name="Projects - List View Tests › Deselect All managers in PM dropdown in List View" classname="Pages\Projects\projectListView.spec.ts" time="41.71">
 </testcase>
 </testsuite>
 </testsuites>

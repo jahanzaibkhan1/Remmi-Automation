@@ -54,4 +54,9 @@ test.describe('Projects - List View Tests', () => {
         await project.selectAllProjectManagersInListView();
     });
 
+    test('Deselect All managers in PM dropdown in List View', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.deselectAllProjectManagersInListView();
+    });
+
 });
