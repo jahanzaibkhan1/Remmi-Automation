@@ -494,4 +494,16 @@ export class ProjectActions {
         expect(rowCount).toBeGreaterThan(0);
     }
 
+    async verifyInactiveTabFilteringInListView(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        const inactiveTab = this.page.locator('ul.list-type li', { hasText: 'Inactive' }).first();
+        await inactiveTab.click();
+        await expect(inactiveTab).toHaveClass(/active-filter/);
+        await this.waitForFirstTableRow();
+        const rowCount = await this.page.locator('tbody tr').count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
+
 }
