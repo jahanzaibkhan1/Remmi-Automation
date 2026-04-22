@@ -33,4 +33,9 @@ test.describe('Projects - List View Tests', () => {
         const project = new ProjectActions(sessionPage);
         await project.verifyActiveTabFilteringInListView();
     });
+
+    test('Verify inactive tab filtering in List View', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyInactiveTabFilteringInListView();
+    });
 });
