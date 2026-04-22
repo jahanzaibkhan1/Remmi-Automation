@@ -63,5 +63,10 @@ test.describe('Projects - List View Tests', () => {
         const project = new ProjectActions(sessionPage);
         await project.selectSingleProjectManagerInListView('Jahanzaib Xenex');
     });
+
+    test('Verify default view popup opens in List View', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyDefaultViewPopupOpensInListView();
+    });
    
 });

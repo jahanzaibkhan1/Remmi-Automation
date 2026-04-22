@@ -667,4 +667,16 @@ export class ProjectActions {
 
         await this.ResetButton();
     }
+
+    async verifyDefaultViewPopupOpensInListView(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        const defaultViewButton = this.page.locator('._view-btn').filter({ hasText: /default view/i });
+        await defaultViewButton.waitFor({ state: 'visible', timeout: 15_000 });
+        await defaultViewButton.click();
+        const popupContent = this.page.locator('.p-overlaypanel-content');
+        await expect(popupContent).toBeVisible({ timeout: 15_000 });
+        await this.page.keyboard.press('Escape');
+    }
 }
