@@ -137,4 +137,10 @@ test.describe('Projects - E2E Tests', () => {
         await project.pinProjectAndVerifyIcon(projectName);
     });
 
+    test('Test 24: Clicking "Unpin from Dashboard" removes the pin icon from the project card', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        const projectName = 'East Village Vila';
+        await project.unpinProjectAndVerifyRemoval(projectName);
+    });
+
 });
