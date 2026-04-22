@@ -450,14 +450,14 @@ export class ProjectActions {
      */
     async waitForFirstTableRow(): Promise<void> {
         await this.page.waitForSelector('tbody tr', { state: 'attached', timeout: 30_000 });
-    
+
         await this.page.waitForFunction(() => {
             const rows = document.querySelectorAll('tbody tr');
             if (rows.length === 0) return false;
             const firstRowText = rows[0].textContent?.trim() ?? '';
             return firstRowText.length > 5;
         }, { timeout: 30_000 });
-    
+
         const firstDataRow = this.page.locator('tbody tr').first();
         await firstDataRow.waitFor({ state: 'visible', timeout: 30_000 });
     }
@@ -623,16 +623,48 @@ export class ProjectActions {
         await this.page.waitForTimeout(1500);
         const projectManagerDropdown = this.page.locator('re-multiselect[placeholder="Project Manager"] .box');
         await projectManagerDropdown.click();
-    
+
         const selectAllLabel = this.page.locator('label.select_all[data="Select All"]');
         await selectAllLabel.waitFor({ state: 'visible', timeout: 15_000 });
         await selectAllLabel.click();
         await this.page.keyboard.press('Escape');
-    
+
         await this.waitForFirstTableRow();
-    
+
         const rowCount = await this.page.locator('tbody tr').count();
         expect(rowCount).toBeGreaterThan(0);
+        await this.ResetButton();
+    }
+
+    async deselectAllProjectManagersInListView(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        await this.page.waitForTimeout(1500);
+
+        const projectManagerDropdown = this.page.locator('re-multiselect[placeholder="Project Manager"] .box');
+        await projectManagerDropdown.click();
+
+        const toggleLabel = this.page.locator('label.select_all');
+        await toggleLabel.waitFor({ state: 'visible', timeout: 15_000 });
+
+        const currentState = await toggleLabel.getAttribute('data');
+
+        if (currentState === 'Select All') {
+            await toggleLabel.click();
+            await expect(toggleLabel).toHaveAttribute('data', 'Deselect All', { timeout: 10_000 });
+        }
+
+        await toggleLabel.click();
+        await expect(toggleLabel).toHaveAttribute('data', 'Select All', { timeout: 10_000 });
+
+        await this.page.keyboard.press('Escape');
+
+        await this.waitForFirstTableRow();
+
+        const rowCount = await this.page.locator('tbody tr').count();
+        expect(rowCount).toBeGreaterThan(0);
+
         await this.ResetButton();
     }
 }
