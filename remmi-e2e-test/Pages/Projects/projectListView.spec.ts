@@ -28,4 +28,9 @@ test.describe('Projects - List View Tests', () => {
         const project = new ProjectActions(sessionPage);
         await project.verifyProjectSearchWithInvalidNameInListView('NoSuchProjectABC123');
     });
+
+    test('Verify active tab filtering in List View', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyActiveTabFilteringInListView();
+    });
 });
