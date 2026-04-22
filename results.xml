@@ -1,64 +1,6 @@
-<testsuites id="" name="" tests="24" failures="0" skipped="0" errors="0" time="327.6842740000002">
-<testsuite name="Pages\Projects\projects.spec.ts" timestamp="2026-04-22T08:45:10.714Z" hostname="chromium" tests="24" failures="0" skipped="0" time="325.106" errors="0">
-<testcase name="Projects - E2E Tests › Test 1: Verify project search by name" classname="Pages\Projects\projects.spec.ts" time="37.983">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 2: Search with partial project name" classname="Pages\Projects\projects.spec.ts" time="0.06">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 3: Search with invalid project name" classname="Pages\Projects\projects.spec.ts" time="0.234">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 4: Verify that project image is displayed correctly in Grid View" classname="Pages\Projects\projects.spec.ts" time="0.093">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 5: Verify that a placeholder image appears for projects with no uploaded image" classname="Pages\Projects\projects.spec.ts" time="0.055">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 6: Verify that clicking the Reset button" classname="Pages\Projects\projects.spec.ts" time="12.198">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 7: Verify default tab is &quot;Active&quot;" classname="Pages\Projects\projects.spec.ts" time="0.203">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 8: Verify projects listed are under &quot;Active&quot; tab" classname="Pages\Projects\projects.spec.ts" time="0.079">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 9: Verify projects listed are under &quot;Inactive&quot; tab" classname="Pages\Projects\projects.spec.ts" time="3.596">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 10: Verify precinct grouping under tabs" classname="Pages\Projects\projects.spec.ts" time="0.017">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 11: Verify clicking precinct opens project/lot/EOI tabs" classname="Pages\Projects\projects.spec.ts" time="1.261">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 12: Verify that a precinct-allocated project does not appear in the &quot;Active&quot; tab after viewing inside a precinct" classname="Pages\Projects\projects.spec.ts" time="25.416">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 13: Delete precinct shows project back in active tab" classname="Pages\Projects\projects.spec.ts" time="52.156">
-<system-out>
-<![CDATA[insidePrecinctProjectHeading: 
-]]>
-</system-out>
-</testcase>
-<testcase name="Projects - E2E Tests › Test 14: Switch between grid and list views" classname="Pages\Projects\projects.spec.ts" time="30.992">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 15: Click plus icon to open project popup" classname="Pages\Projects\projects.spec.ts" time="21.604">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 16: Validate popup fields - project name &amp; status" classname="Pages\Projects\projects.spec.ts" time="14.276">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 17: Create project with valid data" classname="Pages\Projects\projects.spec.ts" time="32.5">
-<system-out>
-<![CDATA[Creating project with name: Bode LLC
-]]>
-</system-out>
-</testcase>
-<testcase name="Projects - E2E Tests › Test 18: Save popup with empty fields" classname="Pages\Projects\projects.spec.ts" time="15.793">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 19: Cancel button closes the project popup" classname="Pages\Projects\projects.spec.ts" time="15.025">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 20: Cross icon closes the project popup" classname="Pages\Projects\projects.spec.ts" time="14.12">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 21: Verify project opens with the &quot;General&quot; tab selected after entering project name and status" classname="Pages\Projects\projects.spec.ts" time="34.044">
-<system-out>
-<![CDATA[Creating project with name: Nicolas - Heathcote
-]]>
-</system-out>
-</testcase>
-<testcase name="Projects - E2E Tests › Test 22: Verify that &quot;Pin to Dashboard&quot; option is visible on right-clicking a project card" classname="Pages\Projects\projects.spec.ts" time="11.556">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 23: Clicking &quot;Pin to Dashboard&quot; pins the project and shows pin icon on card" classname="Pages\Projects\projects.spec.ts" time="1.511">
-</testcase>
-<testcase name="Projects - E2E Tests › Test 24: Clicking &quot;Unpin from Dashboard&quot; removes the pin icon from the project card" classname="Pages\Projects\projects.spec.ts" time="0.334">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.229150000000374">
+<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-22T09:20:09.374Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.055" errors="0">
+<testcase name="Projects - List View Tests › Verify project search by name in List View" classname="Pages\Projects\projectListView.spec.ts" time="39.055">
 </testcase>
 </testsuite>
 </testsuites>
