@@ -59,4 +59,9 @@ test.describe('Projects - List View Tests', () => {
         await project.deselectAllProjectManagersInListView();
     });
 
+    test('Search within Project Manager dropdown in List View', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.selectSingleProjectManagerInListView('Jahanzaib Xenex');
+    });
+   
 });
