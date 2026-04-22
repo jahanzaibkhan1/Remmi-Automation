@@ -482,4 +482,16 @@ export class ProjectActions {
         await this.clickResetButton();
     }
 
+    async verifyActiveTabFilteringInListView(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        const activeTab = this.page.locator('ul.list-type li', { hasText: 'Active' }).first();
+        await activeTab.click();
+        await expect(activeTab).toHaveClass(/active-filter/);
+        await this.waitForFirstTableRow();
+        const rowCount = await this.page.locator('tbody tr').count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
+
 }
