@@ -465,4 +465,21 @@ export class ProjectActions {
         await this.clickResetButton();
     }
 
+    async verifyProjectSearchWithInvalidNameInListView(invalidName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        const searchInput = this.page.locator('input[placeholder="Search"]').last();
+        await searchInput.fill('');
+        await searchInput.fill(invalidName);
+        await this.page.waitForLoadState('networkidle');
+        const noRecordsMessage = this.page.getByText(/No projects available/i).first();
+        await expect(noRecordsMessage).toBeVisible({ timeout: 30_000 });
+        const projectRow = this.page
+            .locator('tr')
+            .filter({ hasText: new RegExp(invalidName, 'i') });
+        await expect(projectRow).toHaveCount(0);
+        await this.clickResetButton();
+    }
+
 }
