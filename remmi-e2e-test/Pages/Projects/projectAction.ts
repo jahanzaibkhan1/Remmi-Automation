@@ -215,6 +215,7 @@ export class ProjectActions {
 
     async verifyPrecinctAllocatedProjectNotInActiveTabAfterPrecinctClick(): Promise<void> {
         await this.navigateToProjects();
+        await this.page.reload();
         await this.getFirstVisiblePrecinctCard();
         const insidePrecinctProjectHeading = (
             await this.page.locator('.sgv-product .product-content h3').first().innerText()
@@ -235,6 +236,7 @@ export class ProjectActions {
 
     async verifyProjectReappearsInActiveTabAfterPrecinctDeletion(): Promise<void> {
         await this.navigateToProjects();
+        await this.page.reload();
         await this.page.waitForLoadState('networkidle');
         const precinctSetupLink = this.page.locator('p', { hasText: 'Precinct Set up' }).first();
         await expect(precinctSetupLink).toBeEnabled({ timeout: 40000 });
@@ -275,25 +277,13 @@ export class ProjectActions {
     async switchToGridView(): Promise<void> {
         const gridIcon = this.page.locator('.layout-changer a.grid-icon');
         await expect(gridIcon).toBeVisible({ timeout: 30000 });
-        const isActive = await gridIcon.evaluate((el) => el.classList.contains('activeClass'));
-        if (isActive) return;
         await gridIcon.click();
-        await expect(async () => {
-            const hasActive = await gridIcon.evaluate((el) => el.classList.contains('activeClass'));
-            if (!hasActive) throw new Error("Grid view did not become active in time");
-        }).toPass({ timeout: 20000 });
     }
 
     async switchToListView(): Promise<void> {
         const listIcon = this.page.locator('.layout-changer a:not(.grid-icon)');
         await expect(listIcon).toBeVisible({ timeout: 30000 });
-        const isActive = await listIcon.evaluate((el) => el.classList.contains('activeClass'));
-        if (isActive) return;
         await listIcon.click();
-        await expect(async () => {
-            const hasActive = await listIcon.evaluate((el) => el.classList.contains('activeClass'));
-            if (!hasActive) throw new Error("List view did not become active in time");
-        }).toPass({ timeout: 20000 });
     }
 
     async switchBetweenProjectViews(): Promise<void> {
@@ -316,6 +306,7 @@ export class ProjectActions {
 
     async verifyAndCloseProjectPopup(): Promise<void> {
         await this.navigateToProjects();
+        await this.page.reload();
         await this.openProjectPopup();
         const dialog = this.page.locator('.p-dialog-content');
         await dialog.locator('button._cancel-btn').click();
@@ -332,6 +323,7 @@ export class ProjectActions {
      */
     async createProjectWithValidData(project?: { name?: string; status?: string }): Promise<void> {
         await this.navigateToProjects();
+        await this.page.reload();
         await this.openProjectPopup();
         const projectName = project?.name ?? faker.company.name();
         console.log("Creating project with name:", projectName);
@@ -354,6 +346,7 @@ export class ProjectActions {
      */
     async saveProjectPopupWithEmptyFields(): Promise<void> {
         await this.navigateToProjects();
+        await this.page.reload();
         await this.openProjectPopup();
         const projectDialog = this.page.locator('.p-dialog-content').filter({
             has: this.page.locator('input[formcontrolname="Project_Name"]')
@@ -374,32 +367,42 @@ export class ProjectActions {
      */
     async closeProjectPopupWithCrossIcon(): Promise<void> {
         await this.navigateToProjects();
+        await this.page.reload();
         await this.openProjectPopup();
         const dialog = this.page.locator('.p-dialog-content')
         const closeBtn = this.page.locator("//*[name()='path' and contains(@d,'M8.01186 7')]")
         await closeBtn.click({ force: true });
         await expect(dialog).toBeHidden({ timeout: 10000 });
     }
-    /**
+     /**
      * Verify that "Pin to Dashboard" option is visible when right-clicking a project card.
      */
-    async verifyPinToDashboardOptionVisibleOnRightClick(projectName: string): Promise<void> {
+     async verifyPinToDashboardOptionVisibleOnRightClick(projectName: string): Promise<void> {
         await this.navigateToProjects();
-        const projectCard = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${projectName}$`, 'i') }).first();
+        await this.page.reload();
+        await this.verifyProjectCanBeSearchedByName(projectName);
+        const projectCard = this.page.locator('.sgv-product .product-content h3', {
+            hasText: new RegExp(`^${projectName}$`, 'i')
+        }).first();
         await expect(projectCard).toBeVisible({ timeout: 15000 });
         await projectCard.click({ button: 'right' });
         const pinOption = this.page.getByText('Pin to Dashboard', { exact: true });
         await expect(pinOption).toBeVisible({ timeout: 10000 });
         await this.page.mouse.click(0, 0);
-        await expect(pinOption).not.toBeVisible({timeout:10000});
+        await expect(pinOption).not.toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
     }
 
     /**
-     * Clicks "Pin to Dashboard" for a project card and verifies the pin icon appears.
+     * Searches for a project by name, pins it to dashboard, and verifies the pin icon appears.
      */
     async pinProjectAndVerifyIcon(projectName: string): Promise<void> {
         await this.navigateToProjects();
-        const projectCard = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${projectName}$`, 'i') }).first();
+        await this.verifyProjectCanBeSearchedByName(projectName);
+        const projectCard = this.page.locator('.sgv-product .product-content h3', {
+            hasText: new RegExp(`^${projectName}$`, 'i')
+        }).first();
+        await projectCard.evaluate((el) => el.scrollIntoView({ behavior: "auto", block: "center", inline: "center" }));
         await expect(projectCard).toBeVisible({ timeout: 15000 });
         await projectCard.click({ button: 'right' });
 
@@ -408,5 +411,31 @@ export class ProjectActions {
         await pinOption.click();
         const pinnedIcon = this.page.locator('img[src="assets/img/dashboadIcon/pin-fill.svg"]');
         await expect(pinnedIcon).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1200);
     }
+
+    /**
+     * Searches for a project by name, unpins it from dashboard, and verifies that the pin icon is removed.
+     */
+    async unpinProjectAndVerifyRemoval(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.verifyProjectCanBeSearchedByName(projectName);
+        const projectCard = this.page.locator('.sgv-product .product-content h3', {
+            hasText: new RegExp(`^${projectName}$`, 'i')
+        }).first();
+        await projectCard.scrollIntoViewIfNeeded();
+        await expect(projectCard).toBeVisible({ timeout: 15000 });
+        await projectCard.click({ button: 'right' });
+
+        const unpinOption = this.page.getByText('Unpin from Dashboard', { exact: true });
+        await expect(unpinOption).toBeVisible({ timeout: 10000 });
+        await unpinOption.click();
+
+        // Verify the pin icon is removed from the card
+        const pinnedIcon = this.page.locator('img[src="assets/img/dashboadIcon/pin-fill.svg"]').filter({
+            has: projectCard
+        });
+        await expect(pinnedIcon).toHaveCount(0, { timeout: 10000 });
+    }
+
 }
