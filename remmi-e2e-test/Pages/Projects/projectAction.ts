@@ -679,4 +679,53 @@ export class ProjectActions {
         await expect(popupContent).toBeVisible({ timeout: 15_000 });
         await this.page.keyboard.press('Escape');
     }
+
+    async createNewCustomViewInListView(viewName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+
+        const defaultViewButton = this.page.locator('._view-btn').filter({ hasText: /default view/i });
+        await defaultViewButton.waitFor({ state: 'visible', timeout: 15_000 });
+        await defaultViewButton.click();
+
+        const popupContent = this.page.locator('.p-overlaypanel-content');
+        await expect(popupContent).toBeVisible({ timeout: 15_000 });
+
+        const addViewIcon = popupContent.locator('.view-options img[src*="plus-solid.svg"]');
+        await addViewIcon.waitFor({ state: 'visible', timeout: 10_000 });
+        await addViewIcon.click();
+
+        const viewNameInput = this.page.locator('input[placeholder*="view" i], input[placeholder*="name" i]').last();
+        await expect(viewNameInput).toBeVisible({ timeout: 10_000 });
+        await viewNameInput.click();
+        await viewNameInput.fill(viewName);
+
+        const saveBtn = this.page.getByRole('button', { name: /save|create/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10_000 });
+        await saveBtn.click({ force: true });
+
+        await expect(
+            this.page.getByText(/view created|saved successfully|created successfully/i)
+        ).toBeVisible({ timeout: 10_000 });
+
+        await this.resetToDefaultView();
+    }
+
+    async resetToDefaultView(): Promise<void> {
+        const activeViewButton = this.page.locator('._view-btn').first();
+        await activeViewButton.click();
+
+        const viewDropdown = this.page.locator('.view-w-100 > .ng-select-container > .ng-arrow-wrapper');
+        await expect(viewDropdown).toBeVisible({ timeout: 10_000 });
+        await viewDropdown.click();
+
+        const defaultOption = this.page.getByText(/^default view$/i).first();
+        await expect(defaultOption).toBeVisible({ timeout: 10_000 });
+        await defaultOption.click();
+
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(800);
+        await this.waitForFirstTableRow();
+    }
 }
