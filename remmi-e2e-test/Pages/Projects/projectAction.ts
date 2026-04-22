@@ -480,6 +480,16 @@ export class ProjectActions {
         await this.clickResetButton();
     }
 
+    /**
+     * Clicks the reset button to clear any search/filter in the projects List View.
+     */
+    async ResetButton(): Promise<void> {
+        const resetButton = this.page.locator('button', { hasText: /reset/i }).last();
+        await expect(resetButton).toBeVisible({ timeout: 10000 });
+        await resetButton.click();
+        await this.waitForFirstTableRow();
+    }
+
     async verifyProjectSearchWithInvalidNameInListView(invalidName: string): Promise<void> {
         await this.navigateToProjects();
         await this.switchToListView();
@@ -555,6 +565,7 @@ export class ProjectActions {
 
         const rowCount = await this.page.locator('tbody tr').count();
         expect(rowCount).toBeGreaterThan(0);
+        await this.ResetButton();
     }
 
     /**
@@ -602,5 +613,26 @@ export class ProjectActions {
 
         const rowCount = await this.page.locator('tbody tr').count();
         expect(rowCount).toBeGreaterThan(0);
+        await this.ResetButton();
+    }
+
+    async selectAllProjectManagersInListView(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        await this.page.waitForTimeout(1500);
+        const projectManagerDropdown = this.page.locator('re-multiselect[placeholder="Project Manager"] .box');
+        await projectManagerDropdown.click();
+    
+        const selectAllLabel = this.page.locator('label.select_all[data="Select All"]');
+        await selectAllLabel.waitFor({ state: 'visible', timeout: 15_000 });
+        await selectAllLabel.click();
+        await this.page.keyboard.press('Escape');
+    
+        await this.waitForFirstTableRow();
+    
+        const rowCount = await this.page.locator('tbody tr').count();
+        expect(rowCount).toBeGreaterThan(0);
+        await this.ResetButton();
     }
 }

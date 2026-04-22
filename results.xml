@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="74.8122070000004">
-<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-22T10:25:50.667Z" hostname="chromium" tests="1" failures="0" skipped="0" time="72.877" errors="0">
-<testcase name="Projects - List View Tests › Select multiple project managers in List View" classname="Pages\Projects\projectListView.spec.ts" time="72.877">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.88123299999908">
+<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-22T10:35:59.145Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.651" errors="0">
+<testcase name="Projects - List View Tests › Select All project managers in List View" classname="Pages\Projects\projectListView.spec.ts" time="38.651">
 </testcase>
 </testsuite>
 </testsuites>

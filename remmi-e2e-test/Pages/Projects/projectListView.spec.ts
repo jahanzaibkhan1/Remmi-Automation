@@ -49,4 +49,9 @@ test.describe('Projects - List View Tests', () => {
         await project.selectMultipleProjectManagersInListView(['Jahanzaib Xenex', 'Hina Agent']);
     });
 
+    test('Select All project managers in List View', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.selectAllProjectManagersInListView();
+    });
+
 });
