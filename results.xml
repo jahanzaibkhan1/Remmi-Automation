@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="80.84894400000013">
-<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-22T11:02:56.776Z" hostname="chromium" tests="1" failures="0" skipped="0" time="78.789" errors="0">
-<testcase name="Projects - List View Tests › Search within Project Manager dropdown in List View" classname="Pages\Projects\projectListView.spec.ts" time="78.789">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="84.31819400000013">
+<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-22T11:14:26.985Z" hostname="chromium" tests="1" failures="0" skipped="0" time="82.366" errors="0">
+<testcase name="Projects - List View Tests › Verify default view popup opens in List View" classname="Pages\Projects\projectListView.spec.ts" time="82.366">
 </testcase>
 </testsuite>
 </testsuites>
