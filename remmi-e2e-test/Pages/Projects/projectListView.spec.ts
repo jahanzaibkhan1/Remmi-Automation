@@ -140,4 +140,9 @@ test.describe('Projects - List View Tests', () => {
         await project.sortProjectsAscending('Project Name');
     });
 
+    test('Sort projects descending', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.sortProjectsDescending('Project Name');
+    });
+
 });

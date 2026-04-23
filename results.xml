@@ -1,6 +1,54 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.43997599999979">
-<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T06:23:37.562Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.473" errors="0">
-<testcase name="Projects - List View Tests › Sort projects ascending" classname="Pages\Projects\projectListView.spec.ts" time="54.473">
+<testsuites id="" name="" tests="25" failures="0" skipped="0" errors="0" time="101.91061199999973">
+<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T06:54:04.269Z" hostname="chromium" tests="25" failures="0" skipped="0" time="98.897" errors="0">
+<testcase name="Projects - List View Tests › Verify project search by name in List View" classname="Pages\Projects\projectListView.spec.ts" time="44.708">
+</testcase>
+<testcase name="Projects - List View Tests › Search with no matching results in List View" classname="Pages\Projects\projectListView.spec.ts" time="0.372">
+</testcase>
+<testcase name="Projects - List View Tests › Verify active tab filtering in List View" classname="Pages\Projects\projectListView.spec.ts" time="0.146">
+</testcase>
+<testcase name="Projects - List View Tests › Verify inactive tab filtering in List View" classname="Pages\Projects\projectListView.spec.ts" time="0.131">
+</testcase>
+<testcase name="Projects - List View Tests › Select single project manager in List View" classname="Pages\Projects\projectListView.spec.ts" time="1.977">
+</testcase>
+<testcase name="Projects - List View Tests › Select multiple project managers in List View" classname="Pages\Projects\projectListView.spec.ts" time="2.165">
+</testcase>
+<testcase name="Projects - List View Tests › Select All project managers in List View" classname="Pages\Projects\projectListView.spec.ts" time="1.924">
+</testcase>
+<testcase name="Projects - List View Tests › Deselect All managers in PM dropdown in List View" classname="Pages\Projects\projectListView.spec.ts" time="2.059">
+</testcase>
+<testcase name="Projects - List View Tests › Search within Project Manager dropdown in List View" classname="Pages\Projects\projectListView.spec.ts" time="1.887">
+</testcase>
+<testcase name="Projects - List View Tests › Verify default view popup opens in List View" classname="Pages\Projects\projectListView.spec.ts" time="0.187">
+</testcase>
+<testcase name="Projects - List View Tests › Create a new custom view in List View" classname="Pages\Projects\projectListView.spec.ts" time="2.743">
+</testcase>
+<testcase name="Projects - List View Tests › Share view with agent and team in List View" classname="Pages\Projects\projectListView.spec.ts" time="4.258">
+</testcase>
+<testcase name="Projects - List View Tests › Reorder status positions in List View" classname="Pages\Projects\projectListView.spec.ts" time="3.102">
+</testcase>
+<testcase name="Projects - List View Tests › Hide and show Project Status column in List View" classname="Pages\Projects\projectListView.spec.ts" time="2.103">
+</testcase>
+<testcase name="Projects - List View Tests › Search for status in View Options popup" classname="Pages\Projects\projectListView.spec.ts" time="1.134">
+</testcase>
+<testcase name="Projects - List View Tests › Delete a saved view in List View" classname="Pages\Projects\projectListView.spec.ts" time="2.603">
+</testcase>
+<testcase name="Projects - List View Tests › Switch between grid and list views" classname="Pages\Projects\projectListView.spec.ts" time="14.059">
+</testcase>
+<testcase name="Projects - List View Tests › Open project create popup" classname="Pages\Projects\projectListView.spec.ts" time="0.35">
+</testcase>
+<testcase name="Projects - List View Tests › Select multiple projects in List View" classname="Pages\Projects\projectListView.spec.ts" time="1.381">
+</testcase>
+<testcase name="Projects - List View Tests › Duplicate selected projects" classname="Pages\Projects\projectListView.spec.ts" time="5.275">
+</testcase>
+<testcase name="Projects - List View Tests › Delete selected projects" classname="Pages\Projects\projectListView.spec.ts" time="1.849">
+</testcase>
+<testcase name="Projects - List View Tests › Delete project via delete icon" classname="Pages\Projects\projectListView.spec.ts" time="1.601">
+</testcase>
+<testcase name="Projects - List View Tests › Cancel delete from popup" classname="Pages\Projects\projectListView.spec.ts" time="0.196">
+</testcase>
+<testcase name="Projects - List View Tests › Sort projects ascending" classname="Pages\Projects\projectListView.spec.ts" time="2.417">
+</testcase>
+<testcase name="Projects - List View Tests › Sort projects descending" classname="Pages\Projects\projectListView.spec.ts" time="0.27">
 </testcase>
 </testsuite>
 </testsuites>
