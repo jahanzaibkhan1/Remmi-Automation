@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="78.44149300000072">
-<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T10:00:18.149Z" hostname="chromium" tests="1" failures="0" skipped="0" time="75.817" errors="0">
-<testcase name="Projects - List View Tests › Verify records are displayed at the end of project list view" classname="Pages\Projects\projectListView.spec.ts" time="75.817">
-<system-out>
-<![CDATA[Records displayed at end of list: 105
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.70911499999836">
+<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-23T10:34:57.386Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.373" errors="0">
+<testcase name="Precinct Setup Tab › should display &quot;Precinct&quot; and &quot;Precinct Allocation&quot; sub-tabs when &quot;Precinct Setup&quot; tab is clicked" classname="Pages\Projects\precinctSetup.spec.ts" time="41.373">
 </testcase>
 </testsuite>
 </testsuites>
