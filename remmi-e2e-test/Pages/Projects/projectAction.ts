@@ -1114,4 +1114,17 @@ export class ProjectActions {
         await expect(noRecordsMessage).toBeVisible({ timeout: 30_000 });
         await this.ResetButton();
     }
+
+    async selectProjectManagerWithNoProjects(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        await this.page.waitForTimeout(1500);
+        const pm = this.page.locator('re-multiselect[placeholder="Project Manager"] .box');
+        await pm.click();
+        const dropdownOptionsList = this.page.locator('re-multiselect[placeholder="Project Manager"] ul');
+        await dropdownOptionsList.waitFor({ state: 'visible', timeout: 50000 });
+        await this.page.keyboard.press('Escape');
+        await this.ResetButton();
+    }
 }

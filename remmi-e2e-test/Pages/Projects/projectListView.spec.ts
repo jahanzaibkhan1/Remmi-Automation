@@ -149,5 +149,10 @@ test.describe('Projects - List View Tests', () => {
         const project = new ProjectActions(sessionPage);
         await project.searchProjectWithSymbols();
     });
-    
+
+    test('Select project manager with no projects', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.selectProjectManagerWithNoProjects();
+    });
+
 });

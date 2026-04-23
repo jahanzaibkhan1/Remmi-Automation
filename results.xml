@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="117.93557699999958">
-<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T07:02:14.850Z" hostname="chromium" tests="1" failures="0" skipped="0" time="115.792" errors="0">
-<testcase name="Projects - List View Tests › Try searching project with symbols" classname="Pages\Projects\projectListView.spec.ts" time="115.792">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="45.90805599999987">
+<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T07:11:03.390Z" hostname="chromium" tests="1" failures="0" skipped="0" time="43.338" errors="0">
+<testcase name="Projects - List View Tests › Select project manager with no projects" classname="Pages\Projects\projectListView.spec.ts" time="43.338">
 </testcase>
 </testsuite>
 </testsuites>
