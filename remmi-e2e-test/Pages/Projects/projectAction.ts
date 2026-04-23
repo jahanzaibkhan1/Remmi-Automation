@@ -289,7 +289,7 @@ export class ProjectActions {
         }
         const gridViewButton = this.page.locator('.layout-changer a.grid-icon');
         await expect(gridViewButton).toBeVisible({ timeout: 30_000 });
-        await gridViewButton.click();
+        await gridViewButton.click({force: true});
         await expect(gridProducts.first()).toBeVisible({ timeout: 30_000 });
     }
 
@@ -1273,7 +1273,6 @@ export class ProjectActions {
         const precinctSetupTab = this.page.locator('app-menu a', { hasText: /precinct set up/i });
         await expect(precinctSetupTab).toBeVisible({ timeout: 10_000 });
         await precinctSetupTab.click();
-        await this.page.waitForLoadState('networkidle');
         const precinctTab = this.page.locator('#pills-precinct-tab');
         await expect(precinctTab).toHaveClass(/active/);
         const precinctPanel = this.page.locator('#precinct');
@@ -1304,5 +1303,50 @@ export class ProjectActions {
         await expect(cancelButton).toBeVisible();
         await cancelButton.click();
         await expect(dialog).toBeHidden({ timeout: 5_000 });
+    }
+
+    async verifyPrecinctCreationWithImage(): Promise<void> {
+        const path = require('path');
+        
+        await this.navigateToProjects();
+    
+        // Click "Precinct Set up" main menu tab
+        const precinctSetupTab = this.page.locator('app-menu a', { hasText: /precinct set up/i });
+        await expect(precinctSetupTab).toBeVisible({ timeout: 30_000 });
+        await precinctSetupTab.click();
+        await this.page.waitForLoadState('networkidle');
+    
+        // Open the Add Precinct dialog
+        const createNewButton = this.page.locator('#precinct button', { hasText: /create new/i });
+        await createNewButton.click();
+    
+        const dialog = this.page.locator('.p-dialog[role="dialog"]');
+        await expect(dialog).toBeVisible({ timeout: 10_000 });
+        await expect(dialog.locator('.p-dialog-title')).toHaveText(/add precinct/i);
+        const precinctName = `A${faker.word.adjective()}${faker.word.noun()}`.replace(/[^a-zA-Z0-9]/g, '');
+        // Fill the Precinct Name field
+        const nameInput = dialog.locator('input[placeholder="Precinct Name"]');
+        await nameInput.fill(precinctName);
+    
+        // Upload an image from the Projects/Images folder
+        const imagePath = path.resolve(__dirname, 'Images', 'propertyImage.jpg');
+        const fileInput = dialog.locator('input[type="file"]');
+        await fileInput.setInputFiles(imagePath);
+    
+        // Wait a moment for the image to process/preview
+        await this.page.waitForTimeout(1000);
+    
+        // Click Save
+        const saveButton = dialog.locator('button', { hasText: /^save$/i });
+        await saveButton.click();
+        // Verify dialog closes (indicates save succeeded)
+        await expect(dialog).toBeHidden({ timeout: 15_000 });
+        // The toast aria-label is "Add successfully" and the text is also "Add successfully"
+        const toast = this.page.locator('.toast-message[aria-label="Add successfully"]', { hasText: /Add successfully/i });
+        await expect(toast).toBeVisible({ timeout: 10_000 });
+        const newPrecinctCard = this.page.locator('#precinct .sgv-product', { hasText: precinctName });
+        await newPrecinctCard.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
+        await expect(newPrecinctCard).toBeVisible({ timeout: 30_000 });
+   
     }
 }
