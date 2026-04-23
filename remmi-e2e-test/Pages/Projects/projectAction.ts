@@ -1002,4 +1002,22 @@ export class ProjectActions {
         await selectAllCheckbox.click();
         await this.ResetButton();
     }
+
+    async duplicateSelectedProjects(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+    
+        const rowCheckboxes = this.page.locator('tbody tr p-tablecheckbox .p-checkbox-box').first();
+        await rowCheckboxes.click();
+    
+        const duplicateButton = this.page.locator('button', { hasText: /duplicate/i });
+        await duplicateButton.click();
+
+        const toastMessage = this.page.locator('.toast-message', { hasText: /project duplicated successfully/i });
+        await expect(toastMessage).toBeVisible({ timeout: 10000 });
+   
+        await this.page.waitForTimeout(1000);
+        await this.ResetButton();
+    }
 }

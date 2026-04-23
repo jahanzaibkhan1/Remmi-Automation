@@ -115,4 +115,9 @@ test.describe('Projects - List View Tests', () => {
         await project.selectMultipleProjects();
     });
 
+    test('Duplicate selected projects', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.duplicateSelectedProjects();
+    });
+
 });
