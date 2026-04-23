@@ -1247,4 +1247,24 @@ export class ProjectActions {
         }
         console.log(`Records displayed at end of list: ${count}`);
     }
+
+    async verifyPrecinctSetupSubTabs(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToGridView();
+        // Click the "Precinct Set up" main menu tab
+        const precinctSetupTab = this.page.locator('app-menu a', { hasText: /precinct set up/i });
+        await expect(precinctSetupTab).toBeVisible({ timeout: 10_000 });
+        await precinctSetupTab.click();
+        await this.page.waitForLoadState('networkidle');
+
+        // Verify "Precinct" sub-tab is visible
+        const precinctSubTab = this.page.locator('.secondary-tabs a[role="tab"]')
+            .filter({ hasText: /^\s*Precinct\s*$/i });
+        await expect(precinctSubTab).toBeVisible({ timeout: 10_000 });
+
+        // Verify "Precinct Allocation" sub-tab is visible
+        const precinctAllocationSubTab = this.page.locator('.secondary-tabs a[role="tab"]')
+            .filter({ hasText: /precinct allocation/i });
+        await expect(precinctAllocationSubTab).toBeVisible({ timeout: 10_000 });
+    }
 }
