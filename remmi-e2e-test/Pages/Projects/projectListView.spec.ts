@@ -145,4 +145,9 @@ test.describe('Projects - List View Tests', () => {
         await project.sortProjectsDescending('Project Name');
     });
 
+    test('Try searching project with symbols', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.searchProjectWithSymbols();
+    });
+    
 });

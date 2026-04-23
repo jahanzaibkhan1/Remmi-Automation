@@ -1103,4 +1103,15 @@ export class ProjectActions {
             );
         }
     }
+
+    async searchProjectWithSymbols(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        const searchInput = this.page.locator('input[placeholder="Search"]').last();
+        await searchInput.fill('@#$%^&*');
+        const noRecordsMessage = this.page.getByText(/No projects available/i).first();
+        await expect(noRecordsMessage).toBeVisible({ timeout: 30_000 });
+        await this.ResetButton();
+    }
 }
