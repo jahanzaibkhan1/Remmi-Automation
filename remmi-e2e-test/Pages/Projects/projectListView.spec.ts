@@ -125,4 +125,9 @@ test.describe('Projects - List View Tests', () => {
         await project.deleteSelectedProjects();
     });
 
+    test('Delete project via delete icon', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.deleteProjectViaRowIcon();
+    });
+
 });
