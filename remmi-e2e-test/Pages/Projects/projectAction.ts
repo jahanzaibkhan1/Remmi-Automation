@@ -1036,4 +1036,21 @@ export class ProjectActions {
             this.page.getByText(/project deleted successfully|project.*deleted/i).first()
         ).toBeVisible({ timeout: 10_000 });
     }
+
+    async deleteProjectViaRowIcon(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+    
+        const deleteIcon = this.page.locator('tbody tr img[src*="delete_icon.svg"]').first();
+        await expect(deleteIcon).toBeVisible({ timeout: 10_000 });
+        await deleteIcon.click();
+    
+        await this.page.getByRole('button', { name: /yes|confirm|delete/i }).first().click();
+    
+        await expect(
+            this.page.getByText(/Project deleted successfully|project.*deleted/i).first()
+        ).toBeVisible({ timeout: 10_000 });
+    }
+    
 }
