@@ -130,4 +130,9 @@ test.describe('Projects - List View Tests', () => {
         await project.deleteProjectViaRowIcon();
     });
 
+    test('Cancel delete from popup', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.cancelDeleteFromPopup();
+    });
+
 });

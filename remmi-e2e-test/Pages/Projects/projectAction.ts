@@ -1052,5 +1052,17 @@ export class ProjectActions {
             this.page.getByText(/Project deleted successfully|project.*deleted/i).first()
         ).toBeVisible({ timeout: 10_000 });
     }
+
+    async cancelDeleteFromPopup(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        await this.page.locator('tbody tr img[src*="delete_icon.svg"]').first().click();
+        const cancelButton = this.page.getByRole('button', { name: /cancel|no/i }).first();
+        await expect(cancelButton).toBeVisible({ timeout: 10_000 });
+        await cancelButton.click();
+        await expect(cancelButton).toBeHidden({ timeout: 5_000 });
+    }
+    
     
 }
