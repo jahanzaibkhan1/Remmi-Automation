@@ -120,4 +120,9 @@ test.describe('Projects - List View Tests', () => {
         await project.duplicateSelectedProjects();
     });
 
+    test('Delete selected projects', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.deleteSelectedProjects();
+    });
+
 });
