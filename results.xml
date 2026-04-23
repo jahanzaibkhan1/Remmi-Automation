@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="71.18350100000016">
-<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T04:12:11.793Z" hostname="chromium" tests="1" failures="0" skipped="0" time="68.692" errors="0">
-<testcase name="Projects - List View Tests › Hide and show Project Status column in List View" classname="Pages\Projects\projectListView.spec.ts" time="68.692">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.87861400000006">
+<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T04:19:34.085Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.614" errors="0">
+<testcase name="Projects - List View Tests › Search for status in View Options popup" classname="Pages\Projects\projectListView.spec.ts" time="38.614">
 </testcase>
 </testsuite>
 </testsuites>
