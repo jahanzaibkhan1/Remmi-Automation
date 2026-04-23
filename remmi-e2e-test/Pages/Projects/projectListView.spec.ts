@@ -160,4 +160,9 @@ test.describe('Projects - List View Tests', () => {
         await project.createViewWithoutName();
     });
 
+    test('Save view without changing anything', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.saveViewWithoutChanges();
+    });
+
 });
