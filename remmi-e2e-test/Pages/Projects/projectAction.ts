@@ -1,5 +1,5 @@
 import { expect, Page, Locator } from '@playwright/test';
-import { faker } from '@faker-js/faker';
+import { faker, th } from '@faker-js/faker';
 export class ProjectActions {
     private readonly page: Page;
 
@@ -66,7 +66,7 @@ export class ProjectActions {
         await input.fill(invalidName);
         const matchingProjects = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(invalidName, 'i') });
         await expect(matchingProjects).toHaveCount(0);
-        await input.fill('');
+        await this.clickResetButton();
 
     }
 
@@ -75,8 +75,11 @@ export class ProjectActions {
      */
     async verifyProjectImageDisplayedInGridView(projectName: string): Promise<void> {
         await this.navigateToProjects();
+        // perform with search
+        const searchInput = this.projectsSearchInput;
+        await expect(searchInput).toBeVisible({ timeout: 30000 });
+        await searchInput.fill(projectName);
         const projectCard = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${projectName}$`, 'i') }).first();
-        await projectCard.scrollIntoViewIfNeeded();
         await expect(projectCard).toBeVisible({ timeout: 15000 });
         const sgvProduct = projectCard.locator('..').locator('..').first();
         const productThumbnail = sgvProduct.locator('.product-thumbnail').first();
@@ -93,12 +96,16 @@ export class ProjectActions {
      */
     async verifyPlaceholderImageForProjectWithNoImage(): Promise<void> {
         await this.navigateToProjects();
+        // perform with search search
+        const searchInput = this.projectsSearchInput;
+        await expect(searchInput).toBeVisible({ timeout: 30000 });
+        await searchInput.fill('Al kabir heights');
         const projectCard = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${'Al kabir heights'}$`, 'i') }).first();
-        await projectCard.scrollIntoViewIfNeeded();
         await expect(projectCard).toBeVisible({ timeout: 15000 });
         const sgvProduct = projectCard.locator('..').locator('..').first();
         const productThumbnail = sgvProduct.locator('.product-thumbnail').first();
         await expect(productThumbnail).toBeVisible({ timeout: 10000 });
+        await this.clickResetButton();
     }
 
     /**
