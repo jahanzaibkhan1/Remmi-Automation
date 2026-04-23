@@ -34,4 +34,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.verifyAddPrecinctPopupOpensAndCloses();
     });
 
+    test('Validate successful precinct creation with image', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyPrecinctCreationWithImage();
+    });
+
 });
