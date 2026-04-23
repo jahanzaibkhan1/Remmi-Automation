@@ -39,4 +39,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.verifyPrecinctCreationWithImage();
     });
 
+    test('Validate image removal using cross icon', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyImageRemovalViaCrossIcon();
+    });
+
 });

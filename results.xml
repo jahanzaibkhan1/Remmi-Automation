@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.66645300000161">
-<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-23T11:02:04.931Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.3" errors="0">
-<testcase name="Precinct Setup Tab › Validate successful precinct creation with image" classname="Pages\Projects\precinctSetup.spec.ts" time="54.3">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.83335699999705">
+<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-23T11:07:49.148Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.478" errors="0">
+<testcase name="Precinct Setup Tab › Validate image removal using cross icon" classname="Pages\Projects\precinctSetup.spec.ts" time="51.478">
 </testcase>
 </testsuite>
 </testsuites>

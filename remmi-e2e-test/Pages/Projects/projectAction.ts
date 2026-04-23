@@ -1349,4 +1349,27 @@ export class ProjectActions {
         await expect(newPrecinctCard).toBeVisible({ timeout: 30_000 });
    
     }
+
+    async verifyImageRemovalViaCrossIcon(): Promise<void> {
+        const path = require('path');
+        await this.navigateToProjects();
+        await this.page.locator('app-menu a', { hasText: /precinct set up/i }).click();
+        await this.page.waitForLoadState('networkidle');
+        await this.page.locator('#precinct button', { hasText: /create new/i }).click();
+        const dialog = this.page.locator('.p-dialog[role="dialog"]');
+        await expect(dialog).toBeVisible({ timeout: 10_000 });
+        const imagePath = path.resolve(__dirname, 'Images', 'propertyImage.jpg');
+        await dialog.locator('input[type="file"]').setInputFiles(imagePath);
+        const uploadedImage = dialog.locator('img.logo-img');
+        await expect(uploadedImage).toBeVisible({ timeout: 10_000 });
+        const removeIcon = dialog.locator('i.pi-times.remove-icon');
+        await expect(removeIcon).toBeVisible();
+        await removeIcon.click();
+        await expect(uploadedImage).toBeHidden({ timeout: 5_000 });
+        await expect(removeIcon).toBeHidden({ timeout: 5_000 });
+        const noImagePlaceholder = dialog.locator('img.no-images');
+        await expect(noImagePlaceholder).toBeVisible({ timeout: 5_000 });
+        await dialog.locator('button', { hasText: /^cancel$/i }).click();
+        await expect(dialog).toBeHidden({ timeout: 5_000 });
+    }
 }
