@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.85335599999968">
-<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T05:44:46.794Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.892" errors="0">
-<testcase name="Projects - List View Tests › Duplicate selected projects" classname="Pages\Projects\projectListView.spec.ts" time="58.892">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.840322999998925">
+<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T06:14:34.287Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.873" errors="0">
+<testcase name="Projects - List View Tests › Delete selected projects" classname="Pages\Projects\projectListView.spec.ts" time="38.873">
 </testcase>
 </testsuite>
 </testsuites>
