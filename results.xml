@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.83303700000047">
-<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-23T10:39:55.506Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.655" errors="0">
-<testcase name="Precinct Setup Tab › Verify Precinct tab shows Select Project dropdown and Create New button" classname="Pages\Projects\precinctSetup.spec.ts" time="39.655">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.117019999999556">
+<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-23T10:43:32.711Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.887" errors="0">
+<testcase name="Precinct Setup Tab › Verify Add Precinct popup opens and closes via Cancel" classname="Pages\Projects\precinctSetup.spec.ts" time="39.887">
 </testcase>
 </testsuite>
 </testsuites>

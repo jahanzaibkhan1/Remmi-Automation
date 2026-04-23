@@ -1282,4 +1282,27 @@ export class ProjectActions {
         const createNewButton = precinctPanel.locator('button', { hasText: /create new/i });
         await expect(createNewButton).toBeVisible({ timeout: 10_000 });
     }
+
+    async verifyAddPrecinctPopupOpensAndCloses(): Promise<void> {
+        await this.navigateToProjects();
+    
+        // Click "Precinct Set up" main menu tab
+        const precinctSetupTab = this.page.locator('app-menu a', { hasText: /precinct set up/i });
+        await expect(precinctSetupTab).toBeVisible({ timeout: 10_000 });
+        await precinctSetupTab.click();
+        await this.page.waitForLoadState('networkidle');
+        const createNewButton = this.page.locator('#precinct button', { hasText: /create new/i });
+        await expect(createNewButton).toBeVisible({ timeout: 10_000 });
+        await createNewButton.click();
+        const dialog = this.page.locator('.p-dialog[role="dialog"]');
+        await expect(dialog).toBeVisible({ timeout: 10_000 });
+        await expect(dialog.locator('.p-dialog-title')).toHaveText(/add precinct/i);
+        await expect(dialog.locator('input[placeholder="Precinct Name"]')).toBeVisible();
+        await expect(dialog.locator('button', { hasText: /upload image/i })).toBeVisible();
+        await expect(dialog.locator('button', { hasText: /^save$/i })).toBeVisible();
+        const cancelButton = dialog.locator('button', { hasText: /^cancel$/i });
+        await expect(cancelButton).toBeVisible();
+        await cancelButton.click();
+        await expect(dialog).toBeHidden({ timeout: 5_000 });
+    }
 }

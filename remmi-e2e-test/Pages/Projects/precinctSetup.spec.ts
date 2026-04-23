@@ -28,5 +28,10 @@ test.describe('Precinct Setup Tab', () => {
         const project = new ProjectActions(sessionPage);
         await project.verifyPrecinctTabDefaultControls();
     });
-    
+
+    test('Verify Add Precinct popup opens and closes via Cancel', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyAddPrecinctPopupOpensAndCloses();
+    });
+
 });
