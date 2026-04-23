@@ -908,4 +908,50 @@ export class ProjectActions {
         await this.page.mouse.click(0, 0);
         await this.page.waitForTimeout(300);
     }
+
+    async deleteSavedViewInListView(viewName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+    
+        const defaultViewButton = this.page.locator('._view-btn').filter({ hasText: /default view/i });
+        await defaultViewButton.waitFor({ state: 'visible', timeout: 15_000 });
+        await defaultViewButton.click();
+    
+        const popupContent = this.page.locator('.p-overlaypanel-content');
+        await expect(popupContent).toBeVisible({ timeout: 15_000 });
+    
+        // Open the view dropdown to reveal saved views
+        const viewDropdown = popupContent.locator('ng-select[placeholder="Select default view"]');
+        await expect(viewDropdown).toBeVisible({ timeout: 10_000 });
+        await viewDropdown.click();
+        await this.page.waitForTimeout(500);
+    
+        // Locate the target view option in the dropdown panel
+        const viewOption = this.page.locator('.ng-dropdown-panel-items .ng-option')
+            .filter({ hasText: new RegExp(`^\\s*${viewName}\\s*$`, 'i') });
+        await expect(viewOption).toBeVisible({ timeout: 10_000 });
+    
+        // Click the trash/delete icon inside that option
+        const deleteIcon = viewOption.locator('img[src*="delete_icon.svg"]');
+        await expect(deleteIcon).toBeVisible({ timeout: 10_000 });
+        await deleteIcon.click();
+    
+        // Handle confirmation dialog if one appears
+        const confirmButton = this.page.getByRole('button', { name: /confirm|yes|delete|ok/i }).first();
+        try {
+            await expect(confirmButton).toBeVisible({ timeout: 5_000 });
+            await confirmButton.click();
+        } catch {
+            // No confirmation dialog — deletion was immediate
+        }
+    
+        // Verify success toast
+        await expect(
+            this.page.getByText(/view deleted|deleted successfully|removed successfully/i)
+        ).toBeVisible({ timeout: 10_000 });
+    
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(300);
+    }
 }
