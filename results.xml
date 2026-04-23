@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="28.86754300000053">
-<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T05:10:35.205Z" hostname="chromium" tests="1" failures="0" skipped="0" time="26.441" errors="0">
-<testcase name="Projects - List View Tests › Open project create popup" classname="Pages\Projects\projectListView.spec.ts" time="26.441">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.22865199999977">
+<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T05:27:41.893Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.981" errors="0">
+<testcase name="Projects - List View Tests › Select multiple projects in List View" classname="Pages\Projects\projectListView.spec.ts" time="46.981">
 </testcase>
 </testsuite>
 </testsuites>

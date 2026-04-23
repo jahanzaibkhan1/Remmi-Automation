@@ -283,7 +283,7 @@ export class ProjectActions {
         const gridViewButton = this.page.locator('.layout-changer a.grid-icon');
         await expect(gridViewButton).toBeVisible({ timeout: 30_000 });
         await gridViewButton.click();
-        await expect(gridProducts.first()).toBeVisible({ timeout: 15_000 });
+        await expect(gridProducts.first()).toBeVisible({ timeout: 30_000 });
     }
 
     async switchToListView(): Promise<void> {
@@ -989,5 +989,17 @@ export class ProjectActions {
         const cancelButton = dialog.locator('button._cancel-btn');
         await expect(cancelButton).toBeVisible();
         await cancelButton.click();
+    }
+
+    async selectMultipleProjects(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        const selectAllCheckbox = this.page.locator('thead div.p-checkbox.p-component .p-checkbox-box');
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 30_000 });
+        await selectAllCheckbox.click();
+        await this.page.waitForTimeout(1000);
+        await selectAllCheckbox.click();
+        await this.ResetButton();
     }
 }

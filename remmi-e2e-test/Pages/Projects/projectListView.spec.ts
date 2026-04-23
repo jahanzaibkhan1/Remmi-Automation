@@ -110,4 +110,9 @@ test.describe('Projects - List View Tests', () => {
         await project.openProjectCreatePopup();
     });
 
+    test('Select multiple projects in List View', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.selectMultipleProjects();
+    });
+
 });
