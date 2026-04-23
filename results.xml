@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.87861400000006">
-<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T04:19:34.085Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.614" errors="0">
-<testcase name="Projects - List View Tests › Search for status in View Options popup" classname="Pages\Projects\projectListView.spec.ts" time="38.614">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="90.4066540000001">
+<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T04:46:17.531Z" hostname="chromium" tests="1" failures="0" skipped="0" time="87.859" errors="0">
+<testcase name="Projects - List View Tests › Delete a saved view in List View" classname="Pages\Projects\projectListView.spec.ts" time="87.859">
 </testcase>
 </testsuite>
 </testsuites>

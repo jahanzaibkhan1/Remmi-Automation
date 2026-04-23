@@ -94,5 +94,10 @@ test.describe('Projects - List View Tests', () => {
         const project = new ProjectActions(sessionPage);
         await project.searchStatusInViewPopup();
     });
-    
+
+    test('Delete a saved view in List View', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.deleteSavedViewInListView('Test View');
+    });
+
 });
