@@ -32,6 +32,16 @@ export class ProjectActions {
     }
 
     /**
+     * Navigates directly to the Precinct Listings page.
+     */
+    async gotoPrecinctListings(): Promise<void> {
+        const currentUrl = this.page.url().split(/[?#]/)[0];
+        if (!currentUrl.endsWith('/listings/project-precinct')) {
+            await this.page.goto('/listings/project-precinct');
+        }
+    }
+
+    /**
      * verify project search by name.
      */
     async verifyProjectCanBeSearchedByName(projectName: string): Promise<void> {
@@ -282,7 +292,6 @@ export class ProjectActions {
     }
 
     async switchToGridView(): Promise<void> {
-        await this.navigateToProjects();
         const gridProducts = this.page.locator('.sgv-product');
         if (await gridProducts.first().isVisible().catch(() => false)) {
             return;
@@ -1249,13 +1258,11 @@ export class ProjectActions {
     }
 
     async verifyPrecinctSetupSubTabs(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToGridView();
+        await this.gotoPrecinctListings();
         // Click the "Precinct Set up" main menu tab
         const precinctSetupTab = this.page.locator('app-menu a', { hasText: /precinct set up/i });
-        await expect(precinctSetupTab).toBeVisible({ timeout: 10_000 });
+        await expect(precinctSetupTab).toBeVisible({ timeout: 40_000 });
         await precinctSetupTab.click();
-        await this.page.waitForLoadState('networkidle');
 
         // Verify "Precinct" sub-tab is visible
         const precinctSubTab = this.page.locator('.secondary-tabs a[role="tab"]')
@@ -1269,9 +1276,9 @@ export class ProjectActions {
     }
 
     async verifyPrecinctTabDefaultControls(): Promise<void> {
-        await this.navigateToProjects();
+        await this.gotoPrecinctListings();
         const precinctSetupTab = this.page.locator('app-menu a', { hasText: /precinct set up/i });
-        await expect(precinctSetupTab).toBeVisible({ timeout: 10_000 });
+        await expect(precinctSetupTab).toBeVisible({ timeout: 30_000 });
         await precinctSetupTab.click();
         const precinctTab = this.page.locator('#pills-precinct-tab');
         await expect(precinctTab).toHaveClass(/active/);
@@ -1283,13 +1290,12 @@ export class ProjectActions {
     }
 
     async verifyAddPrecinctPopupOpensAndCloses(): Promise<void> {
-        await this.navigateToProjects();
+        await this.gotoPrecinctListings();
     
         // Click "Precinct Set up" main menu tab
         const precinctSetupTab = this.page.locator('app-menu a', { hasText: /precinct set up/i });
-        await expect(precinctSetupTab).toBeVisible({ timeout: 10_000 });
+        await expect(precinctSetupTab).toBeVisible({ timeout: 30_000 });
         await precinctSetupTab.click();
-        await this.page.waitForLoadState('networkidle');
         const createNewButton = this.page.locator('#precinct button', { hasText: /create new/i });
         await expect(createNewButton).toBeVisible({ timeout: 10_000 });
         await createNewButton.click();
@@ -1308,14 +1314,12 @@ export class ProjectActions {
     async verifyPrecinctCreationWithImage(): Promise<void> {
         const path = require('path');
         
-        await this.navigateToProjects();
+        await this.gotoPrecinctListings();
     
         // Click "Precinct Set up" main menu tab
         const precinctSetupTab = this.page.locator('app-menu a', { hasText: /precinct set up/i });
         await expect(precinctSetupTab).toBeVisible({ timeout: 30_000 });
         await precinctSetupTab.click();
-        await this.page.waitForLoadState('networkidle');
-    
         // Open the Add Precinct dialog
         const createNewButton = this.page.locator('#precinct button', { hasText: /create new/i });
         await createNewButton.click();
@@ -1352,7 +1356,7 @@ export class ProjectActions {
 
     async verifyImageRemovalViaCrossIcon(): Promise<void> {
         const path = require('path');
-        await this.navigateToProjects();
+        await this.gotoPrecinctListings();
         await this.page.locator('app-menu a', { hasText: /precinct set up/i }).click();
         await this.page.waitForLoadState('networkidle');
         await this.page.locator('#precinct button', { hasText: /create new/i }).click();

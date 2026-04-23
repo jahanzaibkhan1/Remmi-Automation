@@ -1,6 +1,14 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.83335699999705">
-<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-23T11:07:49.148Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.478" errors="0">
-<testcase name="Precinct Setup Tab › Validate image removal using cross icon" classname="Pages\Projects\precinctSetup.spec.ts" time="51.478">
+<testsuites id="" name="" tests="5" failures="0" skipped="0" errors="0" time="41.636800999999046">
+<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-23T11:27:43.346Z" hostname="chromium" tests="5" failures="0" skipped="0" time="39.667" errors="0">
+<testcase name="Precinct Setup Tab › should display &quot;Precinct&quot; and &quot;Precinct Allocation&quot; sub-tabs when &quot;Precinct Setup&quot; tab is clicked" classname="Pages\Projects\precinctSetup.spec.ts" time="30.439">
+</testcase>
+<testcase name="Precinct Setup Tab › Verify Precinct tab shows Select Project dropdown and Create New button" classname="Pages\Projects\precinctSetup.spec.ts" time="0.068">
+</testcase>
+<testcase name="Precinct Setup Tab › Verify Add Precinct popup opens and closes via Cancel" classname="Pages\Projects\precinctSetup.spec.ts" time="0.668">
+</testcase>
+<testcase name="Precinct Setup Tab › Validate successful precinct creation with image" classname="Pages\Projects\precinctSetup.spec.ts" time="7.171">
+</testcase>
+<testcase name="Precinct Setup Tab › Validate image removal using cross icon" classname="Pages\Projects\precinctSetup.spec.ts" time="1.321">
 </testcase>
 </testsuite>
 </testsuites>
