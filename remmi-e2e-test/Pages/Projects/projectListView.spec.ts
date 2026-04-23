@@ -155,4 +155,9 @@ test.describe('Projects - List View Tests', () => {
         await project.selectProjectManagerWithNoProjects();
     });
 
+    test('Create view without name', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.createViewWithoutName();
+    });
+
 });
