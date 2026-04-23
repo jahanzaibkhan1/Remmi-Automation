@@ -1267,4 +1267,19 @@ export class ProjectActions {
             .filter({ hasText: /precinct allocation/i });
         await expect(precinctAllocationSubTab).toBeVisible({ timeout: 10_000 });
     }
+
+    async verifyPrecinctTabDefaultControls(): Promise<void> {
+        await this.navigateToProjects();
+        const precinctSetupTab = this.page.locator('app-menu a', { hasText: /precinct set up/i });
+        await expect(precinctSetupTab).toBeVisible({ timeout: 10_000 });
+        await precinctSetupTab.click();
+        await this.page.waitForLoadState('networkidle');
+        const precinctTab = this.page.locator('#pills-precinct-tab');
+        await expect(precinctTab).toHaveClass(/active/);
+        const precinctPanel = this.page.locator('#precinct');
+        const selectProjectDropdown = precinctPanel.locator('ng-select[placeholder="Select Project"]');
+        await expect(selectProjectDropdown).toBeVisible({ timeout: 10_000 });
+        const createNewButton = precinctPanel.locator('button', { hasText: /create new/i });
+        await expect(createNewButton).toBeVisible({ timeout: 10_000 });
+    }
 }

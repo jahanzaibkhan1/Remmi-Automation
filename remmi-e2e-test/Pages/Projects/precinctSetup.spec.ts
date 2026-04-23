@@ -23,4 +23,10 @@ test.describe('Precinct Setup Tab', () => {
         const project = new ProjectActions(sessionPage);
         await project.verifyPrecinctSetupSubTabs();
     });
+    
+    test('Verify Precinct tab shows Select Project dropdown and Create New button', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyPrecinctTabDefaultControls();
+    });
+    
 });
