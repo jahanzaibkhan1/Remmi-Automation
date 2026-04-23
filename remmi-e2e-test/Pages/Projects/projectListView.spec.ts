@@ -170,4 +170,9 @@ test.describe('Projects - List View Tests', () => {
         await project.shareViewWithNoSelection();
     });
 
+    test('View status out of sync', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.viewStatusOutOfSync();
+    });
+    
 });

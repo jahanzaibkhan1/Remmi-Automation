@@ -1198,4 +1198,31 @@ export class ProjectActions {
         await this.ResetButton();
         await this.waitForFirstTableRow();
     }
+
+    async viewStatusOutOfSync(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+    
+        await this.page.locator('._view-btn').filter({ hasText: /default view/i }).click();
+    
+        const popupContent = this.page.locator('.p-overlaypanel-content');
+        await expect(popupContent).toBeVisible({ timeout: 10_000 });
+        await popupContent.locator('#visibleColumnList .cdk-drag')
+            .filter({ hasText: /developer/i })
+            .locator('img[src*="Eye.svg"]').click();
+        await this.page.waitForTimeout(500);
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(500);
+        await this.page.locator('._view-btn').filter({ hasText: /default view/i }).click();
+        await expect(popupContent).toBeVisible({ timeout: 10_000 });
+        const developerInVisible = await popupContent
+            .locator('#visibleColumnList .cdk-drag')
+            .filter({ hasText: /developer/i }).count();
+        console.log(`After navigate-away-and-reopen, Developer in visible list: ${developerInVisible > 0}`);
+        await this.page.waitForTimeout(500);
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(500);
+        await this.ResetButton();
+    }
 }
