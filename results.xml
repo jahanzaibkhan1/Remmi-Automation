@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="90.4066540000001">
-<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T04:46:17.531Z" hostname="chromium" tests="1" failures="0" skipped="0" time="87.859" errors="0">
-<testcase name="Projects - List View Tests › Delete a saved view in List View" classname="Pages\Projects\projectListView.spec.ts" time="87.859">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.14623199999984">
+<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T05:04:29.836Z" hostname="chromium" tests="1" failures="0" skipped="0" time="62.086" errors="0">
+<testcase name="Projects - List View Tests › Switch between grid and list views" classname="Pages\Projects\projectListView.spec.ts" time="62.086">
 </testcase>
 </testsuite>
 </testsuites>

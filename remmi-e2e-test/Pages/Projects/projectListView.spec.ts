@@ -100,4 +100,9 @@ test.describe('Projects - List View Tests', () => {
         await project.deleteSavedViewInListView('Test View');
     });
 
+    test('Switch between grid and list views', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.switchBetweenGridAndListView();
+    });
+
 });

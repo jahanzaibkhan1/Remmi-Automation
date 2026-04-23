@@ -275,9 +275,15 @@ export class ProjectActions {
     }
 
     async switchToGridView(): Promise<void> {
-        const gridIcon = this.page.locator('.layout-changer a.grid-icon');
-        await expect(gridIcon).toBeVisible({ timeout: 30000 });
-        await gridIcon.click();
+        await this.navigateToProjects();
+        const gridProducts = this.page.locator('.sgv-product');
+        if (await gridProducts.first().isVisible().catch(() => false)) {
+            return;
+        }
+        const gridViewButton = this.page.locator('.layout-changer a.grid-icon');
+        await expect(gridViewButton).toBeVisible({ timeout: 30_000 });
+        await gridViewButton.click();
+        await expect(gridProducts.first()).toBeVisible({ timeout: 15_000 });
     }
 
     async switchToListView(): Promise<void> {
@@ -953,5 +959,12 @@ export class ProjectActions {
     
         await this.page.mouse.click(0, 0);
         await this.page.waitForTimeout(300);
+    }
+
+    async switchBetweenGridAndListView() {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.switchToGridView();
+        await this.switchToListView();
     }
 }
