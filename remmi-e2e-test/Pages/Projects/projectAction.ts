@@ -1210,9 +1210,9 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.switchToListView();
         await this.waitForFirstTableRow();
-    
+
         await this.page.locator('._view-btn').filter({ hasText: /default view/i }).click();
-    
+
         const popupContent = this.page.locator('.p-overlaypanel-content');
         await expect(popupContent).toBeVisible({ timeout: 10_000 });
         await popupContent.locator('#visibleColumnList .cdk-drag')
@@ -1231,5 +1231,20 @@ export class ProjectActions {
         await this.page.mouse.click(0, 0);
         await this.page.waitForTimeout(500);
         await this.ResetButton();
+    }
+
+    async verifyRecordsCountAtEnd(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        const recordsLocator = this.page.locator('p').filter({ hasText: /^\s*Records:\s*\d+/ });
+        await recordsLocator.scrollIntoViewIfNeeded();
+        await expect(recordsLocator).toBeVisible({ timeout: 40_000 });
+        const text = await recordsLocator.textContent();
+        const count = parseInt(text?.match(/\d+/)?.[0] ?? '0', 10);
+        if (count <= 0) {
+            throw new Error(`Invalid records count: "${text?.trim()}"`);
+        }
+        console.log(`Records displayed at end of list: ${count}`);
     }
 }

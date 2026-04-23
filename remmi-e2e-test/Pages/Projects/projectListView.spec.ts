@@ -21,7 +21,7 @@ const test = base.extend<{ sessionPage: any }>({
 test.describe('Projects - List View Tests', () => {
     test('Verify project search by name in List View', async ({ sessionPage }) => {
         const project = new ProjectActions(sessionPage);
-        await project.verifyProjectCanBeSearchedByNameInListView('East Village Vila');
+        await project.verifyProjectCanBeSearchedByNameInListView('Nexton');
     });
 
     test('Search with no matching results in List View', async ({ sessionPage }) => {
@@ -174,5 +174,10 @@ test.describe('Projects - List View Tests', () => {
         const project = new ProjectActions(sessionPage);
         await project.viewStatusOutOfSync();
     });
-    
+
+    test('Verify records are displayed at the end of project list view', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyRecordsCountAtEnd();
+    });
+
 });
