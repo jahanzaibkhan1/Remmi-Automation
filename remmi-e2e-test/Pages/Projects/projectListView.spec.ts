@@ -80,4 +80,8 @@ test.describe('Projects - List View Tests', () => {
         await project.shareViewWithAgentAndTeamInListView();
     });
    
+    test('Reorder status positions in List View', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.reorderStatusPositions();
+    });
 });

@@ -736,67 +736,120 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.switchToListView();
         await this.waitForFirstTableRow();
-    
+
         const defaultViewButton = this.page.locator('._view-btn', { hasText: 'Default View' });
         await defaultViewButton.waitFor({ state: 'visible', timeout: 15_000 });
         await defaultViewButton.click();
-    
+
         const popupContent = this.page.locator('.p-overlaypanel-content');
         await expect(popupContent).toBeVisible({ timeout: 15_000 });
-    
+
         const shareIcon = popupContent.locator('.view-options img[src*="share-one.svg"]');
         await expect(shareIcon).toBeVisible({ timeout: 10_000 });
         await shareIcon.click({ force: true });
-    
+
         const usersDropdown = popupContent.locator('re-multiselect.w-100.mr-2 .box');
         await expect(usersDropdown).toBeVisible({ timeout: 10_000 });
         await usersDropdown.click();
-    
+
         const userDropBox = this.page.locator('.drop_box').last();
         await expect(userDropBox).toBeVisible({ timeout: 10_000 });
-    
+
         const userSearchInput = userDropBox.locator('input[placeholder="Search"]');
         await userSearchInput.fill(userName);
         await this.page.waitForTimeout(800);
-    
+
         const userOption = userDropBox.locator('li', { hasText: userName }).first();
         await expect(userOption).toBeVisible({ timeout: 10_000 });
         await userOption.locator('label.checkbox').click({ force: true });
-    
+
         const userDropdownArrow = this.page.locator('re-multiselect.w-100.mr-2 i.fa-sort-up');
         await userDropdownArrow.click({ force: true });
-   
-    
+
+
         const teamsDropdown = popupContent.locator('re-multiselect.custom-select-share .box');
         await expect(teamsDropdown).toBeVisible({ timeout: 10_000 });
         await teamsDropdown.click();
-    
+
         const teamDropBox = this.page.locator('.drop_box').last();
         await expect(teamDropBox).toBeVisible({ timeout: 10_000 });
-    
+
         const teamSearchInput = teamDropBox.locator('input[placeholder="Search"]');
         await teamSearchInput.fill(teamName);
         await this.page.waitForTimeout(800);
-    
+
         const teamOption = teamDropBox.locator('li', { hasText: teamName }).first();
         await expect(teamOption).toBeVisible({ timeout: 10_000 });
         await teamOption.locator('label.checkbox').click({ force: true });
-    
+
         const teamDropdownArrow = this.page.locator('re-multiselect.custom-select-share i.fas.fa-sort-up');
         await teamDropdownArrow.click({ force: true });
-   
+
         const shareBtn = popupContent.locator('button._outline-btn', { hasText: 'Share' });
         await expect(shareBtn).toBeVisible({ timeout: 10_000 });
         await shareBtn.click({ force: true });
-    
+
         const sharedSuccessMessage = this.page.getByText('View shared').or(
             this.page.getByText('shared successfully')
         ).or(
             this.page.getByText('already shared with one or more selected users or teams')
         );
         await expect(sharedSuccessMessage.first()).toBeVisible({ timeout: 10_000 });
-    
+
         await this.page.waitForTimeout(500);
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(400);
+        await this.ResetButton();
+        await this.waitForFirstTableRow();
+    }
+
+    async reorderStatusPositions() {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+    
+        const defaultViewButton = this.page.locator('._view-btn').filter({ hasText: /default view/i });
+        await defaultViewButton.waitFor({ state: 'visible', timeout: 15_000 });
+        await defaultViewButton.click();
+        
+        const popupContent = this.page.locator('.p-overlaypanel-content');
+        await expect(popupContent).toBeVisible({ timeout: 15_000 });
+    
+        const draggableHandles = popupContent.locator('#visibleColumnList .cdk-drag');
+        const handleCount = await draggableHandles.count();
+    
+        if (handleCount < 2) {
+            throw new Error('Less than 2 draggable statuses found, cannot perform drag-and-drop.');
+        }
+
+        const firstHandle = draggableHandles.nth(0);
+        const secondHandle = draggableHandles.nth(1);
+    
+        await firstHandle.scrollIntoViewIfNeeded();
+        await this.page.waitForTimeout(300);
+    
+        const box1 = await firstHandle.boundingBox();
+        const box2 = await secondHandle.boundingBox();
+    
+        if (!box1 || !box2) {
+            throw new Error('Could not get bounding boxes for drag handles.');
+        }
+    
+        const startX = box1.x + box1.width / 2;
+        const startY = box1.y + box1.height / 2;
+        const endX = box2.x + box2.width / 2;
+        const endY = box2.y + box2.height + 20;
+        await this.page.mouse.move(startX, startY);
+        await this.page.waitForTimeout(100);
+        await this.page.mouse.down();
+        await this.page.waitForTimeout(100);
+        await this.page.mouse.move(startX, startY + 15, { steps: 10 });
+        await this.page.waitForTimeout(100);
+        await this.page.mouse.move(endX, endY, { steps: 25 });
+        await this.page.waitForTimeout(300);
+        await this.page.mouse.up();
+        await this.page.waitForTimeout(500);
+        await expect(popupContent).toBeVisible();
         await this.page.mouse.click(0, 0);
         await this.page.waitForTimeout(400);
         await this.ResetButton();
