@@ -165,4 +165,9 @@ test.describe('Projects - List View Tests', () => {
         await project.saveViewWithoutChanges();
     });
 
+    test('Attempt sharing view with no selection', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.shareViewWithNoSelection();
+    });
+
 });

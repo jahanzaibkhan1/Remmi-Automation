@@ -1171,4 +1171,31 @@ export class ProjectActions {
         await this.page.keyboard.press('Escape');
         await this.ResetButton();
     }
+
+    async shareViewWithNoSelection(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        await this.page.locator('._view-btn').filter({ hasText: /default view/i }).click();
+        const popupContent = this.page.locator('.p-overlaypanel-content');
+        await expect(popupContent).toBeVisible({ timeout: 15_000 });
+        const shareIcon = popupContent.locator('.view-options img[src*="share-one.svg"]');
+        await expect(shareIcon).toBeVisible({ timeout: 10_000 });
+        await shareIcon.click({ force: true });
+        const shareBtn = popupContent.locator('button._outline-btn', { hasText: 'Share' });
+        await expect(shareBtn).toBeVisible({ timeout: 10_000 });
+        await shareBtn.click({ force: true });
+        const sharedSuccessMessage = this.page.getByText('View shared').or(
+            this.page.getByText('shared successfully')
+        ).or(
+            this.page.getByText('user or team is not selected')
+        );
+        await expect(sharedSuccessMessage.first()).toBeVisible({ timeout: 10_000 });
+
+        await this.page.waitForTimeout(500);
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(400);
+        await this.ResetButton();
+        await this.waitForFirstTableRow();
+    }
 }

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.12629600000009">
-<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T07:24:41.519Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.861" errors="0">
-<testcase name="Projects - List View Tests › Save view without changing anything" classname="Pages\Projects\projectListView.spec.ts" time="41.861">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.550995999999344">
+<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T07:55:58.327Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.215" errors="0">
+<testcase name="Projects - List View Tests › Attempt sharing view with no selection" classname="Pages\Projects\projectListView.spec.ts" time="45.215">
 </testcase>
 </testsuite>
 </testsuites>
