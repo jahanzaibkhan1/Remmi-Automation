@@ -967,4 +967,27 @@ export class ProjectActions {
         await this.switchToGridView();
         await this.switchToListView();
     }
+
+    async openProjectCreatePopup(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        const addButton = this.page.locator('button._addNew');
+        await expect(addButton).toBeVisible({ timeout: 10_000 });
+        await addButton.click();
+
+        const dialog = this.page.locator('.p-dialog-content').filter({
+            has: this.page.locator('input[formcontrolname="Project_Name"]'),
+        });
+        await expect(dialog).toBeVisible({ timeout: 10_000 });
+        const projectNameInput = dialog.locator('input[formcontrolname="Project_Name"]');
+        await expect(projectNameInput).toBeVisible();
+        const projectStatusSelect = dialog.locator('ng-select[formcontrolname="Project_Status"]');
+        await expect(projectStatusSelect).toBeVisible();
+        const outlineButton = dialog.locator('button._outline-btn');
+        await expect(outlineButton).toBeVisible();
+        const cancelButton = dialog.locator('button._cancel-btn');
+        await expect(cancelButton).toBeVisible();
+        await cancelButton.click();
+    }
 }

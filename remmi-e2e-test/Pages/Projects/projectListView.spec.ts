@@ -105,4 +105,9 @@ test.describe('Projects - List View Tests', () => {
         await project.switchBetweenGridAndListView();
     });
 
+    test('Open project create popup', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.openProjectCreatePopup();
+    });
+
 });
