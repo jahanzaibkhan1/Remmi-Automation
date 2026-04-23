@@ -23,12 +23,12 @@ test.describe('Projects - E2E Tests', () => {
 
     test('Test 1: Verify project search by name', async ({ sessionPage }) => {
         const project = new ProjectActions(sessionPage);
-        await project.verifyProjectCanBeSearchedByName('East Village Vila');
+        await project.verifyProjectCanBeSearchedByName('Nexton');
     });
 
     test('Test 2: Search with partial project name', async ({ sessionPage }) => {
         const project = new ProjectActions(sessionPage);
-        await project.verifyProjectCanBeSearchedByPartialName('East');
+        await project.verifyProjectCanBeSearchedByPartialName('Next');
     });
 
     test('Test 3: Search with invalid project name', async ({ sessionPage }) => {
@@ -38,7 +38,7 @@ test.describe('Projects - E2E Tests', () => {
 
     test('Test 4: Verify that project image is displayed correctly in Grid View', async ({ sessionPage }) => {
         const project = new ProjectActions(sessionPage);
-        await project.verifyProjectImageDisplayedInGridView('East Village Vila');
+        await project.verifyProjectImageDisplayedInGridView('Nexton');
     });
     
     test('Test 5: Verify that a placeholder image appears for projects with no uploaded image', async ({ sessionPage }) => {

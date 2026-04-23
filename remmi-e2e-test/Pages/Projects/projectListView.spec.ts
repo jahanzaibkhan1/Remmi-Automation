@@ -21,7 +21,7 @@ const test = base.extend<{ sessionPage: any }>({
 test.describe('Projects - List View Tests', () => {
     test('Verify project search by name in List View', async ({ sessionPage }) => {
         const project = new ProjectActions(sessionPage);
-        await project.verifyProjectCanBeSearchedByNameInListView('East Village Vila');
+        await project.verifyProjectCanBeSearchedByNameInListView('Nexton');
     });
 
     test('Search with no matching results in List View', async ({ sessionPage }) => {
@@ -80,4 +80,104 @@ test.describe('Projects - List View Tests', () => {
         await project.shareViewWithAgentAndTeamInListView();
     });
    
+    test('Reorder status positions in List View', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.reorderStatusPositions();
+    });
+
+    test('Hide and show Project Status column in List View', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.hideAndShowStatus();
+    });
+
+    test('Search for status in View Options popup', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.searchStatusInViewPopup();
+    });
+
+    test('Delete a saved view in List View', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.deleteSavedViewInListView('Test View');
+    });
+
+    test('Switch between grid and list views', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.switchBetweenGridAndListView();
+    });
+
+    test('Open project create popup', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.openProjectCreatePopup();
+    });
+
+    test('Select multiple projects in List View', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.selectMultipleProjects();
+    });
+
+    test('Duplicate selected projects', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.duplicateSelectedProjects();
+    });
+
+    test('Delete selected projects', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.deleteSelectedProjects();
+    });
+
+    test('Delete project via delete icon', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.deleteProjectViaRowIcon();
+    });
+
+    test('Cancel delete from popup', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.cancelDeleteFromPopup();
+    });
+
+    test('Sort projects ascending', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.sortProjectsAscending('Project Name');
+    });
+
+    test('Sort projects descending', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.sortProjectsDescending('Project Name');
+    });
+
+    test('Try searching project with symbols', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.searchProjectWithSymbols();
+    });
+
+    test('Select project manager with no projects', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.selectProjectManagerWithNoProjects();
+    });
+
+    test('Create view without name', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.createViewWithoutName();
+    });
+
+    test('Save view without changing anything', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.saveViewWithoutChanges();
+    });
+
+    test('Attempt sharing view with no selection', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.shareViewWithNoSelection();
+    });
+
+    test('View status out of sync', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.viewStatusOutOfSync();
+    });
+
+    test('Verify records are displayed at the end of project list view', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyRecordsCountAtEnd();
+    });
+
 });
