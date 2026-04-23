@@ -807,34 +807,34 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.switchToListView();
         await this.waitForFirstTableRow();
-    
+
         const defaultViewButton = this.page.locator('._view-btn').filter({ hasText: /default view/i });
         await defaultViewButton.waitFor({ state: 'visible', timeout: 15_000 });
         await defaultViewButton.click();
-        
+
         const popupContent = this.page.locator('.p-overlaypanel-content');
         await expect(popupContent).toBeVisible({ timeout: 15_000 });
-    
+
         const draggableHandles = popupContent.locator('#visibleColumnList .cdk-drag');
         const handleCount = await draggableHandles.count();
-    
+
         if (handleCount < 2) {
             throw new Error('Less than 2 draggable statuses found, cannot perform drag-and-drop.');
         }
 
         const firstHandle = draggableHandles.nth(0);
         const secondHandle = draggableHandles.nth(1);
-    
+
         await firstHandle.scrollIntoViewIfNeeded();
         await this.page.waitForTimeout(300);
-    
+
         const box1 = await firstHandle.boundingBox();
         const box2 = await secondHandle.boundingBox();
-    
+
         if (!box1 || !box2) {
             throw new Error('Could not get bounding boxes for drag handles.');
         }
-    
+
         const startX = box1.x + box1.width / 2;
         const startY = box1.y + box1.height / 2;
         const endX = box2.x + box2.width / 2;
@@ -854,5 +854,37 @@ export class ProjectActions {
         await this.page.waitForTimeout(400);
         await this.ResetButton();
         await this.waitForFirstTableRow();
+    }
+
+    async hideAndShowStatus() {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        await expect(
+            this.page.locator('._view-btn').filter({ hasText: /default view/i })
+        ).toBeVisible({ timeout: 15_000 });
+        await this.page.locator('._view-btn').filter({ hasText: /default view/i }).click();
+        await expect(this.page.locator('.p-overlaypanel-content')).toBeVisible({ timeout: 10_000 });
+        await expect(
+            this.page.locator('.p-overlaypanel-content').getByText('Hide All', { exact: true })
+        ).toBeVisible({ timeout: 10_000 });
+        await this.page.locator('.p-overlaypanel-content').getByText('Hide All', { exact: true }).click();
+        await this.page.waitForTimeout(500);
+        await expect(
+            this.page.locator('.p-overlaypanel-content #visibleColumnList .cdk-drag')
+        ).toHaveCount(0, { timeout: 10_000 });
+        await expect(
+            this.page.locator('.p-overlaypanel-content').getByText('Show All', { exact: true })
+        ).toBeVisible({ timeout: 10_000 });
+        await this.page.locator('.p-overlaypanel-content').getByText('Show All', { exact: true }).click();
+        await this.page.waitForTimeout(500);
+        await expect(
+            this.page.locator('.p-overlaypanel-content #hiddenColumnList .cdk-drag')
+        ).toHaveCount(0, { timeout: 10_000 });
+        await expect(
+            this.page.locator('.p-overlaypanel-content #visibleColumnList .cdk-drag').first()
+        ).toBeVisible({ timeout: 10_000 });
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(300);
     }
 }
