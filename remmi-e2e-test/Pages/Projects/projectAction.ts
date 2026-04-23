@@ -1127,4 +1127,26 @@ export class ProjectActions {
         await this.page.keyboard.press('Escape');
         await this.ResetButton();
     }
+
+    async createViewWithoutName(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        await this.page.locator('._view-btn').filter({ hasText: /default view/i }).click();
+        const popupContent = this.page.locator('.p-overlaypanel-content');
+        await expect(popupContent).toBeVisible({ timeout: 15_000 });
+        const addViewIcon = popupContent.locator('.view-options img[src*="plus-solid.svg"]');
+        await addViewIcon.waitFor({ state: 'visible', timeout: 10_000 });
+        await addViewIcon.click();
+        const viewNameInput = this.page.locator('input[placeholder*="view" i], input[placeholder*="name" i]').last();
+        await expect(viewNameInput).toBeVisible({ timeout: 10_000 });
+        const saveBtn = this.page.getByRole('button', { name: /save|create/i }).first();
+        await expect(saveBtn).toBeVisible({ timeout: 10_000 });
+        await saveBtn.click({ force: true });
+        await expect(
+            this.page.locator('input[placeholder*="view" i], input[placeholder*="name" i].invalidField')
+        ).toBeVisible({ timeout: 5_000 });
+        await this.page.keyboard.press('Escape');
+        await this.ResetButton();
+    }
 }
