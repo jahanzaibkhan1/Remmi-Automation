@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="82.95347000000066">
-<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T06:20:00.908Z" hostname="chromium" tests="1" failures="0" skipped="0" time="80.988" errors="0">
-<testcase name="Projects - List View Tests › Cancel delete from popup" classname="Pages\Projects\projectListView.spec.ts" time="80.988">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.43997599999979">
+<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T06:23:37.562Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.473" errors="0">
+<testcase name="Projects - List View Tests › Sort projects ascending" classname="Pages\Projects\projectListView.spec.ts" time="54.473">
 </testcase>
 </testsuite>
 </testsuites>

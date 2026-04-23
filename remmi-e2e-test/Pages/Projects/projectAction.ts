@@ -1064,5 +1064,23 @@ export class ProjectActions {
         await expect(cancelButton).toBeHidden({ timeout: 5_000 });
     }
     
+    async sortProjectsAscending(columnName: string = 'Project Name'): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+    
+        const sortIcon = this.page.locator('th', { hasText: columnName })
+            .locator('p-sorticon').first();
+        await sortIcon.click();
+        await this.page.waitForTimeout(500);
+    
+        const values = await this.page.locator('tbody tr td:nth-child(3) p').allTextContents();
+        const trimmed = values.map(v => v.trim()).filter(v => v.length > 0);
+        const sorted = [...trimmed].sort((a, b) => a.localeCompare(b));
+    
+        if (JSON.stringify(trimmed) !== JSON.stringify(sorted)) {
+            throw new Error(`Ascending sort failed. Got: ${trimmed.slice(0, 5).join(', ')}...`);
+        }
+    }
     
 }

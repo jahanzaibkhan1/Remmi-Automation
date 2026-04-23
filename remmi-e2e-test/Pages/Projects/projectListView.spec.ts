@@ -135,4 +135,9 @@ test.describe('Projects - List View Tests', () => {
         await project.cancelDeleteFromPopup();
     });
 
+    test('Sort projects ascending', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.sortProjectsAscending('Project Name');
+    });
+
 });
