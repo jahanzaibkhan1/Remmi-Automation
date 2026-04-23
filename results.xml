@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.550995999999344">
-<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T07:55:58.327Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.215" errors="0">
-<testcase name="Projects - List View Tests › Attempt sharing view with no selection" classname="Pages\Projects\projectListView.spec.ts" time="45.215">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.83234500000067">
+<testsuite name="Pages\Projects\projectListView.spec.ts" timestamp="2026-04-23T08:02:50.285Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.512" errors="0">
+<testcase name="Projects - List View Tests › View status out of sync" classname="Pages\Projects\projectListView.spec.ts" time="51.512">
+<system-out>
+<![CDATA[After navigate-away-and-reopen, Developer in visible list: false
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
