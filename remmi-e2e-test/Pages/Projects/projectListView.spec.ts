@@ -89,4 +89,10 @@ test.describe('Projects - List View Tests', () => {
         const project = new ProjectActions(sessionPage);
         await project.hideAndShowStatus();
     });
+
+    test('Search for status in View Options popup', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.searchStatusInViewPopup();
+    });
+    
 });

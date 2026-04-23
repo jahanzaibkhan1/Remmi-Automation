@@ -887,4 +887,25 @@ export class ProjectActions {
         await this.page.mouse.click(0, 0);
         await this.page.waitForTimeout(300);
     }
+
+    async searchStatusInViewPopup() {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+        await expect(
+            this.page.locator('._view-btn').filter({ hasText: /default view/i })
+        ).toBeVisible({ timeout: 15_000 });
+        await this.page.locator('._view-btn').filter({ hasText: /default view/i }).click();
+        await expect(this.page.locator('.p-overlaypanel-content')).toBeVisible({ timeout: 10_000 });
+        const searchTerm = 'Project Name';
+        const searchInput = this.page.locator('.p-overlaypanel-content input[placeholder="Search"]').first();
+        await expect(searchInput).toBeVisible({ timeout: 10_000 });
+        await searchInput.fill(searchTerm);
+        await this.page.waitForTimeout(500);
+        const matchedRow = this.page.locator('.p-overlaypanel-content #visibleColumnList .cdk-drag')
+            .filter({ hasText: new RegExp(searchTerm, 'i') });
+        await expect(matchedRow.first()).toBeVisible({ timeout: 10_000 });
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(300);
+    }
 }
