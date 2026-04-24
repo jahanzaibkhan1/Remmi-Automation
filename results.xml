@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.591653000000864">
-<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T09:05:18.422Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.355" errors="0">
-<testcase name="Precinct Setup Tab › Validate deleted precinct does not show in allocation dropdown" classname="Pages\Projects\precinctSetup.spec.ts" time="28.355">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.11291800000146">
+<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T09:23:58.015Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.158" errors="0">
+<testcase name="Precinct Setup Tab › Ensure only precinct-allocated projects show when filtering by project" classname="Pages\Projects\precinctSetup.spec.ts" time="39.158">
 </testcase>
 </testsuite>
 </testsuites>
