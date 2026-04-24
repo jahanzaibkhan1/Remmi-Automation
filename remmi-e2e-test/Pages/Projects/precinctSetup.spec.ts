@@ -94,4 +94,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.validatePrecinctDropdownShowsCreatedPrecincts();
     });
 
+    test('Verify search field filters project list', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifySearchFieldFiltersProjectList();
+    });
+
 });
