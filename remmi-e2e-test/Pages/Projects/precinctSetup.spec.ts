@@ -49,4 +49,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.cancelAddPrecinctPopupUsingCrossIcon();
     });
 
+    test('Cancel Add Precinct popup using Cancel button', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.cancelAddPrecinctPopupUsingCancelButton();
+    });
+
 });

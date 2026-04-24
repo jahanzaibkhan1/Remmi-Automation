@@ -1688,4 +1688,13 @@ export class ProjectActions {
         await closeIcon.click();
         await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
     }
+
+    async cancelAddPrecinctPopupUsingCancelButton(): Promise<void> {
+        await this.openAddPrecinctDialog();
+        await expect(this.precinctDialogTitle).toHaveText(/add precinct/i);
+        await expect(this.precinctCancelButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.precinctCancelButton.click();
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+    }
+    
 }
