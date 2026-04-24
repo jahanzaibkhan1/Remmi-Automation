@@ -69,4 +69,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.validateChangesAreSavedAfterEditingPrecinct();
     });
 
+    test('Validate precinct deletion from card', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.validatePrecinctDeletionFromCard();
+    });
+
 });

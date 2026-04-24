@@ -574,20 +574,6 @@ export class ProjectActions {
     // ==========================================================================
 
     /**
-     * Edit (pencil) icon on a specific precinct card by name.
-     */
-    private editIconForPrecinct(precinctName: string): Locator {
-        return this.precinctCardByName(precinctName).locator('img[alt="edit"]');
-    }
-
-    /**
-     * Delete icon on a specific precinct card by name.
-     */
-    private deleteIconForPrecinct(precinctName: string): Locator {
-        return this.precinctCardByName(precinctName).locator('img[alt="delete"]');
-    }
-
-    /**
      * Edit (pencil) icon on the first precinct card in the grid.
      */
     private get firstPrecinctEditIcon(): Locator {
@@ -606,6 +592,15 @@ export class ProjectActions {
      */
     private get firstPrecinctCardName(): Locator {
         return this.page.locator('#precinct .sgv-product').first().locator('h3');
+    }
+
+    /**
+     * Toast shown after successfully deleting a precinct.
+     */
+    private get precinctDeleteSuccessToast(): Locator {
+        return this.page.locator('.toast-message', {
+            hasText: /delete(d)? successfully|removed successfully/i,
+        });
     }
 
     // ==========================================================================
@@ -1813,5 +1808,25 @@ export class ProjectActions {
         await editedCard.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
         await expect(editedCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
 
+    }
+
+    async validatePrecinctDeletionFromCard(): Promise<void> {
+        await this.openPrecinctSetup();
+        const firstCard = this.page.locator('#precinct .sgv-product').first();
+        await expect(firstCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const cardsBefore = await this.page.locator('#precinct .sgv-product').count();
+        expect(cardsBefore).toBeGreaterThan(0);
+        const precinctNameToDelete = (await this.firstPrecinctCardName.innerText()).trim();
+        await expect(this.firstPrecinctDeleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.firstPrecinctDeleteIcon.click();
+        await expect(this.precinctDeleteSuccessToast).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+        await expect(this.precinctCardByName(precinctNameToDelete)).toHaveCount(0, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        const cardsAfter = await this.page.locator('#precinct .sgv-product').count();
+        expect(cardsAfter).toBe(cardsBefore - 1);
     }
 }
