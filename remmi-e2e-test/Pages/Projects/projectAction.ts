@@ -1929,4 +1929,20 @@ export class ProjectActions {
         });
         await expect(this.allocationSelectedListPanel).toBeVisible();
     }
+
+    async validatePrecinctDropdownShowsCreatedPrecincts(): Promise<void> {
+        await this.openPrecinctSetup();
+
+        // Go to Precinct Allocation tab
+        await this.precinctAllocationSubTab.click();
+        await expect(this.precinctAllocationTabQuick).toHaveClass(/active/);
+
+        await this.selectPrecinctDropdown.locator('.ng-select-container').click();
+        await expect(this.selectProjectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.page.locator('.ng-dropdown-panel .ng-option-label').first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        const optionCount = await this.page.locator('.ng-dropdown-panel .ng-option-label').count();
+        expect(optionCount).toBeGreaterThan(0);
+        await this.page.mouse.click(0, 0);
+    }
 }

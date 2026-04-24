@@ -89,4 +89,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.verifyPrecinctAllocationTabLayout();
     });
 
+    test('Validate precinct dropdown shows created precincts', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.validatePrecinctDropdownShowsCreatedPrecincts();
+    });
+
 });
