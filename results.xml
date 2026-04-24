@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.17195400000364">
-<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T08:44:40.356Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.798" errors="0">
-<testcase name="Precinct Setup Tab › Allocate project to precinct and save" classname="Pages\Projects\precinctSetup.spec.ts" time="39.798">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="74.3605700000003">
+<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T08:51:18.984Z" hostname="chromium" tests="1" failures="0" skipped="0" time="71.765" errors="0">
+<testcase name="Precinct Setup Tab › Attempt allocation without selecting a precinct" classname="Pages\Projects\precinctSetup.spec.ts" time="71.765">
+<system-out>
+<![CDATA[[BUG] No validation error shown when saving allocation without selecting a precinct
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
