@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.15387099999934">
-<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T06:02:55.567Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.211" errors="0">
-<testcase name="Precinct Setup Tab › Validate precinct card display after creation" classname="Pages\Projects\precinctSetup.spec.ts" time="51.211">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.31997399999946">
+<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T06:09:18.034Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.372" errors="0">
+<testcase name="Precinct Setup Tab › Verify Edit Precinct popup opens correctly" classname="Pages\Projects\precinctSetup.spec.ts" time="31.372">
 </testcase>
 </testsuite>
 </testsuites>

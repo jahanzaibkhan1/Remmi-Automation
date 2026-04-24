@@ -285,7 +285,7 @@ export class ProjectActions {
         return this.page
             .locator(
                 're-multiselect[placeholder="Project Manager"] input[type="text"], ' +
-                    're-multiselect[placeholder="Project Manager"] input[type="search"]'
+                're-multiselect[placeholder="Project Manager"] input[type="search"]'
             )
             .last();
     }
@@ -345,8 +345,8 @@ export class ProjectActions {
     private get projectNameValidationError(): Locator {
         return this.projectDialog.locator(
             'input[formcontrolname="Project_Name"] ~ .invalid-feedback, ' +
-                'input[formcontrolname="Project_Name"] ~ .text-danger, ' +
-                'input[formcontrolname="Project_Name"].ng-invalid'
+            'input[formcontrolname="Project_Name"] ~ .text-danger, ' +
+            'input[formcontrolname="Project_Name"].ng-invalid'
         );
     }
 
@@ -568,6 +568,44 @@ export class ProjectActions {
 
     private get saveButtonByText(): Locator {
         return this.page.locator('button:has-text("Save")');
+    }
+    // ==========================================================================
+    // LOCATORS — PRECINCT CARD ICONS (EDIT / DELETE)
+    // ==========================================================================
+
+    /**
+     * Edit (pencil) icon on a specific precinct card by name.
+     */
+    private editIconForPrecinct(precinctName: string): Locator {
+        return this.precinctCardByName(precinctName).locator('img[alt="edit"]');
+    }
+
+    /**
+     * Delete icon on a specific precinct card by name.
+     */
+    private deleteIconForPrecinct(precinctName: string): Locator {
+        return this.precinctCardByName(precinctName).locator('img[alt="delete"]');
+    }
+
+    /**
+     * Edit (pencil) icon on the first precinct card in the grid.
+     */
+    private get firstPrecinctEditIcon(): Locator {
+        return this.page.locator('#precinct .sgv-product').first().locator('img[alt="edit"]');
+    }
+
+    /**
+     * Delete icon on the first precinct card in the grid.
+     */
+    private get firstPrecinctDeleteIcon(): Locator {
+        return this.page.locator('#precinct .sgv-product').first().locator('img[alt="delete"]');
+    }
+
+    /**
+     * Name of the first precinct card (reads the <h3>).
+     */
+    private get firstPrecinctCardName(): Locator {
+        return this.page.locator('#precinct .sgv-product').first().locator('h3');
     }
 
     // ==========================================================================
@@ -1510,8 +1548,8 @@ export class ProjectActions {
             const dirLabel = direction === 'asc' ? 'Ascending' : 'Descending';
             throw new Error(
                 `${dirLabel} sort failed for "${columnName}".\n` +
-                    `Actual:   ${trimmed.slice(0, 5).join(' | ')}\n` +
-                    `Expected: ${sorted.slice(0, 5).join(' | ')}`
+                `Actual:   ${trimmed.slice(0, 5).join(' | ')}\n` +
+                `Expected: ${sorted.slice(0, 5).join(' | ')}`
             );
         }
     }
@@ -1696,5 +1734,50 @@ export class ProjectActions {
         await this.precinctCancelButton.click();
         await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
     }
+
+    // ==========================================================================
+    // EDIT PRECINCT HELPERS
+    // ==========================================================================
+
+    /**
+     * Opens the Edit Precinct dialog for the first available precinct card.
+     * Returns the original precinct name (useful for chained verification).
+     */
+    private async openEditPrecinctDialog(): Promise<string> {
+        await this.openPrecinctSetup();
+
+        const firstCard = this.page.locator('#precinct .sgv-product').first();
+        await expect(firstCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+
+        // Capture original name before opening dialog
+        const originalName = (await this.firstPrecinctCardName.innerText()).trim();
+
+        await expect(this.firstPrecinctEditIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.firstPrecinctEditIcon.click();
+
+        await expect(this.addPrecinctDialog).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        return originalName;
+    }
+
+    async verifyEditPrecinctPopupOpensCorrectly(): Promise<void> {
+        const originalName = await this.openEditPrecinctDialog();
     
+        // Title should say "Edit Precinct" (key difference from Add mode)
+        await expect(this.precinctDialogTitle).toHaveText(/edit precinct/i);
+    
+        // All fields must be visible
+        await expect(this.precinctNameInput).toBeVisible();
+        await expect(this.precinctUploadButton).toBeVisible();
+        await expect(this.precinctSaveButton).toBeVisible();
+        await expect(this.precinctCancelButton).toBeVisible();
+    
+        // Name field must be pre-populated with the existing precinct name
+        const currentValue = await this.precinctNameInput.inputValue();
+        expect(currentValue.trim()).toBe(originalName);
+        expect(currentValue.trim().length).toBeGreaterThan(0);
+    
+        // Close dialog cleanly
+        await this.precinctCancelButton.click();
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+    }
 }
