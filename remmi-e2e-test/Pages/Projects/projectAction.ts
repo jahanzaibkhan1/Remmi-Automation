@@ -1955,7 +1955,7 @@ export class ProjectActions {
         await this.precinctAllocationSubTab.click();
         await expect(this.allocationProjectRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         const searchTerm = 'Automation Testing';
-        await this.allocationSearchField.type(searchTerm,{ delay: 120});
+        await this.allocationSearchField.type(searchTerm, { delay: 120 });
         await expect(this.allocationProjectRows.first()).toContainText(new RegExp(searchTerm, 'i'));
         await this.allocationSearchClearIcon.click();
         await expect(this.allocationSearchField).toHaveValue('');
@@ -1976,7 +1976,7 @@ export class ProjectActions {
         await this.allocationProjectCheckboxes.nth(1).click();
         await this.allocationSaveButton.click();
         await expect(this.genericToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-            await this.projectsMenuLink.click();
+        await this.projectsMenuLink.click();
         await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.searchInput.fill(precinctName);
         const precinctCard = this.precinctContainerByName(precinctName);
@@ -2016,7 +2016,7 @@ export class ProjectActions {
         await this.openPrecinctSetup();
         await this.precinctAllocationSubTab.click();
         await expect(this.precinctAllocationTabQuick).toHaveClass(/active/);
-    
+
         // Select first precinct and capture its name
         await this.selectPrecinctDropdown.locator('.ng-select-container').click();
         await expect(this.selectProjectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
@@ -2024,7 +2024,7 @@ export class ProjectActions {
         const precinctName = (await precinctOption.innerText()).trim();
         await precinctOption.click();
         await this.page.waitForTimeout(1000);
-    
+
         // Wait for project list and verify at least one checkbox is already highlighted (pre-allocated)
         await expect(this.allocationProjectCheckboxes.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         const highlightedCheckboxes = this.precinctAllocationPanel.locator(
@@ -2032,50 +2032,50 @@ export class ProjectActions {
         );
         const allocatedCount = await highlightedCheckboxes.count();
         expect(allocatedCount).toBeGreaterThan(0);
-    
+
         // Navigate to Projects and verify the precinct shows the allocated projects
         await this.projectsMenuLink.click();
         await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.searchInput.fill(precinctName);
-    
+
         const precinctCard = this.precinctContainerByName(precinctName);
         await expect(precinctCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await precinctCard.click();
-    
+
         // Verify at least one project card exists inside the precinct view
         await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
     }
 
     async validateDeletedPrecinctNotInAllocationDropdown(): Promise<void> {
         await this.openPrecinctSetup();
-    
+
         // Capture first precinct name and delete it
         await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         const deletedPrecinctName = (await this.firstPrecinctCardName.innerText()).trim();
-    
+
         await this.firstPrecinctDeleteIcon.click();
         await expect(this.precinctDeleteSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-    
+
         // Go to Precinct Allocation tab and open the dropdown
         await this.precinctAllocationSubTab.click();
         await this.selectPrecinctDropdown.locator('.ng-select-container').click();
         await expect(this.page.locator('.ng-dropdown-panel .ng-option-label').first())
             .toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-    
+
         // Verify deleted precinct is NOT in the dropdown
         await expect(
             this.page.locator('.ng-dropdown-panel .ng-option-label', { hasText: deletedPrecinctName })
         ).toHaveCount(0);
     }
-    
+
 
     async verifyOnlyAllocatedPrecinctsShowForProject(): Promise<void> {
         await this.openPrecinctSetup();
-    
+
         // Go to Precinct Allocation tab
         await this.precinctAllocationSubTab.click();
         await expect(this.precinctAllocationTabQuick).toHaveClass(/active/);
-    
+
         // Select first precinct and capture its name
         await this.selectPrecinctDropdown.locator('.ng-select-container').click();
         await expect(this.selectProjectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
@@ -2088,11 +2088,11 @@ export class ProjectActions {
         await expect(this.allocationProjectRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         const allocatedProjectName = (await this.allocationProjectRows.first().innerText()).trim();
         await this.allocationProjectCheckboxes.first().click();
-    
+
         // Save allocation
         await this.allocationSaveButton.click();
         await expect(this.genericToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-    
+
         // Switch to Precinct tab and filter by the allocated project
         await this.precinctSubTab.click();
         await this.selectProjectDropdownContainer.click();
@@ -2104,5 +2104,16 @@ export class ProjectActions {
         // Verify only the allocated precinct appears
         await expect(this.precinctCardByName(allocatedPrecinctName))
             .toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    async verifyImageFileTypeValidation(): Promise<void> {
+        await this.openAddPrecinctDialog();
+        const invalidFile = path.resolve(ProjectActions.IMAGES_DIR, 'invalid.txt');
+        await this.precinctFileInput.setInputFiles(invalidFile);
+        await expect(this.page.getByText(/"invalid.txt" is not a valid image/i))
+            .toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.precinctUploadedImage).toHaveCount(0);
+        await this.precinctCancelButton.click();
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
     }
 }

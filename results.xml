@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.11291800000146">
-<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T09:23:58.015Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.158" errors="0">
-<testcase name="Precinct Setup Tab › Ensure only precinct-allocated projects show when filtering by project" classname="Pages\Projects\precinctSetup.spec.ts" time="39.158">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.52112399999797">
+<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T09:49:11.619Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.105" errors="0">
+<testcase name="Precinct Setup Tab › Verify image file type validation" classname="Pages\Projects\precinctSetup.spec.ts" time="28.105">
 </testcase>
 </testsuite>
 </testsuites>

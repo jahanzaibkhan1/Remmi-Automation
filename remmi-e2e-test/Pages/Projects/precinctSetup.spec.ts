@@ -129,4 +129,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.verifyOnlyAllocatedPrecinctsShowForProject();
     });
 
+    test('Verify image file type validation', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyImageFileTypeValidation();
+    });
+
 });
