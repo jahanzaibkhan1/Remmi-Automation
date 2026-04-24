@@ -2177,4 +2177,15 @@ export class ProjectActions {
         await expect(this.allPrecinctCards.first()).toBeVisible();
         await expect(this.allPrecinctCards.last()).toBeVisible();
     }
+
+    async verifyUploadImagePreviewIsShown(): Promise<void> {
+        await this.openAddPrecinctDialog();
+        await expect(this.precinctNoImagePlaceholder).toBeVisible();
+        await expect(this.precinctUploadedImage).toHaveCount(0);
+        const imagePath = path.resolve(ProjectActions.IMAGES_DIR, ProjectActions.DEFAULT_TEST_IMAGE);
+        await this.precinctFileInput.setInputFiles(imagePath);
+        await expect(this.precinctUploadedImage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.precinctNoImagePlaceholder).toHaveCount(0);
+        await this.precinctCancelButton.click();
+    }
 }

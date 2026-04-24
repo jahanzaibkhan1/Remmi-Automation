@@ -149,4 +149,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.verifyMultiplePrecinctCardsInGridView();
     });
 
+    test('Verify upload image preview is shown', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyUploadImagePreviewIsShown();
+    });
+
 });
