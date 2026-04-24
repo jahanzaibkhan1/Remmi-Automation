@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="29.285591000000014">
-<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T07:09:03.479Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.378" errors="0">
-<testcase name="Precinct Setup Tab › Verify Precinct Allocation tab shows correct layout" classname="Pages\Projects\precinctSetup.spec.ts" time="27.378">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="59.85133999999985">
+<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T07:23:07.835Z" hostname="chromium" tests="1" failures="0" skipped="0" time="57.926" errors="0">
+<testcase name="Precinct Setup Tab › Validate precinct dropdown shows created precincts" classname="Pages\Projects\precinctSetup.spec.ts" time="57.926">
 </testcase>
 </testsuite>
 </testsuites>
