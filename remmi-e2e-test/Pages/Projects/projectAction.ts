@@ -1988,4 +1988,17 @@ export class ProjectActions {
             }).first()
         ).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
     }
+
+    async attemptAllocationWithoutPrecinct(): Promise<void> {
+        await this.openPrecinctSetup();
+        await this.precinctAllocationSubTab.click();
+        await expect(this.precinctAllocationTabQuick).toHaveClass(/active/);
+        await expect(this.allocationProjectCheckboxes.nth(1)).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.allocationProjectCheckboxes.nth(1).click();
+        await this.allocationSaveButton.click();
+        const errorMessage = this.page.getByText(/please select a precinct/i);
+        await expect(errorMessage).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_SHORT });
+        console.log('[BUG] No validation error shown when saving allocation without selecting a precinct');
+        await this.allocationProjectCheckboxes.nth(1).click();
+    }
 }

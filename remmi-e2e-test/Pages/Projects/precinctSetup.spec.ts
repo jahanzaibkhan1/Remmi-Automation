@@ -103,4 +103,9 @@ test.describe('Precinct Setup Tab', () => {
         const project = new ProjectActions(sessionPage);
         await project.allocateProjectToPrecinctAndSave();
     });
+
+    test('Attempt allocation without selecting a precinct', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.attemptAllocationWithoutPrecinct();
+    });
 });
