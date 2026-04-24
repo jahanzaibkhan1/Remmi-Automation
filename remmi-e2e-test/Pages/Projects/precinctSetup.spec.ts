@@ -64,4 +64,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.verifyEditPrecinctPopupOpensCorrectly();
     });
 
+    test('Validate changes are saved after editing precinct', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.validateChangesAreSavedAfterEditingPrecinct();
+    });
+
 });
