@@ -2116,4 +2116,22 @@ export class ProjectActions {
         await this.precinctCancelButton.click();
         await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
     }
+
+    async verifyLongPrecinctNameTruncatedInCard(): Promise<void> {
+        await this.openAddPrecinctDialog();
+        const longName = `A${faker.word.words(10)}`.replace(/[^a-zA-Z0-9]/g, '');
+        await this.precinctNameInput.fill(longName);
+        const imagePath = path.resolve(ProjectActions.IMAGES_DIR, ProjectActions.DEFAULT_TEST_IMAGE);
+        await this.precinctFileInput.setInputFiles(imagePath);
+        await this.page.waitForTimeout(1000);
+        await this.precinctSaveButton.click();
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(this.precinctAddSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const card = this.precinctCardByName(longName);
+        await card.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
+        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const heading = card.locator('h3').first();
+        const isTruncated = await heading.evaluate((el) => el.scrollWidth > el.clientWidth);
+        expect(isTruncated).toBe(true);
+    }
 }

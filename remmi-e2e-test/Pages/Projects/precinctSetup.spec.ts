@@ -134,4 +134,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.verifyImageFileTypeValidation();
     });
 
+    test('Verify long precinct name is truncated in card', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyLongPrecinctNameTruncatedInCard();
+    });
+
 });

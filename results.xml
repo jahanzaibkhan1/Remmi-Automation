@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="30.52112399999797">
-<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T09:49:11.619Z" hostname="chromium" tests="1" failures="0" skipped="0" time="28.105" errors="0">
-<testcase name="Precinct Setup Tab › Verify image file type validation" classname="Pages\Projects\precinctSetup.spec.ts" time="28.105">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.154583000000564">
+<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T10:02:18.964Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.761" errors="0">
+<testcase name="Precinct Setup Tab › Verify long precinct name is truncated in card" classname="Pages\Projects\precinctSetup.spec.ts" time="45.761">
 </testcase>
 </testsuite>
 </testsuites>
