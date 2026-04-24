@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.66905700000003">
-<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T06:55:59.487Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.563" errors="0">
-<testcase name="Precinct Setup Tab › Verify dropdown-based project filtering in Precinct tab" classname="Pages\Projects\precinctSetup.spec.ts" time="36.563">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.92956300000101">
+<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T07:03:09.418Z" hostname="chromium" tests="1" failures="0" skipped="0" time="62.593" errors="0">
+<testcase name="Precinct Setup Tab › Verify “cross icon” on project dropdown clears filter" classname="Pages\Projects\precinctSetup.spec.ts" time="62.593">
 </testcase>
 </testsuite>
 </testsuites>
