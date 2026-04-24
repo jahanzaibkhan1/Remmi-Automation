@@ -139,4 +139,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.verifyLongPrecinctNameTruncatedInCard();
     });
 
+    test('Validate no duplicate precinct name allowed', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.validateNoDuplicatePrecinctNameAllowed();
+    });
+
 });
