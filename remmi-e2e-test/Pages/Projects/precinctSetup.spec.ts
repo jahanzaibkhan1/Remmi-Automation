@@ -154,4 +154,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.verifyUploadImagePreviewIsShown();
     });
 
+    test('Confirm canceling edit popup does not update precinct', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyCancelEditDoesNotUpdatePrecinct();
+    });
+
 });
