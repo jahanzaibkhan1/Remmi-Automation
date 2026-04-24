@@ -54,4 +54,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.cancelAddPrecinctPopupUsingCancelButton();
     });
 
+    test('Validate precinct card display after creation', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyPrecinctCreationWithImage();
+    });
+
 });
