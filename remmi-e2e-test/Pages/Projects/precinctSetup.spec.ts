@@ -144,4 +144,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.validateNoDuplicatePrecinctNameAllowed();
     });
 
+    test('Check card layout when multiple precincts exist', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyMultiplePrecinctCardsInGridView();
+    });
+
 });
