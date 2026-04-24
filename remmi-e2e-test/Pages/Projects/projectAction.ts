@@ -623,6 +623,10 @@ export class ProjectActions {
         return this.selectProjectDropdown.locator('.ng-clear-wrapper');
     }
 
+    private get selectProjectDropdownPanel(): Locator {
+        return this.page.locator('.ng-dropdown-panel');
+    }
+
     private get firstSelectProjectOption(): Locator {
         return this.page.locator('.ng-dropdown-panel .ng-option').first();
     }
@@ -1855,10 +1859,12 @@ export class ProjectActions {
 
     async verifyDropdownSelectAndClearInPrecinctTab(): Promise<void> {
         await this.openPrecinctSetup();
+        await expect(this.selectProjectDropdownContainer).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.selectProjectDropdownContainer.click();
+        await this.selectProjectDropdownPanel.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_DEFAULT });
         await expect(this.firstSelectProjectOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         const selectedName = (await this.firstSelectProjectOption.innerText()).trim();
-        await this.firstSelectProjectOption.click();
+        await this.firstSelectProjectOption.click({force: true});
 
         await expect(this.selectedProjectValueLabel).toHaveText(
             new RegExp(`^\\s*${selectedName}\\s*$`, 'i'),

@@ -79,4 +79,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.verifyDropdownSelectAndClearInPrecinctTab();
     });
 
+    test('Verify “cross icon” on project dropdown clears filter', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyDropdownSelectAndClearInPrecinctTab();
+    });
+
 });
