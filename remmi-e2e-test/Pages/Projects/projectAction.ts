@@ -604,6 +604,29 @@ export class ProjectActions {
     }
 
     // ==========================================================================
+    // LOCATORS — PRECINCT TAB PROJECT FILTER DROPDOWN
+    // ==========================================================================
+
+    private get selectProjectDropdownContainer(): Locator {
+        return this.selectProjectDropdown.locator('.ng-select-container');
+    }
+
+    private get selectProjectPlaceholder(): Locator {
+        return this.selectProjectDropdown.locator('.ng-placeholder');
+    }
+
+    private get selectedProjectValueLabel(): Locator {
+        return this.selectProjectDropdown.locator('.ng-value-label');
+    }
+
+    private get selectProjectClearIcon(): Locator {
+        return this.selectProjectDropdown.locator('.ng-clear-wrapper');
+    }
+
+    private get firstSelectProjectOption(): Locator {
+        return this.page.locator('.ng-dropdown-panel .ng-option').first();
+    }
+    // ==========================================================================
     // LOCATORS — MISC
     // ==========================================================================
 
@@ -1828,5 +1851,21 @@ export class ProjectActions {
         await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
         const cardsAfter = await this.page.locator('#precinct .sgv-product').count();
         expect(cardsAfter).toBe(cardsBefore - 1);
+    }
+
+    async verifyDropdownSelectAndClearInPrecinctTab(): Promise<void> {
+        await this.openPrecinctSetup();
+        await this.selectProjectDropdownContainer.click();
+        await expect(this.firstSelectProjectOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const selectedName = (await this.firstSelectProjectOption.innerText()).trim();
+        await this.firstSelectProjectOption.click();
+
+        await expect(this.selectedProjectValueLabel).toHaveText(
+            new RegExp(`^\\s*${selectedName}\\s*$`, 'i'),
+            { timeout: ProjectActions.TIMEOUT_DEFAULT }
+        );
+        await this.selectProjectClearIcon.click();
+        await expect(this.selectProjectPlaceholder).toHaveText(/select project/i);
+        await expect(this.selectedProjectValueLabel).toHaveCount(0);
     }
 }

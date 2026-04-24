@@ -74,4 +74,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.validatePrecinctDeletionFromCard();
     });
 
+    test('Verify dropdown-based project filtering in Precinct tab', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyDropdownSelectAndClearInPrecinctTab();
+    });
+
 });

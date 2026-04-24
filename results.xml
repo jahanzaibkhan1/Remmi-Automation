@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="31.57701900000125">
-<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T06:25:20.183Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.262" errors="0">
-<testcase name="Precinct Setup Tab › Validate precinct deletion from card" classname="Pages\Projects\precinctSetup.spec.ts" time="29.262">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.66905700000003">
+<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T06:55:59.487Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.563" errors="0">
+<testcase name="Precinct Setup Tab › Verify dropdown-based project filtering in Precinct tab" classname="Pages\Projects\precinctSetup.spec.ts" time="36.563">
 </testcase>
 </testsuite>
 </testsuites>
