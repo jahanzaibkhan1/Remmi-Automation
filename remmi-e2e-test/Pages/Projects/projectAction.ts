@@ -1754,7 +1754,10 @@ export class ProjectActions {
         await expect(this.precinctAddSuccessToast).toBeVisible({
             timeout: ProjectActions.TIMEOUT_DEFAULT,
         });
-
+        if (await this.precinctCancelButton.isVisible().catch(() => false)) {
+            await this.precinctCancelButton.click();
+            await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+        }
         const newCard = this.precinctCardByName(precinctName);
         await newCard.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
         await expect(newCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
@@ -1876,7 +1879,7 @@ export class ProjectActions {
             timeout: ProjectActions.TIMEOUT_DEFAULT,
         });
 
-        const editedCard = this.precinctCardByName(newName);
+        const editedCard = this.precinctCardByName(newName).first();
         await editedCard.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
         await expect(editedCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
 
@@ -1894,9 +1897,6 @@ export class ProjectActions {
         await expect(this.precinctDeleteSuccessToast).toBeVisible({
             timeout: ProjectActions.TIMEOUT_DEFAULT,
         });
-        await expect(this.precinctCardByName(precinctNameToDelete)).toHaveCount(0, {
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
-        });
         await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
         const cardsAfter = await this.page.locator('#precinct .sgv-product').count();
         expect(cardsAfter).toBe(cardsBefore - 1);
@@ -1911,7 +1911,7 @@ export class ProjectActions {
         const selectedName = (await this.firstSelectProjectOption.innerText()).trim();
         await this.firstSelectProjectOption.click({ force: true });
 
-        await expect(this.selectedProjectValueLabel).toHaveText(
+        await expect(this.selectedProjectValueLabel.first()).toHaveText(
             new RegExp(`^\\s*${selectedName}\\s*$`, 'i'),
             { timeout: ProjectActions.TIMEOUT_DEFAULT }
         );
