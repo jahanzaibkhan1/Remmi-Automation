@@ -2011,4 +2011,38 @@ export class ProjectActions {
             .toHaveCount(0, { timeout: ProjectActions.TIMEOUT_SHORT });
         console.log('[BUG] No validation error shown when saving allocation without selecting any project');
     }
+
+    async verifyAllocatedProjectsMarkedOnReopen(): Promise<void> {
+        await this.openPrecinctSetup();
+        await this.precinctAllocationSubTab.click();
+        await expect(this.precinctAllocationTabQuick).toHaveClass(/active/);
+    
+        // Select first precinct and capture its name
+        await this.selectPrecinctDropdown.locator('.ng-select-container').click();
+        await expect(this.selectProjectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const precinctOption = this.page.locator('.ng-dropdown-panel .ng-option-label').first();
+        const precinctName = (await precinctOption.innerText()).trim();
+        await precinctOption.click();
+        await this.page.waitForTimeout(1000);
+    
+        // Wait for project list and verify at least one checkbox is already highlighted (pre-allocated)
+        await expect(this.allocationProjectCheckboxes.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const highlightedCheckboxes = this.precinctAllocationPanel.locator(
+            'tbody p-checkbox .p-checkbox-box.p-highlight'
+        );
+        const allocatedCount = await highlightedCheckboxes.count();
+        expect(allocatedCount).toBeGreaterThan(0);
+    
+        // Navigate to Projects and verify the precinct shows the allocated projects
+        await this.projectsMenuLink.click();
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.searchInput.fill(precinctName);
+    
+        const precinctCard = this.precinctContainerByName(precinctName);
+        await expect(precinctCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await precinctCard.click();
+    
+        // Verify at least one project card exists inside the precinct view
+        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
 }

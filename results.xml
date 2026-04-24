@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="84.11410900000111">
-<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T08:54:43.450Z" hostname="chromium" tests="1" failures="0" skipped="0" time="81.948" errors="0">
-<testcase name="Precinct Setup Tab › Attempt allocation without selecting projects" classname="Pages\Projects\precinctSetup.spec.ts" time="81.948">
-<system-out>
-<![CDATA[[BUG] No validation error shown when saving allocation without selecting any project
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.05061100000143">
+<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T09:03:01.405Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.332" errors="0">
+<testcase name="Precinct Setup Tab › Verify already allocated projects are marked when allocation re-opened" classname="Pages\Projects\precinctSetup.spec.ts" time="40.332">
 </testcase>
 </testsuite>
 </testsuites>

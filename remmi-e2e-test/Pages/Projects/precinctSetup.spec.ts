@@ -113,5 +113,10 @@ test.describe('Precinct Setup Tab', () => {
         const project = new ProjectActions(sessionPage);
         await project.attemptAllocationWithoutProjects();
     });
-    
+
+    test('Verify already allocated projects are marked when allocation re-opened', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyAllocatedProjectsMarkedOnReopen();
+    });
+
 });
