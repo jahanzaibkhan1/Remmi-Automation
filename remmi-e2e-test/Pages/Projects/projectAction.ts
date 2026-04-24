@@ -1,317 +1,657 @@
 import { expect, Page, Locator } from '@playwright/test';
-import { faker, th } from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
+import * as path from 'path';
+
 export class ProjectActions {
+    // ========== CONSTANTS ==========
+    private static readonly TIMEOUT_SHORT = 5_000;
+    private static readonly TIMEOUT_DEFAULT = 10_000;
+    private static readonly TIMEOUT_MEDIUM = 15_000;
+    private static readonly TIMEOUT_LONG = 30_000;
+    private static readonly TIMEOUT_EXTRA_LONG = 40_000;
+    private static readonly UI_SETTLE_DELAY = 500;
+    private static readonly IMAGES_DIR = path.resolve(__dirname, 'Images');
+    private static readonly DEFAULT_TEST_IMAGE = 'propertyImage.jpg';
+    private static readonly PROJECTS_URL = '/project/projects';
+    private static readonly PRECINCT_LISTINGS_URL = '/listings/project-precinct';
+
     private readonly page: Page;
 
     constructor(page: Page) {
         this.page = page;
     }
 
-    /**
-     * Returns the search input for projects
-     */
-    private get projectsSearchInput(): Locator {
+    // ==========================================================================
+    // LOCATORS — SEARCH & TOP BAR
+    // ==========================================================================
+
+    private get searchInput(): Locator {
         return this.page.getByPlaceholder('Search').last();
     }
 
-    /**
-     * Returns the locator for a specific project by its name.
-     */
-    private projectNameResult(projectName: string): Locator {
-        return this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${projectName}$`, 'i') });
+    private get searchInputByPlaceholder(): Locator {
+        return this.page.locator('input[placeholder="Search"]').last();
     }
 
-    /**
-     * Navigation to the project list page.
-     */
-    private async navigateToProjects(): Promise<void> {
-        const currentUrl = this.page.url().split(/[?#]/)[0];
-        if (!currentUrl.endsWith('/project/projects')) {
-            await this.page.goto('/project/projects');
-        }
+    private get resetIcon(): Locator {
+        return this.page.locator('i').nth(3);
     }
 
-    /**
-     * Navigates directly to the Precinct Listings page.
-     */
-    async gotoPrecinctListings(): Promise<void> {
-        const currentUrl = this.page.url().split(/[?#]/)[0];
-        if (!currentUrl.endsWith('/listings/project-precinct')) {
-            await this.page.goto('/listings/project-precinct');
-        }
+    private get resetButton(): Locator {
+        return this.page.locator('button', { hasText: /reset/i }).last();
     }
 
-    /**
-     * verify project search by name.
-     */
-    async verifyProjectCanBeSearchedByName(projectName: string): Promise<void> {
-        await this.navigateToProjects();
-        const input = this.projectsSearchInput;
-        await expect(input).toBeVisible({ timeout: 30000 });
-        await input.fill(projectName);
-        await expect(this.projectNameResult(projectName).first()).toBeVisible({ timeout: 30000 });
+    private tabByLabel(label: string): Locator {
+        return this.page.getByText(label, { exact: true });
     }
 
-    /**
-     * Search with partial project name
-     */
-    async verifyProjectCanBeSearchedByPartialName(partialName: string): Promise<void> {
-        await this.navigateToProjects();
-        const input = this.projectsSearchInput;
-        await expect(input).toBeVisible({ timeout: 30000 });
-        await input.fill(partialName);
-        const firstResult = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(partialName, 'i') }).first();
-        await expect(firstResult).toBeVisible({ timeout: 30000 });
-        const resultText = await firstResult.textContent();
-        expect(resultText?.toLowerCase()).toContain(partialName.toLowerCase());
+    // ==========================================================================
+    // LOCATORS — GRID VIEW (PROJECT CARDS)
+    // ==========================================================================
+
+    private get firstGridProduct(): Locator {
+        return this.page.locator('.sgv-product').first();
     }
 
-    /**
-     * Search with invalid project name
-     */
-    async verifyProjectSearchWithInvalidName(invalidName: string): Promise<void> {
-        await this.navigateToProjects();
-        const input = this.projectsSearchInput;
-        await expect(input).toBeVisible({ timeout: 30000 });
-        await input.fill(invalidName);
-        const matchingProjects = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(invalidName, 'i') });
-        await expect(matchingProjects).toHaveCount(0);
-        await this.clickResetButton();
-
-    }
-
-    /**
-     * Verify that the project image is displayed correctly in Grid View
-     */
-    async verifyProjectImageDisplayedInGridView(projectName: string): Promise<void> {
-        await this.navigateToProjects();
-        // perform with search
-        const searchInput = this.projectsSearchInput;
-        await expect(searchInput).toBeVisible({ timeout: 30000 });
-        await searchInput.fill(projectName);
-        const projectCard = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${projectName}$`, 'i') }).first();
-        await expect(projectCard).toBeVisible({ timeout: 15000 });
-        const sgvProduct = projectCard.locator('..').locator('..').first();
-        const productThumbnail = sgvProduct.locator('.product-thumbnail').first();
-        await expect(productThumbnail).toBeVisible({ timeout: 10000 });
-        const styleAttr = await productThumbnail.getAttribute('style');
-        expect(styleAttr).toBeTruthy();
-        const bgUrlMatch = styleAttr?.match(/background-image:\s*url\((['"]?)(.*?)\1\)/i);
-        expect(bgUrlMatch && bgUrlMatch[2]).toBeTruthy();
-        expect(bgUrlMatch![2].trim()).not.toBe('');
-    }
-
-    /**
-     * Verify that a placeholder image appears for projects with no uploaded image
-     */
-    async verifyPlaceholderImageForProjectWithNoImage(): Promise<void> {
-        await this.navigateToProjects();
-        // perform with search search
-        const searchInput = this.projectsSearchInput;
-        await expect(searchInput).toBeVisible({ timeout: 30000 });
-        await searchInput.fill('Al kabir heights');
-        const projectCard = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${'Al kabir heights'}$`, 'i') }).first();
-        await expect(projectCard).toBeVisible({ timeout: 15000 });
-        const sgvProduct = projectCard.locator('..').locator('..').first();
-        const productThumbnail = sgvProduct.locator('.product-thumbnail').first();
-        await expect(productThumbnail).toBeVisible({ timeout: 10000 });
-        await this.clickResetButton();
-    }
-
-    /**
-     * Helper to click on a tab by its label
-     */
-    private async clickTabByLabel(tabLabel: string): Promise<void> {
-        const tab = this.page.getByText(tabLabel, { exact: true });
-        await expect(tab).toBeVisible({ timeout: 10000 });
-        await tab.click();
-    }
-
-    /**
-     * Helper to click the Reset button (assumes icon structure stays same)
-     */
-    private async clickResetButton(): Promise<void> {
-        const resetButton = this.page.locator('i').nth(3);
-        await expect(resetButton).toBeVisible({ timeout: 10000 });
-        await resetButton.click();
-    }
-
-    /**
-     * After search, click on Inactive tab and Active tab, then click on Reset icon
-     */
-    async verifyTabsAndResetAfterSearch(searchText: string): Promise<void> {
-        await this.navigateToProjects();
-        const input = this.projectsSearchInput;
-        await expect(input).toBeVisible({ timeout: 30000 });
-        await input.fill(searchText);
-        await this.clickTabByLabel('Inactive');
-        await this.clickTabByLabel('Active');
-        await this.clickResetButton();
-        await expect(input).toHaveValue('');
-    }
-
-    /**
-     * Verify that the default selected tab is "Active"
-     */
-    async verifyDefaultTabIsActive(): Promise<void> {
-        await this.navigateToProjects();
-        const activeTab = this.page.getByText('Active', { exact: true });
-        await expect(activeTab).toBeVisible({ timeout: 30000 });
-        const ariaSelected = await activeTab.getAttribute('aria-selected');
-        if (ariaSelected !== null) {
-            expect(ariaSelected).toBe('true');
-        } else {
-            const className = await activeTab.getAttribute('class');
-            expect(className).toMatch(/active/i);
-        }
-    }
-
-    /**
-     * Verifies that all projects listed are under the "Active" tab.
-     */
-    async verifyProjectsUnderActiveTab(projectName: string): Promise<void> {
-        await this.navigateToProjects();
-        const activeTab = this.page.getByText('Active', { exact: true });
-        await expect(activeTab).toBeVisible({ timeout: 30000 });
-        const projectCard = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${projectName}$`, 'i') }).first();
-        await projectCard.scrollIntoViewIfNeeded();
-    }
-
-    /**
-     * Verifies that all projects listed are under the "Inactive" tab.
-     */
-    async verifyProjectsUnderInactiveTab(projectName: string): Promise<void> {
-        await this.navigateToProjects();
-        await this.clickTabByLabel('Inactive');
-        const projectCard = this.page.locator('.sgv-product .product-content h3', { hasText: new RegExp(`^${projectName}$`, 'i') }).first();
-        await expect(projectCard).toBeVisible({ timeout: 10000 });
-        await projectCard.scrollIntoViewIfNeeded();
-    }
-
-    /**
-     * Verifies that precincts are grouped correctly under their respective tabs.
-     */
-    async verifyPrecinctIsGroupedUnderTab(precinctName: string): Promise<void> {
-        await this.navigateToProjects();
-        const nameRegex = new RegExp(`^${precinctName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
-        const container = this.page
-            .locator('.sgv-product.ng-star-inserted')
-            .filter({ has: this.page.locator('.precinct-content h3', { hasText: nameRegex }) })
+    private projectCardByName(name: string): Locator {
+        return this.page
+            .locator('.sgv-product .product-content h3', {
+                hasText: new RegExp(`^${name}$`, 'i'),
+            })
             .first();
-        await expect(container).toBeVisible({ timeout: 40000 });
-        await expect(container.locator('.product-thumbnail.cp.ng-star-inserted[style*="projectimages"]')).toBeVisible({ timeout: 10000 });
     }
 
-    private async getFirstVisiblePrecinctCard() {
-        const precinctCard = this.page.locator('.sgv-product').first();
-        await expect(precinctCard).toBeVisible({ timeout: 30000 });
-        await precinctCard.click();
+    private projectCardContainingText(text: string): Locator {
+        return this.page
+            .locator('.sgv-product .product-content h3', { hasText: new RegExp(text, 'i') })
+            .first();
     }
 
-    private async clickVisibleBackButton() {
-        const backButton = this.page.locator('text=/back/i').first();
-        await expect(backButton).toBeEnabled({ timeout: 15000 });
-        await backButton.click({ force: true });
+    private allProjectCardsByName(name: string): Locator {
+        return this.page.locator('.sgv-product .product-content h3', {
+            hasText: new RegExp(name, 'i'),
+        });
     }
 
-    /**
-     * Verifies clicking a precinct card opens the Project, Lot, EOI tabs
-     */
-    async verifyClickingPrecinctOpensTabs(): Promise<void> {
-        await this.navigateToProjects();
-        await this.getFirstVisiblePrecinctCard();
-        const tabs = ['project', 'lot', 'EOI'];
-        for (const tab of tabs) {
-            const el = this.page.locator(`a#pills-${tab}`).first();
-            await expect(el).toBeVisible({ timeout: 20000 });
-            await expect(el).toHaveText(new RegExp(tab, 'i'), { timeout: 20000 });
-        }
-        await this.page.locator('p', { hasText: 'Projects' }).first().click();
-        await expect(this.page.locator('.sgv-product').first()).toBeVisible({ timeout: 20000 });
+    private thumbnailForCard(card: Locator): Locator {
+        return card.locator('..').locator('..').first().locator('.product-thumbnail').first();
     }
 
-    async verifyPrecinctAllocatedProjectNotInActiveTabAfterPrecinctClick(): Promise<void> {
-        await this.navigateToProjects();
-        await this.page.reload();
-        await this.getFirstVisiblePrecinctCard();
-        const insidePrecinctProjectHeading = (
-            await this.page.locator('.sgv-product .product-content h3').first().innerText()
-        ).trim();
-        await this.page.locator('p', { hasText: 'Projects' }).first().click();
-        await this.page.waitForLoadState('networkidle');
-        await this.page.waitForSelector('.sgv-product .product-content h3', { state: 'visible', timeout: 20000 });
-        await expect(this.projectsSearchInput).toBeVisible({ timeout: 30000 });
-        await this.projectsSearchInput.fill(insidePrecinctProjectHeading);
-        const escapedName = insidePrecinctProjectHeading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    private precinctContainerByName(name: string): Locator {
+        const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        return this.page
+            .locator('.sgv-product.ng-star-inserted')
+            .filter({
+                has: this.page.locator('.precinct-content h3', {
+                    hasText: new RegExp(`^${escapedName}$`, 'i'),
+                }),
+            })
+            .first();
+    }
+
+    private get precinctCardThumbnailWithImage(): Locator {
+        return this.page.locator('.product-thumbnail.cp.ng-star-inserted[style*="projectimages"]');
+    }
+
+    // ==========================================================================
+    // LOCATORS — LIST VIEW (TABLE)
+    // ==========================================================================
+
+    private get firstTableRow(): Locator {
+        return this.page.locator('tbody tr').first();
+    }
+
+    private get allTableRows(): Locator {
+        return this.page.locator('tbody tr');
+    }
+
+    private get firstRowCheckbox(): Locator {
+        return this.page.locator('tbody tr p-tablecheckbox .p-checkbox-box').first();
+    }
+
+    private get selectAllCheckbox(): Locator {
+        return this.page.locator('thead div.p-checkbox.p-component .p-checkbox-box');
+    }
+
+    private get firstRowDeleteIcon(): Locator {
+        return this.page.locator('tbody tr img[src*="delete_icon.svg"]').first();
+    }
+
+    private tableRowWithText(text: string): Locator {
+        return this.page.locator('tr').filter({ hasText: new RegExp(text, 'i') }).first();
+    }
+
+    private get projectNameColumnValues(): Locator {
+        return this.page.locator('tbody tr td:nth-child(3) p');
+    }
+
+    private get recordsCountLabel(): Locator {
+        return this.page.locator('p').filter({ hasText: /^\s*Records:\s*\d+/ });
+    }
+
+    private get noProjectsAvailableMessage(): Locator {
+        return this.page.getByText(/No projects available/i).first();
+    }
+
+    private sortIconForColumn(columnName: string): Locator {
+        return this.page.locator('th', { hasText: columnName }).locator('p-sorticon').first();
+    }
+
+    private columnHeader(columnName: string): Locator {
+        return this.page.locator('th', { hasText: columnName }).first();
+    }
+
+    private columnFilterIcon(columnName: string): Locator {
+        return this.page.getByRole('cell', { name: `${columnName} filter` }).locator('svg');
+    }
+
+    private listFilterTab(label: string): Locator {
+        return this.page.locator('ul.list-type li', { hasText: label }).first();
+    }
+
+    // ==========================================================================
+    // LOCATORS — VIEW SWITCHING
+    // ==========================================================================
+
+    private get gridViewButton(): Locator {
+        return this.page.locator('.layout-changer a.grid-icon');
+    }
+
+    private get listViewButton(): Locator {
+        return this.page.locator('.layout-changer a').filter({
+            has: this.page.locator('img[src*="list.svg"]'),
+        });
+    }
+
+    // ==========================================================================
+    // LOCATORS — VIEW POPUP (DEFAULT VIEW / SAVED VIEWS)
+    // ==========================================================================
+
+    private get defaultViewButton(): Locator {
+        return this.page.locator('._view-btn').filter({ hasText: /default view/i });
+    }
+
+    private get activeViewButton(): Locator {
+        return this.page.locator('._view-btn').first();
+    }
+
+    private get viewPopupContent(): Locator {
+        return this.page.locator('.p-overlaypanel-content');
+    }
+
+    private get addViewIcon(): Locator {
+        return this.viewPopupContent.locator('.view-options img[src*="plus-solid.svg"]');
+    }
+
+    private get shareViewIcon(): Locator {
+        return this.viewPopupContent.locator('.view-options img[src*="share-one.svg"]');
+    }
+
+    private get viewNameInput(): Locator {
+        return this.page
+            .locator('input[placeholder*="view" i], input[placeholder*="name" i]')
+            .last();
+    }
+
+    private get viewNameInputInvalid(): Locator {
+        return this.page.locator(
+            'input[placeholder*="view" i], input[placeholder*="name" i].invalidField'
+        );
+    }
+
+    private get saveOrCreateButton(): Locator {
+        return this.page.getByRole('button', { name: /save|create/i }).first();
+    }
+
+    private get savedViewDropdown(): Locator {
+        return this.viewPopupContent.locator('ng-select[placeholder="Select default view"]');
+    }
+
+    private get viewDropdownArrow(): Locator {
+        return this.page.locator('.view-w-100 > .ng-select-container > .ng-arrow-wrapper');
+    }
+
+    private get defaultViewOption(): Locator {
+        return this.page.getByText(/^default view$/i).first();
+    }
+
+    private savedViewOption(viewName: string): Locator {
+        return this.page
+            .locator('.ng-dropdown-panel-items .ng-option')
+            .filter({ hasText: new RegExp(`^\\s*${viewName}\\s*$`, 'i') });
+    }
+
+    private get visibleColumnList(): Locator {
+        return this.viewPopupContent.locator('#visibleColumnList .cdk-drag');
+    }
+
+    private get hiddenColumnList(): Locator {
+        return this.viewPopupContent.locator('#hiddenColumnList .cdk-drag');
+    }
+
+    private columnItemByName(name: string): Locator {
+        return this.visibleColumnList.filter({ hasText: new RegExp(name, 'i') });
+    }
+
+    private get hideAllButton(): Locator {
+        return this.viewPopupContent.getByText('Hide All', { exact: true });
+    }
+
+    private get showAllButton(): Locator {
+        return this.viewPopupContent.getByText('Show All', { exact: true });
+    }
+
+    private get columnSearchInput(): Locator {
+        return this.viewPopupContent.locator('input[placeholder="Search"]').first();
+    }
+
+    private get shareButton(): Locator {
+        return this.viewPopupContent.locator('button._outline-btn', { hasText: 'Share' });
+    }
+
+    private get usersShareDropdown(): Locator {
+        return this.viewPopupContent.locator('re-multiselect.w-100.mr-2 .box');
+    }
+
+    private get teamsShareDropdown(): Locator {
+        return this.viewPopupContent.locator('re-multiselect.custom-select-share .box');
+    }
+
+    private get usersShareDropdownArrow(): Locator {
+        return this.page.locator('re-multiselect.w-100.mr-2 i.fa-sort-up');
+    }
+
+    private get teamsShareDropdownArrow(): Locator {
+        return this.page.locator('re-multiselect.custom-select-share i.fas.fa-sort-up');
+    }
+
+    private get lastDropBox(): Locator {
+        return this.page.locator('.drop_box').last();
+    }
+
+    // ==========================================================================
+    // LOCATORS — PROJECT MANAGER MULTISELECT
+    // ==========================================================================
+
+    private get projectManagerDropdown(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Project Manager"] .box');
+    }
+
+    private get projectManagerList(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Project Manager"] ul');
+    }
+
+    private get projectManagerSearchInput(): Locator {
+        return this.page
+            .locator(
+                're-multiselect[placeholder="Project Manager"] input[type="text"], ' +
+                    're-multiselect[placeholder="Project Manager"] input[type="search"]'
+            )
+            .last();
+    }
+
+    private projectManagerTag(name: string): Locator {
+        return this.page
+            .locator('re-multiselect[placeholder="Project Manager"] .tags')
+            .filter({ hasText: name });
+    }
+
+    private listOptionByText(text: string): Locator {
+        return this.page.locator('li').filter({ hasText: text }).first();
+    }
+
+    private get selectAllManagersLabel(): Locator {
+        return this.page.locator('label.select_all[data="Select All"]');
+    }
+
+    private get selectAllToggle(): Locator {
+        return this.page.locator('label.select_all');
+    }
+
+    // ==========================================================================
+    // LOCATORS — PROJECT CREATION DIALOG
+    // ==========================================================================
+
+    private get addNewProjectButton(): Locator {
+        return this.page.locator('button._addNew');
+    }
+
+    private get projectDialog(): Locator {
+        return this.page.locator('.p-dialog-content').filter({
+            has: this.page.locator('input[formcontrolname="Project_Name"]'),
+        });
+    }
+
+    private get projectDialogContent(): Locator {
+        return this.page.locator('.p-dialog-content');
+    }
+
+    private get projectNameField(): Locator {
+        return this.projectDialog.locator('input[formcontrolname="Project_Name"]');
+    }
+
+    private get projectStatusField(): Locator {
+        return this.projectDialog.locator('ng-select[formcontrolname="Project_Status"]');
+    }
+
+    private get projectDialogSaveButton(): Locator {
+        return this.projectDialog.locator('button._outline-btn');
+    }
+
+    private get projectDialogCancelButton(): Locator {
+        return this.projectDialog.locator('button._cancel-btn');
+    }
+
+    private get projectNameValidationError(): Locator {
+        return this.projectDialog.locator(
+            'input[formcontrolname="Project_Name"] ~ .invalid-feedback, ' +
+                'input[formcontrolname="Project_Name"] ~ .text-danger, ' +
+                'input[formcontrolname="Project_Name"].ng-invalid'
+        );
+    }
+
+    private get projectDialogCloseIcon(): Locator {
+        return this.page.locator("//*[name()='path' and contains(@d,'M8.01186 7')]");
+    }
+
+    // ==========================================================================
+    // LOCATORS — ACTION BUTTONS (LIST VIEW TOOLBAR)
+    // ==========================================================================
+
+    private get duplicateButton(): Locator {
+        return this.page.locator('button', { hasText: /duplicate/i });
+    }
+
+    private get deleteButtonFirst(): Locator {
+        return this.page.getByRole('button', { name: /delete/i }).first();
+    }
+
+    private get deleteButtonLast(): Locator {
+        return this.page.getByRole('button', { name: /delete/i }).last();
+    }
+
+    private get confirmDeleteButton(): Locator {
+        return this.page.getByRole('button', { name: /yes|confirm|delete/i }).first();
+    }
+
+    private get cancelDeleteButton(): Locator {
+        return this.page.getByRole('button', { name: /cancel|no/i }).first();
+    }
+
+    private get confirmAnyButton(): Locator {
+        return this.page.getByRole('button', { name: /confirm|yes|delete|ok/i }).first();
+    }
+
+    // ==========================================================================
+    // LOCATORS — TOAST & MESSAGES
+    // ==========================================================================
+
+    private toastByText(pattern: RegExp): Locator {
+        return this.page.getByText(pattern).first();
+    }
+
+    private get duplicateSuccessToast(): Locator {
+        return this.page.locator('.toast-message', { hasText: /project duplicated successfully/i });
+    }
+
+    private get deleteSuccessToast(): Locator {
+        return this.page.getByText(/project deleted successfully|project.*deleted/i).first();
+    }
+
+    private get projectAddedToast(): Locator {
+        return this.page.getByText('Project added successfully');
+    }
+
+    private get viewCreatedToast(): Locator {
+        return this.page.getByText(/view created|saved successfully|created successfully/i);
+    }
+
+    private get viewDeletedToast(): Locator {
+        return this.page.getByText(/view deleted|deleted successfully|removed successfully/i);
+    }
+
+    private get genericToast(): Locator {
+        return this.page.locator('.toast-message');
+    }
+
+    private get precinctAddSuccessToast(): Locator {
+        return this.page.locator('.toast-message[aria-label="Add successfully"]', {
+            hasText: /Add successfully/i,
+        });
+    }
+
+    // ==========================================================================
+    // LOCATORS — NAVIGATION MENU
+    // ==========================================================================
+
+    private get projectsMenuLink(): Locator {
+        return this.page.locator('p', { hasText: 'Projects' }).first();
+    }
+
+    private get precinctSetupMenuText(): Locator {
+        return this.page.locator('p', { hasText: 'Precinct Set up' }).first();
+    }
+
+    private get precinctSetupMenu(): Locator {
+        return this.page.locator('app-menu a', { hasText: /precinct set up/i });
+    }
+
+    private get precinctListingsMenuLink(): Locator {
+        return this.page.locator('a[href="/listings/project-precinct"]');
+    }
+
+    // ==========================================================================
+    // LOCATORS — PRECINCT SUB-TABS & PANELS
+    // ==========================================================================
+
+    private get precinctSubTab(): Locator {
+        return this.page
+            .locator('.secondary-tabs a[role="tab"]')
+            .filter({ hasText: /^\s*Precinct\s*$/i });
+    }
+
+    private get precinctAllocationSubTab(): Locator {
+        return this.page
+            .locator('.secondary-tabs a[role="tab"]')
+            .filter({ hasText: /precinct allocation/i });
+    }
+
+    private get precinctAllocationTabById(): Locator {
+        return this.page.locator('a#pills-precinct_allow-tab', {
+            hasText: /precinct allocation/i,
+        });
+    }
+
+    private get precinctAllocationTabQuick(): Locator {
+        return this.page.locator('#pills-precinct_allow-tab');
+    }
+
+    private get precinctTab(): Locator {
+        return this.page.locator('#pills-precinct-tab');
+    }
+
+    private get precinctPanel(): Locator {
+        return this.page.locator('#precinct');
+    }
+
+    private get selectProjectDropdown(): Locator {
+        return this.precinctPanel.locator('ng-select[placeholder="Select Project"]');
+    }
+
+    private get createNewPrecinctButton(): Locator {
+        return this.page.locator('#precinct button', { hasText: /create new/i });
+    }
+
+    private precinctCardByName(name: string): Locator {
+        return this.page.locator('#precinct .sgv-product', { hasText: name });
+    }
+
+    private innerTabById(tabName: string): Locator {
+        return this.page.locator(`a#pills-${tabName}`).first();
+    }
+
+    // ==========================================================================
+    // LOCATORS — ADD PRECINCT DIALOG
+    // ==========================================================================
+
+    private get addPrecinctDialog(): Locator {
+        return this.page.locator('.p-dialog[role="dialog"]');
+    }
+
+    private get precinctDialogTitle(): Locator {
+        return this.addPrecinctDialog.locator('.p-dialog-title');
+    }
+
+    private get precinctNameInput(): Locator {
+        return this.addPrecinctDialog.locator('input[placeholder="Precinct Name"]');
+    }
+
+    private get precinctUploadButton(): Locator {
+        return this.addPrecinctDialog.locator('button', { hasText: /upload image/i });
+    }
+
+    private get precinctSaveButton(): Locator {
+        return this.addPrecinctDialog.locator('button', { hasText: /^save$/i });
+    }
+
+    private get precinctCancelButton(): Locator {
+        return this.addPrecinctDialog.locator('button', { hasText: /^cancel$/i });
+    }
+
+    private get precinctFileInput(): Locator {
+        return this.addPrecinctDialog.locator('input[type="file"]');
+    }
+
+    private get precinctUploadedImage(): Locator {
+        return this.addPrecinctDialog.locator('img.logo-img');
+    }
+
+    private get precinctRemoveImageIcon(): Locator {
+        return this.addPrecinctDialog.locator('i.pi-times.remove-icon');
+    }
+
+    private get precinctNoImagePlaceholder(): Locator {
+        return this.addPrecinctDialog.locator('img.no-images');
+    }
+
+    // ==========================================================================
+    // LOCATORS — PIN / UNPIN
+    // ==========================================================================
+
+    private get pinToDashboardOption(): Locator {
+        return this.page.getByText('Pin to Dashboard', { exact: true });
+    }
+
+    private get unpinFromDashboardOption(): Locator {
+        return this.page.getByText('Unpin from Dashboard', { exact: true });
+    }
+
+    private get pinnedIcon(): Locator {
+        return this.page.locator('img[src="assets/img/dashboadIcon/pin-fill.svg"]');
+    }
+
+    // ==========================================================================
+    // LOCATORS — PRECINCT ALLOCATION CHECKBOXES & DROPDOWNS
+    // ==========================================================================
+
+    private get allocationCheckboxes(): Locator {
+        return this.page.locator('p-checkbox .p-checkbox-box');
+    }
+
+    private get lastNgSelectContainer(): Locator {
+        return this.page.locator('.ng-select-container').last();
+    }
+
+    private get firstNgDropdownOption(): Locator {
+        return this.page.locator('.ng-dropdown-panel .ng-option-label').first();
+    }
+
+    private get saveButtonByText(): Locator {
+        return this.page.locator('button:has-text("Save")');
+    }
+
+    // ==========================================================================
+    // LOCATORS — MISC
+    // ==========================================================================
+
+    private get backButton(): Locator {
+        return this.page.locator('text=/back/i').first();
+    }
+
+    private projectTitleBanner(name: string): Locator {
+        return this.page.locator('p.f-24', { hasText: name });
+    }
+
+    private get allSgvProductHeadings(): Locator {
+        return this.page.locator('.sgv-product .product-content h3');
+    }
+
+    private activeProjectCardFilter(escapedName: string): Locator {
         const nameRegex = new RegExp(`^\\s*${escapedName}\\s*$`, 'i');
-
-        const activeProjectCard = this.page
+        return this.page
             .locator('.projects-row .sgv-product .product-content h3')
             .filter({ hasText: nameRegex });
-        await expect(activeProjectCard).toHaveCount(0);
     }
 
-    async verifyProjectReappearsInActiveTabAfterPrecinctDeletion(): Promise<void> {
-        await this.navigateToProjects();
-        await this.page.reload();
-        await this.page.waitForLoadState('networkidle');
-        const precinctSetupLink = this.page.locator('p', { hasText: 'Precinct Set up' }).first();
-        await expect(precinctSetupLink).toBeEnabled({ timeout: 40000 });
-        await precinctSetupLink.click();
-        const precinctAllocationTab = this.page.locator('a#pills-precinct_allow-tab', { hasText: /precinct allocation/i });
-        await expect(precinctAllocationTab).toBeEnabled({ timeout: 20000 });
-        await precinctAllocationTab.click();
-        await this.page.locator('.ng-select-container').last().click();
-        await this.page.locator('.ng-dropdown-panel .ng-option-label').first().click();
-        let checkboxes = this.page.locator('p-checkbox .p-checkbox-box');
-        await expect(checkboxes.first()).toBeVisible();
-        await checkboxes.first().click();
-        await this.page.waitForTimeout(1200);
-        await checkboxes.first().click();
-        await this.page.locator('button:has-text("Save")').click();
-        await expect(this.page.locator('.toast-message')).toBeVisible();
-        // Click the sidebar "Projects" link using a robust selector 
-        await this.page.locator('p', { hasText: 'Projects' }).first().click();
-        await this.getFirstVisiblePrecinctCard();
-        await this.page.locator('a[href="/listings/project-precinct"]').click();
-        await this.page.locator('#pills-precinct_allow-tab').click();
-        await this.page.locator('.ng-select-container').last().click();
-        await this.page.locator('.ng-dropdown-panel .ng-option-label').first().click();
-        checkboxes = this.page.locator('p-checkbox .p-checkbox-box');
-        await expect(checkboxes.nth(1)).toBeVisible();
-        await checkboxes.nth(1).click();
-        await this.page.locator('button:has-text("Save")').click();
-        await expect(this.page.locator('.toast-message')).toBeVisible();
-        await this.page.locator('p', { hasText: 'Projects' }).first().click();
-        await this.getFirstVisiblePrecinctCard();
-        const insidePrecinctProjectHeading = (
-            await this.page.locator('.sgv-product .product-content h3').first().innerText()
-        ).trim();
-        console.log('insidePrecinctProjectHeading:', insidePrecinctProjectHeading);
-        await this.page.locator('p', { hasText: 'Projects' }).first().click();
+    private shareResponseMessage(): Locator {
+        return this.page
+            .getByText('View shared')
+            .or(this.page.getByText('shared successfully'))
+            .or(this.page.getByText('already shared with one or more selected users or teams'))
+            .or(this.page.getByText('user or team is not selected'));
     }
+
+    // ==========================================================================
+    // NAVIGATION HELPERS
+    // ==========================================================================
+
+    private async navigateToProjects(): Promise<void> {
+        const currentUrl = this.page.url().split(/[?#]/)[0];
+        if (!currentUrl.endsWith(ProjectActions.PROJECTS_URL)) {
+            await this.page.goto(ProjectActions.PROJECTS_URL);
+        }
+    }
+
+    async gotoPrecinctListings(): Promise<void> {
+        const currentUrl = this.page.url().split(/[?#]/)[0];
+        if (!currentUrl.endsWith(ProjectActions.PRECINCT_LISTINGS_URL)) {
+            await this.page.goto(ProjectActions.PRECINCT_LISTINGS_URL);
+        }
+    }
+
+    private async openPrecinctSetup(): Promise<void> {
+        await this.gotoPrecinctListings();
+        await expect(this.precinctSetupMenu).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.precinctSetupMenu.click();
+    }
+
+    private async openAddPrecinctDialog(): Promise<void> {
+        await this.openPrecinctSetup();
+        await expect(this.createNewPrecinctButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.createNewPrecinctButton.click();
+        await expect(this.addPrecinctDialog).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    private async prepareListView(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.waitForFirstTableRow();
+    }
+
+    // ==========================================================================
+    // VIEW SWITCHING
+    // ==========================================================================
 
     async switchToGridView(): Promise<void> {
-        const gridProducts = this.page.locator('.sgv-product');
-        if (await gridProducts.first().isVisible().catch(() => false)) {
-            return;
-        }
-        const gridViewButton = this.page.locator('.layout-changer a.grid-icon');
-        await expect(gridViewButton).toBeVisible({ timeout: 30_000 });
-        await gridViewButton.click({force: true});
-        await expect(gridProducts.first()).toBeVisible({ timeout: 30_000 });
+        if (await this.firstGridProduct.isVisible().catch(() => false)) return;
+        await expect(this.gridViewButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.gridViewButton.click({ force: true });
+        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
     }
 
     async switchToListView(): Promise<void> {
-        await this.navigateToProjects();
-        const tableRows = this.page.locator('tbody tr');
-        if (await tableRows.first().isVisible().catch(() => false)) {
-            return;
-        }
-        const listViewButton = this.page.locator('.layout-changer a').filter({
-            has: this.page.locator('img[src*="list.svg"]')
-        });
-        await listViewButton.click();
+        if (await this.firstTableRow.isVisible().catch(() => false)) return;
+        await this.listViewButton.click();
         await this.waitForFirstTableRow();
     }
 
@@ -321,432 +661,603 @@ export class ProjectActions {
         await this.switchToGridView();
     }
 
-    async openProjectPopup(): Promise<void> {
-        await this.page.locator('button._addNew').click();
-        const dialog = this.page.locator('.p-dialog-content').filter({
-            has: this.page.locator('input[formcontrolname="Project_Name"]'),
+    async switchBetweenGridAndListView(): Promise<void> {
+        await this.navigateToProjects();
+        await this.switchToListView();
+        await this.switchToGridView();
+        await this.switchToListView();
+    }
+
+    async waitForFirstTableRow(): Promise<void> {
+        await this.page.waitForSelector('tbody tr', {
+            state: 'attached',
+            timeout: ProjectActions.TIMEOUT_LONG,
         });
-        await expect(dialog).toBeVisible({ timeout: 10000 });
-        await expect(dialog.locator('input[formcontrolname="Project_Name"]')).toBeVisible();
-        await expect(dialog.locator('ng-select[formcontrolname="Project_Status"]')).toBeVisible();
-        await expect(dialog.locator('button._outline-btn')).toBeVisible();
-        await expect(dialog.locator('button._cancel-btn')).toBeVisible();
+        await this.page.waitForFunction(
+            () => {
+                const rows = document.querySelectorAll('tbody tr');
+                if (rows.length === 0) return false;
+                return (rows[0].textContent?.trim() ?? '').length > 5;
+            },
+            { timeout: ProjectActions.TIMEOUT_LONG }
+        );
+        await this.firstTableRow.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    // ==========================================================================
+    // COMMON ACTION HELPERS
+    // ==========================================================================
+
+    async resetListView(): Promise<void> {
+        await expect(this.resetButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.resetButton.click();
+        await this.waitForFirstTableRow();
+    }
+
+    private async clickResetIcon(): Promise<void> {
+        await expect(this.resetIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.resetIcon.click();
+    }
+
+    private async clickTabByLabel(tabLabel: string): Promise<void> {
+        const tab = this.tabByLabel(tabLabel);
+        await expect(tab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await tab.click();
+    }
+
+    private async openDefaultViewPopup(): Promise<void> {
+        await this.defaultViewButton.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await this.defaultViewButton.click();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+    }
+
+    private async closeOverlay(): Promise<void> {
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(400);
+    }
+
+    private async openProjectManagerDropdown(): Promise<void> {
+        await this.prepareListView();
+        await this.page.waitForTimeout(1500);
+        await this.projectManagerDropdown.click();
+        await this.projectManagerList.waitFor({ state: 'visible', timeout: 50_000 });
+    }
+
+    private async selectManagerByName(name: string): Promise<void> {
+        await this.projectManagerSearchInput.waitFor({
+            state: 'visible',
+            timeout: ProjectActions.TIMEOUT_MEDIUM,
+        });
+        await this.projectManagerSearchInput.fill(name);
+
+        const option = this.listOptionByText(name);
+        await option.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await option.click();
+        await this.projectManagerSearchInput.fill('');
+    }
+
+    private async verifyManagerTagsVisible(names: string[]): Promise<void> {
+        for (const name of names) {
+            await expect(this.projectManagerTag(name)).toBeVisible({
+                timeout: ProjectActions.TIMEOUT_MEDIUM,
+            });
+        }
+    }
+
+    private async selectFirstProjectFromDropdown(): Promise<void> {
+        await this.lastNgSelectContainer.click();
+        await this.firstNgDropdownOption.click();
+    }
+
+    private async clickSaveAndVerifyToast(): Promise<void> {
+        await this.saveButtonByText.click();
+        await expect(this.genericToast).toBeVisible();
+    }
+
+    // ==========================================================================
+    // SEARCH (GRID VIEW)
+    // ==========================================================================
+
+    async verifyProjectCanBeSearchedByName(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.searchInput.fill(projectName);
+        await expect(this.projectCardByName(projectName)).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+    }
+
+    async verifyProjectCanBeSearchedByPartialName(partialName: string): Promise<void> {
+        await this.navigateToProjects();
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.searchInput.fill(partialName);
+
+        const firstResult = this.projectCardContainingText(partialName);
+        await expect(firstResult).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+
+        const resultText = await firstResult.textContent();
+        expect(resultText?.toLowerCase()).toContain(partialName.toLowerCase());
+    }
+
+    async verifyProjectSearchWithInvalidName(invalidName: string): Promise<void> {
+        await this.navigateToProjects();
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.searchInput.fill(invalidName);
+        await expect(this.allProjectCardsByName(invalidName)).toHaveCount(0);
+        await this.clickResetIcon();
+    }
+
+    // ==========================================================================
+    // IMAGE VERIFICATION
+    // ==========================================================================
+
+    async verifyProjectImageDisplayedInGridView(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.searchInput.fill(projectName);
+
+        const card = this.projectCardByName(projectName);
+        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+
+        const thumbnail = this.thumbnailForCard(card);
+        await expect(thumbnail).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        const styleAttr = await thumbnail.getAttribute('style');
+        expect(styleAttr).toBeTruthy();
+
+        const bgUrlMatch = styleAttr?.match(/background-image:\s*url\((['"]?)(.*?)\1\)/i);
+        expect(bgUrlMatch && bgUrlMatch[2]).toBeTruthy();
+        expect(bgUrlMatch![2].trim()).not.toBe('');
+    }
+
+    async verifyPlaceholderImageForProjectWithNoImage(): Promise<void> {
+        const projectName = 'Al kabir heights';
+        await this.navigateToProjects();
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.searchInput.fill(projectName);
+
+        const card = this.projectCardByName(projectName);
+        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(this.thumbnailForCard(card)).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+        await this.clickResetIcon();
+    }
+
+    // ==========================================================================
+    // TABS
+    // ==========================================================================
+
+    async verifyTabsAndResetAfterSearch(searchText: string): Promise<void> {
+        await this.navigateToProjects();
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.searchInput.fill(searchText);
+        await this.clickTabByLabel('Inactive');
+        await this.clickTabByLabel('Active');
+        await this.clickResetIcon();
+        await expect(this.searchInput).toHaveValue('');
+    }
+
+    async verifyDefaultTabIsActive(): Promise<void> {
+        await this.navigateToProjects();
+        const activeTab = this.tabByLabel('Active');
+        await expect(activeTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+
+        const ariaSelected = await activeTab.getAttribute('aria-selected');
+        if (ariaSelected !== null) {
+            expect(ariaSelected).toBe('true');
+        } else {
+            const className = await activeTab.getAttribute('class');
+            expect(className).toMatch(/active/i);
+        }
+    }
+
+    async verifyProjectsUnderActiveTab(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        await expect(this.tabByLabel('Active')).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.projectCardByName(projectName).scrollIntoViewIfNeeded();
+    }
+
+    async verifyProjectsUnderInactiveTab(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickTabByLabel('Inactive');
+        const card = this.projectCardByName(projectName);
+        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await card.scrollIntoViewIfNeeded();
+    }
+
+    async verifyPrecinctIsGroupedUnderTab(precinctName: string): Promise<void> {
+        await this.navigateToProjects();
+        const container = this.precinctContainerByName(precinctName);
+        await expect(container).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(container.locator(this.precinctCardThumbnailWithImage)).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+    }
+
+    // ==========================================================================
+    // PRECINCT NAVIGATION
+    // ==========================================================================
+
+    private async getFirstVisiblePrecinctCard(): Promise<void> {
+        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.firstGridProduct.click();
+    }
+
+    private async clickVisibleBackButton(): Promise<void> {
+        await expect(this.backButton).toBeEnabled({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await this.backButton.click({ force: true });
+    }
+
+    async verifyClickingPrecinctOpensTabs(): Promise<void> {
+        await this.navigateToProjects();
+        await this.getFirstVisiblePrecinctCard();
+
+        for (const tab of ['project', 'lot', 'EOI']) {
+            const el = this.innerTabById(tab);
+            await expect(el).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+            await expect(el).toHaveText(new RegExp(tab, 'i'), { timeout: ProjectActions.TIMEOUT_LONG });
+        }
+
+        await this.projectsMenuLink.click();
+        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    async verifyPrecinctAllocatedProjectNotInActiveTabAfterPrecinctClick(): Promise<void> {
+        await this.navigateToProjects();
+        await this.getFirstVisiblePrecinctCard();
+
+        const insidePrecinctHeading = (await this.allSgvProductHeadings.first().innerText()).trim();
+
+        await this.projectsMenuLink.click();
+        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForSelector('.sgv-product .product-content h3', {
+            state: 'visible',
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.searchInput.fill(insidePrecinctHeading);
+
+        const escapedName = insidePrecinctHeading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        await expect(this.activeProjectCardFilter(escapedName)).toHaveCount(0);
+    }
+
+    async verifyProjectReappearsInActiveTabAfterPrecinctDeletion(): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+
+        await expect(this.precinctSetupMenuText).toBeEnabled({
+            timeout: ProjectActions.TIMEOUT_EXTRA_LONG,
+        });
+        await this.precinctSetupMenuText.click();
+
+        await expect(this.precinctAllocationTabById).toBeEnabled({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        await this.precinctAllocationTabById.click();
+
+        await this.selectFirstProjectFromDropdown();
+
+        await expect(this.allocationCheckboxes.first()).toBeVisible();
+        await this.allocationCheckboxes.first().click();
+        await this.page.waitForTimeout(1200);
+        await this.allocationCheckboxes.first().click();
+
+        await this.clickSaveAndVerifyToast();
+        await this.projectsMenuLink.click();
+        await this.getFirstVisiblePrecinctCard();
+
+        await this.precinctListingsMenuLink.click();
+        await this.precinctAllocationTabQuick.click();
+        await this.selectFirstProjectFromDropdown();
+
+        await expect(this.allocationCheckboxes.nth(1)).toBeVisible();
+        await this.allocationCheckboxes.nth(1).click();
+
+        await this.clickSaveAndVerifyToast();
+        await this.projectsMenuLink.click();
+        await this.getFirstVisiblePrecinctCard();
+        await this.projectsMenuLink.click();
+    }
+
+    // ==========================================================================
+    // PROJECT CREATION DIALOG
+    // ==========================================================================
+
+    async openProjectPopup(): Promise<void> {
+        await this.addNewProjectButton.click();
+        await expect(this.projectDialog).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectNameField).toBeVisible();
+        await expect(this.projectStatusField).toBeVisible();
+        await expect(this.projectDialogSaveButton).toBeVisible();
+        await expect(this.projectDialogCancelButton).toBeVisible();
     }
 
     async verifyAndCloseProjectPopup(): Promise<void> {
         await this.navigateToProjects();
         await this.page.reload();
         await this.openProjectPopup();
-        const dialog = this.page.locator('.p-dialog-content');
-        await dialog.locator('button._cancel-btn').click();
-        await expect(dialog).toBeHidden({ timeout: 10000 });
+        await this.projectDialogCancelButton.click();
+        await expect(this.projectDialogContent).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
 
     async clickOnProjects(): Promise<void> {
-        await this.page.locator('p', { hasText: 'Projects' }).first().click();
+        await this.projectsMenuLink.click();
     }
 
-    /**
-     * Create a project with valid data.
-     * @param project Optional object containing project name and status.
-     */
     async createProjectWithValidData(project?: { name?: string; status?: string }): Promise<void> {
         await this.navigateToProjects();
         await this.page.reload();
         await this.openProjectPopup();
+
         const projectName = project?.name ?? faker.company.name();
-        console.log("Creating project with name:", projectName);
-        const dialog = this.page.locator('.p-dialog-content')
-            .filter({ has: this.page.locator('input[formcontrolname="Project_Name"]') });
-        await dialog.locator('input[formcontrolname="Project_Name"]').fill(projectName);
-        await dialog.locator('button._outline-btn').click();
-        await expect(dialog).toBeHidden({ timeout: 10000 });
-        await this.page.getByText('Project added successfully')
-            .waitFor({ state: 'visible', timeout: 15000 })
-            .catch(() => { });
-        await this.page.locator('p.f-24', { hasText: projectName }).waitFor({ state: 'visible', timeout: 15000 });
+
+        await this.projectNameField.fill(projectName);
+        await this.projectDialogSaveButton.click();
+        await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        await this.projectAddedToast
+            .waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM })
+            .catch(() => {
+                /* Toast may disappear too quickly — non-fatal */
+            });
+
+        await this.projectTitleBanner(projectName).waitFor({
+            state: 'visible',
+            timeout: ProjectActions.TIMEOUT_MEDIUM,
+        });
+
         await this.clickOnProjects();
         await this.verifyProjectCanBeSearchedByName(projectName);
-        await this.clickResetButton();
+        await this.clickResetIcon();
     }
 
-    /**
-     * Attempts to save a new project with empty required fields
-     */
     async saveProjectPopupWithEmptyFields(): Promise<void> {
         await this.navigateToProjects();
         await this.page.reload();
         await this.openProjectPopup();
-        const projectDialog = this.page.locator('.p-dialog-content').filter({
-            has: this.page.locator('input[formcontrolname="Project_Name"]')
+
+        await this.projectNameField.fill('');
+        await this.projectDialogSaveButton.click();
+        await expect(this.projectNameValidationError).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_SHORT,
         });
-        const projectNameInputField = projectDialog.locator('input[formcontrolname="Project_Name"]');
-        await projectNameInputField.fill('');
-        await projectDialog.locator('button._outline-btn').click();
-        const projectNameValidationError = projectDialog.locator(
-            'input[formcontrolname="Project_Name"] ~ .invalid-feedback, input[formcontrolname="Project_Name"] ~ .text-danger, input[formcontrolname="Project_Name"].ng-invalid'
-        );
-        await expect(projectNameValidationError).toBeVisible({ timeout: 5000 });
-        await projectDialog.locator('button._cancel-btn').click();
-        await expect(projectDialog).toBeHidden({ timeout: 10000 });
+
+        await this.projectDialogCancelButton.click();
+        await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
 
-    /**
-     * Clicks the cross (X) icon to close the project popup dialog.
-     */
     async closeProjectPopupWithCrossIcon(): Promise<void> {
         await this.navigateToProjects();
         await this.page.reload();
         await this.openProjectPopup();
-        const dialog = this.page.locator('.p-dialog-content')
-        const closeBtn = this.page.locator("//*[name()='path' and contains(@d,'M8.01186 7')]")
-        await closeBtn.click({ force: true });
-        await expect(dialog).toBeHidden({ timeout: 10000 });
+        await this.projectDialogCloseIcon.click({ force: true });
+        await expect(this.projectDialogContent).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
-    /**
-    * Verify that "Pin to Dashboard" option is visible when right-clicking a project card.
-    */
+
+    // ==========================================================================
+    // PIN / UNPIN
+    // ==========================================================================
+
     async verifyPinToDashboardOptionVisibleOnRightClick(projectName: string): Promise<void> {
         await this.navigateToProjects();
         await this.page.reload();
         await this.verifyProjectCanBeSearchedByName(projectName);
-        const projectCard = this.page.locator('.sgv-product .product-content h3', {
-            hasText: new RegExp(`^${projectName}$`, 'i')
-        }).first();
-        await expect(projectCard).toBeVisible({ timeout: 15000 });
-        await projectCard.click({ button: 'right' });
-        const pinOption = this.page.getByText('Pin to Dashboard', { exact: true });
-        await expect(pinOption).toBeVisible({ timeout: 10000 });
+
+        const card = this.projectCardByName(projectName);
+        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await card.click({ button: 'right' });
+
+        await expect(this.pinToDashboardOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.page.mouse.click(0, 0);
-        await expect(pinOption).not.toBeVisible({ timeout: 10000 });
+        await expect(this.pinToDashboardOption).not.toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
         await this.page.waitForTimeout(1200);
     }
 
-    /**
-     * Searches for a project by name, pins it to dashboard, and verifies the pin icon appears.
-     */
     async pinProjectAndVerifyIcon(projectName: string): Promise<void> {
         await this.navigateToProjects();
         await this.verifyProjectCanBeSearchedByName(projectName);
-        const projectCard = this.page.locator('.sgv-product .product-content h3', {
-            hasText: new RegExp(`^${projectName}$`, 'i')
-        }).first();
-        await projectCard.evaluate((el) => el.scrollIntoView({ behavior: "auto", block: "center", inline: "center" }));
-        await expect(projectCard).toBeVisible({ timeout: 15000 });
-        await projectCard.click({ button: 'right' });
 
-        const pinOption = this.page.getByText('Pin to Dashboard', { exact: true });
-        await expect(pinOption).toBeVisible({ timeout: 10000 });
-        await pinOption.click();
-        const pinnedIcon = this.page.locator('img[src="assets/img/dashboadIcon/pin-fill.svg"]');
-        await expect(pinnedIcon).toBeVisible({ timeout: 10000 });
+        const card = this.projectCardByName(projectName);
+        await card.evaluate((el) =>
+            el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' })
+        );
+        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await card.click({ button: 'right' });
+
+        await expect(this.pinToDashboardOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.pinToDashboardOption.click();
+
+        await expect(this.pinnedIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.page.waitForTimeout(1200);
     }
 
-    /**
-     * Searches for a project by name, unpins it from dashboard, and verifies that the pin icon is removed.
-     */
     async unpinProjectAndVerifyRemoval(projectName: string): Promise<void> {
         await this.navigateToProjects();
         await this.verifyProjectCanBeSearchedByName(projectName);
-        const projectCard = this.page.locator('.sgv-product .product-content h3', {
-            hasText: new RegExp(`^${projectName}$`, 'i')
-        }).first();
-        await projectCard.scrollIntoViewIfNeeded();
-        await expect(projectCard).toBeVisible({ timeout: 15000 });
-        await projectCard.click({ button: 'right' });
 
-        const unpinOption = this.page.getByText('Unpin from Dashboard', { exact: true });
-        await expect(unpinOption).toBeVisible({ timeout: 10000 });
-        await unpinOption.click();
+        const card = this.projectCardByName(projectName);
+        await card.scrollIntoViewIfNeeded();
+        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await card.click({ button: 'right' });
 
-        // Verify the pin icon is removed from the card
-        const pinnedIcon = this.page.locator('img[src="assets/img/dashboadIcon/pin-fill.svg"]').filter({
-            has: projectCard
+        await expect(this.unpinFromDashboardOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.unpinFromDashboardOption.click();
+
+        await expect(this.pinnedIcon.filter({ has: card })).toHaveCount(0, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
         });
-        await expect(pinnedIcon).toHaveCount(0, { timeout: 10000 });
     }
 
-    /**
-     * Waits for the first data row in the projects table to be visible.
-     */
-    async waitForFirstTableRow(): Promise<void> {
-        await this.page.waitForSelector('tbody tr', { state: 'attached', timeout: 30_000 });
+    // ==========================================================================
+    // LIST VIEW — SEARCH
+    // ==========================================================================
 
-        await this.page.waitForFunction(() => {
-            const rows = document.querySelectorAll('tbody tr');
-            if (rows.length === 0) return false;
-            const firstRowText = rows[0].textContent?.trim() ?? '';
-            return firstRowText.length > 5;
-        }, { timeout: 30_000 });
-
-        const firstDataRow = this.page.locator('tbody tr').first();
-        await firstDataRow.waitFor({ state: 'visible', timeout: 30_000 });
-    }
-
-    /**
-     * Verifies project search by name in List View
-     */
     async verifyProjectCanBeSearchedByNameInListView(projectName: string): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        const searchInput = this.page.locator('input[placeholder="Search"]').last();
-        await searchInput.fill('');
-        await searchInput.fill(projectName);
-        const projectRow = this.page
-            .locator('tr')
-            .filter({ hasText: new RegExp(projectName, 'i') })
-            .first();
-        await expect(projectRow).toBeVisible({ timeout: 30000 });
-        await this.clickResetButton();
-    }
-
-    /**
-     * Clicks the reset button to clear any search/filter in the projects List View.
-     */
-    async ResetButton(): Promise<void> {
-        const resetButton = this.page.locator('button', { hasText: /reset/i }).last();
-        await expect(resetButton).toBeVisible({ timeout: 10000 });
-        await resetButton.click();
-        await this.waitForFirstTableRow();
+        await this.prepareListView();
+        await this.searchInputByPlaceholder.fill('');
+        await this.searchInputByPlaceholder.fill(projectName);
+        await expect(this.tableRowWithText(projectName)).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        await this.clickResetIcon();
     }
 
     async verifyProjectSearchWithInvalidNameInListView(invalidName: string): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        const searchInput = this.page.locator('input[placeholder="Search"]').last();
-        await searchInput.fill('');
-        await searchInput.fill(invalidName);
+        await this.prepareListView();
+        await this.searchInputByPlaceholder.fill('');
+        await this.searchInputByPlaceholder.fill(invalidName);
         await this.page.waitForLoadState('networkidle');
-        const noRecordsMessage = this.page.getByText(/No projects available/i).first();
-        await expect(noRecordsMessage).toBeVisible({ timeout: 30_000 });
-        const projectRow = this.page
-            .locator('tr')
-            .filter({ hasText: new RegExp(invalidName, 'i') });
-        await expect(projectRow).toHaveCount(0);
-        await this.clickResetButton();
+        await expect(this.noProjectsAvailableMessage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        await expect(this.page.locator('tr').filter({ hasText: new RegExp(invalidName, 'i') })).toHaveCount(0);
+        await this.clickResetIcon();
     }
 
+    async searchProjectWithSymbols(): Promise<void> {
+        await this.prepareListView();
+        await this.searchInputByPlaceholder.fill('@#$%^&*');
+        await expect(this.noProjectsAvailableMessage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        await this.resetListView();
+    }
+
+    // ==========================================================================
+    // LIST VIEW — FILTERING
+    // ==========================================================================
+
     async verifyActiveTabFilteringInListView(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
+        await this.prepareListView();
+        const tab = this.listFilterTab('Active');
+        await tab.click();
+        await expect(tab).toHaveClass(/active-filter/);
         await this.waitForFirstTableRow();
-        const activeTab = this.page.locator('ul.list-type li', { hasText: 'Active' }).first();
-        await activeTab.click();
-        await expect(activeTab).toHaveClass(/active-filter/);
-        await this.waitForFirstTableRow();
-        const rowCount = await this.page.locator('tbody tr').count();
-        expect(rowCount).toBeGreaterThan(0);
+        expect(await this.allTableRows.count()).toBeGreaterThan(0);
     }
 
     async verifyInactiveTabFilteringInListView(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
+        await this.prepareListView();
+        const tab = this.listFilterTab('Inactive');
+        await tab.click();
+        await expect(tab).toHaveClass(/active-filter/);
         await this.waitForFirstTableRow();
-        const inactiveTab = this.page.locator('ul.list-type li', { hasText: 'Inactive' }).first();
-        await inactiveTab.click();
-        await expect(inactiveTab).toHaveClass(/active-filter/);
-        await this.waitForFirstTableRow();
-        const rowCount = await this.page.locator('tbody tr').count();
-        expect(rowCount).toBeGreaterThan(0);
+        expect(await this.allTableRows.count()).toBeGreaterThan(0);
     }
+
+    // ==========================================================================
+    // LIST VIEW — PROJECT MANAGER MULTISELECT
+    // ==========================================================================
 
     async selectSingleProjectManagerInListView(managerName: string): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        await this.page.waitForTimeout(1500);
-        const projectManagerDropdown = this.page.locator('re-multiselect[placeholder="Project Manager"] .box');
-        await projectManagerDropdown.click();
-        const dropdownOptionsList = this.page.locator('re-multiselect[placeholder="Project Manager"] ul');
-        await dropdownOptionsList.waitFor({ state: 'visible', timeout: 50000 });
-        const searchInput = this.page.locator('re-multiselect[placeholder="Project Manager"] input[type="text"], re-multiselect[placeholder="Project Manager"] input[type="search"]').last();
-        await searchInput.waitFor({ state: 'visible', timeout: 15_000 });
-        await searchInput.fill(managerName);
-        const managerOption = this.page
-            .locator('li')
-            .filter({ hasText: managerName })
-            .first();
-
-        await managerOption.waitFor({ state: 'visible', timeout: 15_000 });
-        await managerOption.click();
-
-        // Close the dropdown
+        await this.openProjectManagerDropdown();
+        await this.selectManagerByName(managerName);
         await this.page.keyboard.press('Escape');
-
-        // Check tag of the selected manager
-        const selectedTag = this.page
-            .locator('re-multiselect[placeholder="Project Manager"] .tags')
-            .filter({ hasText: managerName });
-
-        await expect(selectedTag).toBeVisible({ timeout: 15_000 });
-
+        await this.verifyManagerTagsVisible([managerName]);
         await this.waitForFirstTableRow();
-
-        const rowCount = await this.page.locator('tbody tr').count();
-        expect(rowCount).toBeGreaterThan(0);
-        await this.ResetButton();
+        expect(await this.allTableRows.count()).toBeGreaterThan(0);
+        await this.resetListView();
     }
 
-    /**
-     * Select multiple project managers by their names in the list view.
-     */
     async selectMultipleProjectManagersInListView(managerNames: string[]): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        await this.page.waitForTimeout(1500);
-
-        const projectManagerDropdown = this.page.locator('re-multiselect[placeholder="Project Manager"] .box');
-        await projectManagerDropdown.click();
-
-        const dropdownOptionsList = this.page.locator('re-multiselect[placeholder="Project Manager"] ul');
-        await dropdownOptionsList.waitFor({ state: 'visible', timeout: 50000 });
-
-        const searchInput = this.page.locator('re-multiselect[placeholder="Project Manager"] input[type="text"], re-multiselect[placeholder="Project Manager"] input[type="search"]').last();
-        await searchInput.waitFor({ state: 'visible', timeout: 15_000 });
-
-        for (const managerName of managerNames) {
-            await searchInput.fill(managerName);
-
-            const managerOption = this.page.locator('li').filter({ hasText: managerName }).first();
-            await managerOption.waitFor({ state: 'visible', timeout: 15_000 });
-            await managerOption.click();
-
-            // Optionally clear the search input for the next iteration
-            await searchInput.fill('');
+        await this.openProjectManagerDropdown();
+        for (const name of managerNames) {
+            await this.selectManagerByName(name);
         }
-
-        // Close the dropdown
         await this.page.keyboard.press('Escape');
-
-        // Check tags of selected managers
-        for (const managerName of managerNames) {
-            const selectedTag = this.page
-                .locator('re-multiselect[placeholder="Project Manager"] .tags')
-                .filter({ hasText: managerName });
-
-            await expect(selectedTag).toBeVisible({ timeout: 15_000 });
-        }
-
+        await this.verifyManagerTagsVisible(managerNames);
         await this.waitForFirstTableRow();
-
-        const rowCount = await this.page.locator('tbody tr').count();
-        expect(rowCount).toBeGreaterThan(0);
-        await this.ResetButton();
+        expect(await this.allTableRows.count()).toBeGreaterThan(0);
+        await this.resetListView();
     }
 
     async selectAllProjectManagersInListView(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        await this.page.waitForTimeout(1500);
-        const projectManagerDropdown = this.page.locator('re-multiselect[placeholder="Project Manager"] .box');
-        await projectManagerDropdown.click();
-
-        const selectAllLabel = this.page.locator('label.select_all[data="Select All"]');
-        await selectAllLabel.waitFor({ state: 'visible', timeout: 15_000 });
-        await selectAllLabel.click();
+        await this.openProjectManagerDropdown();
+        await this.selectAllManagersLabel.waitFor({
+            state: 'visible',
+            timeout: ProjectActions.TIMEOUT_MEDIUM,
+        });
+        await this.selectAllManagersLabel.click();
         await this.page.keyboard.press('Escape');
-
         await this.waitForFirstTableRow();
-
-        const rowCount = await this.page.locator('tbody tr').count();
-        expect(rowCount).toBeGreaterThan(0);
-        await this.ResetButton();
+        expect(await this.allTableRows.count()).toBeGreaterThan(0);
+        await this.resetListView();
     }
 
     async deselectAllProjectManagersInListView(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        await this.page.waitForTimeout(1500);
+        await this.openProjectManagerDropdown();
+        await this.selectAllToggle.waitFor({
+            state: 'visible',
+            timeout: ProjectActions.TIMEOUT_MEDIUM,
+        });
 
-        const projectManagerDropdown = this.page.locator('re-multiselect[placeholder="Project Manager"] .box');
-        await projectManagerDropdown.click();
-
-        const toggleLabel = this.page.locator('label.select_all');
-        await toggleLabel.waitFor({ state: 'visible', timeout: 15_000 });
-
-        const currentState = await toggleLabel.getAttribute('data');
-
+        const currentState = await this.selectAllToggle.getAttribute('data');
         if (currentState === 'Select All') {
-            await toggleLabel.click();
-            await expect(toggleLabel).toHaveAttribute('data', 'Deselect All', { timeout: 10_000 });
+            await this.selectAllToggle.click();
+            await expect(this.selectAllToggle).toHaveAttribute('data', 'Deselect All', {
+                timeout: ProjectActions.TIMEOUT_DEFAULT,
+            });
         }
 
-        await toggleLabel.click();
-        await expect(toggleLabel).toHaveAttribute('data', 'Select All', { timeout: 10_000 });
+        await this.selectAllToggle.click();
+        await expect(this.selectAllToggle).toHaveAttribute('data', 'Select All', {
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
 
         await this.page.keyboard.press('Escape');
-
         await this.waitForFirstTableRow();
-
-        const rowCount = await this.page.locator('tbody tr').count();
-        expect(rowCount).toBeGreaterThan(0);
-
-        await this.ResetButton();
+        expect(await this.allTableRows.count()).toBeGreaterThan(0);
+        await this.resetListView();
     }
 
+    async selectProjectManagerWithNoProjects(): Promise<void> {
+        await this.openProjectManagerDropdown();
+        await this.page.keyboard.press('Escape');
+        await this.resetListView();
+    }
+
+    // ==========================================================================
+    // LIST VIEW — CUSTOM VIEWS
+    // ==========================================================================
+
     async verifyDefaultViewPopupOpensInListView(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        const defaultViewButton = this.page.locator('._view-btn').filter({ hasText: /default view/i });
-        await defaultViewButton.waitFor({ state: 'visible', timeout: 15_000 });
-        await defaultViewButton.click();
-        const popupContent = this.page.locator('.p-overlaypanel-content');
-        await expect(popupContent).toBeVisible({ timeout: 15_000 });
+        await this.prepareListView();
+        await this.openDefaultViewPopup();
         await this.page.keyboard.press('Escape');
     }
 
     async createNewCustomViewInListView(viewName: string): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
+        await this.prepareListView();
+        await this.openDefaultViewPopup();
 
-        const defaultViewButton = this.page.locator('._view-btn').filter({ hasText: /default view/i });
-        await defaultViewButton.waitFor({ state: 'visible', timeout: 15_000 });
-        await defaultViewButton.click();
+        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.addViewIcon.click();
 
-        const popupContent = this.page.locator('.p-overlaypanel-content');
-        await expect(popupContent).toBeVisible({ timeout: 15_000 });
+        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.viewNameInput.click();
+        await this.viewNameInput.fill(viewName);
 
-        const addViewIcon = popupContent.locator('.view-options img[src*="plus-solid.svg"]');
-        await addViewIcon.waitFor({ state: 'visible', timeout: 10_000 });
-        await addViewIcon.click();
+        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.saveOrCreateButton.click({ force: true });
 
-        const viewNameInput = this.page.locator('input[placeholder*="view" i], input[placeholder*="name" i]').last();
-        await expect(viewNameInput).toBeVisible({ timeout: 10_000 });
-        await viewNameInput.click();
-        await viewNameInput.fill(viewName);
-
-        const saveBtn = this.page.getByRole('button', { name: /save|create/i }).first();
-        await expect(saveBtn).toBeVisible({ timeout: 10_000 });
-        await saveBtn.click({ force: true });
-
-        await expect(
-            this.page.getByText(/view created|saved successfully|created successfully/i)
-        ).toBeVisible({ timeout: 10_000 });
-
+        await expect(this.viewCreatedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.resetToDefaultView();
     }
 
     async resetToDefaultView(): Promise<void> {
-        const activeViewButton = this.page.locator('._view-btn').first();
-        await activeViewButton.click();
+        await this.activeViewButton.click();
 
-        const viewDropdown = this.page.locator('.view-w-100 > .ng-select-container > .ng-arrow-wrapper');
-        await expect(viewDropdown).toBeVisible({ timeout: 10_000 });
-        await viewDropdown.click();
+        await expect(this.viewDropdownArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.viewDropdownArrow.click();
 
-        const defaultOption = this.page.getByText(/^default view$/i).first();
-        await expect(defaultOption).toBeVisible({ timeout: 10_000 });
-        await defaultOption.click();
+        await expect(this.defaultViewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.defaultViewOption.click();
 
-        await this.page.mouse.click(0, 0);
+        await this.closeOverlay();
         await this.page.waitForTimeout(800);
         await this.waitForFirstTableRow();
     }
@@ -755,112 +1266,86 @@ export class ProjectActions {
         userName: string = 'Abdul Rehman',
         teamName: string = 'Automation Team'
     ): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
+        await this.prepareListView();
+        await this.openDefaultViewPopup();
 
-        const defaultViewButton = this.page.locator('._view-btn', { hasText: 'Default View' });
-        await defaultViewButton.waitFor({ state: 'visible', timeout: 15_000 });
-        await defaultViewButton.click();
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.shareViewIcon.click({ force: true });
 
-        const popupContent = this.page.locator('.p-overlaypanel-content');
-        await expect(popupContent).toBeVisible({ timeout: 15_000 });
+        await this.selectShareTarget(this.usersShareDropdown, this.usersShareDropdownArrow, userName);
+        await this.selectShareTarget(this.teamsShareDropdown, this.teamsShareDropdownArrow, teamName);
 
-        const shareIcon = popupContent.locator('.view-options img[src*="share-one.svg"]');
-        await expect(shareIcon).toBeVisible({ timeout: 10_000 });
-        await shareIcon.click({ force: true });
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.shareButton.click({ force: true });
 
-        const usersDropdown = popupContent.locator('re-multiselect.w-100.mr-2 .box');
-        await expect(usersDropdown).toBeVisible({ timeout: 10_000 });
-        await usersDropdown.click();
+        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
 
-        const userDropBox = this.page.locator('.drop_box').last();
-        await expect(userDropBox).toBeVisible({ timeout: 10_000 });
-
-        const userSearchInput = userDropBox.locator('input[placeholder="Search"]');
-        await userSearchInput.fill(userName);
-        await this.page.waitForTimeout(800);
-
-        const userOption = userDropBox.locator('li', { hasText: userName }).first();
-        await expect(userOption).toBeVisible({ timeout: 10_000 });
-        await userOption.locator('label.checkbox').click({ force: true });
-
-        const userDropdownArrow = this.page.locator('re-multiselect.w-100.mr-2 i.fa-sort-up');
-        await userDropdownArrow.click({ force: true });
-
-
-        const teamsDropdown = popupContent.locator('re-multiselect.custom-select-share .box');
-        await expect(teamsDropdown).toBeVisible({ timeout: 10_000 });
-        await teamsDropdown.click();
-
-        const teamDropBox = this.page.locator('.drop_box').last();
-        await expect(teamDropBox).toBeVisible({ timeout: 10_000 });
-
-        const teamSearchInput = teamDropBox.locator('input[placeholder="Search"]');
-        await teamSearchInput.fill(teamName);
-        await this.page.waitForTimeout(800);
-
-        const teamOption = teamDropBox.locator('li', { hasText: teamName }).first();
-        await expect(teamOption).toBeVisible({ timeout: 10_000 });
-        await teamOption.locator('label.checkbox').click({ force: true });
-
-        const teamDropdownArrow = this.page.locator('re-multiselect.custom-select-share i.fas.fa-sort-up');
-        await teamDropdownArrow.click({ force: true });
-
-        const shareBtn = popupContent.locator('button._outline-btn', { hasText: 'Share' });
-        await expect(shareBtn).toBeVisible({ timeout: 10_000 });
-        await shareBtn.click({ force: true });
-
-        const sharedSuccessMessage = this.page.getByText('View shared').or(
-            this.page.getByText('shared successfully')
-        ).or(
-            this.page.getByText('already shared with one or more selected users or teams')
-        );
-        await expect(sharedSuccessMessage.first()).toBeVisible({ timeout: 10_000 });
-
-        await this.page.waitForTimeout(500);
-        await this.page.mouse.click(0, 0);
-        await this.page.waitForTimeout(400);
-        await this.ResetButton();
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.closeOverlay();
+        await this.resetListView();
         await this.waitForFirstTableRow();
     }
 
-    async reorderStatusPositions() {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
+    private async selectShareTarget(
+        dropdown: Locator,
+        dropdownArrow: Locator,
+        targetName: string
+    ): Promise<void> {
+        await expect(dropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await dropdown.click();
 
-        const defaultViewButton = this.page.locator('._view-btn').filter({ hasText: /default view/i });
-        await defaultViewButton.waitFor({ state: 'visible', timeout: 15_000 });
-        await defaultViewButton.click();
+        const dropBox = this.lastDropBox;
+        await expect(dropBox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
 
-        const popupContent = this.page.locator('.p-overlaypanel-content');
-        await expect(popupContent).toBeVisible({ timeout: 15_000 });
+        const searchField = dropBox.locator('input[placeholder="Search"]');
+        await searchField.fill(targetName);
+        await this.page.waitForTimeout(800);
 
-        const draggableHandles = popupContent.locator('#visibleColumnList .cdk-drag');
-        const handleCount = await draggableHandles.count();
+        const option = dropBox.locator('li', { hasText: targetName }).first();
+        await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await option.locator('label.checkbox').click({ force: true });
 
+        await dropdownArrow.click({ force: true });
+    }
+
+    async reorderStatusPositions(): Promise<void> {
+        await this.prepareListView();
+        await this.openDefaultViewPopup();
+
+        const handleCount = await this.visibleColumnList.count();
         if (handleCount < 2) {
             throw new Error('Less than 2 draggable statuses found, cannot perform drag-and-drop.');
         }
 
-        const firstHandle = draggableHandles.nth(0);
-        const secondHandle = draggableHandles.nth(1);
+        const firstHandle = this.visibleColumnList.nth(0);
+        const secondHandle = this.visibleColumnList.nth(1);
 
         await firstHandle.scrollIntoViewIfNeeded();
         await this.page.waitForTimeout(300);
 
         const box1 = await firstHandle.boundingBox();
         const box2 = await secondHandle.boundingBox();
-
         if (!box1 || !box2) {
             throw new Error('Could not get bounding boxes for drag handles.');
         }
 
-        const startX = box1.x + box1.width / 2;
-        const startY = box1.y + box1.height / 2;
-        const endX = box2.x + box2.width / 2;
-        const endY = box2.y + box2.height + 20;
+        await this.performDragDrop(box1, box2);
+        await expect(this.viewPopupContent).toBeVisible();
+
+        await this.closeOverlay();
+        await this.resetListView();
+        await this.waitForFirstTableRow();
+    }
+
+    private async performDragDrop(
+        sourceBox: { x: number; y: number; width: number; height: number },
+        targetBox: { x: number; y: number; width: number; height: number }
+    ): Promise<void> {
+        const startX = sourceBox.x + sourceBox.width / 2;
+        const startY = sourceBox.y + sourceBox.height / 2;
+        const endX = targetBox.x + targetBox.width / 2;
+        const endY = targetBox.y + targetBox.height + 20;
+
         await this.page.mouse.move(startX, startY);
         await this.page.waitForTimeout(100);
         await this.page.mouse.down();
@@ -870,510 +1355,328 @@ export class ProjectActions {
         await this.page.mouse.move(endX, endY, { steps: 25 });
         await this.page.waitForTimeout(300);
         await this.page.mouse.up();
-        await this.page.waitForTimeout(500);
-        await expect(popupContent).toBeVisible();
-        await this.page.mouse.click(0, 0);
-        await this.page.waitForTimeout(400);
-        await this.ResetButton();
-        await this.waitForFirstTableRow();
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
     }
 
-    async hideAndShowStatus() {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        await expect(
-            this.page.locator('._view-btn').filter({ hasText: /default view/i })
-        ).toBeVisible({ timeout: 15_000 });
-        await this.page.locator('._view-btn').filter({ hasText: /default view/i }).click();
-        await expect(this.page.locator('.p-overlaypanel-content')).toBeVisible({ timeout: 10_000 });
-        await expect(
-            this.page.locator('.p-overlaypanel-content').getByText('Hide All', { exact: true })
-        ).toBeVisible({ timeout: 10_000 });
-        await this.page.locator('.p-overlaypanel-content').getByText('Hide All', { exact: true }).click();
-        await this.page.waitForTimeout(500);
-        await expect(
-            this.page.locator('.p-overlaypanel-content #visibleColumnList .cdk-drag')
-        ).toHaveCount(0, { timeout: 10_000 });
-        await expect(
-            this.page.locator('.p-overlaypanel-content').getByText('Show All', { exact: true })
-        ).toBeVisible({ timeout: 10_000 });
-        await this.page.locator('.p-overlaypanel-content').getByText('Show All', { exact: true }).click();
-        await this.page.waitForTimeout(500);
-        await expect(
-            this.page.locator('.p-overlaypanel-content #hiddenColumnList .cdk-drag')
-        ).toHaveCount(0, { timeout: 10_000 });
-        await expect(
-            this.page.locator('.p-overlaypanel-content #visibleColumnList .cdk-drag').first()
-        ).toBeVisible({ timeout: 10_000 });
-        await this.page.mouse.click(0, 0);
-        await this.page.waitForTimeout(300);
+    async hideAndShowStatus(): Promise<void> {
+        await this.prepareListView();
+        await this.openDefaultViewPopup();
+
+        await expect(this.hideAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.hideAllButton.click();
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+
+        await expect(this.visibleColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        await expect(this.showAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.showAllButton.click();
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+
+        await expect(this.hiddenColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.visibleColumnList.first()).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+
+        await this.closeOverlay();
     }
 
-    async searchStatusInViewPopup() {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        await expect(
-            this.page.locator('._view-btn').filter({ hasText: /default view/i })
-        ).toBeVisible({ timeout: 15_000 });
-        await this.page.locator('._view-btn').filter({ hasText: /default view/i }).click();
-        await expect(this.page.locator('.p-overlaypanel-content')).toBeVisible({ timeout: 10_000 });
+    async searchStatusInViewPopup(): Promise<void> {
+        await this.prepareListView();
+        await this.openDefaultViewPopup();
+
         const searchTerm = 'Project Name';
-        const searchInput = this.page.locator('.p-overlaypanel-content input[placeholder="Search"]').first();
-        await expect(searchInput).toBeVisible({ timeout: 10_000 });
-        await searchInput.fill(searchTerm);
-        await this.page.waitForTimeout(500);
-        const matchedRow = this.page.locator('.p-overlaypanel-content #visibleColumnList .cdk-drag')
-            .filter({ hasText: new RegExp(searchTerm, 'i') });
-        await expect(matchedRow.first()).toBeVisible({ timeout: 10_000 });
-        await this.page.mouse.click(0, 0);
-        await this.page.waitForTimeout(300);
+        await expect(this.columnSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.columnSearchInput.fill(searchTerm);
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+
+        await expect(this.columnItemByName(searchTerm).first()).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+
+        await this.closeOverlay();
     }
 
     async deleteSavedViewInListView(viewName: string): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
+        await this.prepareListView();
+        await this.openDefaultViewPopup();
 
-        const defaultViewButton = this.page.locator('._view-btn').filter({ hasText: /default view/i });
-        await defaultViewButton.waitFor({ state: 'visible', timeout: 15_000 });
-        await defaultViewButton.click();
+        await expect(this.savedViewDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.savedViewDropdown.click();
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
 
-        const popupContent = this.page.locator('.p-overlaypanel-content');
-        await expect(popupContent).toBeVisible({ timeout: 15_000 });
+        const viewOption = this.savedViewOption(viewName);
+        await expect(viewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
 
-        // Open the view dropdown to reveal saved views
-        const viewDropdown = popupContent.locator('ng-select[placeholder="Select default view"]');
-        await expect(viewDropdown).toBeVisible({ timeout: 10_000 });
-        await viewDropdown.click();
-        await this.page.waitForTimeout(500);
-
-        // Locate the target view option in the dropdown panel
-        const viewOption = this.page.locator('.ng-dropdown-panel-items .ng-option')
-            .filter({ hasText: new RegExp(`^\\s*${viewName}\\s*$`, 'i') });
-        await expect(viewOption).toBeVisible({ timeout: 10_000 });
-
-        // Click the trash/delete icon inside that option
         const deleteIcon = viewOption.locator('img[src*="delete_icon.svg"]');
-        await expect(deleteIcon).toBeVisible({ timeout: 10_000 });
+        await expect(deleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await deleteIcon.click();
 
-        // Handle confirmation dialog if one appears
-        const confirmButton = this.page.getByRole('button', { name: /confirm|yes|delete|ok/i }).first();
         try {
-            await expect(confirmButton).toBeVisible({ timeout: 5_000 });
-            await confirmButton.click();
+            await expect(this.confirmAnyButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
+            await this.confirmAnyButton.click();
         } catch {
             // No confirmation dialog — deletion was immediate
         }
 
-        // Verify success toast
-        await expect(
-            this.page.getByText(/view deleted|deleted successfully|removed successfully/i)
-        ).toBeVisible({ timeout: 10_000 });
-
-        await this.page.mouse.click(0, 0);
-        await this.page.waitForTimeout(300);
+        await expect(this.viewDeletedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeOverlay();
     }
 
-    async switchBetweenGridAndListView() {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.switchToGridView();
-        await this.switchToListView();
-    }
+    // ==========================================================================
+    // LIST VIEW — PROJECT ACTIONS (CREATE / DELETE / DUPLICATE / SORT)
+    // ==========================================================================
 
     async openProjectCreatePopup(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        const addButton = this.page.locator('button._addNew');
-        await expect(addButton).toBeVisible({ timeout: 10_000 });
-        await addButton.click();
+        await this.prepareListView();
+        await expect(this.addNewProjectButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.addNewProjectButton.click();
 
-        const dialog = this.page.locator('.p-dialog-content').filter({
-            has: this.page.locator('input[formcontrolname="Project_Name"]'),
-        });
-        await expect(dialog).toBeVisible({ timeout: 10_000 });
-        const projectNameInput = dialog.locator('input[formcontrolname="Project_Name"]');
-        await expect(projectNameInput).toBeVisible();
-        const projectStatusSelect = dialog.locator('ng-select[formcontrolname="Project_Status"]');
-        await expect(projectStatusSelect).toBeVisible();
-        const outlineButton = dialog.locator('button._outline-btn');
-        await expect(outlineButton).toBeVisible();
-        const cancelButton = dialog.locator('button._cancel-btn');
-        await expect(cancelButton).toBeVisible();
-        await cancelButton.click();
+        await expect(this.projectDialog).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectNameField).toBeVisible();
+        await expect(this.projectStatusField).toBeVisible();
+        await expect(this.projectDialogSaveButton).toBeVisible();
+        await expect(this.projectDialogCancelButton).toBeVisible();
+        await this.projectDialogCancelButton.click();
     }
 
     async selectMultipleProjects(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        const selectAllCheckbox = this.page.locator('thead div.p-checkbox.p-component .p-checkbox-box');
-        await expect(selectAllCheckbox).toBeVisible({ timeout: 30_000 });
-        await selectAllCheckbox.click();
+        await this.prepareListView();
+        await expect(this.selectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.selectAllCheckbox.click();
         await this.page.waitForTimeout(1000);
-        await selectAllCheckbox.click();
-        await this.ResetButton();
+        await this.selectAllCheckbox.click();
+        await this.resetListView();
     }
 
     async duplicateSelectedProjects(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-
-        const rowCheckboxes = this.page.locator('tbody tr p-tablecheckbox .p-checkbox-box').first();
-        await rowCheckboxes.click();
-
-        const duplicateButton = this.page.locator('button', { hasText: /duplicate/i });
-        await duplicateButton.click();
-
-        const toastMessage = this.page.locator('.toast-message', { hasText: /project duplicated successfully/i });
-        await expect(toastMessage).toBeVisible({ timeout: 10000 });
-
+        await this.prepareListView();
+        await this.firstRowCheckbox.click();
+        await this.duplicateButton.click();
+        await expect(this.duplicateSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.page.waitForTimeout(1000);
-        await this.ResetButton();
+        await this.resetListView();
     }
 
-    // 2. Delete selected projects
     async deleteSelectedProjects(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        const checkboxes = this.page.locator('tbody tr p-tablecheckbox .p-checkbox-box').first();
-        await checkboxes.click();
-        const deleteButton = this.page.getByRole('button', { name: /delete/i }).first();
-        await deleteButton.click();
-        const confirmDeleteButton = this.page.getByRole('button', { name: /delete/i }).last();
-        await confirmDeleteButton.click();
-        await expect(
-            this.page.getByText(/project deleted successfully|project.*deleted/i).first()
-        ).toBeVisible({ timeout: 10_000 });
+        await this.prepareListView();
+        await this.firstRowCheckbox.click();
+        await this.deleteButtonFirst.click();
+        await this.deleteButtonLast.click();
+        await expect(this.deleteSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
 
     async deleteProjectViaRowIcon(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-
-        const deleteIcon = this.page.locator('tbody tr img[src*="delete_icon.svg"]').first();
-        await expect(deleteIcon).toBeVisible({ timeout: 10_000 });
-        await deleteIcon.click();
-
-        await this.page.getByRole('button', { name: /yes|confirm|delete/i }).first().click();
-
-        await expect(
-            this.page.getByText(/Project deleted successfully|project.*deleted/i).first()
-        ).toBeVisible({ timeout: 10_000 });
+        await this.prepareListView();
+        await expect(this.firstRowDeleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.firstRowDeleteIcon.click();
+        await this.confirmDeleteButton.click();
+        await expect(this.deleteSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
 
     async cancelDeleteFromPopup(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        await this.page.locator('tbody tr img[src*="delete_icon.svg"]').first().click();
-        const cancelButton = this.page.getByRole('button', { name: /cancel|no/i }).first();
-        await expect(cancelButton).toBeVisible({ timeout: 10_000 });
-        await cancelButton.click();
-        await expect(cancelButton).toBeHidden({ timeout: 5_000 });
+        await this.prepareListView();
+        await this.firstRowDeleteIcon.click();
+        await expect(this.cancelDeleteButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cancelDeleteButton.click();
+        await expect(this.cancelDeleteButton).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
     }
 
     async sortProjectsAscending(columnName: string = 'Project Name'): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-
-        const sortIcon = this.page.locator('th', { hasText: columnName })
-            .locator('p-sorticon').first();
-        await sortIcon.click();
-        await this.page.waitForTimeout(500);
-
-        const values = await this.page.locator('tbody tr td:nth-child(3) p').allTextContents();
-        const trimmed = values.map(v => v.trim()).filter(v => v.length > 0);
-        const sorted = [...trimmed].sort((a, b) => a.localeCompare(b));
-
-        if (JSON.stringify(trimmed) !== JSON.stringify(sorted)) {
-            throw new Error(`Ascending sort failed. Got: ${trimmed.slice(0, 5).join(', ')}...`);
-        }
+        await this.prepareListView();
+        await this.sortIconForColumn(columnName).click();
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.verifyColumnSort('asc', columnName);
     }
 
     async sortProjectsDescending(columnName: string = 'Project Name'): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        const columnHeader = this.page.locator('th', { hasText: 'Project Name' }).first();
-        const filterIcon = this.page.getByRole('cell', { name: 'Project Name filter' }).locator('svg');
-        await filterIcon.click();
-        await expect(columnHeader.locator('sortamountdownicon')).toHaveCount(1, { timeout: 5_000 });
-        const values = await this.page.locator('tbody tr td:nth-child(3) p').allTextContents();
-        const trimmed = values.map(v => v.trim()).filter(v => v.length > 0);
-        const sorted = [...trimmed].sort((a, b) => b.toLowerCase().localeCompare(a.toLowerCase()));
+        await this.prepareListView();
+        await this.columnFilterIcon(columnName).click();
+        await expect(this.columnHeader(columnName).locator('sortamountdownicon')).toHaveCount(1, {
+            timeout: ProjectActions.TIMEOUT_SHORT,
+        });
+        await this.verifyColumnSort('desc', columnName);
+    }
+
+    private async verifyColumnSort(direction: 'asc' | 'desc', columnName: string): Promise<void> {
+        const values = await this.projectNameColumnValues.allTextContents();
+        const trimmed = values.map((v) => v.trim()).filter((v) => v.length > 0);
+        const sorted = [...trimmed].sort((a, b) =>
+            direction === 'asc'
+                ? a.toLowerCase().localeCompare(b.toLowerCase())
+                : b.toLowerCase().localeCompare(a.toLowerCase())
+        );
 
         if (JSON.stringify(trimmed) !== JSON.stringify(sorted)) {
+            const dirLabel = direction === 'asc' ? 'Ascending' : 'Descending';
             throw new Error(
-                `Descending sort failed for "${columnName}".\n` +
-                `Actual:   ${trimmed.slice(0, 5).join(' | ')}\n` +
-                `Expected: ${sorted.slice(0, 5).join(' | ')}`
+                `${dirLabel} sort failed for "${columnName}".\n` +
+                    `Actual:   ${trimmed.slice(0, 5).join(' | ')}\n` +
+                    `Expected: ${sorted.slice(0, 5).join(' | ')}`
             );
         }
     }
 
-    async searchProjectWithSymbols(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        const searchInput = this.page.locator('input[placeholder="Search"]').last();
-        await searchInput.fill('@#$%^&*');
-        const noRecordsMessage = this.page.getByText(/No projects available/i).first();
-        await expect(noRecordsMessage).toBeVisible({ timeout: 30_000 });
-        await this.ResetButton();
-    }
-
-    async selectProjectManagerWithNoProjects(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        await this.page.waitForTimeout(1500);
-        const pm = this.page.locator('re-multiselect[placeholder="Project Manager"] .box');
-        await pm.click();
-        const dropdownOptionsList = this.page.locator('re-multiselect[placeholder="Project Manager"] ul');
-        await dropdownOptionsList.waitFor({ state: 'visible', timeout: 50000 });
-        await this.page.keyboard.press('Escape');
-        await this.ResetButton();
-    }
+    // ==========================================================================
+    // LIST VIEW — EDGE CASES
+    // ==========================================================================
 
     async createViewWithoutName(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        await this.page.locator('._view-btn').filter({ hasText: /default view/i }).click();
-        const popupContent = this.page.locator('.p-overlaypanel-content');
-        await expect(popupContent).toBeVisible({ timeout: 15_000 });
-        const addViewIcon = popupContent.locator('.view-options img[src*="plus-solid.svg"]');
-        await addViewIcon.waitFor({ state: 'visible', timeout: 10_000 });
-        await addViewIcon.click();
-        const viewNameInput = this.page.locator('input[placeholder*="view" i], input[placeholder*="name" i]').last();
-        await expect(viewNameInput).toBeVisible({ timeout: 10_000 });
-        const saveBtn = this.page.getByRole('button', { name: /save|create/i }).first();
-        await expect(saveBtn).toBeVisible({ timeout: 10_000 });
-        await saveBtn.click({ force: true });
-        await expect(
-            this.page.locator('input[placeholder*="view" i], input[placeholder*="name" i].invalidField')
-        ).toBeVisible({ timeout: 5_000 });
+        await this.openAddViewAndClickSave();
+        await expect(this.viewNameInputInvalid).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
         await this.page.keyboard.press('Escape');
-        await this.ResetButton();
+        await this.resetListView();
     }
 
     async saveViewWithoutChanges(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        await this.page.locator('._view-btn').filter({ hasText: /default view/i }).click();
-        const popupContent = this.page.locator('.p-overlaypanel-content');
-        await expect(popupContent).toBeVisible({ timeout: 15_000 });
-        const addViewIcon = popupContent.locator('.view-options img[src*="plus-solid.svg"]');
-        await addViewIcon.waitFor({ state: 'visible', timeout: 10_000 });
-        await addViewIcon.click();
-        const viewNameInput = this.page.locator('input[placeholder*="view" i], input[placeholder*="name" i]').last();
-        await expect(viewNameInput).toBeVisible({ timeout: 10_000 });
-        const saveBtn = this.page.getByRole('button', { name: /save|create/i }).first();
-        await expect(saveBtn).toBeVisible({ timeout: 10_000 });
-        await saveBtn.click({ force: true });
-        await expect(
-            this.page.locator('input[placeholder*="view" i], input[placeholder*="name" i].invalidField')
-        ).toBeVisible({ timeout: 5_000 });
+        await this.openAddViewAndClickSave();
+        await expect(this.viewNameInputInvalid).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
         await this.page.keyboard.press('Escape');
-        await this.ResetButton();
+        await this.resetListView();
+    }
+
+    private async openAddViewAndClickSave(): Promise<void> {
+        await this.prepareListView();
+        await this.defaultViewButton.click();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+
+        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.addViewIcon.click();
+
+        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.saveOrCreateButton.click({ force: true });
     }
 
     async shareViewWithNoSelection(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        await this.page.locator('._view-btn').filter({ hasText: /default view/i }).click();
-        const popupContent = this.page.locator('.p-overlaypanel-content');
-        await expect(popupContent).toBeVisible({ timeout: 15_000 });
-        const shareIcon = popupContent.locator('.view-options img[src*="share-one.svg"]');
-        await expect(shareIcon).toBeVisible({ timeout: 10_000 });
-        await shareIcon.click({ force: true });
-        const shareBtn = popupContent.locator('button._outline-btn', { hasText: 'Share' });
-        await expect(shareBtn).toBeVisible({ timeout: 10_000 });
-        await shareBtn.click({ force: true });
-        const sharedSuccessMessage = this.page.getByText('View shared').or(
-            this.page.getByText('shared successfully')
-        ).or(
-            this.page.getByText('user or team is not selected')
-        );
-        await expect(sharedSuccessMessage.first()).toBeVisible({ timeout: 10_000 });
+        await this.prepareListView();
+        await this.defaultViewButton.click();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
 
-        await this.page.waitForTimeout(500);
-        await this.page.mouse.click(0, 0);
-        await this.page.waitForTimeout(400);
-        await this.ResetButton();
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.shareViewIcon.click({ force: true });
+
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.shareButton.click({ force: true });
+
+        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.closeOverlay();
+        await this.resetListView();
         await this.waitForFirstTableRow();
     }
 
     async viewStatusOutOfSync(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
+        await this.prepareListView();
+        await this.defaultViewButton.click();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
 
-        await this.page.locator('._view-btn').filter({ hasText: /default view/i }).click();
+        await this.columnItemByName('developer').locator('img[src*="Eye.svg"]').click();
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
 
-        const popupContent = this.page.locator('.p-overlaypanel-content');
-        await expect(popupContent).toBeVisible({ timeout: 10_000 });
-        await popupContent.locator('#visibleColumnList .cdk-drag')
-            .filter({ hasText: /developer/i })
-            .locator('img[src*="Eye.svg"]').click();
-        await this.page.waitForTimeout(500);
-        await this.page.mouse.click(0, 0);
-        await this.page.waitForTimeout(500);
-        await this.page.locator('._view-btn').filter({ hasText: /default view/i }).click();
-        await expect(popupContent).toBeVisible({ timeout: 10_000 });
-        const developerInVisible = await popupContent
-            .locator('#visibleColumnList .cdk-drag')
-            .filter({ hasText: /developer/i }).count();
-        console.log(`After navigate-away-and-reopen, Developer in visible list: ${developerInVisible > 0}`);
-        await this.page.waitForTimeout(500);
-        await this.page.mouse.click(0, 0);
-        await this.page.waitForTimeout(500);
-        await this.ResetButton();
+        await this.closeOverlay();
+        await this.defaultViewButton.click();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        // Intentional debug log — tracks view persistence behavior
+        const developerCount = await this.columnItemByName('developer').count();
+        console.log(`After navigate-away-and-reopen, Developer in visible list: ${developerCount > 0}`);
+
+        await this.closeOverlay();
+        await this.resetListView();
     }
 
     async verifyRecordsCountAtEnd(): Promise<void> {
-        await this.navigateToProjects();
-        await this.switchToListView();
-        await this.waitForFirstTableRow();
-        const recordsLocator = this.page.locator('p').filter({ hasText: /^\s*Records:\s*\d+/ });
-        await recordsLocator.scrollIntoViewIfNeeded();
-        await expect(recordsLocator).toBeVisible({ timeout: 40_000 });
-        const text = await recordsLocator.textContent();
+        await this.prepareListView();
+        await this.recordsCountLabel.scrollIntoViewIfNeeded();
+        await expect(this.recordsCountLabel).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+
+        const text = await this.recordsCountLabel.textContent();
         const count = parseInt(text?.match(/\d+/)?.[0] ?? '0', 10);
         if (count <= 0) {
             throw new Error(`Invalid records count: "${text?.trim()}"`);
         }
-        console.log(`Records displayed at end of list: ${count}`);
     }
 
+    // ==========================================================================
+    // PRECINCT SETUP
+    // ==========================================================================
+
     async verifyPrecinctSetupSubTabs(): Promise<void> {
-        await this.gotoPrecinctListings();
-        // Click the "Precinct Set up" main menu tab
-        const precinctSetupTab = this.page.locator('app-menu a', { hasText: /precinct set up/i });
-        await expect(precinctSetupTab).toBeVisible({ timeout: 40_000 });
-        await precinctSetupTab.click();
-
-        // Verify "Precinct" sub-tab is visible
-        const precinctSubTab = this.page.locator('.secondary-tabs a[role="tab"]')
-            .filter({ hasText: /^\s*Precinct\s*$/i });
-        await expect(precinctSubTab).toBeVisible({ timeout: 10_000 });
-
-        // Verify "Precinct Allocation" sub-tab is visible
-        const precinctAllocationSubTab = this.page.locator('.secondary-tabs a[role="tab"]')
-            .filter({ hasText: /precinct allocation/i });
-        await expect(precinctAllocationSubTab).toBeVisible({ timeout: 10_000 });
+        await this.openPrecinctSetup();
+        await expect(this.precinctSubTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.precinctAllocationSubTab).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
     }
 
     async verifyPrecinctTabDefaultControls(): Promise<void> {
-        await this.gotoPrecinctListings();
-        const precinctSetupTab = this.page.locator('app-menu a', { hasText: /precinct set up/i });
-        await expect(precinctSetupTab).toBeVisible({ timeout: 30_000 });
-        await precinctSetupTab.click();
-        const precinctTab = this.page.locator('#pills-precinct-tab');
-        await expect(precinctTab).toHaveClass(/active/);
-        const precinctPanel = this.page.locator('#precinct');
-        const selectProjectDropdown = precinctPanel.locator('ng-select[placeholder="Select Project"]');
-        await expect(selectProjectDropdown).toBeVisible({ timeout: 10_000 });
-        const createNewButton = precinctPanel.locator('button', { hasText: /create new/i });
-        await expect(createNewButton).toBeVisible({ timeout: 10_000 });
+        await this.openPrecinctSetup();
+        await expect(this.precinctTab).toHaveClass(/active/);
+        await expect(this.selectProjectDropdown).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+        await expect(this.createNewPrecinctButton).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
     }
 
     async verifyAddPrecinctPopupOpensAndCloses(): Promise<void> {
-        await this.gotoPrecinctListings();
-    
-        // Click "Precinct Set up" main menu tab
-        const precinctSetupTab = this.page.locator('app-menu a', { hasText: /precinct set up/i });
-        await expect(precinctSetupTab).toBeVisible({ timeout: 30_000 });
-        await precinctSetupTab.click();
-        const createNewButton = this.page.locator('#precinct button', { hasText: /create new/i });
-        await expect(createNewButton).toBeVisible({ timeout: 10_000 });
-        await createNewButton.click();
-        const dialog = this.page.locator('.p-dialog[role="dialog"]');
-        await expect(dialog).toBeVisible({ timeout: 10_000 });
-        await expect(dialog.locator('.p-dialog-title')).toHaveText(/add precinct/i);
-        await expect(dialog.locator('input[placeholder="Precinct Name"]')).toBeVisible();
-        await expect(dialog.locator('button', { hasText: /upload image/i })).toBeVisible();
-        await expect(dialog.locator('button', { hasText: /^save$/i })).toBeVisible();
-        const cancelButton = dialog.locator('button', { hasText: /^cancel$/i });
-        await expect(cancelButton).toBeVisible();
-        await cancelButton.click();
-        await expect(dialog).toBeHidden({ timeout: 5_000 });
+        await this.openAddPrecinctDialog();
+        await expect(this.precinctDialogTitle).toHaveText(/add precinct/i);
+        await expect(this.precinctNameInput).toBeVisible();
+        await expect(this.precinctUploadButton).toBeVisible();
+        await expect(this.precinctSaveButton).toBeVisible();
+
+        await expect(this.precinctCancelButton).toBeVisible();
+        await this.precinctCancelButton.click();
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
     }
 
     async verifyPrecinctCreationWithImage(): Promise<void> {
-        const path = require('path');
-        
-        await this.gotoPrecinctListings();
-    
-        // Click "Precinct Set up" main menu tab
-        const precinctSetupTab = this.page.locator('app-menu a', { hasText: /precinct set up/i });
-        await expect(precinctSetupTab).toBeVisible({ timeout: 30_000 });
-        await precinctSetupTab.click();
-        // Open the Add Precinct dialog
-        const createNewButton = this.page.locator('#precinct button', { hasText: /create new/i });
-        await createNewButton.click();
-    
-        const dialog = this.page.locator('.p-dialog[role="dialog"]');
-        await expect(dialog).toBeVisible({ timeout: 10_000 });
-        await expect(dialog.locator('.p-dialog-title')).toHaveText(/add precinct/i);
-        const precinctName = `A${faker.word.adjective()}${faker.word.noun()}`.replace(/[^a-zA-Z0-9]/g, '');
-        // Fill the Precinct Name field
-        const nameInput = dialog.locator('input[placeholder="Precinct Name"]');
-        await nameInput.fill(precinctName);
-    
-        // Upload an image from the Projects/Images folder
-        const imagePath = path.resolve(__dirname, 'Images', 'propertyImage.jpg');
-        const fileInput = dialog.locator('input[type="file"]');
-        await fileInput.setInputFiles(imagePath);
-    
-        // Wait a moment for the image to process/preview
+        await this.openAddPrecinctDialog();
+        await expect(this.precinctDialogTitle).toHaveText(/add precinct/i);
+
+        const precinctName = this.generateUniquePrecinctName();
+        await this.precinctNameInput.fill(precinctName);
+
+        const imagePath = path.resolve(ProjectActions.IMAGES_DIR, ProjectActions.DEFAULT_TEST_IMAGE);
+        await this.precinctFileInput.setInputFiles(imagePath);
         await this.page.waitForTimeout(1000);
-    
-        // Click Save
-        const saveButton = dialog.locator('button', { hasText: /^save$/i });
-        await saveButton.click();
-        // Verify dialog closes (indicates save succeeded)
-        await expect(dialog).toBeHidden({ timeout: 15_000 });
-        // The toast aria-label is "Add successfully" and the text is also "Add successfully"
-        const toast = this.page.locator('.toast-message[aria-label="Add successfully"]', { hasText: /Add successfully/i });
-        await expect(toast).toBeVisible({ timeout: 10_000 });
-        const newPrecinctCard = this.page.locator('#precinct .sgv-product', { hasText: precinctName });
-        await newPrecinctCard.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
-        await expect(newPrecinctCard).toBeVisible({ timeout: 30_000 });
-   
+
+        await this.precinctSaveButton.click();
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(this.precinctAddSuccessToast).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+
+        const newCard = this.precinctCardByName(precinctName);
+        await newCard.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
+        await expect(newCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
     }
 
     async verifyImageRemovalViaCrossIcon(): Promise<void> {
-        const path = require('path');
-        await this.gotoPrecinctListings();
-        await this.page.locator('app-menu a', { hasText: /precinct set up/i }).click();
-        await this.page.waitForLoadState('networkidle');
-        await this.page.locator('#precinct button', { hasText: /create new/i }).click();
-        const dialog = this.page.locator('.p-dialog[role="dialog"]');
-        await expect(dialog).toBeVisible({ timeout: 10_000 });
-        const imagePath = path.resolve(__dirname, 'Images', 'propertyImage.jpg');
-        await dialog.locator('input[type="file"]').setInputFiles(imagePath);
-        const uploadedImage = dialog.locator('img.logo-img');
-        await expect(uploadedImage).toBeVisible({ timeout: 10_000 });
-        const removeIcon = dialog.locator('i.pi-times.remove-icon');
-        await expect(removeIcon).toBeVisible();
-        await removeIcon.click();
-        await expect(uploadedImage).toBeHidden({ timeout: 5_000 });
-        await expect(removeIcon).toBeHidden({ timeout: 5_000 });
-        const noImagePlaceholder = dialog.locator('img.no-images');
-        await expect(noImagePlaceholder).toBeVisible({ timeout: 5_000 });
-        await dialog.locator('button', { hasText: /^cancel$/i }).click();
-        await expect(dialog).toBeHidden({ timeout: 5_000 });
+        await this.openAddPrecinctDialog();
+
+        const imagePath = path.resolve(ProjectActions.IMAGES_DIR, ProjectActions.DEFAULT_TEST_IMAGE);
+        await this.precinctFileInput.setInputFiles(imagePath);
+
+        await expect(this.precinctUploadedImage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.precinctRemoveImageIcon).toBeVisible();
+
+        await this.precinctRemoveImageIcon.click();
+
+        await expect(this.precinctUploadedImage).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+        await expect(this.precinctRemoveImageIcon).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+        await expect(this.precinctNoImagePlaceholder).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_SHORT,
+        });
+
+        await this.precinctCancelButton.click();
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+    }
+
+    private generateUniquePrecinctName(): string {
+        return `A${faker.word.adjective()}${faker.word.noun()}`.replace(/[^a-zA-Z0-9]/g, '');
     }
 }
