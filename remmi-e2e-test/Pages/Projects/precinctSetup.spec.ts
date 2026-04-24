@@ -44,4 +44,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.verifyImageRemovalViaCrossIcon();
     });
 
+    test('Cancel Add Precinct popup using cross icon', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.cancelAddPrecinctPopupUsingCrossIcon();
+    });
+
 });

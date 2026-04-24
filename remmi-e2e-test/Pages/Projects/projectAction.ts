@@ -1679,4 +1679,13 @@ export class ProjectActions {
     private generateUniquePrecinctName(): string {
         return `A${faker.word.adjective()}${faker.word.noun()}`.replace(/[^a-zA-Z0-9]/g, '');
     }
+
+    async cancelAddPrecinctPopupUsingCrossIcon(): Promise<void> {
+        await this.openAddPrecinctDialog();
+        await expect(this.precinctDialogTitle).toHaveText(/add precinct/i);
+        const closeIcon = this.addPrecinctDialog.locator('.p-dialog-header-close');
+        await expect(closeIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await closeIcon.click();
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+    }
 }
