@@ -2045,4 +2045,26 @@ export class ProjectActions {
         // Verify at least one project card exists inside the precinct view
         await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
     }
+
+    async validateDeletedPrecinctNotInAllocationDropdown(): Promise<void> {
+        await this.openPrecinctSetup();
+    
+        // Capture first precinct name and delete it
+        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const deletedPrecinctName = (await this.firstPrecinctCardName.innerText()).trim();
+    
+        await this.firstPrecinctDeleteIcon.click();
+        await expect(this.precinctDeleteSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    
+        // Go to Precinct Allocation tab and open the dropdown
+        await this.precinctAllocationSubTab.click();
+        await this.selectPrecinctDropdown.locator('.ng-select-container').click();
+        await expect(this.page.locator('.ng-dropdown-panel .ng-option-label').first())
+            .toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    
+        // Verify deleted precinct is NOT in the dropdown
+        await expect(
+            this.page.locator('.ng-dropdown-panel .ng-option-label', { hasText: deletedPrecinctName })
+        ).toHaveCount(0);
+    }
 }

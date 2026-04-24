@@ -119,4 +119,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.verifyAllocatedProjectsMarkedOnReopen();
     });
 
+    test('Validate deleted precinct does not show in allocation dropdown', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.validateDeletedPrecinctNotInAllocationDropdown();
+    });
+
 });
