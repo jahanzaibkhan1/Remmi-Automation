@@ -2001,4 +2001,14 @@ export class ProjectActions {
         console.log('[BUG] No validation error shown when saving allocation without selecting a precinct');
         await this.allocationProjectCheckboxes.nth(1).click();
     }
+
+    async attemptAllocationWithoutProjects(): Promise<void> {
+        await this.openPrecinctSetup();
+        await this.precinctAllocationSubTab.click();
+        await expect(this.precinctAllocationTabQuick).toHaveClass(/active/);
+        await this.allocationSaveButton.click();
+        await expect(this.page.getByText(/please select at least one project/i))
+            .toHaveCount(0, { timeout: ProjectActions.TIMEOUT_SHORT });
+        console.log('[BUG] No validation error shown when saving allocation without selecting any project');
+    }
 }
