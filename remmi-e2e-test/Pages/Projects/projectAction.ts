@@ -1761,23 +1761,57 @@ export class ProjectActions {
 
     async verifyEditPrecinctPopupOpensCorrectly(): Promise<void> {
         const originalName = await this.openEditPrecinctDialog();
-    
+
         // Title should say "Edit Precinct" (key difference from Add mode)
         await expect(this.precinctDialogTitle).toHaveText(/edit precinct/i);
-    
+
         // All fields must be visible
         await expect(this.precinctNameInput).toBeVisible();
         await expect(this.precinctUploadButton).toBeVisible();
         await expect(this.precinctSaveButton).toBeVisible();
         await expect(this.precinctCancelButton).toBeVisible();
-    
+
         // Name field must be pre-populated with the existing precinct name
         const currentValue = await this.precinctNameInput.inputValue();
         expect(currentValue.trim()).toBe(originalName);
         expect(currentValue.trim().length).toBeGreaterThan(0);
-    
+
         // Close dialog cleanly
         await this.precinctCancelButton.click();
         await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+    }
+
+    private get precinctUpdateSuccessToast(): Locator {
+        return this.page.locator('.toast-message', {
+            hasText: /update(d)? successfully/i,
+        });
+    }
+
+    private generateEditedPrecinctName(originalName: string): string {
+        const suffix = Date.now().toString().slice(-6);
+        return `${originalName}_edited_${suffix}`.substring(0, 50); // guard against max-length
+    }
+
+    async validateChangesAreSavedAfterEditingPrecinct(): Promise<void> {
+        const originalName = await this.openEditPrecinctDialog();
+        await expect(this.precinctDialogTitle).toHaveText(/edit precinct/i);
+
+        const newName = this.generateEditedPrecinctName(originalName);
+
+        await this.precinctNameInput.click();
+        await this.precinctNameInput.fill('');
+        await this.precinctNameInput.fill(newName);
+        await expect(this.precinctNameInput).toHaveValue(newName);
+
+        await this.precinctSaveButton.click();
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(this.precinctUpdateSuccessToast).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+
+        const editedCard = this.precinctCardByName(newName);
+        await editedCard.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
+        await expect(editedCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+
     }
 }
