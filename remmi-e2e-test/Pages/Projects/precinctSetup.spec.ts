@@ -84,4 +84,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.verifyDropdownSelectAndClearInPrecinctTab();
     });
 
+    test('Verify Precinct Allocation tab shows correct layout', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyPrecinctAllocationTabLayout();
+    });
+
 });
