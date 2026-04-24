@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="97.21296299999952">
-<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T07:30:17.427Z" hostname="chromium" tests="1" failures="0" skipped="0" time="95.237" errors="0">
-<testcase name="Precinct Setup Tab › Verify search field filters project list" classname="Pages\Projects\precinctSetup.spec.ts" time="95.237">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.17195400000364">
+<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T08:44:40.356Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.798" errors="0">
+<testcase name="Precinct Setup Tab › Allocate project to precinct and save" classname="Pages\Projects\precinctSetup.spec.ts" time="39.798">
 </testcase>
 </testsuite>
 </testsuites>
