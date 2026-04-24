@@ -1945,4 +1945,16 @@ export class ProjectActions {
         expect(optionCount).toBeGreaterThan(0);
         await this.page.mouse.click(0, 0);
     }
+
+    async verifySearchFieldFiltersProjectList(): Promise<void> {
+        await this.openPrecinctSetup();
+        await this.precinctAllocationSubTab.click();
+        await expect(this.allocationProjectRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const searchTerm = 'Automation Test'
+        await this.allocationSearchField.fill(searchTerm);
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+
+        await expect(this.allocationProjectRows.first()).toContainText(new RegExp(searchTerm, 'i'));
+        await this.page.mouse.click(0, 0);
+    }
 }
