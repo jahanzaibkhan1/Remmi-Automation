@@ -2188,4 +2188,20 @@ export class ProjectActions {
         await expect(this.precinctNoImagePlaceholder).toHaveCount(0);
         await this.precinctCancelButton.click();
     }
+
+    async verifyCancelEditDoesNotUpdatePrecinct(): Promise<void> {
+        // Open edit dialog and capture original name
+        const originalName = await this.openEditPrecinctDialog();
+
+        // Change the name but click Cancel instead of Save
+        const newName = `A${faker.word.noun()}Changed`.replace(/[^a-zA-Z0-9]/g, '');
+        await this.precinctNameInput.fill(newName);
+
+        await this.precinctCancelButton.click();
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+
+        // Verify original name still exists and new name was not saved
+        await expect(this.precinctCardByName(originalName).first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.precinctCardByName(newName)).toHaveCount(0);
+    }
 }
