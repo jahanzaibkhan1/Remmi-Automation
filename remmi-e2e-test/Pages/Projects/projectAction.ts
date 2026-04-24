@@ -631,6 +631,10 @@ export class ProjectActions {
         return this.page.locator('.ng-dropdown-panel .ng-option').first();
     }
 
+    private get allPrecinctCards(): Locator {
+        return this.page.locator('#precinct .sgv-product');
+    }
+
     // ==========================================================================
     // LOCATORS — PRECINCT ALLOCATION TAB LAYOUT
     // ==========================================================================
@@ -2134,29 +2138,43 @@ export class ProjectActions {
 
     async validateNoDuplicatePrecinctNameAllowed(): Promise<void> {
         await this.openPrecinctSetup();
-    
+
         // Capture an existing precinct name
         await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         const existingName = (await this.firstPrecinctCardName.innerText()).trim();
-    
+
         // Try to create a precinct with the same name
         await this.openAddPrecinctDialog();
         await this.precinctNameInput.fill(existingName);
-    
+
         const imagePath = path.resolve(ProjectActions.IMAGES_DIR, ProjectActions.DEFAULT_TEST_IMAGE);
         await this.precinctFileInput.setInputFiles(imagePath);
         await this.page.waitForTimeout(1000);
-    
+
         await this.precinctSaveButton.click();
-    
+
         // [BUG] Expected: validation error, dialog stays open. Actual: duplicate created.
         // TODO: Uncomment when validation is implemented
         // await expect(this.page.getByText(/precinct name already exists/i))
         //     .toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         // await expect(this.addPrecinctDialog).toBeVisible();
-    
+
         // Current behavior — duplicate is accepted
         await expect(this.precinctAddSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         console.log(`[BUG] Duplicate precinct "${existingName}" created without validation error`);
+    }
+
+
+
+    async verifyMultiplePrecinctCardsInGridView(): Promise<void> {
+        await this.openPrecinctSetup();
+        // Verify grid container uses the view-grid class (grid layout)
+        await expect(this.page.locator('#precinct .projects-row.view-grid')).toBeVisible();
+        // Verify grid layout shows multiple precinct cards
+        const cardCount = await this.allPrecinctCards.count();
+        expect(cardCount).toBeGreaterThan(1);
+        // Verify first and last cards are rendered correctly
+        await expect(this.allPrecinctCards.first()).toBeVisible();
+        await expect(this.allPrecinctCards.last()).toBeVisible();
     }
 }
