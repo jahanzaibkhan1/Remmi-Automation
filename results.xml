@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.92956300000101">
-<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T07:03:09.418Z" hostname="chromium" tests="1" failures="0" skipped="0" time="62.593" errors="0">
-<testcase name="Precinct Setup Tab › Verify “cross icon” on project dropdown clears filter" classname="Pages\Projects\precinctSetup.spec.ts" time="62.593">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="29.285591000000014">
+<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T07:09:03.479Z" hostname="chromium" tests="1" failures="0" skipped="0" time="27.378" errors="0">
+<testcase name="Precinct Setup Tab › Verify Precinct Allocation tab shows correct layout" classname="Pages\Projects\precinctSetup.spec.ts" time="27.378">
 </testcase>
 </testsuite>
 </testsuites>
