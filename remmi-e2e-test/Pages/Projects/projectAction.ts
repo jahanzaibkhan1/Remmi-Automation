@@ -2067,4 +2067,42 @@ export class ProjectActions {
             this.page.locator('.ng-dropdown-panel .ng-option-label', { hasText: deletedPrecinctName })
         ).toHaveCount(0);
     }
+    
+
+    async verifyOnlyAllocatedPrecinctsShowForProject(): Promise<void> {
+        await this.openPrecinctSetup();
+    
+        // Go to Precinct Allocation tab
+        await this.precinctAllocationSubTab.click();
+        await expect(this.precinctAllocationTabQuick).toHaveClass(/active/);
+    
+        // Select first precinct and capture its name
+        await this.selectPrecinctDropdown.locator('.ng-select-container').click();
+        await expect(this.selectProjectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(1200);
+        const precinctOption = this.page.locator('.ng-dropdown-panel .ng-option-label').first();
+        const allocatedPrecinctName = (await precinctOption.innerText()).trim();
+        await precinctOption.click();
+        await this.page.waitForTimeout(1200);
+        // Select first project and capture its name
+        await expect(this.allocationProjectRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const allocatedProjectName = (await this.allocationProjectRows.first().innerText()).trim();
+        await this.allocationProjectCheckboxes.first().click();
+    
+        // Save allocation
+        await this.allocationSaveButton.click();
+        await expect(this.genericToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    
+        // Switch to Precinct tab and filter by the allocated project
+        await this.precinctSubTab.click();
+        await this.selectProjectDropdownContainer.click();
+        await expect(this.selectProjectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.locator('.ng-dropdown-panel .ng-option', {
+            hasText: new RegExp(`^\\s*${allocatedProjectName}\\s*$`, 'i')
+        }).first().click();
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        // Verify only the allocated precinct appears
+        await expect(this.precinctCardByName(allocatedPrecinctName))
+            .toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
 }

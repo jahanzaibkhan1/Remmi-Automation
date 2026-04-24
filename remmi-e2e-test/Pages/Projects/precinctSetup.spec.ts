@@ -124,4 +124,9 @@ test.describe('Precinct Setup Tab', () => {
         await project.validateDeletedPrecinctNotInAllocationDropdown();
     });
 
+    test('Ensure only precinct-allocated projects show when filtering by project', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyOnlyAllocatedPrecinctsShowForProject();
+    });
+
 });
