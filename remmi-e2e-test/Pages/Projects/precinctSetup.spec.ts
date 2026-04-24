@@ -44,4 +44,119 @@ test.describe('Precinct Setup Tab', () => {
         await project.verifyImageRemovalViaCrossIcon();
     });
 
+    test('Cancel Add Precinct popup using cross icon', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.cancelAddPrecinctPopupUsingCrossIcon();
+    });
+
+    test('Cancel Add Precinct popup using Cancel button', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.cancelAddPrecinctPopupUsingCancelButton();
+    });
+
+    test('Validate precinct card display after creation', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyPrecinctCreationWithImage();
+    });
+
+    test('Verify Edit Precinct popup opens correctly', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyEditPrecinctPopupOpensCorrectly();
+    });
+
+    test('Validate changes are saved after editing precinct', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.validateChangesAreSavedAfterEditingPrecinct();
+    });
+
+    test('Validate precinct deletion from card', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.validatePrecinctDeletionFromCard();
+    });
+
+    test('Verify dropdown-based project filtering in Precinct tab', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyDropdownSelectAndClearInPrecinctTab();
+    });
+
+    test('Verify “cross icon” on project dropdown clears filter', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyDropdownSelectAndClearInPrecinctTab();
+    });
+
+    test('Verify Precinct Allocation tab shows correct layout', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyPrecinctAllocationTabLayout();
+    });
+
+    test('Validate precinct dropdown shows created precincts', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.validatePrecinctDropdownShowsCreatedPrecincts();
+    });
+
+    test('Verify search field filters project list', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifySearchFieldFiltersProjectList();
+    });
+
+    test('Allocate project to precinct and save', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.allocateProjectToPrecinctAndSave();
+    });
+
+    test('Attempt allocation without selecting a precinct', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.attemptAllocationWithoutPrecinct();
+    });
+
+    test('Attempt allocation without selecting projects', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.attemptAllocationWithoutProjects();
+    });
+
+    test('Verify already allocated projects are marked when allocation re-opened', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyAllocatedProjectsMarkedOnReopen();
+    });
+
+    test('Validate deleted precinct does not show in allocation dropdown', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.validateDeletedPrecinctNotInAllocationDropdown();
+    });
+
+    test('Ensure only precinct-allocated projects show when filtering by project', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyOnlyAllocatedPrecinctsShowForProject();
+    });
+
+    test('Verify image file type validation', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyImageFileTypeValidation();
+    });
+
+    test('Verify long precinct name is truncated in card', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyLongPrecinctNameTruncatedInCard();
+    });
+
+    test('Validate no duplicate precinct name allowed', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.validateNoDuplicatePrecinctNameAllowed();
+    });
+
+    test('Check card layout when multiple precincts exist', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyMultiplePrecinctCardsInGridView();
+    });
+
+    test('Verify upload image preview is shown', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyUploadImagePreviewIsShown();
+    });
+
+    test('Confirm canceling edit popup does not update precinct', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyCancelEditDoesNotUpdatePrecinct();
+    });
+
 });
