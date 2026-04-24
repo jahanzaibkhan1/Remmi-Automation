@@ -667,6 +667,10 @@ export class ProjectActions {
         return this.precinctAllocationPanel.locator('p-orderlist');
     }
 
+    private get allocationSearchClearIcon(): Locator {
+        return this.precinctAllocationPanel.locator('i.pi-times._cross-icon');
+    }
+
     // ==========================================================================
     // LOCATORS — MISC
     // ==========================================================================
@@ -1950,11 +1954,38 @@ export class ProjectActions {
         await this.openPrecinctSetup();
         await this.precinctAllocationSubTab.click();
         await expect(this.allocationProjectRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        const searchTerm = 'Automation Test'
-        await this.allocationSearchField.fill(searchTerm);
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
-
+        const searchTerm = 'Automation Testing';
+        await this.allocationSearchField.type(searchTerm,{ delay: 120});
         await expect(this.allocationProjectRows.first()).toContainText(new RegExp(searchTerm, 'i'));
-        await this.page.mouse.click(0, 0);
+        await this.allocationSearchClearIcon.click();
+        await expect(this.allocationSearchField).toHaveValue('');
+    }
+
+    async allocateProjectToPrecinctAndSave(): Promise<void> {
+        await this.openPrecinctSetup();
+        await this.precinctAllocationSubTab.click();
+        await expect(this.precinctAllocationTabQuick).toHaveClass(/active/);
+        await this.selectPrecinctDropdown.locator('.ng-select-container').click();
+        await expect(this.selectProjectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const firstPrecinctOption = this.page.locator('.ng-dropdown-panel .ng-option-label').first();
+        const precinctName = (await firstPrecinctOption.innerText()).trim();
+        await firstPrecinctOption.click();
+        await this.page.waitForTimeout(1200);
+        await expect(this.allocationProjectRows.nth(1)).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const projectName = (await this.allocationProjectRows.nth(1).innerText()).trim();
+        await this.allocationProjectCheckboxes.nth(1).click();
+        await this.allocationSaveButton.click();
+        await expect(this.genericToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+            await this.projectsMenuLink.click();
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.searchInput.fill(precinctName);
+        const precinctCard = this.precinctContainerByName(precinctName);
+        await expect(precinctCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await precinctCard.click();
+        await expect(
+            this.page.locator('.sgv-product .product-content h3', {
+                hasText: new RegExp(`^\\s*${projectName}\\s*$`, 'i'),
+            }).first()
+        ).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
     }
 }

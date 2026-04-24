@@ -99,4 +99,8 @@ test.describe('Precinct Setup Tab', () => {
         await project.verifySearchFieldFiltersProjectList();
     });
 
+    test('Allocate project to precinct and save', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.allocateProjectToPrecinctAndSave();
+    });
 });
