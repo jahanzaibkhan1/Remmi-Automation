@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.76302000000328">
-<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T10:23:15.041Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.053" errors="0">
-<testcase name="Precinct Setup Tab › Check card layout when multiple precincts exist" classname="Pages\Projects\precinctSetup.spec.ts" time="38.053">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="40.14895800000057">
+<testsuite name="Pages\Projects\precinctSetup.spec.ts" timestamp="2026-04-24T10:27:13.467Z" hostname="chromium" tests="1" failures="0" skipped="0" time="37.783" errors="0">
+<testcase name="Precinct Setup Tab › Verify upload image preview is shown" classname="Pages\Projects\precinctSetup.spec.ts" time="37.783">
 </testcase>
 </testsuite>
 </testsuites>
