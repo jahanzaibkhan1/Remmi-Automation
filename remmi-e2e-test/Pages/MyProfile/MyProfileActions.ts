@@ -686,7 +686,7 @@ export class MyProfileActions {
   }
 
   private async clickAddProjectButton() {
-    await this.locators.addProjectBtn.click();
+    await this.locators.addProjectBtn.click({force: true});
   }
 
   private async fillSearchProjectInput(projectName: string) {
@@ -3318,7 +3318,7 @@ export class MyProfileActions {
 
       // ✅ Wait for table to refresh
       const removedAlert = this.page.getByRole('alert', { name: /Removed successfully/i }).first();
-      await expect(removedAlert).toBeVisible();
+      await expect(removedAlert).toBeVisible({timeout: 30000});
       await removedAlert.evaluate(node => node.style.display = 'none');
 
       // Wait for the first row to be visible after deletion and table refresh

@@ -1,18 +1,178 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="42.83945299999975">
-<testsuite name="Pages\Dashboard\dashboard.spec.ts" timestamp="2026-04-27T07:47:58.042Z" hostname="chromium" tests="1" failures="0" skipped="0" time="40.875" errors="0">
-<testcase name="Dashboard Module Boards Display › Verify lead types on Lead board" classname="Pages\Dashboard\dashboard.spec.ts" time="40.875">
+<testsuites id="" name="" tests="24" failures="0" skipped="0" errors="0" time="177.53549899999797">
+<testsuite name="Pages\MyProfile\Association.spec.ts" timestamp="2026-04-27T08:29:18.735Z" hostname="chromium" tests="24" failures="0" skipped="0" time="174.678" errors="0">
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 1: Verify that the Association tab opens successfully" classname="Pages\MyProfile\Association.spec.ts" time="16.793">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 2: Verify the search functionality in the Association tab" classname="Pages\MyProfile\Association.spec.ts" time="1.872">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 3: Verify search with no matching project" classname="Pages\MyProfile\Association.spec.ts" time="1.519">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 4: Verify that Add Project dropdown opens successfully" classname="Pages\MyProfile\Association.spec.ts" time="1.454">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 5: Verify the search option inside Add Project dropdown" classname="Pages\MyProfile\Association.spec.ts" time="1.438">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 6: Verify single project selection from dropdown" classname="Pages\MyProfile\Association.spec.ts" time="1.574">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 7: Verify multiple project selection from dropdown" classname="Pages\MyProfile\Association.spec.ts" time="1.784">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 8: Verify the “Select All” functionality" classname="Pages\MyProfile\Association.spec.ts" time="29.261">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 9: Verify the “Deselect All” functionality" classname="Pages\MyProfile\Association.spec.ts" time="2.35">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 10: Verify removing a project tag before adding" classname="Pages\MyProfile\Association.spec.ts" time="1.62">
 <system-out>
-<![CDATA[=== Dashboard Counts === { new: [33m1[39m, buyer: [33m1[39m, seller: [33m0[39m, unassigned: [33m9[39m }
-[new] expected=1, records=1
-[buyer] expected=1, records=1
-[unassigned] expected=9, records=13
+<![CDATA[Project "Hina's Project" is NOT visible in the association table.
 ]]>
 </system-out>
-<system-err>
-<![CDATA[[seller] expected=0 but table has data
-[Lead Board] Mismatch for unassigned
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 11: Verify adding multiple projects at once" classname="Pages\MyProfile\Association.spec.ts" time="1.731">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 12: Verify that previously added projects are not duplicated" classname="Pages\MyProfile\Association.spec.ts" time="17.028">
+<system-out>
+<![CDATA[Associated projects before: [ [32m'Automation Testing'[39m, [32m"Hina's Project"[39m ]
 ]]>
-</system-err>
+</system-out>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 13: Verify adding when list is initially empty" classname="Pages\MyProfile\Association.spec.ts" time="23.194">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 14: Verify the sort functionality" classname="Pages\MyProfile\Association.spec.ts" time="7.981">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 15: Verify delete icon under Action column" classname="Pages\MyProfile\Association.spec.ts" time="9.565">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 16: Verify project delete funcationality" classname="Pages\MyProfile\Association.spec.ts" time="8.948">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 17: Verify checkbox beside each project" classname="Pages\MyProfile\Association.spec.ts" time="2.25">
+<system-out>
+<![CDATA[✅ Verified all 106 project checkboxes selected after clicking Select All checkbox.
+]]>
+</system-out>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 18: Verify multiple checkbox selection" classname="Pages\MyProfile\Association.spec.ts" time="2.272">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 19: Verify Select All checkbox selection" classname="Pages\MyProfile\Association.spec.ts" time="2.208">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 20: Verify bulk delete functionality" classname="Pages\MyProfile\Association.spec.ts" time="13.219">
+<system-out>
+<![CDATA[🧾 Projects BEFORE delete: [
+  [32m'Yundt - Hagenes'[39m,
+  [32m'Yost, Frami and Nienow'[39m,
+  [32m'Windler, Legros and Stanton'[39m,
+  [32m'Will and Sons'[39m,
+  [32m'Wilkinson LLC'[39m,
+  [32m'Weissnat Inc'[39m,
+  [32m'Weimann, Daugherty and Sanford'[39m,
+  [32m'Wehner Inc'[39m,
+  [32m'Villa B1'[39m,
+  [32m'Tromp - Miller'[39m,
+  [32m'Trantow, Olson and Johns'[39m,
+  [32m'Swift - Luettgen'[39m,
+  [32m'Strosin Inc'[39m,
+  [32m'Stiedemann, Murray and Rempel'[39m,
+  [32m'Steuber Inc'[39m,
+  [32m'Stamm - Prosacco'[39m,
+  [32m'Sporer, Rogahn and Schulist'[39m,
+  [32m'Simonis, Hartmann and Strosin'[39m,
+  [32m'Shanahan, Langworth and Hartmann'[39m,
+  [32m'Schmeler - Daugherty'[39m,
+  [32m'Sauer, Pfeffer and Larson'[39m,
+  [32m'Rutherford Inc'[39m,
+  [32m'Roberts and Sons'[39m,
+  [32m'Rippin, Reichel and Hills'[39m,
+  [32m'Rath, Wunsch and Waters'[39m,
+  [32m'Prohaska Group'[39m,
+  [32m'Pollich, Hackett and Barrows'[39m,
+  [32m'Paucek, Doyle and Haley'[39m,
+  [32m'Padberg Group'[39m,
+  [32m'Osinski, Johnson and Ferry'[39m,
+  [32m'Only Sale Agent Project'[39m,
+  [32m'Nitzsche - Gleason'[39m,
+  [32m'Nicolas - Heathcote'[39m,
+  [32m'Nicolas - Friesen'[39m,
+  [32m'Nexton'[39m,
+  [32m'New Project'[39m,
+  [32m'New Marval Hights'[39m,
+  [32m'New Live Project'[39m,
+  [32m'Murazik Inc'[39m,
+  [32m'Moen Group'[39m,
+  [32m'Metz LLC'[39m,
+  [32m'Mayer Inc'[39m,
+  [32m'Marquardt Inc'[39m,
+  [32m'Mann - Lind'[39m,
+  [32m'Maggio, Nikolaus and Koch'[39m,
+  [32m'Lueilwitz, McClure and Konopelski'[39m,
+  [32m'Lueilwitz, Marks and Mann'[39m,
+  [32m'Leuschke, Dooley and Wunsch'[39m,
+  [32m'Ledner Inc'[39m,
+  [32m'Leannon - Thompson'[39m,
+  [32m'lahore centre'[39m,
+  [32m'Kutch - Hane'[39m,
+  [32m"Konopelski - O'Kon"[39m,
+  [32m'Kohler - Hirthe'[39m,
+  [32m'Kohler - Bogan'[39m,
+  [32m'Koepp Inc'[39m,
+  [32m'Koelpin Group'[39m,
+  [32m'Koch, Erdman and Ortiz'[39m,
+  [32m'Klocko, Rau and Carter'[39m,
+  [32m'Klocko - Johnston'[39m,
+  [32m'Kilback Group'[39m,
+  [32m'Kiehn - Nolan'[39m,
+  [32m'Johnson and Sons'[39m,
+  [32m'Jacobson - Grimes'[39m,
+  [32m'Jacobs, Spinka and Bergstrom'[39m,
+  [32m'Hyatt, Kessler and Hammes'[39m,
+  [32m'Hudson Group'[39m,
+  [32m'Hintz, Pouros and Larson'[39m,
+  [32m"Hina's Project"[39m,
+  [32m'Hettinger - Stamm'[39m,
+  [32m'Heller, Rau and Simonis'[39m,
+  [32m'Heller, Auer and Waters'[39m,
+  [32m'Hauck, Mills and Rohan'[39m,
+  [32m'Harris, Pollich and Stehr'[39m,
+  [32m'Hane, McLaughlin and Upton'[39m,
+  [32m'Green Inc'[39m,
+  [32m'Goldner - Kemmer'[39m,
+  [32m'Gleichner - Reynolds'[39m,
+  [32m'Gerlach - Prosacco'[39m,
+  [32m'Fritsch - Volkman'[39m,
+  [32m'Feest - Ortiz'[39m,
+  [32m'Feest - Ortiz'[39m,
+  [32m'Fay, Doyle and Sawayn'[39m,
+  [32m'Emmerich - Zemlak'[39m,
+  [32m'Emard, Schaefer and Kulas'[39m,
+  [32m'East Village Vila'[39m,
+  [32m'Dach, Kreiger and Fritsch'[39m,
+  [32m'Dach LLC'[39m,
+  [32m'Crist, Emard and Bernier'[39m,
+  [32m'Crist, Bergstrom and Braun'[39m,
+  [32m'Cassin Inc'[39m,
+  [32m'Cassin - Terry'[39m,
+  [32m'Boyer, Bahringer and Klocko'[39m,
+  [32m'Bode LLC'[39m,
+  [32m'Beier, Kunze and Schroeder'[39m,
+  [32m'Beer, Turcotte and Feil'[39m,
+  [32m'Beatty, Abbott and Gerhold'[39m,
+  [32m'Bauch LLC'[39m,
+  [32m'Bailey - Erdman'[39m,
+  [32m'Automation Testing'[39m,
+  ... 6 more items
+]
+🧾 Projects AFTER delete: [ [32m'Yundt - Hagenes'[39m, [32m'Yost, Frami and Nienow'[39m ]
+]]>
+</system-out>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 21: Verify UI update after deletion" classname="Pages\MyProfile\Association.spec.ts" time="9.14">
+<system-out>
+<![CDATA[🧾 Projects BEFORE action: [ [32m'Yundt - Hagenes'[39m, [32m'Yost, Frami and Nienow'[39m ]
+🧾 Projects AFTER delete: [ [32m'Yost, Frami and Nienow'[39m ]
+🗑️ Deleted Project(s): [ [32m'Yundt - Hagenes'[39m ]
+✅ Successfully deleted 1 project(s).
+]]>
+</system-out>
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 22: Verify that deleted projects can be re-added" classname="Pages\MyProfile\Association.spec.ts" time="2.356">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 23: Verify empty list message" classname="Pages\MyProfile\Association.spec.ts" time="11.054">
+</testcase>
+<testcase name="My Profile Associations Tab Tests - Remmi E2E › Test 24: Try adding project without selecting any" classname="Pages\MyProfile\Association.spec.ts" time="4.067">
 </testcase>
 </testsuite>
 </testsuites>
