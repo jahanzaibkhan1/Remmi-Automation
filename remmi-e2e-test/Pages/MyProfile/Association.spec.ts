@@ -61,7 +61,7 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
     test('Test 7: Verify multiple project selection from dropdown', async ({ sessionPage }) => {
       const profile = new MyProfileActions(sessionPage);
       await profile.navigateToProfilePage();
-      await profile.verifyMultipleProjectSelectionFromDropdown(["Hina's Project", "askari center"]);
+      await profile.verifyMultipleProjectSelectionFromDropdown(["Hina's Project", "automation Testing"]);
     });
 
     test('Test 8: Verify the “Select All” functionality', async ({ sessionPage }) => {
@@ -85,7 +85,7 @@ test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
     test('Test 11: Verify adding multiple projects at once', async ({ sessionPage }) => {
       const profile = new MyProfileActions(sessionPage);
       await profile.navigateToProfilePage();
-      await profile.verifyMultipleProjectSelection(["Hina's Project", "askari center"]);
+      await profile.verifyMultipleProjectSelection(["Hina's Project", "automation Testing"]);
     });
 
     test('Test 12: Verify that previously added projects are not duplicated', async ({ sessionPage }) => {
