@@ -50,7 +50,7 @@ export class ProjectActions {
     // ==========================================================================
 
     private get firstGridProduct(): Locator {
-        return this.page.locator('.sgv-product').first();
+        return this.page.locator('.projects-row.view-grid .sgv-product').first();
     }
 
     private projectCardByName(name: string): Locator {
@@ -96,9 +96,10 @@ export class ProjectActions {
     // ==========================================================================
     // LOCATORS — LIST VIEW (TABLE)
     // ==========================================================================
-
+    
     private get firstTableRow(): Locator {
-        return this.page.locator('tbody tr').first();
+        // Scoped to datatable specifically
+        return this.page.locator('tbody.p-datatable-tbody tr').first();
     }
 
     private get allTableRows(): Locator {
@@ -156,13 +157,12 @@ export class ProjectActions {
     private get gridViewButton(): Locator {
         return this.page.locator('.layout-changer a.grid-icon');
     }
-
+    
     private get listViewButton(): Locator {
-        return this.page.locator('.layout-changer a').filter({
-            has: this.page.locator('img[src*="list.svg"]'),
-        });
+        // Direct selector — no filter, no sub-query
+        return this.page.locator('.layout-changer a:has(img[src*="list.svg"])');
     }
-
+    
     // ==========================================================================
     // LOCATORS — VIEW POPUP (DEFAULT VIEW / SAVED VIEWS)
     // ==========================================================================
@@ -313,7 +313,7 @@ export class ProjectActions {
     // ==========================================================================
 
     private get addNewProjectButton(): Locator {
-        return this.page.locator('i.pi.pi-plus.f-14');
+        return this.page.locator('button._addNew i.pi.pi-plus').first();
     }
 
     private get projectDialog(): Locator {
@@ -751,16 +751,19 @@ export class ProjectActions {
         if (await this.firstGridProduct.isVisible().catch(() => false)) return;
         await expect(this.gridViewButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.gridViewButton.click({ force: true });
-        await this.page.waitForLoadState('networkidle');
         await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
     }
-
     async switchToListView(): Promise<void> {
         if (await this.firstTableRow.isVisible().catch(() => false)) return;
+        await this.page.waitForSelector('.loading-overlay', { state: 'detached', timeout: 43000 }).catch(() => {});
         await expect(this.listViewButton).toBeEnabled({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.listViewButton.evaluate((el: HTMLElement) => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
         await this.listViewButton.click();
-        await this.page.waitForLoadState('networkidle');
         await this.firstTableRow.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        const text = await this.firstTableRow.textContent();
+        if (!text || text.trim().length < 2) {
+            await this.page.waitForTimeout(500);
+        }
     }
 
     async switchBetweenProjectViews(): Promise<void> {
@@ -1014,7 +1017,9 @@ export class ProjectActions {
 
         const insidePrecinctHeading = (await this.allSgvProductHeadings.first().innerText()).trim();
 
+        await this.projectsMenuLink.evaluate((el: HTMLElement) => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
         await this.projectsMenuLink.click();
+   
         await this.page.waitForLoadState('networkidle');
         await this.page.waitForSelector('.sgv-product .product-content h3', {
             state: 'visible',
