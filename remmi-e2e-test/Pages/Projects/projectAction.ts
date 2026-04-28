@@ -313,7 +313,7 @@ export class ProjectActions {
     // ==========================================================================
 
     private get addNewProjectButton(): Locator {
-        return this.page.locator('button._addNew');
+        return this.page.locator('i.pi.pi-plus.f-14');
     }
 
     private get projectDialog(): Locator {
@@ -335,11 +335,11 @@ export class ProjectActions {
     }
 
     private get projectDialogSaveButton(): Locator {
-        return this.projectDialog.locator('button._outline-btn');
+        return this.page.getByRole('button', { name: /save/i });
     }
 
     private get projectDialogCancelButton(): Locator {
-        return this.projectDialog.locator('button._cancel-btn');
+        return this.page.getByRole('button', { name: /cancel/i });
     }
 
     private get projectNameValidationError(): Locator {
@@ -425,7 +425,7 @@ export class ProjectActions {
     // ==========================================================================
 
     private get projectsMenuLink(): Locator {
-        return this.page.locator('p', { hasText: 'Projects' }).first();
+        return this.page.locator('a[href="/project/projects"]').first();
     }
 
     private get precinctSetupMenuText(): Locator {
@@ -726,8 +726,8 @@ export class ProjectActions {
 
     private async openPrecinctSetup(): Promise<void> {
         await this.gotoPrecinctListings();
-        await expect(this.precinctSetupMenu).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.precinctSetupMenu.click();
+        await expect(this.precinctListingsMenuLink).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.precinctListingsMenuLink.click();
     }
 
     private async openAddPrecinctDialog(): Promise<void> {
@@ -751,6 +751,7 @@ export class ProjectActions {
         if (await this.firstGridProduct.isVisible().catch(() => false)) return;
         await expect(this.gridViewButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.gridViewButton.click({ force: true });
+        await this.page.waitForLoadState('networkidle');
         await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
     }
 
@@ -758,6 +759,7 @@ export class ProjectActions {
         if (await this.firstTableRow.isVisible().catch(() => false)) return;
         await expect(this.listViewButton).toBeEnabled({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.listViewButton.click();
+        await this.page.waitForLoadState('networkidle');
         await this.firstTableRow.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
     }
 
@@ -859,10 +861,6 @@ export class ProjectActions {
         await this.saveButtonByText.click();
         await expect(this.genericToast).toBeVisible();
     }
-
-    // ==========================================================================
-    // SEARCH (GRID VIEW)
-    // ==========================================================================
 
     async verifyProjectCanBeSearchedByName(projectName: string): Promise<void> {
         await this.navigateToProjects();
@@ -987,6 +985,7 @@ export class ProjectActions {
 
     private async getFirstVisiblePrecinctCard(): Promise<void> {
         await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.firstGridProduct).toBeEnabled({timeout: ProjectActions.TIMEOUT_LONG});
         await this.firstGridProduct.click();
     }
 
@@ -1031,12 +1030,10 @@ export class ProjectActions {
 
     async verifyProjectReappearsInActiveTabAfterPrecinctDeletion(): Promise<void> {
         await this.navigateToProjects();
-        await this.page.waitForLoadState('networkidle');
-
-        await expect(this.precinctSetupMenuText).toBeEnabled({
+        await expect(this.precinctListingsMenuLink).toBeEnabled({
             timeout: ProjectActions.TIMEOUT_EXTRA_LONG,
         });
-        await this.precinctSetupMenuText.click();
+        await this.precinctListingsMenuLink.click();
 
         await expect(this.precinctAllocationTabById).toBeEnabled({
             timeout: ProjectActions.TIMEOUT_LONG,
@@ -1072,19 +1069,21 @@ export class ProjectActions {
     // ==========================================================================
 
     async openProjectPopup(): Promise<void> {
+        await this.page.reload();
+        await expect(this.addNewProjectButton).toBeEnabled({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.addNewProjectButton.click();
         await expect(this.projectDialog).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.projectNameField).toBeVisible();
-        await expect(this.projectStatusField).toBeVisible();
-        await expect(this.projectDialogSaveButton).toBeVisible();
-        await expect(this.projectDialogCancelButton).toBeVisible();
+        await expect(this.projectNameField).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectStatusField).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDialogSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDialogCancelButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+   
     }
 
     async verifyAndCloseProjectPopup(): Promise<void> {
         await this.navigateToProjects();
-        await this.page.reload();
         await this.openProjectPopup();
-        await this.projectDialogCancelButton.click();
+        await this.projectDialogCancelButton.click({force: true});
         await expect(this.projectDialogContent).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
 
@@ -1094,13 +1093,12 @@ export class ProjectActions {
 
     async createProjectWithValidData(project?: { name?: string; status?: string }): Promise<void> {
         await this.navigateToProjects();
-        await this.page.reload();
         await this.openProjectPopup();
 
         const projectName = project?.name ?? faker.company.name();
 
         await this.projectNameField.fill(projectName);
-        await this.projectDialogSaveButton.click();
+        await this.projectDialogSaveButton.click({force: true});
         await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
 
         await this.projectAddedToast
@@ -1113,19 +1111,19 @@ export class ProjectActions {
             state: 'visible',
             timeout: ProjectActions.TIMEOUT_MEDIUM,
         });
-
-        await this.clickOnProjects();
+        const projectsText = this.page.locator('p', { hasText: 'Projects' });
+        await expect(projectsText).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await projectsText.click({force: true});
         await this.verifyProjectCanBeSearchedByName(projectName);
         await this.clickResetIcon();
     }
 
     async saveProjectPopupWithEmptyFields(): Promise<void> {
         await this.navigateToProjects();
-        await this.page.reload();
         await this.openProjectPopup();
 
         await this.projectNameField.fill('');
-        await this.projectDialogSaveButton.click();
+        await this.projectDialogSaveButton.click({force: true});
         await expect(this.projectNameValidationError).toBeVisible({
             timeout: ProjectActions.TIMEOUT_SHORT,
         });
@@ -1136,7 +1134,6 @@ export class ProjectActions {
 
     async closeProjectPopupWithCrossIcon(): Promise<void> {
         await this.navigateToProjects();
-        await this.page.reload();
         await this.openProjectPopup();
         await this.projectDialogCloseIcon.click({ force: true });
         await expect(this.projectDialogContent).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
@@ -1148,7 +1145,6 @@ export class ProjectActions {
 
     async verifyPinToDashboardOptionVisibleOnRightClick(projectName: string): Promise<void> {
         await this.navigateToProjects();
-        await this.page.reload();
         await this.verifyProjectCanBeSearchedByName(projectName);
 
         const card = this.projectCardByName(projectName);
