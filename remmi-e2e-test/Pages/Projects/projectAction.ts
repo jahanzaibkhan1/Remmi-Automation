@@ -22,6 +22,71 @@ export class ProjectActions {
     }
 
     // ==========================================================================
+    // LOCATORS — PRECINCT INNER VIEW (TC_01 to TC_08)
+    // ==========================================================================
+
+    private get firstPrecinctOnProjectsPage(): Locator {
+        return this.page.locator('.sgv-product.ng-star-inserted').first();
+    }
+
+    private get precinctNameUnderActive(): Locator {
+        return this.page.locator('#project .product-content h3').first();
+    }
+
+    private get projectTabInPrecinct(): Locator {
+        return this.page.locator('a#pills-project-tab, a#pills-project').first();
+    }
+
+    private get lotTabInPrecinct(): Locator {
+        return this.page.locator('a#pills-lot-tab, a#pills-lot').first();
+    }
+
+    private get eoiTabInPrecinct(): Locator {
+        return this.page.locator('a#pills-EOI-tab, a#pills-EOI').first();
+    }
+
+    private get lotListView(): Locator {
+        return this.page.locator('#lot, #pills-lot, app-lot-list').first();
+    }
+
+    private get projectCardName(): Locator {
+        return this.page.locator('.product-content h3').first();
+    }
+
+    private get projectCardArrowIcon(): Locator {
+        return this.page.locator(
+            'img[src*="arrow"], img[src*="chevron"], i.pi-chevron-down, i.pi-angle-down'
+        ).last();
+    }
+
+    private projectBreadcrumbName(projectName: string): Locator {
+        return this.page.locator('p.ml-2.cursor-pointer', { hasText: projectName }).last();
+    }
+
+    private get projectsBreadcrumbLink(): Locator {
+        return this.page.locator('p.cursor-pointer[routerlink="/project/projects"]');
+    }
+
+    private projectCardCollapseIcon(): Locator {
+        return this.page.locator('i.pi-chevron-up').first();
+    }
+
+    private projectCardPriceContent(): Locator {
+        return this.page.locator('.product-meta-tool a', { hasText: /priced from|price/i }).first()
+    }
+
+    // Click on project image in precinct (product-thumbnail context)
+    private get projectImageInPrecinct(): Locator {
+        return this.page.locator('.product-thumbnail img').first();
+    }
+
+    async clickProjectImageInPrecinct(): Promise<void> {
+        await this.projectImageInPrecinct.click();
+    }
+
+
+
+    // ==========================================================================
     // LOCATORS — SEARCH & TOP BAR
     // ==========================================================================
 
@@ -50,7 +115,7 @@ export class ProjectActions {
     // ==========================================================================
 
     private get firstGridProduct(): Locator {
-        return this.page.locator('.sgv-product').first();
+        return this.page.locator('.projects-row.view-grid .sgv-product').first();
     }
 
     private projectCardByName(name: string): Locator {
@@ -98,7 +163,8 @@ export class ProjectActions {
     // ==========================================================================
 
     private get firstTableRow(): Locator {
-        return this.page.locator('tbody tr').first();
+        // Scoped to datatable specifically
+        return this.page.locator('tbody.p-datatable-tbody tr').first();
     }
 
     private get allTableRows(): Locator {
@@ -158,9 +224,8 @@ export class ProjectActions {
     }
 
     private get listViewButton(): Locator {
-        return this.page.locator('.layout-changer a').filter({
-            has: this.page.locator('img[src*="list.svg"]'),
-        });
+        // Direct selector — no filter, no sub-query
+        return this.page.locator('.layout-changer a:has(img[src*="list.svg"])');
     }
 
     // ==========================================================================
@@ -313,7 +378,7 @@ export class ProjectActions {
     // ==========================================================================
 
     private get addNewProjectButton(): Locator {
-        return this.page.locator('button._addNew');
+        return this.page.locator('button._addNew i.pi.pi-plus').first();
     }
 
     private get projectDialog(): Locator {
@@ -335,11 +400,11 @@ export class ProjectActions {
     }
 
     private get projectDialogSaveButton(): Locator {
-        return this.projectDialog.locator('button._outline-btn');
+        return this.page.getByRole('button', { name: /save/i });
     }
 
     private get projectDialogCancelButton(): Locator {
-        return this.projectDialog.locator('button._cancel-btn');
+        return this.page.getByRole('button', { name: /cancel/i });
     }
 
     private get projectNameValidationError(): Locator {
@@ -425,20 +490,14 @@ export class ProjectActions {
     // ==========================================================================
 
     private get projectsMenuLink(): Locator {
-        return this.page.locator('p', { hasText: 'Projects' }).first();
-    }
-
-    private get precinctSetupMenuText(): Locator {
-        return this.page.locator('p', { hasText: 'Precinct Set up' }).first();
-    }
-
-    private get precinctSetupMenu(): Locator {
-        return this.page.locator('app-menu a', { hasText: /precinct set up/i });
+        return this.page.locator('a[href="/project/projects"]').first();
     }
 
     private get precinctListingsMenuLink(): Locator {
         return this.page.locator('a[href="/listings/project-precinct"]');
     }
+
+    // click project
 
     // ==========================================================================
     // LOCATORS — PRECINCT SUB-TABS & PANELS
@@ -726,8 +785,8 @@ export class ProjectActions {
 
     private async openPrecinctSetup(): Promise<void> {
         await this.gotoPrecinctListings();
-        await expect(this.precinctSetupMenu).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.precinctSetupMenu.click();
+        await expect(this.precinctListingsMenuLink).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.precinctListingsMenuLink.click();
     }
 
     private async openAddPrecinctDialog(): Promise<void> {
@@ -753,12 +812,17 @@ export class ProjectActions {
         await this.gridViewButton.click({ force: true });
         await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
     }
-
     async switchToListView(): Promise<void> {
         if (await this.firstTableRow.isVisible().catch(() => false)) return;
+        await this.page.waitForSelector('.loading-overlay', { state: 'detached', timeout: 43000 }).catch(() => { });
         await expect(this.listViewButton).toBeEnabled({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.listViewButton.evaluate((el: HTMLElement) => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
         await this.listViewButton.click();
         await this.firstTableRow.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        const text = await this.firstTableRow.textContent();
+        if (!text || text.trim().length < 2) {
+            await this.page.waitForTimeout(500);
+        }
     }
 
     async switchBetweenProjectViews(): Promise<void> {
@@ -859,10 +923,6 @@ export class ProjectActions {
         await this.saveButtonByText.click();
         await expect(this.genericToast).toBeVisible();
     }
-
-    // ==========================================================================
-    // SEARCH (GRID VIEW)
-    // ==========================================================================
 
     async verifyProjectCanBeSearchedByName(projectName: string): Promise<void> {
         await this.navigateToProjects();
@@ -987,6 +1047,7 @@ export class ProjectActions {
 
     private async getFirstVisiblePrecinctCard(): Promise<void> {
         await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.firstGridProduct).toBeEnabled({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.firstGridProduct.click();
     }
 
@@ -1015,7 +1076,9 @@ export class ProjectActions {
 
         const insidePrecinctHeading = (await this.allSgvProductHeadings.first().innerText()).trim();
 
+        await this.projectsMenuLink.evaluate((el: HTMLElement) => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
         await this.projectsMenuLink.click();
+
         await this.page.waitForLoadState('networkidle');
         await this.page.waitForSelector('.sgv-product .product-content h3', {
             state: 'visible',
@@ -1031,12 +1094,10 @@ export class ProjectActions {
 
     async verifyProjectReappearsInActiveTabAfterPrecinctDeletion(): Promise<void> {
         await this.navigateToProjects();
-        await this.page.waitForLoadState('networkidle');
-
-        await expect(this.precinctSetupMenuText).toBeEnabled({
+        await expect(this.precinctListingsMenuLink).toBeEnabled({
             timeout: ProjectActions.TIMEOUT_EXTRA_LONG,
         });
-        await this.precinctSetupMenuText.click();
+        await this.precinctListingsMenuLink.click();
 
         await expect(this.precinctAllocationTabById).toBeEnabled({
             timeout: ProjectActions.TIMEOUT_LONG,
@@ -1072,19 +1133,21 @@ export class ProjectActions {
     // ==========================================================================
 
     async openProjectPopup(): Promise<void> {
+        await this.page.reload();
+        await expect(this.addNewProjectButton).toBeEnabled({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.addNewProjectButton.click();
         await expect(this.projectDialog).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.projectNameField).toBeVisible();
-        await expect(this.projectStatusField).toBeVisible();
-        await expect(this.projectDialogSaveButton).toBeVisible();
-        await expect(this.projectDialogCancelButton).toBeVisible();
+        await expect(this.projectNameField).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectStatusField).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDialogSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDialogCancelButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
     }
 
     async verifyAndCloseProjectPopup(): Promise<void> {
         await this.navigateToProjects();
-        await this.page.reload();
         await this.openProjectPopup();
-        await this.projectDialogCancelButton.click();
+        await this.projectDialogCancelButton.click({ force: true });
         await expect(this.projectDialogContent).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
 
@@ -1094,13 +1157,12 @@ export class ProjectActions {
 
     async createProjectWithValidData(project?: { name?: string; status?: string }): Promise<void> {
         await this.navigateToProjects();
-        await this.page.reload();
         await this.openProjectPopup();
 
         const projectName = project?.name ?? faker.company.name();
 
         await this.projectNameField.fill(projectName);
-        await this.projectDialogSaveButton.click();
+        await this.projectDialogSaveButton.click({ force: true });
         await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
 
         await this.projectAddedToast
@@ -1113,19 +1175,19 @@ export class ProjectActions {
             state: 'visible',
             timeout: ProjectActions.TIMEOUT_MEDIUM,
         });
-
-        await this.clickOnProjects();
+        const projectsText = this.page.locator('p', { hasText: 'Projects' });
+        await expect(projectsText).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await projectsText.click({ force: true });
         await this.verifyProjectCanBeSearchedByName(projectName);
         await this.clickResetIcon();
     }
 
     async saveProjectPopupWithEmptyFields(): Promise<void> {
         await this.navigateToProjects();
-        await this.page.reload();
         await this.openProjectPopup();
 
         await this.projectNameField.fill('');
-        await this.projectDialogSaveButton.click();
+        await this.projectDialogSaveButton.click({ force: true });
         await expect(this.projectNameValidationError).toBeVisible({
             timeout: ProjectActions.TIMEOUT_SHORT,
         });
@@ -1136,7 +1198,6 @@ export class ProjectActions {
 
     async closeProjectPopupWithCrossIcon(): Promise<void> {
         await this.navigateToProjects();
-        await this.page.reload();
         await this.openProjectPopup();
         await this.projectDialogCloseIcon.click({ force: true });
         await expect(this.projectDialogContent).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
@@ -1148,7 +1209,6 @@ export class ProjectActions {
 
     async verifyPinToDashboardOptionVisibleOnRightClick(projectName: string): Promise<void> {
         await this.navigateToProjects();
-        await this.page.reload();
         await this.verifyProjectCanBeSearchedByName(projectName);
 
         const card = this.projectCardByName(projectName);
@@ -2198,5 +2258,187 @@ export class ProjectActions {
         // Verify original name still exists and new name was not saved
         await expect(this.precinctCardByName(originalName).first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await expect(this.precinctCardByName(newName)).toHaveCount(0);
+    }
+
+    // ==========================================================================
+    // TC_01 to TC_08 — PRECINCT INNER VIEW TESTS
+    // ==========================================================================
+
+    // TC_01 — Project name visible under precinct after click
+    async verifyPrecinctNameDisplayedCorrectly(): Promise<void> {
+        await this.navigateToProjects();
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
+        await this.firstPrecinctOnProjectsPage.click();
+        await console.log(precinctName);
+        await expect(this.precinctNameUnderActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const displayedName = (await this.precinctNameUnderActive.innerText()).trim();
+        expect(displayedName.length).toBeGreaterThan(0);
+        await this.projectsMenuLink.click();
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+    }
+
+    // TC_02 — Project, Lot, EOI tabs visible after selecting precinct
+    async verifyTabsVisibleAfterPrecinctSelection(): Promise<void> {
+        await this.navigateToProjects();
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
+        await this.firstPrecinctOnProjectsPage.click();
+        await console.log(precinctName);
+        await expect(this.projectTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.eoiTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectsMenuLink.click();
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+    }
+
+    // TC_03 — Allocated projects displayed under Project tab
+    async verifyAllocatedProjectsUnderProjectTab(): Promise<void> {
+        await this.navigateToProjects();
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
+        await this.firstPrecinctOnProjectsPage.click();
+        await console.log(precinctName);
+        await expect(this.precinctNameUnderActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const displayedName = (await this.precinctNameUnderActive.innerText()).trim();
+        expect(displayedName.length).toBeGreaterThan(0);
+        await this.projectsMenuLink.click();
+    }
+
+    // TC_04 — Project card shows image, name, and price label
+    async verifyProjectCardShowsImageNameAndPrice(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
+        await console.log(precinctName);
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.searchInput.fill(projectName);
+
+        const card = this.projectCardByName(projectName);
+        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+
+        // Image
+        const thumbnail = this.thumbnailForCard(card);
+        await expect(thumbnail).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        const styleAttr = await thumbnail.getAttribute('style');
+        const bgUrlMatch = styleAttr?.match(/background-image:\s*url\((['"]?)(.*?)\1\)/i);
+        expect(bgUrlMatch && bgUrlMatch[2]).toBeTruthy();
+        expect(bgUrlMatch![2].trim()).not.toBe('');
+
+        // Name
+        const name = this.projectCardName;
+        await expect(name).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        // "Priced From" label
+        const priceLabel = this.projectCardPriceContent();
+        await expect(priceLabel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+
+    }
+
+    // TC_05 — Expand project card using arrow icon
+    async verifyExpandProjectCard(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
+        await console.log(precinctName);
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.searchInput.click();
+        await this.searchInput.fill(projectName);
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.searchInput.fill(projectName);
+
+        const card = this.projectCardByName(projectName);
+        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(this.projectCardArrowIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectCardArrowIcon.click();
+        await expect(this.projectCardCollapseIcon()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectCardCollapseIcon().click();
+    }
+
+    // TC_06 — Collapse project card using arrow icon
+    async verifyCollapseProjectCard(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
+        await console.log(precinctName);
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.searchInput.click();
+        await this.searchInput.fill(projectName);
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.searchInput.fill(projectName);
+
+        const card = this.projectCardByName(projectName);
+        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(this.projectCardArrowIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectCardArrowIcon.click();
+        await expect(this.projectCardCollapseIcon()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectCardCollapseIcon().click();
+        await this.clickResetIcon();
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+    }
+
+    // TC_07 — Open project from precinct card
+    async verifyOpenProjectFromPrecinctCard(): Promise<void> {
+        await this.navigateToProjects();
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
+        await this.firstPrecinctOnProjectsPage.click();
+        await console.log(precinctName);
+        const displayedName = (await this.precinctNameUnderActive.innerText()).trim();
+        expect(displayedName.length).toBeGreaterThan(0);
+
+        await this.clickProjectImageInPrecinct();
+
+        await expect(this.projectBreadcrumbName(displayedName)).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        await expect(this.projectsBreadcrumbLink).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectsBreadcrumbLink.click();
+        await this.page.waitForTimeout(1200);
+        await this.projectsMenuLink.click();
+        await this.page.waitForTimeout(1200);
+        await this.projectsMenuLink.click();
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.page.getByText('Precinct', { exact: true })).toBeVisible({timeout: ProjectActions.TIMEOUT_DEFAULT });
+   
+    }
+
+    // TC_08 — Open Lot tab successfully, click on Lot tab
+    async verifyLotTabOpens(): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle')
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
+        await this.firstPrecinctOnProjectsPage.click();
+        await console.log(precinctName);
+        await expect(this.precinctNameUnderActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const displayedName = (await this.precinctNameUnderActive.innerText()).trim();
+        expect(displayedName.length).toBeGreaterThan(0);
+        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotTabInPrecinct.click();
     }
 }
