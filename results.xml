@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="45.92200399999879">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-29T08:33:19.819Z" hostname="chromium" tests="1" failures="0" skipped="0" time="43.929" errors="0">
-<testcase name="Lot List Page › Test 11: Select one bed number" classname="Pages\Projects\lotList.spec.ts" time="43.929">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="36.824028999999165">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-29T08:35:29.986Z" hostname="chromium" tests="1" failures="0" skipped="0" time="34.867" errors="0">
+<testcase name="Lot List Page › Test 12: Select multiple bed numbers" classname="Pages\Projects\lotList.spec.ts" time="34.867">
 </testcase>
 </testsuite>
 </testsuites>

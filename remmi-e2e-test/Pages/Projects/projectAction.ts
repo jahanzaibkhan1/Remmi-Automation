@@ -2917,4 +2917,21 @@ export class ProjectActions {
         await this.resetButton.click();
     }
 
+    /**
+     * Select multiple bed numbers
+     */
+    async selectMultipleBedNumbers(bedValues: string[]): Promise<void> {
+        await this.navigateToLots();
+        await this.openBedDropdown();
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        for (const bedValue of bedValues) {
+            await this.selectBedByValue(bedValue);
+        }
+        await this.closeDropdown();
+        for (const bedValue of bedValues) {
+            await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
+        await this.resetButton.click();
+    }
+
 }
