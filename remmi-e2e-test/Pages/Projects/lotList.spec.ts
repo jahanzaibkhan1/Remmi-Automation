@@ -117,4 +117,9 @@ test.describe('Lot List Page', () => {
         await project.verifyDeselectAllStatusInDropdown();
     });
 
+    test('Test 22: Remove status tag via cross icon', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyRemoveSelectedStatusTag('Sold');
+    });
+
 });
