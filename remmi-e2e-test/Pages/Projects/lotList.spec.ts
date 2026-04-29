@@ -37,4 +37,9 @@ test.describe('Lot List Page', () => {
         const project = new ProjectActions(sessionPage);
         await project.verifySelectProjectFromDropdown('Adb');
     });
+
+    test('Test 5: Select multiple projects from dropdown', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifySelectMultipleProjectsFromDropdown(['Adb', 'Automation Testing']);
+    });
 });
