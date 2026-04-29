@@ -42,4 +42,8 @@ test.describe('Lot List Page', () => {
         const project = new ProjectActions(sessionPage);
         await project.verifySelectMultipleProjectsFromDropdown(['Adb', 'Automation Testing']);
     });
+
+    test('Test 6: Use Deselect All in Project dropdown', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyDeselectAllProjectsInDropdown();
+    });
 });

@@ -2627,6 +2627,62 @@ export class ProjectActions {
         expect(firstRowText).toContain(keyword.toLowerCase());
     }
 
+    // Project dropdown helpers
+    private async openProjectDropdown(): Promise<void> {
+        await expect(this.projectDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.projectDropdownInLot.click();
+        await expect(this.projectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    private async closeDropdown(): Promise<void> {
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(800);
+    }
+
+    private async searchInProjectDropdown(projectName: string): Promise<void> {
+        await expect(this.projectDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectDropdownSearchInput.fill(projectName);
+        await this.page.waitForTimeout(800);
+    }
+
+    private async clearProjectDropdownSearch(): Promise<void> {
+        await this.projectDropdownSearchInput.fill('');
+        await this.page.waitForTimeout(300);
+    }
+
+    private async selectProjectByName(projectName: string): Promise<void> {
+        const optionsCount = await this.projectDropdownOptions.count();
+        for (let i = 0; i < optionsCount; i++) {
+            const option = this.projectDropdownOptions.nth(i);
+            const text = (await option.innerText()).trim().toLowerCase();
+            if (text.includes(projectName.toLowerCase())) {
+                await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+                await option.click();
+                return;
+            }
+        }
+        throw new Error(`Project "${projectName}" not found in dropdown`);
+    }
+
+    private async assertAllRowsContainAnyProject(projectNames: string[]): Promise<void> {
+        const rowCount = await this.lotTableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+        for (let i = 0; i < rowCount; i++) {
+            const rowText = (await this.lotTableRows.nth(i).innerText()).toLowerCase();
+            const matches = projectNames.some(name => rowText.includes(name.toLowerCase()));
+            expect(matches).toBeTruthy();
+        }
+    }
+
+    private async resetFilters(): Promise<void> {
+        await this.resetButton.click();
+        await this.page.waitForTimeout(800);
+    }
+
+    // ==========================================================================
+    // LOT LIST PAGE — TEST FUNCTIONS
+    // ==========================================================================
+
     // TC — /listings/lot: Search for specific lot
     async verifySearchSpecificLot(lotKeyword: string): Promise<void> {
         await this.navigateToLots();
@@ -2640,84 +2696,89 @@ export class ProjectActions {
     // TC — Use Project dropdown in Lot tab, verify only allocated projects shown
     async verifyProjectDropdownShowsAllocatedProjects(): Promise<void> {
         await this.navigateToLots();
-        await expect(this.projectDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.projectDropdownInLot.click();
-        await expect(this.projectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.page.mouse.click(0, 0);
+        await this.openProjectDropdown();
+        await this.closeDropdown();
     }
 
     // TC — Search project in Project dropdown list
     async verifySearchProjectInDropdown(projectName: string): Promise<void> {
         await this.navigateToLots();
-        await expect(this.projectDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.projectDropdownInLot.click();
-        await expect(this.projectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.projectDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.projectDropdownSearchInput.fill(projectName);
-        await this.page.waitForTimeout(1000);
+        await this.openProjectDropdown();
+        await this.searchInProjectDropdown(projectName);
+
         const filteredCount = await this.projectDropdownOptions.count();
         expect(filteredCount).toBeGreaterThan(0);
+
         const firstOptionText = (await this.projectDropdownOptions.first().innerText()).trim().toLowerCase();
         expect(firstOptionText).toContain(projectName.toLowerCase());
-        await this.page.mouse.click(0, 0);
-        await this.resetButton.click();
+
+        await this.closeDropdown();
+        await this.resetFilters();
     }
 
     // TC — Select one project from dropdown
     async verifySelectProjectFromDropdown(projectName: string): Promise<void> {
         await this.navigateToLots();
-        await expect(this.projectDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.projectDropdownInLot.click();
-        await expect(this.projectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.projectDropdownSearchInput.fill(projectName);
-        await this.page.waitForTimeout(1000);
-        const targetOption = this.projectDropdownOptions.first();
-        await expect(targetOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await targetOption.click();
-        await this.page.mouse.click(0, 0);
-        await this.page.waitForTimeout(1000);
-        const rowCount = await this.lotTableRows.count();
-        expect(rowCount).toBeGreaterThan(0);
-        const firstRowText = (await this.lotTableRows.first().innerText()).toLowerCase();
-        expect(firstRowText).toContain(projectName.toLowerCase());
-        await this.resetButton.click();
+        await this.openProjectDropdown();
+        await this.searchInProjectDropdown(projectName);
+        await this.selectProjectByName(projectName);
+        await this.closeDropdown();
+
+        await this.assertLotsExist();
+        await this.assertFirstRowContains(projectName);
+        await this.resetFilters();
     }
 
-    // Select multiple projects from Project dropdown
+    // TC — Select multiple projects from Project dropdown
     async verifySelectMultipleProjectsFromDropdown(projectNames: string[]): Promise<void> {
         await this.navigateToLots();
-        await expect(this.projectDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.projectDropdownInLot.click();
-        await expect(this.projectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.openProjectDropdown();
+
         for (const projectName of projectNames) {
-            await expect(this.projectDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-            await this.projectDropdownSearchInput.fill(projectName);
-            await this.page.waitForTimeout(700);
-            const optionsCount = await this.projectDropdownOptions.count();
-            let selected = false;
-            for (let i = 0; i < optionsCount; i++) {
-                const option = this.projectDropdownOptions.nth(i);
-                const text = (await option.innerText()).trim().toLowerCase();
-                if (text.includes(projectName.toLowerCase())) {
-                    await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-                    await option.click();
-                    selected = true;
-                    break;
-                }
-            }
-            expect(selected).toBeTruthy();
-            await this.projectDropdownSearchInput.fill('');
-            await this.page.waitForTimeout(300);
+            await this.searchInProjectDropdown(projectName);
+            await this.selectProjectByName(projectName);
+            await this.clearProjectDropdownSearch();
         }
-        await this.page.mouse.click(0, 0);
-        await this.page.waitForTimeout(1000);
-        const rowCount = await this.lotTableRows.count();
-        expect(rowCount).toBeGreaterThan(0);
-        for (let i = 0; i < rowCount; i++) {
-            const rowText = (await this.lotTableRows.nth(i).innerText()).toLowerCase();
-            const matches = projectNames.some(name => rowText.includes(name.toLowerCase()));
-            expect(matches).toBeTruthy();
-        }
-        await this.resetButton.click();
+
+        await this.closeDropdown();
+        await this.assertAllRowsContainAnyProject(projectNames);
+        await this.resetFilters();
+    }
+
+    // TC — Use Select All in Project dropdown
+    async verifySelectAllProjectsInDropdown(): Promise<void> {
+        await this.navigateToLots();
+        await this.openProjectDropdown();
+
+        await expect(this.projectDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const totalOptions = await this.projectDropdownOptions.count();
+        expect(totalOptions).toBeGreaterThan(0);
+
+        await this.projectDropdownSelectAllCheckbox.click();
+        await this.closeDropdown();
+
+        await this.assertLotsExist();
+        await this.resetFilters();
+    }
+
+    // TC — Use Deselect All in Project dropdown
+    async verifyDeselectAllProjectsInDropdown(): Promise<void> {
+        await this.navigateToLots();
+        await this.openProjectDropdown();
+
+        // First select all
+        await expect(this.projectDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+
+        // Click again to deselect all
+        await this.projectDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+
+        await this.closeDropdown();
+
+        // Verify table shows all lots (no filter applied = all results)
+        await this.assertLotsExist();
+        await this.resetFilters();
     }
 }
