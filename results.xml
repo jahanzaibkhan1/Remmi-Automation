@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.68888499999978">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-29T08:09:31.884Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.672" errors="0">
-<testcase name="Lot List Page › Test 9: Use Bed dropdown in Lot tab" classname="Pages\Projects\lotList.spec.ts" time="45.672">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="111.91535300000012">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-29T08:30:07.013Z" hostname="chromium" tests="1" failures="0" skipped="0" time="109.229" errors="0">
+<testcase name="Lot List Page › Test 10: Search bed numbers in dropdown" classname="Pages\Projects\lotList.spec.ts" time="109.229">
 </testcase>
 </testsuite>
 </testsuites>
