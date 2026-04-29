@@ -59,4 +59,9 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyBedDropdownFilter();
     });
 
+    test('Test 10: Search bed numbers in dropdown', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifySearchBedInDropdown('2');
+    });
+
 });

@@ -2891,4 +2891,17 @@ export class ProjectActions {
         await this.closeDropdown();
     }
 
+    // Search bed numbers in dropdown
+    async verifySearchBedInDropdown(bedValue: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openBedDropdown();
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bedDropdownSearchInput.fill(bedValue);
+        await this.selectBedByValue(bedValue);
+        await this.bedDropdownSearchInput.fill('');
+        await this.closeDropdown();
+        await this.resetButton.click();
+    }
+
 }
