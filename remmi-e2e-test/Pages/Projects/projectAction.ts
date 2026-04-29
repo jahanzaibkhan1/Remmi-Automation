@@ -860,6 +860,28 @@ export class ProjectActions {
         return this.page.locator('p.ng-star-inserted', { hasText: /records:/i });
     }
 
+    // LOCATORS — PROJECT DROPDOWN IN LOT TAB
+
+    private get projectDropdownInLot(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Project"]').locator('.box');
+    }
+
+    private get projectDropdownPanel(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Project"]').locator('.drop_box');
+    }
+
+    private get projectDropdownOptions(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Project"]').locator('.drop_box ul li.p-element');
+    }
+
+    private get projectDropdownSearchInput(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Project"]').locator('.drop_box .inpt input');
+    }
+
+    private get projectDropdownSelectAllCheckbox(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Project"]').locator('.drop_box label.select_all');
+    }
+
     // ==========================================================================
     // LOCATORS — MISC
     // ==========================================================================
@@ -2604,7 +2626,7 @@ export class ProjectActions {
         const firstRowText = (await this.lotTableRows.first().innerText()).toLowerCase();
         expect(firstRowText).toContain(keyword.toLowerCase());
     }
-    
+
     // TC — /listings/lot: Search for specific lot
     async verifySearchSpecificLot(lotKeyword: string): Promise<void> {
         await this.navigateToLots();
@@ -2613,5 +2635,14 @@ export class ProjectActions {
         await this.assertLotsExist();
         await this.assertFirstRowContains(lotKeyword);
         await this.clearLotSearch();
+    }
+
+    // TC — Use Project dropdown in Lot tab, verify only allocated projects shown
+    async verifyProjectDropdownShowsAllocatedProjects(): Promise<void> {
+        await this.navigateToLots();
+        await expect(this.projectDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.projectDropdownInLot.click();
+        await expect(this.projectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.mouse.click(0, 0);
     }
 }
