@@ -97,4 +97,10 @@ test.describe('Lot List Page', () => {
         const project = new ProjectActions(sessionPage);
         await project.verifySelectOneStatus('For sale');
     });
+
+    test('Test 18: Select multiple statuses from Status dropdown', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.selectMultipleStatuses(['For sale', 'Sold']);
+    });
+
 });

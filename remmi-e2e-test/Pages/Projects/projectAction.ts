@@ -3020,6 +3020,7 @@ export class ProjectActions {
 
     private async openStatusDropdown(): Promise<void> {
         await expect(this.statusDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.page.waitForTimeout(1200);
         await this.statusDropdownInLot.click();
         await expect(this.statusDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await expect(this.statusDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
@@ -3056,11 +3057,33 @@ export class ProjectActions {
     // TC — Select one status from Status dropdown 
     async verifySelectOneStatus(statusValue: string): Promise<void> {
         await this.navigateToLots();
+        await this.resetFilters();
         await this.openStatusDropdown();
         await this.searchInStatusDropdown(statusValue);
         await this.selectStatusByValue(statusValue);
         await this.closeDropdown();
         await expect(this.selectedStatusTagByValue(statusValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotsExist();
+        await this.resetFilters();
+    }
+
+    // TC — Select multiple statuses from Status dropdown
+    async selectMultipleStatuses(statusValues: string[]): Promise<void> {
+        await this.navigateToLots();
+        await this.resetFilters();
+        await this.assertLotsExist(); 
+        await this.openStatusDropdown();
+        for (const statusValue of statusValues) {
+            await this.searchInStatusDropdown(statusValue);
+            await this.selectStatusByValue(statusValue);
+            await this.statusDropdownSearchInput.fill('');
+            await this.page.waitForTimeout(300);
+        }
+
+        await this.closeDropdown();
+        for (const statusValue of statusValues) {
+            await expect(this.selectedStatusTagByValue(statusValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
         await this.assertLotsExist();
         await this.resetFilters();
     }
