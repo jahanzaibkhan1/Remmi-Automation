@@ -2674,12 +2674,50 @@ export class ProjectActions {
         const targetOption = this.projectDropdownOptions.first();
         await expect(targetOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await targetOption.click();
-        await this.page.mouse.click(0,0);
+        await this.page.mouse.click(0, 0);
         await this.page.waitForTimeout(1000);
         const rowCount = await this.lotTableRows.count();
         expect(rowCount).toBeGreaterThan(0);
         const firstRowText = (await this.lotTableRows.first().innerText()).toLowerCase();
         expect(firstRowText).toContain(projectName.toLowerCase());
+        await this.resetButton.click();
+    }
+
+    // Select multiple projects from Project dropdown
+    async verifySelectMultipleProjectsFromDropdown(projectNames: string[]): Promise<void> {
+        await this.navigateToLots();
+        await expect(this.projectDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.projectDropdownInLot.click();
+        await expect(this.projectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        for (const projectName of projectNames) {
+            await expect(this.projectDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+            await this.projectDropdownSearchInput.fill(projectName);
+            await this.page.waitForTimeout(700);
+            const optionsCount = await this.projectDropdownOptions.count();
+            let selected = false;
+            for (let i = 0; i < optionsCount; i++) {
+                const option = this.projectDropdownOptions.nth(i);
+                const text = (await option.innerText()).trim().toLowerCase();
+                if (text.includes(projectName.toLowerCase())) {
+                    await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+                    await option.click();
+                    selected = true;
+                    break;
+                }
+            }
+            expect(selected).toBeTruthy();
+            await this.projectDropdownSearchInput.fill('');
+            await this.page.waitForTimeout(300);
+        }
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(1000);
+        const rowCount = await this.lotTableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+        for (let i = 0; i < rowCount; i++) {
+            const rowText = (await this.lotTableRows.nth(i).innerText()).toLowerCase();
+            const matches = projectNames.some(name => rowText.includes(name.toLowerCase()));
+            expect(matches).toBeTruthy();
+        }
         await this.resetButton.click();
     }
 }

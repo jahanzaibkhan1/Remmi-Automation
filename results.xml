@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.11902099999972">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-29T07:03:23.784Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.69" errors="0">
-<testcase name="Lot List Page › Test 4: Select one project from dropdown" classname="Pages\Projects\lotList.spec.ts" time="48.69">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="61.07316500000004">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-29T07:11:40.057Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.623" errors="0">
+<testcase name="Lot List Page › Test 5: Select multiple projects from dropdown" classname="Pages\Projects\lotList.spec.ts" time="58.623">
 </testcase>
 </testsuite>
 </testsuites>
