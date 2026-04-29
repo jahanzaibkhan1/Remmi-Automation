@@ -1,42 +1,6 @@
-<testsuites id="" name="" tests="19" failures="0" skipped="0" errors="0" time="87.22167600000091">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-29T10:19:00.982Z" hostname="chromium" tests="19" failures="0" skipped="0" time="85.019" errors="0">
-<testcase name="Lot List Page › Test 1: Search for specific lot" classname="Pages\Projects\lotList.spec.ts" time="37.563">
-</testcase>
-<testcase name="Lot List Page › Test 2: Use Project dropdown in Lot tab" classname="Pages\Projects\lotList.spec.ts" time="0.941">
-</testcase>
-<testcase name="Lot List Page › Test 3: Search project in dropdown list" classname="Pages\Projects\lotList.spec.ts" time="2.62">
-</testcase>
-<testcase name="Lot List Page › Test 4: Select one project from dropdown" classname="Pages\Projects\lotList.spec.ts" time="2.701">
-</testcase>
-<testcase name="Lot List Page › Test 5: Select multiple projects from dropdown" classname="Pages\Projects\lotList.spec.ts" time="4.342">
-</testcase>
-<testcase name="Lot List Page › Test 6: Use Deselect All in Project dropdown" classname="Pages\Projects\lotList.spec.ts" time="3.679">
-</testcase>
-<testcase name="Lot List Page › Test 7: Use Select All in Project dropdown" classname="Pages\Projects\lotList.spec.ts" time="1.967">
-</testcase>
-<testcase name="Lot List Page › Test 8: Remove selected project tag using cross icon" classname="Pages\Projects\lotList.spec.ts" time="2.786">
-</testcase>
-<testcase name="Lot List Page › Test 9: Use Bed dropdown in Lot tab" classname="Pages\Projects\lotList.spec.ts" time="0.903">
-</testcase>
-<testcase name="Lot List Page › Test 10: Search bed numbers in dropdown" classname="Pages\Projects\lotList.spec.ts" time="1.075">
-</testcase>
-<testcase name="Lot List Page › Test 11: Select one bed number" classname="Pages\Projects\lotList.spec.ts" time="1.036">
-</testcase>
-<testcase name="Lot List Page › Test 12: Select multiple bed numbers" classname="Pages\Projects\lotList.spec.ts" time="1.141">
-</testcase>
-<testcase name="Lot List Page › Test 13: Select All beds option" classname="Pages\Projects\lotList.spec.ts" time="1.116">
-</testcase>
-<testcase name="Lot List Page › Test 14: Use Deselect All in Bed dropdown" classname="Pages\Projects\lotList.spec.ts" time="2.745">
-</testcase>
-<testcase name="Lot List Page › Test 15: Remove selected bed tag using cross icon" classname="Pages\Projects\lotList.spec.ts" time="1.122">
-</testcase>
-<testcase name="Lot List Page › Test 16: Use Status dropdown in Lot tab" classname="Pages\Projects\lotList.spec.ts" time="2.963">
-</testcase>
-<testcase name="Lot List Page › Test 17: Select one status from Status dropdown" classname="Pages\Projects\lotList.spec.ts" time="4.936">
-</testcase>
-<testcase name="Lot List Page › Test 18: Select multiple statuses from Status dropdown" classname="Pages\Projects\lotList.spec.ts" time="6.72">
-</testcase>
-<testcase name="Lot List Page › Test 19: Search statuses in Status dropdown" classname="Pages\Projects\lotList.spec.ts" time="4.663">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.57784800000116">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-29T10:23:41.021Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.637" errors="0">
+<testcase name="Lot List Page › Test 20: Use Select All in Status dropdown" classname="Pages\Projects\lotList.spec.ts" time="44.637">
 </testcase>
 </testsuite>
 </testsuites>
