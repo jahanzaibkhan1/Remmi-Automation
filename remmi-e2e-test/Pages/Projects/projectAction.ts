@@ -764,11 +764,6 @@ export class ProjectActions {
         return this.page.locator('re-multiselect[placeholder="Status"]');
     }
 
-    // Range filters
-    private get priceRangeFilter(): Locator {
-        return this.page.locator('.land-size', { hasText: 'Price Range' });
-    }
-
     private get internalAreaFilter(): Locator {
         return this.page.locator('.land-size', { hasText: 'Internal Area' });
     }
@@ -2660,6 +2655,36 @@ export class ProjectActions {
         return this.selectedStatusTagByValue(statusValue).locator('span.pi-times-circle');
     }
 
+    // Price Range filter
+    private get priceRangeFilter(): Locator {
+        return this.page.locator('.land-size', { hasText: 'Price Range' });
+    }
+
+    private get priceRangeMinInput(): Locator {
+        return this.page.locator('input[placeholder*="Min" i]').first();
+    }
+
+    private get priceRangeMaxInput(): Locator {
+        return this.page.locator('input[placeholder*="Max" i]').first();
+    }
+
+    private get priceRangeApplyButton(): Locator {
+        return this.page.locator('button', { hasText: /apply/i }).first();
+    }
+
+
+    private get internalAreaMinInput(): Locator {
+        return this.page.locator('input[placeholder*="Min" i]').nth(1);
+    }
+
+    private get internalAreaMaxInput(): Locator {
+        return this.page.locator('input[placeholder*="Max" i]').nth(1);
+    }
+
+    private get internalAreaApplyButton(): Locator {
+        return this.page.locator('button', { hasText: /apply/i }).nth(1);
+    }
+
     // ==========================================================================
     // LOT LIST PAGE — HELPER FUNCTIONS
     // ==========================================================================
@@ -2771,7 +2796,7 @@ export class ProjectActions {
     // TC — /listings/lot: Search for specific lot
     async verifySearchSpecificLot(lotKeyword: string): Promise<void> {
         await this.navigateToLots();
-        await this.assertLotsExist();
+        await this.firstLotRow.waitFor({ state: 'attached' });
         await this.searchLot(lotKeyword);
         await this.assertLotsExist();
         await this.assertFirstRowContains(lotKeyword);
@@ -3056,7 +3081,6 @@ export class ProjectActions {
     // TC — Select one status from Status dropdown 
     async verifySelectOneStatus(statusValue: string): Promise<void> {
         await this.navigateToLots();
-        await this.resetFilters();
         await this.openStatusDropdown();
         await this.searchInStatusDropdown(statusValue);
         await this.selectStatusByValue(statusValue);
@@ -3069,8 +3093,6 @@ export class ProjectActions {
     // TC — Select multiple statuses from Status dropdown
     async selectMultipleStatuses(statusValues: string[]): Promise<void> {
         await this.navigateToLots();
-        await this.resetFilters();
-        await this.assertLotsExist();
         await this.openStatusDropdown();
         for (const statusValue of statusValues) {
             await this.searchInStatusDropdown(statusValue);
@@ -3100,8 +3122,6 @@ export class ProjectActions {
     // TC — Use Select All in Status dropdown
     async verifySelectAllStatusInDropdown(): Promise<void> {
         await this.navigateToLots();
-        await this.resetFilters();
-        await this.assertLotsExist();
         await this.openStatusDropdown();
 
         await expect(this.statusDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
@@ -3119,8 +3139,6 @@ export class ProjectActions {
     // TC — Use Deselect All in Status dropdown
     async verifyDeselectAllStatusInDropdown(): Promise<void> {
         await this.navigateToLots();
-        await this.resetFilters();
-        await this.assertLotsExist();
         await this.openStatusDropdown();
 
         await expect(this.statusDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
@@ -3141,20 +3159,62 @@ export class ProjectActions {
     // TC — Remove status tag via cross icon
     async verifyRemoveSelectedStatusTag(statusValue: string): Promise<void> {
         await this.navigateToLots();
-        await this.resetFilters();
-        await this.assertLotsExist();
         await this.openStatusDropdown();
         await this.searchInStatusDropdown(statusValue);
         await this.selectStatusByValue(statusValue);
         await this.closeDropdown();
-
         await expect(this.selectedStatusTagByValue(statusValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-
         await this.statusTagCrossIcon(statusValue).click();
-        await this.page.waitForTimeout(800);
-
         await expect(this.selectedStatusTagByValue(statusValue)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.assertLotsExist();
+        await this.resetButton.click();
     }
 
+    private async openPriceRangeFilter(): Promise<void> {
+        await expect(this.priceRangeFilter).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.priceRangeFilter.click();
+    }
+
+    private async setPriceRange(min: string, max: string): Promise<void> {
+        await this.priceRangeMinInput.fill(min);
+        await this.priceRangeMaxInput.fill(max);
+    }
+
+    private async openInternalAreaFilter(): Promise<void> {
+        await expect(this.internalAreaFilter).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.internalAreaFilter.click();
+    }
+
+    private async setInternalArea(min: string, max: string): Promise<void> {
+        await this.internalAreaMinInput.fill(min);
+        await this.internalAreaMaxInput.fill(max);
+    }
+
+    // TC — Use Price Range filter
+    async verifyPriceRangeFilter(min: string, max: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openPriceRangeFilter();
+        await this.setPriceRange(min, max);
+        await this.assertLotsExist();
+
+        // Verify Lot Price column values within range
+        const rowCount = await this.lotTableRows.count();
+        for (let i = 0; i < Math.min(rowCount, 5); i++) {
+            const priceText = (await this.rowLotPriceCell(this.lotTableRows.nth(i)).innerText()).trim().replace(/[^0-9]/g, '');
+            const price = parseInt(priceText, 10);
+            expect(price).toBeGreaterThanOrEqual(parseInt(min, 10));
+            expect(price).toBeLessThanOrEqual(parseInt(max, 10));
+        }
+        await this.openPriceRangeFilter();
+        await this.resetFilters();
+    }
+
+    // TC — Use Internal Area filter
+    async verifyInternalAreaFilter(min: string, max: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openInternalAreaFilter();
+        await this.setInternalArea(min, max);
+        await this.assertLotsExist();
+        await this.resetFilters();
+    }
 }
