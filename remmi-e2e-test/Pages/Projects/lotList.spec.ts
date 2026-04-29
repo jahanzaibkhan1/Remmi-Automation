@@ -103,4 +103,9 @@ test.describe('Lot List Page', () => {
         await project.selectMultipleStatuses(['For sale', 'Sold']);
     });
 
+    test('Test 19: Search statuses in Status dropdown', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifySearchStatusInDropdown('Sold');
+    });
+
 });

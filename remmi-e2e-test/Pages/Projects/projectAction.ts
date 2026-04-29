@@ -3088,4 +3088,15 @@ export class ProjectActions {
         await this.resetFilters();
     }
 
+    // Search statuses in dropdown
+    async verifySearchStatusInDropdown(statusValue: string): Promise<void> {
+        await this.navigateToLots();
+        await this.resetFilters();
+        await this.assertLotsExist(); 
+        await this.openStatusDropdown();
+        await this.searchInStatusDropdown(statusValue);
+        await this.closeDropdown();
+        await this.resetFilters();
+    }
+
 }
