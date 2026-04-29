@@ -2645,4 +2645,20 @@ export class ProjectActions {
         await expect(this.projectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.page.mouse.click(0, 0);
     }
+
+    // TC — Search project in Project dropdown list
+    async verifySearchProjectInDropdown(projectName: string): Promise<void> {
+        await this.navigateToLots();
+        await expect(this.projectDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.projectDropdownInLot.click();
+        await expect(this.projectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectDropdownSearchInput.fill(projectName);
+        await this.page.waitForTimeout(1000);
+        const filteredCount = await this.projectDropdownOptions.count();
+        expect(filteredCount).toBeGreaterThan(0);
+        const firstOptionText = (await this.projectDropdownOptions.first().innerText()).trim().toLowerCase();
+        expect(firstOptionText).toContain(projectName.toLowerCase());
+        await this.page.mouse.click(0,0);
+    }
 }
