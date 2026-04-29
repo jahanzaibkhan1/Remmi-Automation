@@ -122,4 +122,8 @@ test.describe('Lot List Page', () => {
         await project.verifyRemoveSelectedStatusTag('Sold');
     });
 
+    test('Test 23: Use Price Range filter', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyPriceRangeFilter('500000', '1500000');
+    });
+
 });
