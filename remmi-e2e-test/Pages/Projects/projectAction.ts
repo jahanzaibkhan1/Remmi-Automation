@@ -2590,6 +2590,41 @@ export class ProjectActions {
         await this.lotTabInPrecinct.click();
     }
 
+    // LOCATORS — BED DROPDOWN IN LOT TAB
+
+    private get bedDropdownInLot(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Bed"]').locator('.box');
+    }
+
+    private get bedDropdownPanel(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Bed"]').locator('.drop_box');
+    }
+
+    private get bedDropdownOptions(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Bed"]').locator('.drop_box ul li.p-element');
+    }
+
+    private get bedDropdownSearchInput(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Bed"]').locator('.drop_box .inpt input');
+    }
+
+    private get bedDropdownSelectAllCheckbox(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Bed"]').locator('.drop_box label.select_all');
+    }
+
+    private get selectedBedTags(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Bed"]').locator('.tags .selected_one');
+    }
+
+    private selectedBedTagByValue(bedValue: string): Locator {
+        return this.page.locator('re-multiselect[placeholder="Bed"]')
+            .locator('.tags .selected_one', { hasText: bedValue });
+    }
+
+    private bedTagCrossIcon(bedValue: string): Locator {
+        return this.selectedBedTagByValue(bedValue).locator('span.pi-times-circle');
+    }
+
     // ==========================================================================
     // LOT LIST PAGE — HELPER FUNCTIONS
     // ==========================================================================
@@ -2815,15 +2850,45 @@ export class ProjectActions {
     }
 
     // TC — Remove selected project tag using cross icon
-async verifyRemoveSelectedProjectTag(projectName: string): Promise<void> {
-    await this.navigateToLots();
-    await this.openProjectDropdown();
-    await this.searchInProjectDropdown(projectName);
-    await this.selectProjectByName(projectName);
-    await this.closeDropdown();
-    await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-    await this.projectTagCrossIcon(projectName).click();
-    await this.page.waitForTimeout(800);
-    await this.resetButton.click();
-}
+    async verifyRemoveSelectedProjectTag(projectName: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openProjectDropdown();
+        await this.searchInProjectDropdown(projectName);
+        await this.selectProjectByName(projectName);
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectTagCrossIcon(projectName).click();
+        await this.page.waitForTimeout(800);
+        await this.resetButton.click();
+    }
+
+    private async openBedDropdown(): Promise<void> {
+        await expect(this.bedDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.bedDropdownInLot.click();
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    private async selectBedByValue(bedValue: string): Promise<void> {
+        const optionsCount = await this.bedDropdownOptions.count();
+        for (let i = 0; i < optionsCount; i++) {
+            const option = this.bedDropdownOptions.nth(i);
+            const text = (await option.innerText()).trim();
+            if (text === bedValue || text.includes(bedValue)) {
+                await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+                await option.click();
+                return;
+            }
+        }
+        throw new Error(`Bed value "${bedValue}" not found in dropdown`);
+    }
+    // TC — Use Bed dropdown in Lot tab
+    async verifyBedDropdownFilter(): Promise<void> {
+        await this.navigateToLots();
+        await this.openBedDropdown();
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const optionsCount = await this.bedDropdownOptions.count();
+        expect(optionsCount).toBeGreaterThan(0);
+        await this.closeDropdown();
+    }
+
 }
