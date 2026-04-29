@@ -1,6 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.350822999999856">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-29T06:36:56.364Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.427" errors="0">
-<testcase name="Lot List Page › Search for specific lot" classname="Pages\Projects\lotList.spec.ts" time="51.427">
+<testsuites id="" name="" tests="2" failures="0" skipped="0" errors="0" time="51.498137000000106">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-29T06:47:42.307Z" hostname="chromium" tests="2" failures="0" skipped="0" time="49.56" errors="0">
+<testcase name="Lot List Page › Test 1: Search for specific lot" classname="Pages\Projects\lotList.spec.ts" time="49.404">
+</testcase>
+<testcase name="Lot List Page › Test 2: Use Project dropdown in Lot tab" classname="Pages\Projects\lotList.spec.ts" time="0.156">
 </testcase>
 </testsuite>
 </testsuites>

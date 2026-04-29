@@ -6,21 +6,25 @@ const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.
 const DASHBOARD_URL = process.env.DASHBOARD_URL;
 
 const test = base.extend<{ sessionPage: any }>({
-  sessionPage: [async ({ browser }, use) => {
-    const context = await browser.newContext({ storageState: managerSessionPath });
-    try {
-      const page = await context.newPage();
-      await page.goto(DASHBOARD_URL);
-      await use(page);
-    } finally {
-      // Optionally clean up context
-    }
-  }, { scope: 'worker' }]
+    sessionPage: [async ({ browser }, use) => {
+        const context = await browser.newContext({ storageState: managerSessionPath });
+        try {
+            const page = await context.newPage();
+            await page.goto(DASHBOARD_URL);
+            await use(page);
+        } finally {
+            // Optionally clean up context
+        }
+    }, { scope: 'worker' }]
 });
 
 test.describe('Lot List Page', () => {
-  test('Search for specific lot', async ({ sessionPage }) => {
-    const project = new ProjectActions(sessionPage);
-    await project.verifySearchSpecificLot('Automation Lot');
-  });
+    test('Test 1: Search for specific lot', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifySearchSpecificLot('Automation Lot');
+    });
+
+    test('Test 2: Use Project dropdown in Lot tab', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyProjectDropdownShowsAllocatedProjects();
+    });
 });
