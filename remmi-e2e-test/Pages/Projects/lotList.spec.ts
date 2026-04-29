@@ -50,4 +50,9 @@ test.describe('Lot List Page', () => {
     test('Test 7: Use Select All in Project dropdown', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifySelectAllProjectsInDropdown();
     });
+
+    test('Test 8: Remove selected project tag using cross icon', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyRemoveSelectedProjectTag('adb');
+    });
+    
 });

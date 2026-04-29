@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.631220999999904">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-29T07:26:25.239Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.685" errors="0">
-<testcase name="Lot List Page › Test 7: Use Select All in Project dropdown" classname="Pages\Projects\lotList.spec.ts" time="44.685">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="91.76177300000005">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-29T07:32:38.950Z" hostname="chromium" tests="1" failures="0" skipped="0" time="89.825" errors="0">
+<testcase name="Lot List Page › Test 8: Remove selected project tag using cross icon" classname="Pages\Projects\lotList.spec.ts" time="89.825">
 </testcase>
 </testsuite>
 </testsuites>
