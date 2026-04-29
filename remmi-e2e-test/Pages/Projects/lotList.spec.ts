@@ -64,4 +64,9 @@ test.describe('Lot List Page', () => {
         await project.verifySearchBedInDropdown('2');
     });
 
+    test('Test 11: Select one bed number', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.selectBedNumber('2');
+    });
+
 });

@@ -2904,4 +2904,17 @@ export class ProjectActions {
         await this.resetButton.click();
     }
 
+    /**
+     * Select one bed number
+     */
+    async selectBedNumber(bedValue: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openBedDropdown();
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.selectBedByValue(bedValue);
+        await this.closeDropdown();
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.resetButton.click();
+    }
+
 }
