@@ -2692,7 +2692,7 @@ export class ProjectActions {
     }
 
     private async assertFirstRowContains(keyword: string): Promise<void> {
-        await expect(this.lotTableRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotTableRows.first().waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
         const firstRowText = (await this.lotTableRows.first().innerText()).toLowerCase();
         expect(firstRowText).toContain(keyword.toLowerCase());
     }
@@ -3022,6 +3022,13 @@ export class ProjectActions {
         await expect(this.statusDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.statusDropdownInLot.click();
         await expect(this.statusDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.statusDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    private async searchInStatusDropdown(statusValue: string): Promise<void> {
+        await expect(this.statusDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.statusDropdownSearchInput.fill(statusValue);
+        await this.page.waitForTimeout(800);
     }
 
     private async selectStatusByValue(statusValue: string): Promise<void> {
@@ -3043,6 +3050,18 @@ export class ProjectActions {
         await this.navigateToLots();
         await this.openStatusDropdown();
         await this.closeDropdown();
+        await this.resetFilters();
+    }
+
+    // TC — Select one status from Status dropdown 
+    async verifySelectOneStatus(statusValue: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openStatusDropdown();
+        await this.searchInStatusDropdown(statusValue);
+        await this.selectStatusByValue(statusValue);
+        await this.closeDropdown();
+        await expect(this.selectedStatusTagByValue(statusValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotsExist();
         await this.resetFilters();
     }
 
