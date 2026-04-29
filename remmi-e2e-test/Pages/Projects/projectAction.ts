@@ -735,6 +735,149 @@ export class ProjectActions {
     }
 
     // ==========================================================================
+    // LOT LIST PAGE — LOCATORS
+    // =========================================================================
+
+    // Search bar
+    private get lotSearchInput(): Locator {
+        return this.page.locator('input#keywordInput[name="task-search"]');
+    }
+
+    private get lotSearchIcon(): Locator {
+        return this.page.locator('i.pi-search._search-icon');
+    }
+
+    // Filter dropdowns (re-multiselect)
+    private get precinctFilter(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Precinct"]');
+    }
+
+    private get projectFilter(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Project"]');
+    }
+
+    private get bedFilter(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Bed"]');
+    }
+
+    private get statusFilter(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Status"]');
+    }
+
+    private get internalAreaFilter(): Locator {
+        return this.page.locator('.land-size', { hasText: 'Internal Area' });
+    }
+
+    // Table - Header
+    private get lotTable(): Locator {
+        return this.page.locator('p-table#apartmentscolumns table');
+    }
+
+    private get lotTableHeader(): Locator {
+        return this.page.locator('table thead tr');
+    }
+
+    private lotColumnHeader(columnName: string): Locator {
+        return this.page.locator('table thead th p', { hasText: columnName });
+    }
+
+    private lotColumnSortIcon(columnName: string): Locator {
+        return this.page.locator('table thead th', { hasText: columnName }).locator('i.custom-sort');
+    }
+
+    // Header checkbox (select all)
+    private get selectAllLotCheckbox(): Locator {
+        return this.page.locator('p-tableheadercheckbox .p-checkbox-box');
+    }
+
+    // Table - Body rows
+    private get lotTableRows(): Locator {
+        return this.page.locator('table tbody tr');
+    }
+
+    private get firstLotRow(): Locator {
+        return this.lotTableRows.first();
+    }
+
+    // Row by lot number / project name
+    private lotRowByLotNumber(lotNumber: string): Locator {
+        return this.page.locator('table tbody tr', { hasText: lotNumber });
+    }
+
+    private lotRowByProjectName(projectName: string): Locator {
+        return this.page.locator('table tbody tr', { hasText: projectName });
+    }
+
+    // Row checkbox
+    private rowCheckbox(row: Locator): Locator {
+        return row.locator('p-tablecheckbox .p-checkbox-box');
+    }
+
+    // Row cell values (by column index — 0-based, includes checkbox column)
+    private rowProjectCell(row: Locator): Locator {
+        return row.locator('td').nth(1).locator('p');
+    }
+
+    private rowLotCell(row: Locator): Locator {
+        return row.locator('td').nth(2).locator('p');
+    }
+
+    private rowLotPriceCell(row: Locator): Locator {
+        return row.locator('td').nth(3).locator('p');
+    }
+
+    private rowStatusCell(row: Locator): Locator {
+        return row.locator('td').nth(4).locator('p');
+    }
+
+    private rowSalesAgencyCell(row: Locator): Locator {
+        return row.locator('td').nth(5).locator('p');
+    }
+
+    private rowSalesAgentCell(row: Locator): Locator {
+        return row.locator('td').nth(6).locator('p');
+    }
+
+    private rowBedCell(row: Locator): Locator {
+        return row.locator('td').nth(7).locator('p');
+    }
+
+    private rowBathCell(row: Locator): Locator {
+        return row.locator('td').nth(8).locator('p');
+    }
+
+    private rowCreatedAtCell(row: Locator): Locator {
+        return row.locator('td').nth(9).locator('p');
+    }
+
+    // Records count
+    private get lotRecordsCount(): Locator {
+        return this.page.locator('p.ng-star-inserted', { hasText: /records:/i });
+    }
+
+    // LOCATORS — PROJECT DROPDOWN IN LOT TAB
+
+    private get projectDropdownInLot(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Project"]').locator('.box');
+    }
+
+    private get projectDropdownPanel(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Project"]').locator('.drop_box');
+    }
+
+    private get projectDropdownOptions(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Project"]').locator('.drop_box ul li.p-element');
+    }
+
+    private get projectDropdownSearchInput(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Project"]').locator('.drop_box .inpt input');
+    }
+
+    private get projectDropdownSelectAllCheckbox(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Project"]').locator('.drop_box label.select_all');
+    }
+
+    // ==========================================================================
     // LOCATORS — MISC
     // ==========================================================================
 
@@ -2421,8 +2564,8 @@ export class ProjectActions {
         await this.page.waitForTimeout(1200);
         await this.projectsMenuLink.click();
         await expect(this.firstPrecinctOnProjectsPage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.page.getByText('Precinct', { exact: true })).toBeVisible({timeout: ProjectActions.TIMEOUT_DEFAULT });
-   
+        await expect(this.page.getByText('Precinct', { exact: true })).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
     }
 
     // TC_08 — Open Lot tab successfully, click on Lot tab
@@ -2440,5 +2583,631 @@ export class ProjectActions {
         expect(displayedName.length).toBeGreaterThan(0);
         await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.lotTabInPrecinct.click();
+    }
+
+    // LOCATORS — BED DROPDOWN IN LOT TAB
+
+    private get bedDropdownInLot(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Bed"]').locator('.box');
+    }
+
+    private get bedDropdownPanel(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Bed"]').locator('.drop_box');
+    }
+
+    private get bedDropdownOptions(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Bed"]').locator('.drop_box ul li.p-element');
+    }
+
+    private get bedDropdownSearchInput(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Bed"]').locator('.drop_box .inpt input');
+    }
+
+    private get bedDropdownSelectAllCheckbox(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Bed"]').locator('.drop_box label.select_all');
+    }
+
+    private get selectedBedTags(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Bed"]').locator('.tags .selected_one');
+    }
+
+    private selectedBedTagByValue(bedValue: string): Locator {
+        return this.page.locator('re-multiselect[placeholder="Bed"]')
+            .locator('.tags .selected_one', { hasText: bedValue });
+    }
+
+    private bedTagCrossIcon(bedValue: string): Locator {
+        return this.selectedBedTagByValue(bedValue).locator('span.pi-times-circle');
+    }
+
+    // LOCATORS — STATUS DROPDOWN IN LOT TAB
+
+    private get statusDropdownInLot(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Status"]').locator('.box');
+    }
+
+    private get statusDropdownPanel(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Status"]').locator('.drop_box');
+    }
+
+    private get statusDropdownOptions(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Status"]').locator('.drop_box ul li.p-element');
+    }
+
+    private get statusDropdownSearchInput(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Status"]').locator('.drop_box .inpt input');
+    }
+
+    private get statusDropdownSelectAllCheckbox(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Status"]').locator('.drop_box label.select_all');
+    }
+
+    private selectedStatusTagByValue(statusValue: string): Locator {
+        return this.page.locator('re-multiselect[placeholder="Status"]')
+            .locator('.tags .selected_one', { hasText: statusValue });
+    }
+
+    private statusTagCrossIcon(statusValue: string): Locator {
+        return this.selectedStatusTagByValue(statusValue).locator('span.pi-times-circle');
+    }
+
+    // Price Range filter
+    private get priceRangeFilter(): Locator {
+        return this.page.locator('.land-size', { hasText: 'Price Range' });
+    }
+
+    private get priceRangeMinInput(): Locator {
+        return this.page.locator('input[placeholder*="Min" i]').first();
+    }
+
+    private get priceRangeMaxInput(): Locator {
+        return this.page.locator('input[placeholder*="Max" i]').first();
+    }
+
+    private get priceRangeApplyButton(): Locator {
+        return this.page.locator('button', { hasText: /apply/i }).first();
+    }
+
+
+    private get internalAreaMinInput(): Locator {
+        return this.page.locator('input[placeholder*="Min" i]');
+    }
+
+    private get internalAreaMaxInput(): Locator {
+        return this.page.locator('input[placeholder*="Max" i]');
+    }
+
+    // ==========================================================================
+    // LOT LIST PAGE — HELPER FUNCTIONS
+    // ==========================================================================
+
+    private async navigateToLots(): Promise<void> {
+        const url = this.page.url();
+        if (!url.includes('/listings/lot')) {
+            await this.page.goto('/listings/lot');
+        }
+        await expect(this.lotSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    private async searchLot(keyword: string): Promise<void> {
+        await this.lotSearchInput.fill(keyword);
+        await this.page.waitForTimeout(1500);
+    }
+
+    private async clearLotSearch(): Promise<void> {
+        await this.lotSearchInput.fill('');
+        await this.page.waitForTimeout(1000);
+    }
+
+    private async getLotRowCount(): Promise<number> {
+        return await this.lotTableRows.count();
+    }
+
+    private async assertLotsExist(): Promise<void> {
+        const count = await this.getLotRowCount();
+        expect(count).toBeGreaterThan(0);
+    }
+
+    private async assertFirstRowContains(keyword: string): Promise<void> {
+        await this.lotTableRows.first().waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        const firstRowText = (await this.lotTableRows.first().innerText()).toLowerCase();
+        expect(firstRowText).toContain(keyword.toLowerCase());
+    }
+
+    // Project dropdown helpers
+    private async openProjectDropdown(): Promise<void> {
+        await expect(this.projectDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.projectDropdownInLot.click();
+        await expect(this.projectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    private async closeDropdown(): Promise<void> {
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(800);
+    }
+
+    private async searchInProjectDropdown(projectName: string): Promise<void> {
+        await expect(this.projectDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectDropdownSearchInput.fill(projectName);
+        await this.page.waitForTimeout(800);
+    }
+
+    private async clearProjectDropdownSearch(): Promise<void> {
+        await this.projectDropdownSearchInput.fill('');
+        await this.page.waitForTimeout(300);
+    }
+
+    private async selectProjectByName(projectName: string): Promise<void> {
+        const optionsCount = await this.projectDropdownOptions.count();
+        for (let i = 0; i < optionsCount; i++) {
+            const option = this.projectDropdownOptions.nth(i);
+            const text = (await option.innerText()).trim().toLowerCase();
+            if (text.includes(projectName.toLowerCase())) {
+                await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+                await option.click();
+                return;
+            }
+        }
+        throw new Error(`Project "${projectName}" not found in dropdown`);
+    }
+
+    private async assertAllRowsContainAnyProject(projectNames: string[]): Promise<void> {
+        const rowCount = await this.lotTableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+        for (let i = 0; i < rowCount; i++) {
+            const rowText = (await this.lotTableRows.nth(i).innerText()).toLowerCase();
+            const matches = projectNames.some(name => rowText.includes(name.toLowerCase()));
+            expect(matches).toBeTruthy();
+        }
+    }
+
+    private async resetFilters(): Promise<void> {
+        await this.resetButton.click();
+        await this.page.waitForTimeout(800);
+    }
+
+    // LOCATORS — Selected project tags
+
+    private get selectedProjectTags(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Project"]').locator('.tags .selected_one');
+    }
+
+    private selectedProjectTagByName(projectName: string): Locator {
+        return this.page.locator('re-multiselect[placeholder="Project"]')
+            .locator('.tags .selected_one', { hasText: projectName });
+    }
+
+    private projectTagCrossIcon(projectName: string): Locator {
+        return this.selectedProjectTagByName(projectName).locator('span.pi-times-circle');
+    }
+
+    // ==========================================================================
+    // LOT LIST PAGE — TEST FUNCTIONS
+    // ==========================================================================
+
+    // TC — /listings/lot: Search for specific lot
+    async verifySearchSpecificLot(lotKeyword: string): Promise<void> {
+        await this.navigateToLots();
+        await this.firstLotRow.waitFor({ state: 'attached' });
+        await this.searchLot(lotKeyword);
+        await this.assertLotsExist();
+        await this.assertFirstRowContains(lotKeyword);
+        await this.clearLotSearch();
+    }
+
+    // TC — Use Project dropdown in Lot tab, verify only allocated projects shown
+    async verifyProjectDropdownShowsAllocatedProjects(): Promise<void> {
+        await this.navigateToLots();
+        await this.openProjectDropdown();
+        await this.closeDropdown();
+    }
+
+    // TC — Search project in Project dropdown list
+    async verifySearchProjectInDropdown(projectName: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openProjectDropdown();
+        await this.searchInProjectDropdown(projectName);
+
+        const filteredCount = await this.projectDropdownOptions.count();
+        expect(filteredCount).toBeGreaterThan(0);
+
+        const firstOptionText = (await this.projectDropdownOptions.first().innerText()).trim().toLowerCase();
+        expect(firstOptionText).toContain(projectName.toLowerCase());
+
+        await this.closeDropdown();
+        await this.resetFilters();
+    }
+
+    // TC — Select one project from dropdown
+    async verifySelectProjectFromDropdown(projectName: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openProjectDropdown();
+        await this.searchInProjectDropdown(projectName);
+        await this.selectProjectByName(projectName);
+        await this.closeDropdown();
+
+        await this.assertLotsExist();
+        await this.assertFirstRowContains(projectName);
+        await this.resetFilters();
+    }
+
+    // TC — Select multiple projects from Project dropdown
+    async verifySelectMultipleProjectsFromDropdown(projectNames: string[]): Promise<void> {
+        await this.navigateToLots();
+        await this.openProjectDropdown();
+
+        for (const projectName of projectNames) {
+            await this.searchInProjectDropdown(projectName);
+            await this.selectProjectByName(projectName);
+            await this.clearProjectDropdownSearch();
+        }
+
+        await this.closeDropdown();
+        await this.assertAllRowsContainAnyProject(projectNames);
+        await this.resetFilters();
+    }
+
+    // TC — Use Select All in Project dropdown
+    async verifySelectAllProjectsInDropdown(): Promise<void> {
+        await this.navigateToLots();
+        await this.openProjectDropdown();
+
+        await expect(this.projectDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const totalOptions = await this.projectDropdownOptions.count();
+        expect(totalOptions).toBeGreaterThan(0);
+
+        await this.projectDropdownSelectAllCheckbox.click();
+        await this.closeDropdown();
+
+        await this.assertLotsExist();
+        await this.resetFilters();
+    }
+
+    // TC — Use Deselect All in Project dropdown
+    async verifyDeselectAllProjectsInDropdown(): Promise<void> {
+        await this.navigateToLots();
+        await this.openProjectDropdown();
+
+        // First select all
+        await expect(this.projectDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+
+        // Click again to deselect all
+        await this.projectDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+
+        await this.closeDropdown();
+
+        // Verify table shows all lots (no filter applied = all results)
+        await this.assertLotsExist();
+        await this.resetFilters();
+    }
+
+    // TC — Use Select All in Project dropdown
+    async verifySelectAllProjects(): Promise<void> {
+        await this.navigateToLots();
+        await this.openProjectDropdown();
+
+        await expect(this.projectDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const totalOptions = await this.projectDropdownOptions.count();
+        expect(totalOptions).toBeGreaterThan(0);
+
+        await this.projectDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(1000);
+
+        await this.closeDropdown();
+        await this.assertLotsExist();
+        await this.resetFilters();
+    }
+
+    // TC — Remove selected project tag using cross icon
+    async verifyRemoveSelectedProjectTag(projectName: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openProjectDropdown();
+        await this.searchInProjectDropdown(projectName);
+        await this.selectProjectByName(projectName);
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectTagCrossIcon(projectName).click();
+        await this.page.waitForTimeout(800);
+        await this.resetButton.click();
+    }
+
+    private async openBedDropdown(): Promise<void> {
+        await expect(this.bedDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.bedDropdownInLot.click();
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    private async selectBedByValue(bedValue: string): Promise<void> {
+        const optionsCount = await this.bedDropdownOptions.count();
+        for (let i = 0; i < optionsCount; i++) {
+            const option = this.bedDropdownOptions.nth(i);
+            const text = (await option.innerText()).trim();
+            if (text === bedValue || text.includes(bedValue)) {
+                await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+                await option.click();
+                return;
+            }
+        }
+        throw new Error(`Bed value "${bedValue}" not found in dropdown`);
+    }
+    // TC — Use Bed dropdown in Lot tab
+    async verifyBedDropdownFilter(): Promise<void> {
+        await this.navigateToLots();
+        await this.openBedDropdown();
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const optionsCount = await this.bedDropdownOptions.count();
+        expect(optionsCount).toBeGreaterThan(0);
+        await this.closeDropdown();
+    }
+
+    // Search bed numbers in dropdown
+    async verifySearchBedInDropdown(bedValue: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openBedDropdown();
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bedDropdownSearchInput.fill(bedValue);
+        await this.selectBedByValue(bedValue);
+        await this.bedDropdownSearchInput.fill('');
+        await this.closeDropdown();
+        await this.resetButton.click();
+    }
+
+    /**
+     * Select one bed number
+     */
+    async selectBedNumber(bedValue: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openBedDropdown();
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.selectBedByValue(bedValue);
+        await this.closeDropdown();
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.resetButton.click();
+    }
+
+    /**
+     * Select multiple bed numbers
+     */
+    async selectMultipleBedNumbers(bedValues: string[]): Promise<void> {
+        await this.navigateToLots();
+        await this.openBedDropdown();
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        for (const bedValue of bedValues) {
+            await this.selectBedByValue(bedValue);
+        }
+        await this.closeDropdown();
+        for (const bedValue of bedValues) {
+            await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
+        await this.resetButton.click();
+    }
+
+    /**
+     * Select All beds option
+     */
+    async verifySelectAllBedsInDropdown(): Promise<void> {
+        await this.navigateToLots();
+        await this.openBedDropdown();
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bedDropdownSelectAllCheckbox.click();
+        const optionsCount = await this.bedDropdownOptions.count();
+        await expect(async () => {
+            const tagCount = await this.selectedBedTags.count();
+            expect(tagCount).toBe(optionsCount);
+        }).toPass();
+        await this.closeDropdown();
+        await this.resetButton.click();
+    }
+
+    /**
+     * Use Deselect All in Bed dropdown
+     */
+    async verifyDeselectAllBedsInDropdown(): Promise<void> {
+        await this.navigateToLots();
+        await this.openBedDropdown();
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bedDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+        await this.bedDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+        await expect(this.selectedBedTags).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeDropdown();
+        await this.resetButton.click();
+    }
+
+    /**
+     * Remove selected bed tag using cross icon
+     */
+    async verifyRemoveSelectedBedTag(bedValue: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openBedDropdown();
+        await this.selectBedByValue(bedValue);
+        await this.closeDropdown();
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bedTagCrossIcon(bedValue).click();
+        await expect(this.selectedBedTagByValue(bedValue)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.resetButton.click();
+    }
+
+    private async openStatusDropdown(): Promise<void> {
+        await expect(this.statusDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.statusDropdownInLot.click();
+        await expect(this.statusDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.statusDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    private async searchInStatusDropdown(statusValue: string): Promise<void> {
+        await expect(this.statusDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.statusDropdownSearchInput.fill(statusValue);
+        await this.page.waitForTimeout(800);
+    }
+
+    private async selectStatusByValue(statusValue: string): Promise<void> {
+        const optionsCount = await this.statusDropdownOptions.count();
+        for (let i = 0; i < optionsCount; i++) {
+            const option = this.statusDropdownOptions.nth(i);
+            const text = (await option.innerText()).trim().toLowerCase();
+            if (text.includes(statusValue.toLowerCase())) {
+                await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+                await option.click();
+                return;
+            }
+        }
+        throw new Error(`Status value "${statusValue}" not found in dropdown`);
+    }
+
+    // TC — Use Status dropdown in Lot tab
+    async verifyStatusDropdownFilter(): Promise<void> {
+        await this.navigateToLots();
+        await this.openStatusDropdown();
+        await this.closeDropdown();
+        await this.resetFilters();
+    }
+
+    // TC — Select one status from Status dropdown 
+    async verifySelectOneStatus(statusValue: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openStatusDropdown();
+        await this.searchInStatusDropdown(statusValue);
+        await this.selectStatusByValue(statusValue);
+        await this.closeDropdown();
+        await expect(this.selectedStatusTagByValue(statusValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotsExist();
+        await this.resetFilters();
+    }
+
+    // TC — Select multiple statuses from Status dropdown
+    async selectMultipleStatuses(statusValues: string[]): Promise<void> {
+        await this.navigateToLots();
+        await this.openStatusDropdown();
+        for (const statusValue of statusValues) {
+            await this.searchInStatusDropdown(statusValue);
+            await this.selectStatusByValue(statusValue);
+            await this.statusDropdownSearchInput.fill('');
+            await this.page.waitForTimeout(300);
+        }
+
+        await this.closeDropdown();
+        for (const statusValue of statusValues) {
+            await expect(this.selectedStatusTagByValue(statusValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
+        await this.assertLotsExist();
+        await this.resetFilters();
+    }
+
+    // Search statuses in dropdown
+    async verifySearchStatusInDropdown(statusValue: string): Promise<void> {
+        await this.navigateToLots();
+        await this.lotTableRows.first().waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        await this.openStatusDropdown();
+        await this.searchInStatusDropdown(statusValue);
+        await this.closeDropdown();
+        await this.resetFilters();
+    }
+
+    // TC — Use Select All in Status dropdown
+    async verifySelectAllStatusInDropdown(): Promise<void> {
+        await this.navigateToLots();
+        await this.openStatusDropdown();
+
+        await expect(this.statusDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const totalOptions = await this.statusDropdownOptions.count();
+        expect(totalOptions).toBeGreaterThan(0);
+
+        await this.statusDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(1000);
+
+        await this.closeDropdown();
+        await this.assertLotsExist();
+        await this.resetFilters();
+    }
+
+    // TC — Use Deselect All in Status dropdown
+    async verifyDeselectAllStatusInDropdown(): Promise<void> {
+        await this.navigateToLots();
+        await this.openStatusDropdown();
+
+        await expect(this.statusDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        // Select all first
+        await this.statusDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+
+        // Deselect all
+        await this.statusDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+
+        await this.closeDropdown();
+        await this.assertLotsExist();
+        await this.resetFilters();
+    }
+
+    // TC — Remove status tag via cross icon
+    async verifyRemoveSelectedStatusTag(statusValue: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openStatusDropdown();
+        await this.searchInStatusDropdown(statusValue);
+        await this.selectStatusByValue(statusValue);
+        await this.closeDropdown();
+        await expect(this.selectedStatusTagByValue(statusValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.statusTagCrossIcon(statusValue).click();
+        await expect(this.selectedStatusTagByValue(statusValue)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotsExist();
+        await this.resetButton.click();
+    }
+
+    private async openPriceRangeFilter(): Promise<void> {
+        await expect(this.priceRangeFilter).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.priceRangeFilter.click();
+    }
+
+    private async setPriceRange(min: string, max: string): Promise<void> {
+        await this.priceRangeMinInput.fill(min);
+        await this.priceRangeMaxInput.fill(max);
+    }
+
+    private async openInternalAreaFilter(): Promise<void> {
+        await expect(this.internalAreaFilter).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.internalAreaFilter.click();
+    }
+
+    private async setInternalArea(min: string, max: string): Promise<void> {
+        await this.internalAreaMinInput.fill(min);
+        await this.internalAreaMaxInput.fill(max);
+    }
+
+    // TC — Use Price Range filter
+    async verifyPriceRangeFilter(min: string, max: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openPriceRangeFilter();
+        await this.setPriceRange(min, max);
+        await this.assertLotsExist();
+
+        // Verify Lot Price column values within range
+        const rowCount = await this.lotTableRows.count();
+        for (let i = 0; i < Math.min(rowCount, 5); i++) {
+            const priceText = (await this.rowLotPriceCell(this.lotTableRows.nth(i)).innerText()).trim().replace(/[^0-9]/g, '');
+            const price = parseInt(priceText, 10);
+            expect(price).toBeGreaterThanOrEqual(parseInt(min, 10));
+            expect(price).toBeLessThanOrEqual(parseInt(max, 10));
+        }
+        await this.openPriceRangeFilter();
+        await this.resetFilters();
+    }
+
+    // TC — Use Internal Area filter
+    async verifyInternalAreaFilter(min: string, max: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openInternalAreaFilter();
+        await this.setInternalArea(min, max);
+        await this.assertLotsExist();
+        await this.openInternalAreaFilter();
+        await this.resetFilters();
     }
 }
