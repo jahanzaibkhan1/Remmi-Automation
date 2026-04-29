@@ -2625,6 +2625,41 @@ export class ProjectActions {
         return this.selectedBedTagByValue(bedValue).locator('span.pi-times-circle');
     }
 
+    // LOCATORS — STATUS DROPDOWN IN LOT TAB
+
+    private get statusDropdownInLot(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Status"]').locator('.box');
+    }
+
+    private get statusDropdownPanel(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Status"]').locator('.drop_box');
+    }
+
+    private get statusDropdownOptions(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Status"]').locator('.drop_box ul li.p-element');
+    }
+
+    private get statusDropdownSearchInput(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Status"]').locator('.drop_box .inpt input');
+    }
+
+    private get statusDropdownSelectAllCheckbox(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Status"]').locator('.drop_box label.select_all');
+    }
+
+    private get selectedStatusTags(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Status"]').locator('.tags .selected_one');
+    }
+
+    private selectedStatusTagByValue(statusValue: string): Locator {
+        return this.page.locator('re-multiselect[placeholder="Status"]')
+            .locator('.tags .selected_one', { hasText: statusValue });
+    }
+
+    private statusTagCrossIcon(statusValue: string): Locator {
+        return this.selectedStatusTagByValue(statusValue).locator('span.pi-times-circle');
+    }
+
     // ==========================================================================
     // LOT LIST PAGE — HELPER FUNCTIONS
     // ==========================================================================
@@ -2981,6 +3016,34 @@ export class ProjectActions {
         await this.bedTagCrossIcon(bedValue).click();
         await expect(this.selectedBedTagByValue(bedValue)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.resetButton.click();
+    }
+
+    private async openStatusDropdown(): Promise<void> {
+        await expect(this.statusDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.statusDropdownInLot.click();
+        await expect(this.statusDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    private async selectStatusByValue(statusValue: string): Promise<void> {
+        const optionsCount = await this.statusDropdownOptions.count();
+        for (let i = 0; i < optionsCount; i++) {
+            const option = this.statusDropdownOptions.nth(i);
+            const text = (await option.innerText()).trim().toLowerCase();
+            if (text.includes(statusValue.toLowerCase())) {
+                await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+                await option.click();
+                return;
+            }
+        }
+        throw new Error(`Status value "${statusValue}" not found in dropdown`);
+    }
+
+    // TC — Use Status dropdown in Lot tab
+    async verifyStatusDropdownFilter(): Promise<void> {
+        await this.navigateToLots();
+        await this.openStatusDropdown();
+        await this.closeDropdown();
+        await this.resetFilters();
     }
 
 }

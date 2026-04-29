@@ -88,5 +88,9 @@ test.describe('Lot List Page', () => {
         const project = new ProjectActions(sessionPage);
         await project.verifyRemoveSelectedBedTag('2');
     });
-    
+
+    test('Test 16: Use Status dropdown in Lot tab', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyStatusDropdownFilter();
+    });
+
 });
