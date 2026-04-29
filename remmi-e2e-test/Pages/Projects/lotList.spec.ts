@@ -126,4 +126,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyPriceRangeFilter('500000', '1500000');
     });
 
+    test('Test 24: Use Internal Area filter', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyInternalAreaFilter('50', '200');
+    });
+
 });
