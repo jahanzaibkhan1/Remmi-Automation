@@ -73,9 +73,15 @@ test.describe('Lot List Page', () => {
         const project = new ProjectActions(sessionPage);
         await project.selectMultipleBedNumbers(['2', '3']);
     });
-    
+
     test('Test 13: Select All beds option', async ({ sessionPage }) => {
         const project = new ProjectActions(sessionPage);
         await project.verifySelectAllBedsInDropdown();
     });
+
+    test('Test 14: Use Deselect All in Bed dropdown', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyDeselectAllBedsInDropdown();
+    });
+    
 });

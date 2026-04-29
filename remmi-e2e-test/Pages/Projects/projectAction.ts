@@ -2952,4 +2952,21 @@ export class ProjectActions {
         await this.resetButton.click();
     }
 
+    /**
+     * Use Deselect All in Bed dropdown
+     */
+    async verifyDeselectAllBedsInDropdown(): Promise<void> {
+        await this.navigateToLots();
+        await this.openBedDropdown();
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bedDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+        await this.bedDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+        await expect(this.selectedBedTags).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeDropdown();
+        await this.resetButton.click();
+    }
+
 }
