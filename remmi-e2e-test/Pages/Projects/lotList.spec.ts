@@ -27,4 +27,9 @@ test.describe('Lot List Page', () => {
     test('Test 2: Use Project dropdown in Lot tab', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyProjectDropdownShowsAllocatedProjects();
     });
+
+    test('Test 3: Search project in dropdown list', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifySearchProjectInDropdown('Automation Testing');
+    });
 });
