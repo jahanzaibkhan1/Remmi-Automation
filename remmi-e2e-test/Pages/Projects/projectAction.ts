@@ -735,6 +735,132 @@ export class ProjectActions {
     }
 
     // ==========================================================================
+    // LOT LIST PAGE — LOCATORS
+    // =========================================================================
+
+    // Search bar
+    private get lotSearchInput(): Locator {
+        return this.page.locator('input#keywordInput[name="task-search"]');
+    }
+
+    private get lotSearchIcon(): Locator {
+        return this.page.locator('i.pi-search._search-icon');
+    }
+
+    // Filter dropdowns (re-multiselect)
+    private get precinctFilter(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Precinct"]');
+    }
+
+    private get projectFilter(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Project"]');
+    }
+
+    private get bedFilter(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Bed"]');
+    }
+
+    private get statusFilter(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Status"]');
+    }
+
+    // Range filters
+    private get priceRangeFilter(): Locator {
+        return this.page.locator('.land-size', { hasText: 'Price Range' });
+    }
+
+    private get internalAreaFilter(): Locator {
+        return this.page.locator('.land-size', { hasText: 'Internal Area' });
+    }
+
+    // Table - Header
+    private get lotTable(): Locator {
+        return this.page.locator('p-table#apartmentscolumns table');
+    }
+
+    private get lotTableHeader(): Locator {
+        return this.page.locator('table thead tr');
+    }
+
+    private lotColumnHeader(columnName: string): Locator {
+        return this.page.locator('table thead th p', { hasText: columnName });
+    }
+
+    private lotColumnSortIcon(columnName: string): Locator {
+        return this.page.locator('table thead th', { hasText: columnName }).locator('i.custom-sort');
+    }
+
+    // Header checkbox (select all)
+    private get selectAllLotCheckbox(): Locator {
+        return this.page.locator('p-tableheadercheckbox .p-checkbox-box');
+    }
+
+    // Table - Body rows
+    private get lotTableRows(): Locator {
+        return this.page.locator('table tbody tr');
+    }
+
+    private get firstLotRow(): Locator {
+        return this.lotTableRows.first();
+    }
+
+    // Row by lot number / project name
+    private lotRowByLotNumber(lotNumber: string): Locator {
+        return this.page.locator('table tbody tr', { hasText: lotNumber });
+    }
+
+    private lotRowByProjectName(projectName: string): Locator {
+        return this.page.locator('table tbody tr', { hasText: projectName });
+    }
+
+    // Row checkbox
+    private rowCheckbox(row: Locator): Locator {
+        return row.locator('p-tablecheckbox .p-checkbox-box');
+    }
+
+    // Row cell values (by column index — 0-based, includes checkbox column)
+    private rowProjectCell(row: Locator): Locator {
+        return row.locator('td').nth(1).locator('p');
+    }
+
+    private rowLotCell(row: Locator): Locator {
+        return row.locator('td').nth(2).locator('p');
+    }
+
+    private rowLotPriceCell(row: Locator): Locator {
+        return row.locator('td').nth(3).locator('p');
+    }
+
+    private rowStatusCell(row: Locator): Locator {
+        return row.locator('td').nth(4).locator('p');
+    }
+
+    private rowSalesAgencyCell(row: Locator): Locator {
+        return row.locator('td').nth(5).locator('p');
+    }
+
+    private rowSalesAgentCell(row: Locator): Locator {
+        return row.locator('td').nth(6).locator('p');
+    }
+
+    private rowBedCell(row: Locator): Locator {
+        return row.locator('td').nth(7).locator('p');
+    }
+
+    private rowBathCell(row: Locator): Locator {
+        return row.locator('td').nth(8).locator('p');
+    }
+
+    private rowCreatedAtCell(row: Locator): Locator {
+        return row.locator('td').nth(9).locator('p');
+    }
+
+    // Records count
+    private get lotRecordsCount(): Locator {
+        return this.page.locator('p.ng-star-inserted', { hasText: /records:/i });
+    }
+
+    // ==========================================================================
     // LOCATORS — MISC
     // ==========================================================================
 
@@ -2421,8 +2547,8 @@ export class ProjectActions {
         await this.page.waitForTimeout(1200);
         await this.projectsMenuLink.click();
         await expect(this.firstPrecinctOnProjectsPage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.page.getByText('Precinct', { exact: true })).toBeVisible({timeout: ProjectActions.TIMEOUT_DEFAULT });
-   
+        await expect(this.page.getByText('Precinct', { exact: true })).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
     }
 
     // TC_08 — Open Lot tab successfully, click on Lot tab
@@ -2440,5 +2566,52 @@ export class ProjectActions {
         expect(displayedName.length).toBeGreaterThan(0);
         await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.lotTabInPrecinct.click();
+    }
+
+    // ==========================================================================
+    // LOT LIST PAGE — HELPER FUNCTIONS
+    // ==========================================================================
+
+    private async navigateToLots(): Promise<void> {
+        const url = this.page.url();
+        if (!url.includes('/listings/lot')) {
+            await this.page.goto('/listings/lot');
+        }
+        await expect(this.lotSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    private async searchLot(keyword: string): Promise<void> {
+        await this.lotSearchInput.fill(keyword);
+        await this.page.waitForTimeout(1500);
+    }
+
+    private async clearLotSearch(): Promise<void> {
+        await this.lotSearchInput.fill('');
+        await this.page.waitForTimeout(1000);
+    }
+
+    private async getLotRowCount(): Promise<number> {
+        return await this.lotTableRows.count();
+    }
+
+    private async assertLotsExist(): Promise<void> {
+        const count = await this.getLotRowCount();
+        expect(count).toBeGreaterThan(0);
+    }
+
+    private async assertFirstRowContains(keyword: string): Promise<void> {
+        await expect(this.lotTableRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const firstRowText = (await this.lotTableRows.first().innerText()).toLowerCase();
+        expect(firstRowText).toContain(keyword.toLowerCase());
+    }
+    
+    // TC — /listings/lot: Search for specific lot
+    async verifySearchSpecificLot(lotKeyword: string): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.searchLot(lotKeyword);
+        await this.assertLotsExist();
+        await this.assertFirstRowContains(lotKeyword);
+        await this.clearLotSearch();
     }
 }
