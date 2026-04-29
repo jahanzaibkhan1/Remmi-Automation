@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="58.70095799999964">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-29T07:22:08.235Z" hostname="chromium" tests="1" failures="0" skipped="0" time="56.76" errors="0">
-<testcase name="Lot List Page › Test 6: Use Deselect All in Project dropdown" classname="Pages\Projects\lotList.spec.ts" time="56.76">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.631220999999904">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-29T07:26:25.239Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.685" errors="0">
+<testcase name="Lot List Page › Test 7: Use Select All in Project dropdown" classname="Pages\Projects\lotList.spec.ts" time="44.685">
 </testcase>
 </testsuite>
 </testsuites>
