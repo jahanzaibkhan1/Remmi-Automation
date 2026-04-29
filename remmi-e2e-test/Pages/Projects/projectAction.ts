@@ -2642,10 +2642,6 @@ export class ProjectActions {
         return this.page.locator('re-multiselect[placeholder="Status"]').locator('.drop_box label.select_all');
     }
 
-    private get selectedStatusTags(): Locator {
-        return this.page.locator('re-multiselect[placeholder="Status"]').locator('.tags .selected_one');
-    }
-
     private selectedStatusTagByValue(statusValue: string): Locator {
         return this.page.locator('re-multiselect[placeholder="Status"]')
             .locator('.tags .selected_one', { hasText: statusValue });
@@ -2674,15 +2670,11 @@ export class ProjectActions {
 
 
     private get internalAreaMinInput(): Locator {
-        return this.page.locator('input[placeholder*="Min" i]').nth(1);
+        return this.page.locator('input[placeholder*="Min" i]');
     }
 
     private get internalAreaMaxInput(): Locator {
-        return this.page.locator('input[placeholder*="Max" i]').nth(1);
-    }
-
-    private get internalAreaApplyButton(): Locator {
-        return this.page.locator('button', { hasText: /apply/i }).nth(1);
+        return this.page.locator('input[placeholder*="Max" i]');
     }
 
     // ==========================================================================
@@ -3215,6 +3207,7 @@ export class ProjectActions {
         await this.openInternalAreaFilter();
         await this.setInternalArea(min, max);
         await this.assertLotsExist();
+        await this.openInternalAreaFilter();
         await this.resetFilters();
     }
 }
