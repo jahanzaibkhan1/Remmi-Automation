@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.92471000000089">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-29T08:39:48.336Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.926" errors="0">
-<testcase name="Lot List Page › Test 14: Use Deselect All in Bed dropdown" classname="Pages\Projects\lotList.spec.ts" time="41.926">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="44.72169299999997">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-29T08:41:48.522Z" hostname="chromium" tests="1" failures="0" skipped="0" time="42.723" errors="0">
+<testcase name="Lot List Page › Test 15: Remove selected bed tag using cross icon" classname="Pages\Projects\lotList.spec.ts" time="42.723">
 </testcase>
 </testsuite>
 </testsuites>

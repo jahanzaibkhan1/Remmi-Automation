@@ -83,5 +83,10 @@ test.describe('Lot List Page', () => {
         const project = new ProjectActions(sessionPage);
         await project.verifyDeselectAllBedsInDropdown();
     });
+
+    test('Test 15: Remove selected bed tag using cross icon', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyRemoveSelectedBedTag('2');
+    });
     
 });
