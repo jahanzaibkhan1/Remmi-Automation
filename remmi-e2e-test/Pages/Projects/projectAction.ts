@@ -2679,6 +2679,21 @@ export class ProjectActions {
         await this.page.waitForTimeout(800);
     }
 
+    // LOCATORS — Selected project tags
+
+    private get selectedProjectTags(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Project"]').locator('.tags .selected_one');
+    }
+
+    private selectedProjectTagByName(projectName: string): Locator {
+        return this.page.locator('re-multiselect[placeholder="Project"]')
+            .locator('.tags .selected_one', { hasText: projectName });
+    }
+
+    private projectTagCrossIcon(projectName: string): Locator {
+        return this.selectedProjectTagByName(projectName).locator('span.pi-times-circle');
+    }
+
     // ==========================================================================
     // LOT LIST PAGE — TEST FUNCTIONS
     // ==========================================================================
@@ -2798,4 +2813,17 @@ export class ProjectActions {
         await this.assertLotsExist();
         await this.resetFilters();
     }
+
+    // TC — Remove selected project tag using cross icon
+async verifyRemoveSelectedProjectTag(projectName: string): Promise<void> {
+    await this.navigateToLots();
+    await this.openProjectDropdown();
+    await this.searchInProjectDropdown(projectName);
+    await this.selectProjectByName(projectName);
+    await this.closeDropdown();
+    await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    await this.projectTagCrossIcon(projectName).click();
+    await this.page.waitForTimeout(800);
+    await this.resetButton.click();
+}
 }
