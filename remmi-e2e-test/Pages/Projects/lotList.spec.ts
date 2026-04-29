@@ -69,4 +69,9 @@ test.describe('Lot List Page', () => {
         await project.selectBedNumber('2');
     });
 
+    test('Test 12: Select multiple bed numbers', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.selectMultipleBedNumbers(['2', '3']);
+    });
+
 });
