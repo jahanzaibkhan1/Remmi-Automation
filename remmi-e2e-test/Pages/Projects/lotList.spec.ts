@@ -32,4 +32,9 @@ test.describe('Lot List Page', () => {
         const project = new ProjectActions(sessionPage);
         await project.verifySearchProjectInDropdown('Automation Testing');
     });
+
+    test('Test 4: Select one project from dropdown', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifySelectProjectFromDropdown('Adb');
+    });
 });

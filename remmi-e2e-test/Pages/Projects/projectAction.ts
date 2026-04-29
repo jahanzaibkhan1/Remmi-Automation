@@ -2659,6 +2659,27 @@ export class ProjectActions {
         expect(filteredCount).toBeGreaterThan(0);
         const firstOptionText = (await this.projectDropdownOptions.first().innerText()).trim().toLowerCase();
         expect(firstOptionText).toContain(projectName.toLowerCase());
+        await this.page.mouse.click(0, 0);
+        await this.resetButton.click();
+    }
+
+    // TC — Select one project from dropdown
+    async verifySelectProjectFromDropdown(projectName: string): Promise<void> {
+        await this.navigateToLots();
+        await expect(this.projectDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.projectDropdownInLot.click();
+        await expect(this.projectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectDropdownSearchInput.fill(projectName);
+        await this.page.waitForTimeout(1000);
+        const targetOption = this.projectDropdownOptions.first();
+        await expect(targetOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await targetOption.click();
         await this.page.mouse.click(0,0);
+        await this.page.waitForTimeout(1000);
+        const rowCount = await this.lotTableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+        const firstRowText = (await this.lotTableRows.first().innerText()).toLowerCase();
+        expect(firstRowText).toContain(projectName.toLowerCase());
+        await this.resetButton.click();
     }
 }
