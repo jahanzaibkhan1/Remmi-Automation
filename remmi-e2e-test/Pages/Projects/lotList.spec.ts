@@ -112,4 +112,9 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifySelectAllStatusInDropdown();
     });
 
+    test('Test 21: Use Deselect All in Status dropdown', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyDeselectAllStatusInDropdown();
+    });
+
 });

@@ -3101,6 +3101,8 @@ export class ProjectActions {
     // TC — Use Select All in Status dropdown
     async verifySelectAllStatusInDropdown(): Promise<void> {
         await this.navigateToLots();
+        await this.resetFilters();
+        await this.assertLotsExist();
         await this.openStatusDropdown();
 
         await expect(this.statusDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
@@ -3118,6 +3120,8 @@ export class ProjectActions {
     // TC — Use Deselect All in Status dropdown
     async verifyDeselectAllStatusInDropdown(): Promise<void> {
         await this.navigateToLots();
+        await this.resetFilters();
+        await this.assertLotsExist();
         await this.openStatusDropdown();
 
         await expect(this.statusDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
@@ -3138,6 +3142,8 @@ export class ProjectActions {
     // TC — Remove status tag via cross icon
     async verifyRemoveSelectedStatusTag(statusValue: string): Promise<void> {
         await this.navigateToLots();
+        await this.resetFilters();
+        await this.assertLotsExist();
         await this.openStatusDropdown();
         await this.searchInStatusDropdown(statusValue);
         await this.selectStatusByValue(statusValue);
