@@ -2781,4 +2781,21 @@ export class ProjectActions {
         await this.assertLotsExist();
         await this.resetFilters();
     }
+
+    // TC — Use Select All in Project dropdown
+    async verifySelectAllProjects(): Promise<void> {
+        await this.navigateToLots();
+        await this.openProjectDropdown();
+
+        await expect(this.projectDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const totalOptions = await this.projectDropdownOptions.count();
+        expect(totalOptions).toBeGreaterThan(0);
+
+        await this.projectDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(1000);
+
+        await this.closeDropdown();
+        await this.assertLotsExist();
+        await this.resetFilters();
+    }
 }

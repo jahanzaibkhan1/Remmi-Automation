@@ -46,4 +46,8 @@ test.describe('Lot List Page', () => {
     test('Test 6: Use Deselect All in Project dropdown', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyDeselectAllProjectsInDropdown();
     });
+
+    test('Test 7: Use Select All in Project dropdown', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySelectAllProjectsInDropdown();
+    });
 });
