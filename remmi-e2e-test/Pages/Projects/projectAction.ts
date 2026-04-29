@@ -2934,4 +2934,22 @@ export class ProjectActions {
         await this.resetButton.click();
     }
 
+    /**
+     * Select All beds option
+     */
+    async verifySelectAllBedsInDropdown(): Promise<void> {
+        await this.navigateToLots();
+        await this.openBedDropdown();
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bedDropdownSelectAllCheckbox.click();
+        const optionsCount = await this.bedDropdownOptions.count();
+        await expect(async () => {
+            const tagCount = await this.selectedBedTags.count();
+            expect(tagCount).toBe(optionsCount);
+        }).toPass();
+        await this.closeDropdown();
+        await this.resetButton.click();
+    }
+
 }

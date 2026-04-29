@@ -73,5 +73,9 @@ test.describe('Lot List Page', () => {
         const project = new ProjectActions(sessionPage);
         await project.selectMultipleBedNumbers(['2', '3']);
     });
-
+    
+    test('Test 13: Select All beds option', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifySelectAllBedsInDropdown();
+    });
 });
