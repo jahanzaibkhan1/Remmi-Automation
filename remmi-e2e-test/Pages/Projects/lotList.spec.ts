@@ -93,4 +93,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyStatusDropdownFilter();
     });
 
+    test('Test 17: Select one status from Status dropdown', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifySelectOneStatus('For sale');
+    });
 });
