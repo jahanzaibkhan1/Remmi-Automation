@@ -108,4 +108,8 @@ test.describe('Lot List Page', () => {
         await project.verifySearchStatusInDropdown('Sold');
     });
 
+    test('Test 20: Use Select All in Status dropdown', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySelectAllStatusInDropdown();
+    });
+
 });

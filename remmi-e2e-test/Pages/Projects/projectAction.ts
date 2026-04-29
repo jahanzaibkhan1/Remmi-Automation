@@ -3020,7 +3020,6 @@ export class ProjectActions {
 
     private async openStatusDropdown(): Promise<void> {
         await expect(this.statusDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.page.waitForTimeout(1200);
         await this.statusDropdownInLot.click();
         await expect(this.statusDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await expect(this.statusDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
@@ -3071,7 +3070,7 @@ export class ProjectActions {
     async selectMultipleStatuses(statusValues: string[]): Promise<void> {
         await this.navigateToLots();
         await this.resetFilters();
-        await this.assertLotsExist(); 
+        await this.assertLotsExist();
         await this.openStatusDropdown();
         for (const statusValue of statusValues) {
             await this.searchInStatusDropdown(statusValue);
@@ -3092,11 +3091,65 @@ export class ProjectActions {
     async verifySearchStatusInDropdown(statusValue: string): Promise<void> {
         await this.navigateToLots();
         await this.resetFilters();
-        await this.assertLotsExist(); 
+        await this.assertLotsExist();
         await this.openStatusDropdown();
         await this.searchInStatusDropdown(statusValue);
         await this.closeDropdown();
         await this.resetFilters();
+    }
+
+    // TC — Use Select All in Status dropdown
+    async verifySelectAllStatusInDropdown(): Promise<void> {
+        await this.navigateToLots();
+        await this.openStatusDropdown();
+
+        await expect(this.statusDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const totalOptions = await this.statusDropdownOptions.count();
+        expect(totalOptions).toBeGreaterThan(0);
+
+        await this.statusDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(1000);
+
+        await this.closeDropdown();
+        await this.assertLotsExist();
+        await this.resetFilters();
+    }
+
+    // TC — Use Deselect All in Status dropdown
+    async verifyDeselectAllStatusInDropdown(): Promise<void> {
+        await this.navigateToLots();
+        await this.openStatusDropdown();
+
+        await expect(this.statusDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        // Select all first
+        await this.statusDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+
+        // Deselect all
+        await this.statusDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+
+        await this.closeDropdown();
+        await this.assertLotsExist();
+        await this.resetFilters();
+    }
+
+    // TC — Remove status tag via cross icon
+    async verifyRemoveSelectedStatusTag(statusValue: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openStatusDropdown();
+        await this.searchInStatusDropdown(statusValue);
+        await this.selectStatusByValue(statusValue);
+        await this.closeDropdown();
+
+        await expect(this.selectedStatusTagByValue(statusValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        await this.statusTagCrossIcon(statusValue).click();
+        await this.page.waitForTimeout(800);
+
+        await expect(this.selectedStatusTagByValue(statusValue)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotsExist();
     }
 
 }
