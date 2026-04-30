@@ -183,5 +183,9 @@ test.describe('Lot List Page', () => {
     test('Test 37: Use master checkbox to select all lots', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifySelectAllLotsViaMasterCheckbox();
     });
-    
+
+    test('Test 38: Deselect all lots using master checkbox', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyDeselectAllLotsViaMasterCheckbox();
+    });
+
 });

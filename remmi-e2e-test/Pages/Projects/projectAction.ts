@@ -3477,4 +3477,32 @@ export class ProjectActions {
         await this.page.waitForTimeout(800);
 
     }
+
+    // Use master checkbox to deselect all lots
+    async verifyDeselectAllLotsViaMasterCheckbox(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        // Select all lots first to ensure some are selected
+        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.selectAllLotCheckbox.click();
+        await this.page.waitForTimeout(800);
+        // Deselect all using master checkbox
+        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.selectAllLotCheckbox.click();
+        await this.page.waitForTimeout(800);
+        // Verify master checkbox is NOT selected
+        const isMasterSelected = await this.isSelectAllCheckboxSelected();
+        expect(isMasterSelected).toBeFalsy();
+        // Verify all visible row checkboxes are NOT selected
+        const rowCount = await this.lotTableRows.count();
+        for (let i = 0; i < Math.min(rowCount, 5); i++) {
+            const row = this.lotTableRows.nth(i);
+            const isSelected = await this.isRowCheckboxSelected(row);
+            expect(isSelected).toBeFalsy();
+        }
+    }
 }

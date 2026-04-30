@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.61467899999954">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T05:48:39.730Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.176" errors="0">
-<testcase name="Lot List Page › Test 37: Use master checkbox to select all lots" classname="Pages\Projects\lotList.spec.ts" time="36.176">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="37.553460999999196">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T05:59:15.621Z" hostname="chromium" tests="1" failures="0" skipped="0" time="35.595" errors="0">
+<testcase name="Lot List Page › Test 38: Deselect all lots using master checkbox" classname="Pages\Projects\lotList.spec.ts" time="35.595">
 </testcase>
 </testsuite>
 </testsuites>
