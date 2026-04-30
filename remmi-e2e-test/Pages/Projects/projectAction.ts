@@ -3394,8 +3394,10 @@ export class ProjectActions {
     async verifySelectSingleLot(): Promise<void> {
         await this.navigateToLots();
         await this.assertLotsExist();
-        // Click checkbox of the first lot row
+        await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
         const checkbox = this.rowCheckbox(firstRow);
         await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
         await checkbox.click();
@@ -3403,5 +3405,31 @@ export class ProjectActions {
         // Verify checkbox is selected
         const isSelected = await this.isRowCheckboxSelected(firstRow);
         expect(isSelected).toBeTruthy();
+    }
+
+    // TC — Select multiple lots from list
+    async verifySelectMultipleLots(count: number = 3): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        const totalRows = await this.lotTableRows.count();
+        expect(totalRows).toBeGreaterThanOrEqual(count);
+        // Click checkboxes of first N rows
+        for (let i = 0; i < count; i++) {
+            const row = this.lotTableRows.nth(i);
+            const checkbox = this.rowCheckbox(row);
+            await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+            await checkbox.click();
+            await this.page.waitForTimeout(300);
+        }
+        // Verify all selected rows have selected checkboxes
+        for (let i = 0; i < count; i++) {
+            const row = this.lotTableRows.nth(i);
+            const isSelected = await this.isRowCheckboxSelected(row);
+            expect(isSelected).toBeTruthy();
+        }
     }
 }
