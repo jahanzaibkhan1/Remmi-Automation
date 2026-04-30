@@ -3383,4 +3383,25 @@ export class ProjectActions {
         await this.page.waitForTimeout(500);
         await this.closeOverlay();
     }
+
+    private async isRowCheckboxSelected(row: Locator): Promise<boolean> {
+        const checkbox = this.rowCheckbox(row);
+        const className = await checkbox.getAttribute('class') || '';
+        return className.includes('p-highlight') || className.includes('p-checked');
+    }
+
+    // TC — Select single lot from list
+    async verifySelectSingleLot(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        // Click checkbox of the first lot row
+        const firstRow = this.lotTableRows.first();
+        const checkbox = this.rowCheckbox(firstRow);
+        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await checkbox.click();
+        await this.page.waitForTimeout(500);
+        // Verify checkbox is selected
+        const isSelected = await this.isRowCheckboxSelected(firstRow);
+        expect(isSelected).toBeTruthy();
+    }
 }
