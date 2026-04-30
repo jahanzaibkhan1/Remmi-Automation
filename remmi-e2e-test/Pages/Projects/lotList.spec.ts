@@ -188,4 +188,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyDeselectAllLotsViaMasterCheckbox();
     });
 
+    test('Test 39: Bulk edit becomes visible on lot selection', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyBulkEditVisibleOnSelection();
+    });
+
 });
