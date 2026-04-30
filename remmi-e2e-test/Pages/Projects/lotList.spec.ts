@@ -228,4 +228,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyPopupClosesOnCrossClick();
     });
 
+    test('Test 49: Share popup fails on empty selection', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySharePopupFailsOnEmptySelection();
+    });
+
 });

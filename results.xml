@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.707151000000536">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T09:45:19.243Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.66" errors="0">
-<testcase name="Lot List Page › Test 48: Popup closes on cross icon click" classname="Pages\Projects\lotList.spec.ts" time="46.66">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.649435000002384">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T09:50:07.187Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.624" errors="0">
+<testcase name="Lot List Page › Test 49: Share popup fails on empty selection" classname="Pages\Projects\lotList.spec.ts" time="47.624">
 </testcase>
 </testsuite>
 </testsuites>
