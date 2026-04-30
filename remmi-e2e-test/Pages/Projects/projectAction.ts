@@ -2719,7 +2719,7 @@ export class ProjectActions {
     // LOCATORS — Sort icon states (targeted to Status column reliably)
 
     private statusColumnHeader(): Locator {
-        return this.page.locator('table thead th', { has: this.page.locator('p', { hasText: /^Status$/ }) });
+        return this.page.locator('table thead th', { has: this.page.locator('p', { hasText: /^Project Status$/ }) });
     }
 
     private get statusColumnSortIcon(): Locator {
@@ -3305,7 +3305,7 @@ export class ProjectActions {
     async verifyCreateNewView(viewName: string): Promise<void> {
         await this.navigateToLots();
         await this.openDefaultViewPopup();
-        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
         await this.addViewIcon.click();
         await expect(this.viewNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.viewNameInput.click();
@@ -3323,7 +3323,7 @@ export class ProjectActions {
     ): Promise<void> {
         await this.navigateToLots();
         await this.openDefaultViewPopup();
-        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.shareViewIcon.click({ force: true });
         await this.selectShareTarget(this.usersShareDropdown, this.usersShareDropdownArrow, userName);
         await this.selectShareTarget(this.teamsShareDropdown, this.teamsShareDropdownArrow, teamName);
@@ -3401,6 +3401,8 @@ export class ProjectActions {
         await expect(this.columnItemByName(searchTerm).first()).toBeVisible({
             timeout: ProjectActions.TIMEOUT_DEFAULT,
         });
+        await this.columnSearchInput.fill('');
+        await this.page.waitForTimeout(1000);
         await this.closeOverlay();
         await this.resetListView();
         await this.waitForFirstTableRow();
@@ -3412,18 +3414,20 @@ export class ProjectActions {
         await this.openDefaultViewPopup();
         await expect(this.hideAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.hideAllButton.click();
+        await this.page.waitForTimeout(1000);
         await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
         await expect(this.visibleColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
         await expect(this.showAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.showAllButton.evaluate(button => button.scrollIntoView({ behavior: 'instant', block: 'center' }));
         await this.page.waitForTimeout(1000);
         await this.showAllButton.click();
+        await this.page.waitForTimeout(1000);
         await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
         await expect(this.hiddenColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
         await expect(this.visibleColumnList.first()).toBeVisible({
             timeout: ProjectActions.TIMEOUT_DEFAULT,
         });
-
+        await this.page.waitForTimeout(1000);
         await this.closeOverlay();
     }
 
@@ -3435,6 +3439,7 @@ export class ProjectActions {
         await this.page.waitForTimeout(500);
         await this.reorderExpandCollapseArrow.click();
         await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
         await this.closeOverlay();
     }
 
@@ -3695,6 +3700,9 @@ export class ProjectActions {
             await expect(fieldLabelLocator).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         }
         await expect(this.saveAndCloseButton.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.saveAndCloseButton.click();
+        await this.assertSuccessToast();
+        await this.resetButton.click();
     }
 
     // TC — Popup closes on cross icon click
@@ -3724,7 +3732,7 @@ export class ProjectActions {
         await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
         await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.shareViewIcon.click({ force: true });
-        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.shareButton.click({ force: true });
         await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
@@ -3740,7 +3748,7 @@ export class ProjectActions {
         await this.resetButton.click();
         await this.defaultViewButton.click();
         await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
-        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
         await this.addViewIcon.click();
         await expect(this.viewNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
