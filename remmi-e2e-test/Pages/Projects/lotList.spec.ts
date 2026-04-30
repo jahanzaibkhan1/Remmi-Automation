@@ -200,4 +200,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifySortLotsByStatus();
     });
 
+    test('Test 42: No Record Found visible only when no project allocation', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyNoRecordFoundIfNoProjectAllocation();
+    });
+
 });

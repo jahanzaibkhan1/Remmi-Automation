@@ -2721,12 +2721,13 @@ export class ProjectActions {
         return this.statusColumnHeader().locator('i.custom-sort');
     }
 
-    private get statusColumnSortIconAsc(): Locator {
+    private get statusColumnSortIconDesc(): Locator {
         return this.statusColumnHeader().locator('i.pi-sort-amount-up-alt');
     }
 
-    private get statusColumnSortIconDesc(): Locator {
-        return this.statusColumnHeader().locator('i.pi-sort-amount-up-alt');
+    // LOCATOR — No record found message
+    private get noRecordFoundMessage(): Locator {
+        return this.page.locator('ul li', { hasText: 'No Record Found' });
     }
 
     // ==========================================================================
@@ -3592,5 +3593,19 @@ export class ProjectActions {
         await this.assertLotsExist();
         await this.statusColumnSortIcon.click();
         await this.assertLotsExist();
+    }
+
+    // TC — Project dropdown shows "No Record Found" if no projects allocated
+    async verifyNoRecordFoundIfNoProjectAllocation(): Promise<void> {
+        await this.navigateToLots();
+        await this.openProjectDropdown();
+        const optionsCount = await this.projectDropdownOptions.count();
+        if (optionsCount === 0) {
+            await expect(this.noRecordFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        } else {
+            await expect(this.noRecordFoundMessage).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+            expect(optionsCount).toBeGreaterThan(0);
+        }
+        await this.closeDropdown();
     }
 }

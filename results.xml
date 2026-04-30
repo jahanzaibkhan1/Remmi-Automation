@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="68.75868099999987">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T07:29:25.935Z" hostname="chromium" tests="1" failures="0" skipped="0" time="66.207" errors="0">
-<testcase name="Lot List Page › Test 41: Sort lots by Status column" classname="Pages\Projects\lotList.spec.ts" time="66.207">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="90.74548699999973">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T07:41:02.046Z" hostname="chromium" tests="1" failures="0" skipped="0" time="88.709" errors="0">
+<testcase name="Lot List Page › Test 42: No Record Found visible only when no project allocation" classname="Pages\Projects\lotList.spec.ts" time="88.709">
 </testcase>
 </testsuite>
 </testsuites>
