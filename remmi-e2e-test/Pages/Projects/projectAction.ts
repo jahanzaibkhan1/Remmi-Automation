@@ -3640,4 +3640,19 @@ export class ProjectActions {
         const projectTagsCount = await this.page.locator('re-multiselect[placeholder="Project"] .tags .selected_one').count();
         expect(projectTagsCount).toBe(0);
     }
+
+    // TC — Handle invalid price range input and display validation error
+    async verifyInvalidPriceRangeInput(min: string, max: string): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.openPriceRangeFilter();
+        await this.setPriceRange(min, max);
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.openPriceRangeFilter();
+        await this.resetFilters();
+    }
 }
