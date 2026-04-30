@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="65.12476800000016">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T04:31:14.130Z" hostname="chromium" tests="1" failures="0" skipped="0" time="62.825" errors="0">
-<testcase name="Lot List Page › Test 33: Reorder statuses using drag/drop" classname="Pages\Projects\lotList.spec.ts" time="62.825">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="73.03225200000033">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T04:46:43.293Z" hostname="chromium" tests="1" failures="0" skipped="0" time="70.274" errors="0">
+<testcase name="Lot List Page › Test 34: Move status using arrow buttons" classname="Pages\Projects\lotList.spec.ts" time="70.274">
 </testcase>
 </testsuite>
 </testsuites>

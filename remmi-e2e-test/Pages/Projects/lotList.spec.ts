@@ -168,4 +168,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).saveCustomViewWithStatusArrangement();
     });
 
+    test('Test 34: Move status using arrow buttons', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyCollapseAndExpandReorderList();
+    });
+
 });
