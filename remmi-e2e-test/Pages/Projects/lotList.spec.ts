@@ -204,4 +204,7 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyNoRecordFoundIfNoProjectAllocation();
     });
 
+    test('Test 43: Lot tab displays “No Record Found” message on invalid search', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyNoRecordsOnInvalidLotSearch('invalid_keyword_12345');
+    });
 });
