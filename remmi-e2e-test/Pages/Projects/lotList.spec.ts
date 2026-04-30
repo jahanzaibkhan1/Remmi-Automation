@@ -172,4 +172,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyCollapseAndExpandReorderList();
     });
 
+    test('Test 35: Select single lot from list', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySelectSingleLot();
+    });
+
 });
