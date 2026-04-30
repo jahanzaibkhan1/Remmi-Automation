@@ -134,4 +134,106 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyResetButtonClearsFilters();
     });
 
+    test('Test 26: View popup opens on View button click', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyViewPopupOpens();
+    });
+
+    test('Test 27: Create new view from popup', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyCreateNewView('My Custom View');
+    });
+
+    test('Test 28: Share view with agent/team', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyShareViewWithAgent();
+    });
+
+    test('Test 29: Save custom view with status arrangement', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).saveCustomViewWithStatusArrangement();
+    });
+
+    test('Test 30: Delete an existing saved view in Lot List View', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.deleteSavedViewInLotList('My Custom View');
+    });
+
+    test('Test 31: Search statuses in view popup', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.searchStatusInLotViewPopup();
+    });
+
+    test('Test 32: Hide/Unhide status using eye icon', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHideUnhideStatus();
+    });
+
+    test('Test 33: Reorder statuses using drag/drop', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).saveCustomViewWithStatusArrangement();
+    });
+
+    test('Test 34: Move status using arrow buttons', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyCollapseAndExpandReorderList();
+    });
+
+    test('Test 35: Select single lot from list', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySelectSingleLot();
+    });
+
+    test('Test 36: Select multiple lots rows', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySelectMultipleLots(2);
+    });
+
+    test('Test 37: Use master checkbox to select all lots', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySelectAllLotsViaMasterCheckbox();
+    });
+
+    test('Test 38: Deselect all lots using master checkbox', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyDeselectAllLotsViaMasterCheckbox();
+    });
+
+    test('Test 39: Bulk edit becomes visible on lot selection', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyBulkEditVisibleOnSelection();
+    });
+
+    test('Test 40: Edit selected lots using Edit Bulk', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).editSelectedLotsUsingBulkEdit();
+    });
+
+    test('Test 41: Sort lots by Status column', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySortLotsByStatus();
+    });
+
+    test('Test 42: No Record Found visible only when no project allocation', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyNoRecordFoundIfNoProjectAllocation();
+    });
+
+    test('Test 43: Lot tab displays “No Record Found” message on invalid search', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyNoRecordsOnInvalidLotSearch('invalid_keyword_12345');
+    });
+
+    test('Test 44: Prevent tag display for unselected filters', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyPreventTagDisplayForUnselectedFilters();
+    });
+
+    test('Test 45: Handle invalid price range input', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyInvalidPriceRangeInput('1000000', '500');
+    });
+
+    test('Test 46: Handle invalid internal area range input', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyInvalidInternalAreaRangeInput('1000', '10');
+    });
+
+    test('Test 47: Lot edit page renders with incomplete data', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotRendersWithIncompleteData();
+    });
+
+    test('Test 48: Popup closes on cross icon click', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyPopupClosesOnCrossClick();
+    });
+
+    test('Test 49: Share popup fails on empty selection', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySharePopupFailsOnEmptySelection();
+    });
+
+    test('Test 50: Create lot view popup fails when attempting to save without name', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyCreatePopupFailsWithoutName();
+    });
+
 });

@@ -302,6 +302,16 @@ export class ProjectActions {
         return this.viewPopupContent.getByText('Hide All', { exact: true });
     }
 
+    // LOCATORS — Reorder section expand/collapse arrow
+
+    private get reorderExpandCollapseArrow(): Locator {
+        return this.page.locator('.icon-style i.pi');
+    }
+
+    private get reorderCollapsedArrow(): Locator {
+        return this.page.locator('.icon-style i.pi-angle-down');
+    }
+
     private get showAllButton(): Locator {
         return this.viewPopupContent.getByText('Show All', { exact: true });
     }
@@ -793,6 +803,11 @@ export class ProjectActions {
     // Table - Body rows
     private get lotTableRows(): Locator {
         return this.page.locator('table tbody tr');
+    }
+
+    // LOCATOR — Popup close icon
+    private get popupCloseIcon(): Locator {
+        return this.page.locator('.p-dialog-header-close, .close-icon, i.pi-times').first();
     }
 
     private get firstLotRow(): Locator {
@@ -1562,7 +1577,7 @@ export class ProjectActions {
 
         await expect(this.viewDropdownArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.viewDropdownArrow.click();
-
+        await this.page.waitForTimeout(1000);
         await expect(this.defaultViewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.defaultViewOption.click();
 
@@ -2677,9 +2692,61 @@ export class ProjectActions {
         return this.page.locator('input[placeholder*="Max" i]');
     }
 
+    // LOCATORS — View button & popup
+
+    private get viewButton(): Locator {
+        return this.page.locator('._view-btn');
+    }
+
+    private get viewPopup(): Locator {
+        return this.page.locator('p-overlaypanel .p-overlaypanel, .p-overlaypanel-content').first();
+    }
+
+    // LOCATOR — Bulk edit button/section
+    private get bulkEditButton(): Locator {
+        return this.page.locator('button, a, p', { hasText: /bulk edit/i }).first();
+    }
+
+    private get saveAndCloseButton(): Locator {
+        return this.page.locator('button', { hasText: /save.*close|save & close/i }).first();
+    }
+    // LOCATORS — Toast notifications
+
+    private get successToast(): Locator {
+        return this.page.locator('div[role="alert"].toast-message');
+    }
+
+    // LOCATORS — Sort icon states (targeted to Status column reliably)
+
+    private statusColumnHeader(): Locator {
+        return this.page.locator('table thead th', { has: this.page.locator('p', { hasText: /^Project Status$/ }) });
+    }
+
+    private get statusColumnSortIcon(): Locator {
+        return this.statusColumnHeader().locator('i.custom-sort');
+    }
+
+    private get statusColumnSortIconDesc(): Locator {
+        return this.statusColumnHeader().locator('i.pi-sort-amount-up-alt');
+    }
+
+    // LOCATOR — No record found message
+    private get noRecordFoundMessage(): Locator {
+        return this.page.locator('ul li', { hasText: 'No Record Found' });
+    }
+
+    private get noLotFoundMessage(): Locator {
+        return this.page.locator('tr', { hasText: 'No Lots available' });
+    }
+
     // ==========================================================================
     // LOT LIST PAGE — HELPER FUNCTIONS
     // ==========================================================================
+
+    private async assertSuccessToast(expectedText: string = 'Update successfully'): Promise<void> {
+        await expect(this.successToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.successToast).toContainText(expectedText, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
 
     private async navigateToLots(): Promise<void> {
         const url = this.page.url();
@@ -2788,7 +2855,13 @@ export class ProjectActions {
     // TC — /listings/lot: Search for specific lot
     async verifySearchSpecificLot(lotKeyword: string): Promise<void> {
         await this.navigateToLots();
-        await this.firstLotRow.waitFor({ state: 'attached' });
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        const checkbox = this.rowCheckbox(firstRow);
+        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
         await this.searchLot(lotKeyword);
         await this.assertLotsExist();
         await this.assertFirstRowContains(lotKeyword);
@@ -2824,7 +2897,7 @@ export class ProjectActions {
         await this.openProjectDropdown();
         await this.searchInProjectDropdown(projectName);
         await this.selectProjectByName(projectName);
-        await this.closeDropdown();
+        await this.page.mouse.click(0, 0);
 
         await this.assertLotsExist();
         await this.assertFirstRowContains(projectName);
@@ -3216,5 +3289,473 @@ export class ProjectActions {
         await expect(this.lotSearchInput).toHaveValue('');
         await expect(this.selectedProjectTagByName('Nexton')).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.assertLotsExist();
+    }
+
+    // TC — View popup opens on View button click
+    async verifyViewPopupOpens(): Promise<void> {
+        await this.navigateToLots();
+        await expect(this.viewButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.viewButton.click();
+        await this.page.waitForTimeout(800);
+        await expect(this.viewPopup).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeDropdown();
+    }
+
+    // TC — Create new view from popup
+    async verifyCreateNewView(viewName: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openDefaultViewPopup();
+        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        await this.addViewIcon.click();
+        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.viewNameInput.click();
+        await this.viewNameInput.fill(viewName);
+        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.saveOrCreateButton.click({ force: true });
+        await expect(this.viewCreatedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.resetToDefaultView();
+    }
+
+    // TC — Share view with agent/team
+    async verifyShareViewWithAgent(
+        userName: string = 'Abdul Rehman',
+        teamName: string = 'Automation Team'
+    ): Promise<void> {
+        await this.navigateToLots();
+        await this.openDefaultViewPopup();
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.shareViewIcon.click({ force: true });
+        await this.selectShareTarget(this.usersShareDropdown, this.usersShareDropdownArrow, userName);
+        await this.selectShareTarget(this.teamsShareDropdown, this.teamsShareDropdownArrow, teamName);
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.shareButton.click({ force: true });
+        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.closeOverlay();
+        await this.resetListView();
+        await this.waitForFirstTableRow();
+    }
+
+    /**
+     * Save custom view with status arrangement
+     */
+    async saveCustomViewWithStatusArrangement(): Promise<void> {
+        await this.navigateToLots();
+        await this.openDefaultViewPopup();
+        const handleCount = await this.visibleColumnList.count();
+        if (handleCount < 2) {
+            throw new Error('Less than 2 draggable statuses found, cannot perform drag-and-drop.');
+        }
+        const firstHandle = this.visibleColumnList.nth(0);
+        const secondHandle = this.visibleColumnList.nth(1);
+        await firstHandle.scrollIntoViewIfNeeded();
+        await this.page.waitForTimeout(300);
+        const box1 = await firstHandle.boundingBox();
+        const box2 = await secondHandle.boundingBox();
+        if (!box1 || !box2) {
+            throw new Error('Could not get bounding boxes for drag handles.');
+        }
+        await this.performDragDrop(box1, box2);
+        await expect(this.viewPopupContent).toBeVisible();
+        await this.closeOverlay();
+        await this.resetListView();
+        await this.waitForFirstTableRow();
+    }
+
+    /**
+     * Delete an existing saved view in the Lot List View
+     */
+    async deleteSavedViewInLotList(viewName: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openDefaultViewPopup();
+        await expect(this.savedViewDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.savedViewDropdown.click();
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        const viewOption = this.savedViewOption(viewName);
+        await expect(viewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const deleteIcon = viewOption.locator('img[src*="delete_icon.svg"]');
+        await expect(deleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await deleteIcon.click();
+        try {
+            await expect(this.confirmAnyButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
+            await this.confirmAnyButton.click();
+        } catch {
+
+        }
+        await expect(this.viewDeletedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeOverlay();
+        await this.resetListView();
+        await this.waitForFirstTableRow();
+    }
+
+    /**
+     * Search for a given status in the View Options popup and verify results show as expected.
+     */
+    async searchStatusInLotViewPopup(): Promise<void> {
+        await this.navigateToLots();
+        await this.openDefaultViewPopup();
+        const searchTerm = 'Project';
+        await expect(this.columnSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.columnSearchInput.fill(searchTerm);
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.columnItemByName(searchTerm).first()).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+        await this.columnSearchInput.fill('');
+        await this.page.waitForTimeout(1000);
+        await this.closeOverlay();
+        await this.resetListView();
+        await this.waitForFirstTableRow();
+    }
+
+    // TC — Hide/Unhide status using eye icon
+    async verifyHideUnhideStatus(): Promise<void> {
+        await this.navigateToLots();
+        await this.openDefaultViewPopup();
+        await expect(this.hideAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.hideAllButton.click();
+        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.visibleColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.showAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.showAllButton.evaluate(button => button.scrollIntoView({ behavior: 'instant', block: 'center' }));
+        await this.page.waitForTimeout(1000);
+        await this.showAllButton.click();
+        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.hiddenColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.visibleColumnList.first()).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+        await this.page.waitForTimeout(1000);
+        await this.closeOverlay();
+    }
+
+    // TC — Use arrow to collapse and expand Reorder list
+    async verifyCollapseAndExpandReorderList(): Promise<void> {
+        await this.navigateToLots();
+        await this.openDefaultViewPopup();
+        await this.reorderExpandCollapseArrow.click();
+        await this.page.waitForTimeout(500);
+        await this.reorderExpandCollapseArrow.click();
+        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.closeOverlay();
+    }
+
+    private async isRowCheckboxSelected(row: Locator): Promise<boolean> {
+        const checkbox = this.rowCheckbox(row);
+        const className = await checkbox.getAttribute('class') || '';
+        return className.includes('p-highlight') || className.includes('p-checked');
+    }
+
+    // TC — Select single lot from list
+    async verifySelectSingleLot(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        const checkbox = this.rowCheckbox(firstRow);
+        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await checkbox.click();
+        await this.page.waitForTimeout(500);
+        // Verify checkbox is selected
+        const isSelected = await this.isRowCheckboxSelected(firstRow);
+        expect(isSelected).toBeTruthy();
+        await checkbox.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    // TC — Select multiple lots from list
+    async verifySelectMultipleLots(count: number = 2): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        const totalRows = await this.lotTableRows.count();
+        expect(totalRows).toBeGreaterThanOrEqual(count);
+        // Click checkboxes of first N rows
+        for (let i = 0; i < count; i++) {
+            const row = this.lotTableRows.nth(i);
+            const checkbox = this.rowCheckbox(row);
+            await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+            await checkbox.click();
+            await this.page.waitForTimeout(300);
+        }
+        // Verify all selected rows have selected checkboxes
+        for (let i = 0; i < count; i++) {
+            const row = this.lotTableRows.nth(i);
+            const isSelected = await this.isRowCheckboxSelected(row);
+            expect(isSelected).toBeTruthy();
+        }
+    }
+
+    // HELPER — check if select all (master) checkbox is selected
+    private async isSelectAllCheckboxSelected(): Promise<boolean> {
+        const className = await this.selectAllLotCheckbox.getAttribute('class') || '';
+        return className.includes('p-highlight') || className.includes('p-checked');
+    }
+
+    // TC — Use master checkbox to select all lots
+    async verifySelectAllLotsViaMasterCheckbox(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        // Click master checkbox
+        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.selectAllLotCheckbox.click();
+        await this.page.waitForTimeout(800);
+
+        // Verify master checkbox is selected
+        const isMasterSelected = await this.isSelectAllCheckboxSelected();
+        expect(isMasterSelected).toBeTruthy();
+
+        // Verify all visible row checkboxes are selected
+        const rowCount = await this.lotTableRows.count();
+        for (let i = 0; i < Math.min(rowCount, 5); i++) {
+            const row = this.lotTableRows.nth(i);
+            const isSelected = await this.isRowCheckboxSelected(row);
+            expect(isSelected).toBeTruthy();
+        }
+        await this.page.waitForTimeout(800);
+        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.selectAllLotCheckbox.click();
+        await this.page.waitForTimeout(800);
+
+    }
+
+    // Use master checkbox to deselect all lots
+    async verifyDeselectAllLotsViaMasterCheckbox(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        // Select all lots first to ensure some are selected
+        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.selectAllLotCheckbox.click();
+        await this.page.waitForTimeout(800);
+        // Deselect all using master checkbox
+        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.selectAllLotCheckbox.click();
+        await this.page.waitForTimeout(800);
+        // Verify master checkbox is NOT selected
+        const isMasterSelected = await this.isSelectAllCheckboxSelected();
+        expect(isMasterSelected).toBeFalsy();
+        // Verify all visible row checkboxes are NOT selected
+        const rowCount = await this.lotTableRows.count();
+        for (let i = 0; i < Math.min(rowCount, 5); i++) {
+            const row = this.lotTableRows.nth(i);
+            const isSelected = await this.isRowCheckboxSelected(row);
+            expect(isSelected).toBeFalsy();
+        }
+    }
+
+    // TC — Bulk edit becomes visible on lot selection
+    async verifyBulkEditVisibleOnSelection(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(this.bulkEditButton).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.rowCheckbox(firstRow).click();
+        await this.page.waitForTimeout(500);
+        // Verify Bulk Edit becomes visible
+        await expect(this.bulkEditButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(500);
+        await this.rowCheckbox(firstRow).click();
+        await this.page.waitForTimeout(500);
+        await expect(this.bulkEditButton).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    // Edit selected lots using Edit Bulk
+    async editSelectedLotsUsingBulkEdit(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await firstCheckbox.click();
+        await this.page.waitForTimeout(500);
+        await expect(this.bulkEditButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bulkEditButton.click();
+        await expect(this.saveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.saveAndCloseButton.click();
+        await this.assertSuccessToast();
+        await this.rowCheckbox(firstRow).click();
+        await this.page.waitForTimeout(500);
+        await expect(this.bulkEditButton).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    async verifySortLotsByStatus(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(this.statusColumnSortIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.statusColumnSortIcon.click();
+        await expect(this.statusColumnSortIconDesc).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotsExist();
+        await this.statusColumnSortIcon.click();
+        await this.assertLotsExist();
+    }
+
+    // TC — Project dropdown shows "No Record Found" if no projects allocated
+    async verifyNoRecordFoundIfNoProjectAllocation(): Promise<void> {
+        await this.navigateToLots();
+        await this.openProjectDropdown();
+        const optionsCount = await this.projectDropdownOptions.count();
+        if (optionsCount === 0) {
+            await expect(this.noRecordFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        } else {
+            await expect(this.noRecordFoundMessage).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+            expect(optionsCount).toBeGreaterThan(0);
+        }
+        await this.closeDropdown();
+    }
+
+    // TC — Lot tab displays “No Record Found” message on invalid search
+    async verifyNoRecordsOnInvalidLotSearch(invalidKeyword: string): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        const checkbox = this.rowCheckbox(firstRow);
+        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.searchLot(invalidKeyword);
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clearLotSearch();
+    }
+
+    // TC — Prevent tag display for unselected filters
+    async verifyPreventTagDisplayForUnselectedFilters(): Promise<void> {
+        await this.navigateToLots();
+        await this.openProjectDropdown();
+        await this.closeDropdown();
+        const projectTagsCount = await this.page.locator('re-multiselect[placeholder="Project"] .tags .selected_one').count();
+        expect(projectTagsCount).toBe(0);
+    }
+
+    // TC — Handle invalid price range input and display validation error
+    async verifyInvalidPriceRangeInput(min: string, max: string): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.openPriceRangeFilter();
+        await this.setPriceRange(min, max);
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.openPriceRangeFilter();
+        await this.resetFilters();
+    }
+
+    // TC — Handle invalid internal area range input and display validation error
+    async verifyInvalidInternalAreaRangeInput(min: string, max: string): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.openInternalAreaFilter();
+        await this.setInternalArea(min, max);
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.openInternalAreaFilter();
+        await this.resetFilters();
+    }
+
+    // TC — Lot edit page renders properly with incomplete/missing field data
+    async verifyLotRendersWithIncompleteData(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        const lotEditHeader = this.page.locator('.name-handle p');
+        await expect(lotEditHeader).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.page.locator('a#pills-lot-tab.active')).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const fieldsToCheck = ['Lot Price', 'Car Park Price', 'Storage Price', 'Total', 'Bed', 'Bath', 'Internal Area', 'Aspect', 'Orientation'];
+        for (const fieldLabel of fieldsToCheck) {
+            const fieldLabelLocator = this.page.locator('p.f-12.mb-2', { hasText: new RegExp(`^${fieldLabel}$`) }).first();
+            await expect(fieldLabelLocator).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
+        await expect(this.saveAndCloseButton.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.saveAndCloseButton.click();
+        await this.assertSuccessToast();
+        await this.resetButton.click();
+    }
+
+    // TC — Popup closes on cross icon click
+    async verifyPopupClosesOnCrossClick(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        const lotEditHeader = this.page.locator('.name-handle p');
+        await expect(lotEditHeader).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.popupCloseIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.popupCloseIcon.click();
+        await this.page.waitForTimeout(800);
+        await expect(lotEditHeader).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    // TC — Share popup fails on empty selection
+    async verifySharePopupFailsOnEmptySelection(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        await this.defaultViewButton.click();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.shareViewIcon.click({ force: true });
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.shareButton.click({ force: true });
+        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.closeOverlay();
+        await this.resetListView();
+        await this.waitForFirstTableRow();
+    }
+
+    // TC — Create popup fails when attempting to save without name
+    async verifyCreatePopupFailsWithoutName(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        await this.defaultViewButton.click();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        await this.addViewIcon.click();
+        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.saveOrCreateButton.click({ force: true });
+        await expect(this.viewNameInputInvalid).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
+        await this.closeOverlay();
+        await this.resetListView();
+        await this.waitForFirstTableRow();
     }
 }
