@@ -160,4 +160,8 @@ test.describe('Lot List Page', () => {
         await project.searchStatusInLotViewPopup();
     });
 
+    test('Test 32: Hide/Unhide status using eye icon', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHideUnhideStatus();
+    });
+
 });
