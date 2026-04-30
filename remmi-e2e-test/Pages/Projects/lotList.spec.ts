@@ -138,4 +138,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyViewPopupOpens();
     });
 
+    test('Test 27: Create new view from popup', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyCreateNewView('My Custom View');
+    });
+
 });

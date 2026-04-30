@@ -3237,4 +3237,19 @@ export class ProjectActions {
         await expect(this.viewPopup).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.closeDropdown();
     }
+
+    // TC — Create new view from popup
+    async verifyCreateNewView(viewName: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openDefaultViewPopup();
+        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.addViewIcon.click();
+        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.viewNameInput.click();
+        await this.viewNameInput.fill(viewName);
+        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.saveOrCreateButton.click({ force: true });
+        await expect(this.viewCreatedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.resetToDefaultView();
+    }
 }
