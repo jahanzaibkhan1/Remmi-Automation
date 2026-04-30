@@ -3655,4 +3655,19 @@ export class ProjectActions {
         await this.openPriceRangeFilter();
         await this.resetFilters();
     }
+
+    // TC — Handle invalid internal area range input and display validation error
+    async verifyInvalidInternalAreaRangeInput(min: string, max: string): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.openInternalAreaFilter();
+        await this.setInternalArea(min, max);
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.openInternalAreaFilter();
+        await this.resetFilters();
+    }
 }
