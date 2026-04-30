@@ -3324,4 +3324,22 @@ export class ProjectActions {
         await this.resetListView();
         await this.waitForFirstTableRow();
     }
+
+    /**
+     * Search for a given status in the View Options popup and verify results show as expected.
+     */
+    async searchStatusInLotViewPopup(): Promise<void> {
+        await this.navigateToLots();
+        await this.openDefaultViewPopup();
+        const searchTerm = 'Project';
+        await expect(this.columnSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.columnSearchInput.fill(searchTerm);
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.columnItemByName(searchTerm).first()).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+        await this.closeOverlay();
+        await this.resetListView();
+        await this.waitForFirstTableRow();
+    }
 }
