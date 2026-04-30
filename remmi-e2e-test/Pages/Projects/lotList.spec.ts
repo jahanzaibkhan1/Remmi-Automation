@@ -134,4 +134,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyResetButtonClearsFilters();
     });
 
+    test('Test 26: View popup opens on View button click', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyViewPopupOpens();
+    });
+
 });
