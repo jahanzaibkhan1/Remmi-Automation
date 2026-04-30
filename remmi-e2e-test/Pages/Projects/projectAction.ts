@@ -3591,6 +3591,10 @@ export class ProjectActions {
     async verifySortLotsByStatus(): Promise<void> {
         await this.navigateToLots();
         await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
         await expect(this.statusColumnSortIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.statusColumnSortIcon.click();
         await expect(this.statusColumnSortIconDesc).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
@@ -3626,5 +3630,14 @@ export class ProjectActions {
         await this.searchLot(invalidKeyword);
         await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.clearLotSearch();
+    }
+
+    // TC — Prevent tag display for unselected filters
+    async verifyPreventTagDisplayForUnselectedFilters(): Promise<void> {
+        await this.navigateToLots();
+        await this.openProjectDropdown();
+        await this.closeDropdown();
+        const projectTagsCount = await this.page.locator('re-multiselect[placeholder="Project"] .tags .selected_one').count();
+        expect(projectTagsCount).toBe(0);
     }
 }
