@@ -192,4 +192,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyBulkEditVisibleOnSelection();
     });
 
+    test('Test 40: Edit selected lots using Edit Bulk', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).editSelectedLotsUsingBulkEdit();
+    });
+
 });

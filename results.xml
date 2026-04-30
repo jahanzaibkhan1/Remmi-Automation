@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.085384000001476">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T06:42:28.579Z" hostname="chromium" tests="1" failures="0" skipped="0" time="61.163" errors="0">
-<testcase name="Lot List Page › Test 39: Bulk edit becomes visible on lot selection" classname="Pages\Projects\lotList.spec.ts" time="61.163">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.43652999999933">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T07:07:36.923Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.439" errors="0">
+<testcase name="Lot List Page › Test 40: Edit selected lots using Edit Bulk" classname="Pages\Projects\lotList.spec.ts" time="48.439">
 </testcase>
 </testsuite>
 </testsuites>
