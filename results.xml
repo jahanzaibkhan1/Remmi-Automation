@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.82679400000349">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-29T11:21:37.472Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.42" errors="0">
-<testcase name="Lot List Page › Test 24: Use Internal Area filter" classname="Pages\Projects\lotList.spec.ts" time="41.42">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="76.51058700000006">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T03:25:16.193Z" hostname="chromium" tests="1" failures="0" skipped="0" time="74.114" errors="0">
+<testcase name="Lot List Page › Test 25: Use Reset button to clear filters" classname="Pages\Projects\lotList.spec.ts" time="74.114">
 </testcase>
 </testsuite>
 </testsuites>

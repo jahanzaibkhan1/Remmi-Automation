@@ -130,4 +130,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyInternalAreaFilter('50', '200');
     });
 
+    test('Test 25: Use Reset button to clear filters', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyResetButtonClearsFilters();
+    });
+
 });
