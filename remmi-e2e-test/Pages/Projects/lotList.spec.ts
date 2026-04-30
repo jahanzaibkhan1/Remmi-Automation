@@ -150,4 +150,9 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).saveCustomViewWithStatusArrangement();
     });
 
+    test('Test 30: Delete an existing saved view in Lot List View', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.deleteSavedViewInLotList('My Custom View');
+    });
+
 });

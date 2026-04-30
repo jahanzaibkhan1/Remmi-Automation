@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="51.831571">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T04:00:03.513Z" hostname="chromium" tests="1" failures="0" skipped="0" time="49.659" errors="0">
-<testcase name="Lot List Page › Test 29: Save custom view with status arrangement" classname="Pages\Projects\lotList.spec.ts" time="49.659">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.061566000000106">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T04:04:07.983Z" hostname="chromium" tests="1" failures="0" skipped="0" time="38.834" errors="0">
+<testcase name="Lot List Page › Test 30: Delete an existing saved view in Lot List View" classname="Pages\Projects\lotList.spec.ts" time="38.834">
 </testcase>
 </testsuite>
 </testsuites>

@@ -3298,4 +3298,30 @@ export class ProjectActions {
         await this.resetListView();
         await this.waitForFirstTableRow();
     }
+
+    /**
+     * Delete an existing saved view in the Lot List View
+     */
+    async deleteSavedViewInLotList(viewName: string): Promise<void> {
+        await this.navigateToLots();
+        await this.openDefaultViewPopup();
+        await expect(this.savedViewDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.savedViewDropdown.click();
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        const viewOption = this.savedViewOption(viewName);
+        await expect(viewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const deleteIcon = viewOption.locator('img[src*="delete_icon.svg"]');
+        await expect(deleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await deleteIcon.click();
+        try {
+            await expect(this.confirmAnyButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
+            await this.confirmAnyButton.click();
+        } catch {
+           
+        }
+        await expect(this.viewDeletedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeOverlay();
+        await this.resetListView();
+        await this.waitForFirstTableRow();
+    }
 }
