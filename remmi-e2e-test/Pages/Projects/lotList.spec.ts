@@ -164,4 +164,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyHideUnhideStatus();
     });
 
+    test('Test 33: Reorder statuses using drag/drop', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).saveCustomViewWithStatusArrangement();
+    });
+
 });
