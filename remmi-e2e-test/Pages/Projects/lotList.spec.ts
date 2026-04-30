@@ -155,4 +155,9 @@ test.describe('Lot List Page', () => {
         await project.deleteSavedViewInLotList('My Custom View');
     });
 
+    test('Test 31: Search statuses in view popup', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.searchStatusInLotViewPopup();
+    });
+
 });
