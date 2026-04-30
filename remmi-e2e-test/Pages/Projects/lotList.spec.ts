@@ -219,5 +219,9 @@ test.describe('Lot List Page', () => {
     test('Test 46: Handle invalid internal area range input', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyInvalidInternalAreaRangeInput('1000', '10');
     });
-    
+
+    test('Test 47: Lot edit page renders with incomplete data', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotRendersWithIncompleteData();
+    });
+
 });
