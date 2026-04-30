@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="100.06910899999924">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T05:03:42.755Z" hostname="chromium" tests="1" failures="0" skipped="0" time="94.39" errors="0">
-<testcase name="Lot List Page › Test 35: Select single lot from list" classname="Pages\Projects\lotList.spec.ts" time="94.39">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="65.8279759999998">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T05:25:24.314Z" hostname="chromium" tests="1" failures="0" skipped="0" time="63.41" errors="0">
+<testcase name="Lot List Page › Test 36: Select multiple lots rows" classname="Pages\Projects\lotList.spec.ts" time="63.41">
 </testcase>
 </testsuite>
 </testsuites>

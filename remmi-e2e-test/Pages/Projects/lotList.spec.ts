@@ -176,4 +176,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifySelectSingleLot();
     });
 
+    test('Test 36: Select multiple lots rows', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySelectMultipleLots(3);
+    });
+
 });
