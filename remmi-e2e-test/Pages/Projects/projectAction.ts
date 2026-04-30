@@ -302,6 +302,16 @@ export class ProjectActions {
         return this.viewPopupContent.getByText('Hide All', { exact: true });
     }
 
+    // LOCATORS — Reorder section expand/collapse arrow
+
+    private get reorderExpandCollapseArrow(): Locator {
+        return this.page.locator('.icon-style i.pi');
+    }
+
+    private get reorderCollapsedArrow(): Locator {
+        return this.page.locator('.icon-style i.pi-angle-down');
+    }
+
     private get showAllButton(): Locator {
         return this.viewPopupContent.getByText('Show All', { exact: true });
     }
@@ -3360,6 +3370,17 @@ export class ProjectActions {
             timeout: ProjectActions.TIMEOUT_DEFAULT,
         });
 
+        await this.closeOverlay();
+    }
+
+    // TC — Use arrow to collapse and expand Reorder list
+    async verifyCollapseAndExpandReorderList(): Promise<void> {
+        await this.navigateToLots();
+        await this.openDefaultViewPopup();
+        await this.reorderExpandCollapseArrow.click();
+        await this.page.waitForTimeout(500);
+        await this.reorderExpandCollapseArrow.click();
+        await this.page.waitForTimeout(500);
         await this.closeOverlay();
     }
 }
