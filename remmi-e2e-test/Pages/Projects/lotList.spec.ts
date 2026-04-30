@@ -207,4 +207,8 @@ test.describe('Lot List Page', () => {
     test('Test 43: Lot tab displays “No Record Found” message on invalid search', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyNoRecordsOnInvalidLotSearch('invalid_keyword_12345');
     });
+
+    test('Test 44: Prevent tag display for unselected filters', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyPreventTagDisplayForUnselectedFilters();
+    });
 });
