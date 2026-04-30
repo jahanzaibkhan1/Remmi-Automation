@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="90.74548699999973">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T07:41:02.046Z" hostname="chromium" tests="1" failures="0" skipped="0" time="88.709" errors="0">
-<testcase name="Lot List Page › Test 42: No Record Found visible only when no project allocation" classname="Pages\Projects\lotList.spec.ts" time="88.709">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="82.9925099999979">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T08:00:18.527Z" hostname="chromium" tests="1" failures="0" skipped="0" time="81.042" errors="0">
+<testcase name="Lot List Page › Test 43: Lot tab displays “No Record Found” message on invalid search" classname="Pages\Projects\lotList.spec.ts" time="81.042">
 </testcase>
 </testsuite>
 </testsuites>

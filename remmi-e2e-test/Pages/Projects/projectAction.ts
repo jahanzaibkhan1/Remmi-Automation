@@ -2730,6 +2730,10 @@ export class ProjectActions {
         return this.page.locator('ul li', { hasText: 'No Record Found' });
     }
 
+    private get noLotFoundMessage(): Locator {
+        return this.page.locator('tr', { hasText: 'No Lots available' });
+    }
+
     // ==========================================================================
     // LOT LIST PAGE — HELPER FUNCTIONS
     // ==========================================================================
@@ -3607,5 +3611,20 @@ export class ProjectActions {
             expect(optionsCount).toBeGreaterThan(0);
         }
         await this.closeDropdown();
+    }
+
+    // TC — Lot tab displays “No Record Found” message on invalid search
+    async verifyNoRecordsOnInvalidLotSearch(invalidKeyword: string): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        const checkbox = this.rowCheckbox(firstRow);
+        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.searchLot(invalidKeyword);
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clearLotSearch();
     }
 }
