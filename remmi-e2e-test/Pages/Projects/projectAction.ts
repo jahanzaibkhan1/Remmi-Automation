@@ -3317,7 +3317,7 @@ export class ProjectActions {
             await expect(this.confirmAnyButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
             await this.confirmAnyButton.click();
         } catch {
-           
+
         }
         await expect(this.viewDeletedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.closeOverlay();
@@ -3341,5 +3341,25 @@ export class ProjectActions {
         await this.closeOverlay();
         await this.resetListView();
         await this.waitForFirstTableRow();
+    }
+
+    // TC — Hide/Unhide status using eye icon
+    async verifyHideUnhideStatus(): Promise<void> {
+        await this.navigateToLots();
+        await this.openDefaultViewPopup();
+        await expect(this.hideAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.hideAllButton.click();
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.visibleColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.showAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.showAllButton.evaluate(button => button.scrollIntoView({ behavior: 'instant', block: 'center' }));
+        await this.showAllButton.click();
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.hiddenColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.visibleColumnList.first()).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+
+        await this.closeOverlay();
     }
 }
