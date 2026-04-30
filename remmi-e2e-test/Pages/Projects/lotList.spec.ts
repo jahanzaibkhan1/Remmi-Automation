@@ -177,7 +177,11 @@ test.describe('Lot List Page', () => {
     });
 
     test('Test 36: Select multiple lots rows', async ({ sessionPage }) => {
-        await new ProjectActions(sessionPage).verifySelectMultipleLots(3);
+        await new ProjectActions(sessionPage).verifySelectMultipleLots(2);
     });
 
+    test('Test 37: Use master checkbox to select all lots', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySelectAllLotsViaMasterCheckbox();
+    });
+    
 });

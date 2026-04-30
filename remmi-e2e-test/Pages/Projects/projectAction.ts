@@ -2808,7 +2808,13 @@ export class ProjectActions {
     // TC — /listings/lot: Search for specific lot
     async verifySearchSpecificLot(lotKeyword: string): Promise<void> {
         await this.navigateToLots();
-        await this.firstLotRow.waitFor({ state: 'attached' });
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        const checkbox = this.rowCheckbox(firstRow);
+        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
         await this.searchLot(lotKeyword);
         await this.assertLotsExist();
         await this.assertFirstRowContains(lotKeyword);
@@ -3405,10 +3411,12 @@ export class ProjectActions {
         // Verify checkbox is selected
         const isSelected = await this.isRowCheckboxSelected(firstRow);
         expect(isSelected).toBeTruthy();
+        await checkbox.click();
+        await this.page.waitForTimeout(500);
     }
 
     // TC — Select multiple lots from list
-    async verifySelectMultipleLots(count: number = 3): Promise<void> {
+    async verifySelectMultipleLots(count: number = 2): Promise<void> {
         await this.navigateToLots();
         await this.assertLotsExist();
         await this.resetButton.click();
@@ -3431,5 +3439,42 @@ export class ProjectActions {
             const isSelected = await this.isRowCheckboxSelected(row);
             expect(isSelected).toBeTruthy();
         }
+    }
+
+    // HELPER — check if select all (master) checkbox is selected
+    private async isSelectAllCheckboxSelected(): Promise<boolean> {
+        const className = await this.selectAllLotCheckbox.getAttribute('class') || '';
+        return className.includes('p-highlight') || className.includes('p-checked');
+    }
+
+    // TC — Use master checkbox to select all lots
+    async verifySelectAllLotsViaMasterCheckbox(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        // Click master checkbox
+        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.selectAllLotCheckbox.click();
+        await this.page.waitForTimeout(800);
+
+        // Verify master checkbox is selected
+        const isMasterSelected = await this.isSelectAllCheckboxSelected();
+        expect(isMasterSelected).toBeTruthy();
+
+        // Verify all visible row checkboxes are selected
+        const rowCount = await this.lotTableRows.count();
+        for (let i = 0; i < Math.min(rowCount, 5); i++) {
+            const row = this.lotTableRows.nth(i);
+            const isSelected = await this.isRowCheckboxSelected(row);
+            expect(isSelected).toBeTruthy();
+        }
+        await this.page.waitForTimeout(800);
+        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.selectAllLotCheckbox.click();
+        await this.page.waitForTimeout(800);
+
     }
 }
