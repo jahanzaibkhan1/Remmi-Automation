@@ -146,4 +146,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyShareViewWithAgent();
     });
 
+    test('Test 29: Save custom view with status arrangement', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).saveCustomViewWithStatusArrangement();
+    });
+
 });
