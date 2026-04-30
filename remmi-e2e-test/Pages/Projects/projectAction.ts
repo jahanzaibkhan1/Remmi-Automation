@@ -805,6 +805,11 @@ export class ProjectActions {
         return this.page.locator('table tbody tr');
     }
 
+    // LOCATOR — Popup close icon
+    private get popupCloseIcon(): Locator {
+        return this.page.locator('.p-dialog-header-close, .close-icon, i.pi-times').first();
+    }
+
     private get firstLotRow(): Locator {
         return this.lotTableRows.first();
     }
@@ -3690,5 +3695,23 @@ export class ProjectActions {
             await expect(fieldLabelLocator).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         }
         await expect(this.saveAndCloseButton.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    // TC — Popup closes on cross icon click
+    async verifyPopupClosesOnCrossClick(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        const lotEditHeader = this.page.locator('.name-handle p');
+        await expect(lotEditHeader).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.popupCloseIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.popupCloseIcon.click();
+        await this.page.waitForTimeout(800);
+        await expect(lotEditHeader).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
 }

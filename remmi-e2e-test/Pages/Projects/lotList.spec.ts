@@ -224,4 +224,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyLotRendersWithIncompleteData();
     });
 
+    test('Test 48: Popup closes on cross icon click', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyPopupClosesOnCrossClick();
+    });
+
 });
