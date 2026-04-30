@@ -232,4 +232,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifySharePopupFailsOnEmptySelection();
     });
 
+    test('Test 50: Create lot view popup fails when attempting to save without name', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyCreatePopupFailsWithoutName();
+    });
+
 });
