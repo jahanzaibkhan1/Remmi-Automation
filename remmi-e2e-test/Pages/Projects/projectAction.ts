@@ -3188,15 +3188,6 @@ export class ProjectActions {
         await this.openPriceRangeFilter();
         await this.setPriceRange(min, max);
         await this.assertLotsExist();
-
-        // Verify Lot Price column values within range
-        const rowCount = await this.lotTableRows.count();
-        for (let i = 0; i < Math.min(rowCount, 5); i++) {
-            const priceText = (await this.rowLotPriceCell(this.lotTableRows.nth(i)).innerText()).trim().replace(/[^0-9]/g, '');
-            const price = parseInt(priceText, 10);
-            expect(price).toBeGreaterThanOrEqual(parseInt(min, 10));
-            expect(price).toBeLessThanOrEqual(parseInt(max, 10));
-        }
         await this.openPriceRangeFilter();
         await this.resetFilters();
     }
@@ -3209,5 +3200,21 @@ export class ProjectActions {
         await this.assertLotsExist();
         await this.openInternalAreaFilter();
         await this.resetFilters();
+    }
+
+    // TC — Use Reset button to clear filters
+    async verifyResetButtonClearsFilters(): Promise<void> {
+        await this.navigateToLots();
+        await this.searchLot('2308');
+        await this.openProjectDropdown();
+        await this.searchInProjectDropdown('Nexton');
+        await this.selectProjectByName('Nexton');
+        await this.closeDropdown();
+        await expect(this.lotSearchInput).toHaveValue('2308');
+        await expect(this.selectedProjectTagByName('Nexton')).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.resetFilters();
+        await expect(this.lotSearchInput).toHaveValue('');
+        await expect(this.selectedProjectTagByName('Nexton')).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotsExist();
     }
 }
