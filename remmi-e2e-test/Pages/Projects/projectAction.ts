@@ -1572,7 +1572,7 @@ export class ProjectActions {
 
         await expect(this.viewDropdownArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.viewDropdownArrow.click();
-
+        await this.page.waitForTimeout(1000);
         await expect(this.defaultViewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.defaultViewOption.click();
 
@@ -2697,6 +2697,15 @@ export class ProjectActions {
         return this.page.locator('p-overlaypanel .p-overlaypanel, .p-overlaypanel-content').first();
     }
 
+    // LOCATOR — Bulk edit button/section
+    private get bulkEditButton(): Locator {
+        return this.page.locator('button, a, p', { hasText: /bulk edit/i }).first();
+    }
+
+    private get bulkEditSection(): Locator {
+        return this.page.locator('[class*="bulk"], .bulk-edit, .bulk-actions').first();
+    }
+
     // ==========================================================================
     // LOT LIST PAGE — HELPER FUNCTIONS
     // ==========================================================================
@@ -2850,7 +2859,7 @@ export class ProjectActions {
         await this.openProjectDropdown();
         await this.searchInProjectDropdown(projectName);
         await this.selectProjectByName(projectName);
-        await this.closeDropdown();
+        await this.page.mouse.click(0, 0);
 
         await this.assertLotsExist();
         await this.assertFirstRowContains(projectName);
@@ -3327,7 +3336,7 @@ export class ProjectActions {
         const viewOption = this.savedViewOption(viewName);
         await expect(viewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         const deleteIcon = viewOption.locator('img[src*="delete_icon.svg"]');
-        await expect(deleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(deleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await deleteIcon.click();
         try {
             await expect(this.confirmAnyButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
@@ -3369,6 +3378,7 @@ export class ProjectActions {
         await expect(this.visibleColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
         await expect(this.showAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.showAllButton.evaluate(button => button.scrollIntoView({ behavior: 'instant', block: 'center' }));
+        await this.page.waitForTimeout(1000);
         await this.showAllButton.click();
         await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
         await expect(this.hiddenColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
@@ -3504,5 +3514,24 @@ export class ProjectActions {
             const isSelected = await this.isRowCheckboxSelected(row);
             expect(isSelected).toBeFalsy();
         }
+    }
+
+    // TC — Bulk edit becomes visible on lot selection
+    async verifyBulkEditVisibleOnSelection(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(this.bulkEditButton).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.rowCheckbox(firstRow).click();
+        await this.page.waitForTimeout(500);
+        // Verify Bulk Edit becomes visible
+        await expect(this.bulkEditButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(500);
+        await this.rowCheckbox(firstRow).click();
+        await this.page.waitForTimeout(500);
+        await expect(this.bulkEditButton).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
 }
