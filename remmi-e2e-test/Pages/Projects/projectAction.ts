@@ -2677,6 +2677,16 @@ export class ProjectActions {
         return this.page.locator('input[placeholder*="Max" i]');
     }
 
+    // LOCATORS — View button & popup
+
+    private get viewButton(): Locator {
+        return this.page.locator('._view-btn');
+    }
+
+    private get viewPopup(): Locator {
+        return this.page.locator('p-overlaypanel .p-overlaypanel, .p-overlaypanel-content').first();
+    }
+
     // ==========================================================================
     // LOT LIST PAGE — HELPER FUNCTIONS
     // ==========================================================================
@@ -3216,5 +3226,15 @@ export class ProjectActions {
         await expect(this.lotSearchInput).toHaveValue('');
         await expect(this.selectedProjectTagByName('Nexton')).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.assertLotsExist();
+    }
+
+    // TC — View popup opens on View button click
+    async verifyViewPopupOpens(): Promise<void> {
+        await this.navigateToLots();
+        await expect(this.viewButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.viewButton.click();
+        await this.page.waitForTimeout(800);
+        await expect(this.viewPopup).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeDropdown();
     }
 }

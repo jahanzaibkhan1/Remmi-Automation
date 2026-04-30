@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="76.51058700000006">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T03:25:16.193Z" hostname="chromium" tests="1" failures="0" skipped="0" time="74.114" errors="0">
-<testcase name="Lot List Page › Test 25: Use Reset button to clear filters" classname="Pages\Projects\lotList.spec.ts" time="74.114">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="95.81646299999998">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T03:38:23.455Z" hostname="chromium" tests="1" failures="0" skipped="0" time="92.813" errors="0">
+<testcase name="Lot List Page › Test 26: View popup opens on View button click" classname="Pages\Projects\lotList.spec.ts" time="92.813">
 </testcase>
 </testsuite>
 </testsuites>
