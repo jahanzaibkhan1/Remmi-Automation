@@ -2711,6 +2711,24 @@ export class ProjectActions {
         return this.page.locator('div[role="alert"].toast-message');
     }
 
+    // LOCATORS — Sort icon states (targeted to Status column reliably)
+
+    private statusColumnHeader(): Locator {
+        return this.page.locator('table thead th', { has: this.page.locator('p', { hasText: /^Status$/ }) });
+    }
+
+    private get statusColumnSortIcon(): Locator {
+        return this.statusColumnHeader().locator('i.custom-sort');
+    }
+
+    private get statusColumnSortIconAsc(): Locator {
+        return this.statusColumnHeader().locator('i.pi-sort-amount-up-alt');
+    }
+
+    private get statusColumnSortIconDesc(): Locator {
+        return this.statusColumnHeader().locator('i.pi-sort-amount-up-alt');
+    }
+
     // ==========================================================================
     // LOT LIST PAGE — HELPER FUNCTIONS
     // ==========================================================================
@@ -3563,5 +3581,16 @@ export class ProjectActions {
         await this.rowCheckbox(firstRow).click();
         await this.page.waitForTimeout(500);
         await expect(this.bulkEditButton).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    async verifySortLotsByStatus(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await expect(this.statusColumnSortIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.statusColumnSortIcon.click();
+        await expect(this.statusColumnSortIconDesc).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotsExist();
+        await this.statusColumnSortIcon.click();
+        await this.assertLotsExist();
     }
 }

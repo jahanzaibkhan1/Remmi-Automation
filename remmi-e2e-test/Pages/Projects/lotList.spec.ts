@@ -196,4 +196,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).editSelectedLotsUsingBulkEdit();
     });
 
+    test('Test 41: Sort lots by Status column', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySortLotsByStatus();
+    });
+
 });
