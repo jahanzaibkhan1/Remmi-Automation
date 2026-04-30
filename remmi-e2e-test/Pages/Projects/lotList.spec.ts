@@ -215,4 +215,9 @@ test.describe('Lot List Page', () => {
     test('Test 45: Handle invalid price range input', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyInvalidPriceRangeInput('1000000', '500');
     });
+
+    test('Test 46: Handle invalid internal area range input', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyInvalidInternalAreaRangeInput('1000', '10');
+    });
+    
 });
