@@ -142,4 +142,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyCreateNewView('My Custom View');
     });
 
+    test('Test 28: Share view with agent/team', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyShareViewWithAgent();
+    });
+
 });

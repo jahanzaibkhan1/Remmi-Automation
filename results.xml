@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="65.1170299999998">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T03:48:51.665Z" hostname="chromium" tests="1" failures="0" skipped="0" time="62.314" errors="0">
-<testcase name="Lot List Page › Test 27: Create new view from popup" classname="Pages\Projects\lotList.spec.ts" time="62.314">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.80718600000022">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-04-30T03:53:27.074Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.54" errors="0">
+<testcase name="Lot List Page › Test 28: Share view with agent/team" classname="Pages\Projects\lotList.spec.ts" time="48.54">
 </testcase>
 </testsuite>
 </testsuites>
