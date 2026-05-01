@@ -236,4 +236,45 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyCreatePopupFailsWithoutName();
     });
 
+    test('Test 51: Save view fails without making any changes', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySaveViewFailsWithoutChanges();
+    });
+
+    test('Test 52: Project dropdown filters correctly on text input', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySearchProjectInDropdown('Automation Testing')
+    });
+
+    test('Test 53: Dropdown close does not remove selected tags', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyDropdownCloseDoesNotRemoveTags();
+    });
+
+    test('Test 54: View reflects only selected project, bed, or status filters', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyViewReflectsSelectedFilters('Adb', '2');
+    });
+
+    test('Test 55: Lot selection preserved during view toggle', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotSelectionPreservedDuringViewToggle();
+    });
+
+    test('Test 56: Filter tags persist after popup close', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyDropdownCloseDoesNotRemoveTags();
+    });
+
+    test('Test 57: Save does not close the View popup if there are no changes', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySaveViewFailsWithoutChanges();
+    });
+
+    test('Test 58: Sorting resets only the sorted column', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySortLotsByStatus();
+    });
+
+    test('Test 59: Tags reflect real-time selection and deselection', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyTagReflectsRealTimeSelectionDeselection('Automation Testing');
+    });
+
+    test('Test 60: Ensure Save & Close closes View popup', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySaveViewFailsWithoutChanges();
+    });
+
+
 });

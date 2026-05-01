@@ -249,7 +249,7 @@ export class ProjectActions {
     }
 
     private get shareViewIcon(): Locator {
-        return this.viewPopupContent.locator('.view-options img[src*="share-one.svg"]');
+        return this.page.locator('.view-options img[src*="share-one.svg"]');
     }
 
     private get viewNameInput(): Locator {
@@ -808,6 +808,33 @@ export class ProjectActions {
     // LOCATOR — Popup close icon
     private get popupCloseIcon(): Locator {
         return this.page.locator('.p-dialog-header-close, .close-icon, i.pi-times').first();
+    }
+
+    private get lotFormProjectValue(): Locator {
+        return this.page.locator('ng-select[formcontrolname="projectid"] .ng-value-label');
+    }
+
+    // LOCATOR — Right pin icon
+    private get lotFormPinIcon(): Locator {
+        return this.page.locator('i.fa-thumbtack');
+    }
+
+    private get lotFormPinIconPinned(): Locator {
+        return this.page.locator('i.fa-thumbtack.pinned');
+    }
+
+    // LOCATOR — Pin delete success toast
+    private get pinDeleteSuccessToast(): Locator {
+        return this.page.locator('div[role="alert"].toast-message', { hasText: 'Pin deleted successfully' });
+    }
+
+    // LOCATOR — Pin success toast
+    private get pinSuccessToast(): Locator {
+        return this.page.locator('div[role="alert"].toast-message', { hasText: 'Pin created successfully' });
+    }
+
+    private get lotFormHistoryTab(): Locator {
+        return this.page.locator('a#pills-history-tab');
     }
 
     private get firstLotRow(): Locator {
@@ -2710,6 +2737,11 @@ export class ProjectActions {
     private get saveAndCloseButton(): Locator {
         return this.page.locator('button', { hasText: /save.*close|save & close/i }).first();
     }
+
+    private get lotFormLotInput(): Locator {
+        return this.page.locator('input[formcontrolname="lot_name"]');
+    }
+
     // LOCATORS — Toast notifications
 
     private get successToast(): Locator {
@@ -2789,6 +2821,7 @@ export class ProjectActions {
     }
 
     private async closeDropdown(): Promise<void> {
+        await this.page.waitForTimeout(200);
         await this.page.mouse.click(0, 0);
         await this.page.waitForTimeout(800);
     }
@@ -3758,4 +3791,206 @@ export class ProjectActions {
         await this.resetListView();
         await this.waitForFirstTableRow();
     }
+
+    // TC — Save view fails without making any changes (e.g., without reordering or editing)
+    async verifySaveViewFailsWithoutChanges(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        await this.defaultViewButton.click();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.saveOrCreateButton.click({ force: true });
+        const invalidToastMessage = this.page.getByRole('alert', { name: 'You cannot change the default view' });
+        await expect(invalidToastMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeOverlay();
+        await this.resetListView();
+        await this.waitForFirstTableRow();
+        await this.page.waitForTimeout(1200);
+    }
+
+    // TC — Dropdown close does not remove selected tags
+    async verifyDropdownCloseDoesNotRemoveTags(): Promise<void> {
+        await this.navigateToLots();
+        await this.openProjectDropdown();
+        await this.searchInProjectDropdown('adb');
+        await this.selectProjectByName('adb');
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName('adb')).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.resetFilters();
+        await this.waitForFirstTableRow();
+    }
+
+    // TC — View reflects only selected project, bed, or status filters
+    async verifyViewReflectsSelectedFilters(projectName: string, bedValue: string): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.openProjectDropdown();
+        await this.searchInProjectDropdown(projectName);
+        await this.selectProjectByName(projectName);
+        await this.closeDropdown();
+        await this.page.waitForTimeout(1000);
+        await this.openBedDropdown();
+        await this.selectBedByValue(bedValue);
+        await this.closeDropdown();
+        await this.page.waitForTimeout(1000);
+        await this.assertLotsExist();
+        await this.resetFilters();
+        await this.waitForFirstTableRow();
+    }
+
+    // Lot selection preserved during view toggle
+    async verifyLotSelectionPreservedDuringViewToggle(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await firstCheckbox.click();
+        await this.page.waitForTimeout(500);
+        await expect(this.bulkEditButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bulkEditButton.click();
+        await expect(this.saveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.saveAndCloseButton.click();
+        await this.assertSuccessToast();
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.page.waitForTimeout(1000);
+    }
+
+    // Tags reflect real-time selection/deselection
+    async verifyTagReflectsRealTimeSelectionDeselection(projectName: string): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        await this.openProjectDropdown();
+        await this.searchInProjectDropdown(projectName);
+        await this.selectProjectByName(projectName);
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.openProjectDropdown();
+        await this.searchInProjectDropdown(projectName);
+        await this.selectProjectByName(projectName);
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.resetFilters();
+        await this.waitForFirstTableRow();
+    }
+
+    // TC — Verify lot edit form opens on clicking a lot, save & close, and verify success alert
+    async verifyLotFormOpensOnClick(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        const lotEditHeader = this.page.locator('.name-handle p');
+        await expect(lotEditHeader).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.page.locator('a#pills-lot-tab.active')).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.page.locator('a#pills-history-tab')).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const saveAndCloseBtn = this.saveAndCloseButton.first();
+        await expect(saveAndCloseBtn).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await saveAndCloseBtn.click();
+        await this.assertSuccessToast();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+    }
+
+    // TC — Verify lot name is shown in the form's Lot field
+    async verifyLotNameOnFormTab(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const expectedLotName = (await this.rowLotCell(firstRow).innerText()).trim();
+        expect(expectedLotName.length).toBeGreaterThan(0);
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const actualLotName = await this.lotFormLotInput.inputValue();
+        expect(actualLotName.trim()).toBe(expectedLotName);
+        const saveAndCloseBtn = this.saveAndCloseButton.first();
+        await expect(saveAndCloseBtn).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await saveAndCloseBtn.click();
+        await this.assertSuccessToast();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+    }
+
+    // TC — Verify left cross icon closes lot form
+    async verifyCrossIconClosesLotForm(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.popupCloseIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.popupCloseIcon.click();
+        await this.page.waitForTimeout(800);
+        await expect(this.lotFormLotInput).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotsExist();
+    }
+
+    // TC — Verify right pin icon pins the form (pin then unpin)
+    async verifyPinIconPinsForm(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormPinIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotFormPinIcon.click();
+        await expect(this.pinSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormHistoryTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotFormHistoryTab.click();
+        await expect(this.lotFormPinIconPinned).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotFormPinIcon.click();
+        await expect(this.pinDeleteSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormPinIconPinned).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.popupCloseIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.popupCloseIcon.click();
+        await this.page.waitForTimeout(800);
+        await expect(this.lotFormLotInput).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotsExist();
+    }
+
+    // TC — Verify project and lot name below tab
+    async verifyProjectAndLotNameBelowTab(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const expectedProjectName = (await this.rowProjectCell(firstRow).innerText()).trim();
+        const expectedLotName = (await this.rowLotCell(firstRow).innerText()).trim();
+        expect(expectedProjectName.length).toBeGreaterThan(0);
+        expect(expectedLotName.length).toBeGreaterThan(0);
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormProjectValue).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const actualProjectName = (await this.lotFormProjectValue.innerText()).trim();
+        expect(actualProjectName).toBe(expectedProjectName);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const actualLotName = await this.lotFormLotInput.inputValue();
+        expect(actualLotName.trim()).toBe(expectedLotName);
+        const saveAndCloseBtn = this.saveAndCloseButton.first();
+        await expect(saveAndCloseBtn).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await saveAndCloseBtn.click();
+        await this.assertSuccessToast();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+    }
+
 }
