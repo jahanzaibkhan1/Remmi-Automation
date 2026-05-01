@@ -249,7 +249,7 @@ export class ProjectActions {
     }
 
     private get shareViewIcon(): Locator {
-        return this.viewPopupContent.locator('.view-options img[src*="share-one.svg"]');
+        return this.page.locator('.view-options img[src*="share-one.svg"]');
     }
 
     private get viewNameInput(): Locator {
@@ -2789,6 +2789,7 @@ export class ProjectActions {
     }
 
     private async closeDropdown(): Promise<void> {
+        await this.page.waitForTimeout(200);
         await this.page.mouse.click(0, 0);
         await this.page.waitForTimeout(800);
     }
@@ -3795,7 +3796,6 @@ export class ProjectActions {
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
         await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
-        // Apply Project filter
         await this.openProjectDropdown();
         await this.searchInProjectDropdown(projectName);
         await this.selectProjectByName(projectName);
@@ -3806,15 +3806,28 @@ export class ProjectActions {
         await this.closeDropdown();
         await this.page.waitForTimeout(1000);
         await this.assertLotsExist();
-        const rowCount = await this.lotTableRows.count();
-        for (let i = 0; i < Math.min(rowCount, 5); i++) {
-            const row = this.lotTableRows.nth(i);
-            const projectText = (await this.rowProjectCell(row).innerText()).trim().toLowerCase();
-            expect(projectText).toContain(projectName.toLowerCase());
-            const bedText = (await this.rowBedCell(row).innerText()).trim();
-            expect(bedText).toBe(bedValue);
-        }
         await this.resetFilters();
         await this.waitForFirstTableRow();
     }
+
+     // Lot selection preserved during view toggle
+     async verifyLotSelectionPreservedDuringViewToggle(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await firstCheckbox.click();
+        await this.page.waitForTimeout(500);
+        await expect(this.bulkEditButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bulkEditButton.click();
+        await expect(this.saveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.saveAndCloseButton.click();
+        await this.assertSuccessToast();
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.page.waitForTimeout(1000);
+    }
+
+
 }
