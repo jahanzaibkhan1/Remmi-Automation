@@ -236,4 +236,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyCreatePopupFailsWithoutName();
     });
 
+    test('Test 51: Save view fails without making any changes', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySaveViewFailsWithoutChanges();
+    });
+
 });
