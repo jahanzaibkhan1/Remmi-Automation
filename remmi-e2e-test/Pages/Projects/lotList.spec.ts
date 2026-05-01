@@ -244,4 +244,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifySearchProjectInDropdown('Automation Testing')
     });
 
+    test('Test 53: Dropdown close does not remove selected tags', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyDropdownCloseDoesNotRemoveTags();
+    });
+
 });
