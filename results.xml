@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.89480000000074">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-05-01T09:13:13.387Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.742" errors="0">
-<testcase name="Lot List Page › Test 59: Sorting resets only the sorted column" classname="Pages\Projects\lotList.spec.ts" time="47.742">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="54.656958000000564">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-05-01T09:17:13.020Z" hostname="chromium" tests="1" failures="0" skipped="0" time="52.515" errors="0">
+<testcase name="Lot List Page › Test 60: Tags reflect real-time selection and deselection" classname="Pages\Projects\lotList.spec.ts" time="52.515">
 </testcase>
 </testsuite>
 </testsuites>

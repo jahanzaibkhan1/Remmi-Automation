@@ -271,4 +271,9 @@ test.describe('Lot List Page', () => {
     test('Test 59: Sorting resets only the sorted column', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifySortLotsByStatus();
     });
+
+    test('Test 60: Tags reflect real-time selection and deselection', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyTagReflectsRealTimeSelectionDeselection('Automation Testing');
+    });
+
 });
