@@ -3829,5 +3829,23 @@ export class ProjectActions {
         await this.page.waitForTimeout(1000);
     }
 
+    // Tags reflect real-time selection/deselection
+    async verifyTagReflectsRealTimeSelectionDeselection(projectName: string): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        await this.openProjectDropdown();
+        await this.searchInProjectDropdown(projectName);
+        await this.selectProjectByName(projectName);
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.openProjectDropdown();
+        await this.searchInProjectDropdown(projectName);
+        await this.selectProjectByName(projectName);
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.resetFilters();
+        await this.waitForFirstTableRow();
+    }
 
 }
