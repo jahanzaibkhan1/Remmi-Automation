@@ -810,6 +810,10 @@ export class ProjectActions {
         return this.page.locator('.p-dialog-header-close, .close-icon, i.pi-times').first();
     }
 
+    private get lotFormProjectValue(): Locator {
+        return this.page.locator('ng-select[formcontrolname="projectid"] .ng-value-label');
+    }
+
     // LOCATOR — Right pin icon
     private get lotFormPinIcon(): Locator {
         return this.page.locator('i.fa-thumbtack');
@@ -3961,6 +3965,32 @@ export class ProjectActions {
         await this.page.waitForTimeout(800);
         await expect(this.lotFormLotInput).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.assertLotsExist();
+    }
+
+    // TC — Verify project and lot name below tab
+    async verifyProjectAndLotNameBelowTab(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const expectedProjectName = (await this.rowProjectCell(firstRow).innerText()).trim();
+        const expectedLotName = (await this.rowLotCell(firstRow).innerText()).trim();
+        expect(expectedProjectName.length).toBeGreaterThan(0);
+        expect(expectedLotName.length).toBeGreaterThan(0);
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormProjectValue).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const actualProjectName = (await this.lotFormProjectValue.innerText()).trim();
+        expect(actualProjectName).toBe(expectedProjectName);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const actualLotName = await this.lotFormLotInput.inputValue();
+        expect(actualLotName.trim()).toBe(expectedLotName);
+        const saveAndCloseBtn = this.saveAndCloseButton.first();
+        await expect(saveAndCloseBtn).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await saveAndCloseBtn.click();
+        await this.assertSuccessToast();
+        await this.assertLotsExist();
+        await this.resetButton.click();
     }
 
 }
