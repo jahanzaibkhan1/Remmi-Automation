@@ -3758,4 +3758,20 @@ export class ProjectActions {
         await this.resetListView();
         await this.waitForFirstTableRow();
     }
+
+    // TC — Save view fails without making any changes (e.g., without reordering or editing)
+    async verifySaveViewFailsWithoutChanges(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        await this.defaultViewButton.click();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.saveOrCreateButton.click({ force: true });
+        const invalidToastMessage = this.page.getByRole('alert', { name: 'You cannot change the default view' });
+        await expect(invalidToastMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeOverlay();
+        await this.resetListView();
+        await this.waitForFirstTableRow();
+    }
 }
