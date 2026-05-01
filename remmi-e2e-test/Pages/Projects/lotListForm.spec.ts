@@ -27,5 +27,9 @@ test.describe('Lot Form', () => {
     test('Test 2: Verify lot name is shown on the form', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyLotNameOnFormTab();
     });
-    
+
+    test('Test 3: Left cross icon closes lot form', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyCrossIconClosesLotForm();
+    });
+
 });
