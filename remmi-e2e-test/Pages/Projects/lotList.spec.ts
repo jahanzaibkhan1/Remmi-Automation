@@ -255,5 +255,9 @@ test.describe('Lot List Page', () => {
     test('Test 55: Lot selection preserved during view toggle', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).editSelectedLotsUsingBulkEdit();
     });
-    
+
+    test('Test 56: Filter tags persist after popup close', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyDropdownCloseDoesNotRemoveTags();
+    });
+
 });
