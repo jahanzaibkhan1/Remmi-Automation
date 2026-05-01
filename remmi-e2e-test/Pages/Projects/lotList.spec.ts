@@ -253,7 +253,7 @@ test.describe('Lot List Page', () => {
     });
 
     test('Test 55: Lot selection preserved during view toggle', async ({ sessionPage }) => {
-        await new ProjectActions(sessionPage).editSelectedLotsUsingBulkEdit();
+        await new ProjectActions(sessionPage).verifyLotSelectionPreservedDuringViewToggle();
     });
 
     test('Test 56: Filter tags persist after popup close', async ({ sessionPage }) => {
@@ -262,6 +262,10 @@ test.describe('Lot List Page', () => {
 
     test('Test 57: Save does not close the View popup if there are no changes', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifySaveViewFailsWithoutChanges();
+    });
+
+    test('Test 58: Ensure Save & Close closes View popup', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).editSelectedLotsUsingBulkEdit();
     });
 
 });
