@@ -2710,6 +2710,11 @@ export class ProjectActions {
     private get saveAndCloseButton(): Locator {
         return this.page.locator('button', { hasText: /save.*close|save & close/i }).first();
     }
+
+    private get lotFormLotInput(): Locator {
+        return this.page.locator('input[formcontrolname="lot_name"]');
+    }
+
     // LOCATORS — Toast notifications
 
     private get successToast(): Locator {
@@ -3863,6 +3868,27 @@ export class ProjectActions {
         await expect(lotEditHeader).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await expect(this.page.locator('a#pills-lot-tab.active')).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await expect(this.page.locator('a#pills-history-tab')).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const saveAndCloseBtn = this.saveAndCloseButton.first();
+        await expect(saveAndCloseBtn).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await saveAndCloseBtn.click();
+        await this.assertSuccessToast();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+    }
+
+    // TC — Verify lot name is shown in the form's Lot field
+    async verifyLotNameOnFormTab(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const expectedLotName = (await this.rowLotCell(firstRow).innerText()).trim();
+        expect(expectedLotName.length).toBeGreaterThan(0);
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const actualLotName = await this.lotFormLotInput.inputValue();
+        expect(actualLotName.trim()).toBe(expectedLotName);
         const saveAndCloseBtn = this.saveAndCloseButton.first();
         await expect(saveAndCloseBtn).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await saveAndCloseBtn.click();
