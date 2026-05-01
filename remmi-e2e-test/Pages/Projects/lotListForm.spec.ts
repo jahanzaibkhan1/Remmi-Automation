@@ -24,4 +24,8 @@ test.describe('Lot Form', () => {
         await new ProjectActions(sessionPage).verifyLotFormOpensOnClick();
     });
 
+    test('Test 2: Verify lot name is shown on the form', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotNameOnFormTab();
+    });
+    
 });

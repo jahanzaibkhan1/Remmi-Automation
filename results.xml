@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="69.70398299999907">
-<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-01T09:51:09.353Z" hostname="chromium" tests="1" failures="0" skipped="0" time="67.043" errors="0">
-<testcase name="Lot Form › Test 1: Verify lot form opens on clicking a lot" classname="Pages\Projects\lotListForm.spec.ts" time="67.043">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="41.731786000002174">
+<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-01T10:00:59.510Z" hostname="chromium" tests="1" failures="0" skipped="0" time="39.067" errors="0">
+<testcase name="Lot Form › Test 2: Verify lot name is shown on the form" classname="Pages\Projects\lotListForm.spec.ts" time="39.067">
 </testcase>
 </testsuite>
 </testsuites>
