@@ -3774,6 +3774,7 @@ export class ProjectActions {
         await this.closeOverlay();
         await this.resetListView();
         await this.waitForFirstTableRow();
+        await this.page.waitForTimeout(1200);
     }
 
     // TC — Dropdown close does not remove selected tags

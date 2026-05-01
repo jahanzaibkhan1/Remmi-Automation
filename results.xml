@@ -1,6 +1,124 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="54.656958000000564">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-05-01T09:17:13.020Z" hostname="chromium" tests="1" failures="0" skipped="0" time="52.515" errors="0">
-<testcase name="Lot List Page › Test 60: Tags reflect real-time selection and deselection" classname="Pages\Projects\lotList.spec.ts" time="52.515">
+<testsuites id="" name="" tests="60" failures="0" skipped="0" errors="0" time="222.4292349999994">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-05-01T09:36:07.914Z" hostname="chromium" tests="60" failures="0" skipped="0" time="219.563" errors="0">
+<testcase name="Lot List Page › Test 1: Search for specific lot" classname="Pages\Projects\lotList.spec.ts" time="65.755">
+</testcase>
+<testcase name="Lot List Page › Test 2: Use Project dropdown in Lot tab" classname="Pages\Projects\lotList.spec.ts" time="1.192">
+</testcase>
+<testcase name="Lot List Page › Test 3: Search project in dropdown list" classname="Pages\Projects\lotList.spec.ts" time="2.877">
+</testcase>
+<testcase name="Lot List Page › Test 4: Select one project from dropdown" classname="Pages\Projects\lotList.spec.ts" time="1.88">
+</testcase>
+<testcase name="Lot List Page › Test 5: Select multiple projects from dropdown" classname="Pages\Projects\lotList.spec.ts" time="4.47">
+</testcase>
+<testcase name="Lot List Page › Test 6: Use Deselect All in Project dropdown" classname="Pages\Projects\lotList.spec.ts" time="3.878">
+</testcase>
+<testcase name="Lot List Page › Test 7: Use Select All in Project dropdown" classname="Pages\Projects\lotList.spec.ts" time="2.16">
+</testcase>
+<testcase name="Lot List Page › Test 8: Remove selected project tag using cross icon" classname="Pages\Projects\lotList.spec.ts" time="2.957">
+</testcase>
+<testcase name="Lot List Page › Test 9: Use Bed dropdown in Lot tab" classname="Pages\Projects\lotList.spec.ts" time="1.136">
+</testcase>
+<testcase name="Lot List Page › Test 10: Search bed numbers in dropdown" classname="Pages\Projects\lotList.spec.ts" time="1.271">
+</testcase>
+<testcase name="Lot List Page › Test 11: Select one bed number" classname="Pages\Projects\lotList.spec.ts" time="1.272">
+</testcase>
+<testcase name="Lot List Page › Test 12: Select multiple bed numbers" classname="Pages\Projects\lotList.spec.ts" time="1.358">
+</testcase>
+<testcase name="Lot List Page › Test 13: Select All beds option" classname="Pages\Projects\lotList.spec.ts" time="1.28">
+</testcase>
+<testcase name="Lot List Page › Test 14: Use Deselect All in Bed dropdown" classname="Pages\Projects\lotList.spec.ts" time="2.959">
+</testcase>
+<testcase name="Lot List Page › Test 15: Remove selected bed tag using cross icon" classname="Pages\Projects\lotList.spec.ts" time="1.288">
+</testcase>
+<testcase name="Lot List Page › Test 16: Use Status dropdown in Lot tab" classname="Pages\Projects\lotList.spec.ts" time="1.966">
+</testcase>
+<testcase name="Lot List Page › Test 17: Select one status from Status dropdown" classname="Pages\Projects\lotList.spec.ts" time="2.871">
+</testcase>
+<testcase name="Lot List Page › Test 18: Select multiple statuses from Status dropdown" classname="Pages\Projects\lotList.spec.ts" time="4.504">
+</testcase>
+<testcase name="Lot List Page › Test 19: Search statuses in Status dropdown" classname="Pages\Projects\lotList.spec.ts" time="2.847">
+</testcase>
+<testcase name="Lot List Page › Test 20: Use Select All in Status dropdown" classname="Pages\Projects\lotList.spec.ts" time="3.052">
+</testcase>
+<testcase name="Lot List Page › Test 21: Use Deselect All in Status dropdown" classname="Pages\Projects\lotList.spec.ts" time="3.785">
+</testcase>
+<testcase name="Lot List Page › Test 22: Remove status tag via cross icon" classname="Pages\Projects\lotList.spec.ts" time="2.105">
+</testcase>
+<testcase name="Lot List Page › Test 23: Use Price Range filter" classname="Pages\Projects\lotList.spec.ts" time="1.032">
+</testcase>
+<testcase name="Lot List Page › Test 24: Use Internal Area filter" classname="Pages\Projects\lotList.spec.ts" time="1.04">
+</testcase>
+<testcase name="Lot List Page › Test 25: Use Reset button to clear filters" classname="Pages\Projects\lotList.spec.ts" time="4.499">
+</testcase>
+<testcase name="Lot List Page › Test 26: View popup opens on View button click" classname="Pages\Projects\lotList.spec.ts" time="1.942">
+</testcase>
+<testcase name="Lot List Page › Test 27: Create new view from popup" classname="Pages\Projects\lotList.spec.ts" time="5.327">
+</testcase>
+<testcase name="Lot List Page › Test 28: Share view with agent/team" classname="Pages\Projects\lotList.spec.ts" time="3.732">
+</testcase>
+<testcase name="Lot List Page › Test 29: Save custom view with status arrangement" classname="Pages\Projects\lotList.spec.ts" time="3.064">
+</testcase>
+<testcase name="Lot List Page › Test 30: Delete an existing saved view in Lot List View" classname="Pages\Projects\lotList.spec.ts" time="2.888">
+</testcase>
+<testcase name="Lot List Page › Test 31: Search statuses in view popup" classname="Pages\Projects\lotList.spec.ts" time="2.188">
+</testcase>
+<testcase name="Lot List Page › Test 32: Hide/Unhide status using eye icon" classname="Pages\Projects\lotList.spec.ts" time="6.016">
+</testcase>
+<testcase name="Lot List Page › Test 33: Reorder statuses using drag/drop" classname="Pages\Projects\lotList.spec.ts" time="2.863">
+</testcase>
+<testcase name="Lot List Page › Test 34: Move status using arrow buttons" classname="Pages\Projects\lotList.spec.ts" time="2.287">
+</testcase>
+<testcase name="Lot List Page › Test 35: Select single lot from list" classname="Pages\Projects\lotList.spec.ts" time="1.471">
+</testcase>
+<testcase name="Lot List Page › Test 36: Select multiple lots rows" classname="Pages\Projects\lotList.spec.ts" time="0.822">
+</testcase>
+<testcase name="Lot List Page › Test 37: Use master checkbox to select all lots" classname="Pages\Projects\lotList.spec.ts" time="2.784">
+</testcase>
+<testcase name="Lot List Page › Test 38: Deselect all lots using master checkbox" classname="Pages\Projects\lotList.spec.ts" time="1.999">
+</testcase>
+<testcase name="Lot List Page › Test 39: Bulk edit becomes visible on lot selection" classname="Pages\Projects\lotList.spec.ts" time="1.779">
+</testcase>
+<testcase name="Lot List Page › Test 40: Edit selected lots using Edit Bulk" classname="Pages\Projects\lotList.spec.ts" time="3.757">
+</testcase>
+<testcase name="Lot List Page › Test 41: Sort lots by Status column" classname="Pages\Projects\lotList.spec.ts" time="0.2">
+</testcase>
+<testcase name="Lot List Page › Test 42: No Record Found visible only when no project allocation" classname="Pages\Projects\lotList.spec.ts" time="1.118">
+</testcase>
+<testcase name="Lot List Page › Test 43: Lot tab displays “No Record Found” message on invalid search" classname="Pages\Projects\lotList.spec.ts" time="2.662">
+</testcase>
+<testcase name="Lot List Page › Test 44: Prevent tag display for unselected filters" classname="Pages\Projects\lotList.spec.ts" time="1.113">
+</testcase>
+<testcase name="Lot List Page › Test 45: Handle invalid price range input" classname="Pages\Projects\lotList.spec.ts" time="2.358">
+</testcase>
+<testcase name="Lot List Page › Test 46: Handle invalid internal area range input" classname="Pages\Projects\lotList.spec.ts" time="4.966">
+</testcase>
+<testcase name="Lot List Page › Test 47: Lot edit page renders with incomplete data" classname="Pages\Projects\lotList.spec.ts" time="5.633">
+</testcase>
+<testcase name="Lot List Page › Test 48: Popup closes on cross icon click" classname="Pages\Projects\lotList.spec.ts" time="2.766">
+</testcase>
+<testcase name="Lot List Page › Test 49: Share popup fails on empty selection" classname="Pages\Projects\lotList.spec.ts" time="1.375">
+</testcase>
+<testcase name="Lot List Page › Test 50: Create lot view popup fails when attempting to save without name" classname="Pages\Projects\lotList.spec.ts" time="1.357">
+</testcase>
+<testcase name="Lot List Page › Test 51: Save view fails without making any changes" classname="Pages\Projects\lotList.spec.ts" time="1.972">
+</testcase>
+<testcase name="Lot List Page › Test 52: Project dropdown filters correctly on text input" classname="Pages\Projects\lotList.spec.ts" time="2.938">
+</testcase>
+<testcase name="Lot List Page › Test 53: Dropdown close does not remove selected tags" classname="Pages\Projects\lotList.spec.ts" time="2.953">
+</testcase>
+<testcase name="Lot List Page › Test 54: View reflects only selected project, bed, or status filters" classname="Pages\Projects\lotList.spec.ts" time="6.048">
+</testcase>
+<testcase name="Lot List Page › Test 55: Lot selection preserved during view toggle" classname="Pages\Projects\lotList.spec.ts" time="3.547">
+</testcase>
+<testcase name="Lot List Page › Test 56: Filter tags persist after popup close" classname="Pages\Projects\lotList.spec.ts" time="3.145">
+</testcase>
+<testcase name="Lot List Page › Test 57: Save does not close the View popup if there are no changes" classname="Pages\Projects\lotList.spec.ts" time="1.868">
+</testcase>
+<testcase name="Lot List Page › Test 59: Sorting resets only the sorted column" classname="Pages\Projects\lotList.spec.ts" time="0.166">
+</testcase>
+<testcase name="Lot List Page › Test 60: Tags reflect real-time selection and deselection" classname="Pages\Projects\lotList.spec.ts" time="4.968">
+</testcase>
+<testcase name="Lot List Page › Test 58: Ensure Save &amp; Close closes View popup" classname="Pages\Projects\lotList.spec.ts" time="2.057">
 </testcase>
 </testsuite>
 </testsuites>
