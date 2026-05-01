@@ -40,4 +40,8 @@ test.describe('Lot Form', () => {
         await new ProjectActions(sessionPage).verifyCrossIconClosesLotForm();
     });
 
+    test('Test 6: Verify project and lot name below tab', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyProjectAndLotNameBelowTab();
+    });
+
 });
