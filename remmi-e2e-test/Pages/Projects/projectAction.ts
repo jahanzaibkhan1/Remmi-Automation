@@ -3774,4 +3774,16 @@ export class ProjectActions {
         await this.resetListView();
         await this.waitForFirstTableRow();
     }
+
+    // TC — Dropdown close does not remove selected tags
+    async verifyDropdownCloseDoesNotRemoveTags(): Promise<void> {
+        await this.navigateToLots();
+        await this.openProjectDropdown();
+        await this.searchInProjectDropdown('adb');
+        await this.selectProjectByName('adb');
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName('adb')).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.resetFilters();
+        await this.waitForFirstTableRow();
+    }
 }

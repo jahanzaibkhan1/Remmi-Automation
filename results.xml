@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.309535000000146">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-05-01T04:21:23.908Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.94" errors="0">
-<testcase name="Lot List Page › Test 52: Project dropdown filters correctly on text input" classname="Pages\Projects\lotList.spec.ts" time="44.94">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.560023000000044">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-05-01T04:25:10.980Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.252" errors="0">
+<testcase name="Lot List Page › Test 53: Dropdown close does not remove selected tags" classname="Pages\Projects\lotList.spec.ts" time="31.252">
 </testcase>
 </testsuite>
 </testsuites>
