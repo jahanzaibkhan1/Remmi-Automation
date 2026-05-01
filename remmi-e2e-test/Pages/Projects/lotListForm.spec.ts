@@ -32,4 +32,8 @@ test.describe('Lot Form', () => {
         await new ProjectActions(sessionPage).verifyCrossIconClosesLotForm();
     });
 
+    test('Test 4: Right pin icon pins the form', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyPinIconPinsForm();
+    });
+
 });

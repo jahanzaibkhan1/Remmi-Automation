@@ -810,6 +810,29 @@ export class ProjectActions {
         return this.page.locator('.p-dialog-header-close, .close-icon, i.pi-times').first();
     }
 
+    // LOCATOR — Right pin icon
+    private get lotFormPinIcon(): Locator {
+        return this.page.locator('i.fa-thumbtack');
+    }
+
+    private get lotFormPinIconPinned(): Locator {
+        return this.page.locator('i.fa-thumbtack.pinned');
+    }
+
+    // LOCATOR — Pin delete success toast
+    private get pinDeleteSuccessToast(): Locator {
+        return this.page.locator('div[role="alert"].toast-message', { hasText: 'Pin deleted successfully' });
+    }
+
+    // LOCATOR — Pin success toast
+    private get pinSuccessToast(): Locator {
+        return this.page.locator('div[role="alert"].toast-message', { hasText: 'Pin created successfully' });
+    }
+
+    private get lotFormHistoryTab(): Locator {
+        return this.page.locator('a#pills-history-tab');
+    }
+
     private get firstLotRow(): Locator {
         return this.lotTableRows.first();
     }
@@ -3908,6 +3931,31 @@ export class ProjectActions {
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
         await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.popupCloseIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.popupCloseIcon.click();
+        await this.page.waitForTimeout(800);
+        await expect(this.lotFormLotInput).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotsExist();
+    }
+
+    // TC — Verify right pin icon pins the form (pin then unpin)
+    async verifyPinIconPinsForm(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormPinIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotFormPinIcon.click();
+        await expect(this.pinSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormHistoryTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotFormHistoryTab.click();
+        await expect(this.lotFormPinIconPinned).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotFormPinIcon.click();
+        await expect(this.pinDeleteSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormPinIconPinned).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await expect(this.popupCloseIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.popupCloseIcon.click();
         await this.page.waitForTimeout(800);
