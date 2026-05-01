@@ -248,4 +248,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyDropdownCloseDoesNotRemoveTags();
     });
 
+    test('Test 54: View reflects only selected project, bed, or status filters', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyViewReflectsSelectedFilters('Adb', '2');
+    });
+
 });
