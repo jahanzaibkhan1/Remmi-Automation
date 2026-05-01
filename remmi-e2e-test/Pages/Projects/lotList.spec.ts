@@ -252,4 +252,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyViewReflectsSelectedFilters('Adb', '2');
     });
 
+    test('Test 55: Lot selection preserved during view toggle', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).editSelectedLotsUsingBulkEdit();
+    });
+    
 });
