@@ -260,4 +260,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyDropdownCloseDoesNotRemoveTags();
     });
 
+    test('Test 57: Save does not close the View popup if there are no changes', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySaveViewFailsWithoutChanges();
+    });
+
 });
