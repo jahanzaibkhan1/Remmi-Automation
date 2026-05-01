@@ -36,4 +36,8 @@ test.describe('Lot Form', () => {
         await new ProjectActions(sessionPage).verifyPinIconPinsForm();
     });
 
+    test('Test 5: Verify tabs cross icon closes form', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyCrossIconClosesLotForm();
+    });
+
 });
