@@ -240,4 +240,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifySaveViewFailsWithoutChanges();
     });
 
+    test('Test 52: Project dropdown filters correctly on text input', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySearchProjectInDropdown('Automation Testing')
+    });
+
 });
