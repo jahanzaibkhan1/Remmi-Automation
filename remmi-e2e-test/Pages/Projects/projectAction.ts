@@ -3811,8 +3811,8 @@ export class ProjectActions {
         await this.waitForFirstTableRow();
     }
 
-     // Lot selection preserved during view toggle
-     async verifyLotSelectionPreservedDuringViewToggle(): Promise<void> {
+    // Lot selection preserved during view toggle
+    async verifyLotSelectionPreservedDuringViewToggle(): Promise<void> {
         await this.navigateToLots();
         await this.assertLotsExist();
         await this.resetButton.click();
@@ -3847,6 +3847,28 @@ export class ProjectActions {
         await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.resetFilters();
         await this.waitForFirstTableRow();
+    }
+
+    // TC — Verify lot edit form opens on clicking a lot, save & close, and verify success alert
+    async verifyLotFormOpensOnClick(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        const lotEditHeader = this.page.locator('.name-handle p');
+        await expect(lotEditHeader).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.page.locator('a#pills-lot-tab.active')).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.page.locator('a#pills-history-tab')).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const saveAndCloseBtn = this.saveAndCloseButton.first();
+        await expect(saveAndCloseBtn).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await saveAndCloseBtn.click();
+        await this.assertSuccessToast();
+        await this.assertLotsExist();
+        await this.resetButton.click();
     }
 
 }
