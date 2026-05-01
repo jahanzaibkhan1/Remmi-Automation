@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="33.560023000000044">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-05-01T04:25:10.980Z" hostname="chromium" tests="1" failures="0" skipped="0" time="31.252" errors="0">
-<testcase name="Lot List Page › Test 53: Dropdown close does not remove selected tags" classname="Pages\Projects\lotList.spec.ts" time="31.252">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="52.125680999999865">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-05-01T04:36:47.594Z" hostname="chromium" tests="1" failures="0" skipped="0" time="49.124" errors="0">
+<testcase name="Lot List Page › Test 54: View reflects only selected project, bed, or status filters" classname="Pages\Projects\lotList.spec.ts" time="49.124">
 </testcase>
 </testsuite>
 </testsuites>

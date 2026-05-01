@@ -3786,4 +3786,35 @@ export class ProjectActions {
         await this.resetFilters();
         await this.waitForFirstTableRow();
     }
+
+    // TC — View reflects only selected project, bed, or status filters
+    async verifyViewReflectsSelectedFilters(projectName: string, bedValue: string): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        // Apply Project filter
+        await this.openProjectDropdown();
+        await this.searchInProjectDropdown(projectName);
+        await this.selectProjectByName(projectName);
+        await this.closeDropdown();
+        await this.page.waitForTimeout(1000);
+        await this.openBedDropdown();
+        await this.selectBedByValue(bedValue);
+        await this.closeDropdown();
+        await this.page.waitForTimeout(1000);
+        await this.assertLotsExist();
+        const rowCount = await this.lotTableRows.count();
+        for (let i = 0; i < Math.min(rowCount, 5); i++) {
+            const row = this.lotTableRows.nth(i);
+            const projectText = (await this.rowProjectCell(row).innerText()).trim().toLowerCase();
+            expect(projectText).toContain(projectName.toLowerCase());
+            const bedText = (await this.rowBedCell(row).innerText()).trim();
+            expect(bedText).toBe(bedValue);
+        }
+        await this.resetFilters();
+        await this.waitForFirstTableRow();
+    }
 }
