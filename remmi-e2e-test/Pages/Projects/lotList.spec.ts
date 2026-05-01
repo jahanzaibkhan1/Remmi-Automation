@@ -268,4 +268,7 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).editSelectedLotsUsingBulkEdit();
     });
 
+    test('Test 59: Sorting resets only the sorted column', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySortLotsByStatus();
+    });
 });

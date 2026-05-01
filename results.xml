@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.387617000002415">
-<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-05-01T09:11:40.843Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.192" errors="0">
-<testcase name="Lot List Page › Test 58: Ensure Save &amp; Close closes View popup" classname="Pages\Projects\lotList.spec.ts" time="36.192">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.89480000000074">
+<testsuite name="Pages\Projects\lotList.spec.ts" timestamp="2026-05-01T09:13:13.387Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.742" errors="0">
+<testcase name="Lot List Page › Test 59: Sorting resets only the sorted column" classname="Pages\Projects\lotList.spec.ts" time="47.742">
 </testcase>
 </testsuite>
 </testsuites>
