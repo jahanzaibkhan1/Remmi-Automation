@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="106.03842100000008">
-<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-01T11:02:17.831Z" hostname="chromium" tests="1" failures="0" skipped="0" time="103.854" errors="0">
-<testcase name="Lot Form › Test 4: Right pin icon pins the form" classname="Pages\Projects\lotListForm.spec.ts" time="103.854">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="73.51554100000114">
+<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-01T11:23:13.913Z" hostname="chromium" tests="1" failures="0" skipped="0" time="71.02" errors="0">
+<testcase name="Lot Form › Test 5: Verify tabs cross icon closes form" classname="Pages\Projects\lotListForm.spec.ts" time="71.02">
 </testcase>
 </testsuite>
 </testsuites>
