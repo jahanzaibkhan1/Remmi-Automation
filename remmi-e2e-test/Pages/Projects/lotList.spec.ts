@@ -264,16 +264,17 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifySaveViewFailsWithoutChanges();
     });
 
-    test('Test 58: Ensure Save & Close closes View popup', async ({ sessionPage }) => {
-        await new ProjectActions(sessionPage).editSelectedLotsUsingBulkEdit();
-    });
-
-    test('Test 59: Sorting resets only the sorted column', async ({ sessionPage }) => {
+    test('Test 58: Sorting resets only the sorted column', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifySortLotsByStatus();
     });
 
-    test('Test 60: Tags reflect real-time selection and deselection', async ({ sessionPage }) => {
+    test('Test 59: Tags reflect real-time selection and deselection', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyTagReflectsRealTimeSelectionDeselection('Automation Testing');
     });
+
+    test('Test 60: Ensure Save & Close closes View popup', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySaveViewFailsWithoutChanges();
+    });
+
 
 });
