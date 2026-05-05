@@ -44,4 +44,8 @@ test.describe('Lot Form', () => {
         await new ProjectActions(sessionPage).verifyProjectAndLotNameBelowTab();
     });
 
+    test('Test 7: Apartment Details and History tabs are visible', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyApartmentAndHistoryTabsVisible();
+    });
+    
 });
