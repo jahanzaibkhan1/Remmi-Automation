@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="95.15806399999931">
-<testsuite name="Pages\Listing\Listingview.spec.ts" timestamp="2026-05-05T09:23:08.447Z" hostname="chromium" tests="1" failures="0" skipped="0" time="90.621" errors="0">
-<testcase name="Listing side Menu Tests - Remmi E2E › Test 34: Creating a new list view" classname="Pages\Listing\Listingview.spec.ts" time="90.621">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.19924799999967">
+<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-05T10:36:27.514Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.632" errors="0">
+<testcase name="Lot Form › Test 7: Apartment Details and History tabs are visible" classname="Pages\Projects\lotListForm.spec.ts" time="29.632">
 </testcase>
 </testsuite>
 </testsuites>
