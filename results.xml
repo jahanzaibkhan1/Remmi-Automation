@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="32.19924799999967">
-<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-05T10:36:27.514Z" hostname="chromium" tests="1" failures="0" skipped="0" time="29.632" errors="0">
-<testcase name="Lot Form › Test 7: Apartment Details and History tabs are visible" classname="Pages\Projects\lotListForm.spec.ts" time="29.632">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.59139299999922">
+<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-05T12:00:31.932Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.37" errors="0">
+<testcase name="Lot Form › Test 8: Verify project dropdown is auto-filled" classname="Pages\Projects\lotListForm.spec.ts" time="58.37">
 </testcase>
 </testsuite>
 </testsuites>

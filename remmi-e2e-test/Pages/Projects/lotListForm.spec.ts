@@ -47,5 +47,9 @@ test.describe('Lot Form', () => {
     test('Test 7: Apartment Details and History tabs are visible', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyApartmentAndHistoryTabsVisible();
     });
+
+    test('Test 8: Verify project dropdown is auto-filled', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyProjectDropdownAutoFilled();
+    });
     
 });
