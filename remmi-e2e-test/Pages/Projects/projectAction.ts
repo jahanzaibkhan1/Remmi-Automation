@@ -4022,5 +4022,21 @@ export class ProjectActions {
         await this.closePopupIfVisible();
     }
 
+    // TC — Verify project dropdown is auto-filled
+    async verifyProjectDropdownAutoFilled(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const expectedProjectName = (await this.rowProjectCell(firstRow).innerText()).trim();
+        expect(expectedProjectName.length).toBeGreaterThan(0);
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormProjectValue).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const actualProjectName = (await this.lotFormProjectValue.innerText()).trim();
+        expect(actualProjectName).toBe(expectedProjectName);
+        await this.closePopupIfVisible();
+    }
+
 
 }
