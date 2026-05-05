@@ -3209,6 +3209,12 @@ export class ListingActions {
         await expect(adminViewDropdown).toBeVisible({ timeout: 10000 });
         await adminViewDropdown.click();
         await expect(this.page.getByText(viewName, { exact: true }).first()).toBeVisible({ timeout: 10000 });
+
+        const defaultViewOption = this.page.getByText(/^Admin default$/i).first();
+        await expect(defaultViewOption).toBeVisible({ timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+        await defaultViewOption.click();
+        await this.page.waitForTimeout(1000);
         // Close Admin View focus (click away)
         await this.page.mouse.click(0, 0);
         await this.page.waitForTimeout(500);
