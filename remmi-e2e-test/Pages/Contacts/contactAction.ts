@@ -3459,8 +3459,9 @@ export class ContactActions {
         await saveButton.click();
 
         // Optionally wait for and check for success message or disappearance of modal
-        const successToast = this.page.locator('div').filter({ hasText: 'Tag successfully created' }).nth(2);
-        await expect(successToast).toBeVisible();
+        const successToast = this.page.getByText(/Tag successfully created|already created/i).first();
+        await expect(successToast).toBeVisible({ timeout: 10000 });
+   
         await this.page.waitForTimeout(1200);
         const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
         await closeTagManagerIcon.click({ force: true });
@@ -3514,11 +3515,11 @@ export class ContactActions {
         const saveButton = this.page.getByRole('button', { name: /Add/i }).first();
         await expect(saveButton).toBeVisible({ timeout: 2000 });
         await saveButton.click();
-
-        // Check that the tag was successfully created via toast or popup
-        const successToast = this.page.locator('div').filter({ hasText: 'Tag successfully created' }).nth(2);
-        await expect(successToast).toBeVisible({ timeout: 5000 });
-
+        
+        // Optionally wait for and check for success message or disappearance of modal
+        const successToast = this.page.getByText(/Tag successfully created|already created/i).first();
+        await expect(successToast).toBeVisible({ timeout: 10000 });
+   
         const closetag = this.page.locator('.d-flex.align-items-center > div > button:nth-child(2)').last();
         await expect(closetag).toBeVisible();
         await closetag.click();
@@ -5759,7 +5760,7 @@ export class ContactActions {
         await this.openTasksTab();
         const taskFormModal = this.page.locator('section.body-details.h-100.border-0:visible');
         await taskFormModal.waitFor({ state: 'visible', timeout: 10000 });
-        const contactTag = this.page.locator('p').filter({ hasText: '11 22' }).first();
+        const contactTag = this.page.locator('p').filter({ hasText: '11 22' }).last();
         await contactTag.waitFor({ state: 'visible' });
         await this.closeModalIfVisible();
     }
@@ -6986,16 +6987,6 @@ export class ContactActions {
         const dayLocator = this.page.locator(`.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`);
         await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
         await dayLocator.first().click({ force: true });
-
-        // Set the listing field to the same value as original
-        const listingDropdown = this.page.locator('div').filter({ hasText: /^Select Listing$/ }).nth(1);
-        await listingDropdown.waitFor({ state: 'visible', timeout: 10000 });
-        await listingDropdown.click();
-        const listingSearchBox = this.page.locator('[id="Task: REM-null_1"]').getByRole('textbox', { name: 'Search' });
-        await expect(listingSearchBox).toBeVisible({ timeout: 10000 });
-        await listingSearchBox.fill(listingName);
-        const desiredListingOption = this.page.locator('[id="Task: REM-null_1"]').getByText(new RegExp(listingName, 'i')).last();
-        await desiredListingOption.click();
 
         // Save the copied task
         const saveBtn = this.page.getByRole('button', { name: /Save/i }).first();

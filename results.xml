@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="101.36197199999914">
-<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-01T11:34:18.734Z" hostname="chromium" tests="1" failures="0" skipped="0" time="98.862" errors="0">
-<testcase name="Lot Form › Test 6: Verify project and lot name below tab" classname="Pages\Projects\lotListForm.spec.ts" time="98.862">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.59139299999922">
+<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-05T12:00:31.932Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.37" errors="0">
+<testcase name="Lot Form › Test 8: Verify project dropdown is auto-filled" classname="Pages\Projects\lotListForm.spec.ts" time="58.37">
 </testcase>
 </testsuite>
 </testsuites>

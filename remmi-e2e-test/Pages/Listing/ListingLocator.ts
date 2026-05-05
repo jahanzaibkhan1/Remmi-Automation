@@ -115,7 +115,7 @@ export class ListingLocators {
     }
 
     adminDefaultButton(): Locator {
-        return this.page.getByText('Admin Default').first()
+        return this.page.locator('._view-btn').first();
     }
 
     // Admin view button (if any specific admin-only UI element needed)
