@@ -154,7 +154,7 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
 
   test('Test 23: Verify that entering an address auto-fills the relevant fields', async ({ sessionPage }) => {
     const contact = new ContactActions(sessionPage);
-    await contact.verifyAddressAutoFill('1600 Amphitheatre');
+    await contact.verifyAddressAutoFill('1600 Amphitheatre Road');
   });
 
   test('Test 24: Verify that entering data in address fields updates the main address field', async ({ sessionPage }) => {

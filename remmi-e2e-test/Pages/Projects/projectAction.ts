@@ -837,6 +837,12 @@ export class ProjectActions {
         return this.page.locator('a#pills-history-tab');
     }
 
+    // LOCATORS — Lot form tabs
+
+    private get lotFormApartmentDetailsTab(): Locator {
+        return this.page.locator('a#pills-lot-tab');
+    }
+
     private get firstLotRow(): Locator {
         return this.lotTableRows.first();
     }
@@ -958,6 +964,16 @@ export class ProjectActions {
         const currentUrl = this.page.url().split(/[?#]/)[0];
         if (!currentUrl.endsWith(ProjectActions.PROJECTS_URL)) {
             await this.page.goto(ProjectActions.PROJECTS_URL);
+        }
+    }
+
+    /**
+     * Clicks the popup close icon if visible. Waits for the close icon to appear,
+     */
+    async closePopupIfVisible(): Promise<void> {
+        if (await this.popupCloseIcon.isVisible({ timeout: 20000 }).catch(() => false)) {
+            await this.popupCloseIcon.click();
+            await this.page.waitForTimeout(500);
         }
     }
 
@@ -3992,5 +4008,35 @@ export class ProjectActions {
         await this.assertLotsExist();
         await this.resetButton.click();
     }
+
+    // TC — Verify Apartment Details and History tabs are visible
+    async verifyApartmentAndHistoryTabsVisible(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        await this.rowLotCell(firstRow).click();
+        await expect(this.lotFormApartmentDetailsTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormApartmentDetailsTab).toHaveClass(/active/);
+        await expect(this.lotFormHistoryTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closePopupIfVisible();
+    }
+
+    // TC — Verify project dropdown is auto-filled
+    async verifyProjectDropdownAutoFilled(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const expectedProjectName = (await this.rowProjectCell(firstRow).innerText()).trim();
+        expect(expectedProjectName.length).toBeGreaterThan(0);
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormProjectValue).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const actualProjectName = (await this.lotFormProjectValue.innerText()).trim();
+        expect(actualProjectName).toBe(expectedProjectName);
+        await this.closePopupIfVisible();
+    }
+
 
 }
