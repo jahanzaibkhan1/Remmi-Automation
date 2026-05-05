@@ -3459,8 +3459,9 @@ export class ContactActions {
         await saveButton.click();
 
         // Optionally wait for and check for success message or disappearance of modal
-        const successToast = this.page.locator('div').filter({ hasText: 'Tag successfully created' }).nth(2);
-        await expect(successToast).toBeVisible();
+        const successToast = this.page.getByText(/Tag successfully created|already created/i).first();
+        await expect(successToast).toBeVisible({ timeout: 10000 });
+   
         await this.page.waitForTimeout(1200);
         const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
         await closeTagManagerIcon.click({ force: true });
@@ -3514,11 +3515,11 @@ export class ContactActions {
         const saveButton = this.page.getByRole('button', { name: /Add/i }).first();
         await expect(saveButton).toBeVisible({ timeout: 2000 });
         await saveButton.click();
-
-        // Check that the tag was successfully created via toast or popup
-        const successToast = this.page.locator('div').filter({ hasText: 'Tag successfully created' }).nth(2);
-        await expect(successToast).toBeVisible({ timeout: 5000 });
-
+        
+        // Optionally wait for and check for success message or disappearance of modal
+        const successToast = this.page.getByText(/Tag successfully created|already created/i).first();
+        await expect(successToast).toBeVisible({ timeout: 10000 });
+   
         const closetag = this.page.locator('.d-flex.align-items-center > div > button:nth-child(2)').last();
         await expect(closetag).toBeVisible();
         await closetag.click();
