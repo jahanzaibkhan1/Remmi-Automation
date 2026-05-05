@@ -1,108 +1,82 @@
-<testsuites id="" name="" tests="37" failures="0" skipped="0" errors="0" time="253.07050700000116">
-<testsuite name="Pages\Contacts\contactForm.spec.ts" timestamp="2026-05-05T06:59:01.067Z" hostname="chromium" tests="37" failures="0" skipped="0" time="249.77" errors="0">
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 1: Verify that the contact form opens successfully" classname="Pages\Contacts\contactForm.spec.ts" time="33.406">
-<system-out>
-<![CDATA[Contact Form open successfully
-]]>
-</system-out>
+<testsuites id="" name="" tests="39" failures="0" skipped="0" errors="0" time="476.55669200000165">
+<testsuite name="Pages\Contacts\taskForm.spec.ts" timestamp="2026-05-05T08:14:07.227Z" hostname="chromium" tests="39" failures="0" skipped="0" time="474.144" errors="0">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 1: Verify that Title, Due Date, Staff, Task Status, and Task Type are mandatory fields in the &quot;Create New Task&quot; popup." classname="Pages\Contacts\taskForm.spec.ts" time="74.105">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 2: Verify that the contact form can be closed with the X icon" classname="Pages\Contacts\contactForm.spec.ts" time="3.567">
-<system-out>
-<![CDATA[Contact form was closed using the X icon successfully
-]]>
-</system-out>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 2: Verify that a dropdown list opens when clicking on Task Type field." classname="Pages\Contacts\taskForm.spec.ts" time="3.539">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 3: Verify image upload functionality is removed from the contact form" classname="Pages\Contacts\contactForm.spec.ts" time="3.613">
-<system-out>
-<![CDATA[Verified: Image upload functionality is not displayed on the contact form.
-]]>
-</system-out>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 3: Verify that a dropdown list opens when clicking on Task Status field." classname="Pages\Contacts\taskForm.spec.ts" time="3.596">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 4: Verify that the contact initials placeholder is displayed" classname="Pages\Contacts\contactForm.spec.ts" time="3.751">
-<system-out>
-<![CDATA[✅ Verified initials: OF
-]]>
-</system-out>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 4: Verify that selecting &quot;Lead Management&quot; from Task Type triggers the Lead Name dropdown in the task form." classname="Pages\Contacts\taskForm.spec.ts" time="3.426">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 5: Verify that selecting a contact type updates the type dropdown" classname="Pages\Contacts\contactForm.spec.ts" time="5.188">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 5: Verify that a task is created for the selected lead when lead Name is selected from the dropdown." classname="Pages\Contacts\taskForm.spec.ts" time="12.937">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 6: Verify required fields validation for Company contact type" classname="Pages\Contacts\contactForm.spec.ts" time="5.24">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 6: Verify that selecting a module shows a relevant dropdown list for that module (e.g., Contacts, Properties, Projects)." classname="Pages\Contacts\taskForm.spec.ts" time="2.774">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 7: Verify that the first word of each error message starts with a capital letter" classname="Pages\Contacts\contactForm.spec.ts" time="5.42">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 7: Verify that selecting a contact from the dropdown creates a task linked to that contact." classname="Pages\Contacts\taskForm.spec.ts" time="12.07">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 8: Verify required fields validation for Individual contact type" classname="Pages\Contacts\contactForm.spec.ts" time="4.47">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 8: Verify that the contact tag is displayed correctly in the task form." classname="Pages\Contacts\taskForm.spec.ts" time="4.691">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 9: Verify that clicking &quot;Save&quot; button saves the contact form" classname="Pages\Contacts\contactForm.spec.ts" time="5.488">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 9: Verify that selecting the &quot;Property&quot; module shows a dropdown list for selecting a property." classname="Pages\Contacts\taskForm.spec.ts" time="4.541">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 10: Verify that clicking &quot;Save &amp; Close&quot; saves and closes the contact form" classname="Pages\Contacts\contactForm.spec.ts" time="3.201">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 10: Verify that the contact form displays correctly when opening or creating a contact from a task." classname="Pages\Contacts\taskForm.spec.ts" time="5.034">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 11: Verify that &quot;Select All&quot; changes to &quot;Deselect All&quot; after selecting all check circles" classname="Pages\Contacts\contactForm.spec.ts" time="5.07">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 11: Verify that selecting a property from the dropdown creates a task linked to that property." classname="Pages\Contacts\taskForm.spec.ts" time="15.271">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 12: Verify validation for invalid email format in contact form" classname="Pages\Contacts\contactForm.spec.ts" time="5.738">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 12: Verify that after creating a task, the associated property is correctly shown when the task is opened" classname="Pages\Contacts\taskForm.spec.ts" time="8.958">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 13: Verify that clicking the &quot;+&quot; icon adds a new email field" classname="Pages\Contacts\contactForm.spec.ts" time="4.568">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 13: Verify that a task created for a specific property is only visible within that property and the task module" classname="Pages\Contacts\taskForm.spec.ts" time="5.059">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 14: Verify that clicking the &quot;+&quot; icon adds a new phone field" classname="Pages\Contacts\contactForm.spec.ts" time="4.566">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 14: Verify that selecting the &quot;Project&quot; module shows a dropdown list for selecting a project." classname="Pages\Contacts\taskForm.spec.ts" time="2.687">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 15: Verify that an email or phone field can be deleted" classname="Pages\Contacts\contactForm.spec.ts" time="6.878">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 15: Verify that selecting a project from the dropdown creates a task linked to that project." classname="Pages\Contacts\taskForm.spec.ts" time="9.378">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 16: Verify that clicking the correct (✔) button sets an email as the primary email" classname="Pages\Contacts\contactForm.spec.ts" time="4.777">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 16: Verify that selecting the &quot;Listing&quot; module shows a dropdown list for selecting a listing." classname="Pages\Contacts\taskForm.spec.ts" time="4.592">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 17: Attempt to save a tag without entering a name" classname="Pages\Contacts\contactForm.spec.ts" time="6.671">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 17: Verify that selecting a listing from the dropdown creates a task linked to that listing." classname="Pages\Contacts\taskForm.spec.ts" time="10.764">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 18: Verify that a company is successfully associated with the contact" classname="Pages\Contacts\contactForm.spec.ts" time="5.592">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 18: Verify that after creating a task, the associated listing is correctly shown when the task is opened" classname="Pages\Contacts\taskForm.spec.ts" time="21.942">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 19: Try to associate the same company twice" classname="Pages\Contacts\contactForm.spec.ts" time="5.609">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 19: Verify that a task created for a specific listing is only visible within that listing and the task module" classname="Pages\Contacts\taskForm.spec.ts" time="9.729">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 20: Verify that clicking on a company tag opens the company form" classname="Pages\Contacts\contactForm.spec.ts" time="5.996">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 20: Verify that recurring task checkbox shows a dropdown with &quot;Weekly,&quot; &quot;Monthly,&quot; and &quot;Yearly&quot; options." classname="Pages\Contacts\taskForm.spec.ts" time="4.367">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 21: Verify that a company tag can be removed" classname="Pages\Contacts\contactForm.spec.ts" time="6.535">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 21: Verify that selecting &quot;Weekly&quot; from the recurring task dropdown sends email/notifications weekly." classname="Pages\Contacts\taskForm.spec.ts" time="26.266">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 22: Verify that address suggestions appear while typing in the address field" classname="Pages\Contacts\contactForm.spec.ts" time="8.285">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 22: Verify that clicking &quot;Sync Calendar&quot; allows selection of a time period for task reminders." classname="Pages\Contacts\taskForm.spec.ts" time="25.437">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 23: Verify that entering an address auto-fills the relevant fields" classname="Pages\Contacts\contactForm.spec.ts" time="21.276">
-<system-out>
-<![CDATA[Contact Form open successfully
-Autofilled Address Values: {
-  building_name: [32m''[39m,
-  unit_no: [32m''[39m,
-  streetNo: [32m'1600'[39m,
-  streetName: [32m'Amphitheatre Road'[39m,
-  suburb: [32m''[39m,
-  state: [32m'VIC'[39m,
-  postCode: [32m'3468'[39m,
-  country: [32m'Australia'[39m
-}
-]]>
-</system-out>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 23: Verify that setting a reminder time sends an email or notification at the selected interval." classname="Pages\Contacts\taskForm.spec.ts" time="2.133">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 24: Verify that entering data in address fields updates the main address field" classname="Pages\Contacts\contactForm.spec.ts" time="10.162">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 24: Verify that syncing the calendar with selected days sends email/notifications for the chosen period." classname="Pages\Contacts\taskForm.spec.ts" time="25.816">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 25: Verify that all address fields are displayed correctly" classname="Pages\Contacts\contactForm.spec.ts" time="6.113">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 25: Verify that selecting a team from the dropdown shows the task to all users in that team." classname="Pages\Contacts\taskForm.spec.ts" time="25.2">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 26: Verify that the Tag Manager popup opens" classname="Pages\Contacts\contactForm.spec.ts" time="4.183">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 26: Verify that users added to the selected team can view the task." classname="Pages\Contacts\taskForm.spec.ts" time="3.327">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 27: Verify that a new tag type can be added" classname="Pages\Contacts\contactForm.spec.ts" time="7.565">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 27: Verify that when a comment is added in the &quot;Additional Comments&quot; section, a notification is sent to the selected staff member." classname="Pages\Contacts\taskForm.spec.ts" time="13.244">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 28: Search for a non-existent tag in Tag Manager" classname="Pages\Contacts\contactForm.spec.ts" time="5.782">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 28: Verify that the added comment appears below the &quot;Additional Comments&quot; section once the task is saved." classname="Pages\Contacts\taskForm.spec.ts" time="19.079">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 29: Verify that entering a valid tag and pressing &quot;Enter&quot; creates a tag" classname="Pages\Contacts\contactForm.spec.ts" time="5.099">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 29: Verify that after adding a file and saving the task, the file appears only once even if &quot;Save&quot; is clicked twice" classname="Pages\Contacts\taskForm.spec.ts" time="5.826">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 30: Verify that removing a tag updates the tag list" classname="Pages\Contacts\contactForm.spec.ts" time="5.276">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 30: Verify that the added file appears correctly after saving the task." classname="Pages\Contacts\taskForm.spec.ts" time="25.099">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 31: Verify that a tag remains in the list after form save" classname="Pages\Contacts\contactForm.spec.ts" time="10">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 31: Verify that after creating a task, the &quot;Create Sub Task&quot; option becomes visible." classname="Pages\Contacts\taskForm.spec.ts" time="11.213">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 32: Verify that double clicking a tag adds it to the tag field" classname="Pages\Contacts\contactForm.spec.ts" time="6.67">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 32: Verify that clicking on the &quot;Create Sub Task&quot; button shows a field below the staff section to enter a sub task title." classname="Pages\Contacts\taskForm.spec.ts" time="4.379">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 33: Verify that tags can be searched in the Tag Manager" classname="Pages\Contacts\contactForm.spec.ts" time="3.878">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 33: Verify that entering a title in the sub task field and saving creates the sub task." classname="Pages\Contacts\taskForm.spec.ts" time="7.497">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 34: Verify that clicking &quot;X&quot; on the Tag Manager popup closes it" classname="Pages\Contacts\contactForm.spec.ts" time="3.804">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 34: Verify that the sub task is visible within the parent task after creation." classname="Pages\Contacts\taskForm.spec.ts" time="6.997">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 35: Verify that clicking &quot;Cancel&quot; on the tag creation popup closes it" classname="Pages\Contacts\contactForm.spec.ts" time="5.154">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 35: Verify that when the sub task is opened, a parent task dropdown is shown next to the team field." classname="Pages\Contacts\taskForm.spec.ts" time="8.539">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 36: Verify that clicking &quot;Save&quot; after filling all required fields in tag creation successfully saves the tag" classname="Pages\Contacts\contactForm.spec.ts" time="5.133">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 36: Verify that selecting a different parent task from the parent task dropdown updates the sub task’s parent task." classname="Pages\Contacts\taskForm.spec.ts" time="8.571">
 </testcase>
-<testcase name="Contacts side Menu Tests - Remmi E2E › Test 37: Verify that clicking &quot;Save &amp; Close&quot; after filling all required fields in tag creation saves and closes the form" classname="Pages\Contacts\contactForm.spec.ts" time="6.046">
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 37: Verify that all fields of the original task are copied correctly to the new task when the &quot;Copy Task&quot; option is used." classname="Pages\Contacts\taskForm.spec.ts" time="12.592">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 38: Verify that changes to the original task do not affect the copied task after it has been created." classname="Pages\Contacts\taskForm.spec.ts" time="18.943">
+</testcase>
+<testcase name="Contacts side Menu Tests - Remmi E2E › Test 39: Verify that the task is visible in the task list after it is saved." classname="Pages\Contacts\taskForm.spec.ts" time="4.526">
 </testcase>
 </testsuite>
 </testsuites>
