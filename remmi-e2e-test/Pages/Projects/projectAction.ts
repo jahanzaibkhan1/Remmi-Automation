@@ -4221,4 +4221,43 @@ export class ProjectActions {
         await this.closePopupIfVisible();
     }
 
+    // Verify Save button saves form without closing
+    async verifySaveButtonSavesWithoutClosing(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotFormBedInput.fill('4');
+        await this.page.waitForTimeout(300);
+        expect(await this.lotFormBedInput.inputValue()).toBe('4');
+        await this.lotFormBathInput.fill('3');
+        await this.page.waitForTimeout(300);
+        expect(await this.lotFormBathInput.inputValue()).toBe('3');
+        await this.lotFormAspectInput.fill('East');
+        await this.page.waitForTimeout(300);
+        expect(await this.lotFormAspectInput.inputValue()).toBe('East');
+        const saveButton = this.page.locator('button', { hasText: /^save$/i }).first();
+        await expect(saveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await saveButton.click();
+        await this.assertSuccessToast();
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        expect(await this.lotFormBedInput.inputValue()).toBe('4');
+        expect(await this.lotFormBathInput.inputValue()).toBe('3');
+        expect(await this.lotFormAspectInput.inputValue()).toBe('East');
+        await this.closePopupIfVisible();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const updatedRow = this.lotTableRows.first();
+        await this.rowLotCell(updatedRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        expect(await this.lotFormBedInput.inputValue()).toBe('4');
+        expect(await this.lotFormBathInput.inputValue()).toBe('3');
+        expect(await this.lotFormAspectInput.inputValue()).toBe('East');
+        await this.closePopupIfVisible();
+    }
+
 }
