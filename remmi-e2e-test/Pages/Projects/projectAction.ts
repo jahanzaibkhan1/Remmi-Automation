@@ -4779,4 +4779,21 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Use 'Deselect All' in Project dropdown (uncheck after select all)
+ */
+    async useDeselectAllInProjectDropdown(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openProjectDropdown();
+        await expect(this.projectDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const totalOptions = await this.projectDropdownOptions.count();
+        expect(totalOptions).toBeGreaterThan(0);
+        await this.projectDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+        await this.projectDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+        await this.cleanupAfterLotTest();
+    }
+
 }

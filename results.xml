@@ -1,24 +1,6 @@
-<testsuites id="" name="" tests="8" failures="0" skipped="0" errors="0" time="93.1066569999978">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-06T10:54:51.581Z" hostname="chromium" tests="8" failures="0" skipped="0" time="91.016" errors="0">
-<testcase name="Lot List Page › TC_01: Verify only new values are shown on creation" classname="Pages\Projects\precinctLotList.spec.ts" time="34.532">
-<system-out>
-<![CDATA[A Too Around Zowie Scarcely Er Oxygenate Husk Upsidedown Boastfully Where
-]]>
-</system-out>
-</testcase>
-<testcase name="Lot List Page › TC_02: Search a lot by keyword" classname="Pages\Projects\precinctLotList.spec.ts" time="2.809">
-</testcase>
-<testcase name="Lot List Page › TC_03: Search for a non-existing lot" classname="Pages\Projects\precinctLotList.spec.ts" time="2.797">
-</testcase>
-<testcase name="Lot List Page › TC_04: Open Project dropdown and verify options" classname="Pages\Projects\precinctLotList.spec.ts" time="7.334">
-</testcase>
-<testcase name="Lot List Page › TC_05: Search a project in the Project dropdown in Lot tab" classname="Pages\Projects\precinctLotList.spec.ts" time="11.303">
-</testcase>
-<testcase name="Lot List Page › TC_06: Select a project from Project dropdown" classname="Pages\Projects\precinctLotList.spec.ts" time="9.332">
-</testcase>
-<testcase name="Lot List Page › TC_07: Select multiple projects from Project dropdown" classname="Pages\Projects\precinctLotList.spec.ts" time="14.576">
-</testcase>
-<testcase name="Lot List Page › TC_07: Use Select All in Project dropdown" classname="Pages\Projects\precinctLotList.spec.ts" time="8.333">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.03011400000006">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-06T11:00:57.151Z" hostname="chromium" tests="1" failures="0" skipped="0" time="48.028" errors="0">
+<testcase name="Lot List Page › TC_08: Use Deselect All in Project dropdown" classname="Pages\Projects\precinctLotList.spec.ts" time="48.028">
 </testcase>
 </testsuite>
 </testsuites>
