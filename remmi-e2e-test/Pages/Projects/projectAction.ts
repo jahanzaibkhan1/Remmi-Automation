@@ -4504,4 +4504,44 @@ export class ProjectActions {
         await this.closePopupIfVisible();
     }
 
+    // TC_23 — Verify only new values are shown on creation 
+    async verifyOnlyNewValuesShownOnCreation(searchValue: string): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+
+        // Open lot form
+        await this.rowLotCell(this.lotTableRows.first()).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+
+        // Open History tab
+        await this.lotFormHistoryTab.click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+
+        // Search in history
+        await this.historySearchInput.fill(searchValue);
+        await this.page.waitForTimeout(1000);
+
+        // Verify filtered rows exist
+        const filteredRows = await this.historyTableRows.all();
+        expect(filteredRows.length).toBeGreaterThan(0);
+
+        // Verify search keyword appears in the Changed Field column of at least one row
+        let found = false;
+        for (let i = 0; i < filteredRows.length; i++) {
+            const fieldText = (await this.historyRowChangedField(filteredRows[i]).innerText())
+                .trim()
+                .toLowerCase();
+            if (fieldText.includes(searchValue.toLowerCase())) {
+                found = true;
+                break;
+            }
+        }
+        expect(found).toBeTruthy();
+
+        await this.closePopupIfVisible();
+    }
+
 }
