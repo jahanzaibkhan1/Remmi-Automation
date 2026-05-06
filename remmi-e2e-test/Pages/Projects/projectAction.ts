@@ -864,6 +864,20 @@ export class ProjectActions {
         return this.page.locator('a#pills-history-tab');
     }
 
+    // LOCATORS — History tab
+
+    private get historyTabContent(): Locator {
+        return this.page.locator('app-remmi-history');
+    }
+
+    private get historyTableRows(): Locator {
+        return this.historyTabContent.locator('p-table tbody tr');
+    }
+
+    private get historyRecordsCount(): Locator {
+        return this.historyTabContent.locator('p', { hasText: /Records:/ });
+    }
+
     // LOCATORS — Lot form tabs
 
     private get lotFormApartmentDetailsTab(): Locator {
@@ -4292,6 +4306,26 @@ export class ProjectActions {
         expect(await this.lotFormBedInput.inputValue()).toBe('5');
         expect(await this.lotFormBathInput.inputValue()).toBe('2');
         expect(await this.lotFormAspectInput.inputValue()).toBe('West');
+        await this.closePopupIfVisible();
+    }
+
+    // TC_17 — Verify history tab loads properly
+    async verifyHistoryTabLoads(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormHistoryTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotFormHistoryTab.click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormHistoryTab).toHaveClass(/active/);
+        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const rowCount = await this.historyTableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+        await expect(this.historyRecordsCount).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.closePopupIfVisible();
     }
 

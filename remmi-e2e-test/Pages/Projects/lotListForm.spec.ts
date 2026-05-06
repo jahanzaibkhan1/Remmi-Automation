@@ -79,5 +79,9 @@ test.describe('Lot Form', () => {
     test('TC_16: Verify Save & Close saves and closes form', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifySaveAndCloseButtonSavesAndClosesForm();
     });
-    
+
+    test('TC_17: Verify history tab loads properly', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHistoryTabLoads();
+    });
+
 });
