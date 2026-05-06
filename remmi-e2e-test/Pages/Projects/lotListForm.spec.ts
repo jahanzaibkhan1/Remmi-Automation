@@ -84,4 +84,8 @@ test.describe('Lot Form', () => {
         await new ProjectActions(sessionPage).verifyHistoryTabLoads();
     });
 
+    test('TC_18: Verify search works in history tab', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHistorySearch('Bed');
+    });
+
 });

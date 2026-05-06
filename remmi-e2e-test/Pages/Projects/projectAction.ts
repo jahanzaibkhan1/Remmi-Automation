@@ -878,6 +878,11 @@ export class ProjectActions {
         return this.historyTabContent.locator('p', { hasText: /Records:/ });
     }
 
+    // LOCATOR — History search input
+    private get historySearchInput(): Locator {
+        return this.historyTabContent.locator('input[name="task-search"]');
+    }
+
     // LOCATORS — Lot form tabs
 
     private get lotFormApartmentDetailsTab(): Locator {
@@ -4326,6 +4331,43 @@ export class ProjectActions {
         const rowCount = await this.historyTableRows.count();
         expect(rowCount).toBeGreaterThan(0);
         await expect(this.historyRecordsCount).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closePopupIfVisible();
+    }
+
+    // TC_18 — Verify search works in history tab
+    async verifyHistorySearch(searchKeyword: string): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+
+        const firstRow = this.lotTableRows.first();
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+
+        // Open the History tab
+        await this.lotFormHistoryTab.click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+
+        // Count initial rows
+        const initialCount = await this.historyTableRows.count();
+        expect(initialCount).toBeGreaterThan(0);
+
+        // Search
+        await expect(this.historySearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.historySearchInput.fill(searchKeyword);
+        await this.page.waitForTimeout(1500);
+
+        // Count filtered rows and check contents
+        const filteredCount = await this.historyTableRows.count();
+        expect(filteredCount).toBeGreaterThan(0);
+        const firstRowText = (await this.historyTableRows.first().innerText()).toLowerCase();
+        expect(firstRowText).toContain(searchKeyword.toLowerCase());
+
+        // Clear search input and close the popup
+        await this.historySearchInput.fill('');
+        await this.page.waitForTimeout(500);
         await this.closePopupIfVisible();
     }
 
