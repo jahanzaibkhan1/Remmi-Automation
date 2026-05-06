@@ -92,4 +92,8 @@ test.describe('Lot Form', () => {
         await new ProjectActions(sessionPage).verifyHistoryChangeDate();
     });
 
+    test('TC_20: Verify change by field shows updating staff', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHistoryChangeByField();
+    });
+
 });
