@@ -4826,4 +4826,20 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Search a bed number in Bed dropdown
+ */
+    async searchBedInBedDropdown(bedValue: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openBedDropdown();
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bedDropdownSearchInput.fill(bedValue);
+        await this.selectBedByValue(bedValue);
+        await this.bedDropdownSearchInput.fill('');
+        await this.closeDropdown();
+        await this.cleanupAfterLotTest();
+    }
+
 }

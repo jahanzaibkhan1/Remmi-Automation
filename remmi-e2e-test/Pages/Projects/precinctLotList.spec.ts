@@ -62,4 +62,9 @@ test.describe('Lot List Page', () => {
     test('TC_10: Open Bed dropdown', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).openAndAssertBedDropdown();
     });
+
+    test('TC_11: Search bed number in Bed dropdown', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).searchBedInBedDropdown('2');
+    });
+    
 });
