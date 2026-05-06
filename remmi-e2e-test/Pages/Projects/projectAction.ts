@@ -898,6 +898,11 @@ export class ProjectActions {
         return row.locator('td').nth(2);
     }
 
+    // LOCATOR — Changed Field column cell (4th column)
+    private historyRowChangedField(row: Locator): Locator {
+        return row.locator('td').nth(3);
+    }
+
     // LOCATORS — Lot form tabs
 
     private get lotFormApartmentDetailsTab(): Locator {
@@ -4466,6 +4471,35 @@ export class ProjectActions {
         for (let i = 0; i < rowCount; i++) {
             const eventText = (await this.historyRowEvent(this.historyTableRows.nth(i)).innerText()).trim();
             expect(['Create', 'Update']).toContain(eventText);
+        }
+        await this.closePopupIfVisible();
+    }
+
+    // TC_22 — Verify change fields show updated fields
+    async verifyHistoryChangedFields(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+
+        // Open lot form
+        const firstRow = this.lotTableRows.first();
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+
+        // Click History tab
+        await this.lotFormHistoryTab.click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+
+        // Verify history rows exist
+        const rowCount = await this.historyTableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Verify Changed Field column has a non-empty value for each row
+        for (let i = 0; i < rowCount; i++) {
+            const fieldText = (await this.historyRowChangedField(this.historyTableRows.nth(i)).innerText()).trim();
+            expect(fieldText.length).toBeGreaterThan(0);
         }
         await this.closePopupIfVisible();
     }
