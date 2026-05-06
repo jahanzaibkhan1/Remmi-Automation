@@ -26,5 +26,9 @@ test.describe('Lot List Page', () => {
     test('TC_02: Search a lot by keyword', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).searchLotByKeyword('Automation Lot');
     });
-    
+
+    test('TC_03: Search for a non-existing lot', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).searchNonExistingLot('nonexistent_lot_keyword_12345');
+    });
+
 });
