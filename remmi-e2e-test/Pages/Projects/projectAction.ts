@@ -1,5 +1,5 @@
 import { expect, Page, Locator } from '@playwright/test';
-import { faker } from '@faker-js/faker';
+import { faker, th } from '@faker-js/faker';
 import * as path from 'path';
 
 export class ProjectActions {
@@ -891,6 +891,11 @@ export class ProjectActions {
     // LOCATOR — Changed By column cell (2nd column)
     private historyRowChangedBy(row: Locator): Locator {
         return row.locator('td').nth(1);
+    }
+
+    // LOCATOR — Event column cell (3rd column)
+    private historyRowEvent(row: Locator): Locator {
+        return row.locator('td').nth(2);
     }
 
     // LOCATORS — Lot form tabs
@@ -4433,6 +4438,35 @@ export class ProjectActions {
         // Verify Changed By column has staff name (e.g., "Remmi: Jahanzaib Xenex")
         const changedByText = (await this.historyRowChangedBy(this.historyTableRows.first()).innerText()).trim();
         expect(changedByText.length).toBeGreaterThan(0);
+        await this.closePopupIfVisible();
+    }
+
+    // TC_21 — Verify event column shows 'Create' or 'Update'
+    async verifyHistoryEventColumn(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+
+        // Open lot form
+        const firstRow = this.lotTableRows.first();
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+
+        // Click History tab
+        await this.lotFormHistoryTab.click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+
+        // Verify history rows exist
+        const rowCount = await this.historyTableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Verify all Event column values are either 'Create' or 'Update'
+        for (let i = 0; i < rowCount; i++) {
+            const eventText = (await this.historyRowEvent(this.historyTableRows.nth(i)).innerText()).trim();
+            expect(['Create', 'Update']).toContain(eventText);
+        }
         await this.closePopupIfVisible();
     }
 

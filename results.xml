@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="73.19779799999948">
-<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-06T05:30:19.328Z" hostname="chromium" tests="1" failures="0" skipped="0" time="68.767" errors="0">
-<testcase name="Lot Form › TC_20: Verify change by field shows updating staff" classname="Pages\Projects\lotListForm.spec.ts" time="68.767">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="82.64318800000008">
+<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-06T05:37:49.159Z" hostname="chromium" tests="1" failures="0" skipped="0" time="78.054" errors="0">
+<testcase name="Lot Form › TC_21: Verify event column shows Create or Update" classname="Pages\Projects\lotListForm.spec.ts" time="78.054">
 </testcase>
 </testsuite>
 </testsuites>
