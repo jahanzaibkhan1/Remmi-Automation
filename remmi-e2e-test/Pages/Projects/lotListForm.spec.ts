@@ -51,5 +51,65 @@ test.describe('Lot Form', () => {
     test('Test 8: Verify project dropdown is auto-filled', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyProjectDropdownAutoFilled();
     });
+
+    test('TC_09: Verify project can be changed', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyProjectCanBeChanged('Automation Testing');
+    });
     
+    test('Test_10: Verify lot field shows correct lot name', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotNameOnLotFormTab();
+    });
+
+    test('TC_11: Verify status reason dropdown shows all statuses', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyStatusReasonDropdownShowsAll();
+    });
+
+    test('TC_13: Verify optional fields accept input', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyOptionalFieldsAcceptInput();
+    });
+
+    test('TC_14: Verify close button exits without saving', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyCloseButtonExitsWithoutSaving();
+    });
+
+    test('TC_15: Verify Save button saves form without closing', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySaveButtonSavesWithoutClosing();
+    });
+
+    test('TC_16: Verify Save & Close saves and closes form', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySaveAndCloseButtonSavesAndClosesForm();
+    });
+
+    test('TC_17: Verify history tab loads properly', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHistoryTabLoads();
+    });
+
+    test('TC_18: Verify search works in history tab', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHistorySearch('Bed');
+    });
+
+    test('TC_19: Verify change date is correct', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHistoryChangeDate();
+    });
+
+    test('TC_20: Verify change by field shows updating staff', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHistoryChangeByField();
+    });
+
+    test('TC_21: Verify event column shows Create or Update', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHistoryEventColumn();
+    });
+
+    test('TC_22: Verify change fields show updated fields', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHistoryChangedFields();
+    });
+
+    test('TC_23: Verify only new values are shown on creation', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyOnlyNewValuesShownOnCreation('Create');
+    });
+
+    test('TC_24: Verify both old and new values are shown on update', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyBothOldAndNewValuesOnUpdate();
+    });
+
 });
