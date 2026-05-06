@@ -88,4 +88,8 @@ test.describe('Lot Form', () => {
         await new ProjectActions(sessionPage).verifyHistorySearch('Bed');
     });
 
+    test('TC_19: Verify change date is correct', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHistoryChangeDate();
+    });
+
 });
