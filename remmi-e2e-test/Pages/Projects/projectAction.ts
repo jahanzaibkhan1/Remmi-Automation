@@ -4739,4 +4739,61 @@ export class ProjectActions {
         await this.page.waitForTimeout(500);
     }
 
+    /**
+     * Select multiple projects from the Project dropdown on the Lot tab.
+     */
+    async selectMultipleProjectsInLotDropdown(projectNames: string[]): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        await this.firstPrecinctOnProjectsPage.click();
+        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotTabInPrecinct.click();
+        await this.resetButton.click();
+
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(this.rowCheckbox(firstRow)).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+
+        await this.resetButton.click();
+        await this.page.waitForTimeout(2000);
+
+        for (const projectName of projectNames) {
+            await this.openProjectDropdown();
+            await this.page.waitForTimeout(1000);
+            await this.searchInProjectDropdown(projectName);
+
+            const filteredCount = await this.projectDropdownOptions.count();
+            expect(filteredCount).toBeGreaterThan(0);
+
+            // Pick the matching option
+            let projectFound = false;
+            for (let i = 0; i < filteredCount; i++) {
+                const optionHandle = this.projectDropdownOptions.nth(i);
+                const optionText = (await optionHandle.innerText()).trim().toLowerCase();
+                if (optionText.includes(projectName.toLowerCase())) {
+                    await expect(optionHandle).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+                    await optionHandle.click();
+                    projectFound = true;
+                    break;
+                }
+            }
+
+            if (!projectFound) {
+                throw new Error(`Project "${projectName}" not found in dropdown`);
+            }
+
+            await this.closeDropdown();
+            await this.page.waitForTimeout(500);
+        }
+
+        await this.resetFilters();
+        await this.closeDropdown();
+        await this.clickOnProjects();
+        await this.page.waitForTimeout(500);
+    }
+
 }
