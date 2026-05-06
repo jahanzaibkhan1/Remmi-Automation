@@ -108,4 +108,8 @@ test.describe('Lot Form', () => {
         await new ProjectActions(sessionPage).verifyOnlyNewValuesShownOnCreation('Create');
     });
 
+    test('TC_24: Verify both old and new values are shown on update', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyBothOldAndNewValuesOnUpdate();
+    });
+
 });

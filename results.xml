@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="89.62674400000088">
-<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-06T06:03:25.114Z" hostname="chromium" tests="1" failures="0" skipped="0" time="87.596" errors="0">
-<testcase name="Lot Form › TC_23: Verify only new values are shown on creation" classname="Pages\Projects\lotListForm.spec.ts" time="87.596">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="86.23952500000037">
+<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-06T06:17:16.104Z" hostname="chromium" tests="1" failures="0" skipped="0" time="83.676" errors="0">
+<testcase name="Lot Form › TC_24: Verify both old and new values are shown on update" classname="Pages\Projects\lotListForm.spec.ts" time="83.676">
+<system-out>
+<![CDATA[Old Value: "4", New Value: "5"
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>
