@@ -4890,4 +4890,19 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+     * Use 'Deselect All' in Bed dropdown
+     */
+    async useDeselectAllInBedDropdown(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openBedDropdown();
+        await expect(this.bedDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bedDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(500);
+        await this.bedDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+        await this.cleanupAfterLotTest();
+    }
+
 }
