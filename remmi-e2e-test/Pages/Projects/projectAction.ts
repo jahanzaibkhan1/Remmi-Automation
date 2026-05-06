@@ -864,6 +864,16 @@ export class ProjectActions {
         return this.page.locator('a#pills-history-tab');
     }
 
+    // LOCATORS — History Old Value & New Value columns
+
+    private historyRowOldValue(row: Locator): Locator {
+        return row.locator('td').nth(4);
+    }
+
+    private historyRowNewValue(row: Locator): Locator {
+        return row.locator('td').nth(5);
+    }
+
     // LOCATORS — History tab
 
     private get historyTabContent(): Locator {
@@ -4541,6 +4551,38 @@ export class ProjectActions {
         }
         expect(found).toBeTruthy();
 
+        await this.closePopupIfVisible();
+    }
+
+    // TC_24 — Verify both old and new column values exist on update
+    async verifyBothOldAndNewValuesOnUpdate(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        await this.rowLotCell(this.lotTableRows.first()).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotFormHistoryTab.click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const rowCount = await this.historyTableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+        let verified = false;
+        for (let i = 0; i < rowCount; i++) {
+            const row = this.historyTableRows.nth(i);
+            const eventText = (await this.historyRowEvent(row).innerText()).trim();
+            if (eventText === 'Update') {
+                const oldValueText = (await this.historyRowOldValue(row).innerText()).trim();
+                const newValueText = (await this.historyRowNewValue(row).innerText()).trim();
+                console.log(`Old Value: "${oldValueText}", New Value: "${newValueText}"`);
+                expect(oldValueText.length).toBeGreaterThan(0);
+                expect(newValueText.length).toBeGreaterThan(0);
+                expect(oldValueText).not.toBe(newValueText);
+                verified = true;
+                break;
+            }
+        }
+        expect(verified).toBeTruthy();
         await this.closePopupIfVisible();
     }
 
