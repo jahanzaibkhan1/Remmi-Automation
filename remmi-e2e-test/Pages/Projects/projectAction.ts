@@ -4103,6 +4103,25 @@ export class ProjectActions {
         await this.resetButton.click();
     }
 
+    /**
+     * Asserts that the lot name displayed in the form matches the selected lot in the list.
+     */
+    async verifyLotNameOnLotFormTab(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const expectedLotName = (await this.rowLotCell(firstRow).innerText()).trim();
+        expect(expectedLotName.length).toBeGreaterThan(0);
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1200);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        // Get lot name input value in the form
+        const actualLotName = (await this.lotFormLotInput.inputValue()).trim();
+        expect(actualLotName).toBe(expectedLotName);
+        await this.closePopupIfVisible();
+    }
+
 
 
 }
