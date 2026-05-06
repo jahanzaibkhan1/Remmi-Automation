@@ -2785,6 +2785,28 @@ export class ProjectActions {
         return this.page.locator('input[formcontrolname="lot_name"]');
     }
 
+    // LOCATORS — Only what TC_11 needs
+
+    private get lotFormStatusReasonSelect(): Locator {
+        return this.page.locator('ng-select[formcontrolname="status_reason"]');
+    }
+
+    private get lotFormStatusReasonArrow(): Locator {
+        return this.lotFormStatusReasonSelect.locator('.ng-arrow-wrapper');
+    }
+
+    private get lotFormStatusReasonDropdownPanel(): Locator {
+        return this.lotFormStatusReasonSelect.locator('ng-dropdown-panel');
+    }
+
+    private get lotFormStatusReasonOptions(): Locator {
+        return this.lotFormStatusReasonSelect.locator('ng-dropdown-panel .ng-option');
+    }
+
+    private statusReasonOptionInForm(name: string): Locator {
+        return this.lotFormStatusReasonSelect.locator('ng-dropdown-panel .ng-option', { hasText: name });
+    }
+
     // LOCATORS — Toast notifications
 
     private get successToast(): Locator {
@@ -4119,6 +4141,31 @@ export class ProjectActions {
         // Get lot name input value in the form
         const actualLotName = (await this.lotFormLotInput.inputValue()).trim();
         expect(actualLotName).toBe(expectedLotName);
+        await this.closePopupIfVisible();
+    }
+
+    // TC_11 — Verify status reason dropdown shows all statuses
+    async verifyStatusReasonDropdownShowsAll(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotFormStatusReasonArrow.click();
+        await expect(this.lotFormStatusReasonDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const totalOptions = await this.lotFormStatusReasonOptions.count();
+        expect(totalOptions).toBeGreaterThanOrEqual(15);
+        const expectedStatuses = [
+            'Developer Hold', 'For Sale', 'Withheld', 'Awaiting Vendor Signing',
+            'Called to Settle', 'Cancelled', 'Conditional', 'Contract Issued',
+            'Contract Requested', 'Defaulted', 'Held', 'Reserved', 'Settled', 'Sold', 'Unconditional'
+        ];
+        for (const status of expectedStatuses) {
+            const option = this.statusReasonOptionInForm(status).first();
+            await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
         await this.closePopupIfVisible();
     }
 
