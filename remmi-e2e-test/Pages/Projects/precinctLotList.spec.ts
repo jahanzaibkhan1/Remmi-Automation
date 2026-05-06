@@ -70,5 +70,9 @@ test.describe('Lot List Page', () => {
     test('TC_12: Select single bed number', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).selectSingleBedInDropdown('2');
     });
-    
+
+    test('TC_13: Select multiple bed numbers', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).selectMultipleBedsInDropdown(['1', '2']);
+    });
+
 });

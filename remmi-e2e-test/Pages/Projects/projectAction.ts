@@ -4856,4 +4856,23 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Select multiple bed numbers from Bed dropdown
+ */
+    async selectMultipleBedsInDropdown(bedValues: string[]): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openBedDropdown();
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        for (const bedValue of bedValues) {
+            await this.selectBedByValue(bedValue);
+            await this.page.waitForTimeout(500);
+        }
+        await this.closeDropdown();
+        for (const bedValue of bedValues) {
+            await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
+        await this.cleanupAfterLotTest();
+    }
+
 }
