@@ -2785,6 +2785,20 @@ export class ProjectActions {
         return this.page.locator('input[formcontrolname="lot_name"]');
     }
 
+    // LOCATORS — Optional input fields
+
+    private get lotFormBedInput(): Locator {
+        return this.page.locator('input[formcontrolname="bed"]');
+    }
+
+    private get lotFormBathInput(): Locator {
+        return this.page.locator('input[formcontrolname="bath"]');
+    }
+
+    private get lotFormAspectInput(): Locator {
+        return this.page.locator('input[formcontrolname="aspect"]');
+    }
+
     // LOCATORS — Only what TC_11 needs
 
     private get lotFormStatusReasonSelect(): Locator {
@@ -4169,6 +4183,27 @@ export class ProjectActions {
         await this.closePopupIfVisible();
     }
 
-
+    // TC_13 — Verify optional fields accept input
+    async verifyOptionalFieldsAcceptInput(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        // Open lot form
+        const firstRow = this.lotTableRows.first();
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        // Fill optional fields
+        await this.lotFormBedInput.fill('3');
+        await this.page.waitForTimeout(300);
+        expect(await this.lotFormBedInput.inputValue()).toBe('3');
+        await this.lotFormBathInput.fill('2');
+        await this.page.waitForTimeout(300);
+        expect(await this.lotFormBathInput.inputValue()).toBe('2');
+        await this.lotFormAspectInput.fill('North');
+        await this.page.waitForTimeout(300);
+        expect(await this.lotFormAspectInput.inputValue()).toBe('North');
+        await this.closePopupIfVisible();
+    }
 
 }

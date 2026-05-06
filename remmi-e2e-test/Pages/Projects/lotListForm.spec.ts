@@ -64,4 +64,8 @@ test.describe('Lot Form', () => {
         await new ProjectActions(sessionPage).verifyStatusReasonDropdownShowsAll();
     });
 
+    test('TC_13: Verify optional fields accept input', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyOptionalFieldsAcceptInput();
+    });
+
 });
