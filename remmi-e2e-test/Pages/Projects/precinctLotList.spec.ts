@@ -83,4 +83,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).useDeselectAllInBedDropdown();
     });
 
+    test('TC_16: Remove bed tag from Bed dropdown', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).removeSelectedBedTagInBedDropdown('2');
+    });
+    
 });

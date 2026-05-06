@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="45.772471999999134">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-06T11:28:43.979Z" hostname="chromium" tests="1" failures="0" skipped="0" time="43.763" errors="0">
-<testcase name="Lot List Page › TC_15: Use Deselect All in Bed dropdown" classname="Pages\Projects\precinctLotList.spec.ts" time="43.763">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="77.37533200000226">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-06T11:31:08.182Z" hostname="chromium" tests="1" failures="0" skipped="0" time="75.366" errors="0">
+<testcase name="Lot List Page › TC_16: Remove bed tag from Bed dropdown" classname="Pages\Projects\precinctLotList.spec.ts" time="75.366">
 </testcase>
 </testsuite>
 </testsuites>
