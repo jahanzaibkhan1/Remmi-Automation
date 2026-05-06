@@ -4260,4 +4260,39 @@ export class ProjectActions {
         await this.closePopupIfVisible();
     }
 
+    // Verify Save & Close saves and closes form
+    async verifySaveAndCloseButtonSavesAndClosesForm(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotFormBedInput.fill('5');
+        await this.page.waitForTimeout(300);
+        expect(await this.lotFormBedInput.inputValue()).toBe('5');
+        await this.lotFormBathInput.fill('2');
+        await this.page.waitForTimeout(300);
+        expect(await this.lotFormBathInput.inputValue()).toBe('2');
+        await this.lotFormAspectInput.fill('West');
+        await this.page.waitForTimeout(300);
+        expect(await this.lotFormAspectInput.inputValue()).toBe('West');
+        const saveAndCloseBtn = this.saveAndCloseButton.first();
+        await expect(saveAndCloseBtn).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await saveAndCloseBtn.click();
+        await this.assertSuccessToast();
+        await expect(this.lotFormLotInput).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const updatedRow = this.lotTableRows.first();
+        await this.rowLotCell(updatedRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        expect(await this.lotFormBedInput.inputValue()).toBe('5');
+        expect(await this.lotFormBathInput.inputValue()).toBe('2');
+        expect(await this.lotFormAspectInput.inputValue()).toBe('West');
+        await this.closePopupIfVisible();
+    }
+
 }
