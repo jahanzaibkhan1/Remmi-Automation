@@ -750,7 +750,7 @@ export class ProjectActions {
 
     // Search bar
     private get lotSearchInput(): Locator {
-        return this.page.locator('input#keywordInput[name="task-search"]');
+        return this.page.locator('input#keywordInput[name="task-search"]').last();
     }
 
     private get lotSearchIcon(): Locator {
@@ -4596,6 +4596,34 @@ export class ProjectActions {
         expect(displayedName.length).toBeGreaterThan(0);
         await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.lotTabInPrecinct.click();
+        await this.clickOnProjects();
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Search a lot by keyword
+     */
+    async searchLotByKeyword(keyword: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
+        await this.firstPrecinctOnProjectsPage.click();
+        await console.log(precinctName);
+        await expect(this.precinctNameUnderActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const displayedName = (await this.precinctNameUnderActive.innerText()).trim();
+        expect(displayedName.length).toBeGreaterThan(0);
+        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotTabInPrecinct.click();
+        await expect(this.lotSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotSearchInput.fill('');
+        await this.lotSearchInput.fill(keyword);
+        const searchResults = this.lotTable;
+        await expect(searchResults.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        const resultCount = await searchResults.count();
+        expect(resultCount).toBeGreaterThan(0);
         await this.clickOnProjects();
         await this.page.waitForTimeout(1000);
     }
