@@ -58,5 +58,8 @@ test.describe('Lot List Page', () => {
     test('TC_09: Remove selected project tag from Project dropdown', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).removeSelectedProjectTagInLotDropdown('Adb');
     });
-    
+
+    test('TC_10: Open Bed dropdown', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).openAndAssertBedDropdown();
+    });
 });

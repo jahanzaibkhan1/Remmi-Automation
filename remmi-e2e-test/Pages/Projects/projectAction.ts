@@ -4813,4 +4813,17 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Open Bed dropdown and verify options appear
+ */
+    async openAndAssertBedDropdown(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openBedDropdown();
+        await expect(this.bedDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const optionsCount = await this.bedDropdownOptions.count();
+        expect(optionsCount).toBeGreaterThan(0);
+        await this.cleanupAfterLotTest();
+    }
+
 }
