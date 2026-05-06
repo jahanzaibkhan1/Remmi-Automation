@@ -54,4 +54,9 @@ test.describe('Lot List Page', () => {
     test('TC_08: Use Deselect All in Project dropdown', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).useDeselectAllInProjectDropdown();
     });
+
+    test('TC_09: Remove selected project tag from Project dropdown', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).removeSelectedProjectTagInLotDropdown('Adb');
+    });
+    
 });
