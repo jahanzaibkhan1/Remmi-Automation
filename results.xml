@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="83.46808100000024">
-<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-06T05:01:31.488Z" hostname="chromium" tests="1" failures="0" skipped="0" time="81.016" errors="0">
-<testcase name="Lot Form › TC_16: Verify Save &amp; Close saves and closes form" classname="Pages\Projects\lotListForm.spec.ts" time="81.016">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="112.72604399999976">
+<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-06T05:08:30.972Z" hostname="chromium" tests="1" failures="0" skipped="0" time="109.706" errors="0">
+<testcase name="Lot Form › TC_17: Verify history tab loads properly" classname="Pages\Projects\lotListForm.spec.ts" time="109.706">
 </testcase>
 </testsuite>
 </testsuites>
