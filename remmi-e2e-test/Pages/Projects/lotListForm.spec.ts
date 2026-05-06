@@ -96,4 +96,8 @@ test.describe('Lot Form', () => {
         await new ProjectActions(sessionPage).verifyHistoryChangeByField();
     });
 
+    test('TC_21: Verify event column shows Create or Update', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHistoryEventColumn();
+    });
+
 });
