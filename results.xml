@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="88.57127199999988">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-06T11:14:40.516Z" hostname="chromium" tests="1" failures="0" skipped="0" time="86.544" errors="0">
-<testcase name="Lot List Page › TC_12: Select single bed number" classname="Pages\Projects\precinctLotList.spec.ts" time="86.544">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="58.76764699999988">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-06T11:23:03.763Z" hostname="chromium" tests="1" failures="0" skipped="0" time="56.696" errors="0">
+<testcase name="Lot List Page › TC_13: Select multiple bed numbers" classname="Pages\Projects\precinctLotList.spec.ts" time="56.696">
 </testcase>
 </testsuite>
 </testsuites>
