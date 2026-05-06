@@ -47,4 +47,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).selectMultipleProjectsInLotDropdown(['Adb', 'Automation Testing']);
     });
 
+    test('TC_07: Use Select All in Project dropdown', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).useSelectAllInProjectDropdown();
+    });
+
 });

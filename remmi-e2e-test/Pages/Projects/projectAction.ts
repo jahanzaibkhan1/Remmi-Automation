@@ -4579,6 +4579,88 @@ export class ProjectActions {
         await this.closePopupIfVisible();
     }
 
+    // ==========================================================================
+    // HELPERS — PRECINCT LOT TAB
+    // ==========================================================================
+
+    /**
+     * HELPER — Navigate to first precinct and open Lot tab
+     */
+    private async navigateToLotTabInPrecinct(): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        await this.firstPrecinctOnProjectsPage.click();
+        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotTabInPrecinct.click();
+    }
+
+    /**
+     * HELPER — Reset filters and ensure at least one lot row is visible
+     */
+    private async resetAndAssertLotRowVisible(): Promise<void> {
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.resetButton.click();
+        await this.page.waitForTimeout(2000);
+    }
+
+    /**
+     * HELPER — Cleanup after test (close dropdown, reset, navigate back)
+     */
+    private async cleanupAfterLotTest(): Promise<void> {
+        await this.closeDropdown();
+        await this.resetFilters();
+        await this.closeDropdown();
+        await this.clickOnProjects();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Open Project dropdown, search, and verify results exist
+     */
+    private async openProjectDropdownAndSearch(projectName: string): Promise<number> {
+        await this.openProjectDropdown();
+        await this.page.waitForTimeout(1000);
+        await this.searchInProjectDropdown(projectName);
+        const count = await this.projectDropdownOptions.count();
+        expect(count).toBeGreaterThan(0);
+        return count;
+    }
+
+    /**
+     * HELPER — Verify first dropdown option matches project name
+     */
+    private async assertFirstOptionMatchesProject(projectName: string): Promise<void> {
+        const firstOptionText = (await this.projectDropdownOptions.first().innerText()).trim().toLowerCase();
+        expect(firstOptionText).toContain(projectName.toLowerCase());
+    }
+
+    /**
+     * HELPER — Click matching project option from dropdown
+     */
+    private async clickProjectOptionByName(projectName: string): Promise<void> {
+        const count = await this.projectDropdownOptions.count();
+        for (let i = 0; i < count; i++) {
+            const option = this.projectDropdownOptions.nth(i);
+            const text = (await option.innerText()).trim().toLowerCase();
+            if (text.includes(projectName.toLowerCase())) {
+                await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+                await option.click();
+                return;
+            }
+        }
+        throw new Error(`Project "${projectName}" not found in dropdown`);
+    }
+
+    // ==========================================================================
+    // TESTS — PRECINCT LOT TAB
+    // ==========================================================================
+
     /**
      * Opens the Lot tab from the Precinct view.
      */
@@ -4590,10 +4672,12 @@ export class ProjectActions {
         });
         const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
         await this.firstPrecinctOnProjectsPage.click();
-        await console.log(precinctName);
+        console.log(precinctName);
+
         await expect(this.precinctNameUnderActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         const displayedName = (await this.precinctNameUnderActive.innerText()).trim();
         expect(displayedName.length).toBeGreaterThan(0);
+
         await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.lotTabInPrecinct.click();
         await this.clickOnProjects();
@@ -4601,199 +4685,98 @@ export class ProjectActions {
     }
 
     /**
-     * Search a lot by keyword
+     * Search a lot by keyword in Precinct's Lot tab
      */
     async searchLotByKeyword(keyword: string): Promise<void> {
-        await this.navigateToProjects();
-        await this.page.waitForLoadState('networkidle');
-        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
-        });
-        await this.firstPrecinctOnProjectsPage.click();
-        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.lotTabInPrecinct.click();
-        await expect(this.lotSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.lotSearchInput.fill('');
-        await this.lotSearchInput.fill(keyword);
-        const searchResults = this.lotTable;
-        await expect(searchResults.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
-        const resultCount = await searchResults.count();
-        expect(resultCount).toBeGreaterThan(0);
+        await this.navigateToLotTabInPrecinct();
+        await this.searchLot(keyword);
+
+        await expect(this.lotTable.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        expect(await this.lotTable.count()).toBeGreaterThan(0);
+
         await this.clickOnProjects();
-        await this.page.waitForTimeout(1000);
     }
 
     /**
-     * Search for a lot by a keyword that does not exist, and verify no results are found.
+     * Search for a lot by a keyword that does not exist
      */
     async searchNonExistingLot(keyword: string): Promise<void> {
-        await this.navigateToProjects();
-        await this.page.waitForLoadState('networkidle');
-        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
-        });
-        await this.firstPrecinctOnProjectsPage.click();
-        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.lotTabInPrecinct.click();
-        await expect(this.lotSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.lotSearchInput.fill('');
-        await this.lotSearchInput.fill(keyword);
+        await this.navigateToLotTabInPrecinct();
+        await this.searchLot(keyword);
         await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
         await this.clickOnProjects();
-        await this.page.waitForTimeout(1000);
     }
 
     /**
-     * Opens the Project dropdown 
+     * Opens the Project dropdown and verifies options appear
      */
     async openAndAssertProjectDropdown(): Promise<void> {
-        await this.navigateToProjects();
-        await this.page.waitForLoadState('networkidle');
-        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
-        });
-        await this.firstPrecinctOnProjectsPage.click();
-        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.lotTabInPrecinct.click();
-        await this.resetButton.click();
-        await expect(this.lotTableRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.page.waitForTimeout(1200);
-        await expect(this.projectFilter).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+
         await this.projectFilter.click();
         await expect(this.projectDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.page.mouse.click(0, 0);
-        await this.clickOnProjects();
-        await this.page.waitForTimeout(1000);
+
+        await this.cleanupAfterLotTest();
     }
 
     /**
-     * Search for a project in the Project dropdown.
+     * Search for a project in the Project dropdown
      */
     async verifySearchProjectInLotDropdown(projectName: string): Promise<void> {
-        await this.navigateToProjects();
-        await this.page.waitForLoadState('networkidle');
-        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
-        });
-        await this.firstPrecinctOnProjectsPage.click();
-        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.lotTabInPrecinct.click();
-        await this.resetButton.click();
-        const firstRow = this.lotTableRows.first();
-        const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
-        const checkbox = this.rowCheckbox(firstRow);
-        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
-        await this.resetButton.click();
-        await this.page.waitForTimeout(2000);
-        await this.openProjectDropdown();
-        await this.page.waitForTimeout(1000);
-        await this.searchInProjectDropdown(projectName);
-        const filteredCount = await this.projectDropdownOptions.count();
-        expect(filteredCount).toBeGreaterThan(0);
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
 
-        const firstOptionText = (await this.projectDropdownOptions.first().innerText()).trim().toLowerCase();
-        expect(firstOptionText).toContain(projectName.toLowerCase());
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.assertFirstOptionMatchesProject(projectName);
 
-        await this.closeDropdown();
-        await this.resetFilters();
-        await this.closeDropdown();
-        await this.clickOnProjects();
-        await this.page.waitForTimeout(500);
+        await this.cleanupAfterLotTest();
     }
 
     /**
-     * Select a project by name from the Project dropdown on the Lot tab within a precinct.
+     * Select a project by name from the Project dropdown on the Lot tab
      */
     async selectProjectInLotDropdown(projectName: string): Promise<void> {
-        await this.navigateToProjects();
-        await this.page.waitForLoadState('networkidle');
-        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
-        });
-        await this.firstPrecinctOnProjectsPage.click();
-        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.lotTabInPrecinct.click();
-        await this.resetButton.click();
-        const firstRow = this.lotTableRows.first();
-        const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
-        const checkbox = this.rowCheckbox(firstRow);
-        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
-        await this.resetButton.click();
-        await this.page.waitForTimeout(2000);
-        await this.openProjectDropdown();
-        await this.page.waitForTimeout(1000);
-        await this.searchInProjectDropdown(projectName);
-        const filteredCount = await this.projectDropdownOptions.count();
-        expect(filteredCount).toBeGreaterThan(0);
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
 
-        const firstOption = this.projectDropdownOptions.first();
-        const firstOptionText = (await firstOption.innerText()).trim().toLowerCase();
-        expect(firstOptionText).toContain(projectName.toLowerCase());
-        await firstOption.click();
-        await this.closeDropdown();
-        await this.resetFilters();
-        await this.closeDropdown();
-        await this.clickOnProjects();
-        await this.page.waitForTimeout(500);
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.assertFirstOptionMatchesProject(projectName);
+        await this.projectDropdownOptions.first().click();
+
+        await this.cleanupAfterLotTest();
     }
 
     /**
-     * Select multiple projects from the Project dropdown on the Lot tab.
+     * Select multiple projects from the Project dropdown on the Lot tab
      */
     async selectMultipleProjectsInLotDropdown(projectNames: string[]): Promise<void> {
-        await this.navigateToProjects();
-        await this.page.waitForLoadState('networkidle');
-        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
-        });
-        await this.firstPrecinctOnProjectsPage.click();
-        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.lotTabInPrecinct.click();
-        await this.resetButton.click();
-
-        const firstRow = this.lotTableRows.first();
-        const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
-        await expect(this.rowCheckbox(firstRow)).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
-
-        await this.resetButton.click();
-        await this.page.waitForTimeout(2000);
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
 
         for (const projectName of projectNames) {
-            await this.openProjectDropdown();
-            await this.page.waitForTimeout(1000);
-            await this.searchInProjectDropdown(projectName);
-
-            const filteredCount = await this.projectDropdownOptions.count();
-            expect(filteredCount).toBeGreaterThan(0);
-
-            // Pick the matching option
-            let projectFound = false;
-            for (let i = 0; i < filteredCount; i++) {
-                const optionHandle = this.projectDropdownOptions.nth(i);
-                const optionText = (await optionHandle.innerText()).trim().toLowerCase();
-                if (optionText.includes(projectName.toLowerCase())) {
-                    await expect(optionHandle).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-                    await optionHandle.click();
-                    projectFound = true;
-                    break;
-                }
-            }
-
-            if (!projectFound) {
-                throw new Error(`Project "${projectName}" not found in dropdown`);
-            }
-
+            await this.openProjectDropdownAndSearch(projectName);
+            await this.clickProjectOptionByName(projectName);
             await this.closeDropdown();
-            await this.page.waitForTimeout(500);
         }
 
-        await this.resetFilters();
-        await this.closeDropdown();
-        await this.clickOnProjects();
-        await this.page.waitForTimeout(500);
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+     * Use 'Select All' in Project dropdown
+     */
+    async useSelectAllInProjectDropdown(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+
+        await this.openProjectDropdown();
+        await expect(this.projectDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const totalOptions = await this.projectDropdownOptions.count();
+        expect(totalOptions).toBeGreaterThan(0);
+        await this.projectDropdownSelectAllCheckbox.click();
+        await this.cleanupAfterLotTest();
     }
 
 }
