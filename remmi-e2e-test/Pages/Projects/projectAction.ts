@@ -823,6 +823,33 @@ export class ProjectActions {
         return this.page.locator('i.fa-thumbtack.pinned');
     }
 
+    // LOCATORS — Project dropdown inside lot form
+
+    private get lotFormProjectSelect(): Locator {
+        return this.page.locator('ng-select[formcontrolname="projectid"]');
+    }
+
+    private get lotFormProjectArrow(): Locator {
+        return this.lotFormProjectSelect.locator('.ng-arrow-wrapper');
+    }
+
+    private get lotFormProjectDropdownPanel(): Locator {
+        return this.lotFormProjectSelect.locator('ng-dropdown-panel');
+    }
+
+    private get lotFormProjectSearchInput(): Locator {
+        return this.lotFormProjectSelect.locator('input[type="text"]');
+    }
+
+    private get lotFormProjectOptions(): Locator {
+        return this.lotFormProjectSelect.locator('ng-dropdown-panel .ng-option');
+    }
+
+    private projectOptionInForm(name: string): Locator {
+        return this.lotFormProjectSelect.locator('ng-dropdown-panel .ng-option', { hasText: name });
+    }
+
+
     // LOCATOR — Pin delete success toast
     private get pinDeleteSuccessToast(): Locator {
         return this.page.locator('div[role="alert"].toast-message', { hasText: 'Pin deleted successfully' });
@@ -4037,6 +4064,45 @@ export class ProjectActions {
         expect(actualProjectName).toBe(expectedProjectName);
         await this.closePopupIfVisible();
     }
+
+
+    // TC_09 — Verify project can be changed (search project, save, refresh, verify)
+    async verifyProjectCanBeChanged(newProjectName: string): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const originalLotName = (await this.rowLotCell(firstRow).innerText()).trim();
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotFormProjectArrow.click();
+        await expect(this.lotFormProjectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotFormProjectSearchInput.fill(newProjectName);
+        await this.page.waitForTimeout(800);
+        const newOption = this.projectOptionInForm(newProjectName).first();
+        await expect(newOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await newOption.click();
+        await this.page.waitForTimeout(800);
+
+        const updatedValue = (await this.lotFormProjectValue.innerText()).trim();
+        expect(updatedValue.toLowerCase()).toContain(newProjectName.toLowerCase());
+        await this.saveAndCloseButton.first().click();
+        await this.assertSuccessToast();
+        await this.page.waitForTimeout(1500);
+        await this.page.reload();
+        await this.page.waitForTimeout(2000);
+        await expect(this.lotSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.assertLotsExist();
+        await this.searchLot(originalLotName);
+        await this.assertLotsExist();
+        const updatedRow = this.lotTableRows.first();
+        const projectAfter = (await this.rowProjectCell(updatedRow).innerText()).trim();
+        expect(projectAfter.toLowerCase()).toContain(newProjectName.toLowerCase());
+        await this.clearLotSearch();
+        await this.resetButton.click();
+    }
+
 
 
 }

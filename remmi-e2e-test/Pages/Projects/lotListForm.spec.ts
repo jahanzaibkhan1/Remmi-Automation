@@ -51,5 +51,9 @@ test.describe('Lot Form', () => {
     test('Test 8: Verify project dropdown is auto-filled', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyProjectDropdownAutoFilled();
     });
+
+    test('TC_09: Verify project can be changed', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyProjectCanBeChanged('Automation Testing');
+    });
     
 });
