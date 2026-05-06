@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="97.46731300000101">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-06T11:04:31.824Z" hostname="chromium" tests="1" failures="0" skipped="0" time="95.445" errors="0">
-<testcase name="Lot List Page › TC_09: Remove selected project tag from Project dropdown" classname="Pages\Projects\precinctLotList.spec.ts" time="95.445">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="43.55287600000203">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-06T11:08:39.674Z" hostname="chromium" tests="1" failures="0" skipped="0" time="41.505" errors="0">
+<testcase name="Lot List Page › TC_10: Open Bed dropdown" classname="Pages\Projects\precinctLotList.spec.ts" time="41.505">
 </testcase>
 </testsuite>
 </testsuites>
