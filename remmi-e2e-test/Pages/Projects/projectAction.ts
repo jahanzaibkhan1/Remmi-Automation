@@ -4643,4 +4643,26 @@ export class ProjectActions {
         await this.page.waitForTimeout(1000);
     }
 
+    /**
+     * Opens the Project dropdown 
+     */
+    async openAndAssertProjectDropdown(): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        await this.firstPrecinctOnProjectsPage.click();
+        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotTabInPrecinct.click(); 
+        await expect(this.lotTableRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.page.waitForTimeout(1200);
+        await expect(this.projectFilter).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.projectFilter.click();
+        await expect(this.projectDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.page.mouse.click(0,0);
+        await this.clickOnProjects();
+        await this.page.waitForTimeout(1000);
+    }
+
 }
