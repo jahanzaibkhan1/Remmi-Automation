@@ -31,4 +31,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).searchNonExistingLot('nonexistent_lot_keyword_12345');
     });
 
+    test('TC_04: Open Project dropdown and verify options', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).openAndAssertProjectDropdown();
+    });
+
 });
