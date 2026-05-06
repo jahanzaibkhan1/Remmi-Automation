@@ -883,6 +883,11 @@ export class ProjectActions {
         return this.historyTabContent.locator('input[name="task-search"]');
     }
 
+    // LOCATOR — Changed Date column cell (1st column)
+    private historyRowChangedDate(row: Locator): Locator {
+        return row.locator('td').nth(0);
+    }
+
     // LOCATORS — Lot form tabs
 
     private get lotFormApartmentDetailsTab(): Locator {
@@ -4369,6 +4374,33 @@ export class ProjectActions {
         await this.historySearchInput.fill('');
         await this.page.waitForTimeout(500);
         await this.closePopupIfVisible();
+    }
+
+    // TC_19 — Verify change date is correct
+    async verifyHistoryChangeDate(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+
+        // Open lot form
+        const firstRow = this.lotTableRows.first();
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+
+        // Click History tab
+        await this.lotFormHistoryTab.click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+
+        // Verify history rows exist
+        const rowCount = await this.historyTableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        // Verify Changed Date column has valid timestamp format (e.g., "06-05-2026 10:02 AM")
+        const dateText = (await this.historyRowChangedDate(this.historyTableRows.first()).innerText()).trim();
+        expect(dateText.length).toBeGreaterThan(0);
+        expect(dateText).toMatch(/\d{2}-\d{2}-\d{4}\s+\d{1,2}:\d{2}\s+(AM|PM)/i);
     }
 
 }
