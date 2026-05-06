@@ -75,4 +75,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).selectMultipleBedsInDropdown(['1', '2']);
     });
 
+    test('TC_14: Use Select All in Bed dropdown', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).useSelectAllInBedDropdown();
+    });
+
 });
