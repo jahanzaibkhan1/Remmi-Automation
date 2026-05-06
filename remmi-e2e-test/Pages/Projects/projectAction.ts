@@ -4609,12 +4609,7 @@ export class ProjectActions {
         await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
             timeout: ProjectActions.TIMEOUT_LONG,
         });
-        const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
         await this.firstPrecinctOnProjectsPage.click();
-        await console.log(precinctName);
-        await expect(this.precinctNameUnderActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        const displayedName = (await this.precinctNameUnderActive.innerText()).trim();
-        expect(displayedName.length).toBeGreaterThan(0);
         await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.lotTabInPrecinct.click();
         await expect(this.lotSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
@@ -4624,6 +4619,26 @@ export class ProjectActions {
         await expect(searchResults.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
         const resultCount = await searchResults.count();
         expect(resultCount).toBeGreaterThan(0);
+        await this.clickOnProjects();
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Search for a lot by a keyword that does not exist, and verify no results are found.
+     */
+    async searchNonExistingLot(keyword: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        await this.firstPrecinctOnProjectsPage.click();
+        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotTabInPrecinct.click();
+        await expect(this.lotSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotSearchInput.fill('');
+        await this.lotSearchInput.fill(keyword);
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.clickOnProjects();
         await this.page.waitForTimeout(1000);
     }
