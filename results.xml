@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="74.64198300000001">
-<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-06T03:56:12.607Z" hostname="chromium" tests="1" failures="0" skipped="0" time="72.32" errors="0">
-<testcase name="Lot Form › TC_09: Verify project can be changed" classname="Pages\Projects\lotListForm.spec.ts" time="72.32">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.556992000000086">
+<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-06T04:00:10.972Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.299" errors="0">
+<testcase name="Lot Form › Verify lot field shows correct lot name" classname="Pages\Projects\lotListForm.spec.ts" time="36.299">
 </testcase>
 </testsuite>
 </testsuites>
