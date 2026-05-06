@@ -35,4 +35,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).openAndAssertProjectDropdown();
     });
 
+    test('TC_05: Search a project in the Project dropdown in Lot tab', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySearchProjectInLotDropdown('Adb');
+    });
+
 });

@@ -4654,15 +4654,52 @@ export class ProjectActions {
         });
         await this.firstPrecinctOnProjectsPage.click();
         await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.lotTabInPrecinct.click(); 
+        await this.lotTabInPrecinct.click();
+        await this.resetButton.click();
         await expect(this.lotTableRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.page.waitForTimeout(1200);
         await expect(this.projectFilter).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.projectFilter.click();
         await expect(this.projectDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await this.page.mouse.click(0,0);
+        await this.page.mouse.click(0, 0);
         await this.clickOnProjects();
         await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * Search for a project in the Project dropdown.
+     */
+    async verifySearchProjectInLotDropdown(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_LONG,
+        });
+        await this.firstPrecinctOnProjectsPage.click();
+        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotTabInPrecinct.click();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        const firstCheckbox = this.rowCheckbox(firstRow);
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        const checkbox = this.rowCheckbox(firstRow);
+        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.resetButton.click();
+        await this.page.waitForTimeout(2000);
+        await this.openProjectDropdown();
+        await this.page.waitForTimeout(1000);
+        await this.searchInProjectDropdown(projectName);
+        const filteredCount = await this.projectDropdownOptions.count();
+        expect(filteredCount).toBeGreaterThan(0);
+
+        const firstOptionText = (await this.projectDropdownOptions.first().innerText()).trim().toLowerCase();
+        expect(firstOptionText).toContain(projectName.toLowerCase());
+
+        await this.closeDropdown();
+        await this.resetFilters();
+        await this.closeDropdown();
+        await this.clickOnProjects();
+        await this.page.waitForTimeout(500);
     }
 
 }
