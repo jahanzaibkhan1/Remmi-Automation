@@ -104,4 +104,8 @@ test.describe('Lot Form', () => {
         await new ProjectActions(sessionPage).verifyHistoryChangedFields();
     });
 
+    test('TC_23: Verify only new values are shown on creation', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyOnlyNewValuesShownOnCreation('Create');
+    });
+
 });

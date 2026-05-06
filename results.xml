@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="84.54218699999991">
-<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-06T05:42:40.338Z" hostname="chromium" tests="1" failures="0" skipped="0" time="80.118" errors="0">
-<testcase name="Lot Form › TC_22: Verify change fields show updated fields" classname="Pages\Projects\lotListForm.spec.ts" time="80.118">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="89.62674400000088">
+<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-06T06:03:25.114Z" hostname="chromium" tests="1" failures="0" skipped="0" time="87.596" errors="0">
+<testcase name="Lot Form › TC_23: Verify only new values are shown on creation" classname="Pages\Projects\lotListForm.spec.ts" time="87.596">
 </testcase>
 </testsuite>
 </testsuites>
