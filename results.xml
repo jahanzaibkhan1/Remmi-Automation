@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="38.556992000000086">
-<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-06T04:00:10.972Z" hostname="chromium" tests="1" failures="0" skipped="0" time="36.299" errors="0">
-<testcase name="Lot Form › Verify lot field shows correct lot name" classname="Pages\Projects\lotListForm.spec.ts" time="36.299">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="114.48743499999959">
+<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-06T04:06:52.488Z" hostname="chromium" tests="1" failures="0" skipped="0" time="112.207" errors="0">
+<testcase name="Lot Form › TC_11: Verify status reason dropdown shows all statuses" classname="Pages\Projects\lotListForm.spec.ts" time="112.207">
 </testcase>
 </testsuite>
 </testsuites>

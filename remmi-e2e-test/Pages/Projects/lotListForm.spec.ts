@@ -56,8 +56,12 @@ test.describe('Lot Form', () => {
         await new ProjectActions(sessionPage).verifyProjectCanBeChanged('Automation Testing');
     });
     
-    test('Verify lot field shows correct lot name', async ({ sessionPage }) => {
+    test('Test_10: Verify lot field shows correct lot name', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyLotNameOnLotFormTab();
     });
-    
+
+    test('TC_11: Verify status reason dropdown shows all statuses', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyStatusReasonDropdownShowsAll();
+    });
+
 });
