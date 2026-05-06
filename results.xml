@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="58.29287699999986">
-<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-06T04:31:05.236Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.777" errors="0">
-<testcase name="Lot Form › TC_13: Verify optional fields accept input" classname="Pages\Projects\lotListForm.spec.ts" time="54.777">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="62.82325">
+<testsuite name="Pages\Projects\lotListForm.spec.ts" timestamp="2026-05-06T04:36:58.943Z" hostname="chromium" tests="1" failures="0" skipped="0" time="60.385" errors="0">
+<testcase name="Lot Form › TC_14: Verify close button exits without saving" classname="Pages\Projects\lotListForm.spec.ts" time="60.385">
 </testcase>
 </testsuite>
 </testsuites>

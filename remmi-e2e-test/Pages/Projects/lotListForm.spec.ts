@@ -68,4 +68,8 @@ test.describe('Lot Form', () => {
         await new ProjectActions(sessionPage).verifyOptionalFieldsAcceptInput();
     });
 
+    test('TC_14: Verify close button exits without saving', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyCloseButtonExitsWithoutSaving();
+    });
+
 });

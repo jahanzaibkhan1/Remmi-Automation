@@ -4206,4 +4206,19 @@ export class ProjectActions {
         await this.closePopupIfVisible();
     }
 
+    // TC — Verify close button exits without saving
+    async verifyCloseButtonExitsWithoutSaving(): Promise<void> {
+        await this.navigateToLots();
+        await this.assertLotsExist();
+        await this.resetButton.click();
+        const firstRow = this.lotTableRows.first();
+        await this.rowLotCell(firstRow).click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotFormLotInput.fill('Changed Lot Name');
+        await this.page.waitForTimeout(500);
+        expect(await this.lotFormLotInput.inputValue()).toBe('Changed Lot Name');
+        await this.closePopupIfVisible();
+    }
+
 }
