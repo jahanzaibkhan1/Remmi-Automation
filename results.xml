@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="46.52292200000212">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-06T10:32:44.653Z" hostname="chromium" tests="1" failures="0" skipped="0" time="44.509" errors="0">
-<testcase name="Lot List Page › TC_05: Search a project in the Project dropdown in Lot tab" classname="Pages\Projects\precinctLotList.spec.ts" time="44.509">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.279780999999495">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-06T10:38:33.332Z" hostname="chromium" tests="1" failures="0" skipped="0" time="46.299" errors="0">
+<testcase name="Lot List Page › TC_06: Select a project from Project dropdown" classname="Pages\Projects\precinctLotList.spec.ts" time="46.299">
 </testcase>
 </testsuite>
 </testsuites>

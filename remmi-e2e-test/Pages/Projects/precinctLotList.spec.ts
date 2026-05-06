@@ -39,4 +39,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifySearchProjectInLotDropdown('Adb');
     });
 
+    test('TC_06: Select a project from Project dropdown', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).selectProjectInLotDropdown('Adb');
+    });
+
 });
