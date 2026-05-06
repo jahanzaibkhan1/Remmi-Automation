@@ -100,4 +100,8 @@ test.describe('Lot Form', () => {
         await new ProjectActions(sessionPage).verifyHistoryEventColumn();
     });
 
+    test('TC_22: Verify change fields show updated fields', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHistoryChangedFields();
+    });
+
 });
