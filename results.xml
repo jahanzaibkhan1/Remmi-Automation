@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="97.21140299999993">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T04:53:04.001Z" hostname="chromium" tests="1" failures="0" skipped="0" time="94.855" errors="0">
-<testcase name="Lot List Page › TC_31: Enter invalid area range" classname="Pages\Projects\precinctLotList.spec.ts" time="94.855">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="74.56321100000012">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T04:57:13.580Z" hostname="chromium" tests="1" failures="0" skipped="0" time="69.899" errors="0">
+<testcase name="Lot List Page › TC_32: Use Reset button after filtering" classname="Pages\Projects\precinctLotList.spec.ts" time="69.899">
 </testcase>
 </testsuite>
 </testsuites>
