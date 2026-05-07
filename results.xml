@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="102.88342400000059">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T06:40:04.587Z" hostname="chromium" tests="1" failures="0" skipped="0" time="100.941" errors="0">
-<testcase name="Lot List Page › TC_36: Share a view" classname="Pages\Projects\precinctLotList.spec.ts" time="100.941">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="96.26778399999999">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T06:45:00.552Z" hostname="chromium" tests="1" failures="0" skipped="0" time="94.314" errors="0">
+<testcase name="Lot List Page › TC_37: Delete a view" classname="Pages\Projects\precinctLotList.spec.ts" time="94.314">
 </testcase>
 </testsuite>
 </testsuites>
