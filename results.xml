@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="89.7562770000007">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T05:09:54.890Z" hostname="chromium" tests="1" failures="0" skipped="0" time="85.258" errors="0">
-<testcase name="Lot List Page › TC_34: Open View popup" classname="Pages\Projects\precinctLotList.spec.ts" time="85.258">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="124.25856099999976">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T05:15:13.744Z" hostname="chromium" tests="1" failures="0" skipped="0" time="119.86" errors="0">
+<testcase name="Lot List Page › TC_35: Create new view" classname="Pages\Projects\precinctLotList.spec.ts" time="119.86">
 </testcase>
 </testsuite>
 </testsuites>
