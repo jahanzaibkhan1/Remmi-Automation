@@ -5081,4 +5081,16 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Filter lots using Internal Area range (min to max) and verify lots are filtered
+ */
+    async filterLotsUsingAreaRange(min: string, max: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openInternalAreaFilter();
+        await this.setInternalArea(min, max);
+        await this.assertLotsExist();
+        await this.cleanupAfterLotTest();
+    }
+
 }
