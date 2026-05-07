@@ -4964,4 +4964,20 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Select multiple statuses from Status dropdown
+ */
+    async selectMultipleStatusesInDropdown(statusNames: string[]): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openStatusDropdown();
+        for (const statusName of statusNames) {
+            await this.searchInStatusDropdown(statusName);
+            await this.selectStatusByValue(statusName);
+            await this.statusDropdownSearchInput.fill('');
+            await this.page.waitForTimeout(500);
+        }
+        await this.cleanupAfterLotTest();
+    }
+
 }
