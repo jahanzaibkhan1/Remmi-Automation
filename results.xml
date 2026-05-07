@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="65.77777199999989">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T10:16:18.888Z" hostname="chromium" tests="1" failures="0" skipped="0" time="63.425" errors="0">
-<testcase name="Lot List Page › TC_53: Remove one tag only" classname="Pages\Projects\precinctLotList.spec.ts" time="63.425">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="61.95024399999902">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T10:19:29.218Z" hostname="chromium" tests="1" failures="0" skipped="0" time="59.677" errors="0">
+<testcase name="Lot List Page › TC_54: Reopen closed dropdown and verify selection" classname="Pages\Projects\precinctLotList.spec.ts" time="59.677">
 </testcase>
 </testsuite>
 </testsuites>

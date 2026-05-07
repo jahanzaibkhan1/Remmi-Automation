@@ -231,4 +231,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).removeOneTagOnly('adb', '2');
     });
 
+    test('TC_54: Reopen closed dropdown and verify selection', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).reopenDropdownAndVerifySelection('adb');
+    });
+
 });
