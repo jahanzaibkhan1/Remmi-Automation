@@ -206,5 +206,9 @@ test.describe('Lot List Page', () => {
     test('TC_47: Select all lots using master checkbox', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).selectAllLotsUsingMasterCheckbox();
     });
-    
+
+    test('TC_48: Deselect one selected lot', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).deselectOneSelectedLot();
+    });
+
 });
