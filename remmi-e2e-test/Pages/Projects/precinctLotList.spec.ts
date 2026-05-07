@@ -147,4 +147,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).useResetButtonAfterFiltering('adb');
     });
 
+    test('TC_33: Use Reset with no filters applied', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).useResetWithNoFiltersApplied();
+    });
+
 });
