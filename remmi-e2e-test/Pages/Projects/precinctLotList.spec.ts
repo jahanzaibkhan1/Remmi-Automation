@@ -159,12 +159,12 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).createNewView('My Test View');
     });
 
-    test('TC_36: Share a view', async ({ sessionPage }) => {
-        await new ProjectActions(sessionPage).shareView('Abdul Rehman', 'Automation Team');
+    test('TC_36: Delete a view', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).deleteView('My Test View');
     });
 
-    test('TC_37: Delete a view', async ({ sessionPage }) => {
-        await new ProjectActions(sessionPage).deleteView('My Test View');
+    test('TC_37: Share a view', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).shareView('Abdul Rehman', 'Automation Team');
     });
 
     test('TC_38: Search column in View popup', async ({ sessionPage }) => {
@@ -225,6 +225,10 @@ test.describe('Lot List Page', () => {
 
     test('TC_52: Apply multiple dropdown filters', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).applyMultipleDropdownFilters('adb', '2', 'For Sale');
+    });
+
+    test('TC_53: Remove one tag only', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).removeOneTagOnly('adb', '2');
     });
 
 });
