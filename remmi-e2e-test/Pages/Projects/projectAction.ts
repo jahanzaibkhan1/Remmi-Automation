@@ -5024,4 +5024,17 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Close Status dropdown
+ */
+    async closeStatusDropdownTest(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openStatusDropdown();
+        await expect(this.statusDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeDropdown();
+        await expect(this.statusDropdownPanel).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
 }

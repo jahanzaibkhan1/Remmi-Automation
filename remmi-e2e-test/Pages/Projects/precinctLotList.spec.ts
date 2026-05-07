@@ -115,4 +115,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).removeSelectedStatusTagInStatusDropdown('For Sale');
     });
 
+    test('TC_25: Close Status dropdown', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).closeStatusDropdownTest();
+    });
+
 });
