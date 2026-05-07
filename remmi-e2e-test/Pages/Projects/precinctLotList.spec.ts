@@ -166,5 +166,9 @@ test.describe('Lot List Page', () => {
     test('TC_37: Delete a view', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).deleteView('My Test View');
     });
-    
+
+    test('TC_38: Search column in View popup', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).searchColumnInViewPopup('Project');
+    });
+
 });

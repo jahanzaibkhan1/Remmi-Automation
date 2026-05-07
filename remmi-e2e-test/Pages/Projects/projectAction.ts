@@ -5210,4 +5210,21 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+    * Search for a column in View popup
+    */
+    async searchColumnInViewPopup(searchTerm: string = 'Project'): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openDefaultViewPopup();
+        await expect(this.columnSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.columnSearchInput.fill(searchTerm);
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.columnItemByName(searchTerm).first()).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+        await this.columnSearchInput.fill('');
+        await this.page.waitForTimeout(1000);
+        await this.cleanupAfterLotTest();
+    }
 }
