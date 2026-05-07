@@ -123,4 +123,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).openAndClosePriceRangeFilter();
     });
 
+    test('TC_27: Filter lots using price range', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).filterLotsUsingPriceRange('500000', '1000000');
+    });
+
 });
