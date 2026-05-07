@@ -5287,4 +5287,19 @@ export class ProjectActions {
         await expect(this.viewPopupContent).toBeVisible();
         await this.cleanupAfterLotTest();
     }
+
+    /**
+     * Reorder using up/down arrows — Status moves accordingly
+     */
+    async reorderColumnUsingArrows(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.openDefaultViewPopup();
+        await this.reorderCollapsedArrow.click();
+        await this.page.waitForTimeout(500);
+        await this.reorderExpandCollapseArrow.click();
+        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.cleanupAfterLotTest();
+    }
+
 }
