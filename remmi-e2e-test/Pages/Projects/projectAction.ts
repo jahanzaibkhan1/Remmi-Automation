@@ -5262,4 +5262,29 @@ export class ProjectActions {
         await this.clickShowAll();
         await this.cleanupAfterLotTest();
     }
+
+    /**
+ * Drag a column to reorder it (drag first column to second position)
+ */
+    async dragColumnToReorder(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openDefaultViewPopup();
+        const handleCount = await this.visibleColumnList.count();
+        if (handleCount < 2) {
+            throw new Error('Less than 2 draggable statuses found, cannot perform drag-and-drop.');
+        }
+        const firstHandle = this.visibleColumnList.nth(0);
+        const secondHandle = this.visibleColumnList.nth(1);
+        await firstHandle.scrollIntoViewIfNeeded();
+        await this.page.waitForTimeout(300);
+        const box1 = await firstHandle.boundingBox();
+        const box2 = await secondHandle.boundingBox();
+        if (!box1 || !box2) {
+            throw new Error('Could not get bounding boxes for drag handles.');
+        }
+        await this.performDragDrop(box1, box2);
+        await expect(this.viewPopupContent).toBeVisible();
+        await this.cleanupAfterLotTest();
+    }
 }
