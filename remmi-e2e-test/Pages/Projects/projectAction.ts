@@ -5430,4 +5430,16 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+     * Deselect one selected lot (toggle checkbox off for the first selected row)
+     */
+    async deselectOneSelectedLot(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        const firstRow = this.lotTableRows.first();
+        await this.toggleRowCheckboxAndVerify(firstRow, true);
+        await this.toggleRowCheckboxAndVerify(firstRow, false);
+        await this.cleanupAfterLotTest();
+    }
+
 }

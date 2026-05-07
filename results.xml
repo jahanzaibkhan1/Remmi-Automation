@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="92.73471299999952">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T08:52:35.698Z" hostname="chromium" tests="1" failures="0" skipped="0" time="90.678" errors="0">
-<testcase name="Lot List Page › TC_47: Select all lots using master checkbox" classname="Pages\Projects\precinctLotList.spec.ts" time="90.678">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="65.74573699999974">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T09:15:34.131Z" hostname="chromium" tests="1" failures="0" skipped="0" time="63.436" errors="0">
+<testcase name="Lot List Page › TC_48: Deselect one selected lot" classname="Pages\Projects\precinctLotList.spec.ts" time="63.436">
 </testcase>
 </testsuite>
 </testsuites>
