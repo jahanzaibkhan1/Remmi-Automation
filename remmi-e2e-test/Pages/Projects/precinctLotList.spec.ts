@@ -234,5 +234,9 @@ test.describe('Lot List Page', () => {
     test('TC_54: Reopen closed dropdown and verify selection', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).reopenDropdownAndVerifySelection('adb');
     });
+    
+    test('TC_55: Apply bed filter and switch to Project dropdown', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).applyBedFilterAndSwitchToProjectDropdown('2');
+    });
 
 });
