@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="74.56321100000012">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T04:57:13.580Z" hostname="chromium" tests="1" failures="0" skipped="0" time="69.899" errors="0">
-<testcase name="Lot List Page › TC_32: Use Reset button after filtering" classname="Pages\Projects\precinctLotList.spec.ts" time="69.899">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="57.63568099999986">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T05:00:41.521Z" hostname="chromium" tests="1" failures="0" skipped="0" time="53.077" errors="0">
+<testcase name="Lot List Page › TC_33: Use Reset with no filters applied" classname="Pages\Projects\precinctLotList.spec.ts" time="53.077">
 </testcase>
 </testsuite>
 </testsuites>

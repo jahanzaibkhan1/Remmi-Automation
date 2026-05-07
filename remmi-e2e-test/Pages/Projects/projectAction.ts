@@ -5123,4 +5123,14 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Use Reset button with no filters applied (verify it works gracefully)
+ */
+    async useResetWithNoFiltersApplied(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetButton.click();
+        await this.page.waitForTimeout(1000);
+        await this.assertLotsExist();
+        await this.cleanupAfterLotTest();
+    }
 }
