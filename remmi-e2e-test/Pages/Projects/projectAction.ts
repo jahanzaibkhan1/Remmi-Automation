@@ -5381,4 +5381,28 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * HELPER — Toggle a row checkbox and verify selected state
+ */
+    private async toggleRowCheckboxAndVerify(row: Locator, expectSelected: boolean): Promise<void> {
+        const checkbox = this.rowCheckbox(row);
+        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await checkbox.click();
+        await this.page.waitForTimeout(500);
+        const isSelected = await this.isRowCheckboxSelected(row);
+        expect(isSelected).toBe(expectSelected);
+    }
+
+    /**
+     * Select single lot from list (toggle checkbox)
+     */
+    async selectSingleLotFromList(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        const firstRow = this.lotTableRows.first();
+        await this.toggleRowCheckboxAndVerify(firstRow, true);
+        await this.toggleRowCheckboxAndVerify(firstRow, false);
+        await this.cleanupAfterLotTest();
+    }
+
 }

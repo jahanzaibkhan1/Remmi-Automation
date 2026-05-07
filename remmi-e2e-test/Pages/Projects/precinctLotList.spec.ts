@@ -194,5 +194,9 @@ test.describe('Lot List Page', () => {
     test('TC_44: Select a saved view', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).selectSavedView();
     });
+
+    test('TC_45: Select single lot from list', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).selectSingleLotFromList();
+    });
     
 });
