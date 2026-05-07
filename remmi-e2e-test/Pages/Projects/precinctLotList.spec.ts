@@ -203,4 +203,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).selectMultipleLotsManually(2);
     });
     
+    test('TC_47: Select all lots using master checkbox', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).selectAllLotsUsingMasterCheckbox();
+    });
+    
 });

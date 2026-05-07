@@ -5419,4 +5419,15 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Select all lots using master/header checkbox in status row
+ */
+    async selectAllLotsUsingMasterCheckbox(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.selectAllLotCheckbox.click();
+        await this.cleanupAfterLotTest();
+    }
+
 }
