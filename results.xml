@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="92.32744099999964">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T10:05:15.848Z" hostname="chromium" tests="1" failures="0" skipped="0" time="90.094" errors="0">
-<testcase name="Lot List Page › TC_51: Toggle status sorting" classname="Pages\Projects\precinctLotList.spec.ts" time="90.094">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="61.225">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T10:11:28.555Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.925" errors="0">
+<testcase name="Lot List Page › TC_52: Apply multiple dropdown filters" classname="Pages\Projects\precinctLotList.spec.ts" time="58.925">
 </testcase>
 </testsuite>
 </testsuites>

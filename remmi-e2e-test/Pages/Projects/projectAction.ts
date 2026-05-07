@@ -5513,4 +5513,36 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Apply multiple dropdown filters (Project + Bed + Status) and verify results
+ */
+    async applyMultipleDropdownFilters(projectName: string, bedValue: string, statusName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+
+        // Apply Project filter
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.assertFirstOptionMatchesProject(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+
+        // Apply Bed filter
+        await this.openBedDropdown();
+        await this.selectBedByValue(bedValue);
+        await this.closeDropdown();
+
+        // Apply Status filter
+        await this.openStatusDropdown();
+        await this.searchInStatusDropdown(statusName);
+        await this.selectStatusByValue(statusName);
+        await this.closeDropdown();
+
+        // Verify all selected tags are visible
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedStatusTagByValue(statusName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        await this.cleanupAfterLotTest();
+    }
+
 }

@@ -223,4 +223,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).toggleStatusSorting();
     });
 
+    test('TC_52: Apply multiple dropdown filters', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).applyMultipleDropdownFilters('adb', '2', 'For Sale');
+    });
+
 });
