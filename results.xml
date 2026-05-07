@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="69.83584999999776">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T08:28:15.929Z" hostname="chromium" tests="1" failures="0" skipped="0" time="66.967" errors="0">
-<testcase name="Lot List Page › TC_43: Save reordered statuses" classname="Pages\Projects\precinctLotList.spec.ts" time="66.967">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="93.66358399999886">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T08:37:42.331Z" hostname="chromium" tests="1" failures="0" skipped="0" time="91.662" errors="0">
+<testcase name="Lot List Page › TC_44: Select a saved view" classname="Pages\Projects\precinctLotList.spec.ts" time="91.662">
 </testcase>
 </testsuite>
 </testsuites>
