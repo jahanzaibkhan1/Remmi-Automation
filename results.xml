@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="48.81696699999995">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T04:02:38.986Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.868" errors="0">
-<testcase name="Lot List Page › TC_19: Search a status in Status dropdown" classname="Pages\Projects\precinctLotList.spec.ts" time="45.868">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.09287199999997">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T04:06:34.629Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.775" errors="0">
+<testcase name="Lot List Page › TC_20: Select single status" classname="Pages\Projects\precinctLotList.spec.ts" time="47.775">
 </testcase>
 </testsuite>
 </testsuites>

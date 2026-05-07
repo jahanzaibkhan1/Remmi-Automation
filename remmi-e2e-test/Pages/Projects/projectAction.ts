@@ -4952,4 +4952,16 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Select a single status from Status dropdown
+ */
+    async selectSingleStatusInDropdown(statusName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openStatusDropdown();
+        await this.searchInStatusDropdown(statusName);
+        await this.selectStatusByValue(statusName);
+        await this.cleanupAfterLotTest();
+    }
+
 }

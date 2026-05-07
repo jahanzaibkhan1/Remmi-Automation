@@ -94,5 +94,9 @@ test.describe('Lot List Page', () => {
     test('TC_19: Search a status in Status dropdown', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).searchStatusInStatusDropdown('For Sale');
     });
+
+    test('TC_20: Select single status', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).selectSingleStatusInDropdown('For Sale');
+    });
     
 });
