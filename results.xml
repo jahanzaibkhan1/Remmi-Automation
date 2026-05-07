@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="49.578441999999804">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T04:42:08.011Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.208" errors="0">
-<testcase name="Lot List Page › TC_29: Open Area range filter" classname="Pages\Projects\precinctLotList.spec.ts" time="47.208">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="54.27134300000034">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T04:45:57.306Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.845" errors="0">
+<testcase name="Lot List Page › TC_30: Filter lots using area range" classname="Pages\Projects\precinctLotList.spec.ts" time="51.845">
 </testcase>
 </testsuite>
 </testsuites>

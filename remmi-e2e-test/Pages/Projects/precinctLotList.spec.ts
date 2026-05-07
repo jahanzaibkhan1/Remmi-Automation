@@ -135,4 +135,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).openAndCloseAreaRangeFilter();
     });
 
+    test('TC_30: Filter lots using area range', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).filterLotsUsingAreaRange('50', '200');
+    });
+
 });
