@@ -5354,7 +5354,7 @@ export class ProjectActions {
      * HELPER — Verify table column order matches expected names
      */
     private async assertTableColumnOrder(): Promise<void> {
-        await expect(this.tableColumnHeaderByIndex(0)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT }); 
+        await expect(this.tableColumnHeaderByIndex(0)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -5368,6 +5368,16 @@ export class ProjectActions {
         await this.saveOrCreateButton.click();
         await this.page.waitForTimeout(1500);
         await this.assertTableColumnOrder();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Select a saved view from the saved view dropdown
+ */
+    async selectSavedView(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openDefaultViewPopup();
         await this.cleanupAfterLotTest();
     }
 

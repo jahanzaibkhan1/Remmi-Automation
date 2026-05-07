@@ -190,5 +190,9 @@ test.describe('Lot List Page', () => {
     test('TC_43: Save reordered statuses', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).saveReorderedStatuses();
     });
+
+    test('TC_44: Select a saved view', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).selectSavedView();
+    });
     
 });
