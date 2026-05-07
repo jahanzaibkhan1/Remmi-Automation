@@ -2877,6 +2877,18 @@ export class ProjectActions {
         return this.page.locator('table thead th', { has: this.page.locator('p', { hasText: /^Project Status$/ }) });
     }
 
+    private projectColumnHeader(): Locator {
+        return this.page.locator('table thead th', { has: this.page.locator('p', { hasText: /^Project$/ }) });
+    }
+
+    private get projectColumnSortIcon(): Locator {
+        return this.projectColumnHeader().locator('i.custom-sort');
+    }
+
+    private get projectColumnSortIconDesc(): Locator {
+        return this.projectColumnHeader().locator('i.pi-sort-amount-up-alt');
+    }
+
     private get statusColumnSortIcon(): Locator {
         return this.statusColumnHeader().locator('i.custom-sort');
     }
@@ -5259,7 +5271,9 @@ export class ProjectActions {
         await this.resetAndAssertLotRowVisible();
         await this.openDefaultViewPopup();
         await this.clickHideAll();
+        await this.page.waitForTimeout(1200)
         await this.clickShowAll();
+        await this.page.waitForTimeout(500)
         await this.cleanupAfterLotTest();
     }
 
@@ -5470,6 +5484,18 @@ export class ProjectActions {
         await this.openBulkEditDialog();
         await this.saveAndCloseBulkEdit();
         await this.toggleRowCheckboxAndVerify(firstRow, false);
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Sort lots by Status column (Asc/Desc)
+ */
+    async sortLotsByStatus(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await expect(this.projectColumnSortIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectColumnSortIcon.click();
+        await expect(this.projectColumnSortIconDesc).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 

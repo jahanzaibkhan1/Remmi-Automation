@@ -215,4 +215,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).openBulkEditAfterSelectingLots();
     });
 
+    test('TC_50: Sort lots by Status', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).sortLotsByStatus();
+    });
+
 });
