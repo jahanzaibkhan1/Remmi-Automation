@@ -5545,4 +5545,37 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Remove one filter tag only and verify other tags remain
+ */
+    async removeOneTagOnly(projectName: string, bedValue: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+
+        // Apply Project filter
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.assertFirstOptionMatchesProject(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+
+        // Apply Bed filter
+        await this.openBedDropdown();
+        await this.selectBedByValue(bedValue);
+        await this.closeDropdown();
+
+        // Verify both tags visible
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        // Remove only the Project tag
+        await this.projectTagCrossIcon(projectName).click();
+        await this.page.waitForTimeout(800);
+
+        // Verify Project tag is removed but Bed tag remains
+        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        await this.cleanupAfterLotTest();
+    }
+
 }
