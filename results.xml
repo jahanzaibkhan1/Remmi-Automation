@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="57.653804">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T04:09:05.748Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.252" errors="0">
-<testcase name="Lot List Page › TC_21: Select multiple statuses" classname="Pages\Projects\precinctLotList.spec.ts" time="55.252">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.126121999999974">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T04:11:47.442Z" hostname="chromium" tests="1" failures="0" skipped="0" time="52.763" errors="0">
+<testcase name="Lot List Page › TC_22: Select all statuses" classname="Pages\Projects\precinctLotList.spec.ts" time="52.763">
 </testcase>
 </testsuite>
 </testsuites>

@@ -4980,4 +4980,16 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Use 'Select All' in Status dropdown
+ */
+    async useSelectAllInStatusDropdown(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openStatusDropdown();
+        await this.statusDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+        await this.cleanupAfterLotTest();
+    }
+
 }

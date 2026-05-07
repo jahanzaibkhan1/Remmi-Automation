@@ -102,5 +102,9 @@ test.describe('Lot List Page', () => {
     test('TC_21: Select multiple statuses', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).selectMultipleStatusesInDropdown(['For Sale', 'Sold']);
     });
+
+    test('TC_22: Select all statuses', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).useSelectAllInStatusDropdown();
+    });
     
 });
