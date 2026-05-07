@@ -175,4 +175,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).hideAllAndShowAllColumns();
     });
 
+    test('TC_40: Hide/show statuses (bulk)', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).hideAllAndShowAllColumns();
+    });
+
 });
