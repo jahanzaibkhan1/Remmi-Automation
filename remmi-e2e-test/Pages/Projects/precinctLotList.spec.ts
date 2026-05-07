@@ -127,4 +127,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).filterLotsUsingPriceRange('500000', '1000000');
     });
 
+    test('TC_28: Use invalid price range', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).useInvalidPriceRange('1000000', '500');
+    });
+
 });
