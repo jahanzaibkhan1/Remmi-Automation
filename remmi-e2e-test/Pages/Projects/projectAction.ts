@@ -5442,4 +5442,35 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+     * HELPER — Open Bulk Edit dialog (assumes lots are already selected)
+     */
+    private async openBulkEditDialog(): Promise<void> {
+        await expect(this.bulkEditButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bulkEditButton.click();
+    }
+
+    /**
+     * HELPER — Save & Close Bulk Edit and verify success toast
+     */
+    private async saveAndCloseBulkEdit(): Promise<void> {
+        await expect(this.saveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.saveAndCloseButton.click();
+        await this.assertSuccessToast();
+    }
+
+    /**
+ * Open bulk edit after selecting lots, save and close, verify success toast
+ */
+    async openBulkEditAfterSelectingLots(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        const firstRow = this.lotTableRows.first();
+        await this.toggleRowCheckboxAndVerify(firstRow, true);
+        await this.openBulkEditDialog();
+        await this.saveAndCloseBulkEdit();
+        await this.toggleRowCheckboxAndVerify(firstRow, false);
+        await this.cleanupAfterLotTest();
+    }
+
 }

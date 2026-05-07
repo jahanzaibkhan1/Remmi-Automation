@@ -211,4 +211,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).deselectOneSelectedLot();
     });
 
+    test('TC_49: Open bulk edit after selecting lots', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).openBulkEditAfterSelectingLots();
+    });
+
 });
