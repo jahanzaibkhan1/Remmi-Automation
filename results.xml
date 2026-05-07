@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="99.9845549999997">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T07:13:11.179Z" hostname="chromium" tests="1" failures="0" skipped="0" time="97.647" errors="0">
-<testcase name="Lot List Page › TC_39: Hide all and show all columns" classname="Pages\Projects\precinctLotList.spec.ts" time="97.647">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="119.22214300000108">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T07:26:49.815Z" hostname="chromium" tests="1" failures="0" skipped="0" time="116.85" errors="0">
+<testcase name="Lot List Page › TC_41: Drag statuses to reorder" classname="Pages\Projects\precinctLotList.spec.ts" time="116.85">
 </testcase>
 </testsuite>
 </testsuites>

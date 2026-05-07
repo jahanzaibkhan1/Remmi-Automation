@@ -179,4 +179,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).hideAllAndShowAllColumns();
     });
 
+    test('TC_41: Drag statuses to reorder', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).dragColumnToReorder();
+    });
+
 });
