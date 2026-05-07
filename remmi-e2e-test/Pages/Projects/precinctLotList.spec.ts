@@ -131,4 +131,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).useInvalidPriceRange('1000000', '500');
     });
 
+    test('TC_29: Open Area range filter', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).openAndCloseAreaRangeFilter();
+    });
+
 });
