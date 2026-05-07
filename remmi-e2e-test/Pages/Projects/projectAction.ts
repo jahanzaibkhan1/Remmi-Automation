@@ -4935,4 +4935,21 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Search a status in Status dropdown
+ */
+    async searchStatusInStatusDropdown(statusName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openStatusDropdown();
+        await expect(this.statusDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.statusDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.statusDropdownSearchInput.fill(statusName);
+        await this.page.waitForTimeout(500);
+        const matchingOption = this.statusDropdownOptions.filter({ hasText: statusName }).first();
+        await expect(matchingOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.statusDropdownSearchInput.fill('');
+        await this.cleanupAfterLotTest();
+    }
+
 }
