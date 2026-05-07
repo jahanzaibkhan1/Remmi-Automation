@@ -5578,4 +5578,27 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Reopen closed dropdown and verify selection persists
+ */
+    async reopenDropdownAndVerifySelection(projectName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+
+        // Apply Project filter
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.assertFirstOptionMatchesProject(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.openProjectDropdown();
+        await this.page.waitForTimeout(800);
+        const selectedOption = this.projectDropdownOptions.filter({ hasText: projectName }).first();
+        await expect(selectedOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const isChecked = await selectedOption.locator('.p-checkbox-box.p-highlight, input[type="checkbox"]:checked').count();
+        expect(isChecked).toBeGreaterThan(0);
+        await this.closeDropdown();
+        await this.cleanupAfterLotTest();
+    }
+
 }
