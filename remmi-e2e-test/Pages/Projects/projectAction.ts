@@ -5302,4 +5302,73 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * HELPER — Get drag handle by index from visible column list
+ */
+    private async getColumnHandleAndName(index: number): Promise<{ handle: Locator; name: string }> {
+        const handle = this.visibleColumnList.nth(index);
+        await this.page.waitForTimeout(1000);
+        const name = (await handle.locator('p').innerText()).trim();
+        return { handle, name };
+    }
+
+    /**
+     * HELPER — Get bounding box safely from a column handle
+     */
+    private async getBoxFromHandle(handle: Locator): Promise<{ x: number; y: number; width: number; height: number }> {
+        await handle.scrollIntoViewIfNeeded();
+        await this.page.waitForTimeout(500);
+        const box = await handle.boundingBox();
+        if (!box) {
+            throw new Error('Could not get bounding box for drag handle.');
+        }
+        return box;
+    }
+
+    /**
+     * HELPER — Drag column from one position to another
+     */
+    private async dragColumn(fromIndex: number, toIndex: number): Promise<void> {
+        const handleCount = await this.visibleColumnList.count();
+        if (handleCount < 2) {
+            throw new Error('Less than 2 draggable columns found, cannot perform drag-and-drop.');
+        }
+
+        const fromColumn = this.visibleColumnList.nth(fromIndex);
+        const toColumn = this.visibleColumnList.nth(toIndex);
+
+        const fromBox = await this.getBoxFromHandle(fromColumn);
+        const toBox = await this.getBoxFromHandle(toColumn);
+
+        await this.performDragDrop(fromBox, toBox);
+    }
+
+    /**
+     * HELPER — Get table column header name by index
+     */
+    private tableColumnHeaderByIndex(index: number): Locator {
+        return this.page.locator('table thead th p').nth(index);
+    }
+
+    /**
+     * HELPER — Verify table column order matches expected names
+     */
+    private async assertTableColumnOrder(): Promise<void> {
+        await expect(this.tableColumnHeaderByIndex(0)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT }); 
+    }
+
+    /**
+     * Save the reordered statuses after drag-and-drop, then verify table column order changed
+     */
+    async saveReorderedStatuses(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.openDefaultViewPopup();
+        await this.dragColumn(0, 1);
+        await expect(this.viewPopupContent).toBeVisible();
+        await this.saveOrCreateButton.click();
+        await this.page.waitForTimeout(1500);
+        await this.assertTableColumnOrder();
+        await this.cleanupAfterLotTest();
+    }
+
 }
