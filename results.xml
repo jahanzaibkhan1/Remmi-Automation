@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="65.74573699999974">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T09:15:34.131Z" hostname="chromium" tests="1" failures="0" skipped="0" time="63.436" errors="0">
-<testcase name="Lot List Page › TC_48: Deselect one selected lot" classname="Pages\Projects\precinctLotList.spec.ts" time="63.436">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.26635700000078">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T09:21:51.880Z" hostname="chromium" tests="1" failures="0" skipped="0" time="62.057" errors="0">
+<testcase name="Lot List Page › TC_49: Open bulk edit after selecting lots" classname="Pages\Projects\precinctLotList.spec.ts" time="62.057">
 </testcase>
 </testsuite>
 </testsuites>
