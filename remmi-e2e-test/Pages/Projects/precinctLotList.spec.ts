@@ -186,5 +186,9 @@ test.describe('Lot List Page', () => {
     test('TC_42: Reorder using arrows', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).reorderColumnUsingArrows();
     });
+
+    test('TC_43: Save reordered statuses', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).saveReorderedStatuses();
+    });
     
 });
