@@ -4992,4 +4992,18 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Use 'Deselect All' in Status dropdown 
+ */
+    async useDeselectAllInStatusDropdown(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openStatusDropdown();
+        await this.statusDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+        await this.statusDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+        await this.cleanupAfterLotTest();
+    }
+
 }

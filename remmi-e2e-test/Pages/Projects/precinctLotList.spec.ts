@@ -107,4 +107,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).useSelectAllInStatusDropdown();
     });
     
+    test('TC_23: Deselect all statuses', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).useDeselectAllInStatusDropdown();
+    });
+    
 });
