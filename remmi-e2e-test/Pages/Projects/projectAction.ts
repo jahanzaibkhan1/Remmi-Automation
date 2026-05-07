@@ -4922,4 +4922,17 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Open Status dropdown and verify options appear
+ */
+    async openAndAssertStatusDropdown(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openStatusDropdown();
+        await expect(this.statusDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const optionsCount = await this.statusDropdownOptions.count();
+        expect(optionsCount).toBeGreaterThan(0);
+        await this.cleanupAfterLotTest();
+    }
+
 }
