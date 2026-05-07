@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="113.86499799999967">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T08:43:39.078Z" hostname="chromium" tests="1" failures="0" skipped="0" time="111.858" errors="0">
-<testcase name="Lot List Page › TC_45: Select single lot from list" classname="Pages\Projects\precinctLotList.spec.ts" time="111.858">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="59.102250999998304">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T08:48:55.305Z" hostname="chromium" tests="1" failures="0" skipped="0" time="57.104" errors="0">
+<testcase name="Lot List Page › TC_46: Select multiple lots manually" classname="Pages\Projects\precinctLotList.spec.ts" time="57.104">
 </testcase>
 </testsuite>
 </testsuites>

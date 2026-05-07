@@ -5401,7 +5401,21 @@ export class ProjectActions {
         await this.resetAndAssertLotRowVisible();
         const firstRow = this.lotTableRows.first();
         await this.toggleRowCheckboxAndVerify(firstRow, true);
-        await this.toggleRowCheckboxAndVerify(firstRow, false);
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Select multiple lots manually (toggle checkboxes for first N rows)
+ */
+    async selectMultipleLotsManually(count: number = 2): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        const totalRows = await this.lotTableRows.count();
+        const selectCount = Math.min(count, totalRows);
+        expect(selectCount).toBeGreaterThan(1);
+        for (let i = 0; i < selectCount; i++) {
+            await this.toggleRowCheckboxAndVerify(this.lotTableRows.nth(i), true);
+        }
         await this.cleanupAfterLotTest();
     }
 

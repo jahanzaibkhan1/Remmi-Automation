@@ -198,5 +198,9 @@ test.describe('Lot List Page', () => {
     test('TC_45: Select single lot from list', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).selectSingleLotFromList();
     });
+
+    test('TC_46: Select multiple lots manually', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).selectMultipleLotsManually(2);
+    });
     
 });
