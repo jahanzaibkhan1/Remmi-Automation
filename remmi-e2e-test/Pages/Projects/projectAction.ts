@@ -5037,4 +5037,14 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+    * Open Price range filter (test)
+    */
+    async openAndClosePriceRangeFilter(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openPriceRangeFilter();
+        await this.cleanupAfterLotTest();
+    }
+
 }
