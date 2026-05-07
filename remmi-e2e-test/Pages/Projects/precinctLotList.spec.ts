@@ -143,4 +143,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).useInvalidAreaRange('500', '50');
     });
 
+    test('TC_32: Use Reset button after filtering', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).useResetButtonAfterFiltering('adb');
+    });
+
 });
