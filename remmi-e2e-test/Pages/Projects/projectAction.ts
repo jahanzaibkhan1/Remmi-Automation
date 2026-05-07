@@ -5071,4 +5071,14 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Open Area range filter (test)
+ */
+    async openAndCloseAreaRangeFilter(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openInternalAreaFilter();
+        await this.cleanupAfterLotTest();
+    }
+
 }
