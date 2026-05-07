@@ -155,4 +155,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).openAndAssertViewPopup();
     });
 
+    test('TC_35: Create new view', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).createNewView('My Test View');
+    });
+
 });
