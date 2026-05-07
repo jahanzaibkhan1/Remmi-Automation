@@ -171,4 +171,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).searchColumnInViewPopup('Project');
     });
 
+    test('TC_39: Hide all and show all columns', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).hideAllAndShowAllColumns();
+    });
+
 });

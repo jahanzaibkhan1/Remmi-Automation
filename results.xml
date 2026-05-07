@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="68.69944700000063">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T06:49:24.845Z" hostname="chromium" tests="1" failures="0" skipped="0" time="66.755" errors="0">
-<testcase name="Lot List Page › TC_38: Search column in View popup" classname="Pages\Projects\precinctLotList.spec.ts" time="66.755">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="99.9845549999997">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T07:13:11.179Z" hostname="chromium" tests="1" failures="0" skipped="0" time="97.647" errors="0">
+<testcase name="Lot List Page › TC_39: Hide all and show all columns" classname="Pages\Projects\precinctLotList.spec.ts" time="97.647">
 </testcase>
 </testsuite>
 </testsuites>

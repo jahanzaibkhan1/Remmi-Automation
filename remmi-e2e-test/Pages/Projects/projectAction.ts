@@ -5227,4 +5227,39 @@ export class ProjectActions {
         await this.page.waitForTimeout(1000);
         await this.cleanupAfterLotTest();
     }
+
+    /**
+ * HELPER — Click 'Hide All' button and verify Shown list is empty
+ */
+    private async clickHideAll(): Promise<void> {
+        await expect(this.hideAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.hideAllButton.click();
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.visibleColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Click 'Show All' button and verify Hidden list is empty
+     */
+    private async clickShowAll(): Promise<void> {
+        await expect(this.showAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.showAllButton.evaluate(button => button.scrollIntoView({ behavior: 'instant', block: 'center' }));
+        await this.page.waitForTimeout(1300);
+        await this.showAllButton.click();
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.hiddenColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.visibleColumnList.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+  * Hide all columns then show all columns via Hide All / Show All buttons
+  */
+    async hideAllAndShowAllColumns(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openDefaultViewPopup();
+        await this.clickHideAll();
+        await this.clickShowAll();
+        await this.cleanupAfterLotTest();
+    }
 }
