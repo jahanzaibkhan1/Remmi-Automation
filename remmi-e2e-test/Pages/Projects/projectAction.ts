@@ -5499,4 +5499,18 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Toggle status sorting (click sort icon again to switch to ascending/descending)
+ */
+    async toggleStatusSorting(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await expect(this.projectColumnSortIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectColumnSortIcon.click();
+        await expect(this.projectColumnSortIconDesc).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectColumnSortIconDesc.click();
+        await expect(this.projectColumnSortIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
 }

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="107.07253999999911">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T09:59:26.863Z" hostname="chromium" tests="1" failures="0" skipped="0" time="104.79" errors="0">
-<testcase name="Lot List Page › TC_50: Sort lots by Status" classname="Pages\Projects\precinctLotList.spec.ts" time="104.79">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="92.32744099999964">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T10:05:15.848Z" hostname="chromium" tests="1" failures="0" skipped="0" time="90.094" errors="0">
+<testcase name="Lot List Page › TC_51: Toggle status sorting" classname="Pages\Projects\precinctLotList.spec.ts" time="90.094">
 </testcase>
 </testsuite>
 </testsuites>
