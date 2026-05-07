@@ -5047,4 +5047,16 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Filter lots using Price Range (min to max) and verify lots are filtered
+ */
+    async filterLotsUsingPriceRange(min: string, max: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openPriceRangeFilter();
+        await this.setPriceRange(min, max);
+        await this.assertLotsExist();
+        await this.cleanupAfterLotTest();
+    }
+
 }

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="71.1206000000001">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T04:29:41.716Z" hostname="chromium" tests="1" failures="0" skipped="0" time="68.909" errors="0">
-<testcase name="Lot List Page › TC_26: Open Price range filter" classname="Pages\Projects\precinctLotList.spec.ts" time="68.909">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="50.16522599999979">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T04:33:26.474Z" hostname="chromium" tests="1" failures="0" skipped="0" time="47.761" errors="0">
+<testcase name="Lot List Page › TC_27: Filter lots using price range" classname="Pages\Projects\precinctLotList.spec.ts" time="47.761">
 </testcase>
 </testsuite>
 </testsuites>
