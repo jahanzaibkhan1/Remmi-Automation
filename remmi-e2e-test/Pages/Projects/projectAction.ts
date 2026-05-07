@@ -5133,4 +5133,15 @@ export class ProjectActions {
         await this.assertLotsExist();
         await this.cleanupAfterLotTest();
     }
+
+    /**
+ * Open View popup and verify it appears
+ */
+    async openAndAssertViewPopup(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.defaultViewButton.click();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
 }
