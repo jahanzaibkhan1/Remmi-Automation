@@ -5185,4 +5185,29 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+    * Delete a view from the View popup
+    */
+    async deleteView(viewName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openDefaultViewPopup();
+        await expect(this.savedViewDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.savedViewDropdown.click();
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        const viewOption = this.savedViewOption(viewName);
+        await expect(viewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const deleteIcon = viewOption.locator('img[src*="delete_icon.svg"]');
+        await expect(deleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await deleteIcon.click();
+        try {
+            await expect(this.confirmAnyButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
+            await this.confirmAnyButton.click();
+        } catch {
+            // Confirmation dialog may not appear in some flows
+        }
+        await expect(this.viewDeletedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
 }
