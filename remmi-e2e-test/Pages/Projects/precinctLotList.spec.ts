@@ -139,4 +139,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).filterLotsUsingAreaRange('50', '200');
     });
 
+    test('TC_31: Enter invalid area range', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).useInvalidAreaRange('500', '50');
+    });
+
 });
