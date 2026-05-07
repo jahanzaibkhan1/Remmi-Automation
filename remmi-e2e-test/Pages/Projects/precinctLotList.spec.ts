@@ -159,4 +159,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).createNewView('My Test View');
     });
 
+    test('TC_36: Share a view', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).shareView('Abdul Rehman', 'Automation Team');
+    });
+    
 });
