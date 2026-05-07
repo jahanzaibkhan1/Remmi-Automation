@@ -151,4 +151,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).useResetWithNoFiltersApplied();
     });
 
+    test('TC_34: Open View popup', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).openAndAssertViewPopup();
+    });
+
 });
