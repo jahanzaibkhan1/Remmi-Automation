@@ -183,4 +183,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).dragColumnToReorder();
     });
 
+    test('TC_42: Reorder using arrows', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).reorderColumnUsingArrows();
+    });
+    
 });

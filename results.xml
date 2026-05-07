@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="119.22214300000108">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T07:26:49.815Z" hostname="chromium" tests="1" failures="0" skipped="0" time="116.85" errors="0">
-<testcase name="Lot List Page › TC_41: Drag statuses to reorder" classname="Pages\Projects\precinctLotList.spec.ts" time="116.85">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="68.40792500000074">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T07:56:43.094Z" hostname="chromium" tests="1" failures="0" skipped="0" time="66.095" errors="0">
+<testcase name="Lot List Page › TC_42: Reorder using arrows" classname="Pages\Projects\precinctLotList.spec.ts" time="66.095">
 </testcase>
 </testsuite>
 </testsuites>
