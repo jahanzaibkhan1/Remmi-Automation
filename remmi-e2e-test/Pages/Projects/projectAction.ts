@@ -5059,4 +5059,16 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Use invalid price range
+ */
+    async useInvalidPriceRange(min: string, max: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openPriceRangeFilter();
+        await this.setPriceRange(min, max);
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
 }
