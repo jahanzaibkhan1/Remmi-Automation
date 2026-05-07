@@ -5006,4 +5006,22 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Remove a selected status tag from Status dropdown (× icon click)
+ */
+    /**
+     * Remove a selected status tag from Status dropdown (× icon click)
+     */
+    async removeSelectedStatusTagInStatusDropdown(statusValue: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openStatusDropdown();
+        await this.searchInStatusDropdown(statusValue);
+        await this.selectStatusByValue(statusValue);
+        await this.closeDropdown();
+        await expect(this.selectedStatusTagByValue(statusValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.statusTagCrossIcon(statusValue).click();
+        await this.cleanupAfterLotTest();
+    }
+
 }
