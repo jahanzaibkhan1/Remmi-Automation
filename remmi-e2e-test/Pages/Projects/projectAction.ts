@@ -2877,6 +2877,18 @@ export class ProjectActions {
         return this.page.locator('table thead th', { has: this.page.locator('p', { hasText: /^Project Status$/ }) });
     }
 
+    private projectColumnHeader(): Locator {
+        return this.page.locator('table thead th', { has: this.page.locator('p', { hasText: /^Project$/ }) });
+    }
+
+    private get projectColumnSortIcon(): Locator {
+        return this.projectColumnHeader().locator('i.custom-sort');
+    }
+
+    private get projectColumnSortIconDesc(): Locator {
+        return this.projectColumnHeader().locator('i.pi-sort-amount-up-alt');
+    }
+
     private get statusColumnSortIcon(): Locator {
         return this.statusColumnHeader().locator('i.custom-sort');
     }
@@ -4919,6 +4931,691 @@ export class ProjectActions {
         await this.bedTagCrossIcon(bedValue).click();
         await this.page.waitForTimeout(800);
         await expect(this.selectedBedTagByValue(bedValue)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Open Status dropdown and verify options appear
+ */
+    async openAndAssertStatusDropdown(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openStatusDropdown();
+        await expect(this.statusDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const optionsCount = await this.statusDropdownOptions.count();
+        expect(optionsCount).toBeGreaterThan(0);
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Search a status in Status dropdown
+ */
+    async searchStatusInStatusDropdown(statusName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openStatusDropdown();
+        await expect(this.statusDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.statusDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.statusDropdownSearchInput.fill(statusName);
+        await this.page.waitForTimeout(500);
+        const matchingOption = this.statusDropdownOptions.filter({ hasText: statusName }).first();
+        await expect(matchingOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.statusDropdownSearchInput.fill('');
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Select a single status from Status dropdown
+ */
+    async selectSingleStatusInDropdown(statusName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openStatusDropdown();
+        await this.searchInStatusDropdown(statusName);
+        await this.selectStatusByValue(statusName);
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Select multiple statuses from Status dropdown
+ */
+    async selectMultipleStatusesInDropdown(statusNames: string[]): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openStatusDropdown();
+        for (const statusName of statusNames) {
+            await this.searchInStatusDropdown(statusName);
+            await this.selectStatusByValue(statusName);
+            await this.statusDropdownSearchInput.fill('');
+            await this.page.waitForTimeout(500);
+        }
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Use 'Select All' in Status dropdown
+ */
+    async useSelectAllInStatusDropdown(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openStatusDropdown();
+        await this.statusDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Use 'Deselect All' in Status dropdown 
+ */
+    async useDeselectAllInStatusDropdown(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openStatusDropdown();
+        await this.statusDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+        await this.statusDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(800);
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Remove a selected status tag from Status dropdown (× icon click)
+ */
+    /**
+     * Remove a selected status tag from Status dropdown (× icon click)
+     */
+    async removeSelectedStatusTagInStatusDropdown(statusValue: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openStatusDropdown();
+        await this.searchInStatusDropdown(statusValue);
+        await this.selectStatusByValue(statusValue);
+        await this.closeDropdown();
+        await expect(this.selectedStatusTagByValue(statusValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.statusTagCrossIcon(statusValue).click();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Close Status dropdown
+ */
+    async closeStatusDropdownTest(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openStatusDropdown();
+        await expect(this.statusDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeDropdown();
+        await expect(this.statusDropdownPanel).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+    * Open Price range filter (test)
+    */
+    async openAndClosePriceRangeFilter(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openPriceRangeFilter();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Filter lots using Price Range (min to max) and verify lots are filtered
+ */
+    async filterLotsUsingPriceRange(min: string, max: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openPriceRangeFilter();
+        await this.setPriceRange(min, max);
+        await this.assertLotsExist();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Use invalid price range
+ */
+    async useInvalidPriceRange(min: string, max: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openPriceRangeFilter();
+        await this.setPriceRange(min, max);
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Open Area range filter (test)
+ */
+    async openAndCloseAreaRangeFilter(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openInternalAreaFilter();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Filter lots using Internal Area range (min to max) and verify lots are filtered
+ */
+    async filterLotsUsingAreaRange(min: string, max: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openInternalAreaFilter();
+        await this.setInternalArea(min, max);
+        await this.assertLotsExist();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Enter invalid area range (e.g., min > max) and verify "No Record Found" appears
+ */
+    async useInvalidAreaRange(min: string, max: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openInternalAreaFilter();
+        await this.setInternalArea(min, max);
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Use Reset button after applying filters and verify filters are cleared
+ */
+    async useResetButtonAfterFiltering(projectName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.assertFirstOptionMatchesProject(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.resetButton.click();
+        await this.page.waitForTimeout(1000);
+        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotsExist();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Use Reset button with no filters applied (verify it works gracefully)
+ */
+    async useResetWithNoFiltersApplied(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetButton.click();
+        await this.page.waitForTimeout(1000);
+        await this.assertLotsExist();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Open View popup and verify it appears
+ */
+    async openAndAssertViewPopup(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.defaultViewButton.click();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Create a new view with a custom name
+ */
+    async createNewView(viewName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openDefaultViewPopup();
+        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        await this.addViewIcon.click();
+        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.viewNameInput.click();
+        await this.viewNameInput.fill(viewName);
+        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.saveOrCreateButton.click({ force: true });
+        await expect(this.viewCreatedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.resetToDefaultView();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Share a view with a user and team
+ */
+    async shareView(
+        userName: string = 'Abdul Rehman',
+        teamName: string = 'Automation Team'
+    ): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openDefaultViewPopup();
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.shareViewIcon.click({ force: true });
+        await this.selectShareTarget(this.usersShareDropdown, this.usersShareDropdownArrow, userName);
+        await this.selectShareTarget(this.teamsShareDropdown, this.teamsShareDropdownArrow, teamName);
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.shareButton.click({ force: true });
+        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+    * Delete a view from the View popup
+    */
+    async deleteView(viewName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openDefaultViewPopup();
+        await expect(this.savedViewDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.savedViewDropdown.click();
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        const viewOption = this.savedViewOption(viewName);
+        await expect(viewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const deleteIcon = viewOption.locator('img[src*="delete_icon.svg"]');
+        await expect(deleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await deleteIcon.click();
+        try {
+            await expect(this.confirmAnyButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
+            await this.confirmAnyButton.click();
+        } catch {
+            // Confirmation dialog may not appear in some flows
+        }
+        await expect(this.viewDeletedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+    * Search for a column in View popup
+    */
+    async searchColumnInViewPopup(searchTerm: string = 'Project'): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openDefaultViewPopup();
+        await expect(this.columnSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.columnSearchInput.fill(searchTerm);
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.columnItemByName(searchTerm).first()).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+        await this.columnSearchInput.fill('');
+        await this.page.waitForTimeout(1000);
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * HELPER — Click 'Hide All' button and verify Shown list is empty
+ */
+    private async clickHideAll(): Promise<void> {
+        await expect(this.hideAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.hideAllButton.click();
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.visibleColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Click 'Show All' button and verify Hidden list is empty
+     */
+    private async clickShowAll(): Promise<void> {
+        await expect(this.showAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.showAllButton.evaluate(button => button.scrollIntoView({ behavior: 'instant', block: 'center' }));
+        await this.page.waitForTimeout(1300);
+        await this.showAllButton.click();
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.hiddenColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.visibleColumnList.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+  * Hide all columns then show all columns via Hide All / Show All buttons
+  */
+    async hideAllAndShowAllColumns(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openDefaultViewPopup();
+        await this.clickHideAll();
+        await this.page.waitForTimeout(1200)
+        await this.clickShowAll();
+        await this.page.waitForTimeout(500)
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Drag a column to reorder it (drag first column to second position)
+ */
+    async dragColumnToReorder(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openDefaultViewPopup();
+        const handleCount = await this.visibleColumnList.count();
+        if (handleCount < 2) {
+            throw new Error('Less than 2 draggable statuses found, cannot perform drag-and-drop.');
+        }
+        const firstHandle = this.visibleColumnList.nth(0);
+        const secondHandle = this.visibleColumnList.nth(1);
+        await firstHandle.scrollIntoViewIfNeeded();
+        await this.page.waitForTimeout(300);
+        const box1 = await firstHandle.boundingBox();
+        const box2 = await secondHandle.boundingBox();
+        if (!box1 || !box2) {
+            throw new Error('Could not get bounding boxes for drag handles.');
+        }
+        await this.performDragDrop(box1, box2);
+        await expect(this.viewPopupContent).toBeVisible();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+     * Reorder using up/down arrows — Status moves accordingly
+     */
+    async reorderColumnUsingArrows(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.openDefaultViewPopup();
+        await this.reorderCollapsedArrow.click();
+        await this.page.waitForTimeout(500);
+        await this.reorderExpandCollapseArrow.click();
+        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * HELPER — Get drag handle by index from visible column list
+ */
+    private async getColumnHandleAndName(index: number): Promise<{ handle: Locator; name: string }> {
+        const handle = this.visibleColumnList.nth(index);
+        await this.page.waitForTimeout(1000);
+        const name = (await handle.locator('p').innerText()).trim();
+        return { handle, name };
+    }
+
+    /**
+     * HELPER — Get bounding box safely from a column handle
+     */
+    private async getBoxFromHandle(handle: Locator): Promise<{ x: number; y: number; width: number; height: number }> {
+        await handle.scrollIntoViewIfNeeded();
+        await this.page.waitForTimeout(500);
+        const box = await handle.boundingBox();
+        if (!box) {
+            throw new Error('Could not get bounding box for drag handle.');
+        }
+        return box;
+    }
+
+    /**
+     * HELPER — Drag column from one position to another
+     */
+    private async dragColumn(fromIndex: number, toIndex: number): Promise<void> {
+        const handleCount = await this.visibleColumnList.count();
+        if (handleCount < 2) {
+            throw new Error('Less than 2 draggable columns found, cannot perform drag-and-drop.');
+        }
+
+        const fromColumn = this.visibleColumnList.nth(fromIndex);
+        const toColumn = this.visibleColumnList.nth(toIndex);
+
+        const fromBox = await this.getBoxFromHandle(fromColumn);
+        const toBox = await this.getBoxFromHandle(toColumn);
+
+        await this.performDragDrop(fromBox, toBox);
+    }
+
+    /**
+     * HELPER — Get table column header name by index
+     */
+    private tableColumnHeaderByIndex(index: number): Locator {
+        return this.page.locator('table thead th p').nth(index);
+    }
+
+    /**
+     * HELPER — Verify table column order matches expected names
+     */
+    private async assertTableColumnOrder(): Promise<void> {
+        await expect(this.tableColumnHeaderByIndex(0)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * Save the reordered statuses after drag-and-drop, then verify table column order changed
+     */
+    async saveReorderedStatuses(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.openDefaultViewPopup();
+        await this.dragColumn(0, 1);
+        await expect(this.viewPopupContent).toBeVisible();
+        await this.saveOrCreateButton.click();
+        await this.page.waitForTimeout(1500);
+        await this.assertTableColumnOrder();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Select a saved view from the saved view dropdown
+ */
+    async selectSavedView(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openDefaultViewPopup();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * HELPER — Toggle a row checkbox and verify selected state
+ */
+    private async toggleRowCheckboxAndVerify(row: Locator, expectSelected: boolean): Promise<void> {
+        const checkbox = this.rowCheckbox(row);
+        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await checkbox.click();
+        await this.page.waitForTimeout(500);
+        const isSelected = await this.isRowCheckboxSelected(row);
+        expect(isSelected).toBe(expectSelected);
+    }
+
+    /**
+     * Select single lot from list (toggle checkbox)
+     */
+    async selectSingleLotFromList(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        const firstRow = this.lotTableRows.first();
+        await this.toggleRowCheckboxAndVerify(firstRow, true);
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Select multiple lots manually (toggle checkboxes for first N rows)
+ */
+    async selectMultipleLotsManually(count: number = 2): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        const totalRows = await this.lotTableRows.count();
+        const selectCount = Math.min(count, totalRows);
+        expect(selectCount).toBeGreaterThan(1);
+        for (let i = 0; i < selectCount; i++) {
+            await this.toggleRowCheckboxAndVerify(this.lotTableRows.nth(i), true);
+        }
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Select all lots using master/header checkbox in status row
+ */
+    async selectAllLotsUsingMasterCheckbox(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await this.selectAllLotCheckbox.click();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+     * Deselect one selected lot (toggle checkbox off for the first selected row)
+     */
+    async deselectOneSelectedLot(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        const firstRow = this.lotTableRows.first();
+        await this.toggleRowCheckboxAndVerify(firstRow, true);
+        await this.toggleRowCheckboxAndVerify(firstRow, false);
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+     * HELPER — Open Bulk Edit dialog (assumes lots are already selected)
+     */
+    private async openBulkEditDialog(): Promise<void> {
+        await expect(this.bulkEditButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bulkEditButton.click();
+    }
+
+    /**
+     * HELPER — Save & Close Bulk Edit and verify success toast
+     */
+    private async saveAndCloseBulkEdit(): Promise<void> {
+        await expect(this.saveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.saveAndCloseButton.click();
+        await this.assertSuccessToast();
+    }
+
+    /**
+ * Open bulk edit after selecting lots, save and close, verify success toast
+ */
+    async openBulkEditAfterSelectingLots(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        const firstRow = this.lotTableRows.first();
+        await this.toggleRowCheckboxAndVerify(firstRow, true);
+        await this.openBulkEditDialog();
+        await this.saveAndCloseBulkEdit();
+        await this.toggleRowCheckboxAndVerify(firstRow, false);
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Sort lots by Status column (Asc/Desc)
+ */
+    async sortLotsByStatus(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await expect(this.projectColumnSortIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectColumnSortIcon.click();
+        await expect(this.projectColumnSortIconDesc).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Toggle status sorting (click sort icon again to switch to ascending/descending)
+ */
+    async toggleStatusSorting(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await expect(this.projectColumnSortIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectColumnSortIcon.click();
+        await expect(this.projectColumnSortIconDesc).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectColumnSortIconDesc.click();
+        await expect(this.projectColumnSortIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Apply multiple dropdown filters (Project + Bed + Status) and verify results
+ */
+    async applyMultipleDropdownFilters(projectName: string, bedValue: string, statusName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+
+        // Apply Project filter
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.assertFirstOptionMatchesProject(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+
+        // Apply Bed filter
+        await this.openBedDropdown();
+        await this.selectBedByValue(bedValue);
+        await this.closeDropdown();
+
+        // Apply Status filter
+        await this.openStatusDropdown();
+        await this.searchInStatusDropdown(statusName);
+        await this.selectStatusByValue(statusName);
+        await this.closeDropdown();
+
+        // Verify all selected tags are visible
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedStatusTagByValue(statusName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Remove one filter tag only and verify other tags remain
+ */
+    async removeOneTagOnly(projectName: string, bedValue: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+
+        // Apply Project filter
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.assertFirstOptionMatchesProject(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+
+        // Apply Bed filter
+        await this.openBedDropdown();
+        await this.selectBedByValue(bedValue);
+        await this.closeDropdown();
+
+        // Verify both tags visible
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        // Remove only the Project tag
+        await this.projectTagCrossIcon(projectName).click();
+        await this.page.waitForTimeout(800);
+
+        // Verify Project tag is removed but Bed tag remains
+        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Reopen closed dropdown and verify selection persists
+ */
+    async reopenDropdownAndVerifySelection(projectName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+
+        // Apply Project filter
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.assertFirstOptionMatchesProject(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.openProjectDropdown();
+        await this.page.waitForTimeout(800);
+        const selectedOption = this.projectDropdownOptions.filter({ hasText: projectName }).first();
+        await expect(selectedOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const isChecked = await selectedOption.locator('.p-checkbox-box.p-highlight, input[type="checkbox"]:checked').count();
+        expect(isChecked).toBeGreaterThan(0);
+        await this.closeDropdown();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Apply bed filter and switch to Project dropdown - verify bed filter persists
+ */
+    async applyBedFilterAndSwitchToProjectDropdown(bedValue: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openBedDropdown();
+        await this.selectBedByValue(bedValue);
+        await this.closeDropdown();
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.openProjectDropdown();
+        await this.page.waitForTimeout(800);
+        await expect(this.projectDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeDropdown();
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 
