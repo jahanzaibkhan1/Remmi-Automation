@@ -219,4 +219,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).sortLotsByStatus();
     });
 
+    test('TC_51: Toggle status sorting', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).toggleStatusSorting();
+    });
+
 });
