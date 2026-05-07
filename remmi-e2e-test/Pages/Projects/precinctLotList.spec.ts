@@ -119,4 +119,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).closeStatusDropdownTest();
     });
 
+    test('TC_26: Open Price range filter', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).openAndClosePriceRangeFilter();
+    });
+
 });
