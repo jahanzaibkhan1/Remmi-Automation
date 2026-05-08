@@ -44,4 +44,8 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).verifyProjectAddressPopupOpens('Automation', 'Australia');
     });
 
+    test('TC_07: Add project address and save', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).addProjectAddressAndSave('Automation', 'Australia');
+    });
+
 });

@@ -6101,9 +6101,17 @@ export class ProjectActions {
         return this.page.locator('.pac-container .pac-item');
     }
 
-    // ==========================================================================
-    // HELPERS — PROJECT NAVIGATION
-    // ==========================================================================
+    private get generalTabSaveButton(): Locator {
+        return this.generalSettingContent.locator('button._outline-btn', { hasText: /^\s*Save\s*$/i }).first();
+    }
+
+    private get generalTabSaveAndCloseButton(): Locator {
+        return this.generalSettingContent.locator('button._primary-btn', { hasText: /Save & Close/i }).first();
+    }
+
+    private get generalTabCloseButton(): Locator {
+        return this.generalSettingContent.locator('button._cancel-btn', { hasText: /^\s*Close\s*$/i }).first();
+    }
 
     /**
      * HELPER — Navigate to Project Pricelist (skip if already there)
@@ -6158,12 +6166,6 @@ export class ProjectActions {
         await expect(this.pricelistContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
 
-    /**
-     * HELPER — Cleanup after project test
-     */
-    /**
-  * HELPER — Cleanup after project test (navigate back via breadcrumb)
-  */
     private async cleanupAfterProjectTest(): Promise<void> {
         await expect(this.projectsBreadcrumb).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.projectsBreadcrumb.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'auto' }));
@@ -6172,10 +6174,6 @@ export class ProjectActions {
         await this.page.waitForTimeout(800);
         await expect(this.projectsSectionHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
     }
-
-    // ==========================================================================
-    // HELPERS — ADDRESS POPUPS
-    // ==========================================================================
 
     /**
      * HELPER — Open Project Address popup
@@ -6251,7 +6249,6 @@ export class ProjectActions {
 
     /**
      * HELPER — Verify form labels appear in the expected order at given starting index
-     * Example: assertLabelOrder(['Project Name', 'Project Status'], 0)
      */
     private async assertLabelOrder(expectedLabels: string[], startIndex: number = 0): Promise<void> {
         for (let i = 0; i < expectedLabels.length; i++) {
@@ -6271,9 +6268,11 @@ export class ProjectActions {
     private async typeAddressAndAssertSuggestions(input: Locator, query: string): Promise<void> {
         await expect(input).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await input.click();
-        await input.fill(query);
+        // Type each character slowly to simulate a real user typing (for more reliable autocomplete)
+        for (const char of query) {
+            await input.type(char, { delay: 300 });
+        }
         await this.page.waitForTimeout(1500); // wait for Google API response
-
         await expect(this.googlePlacesDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         const suggestionCount = await this.googlePlacesSuggestions.count();
         expect(suggestionCount).toBeGreaterThan(0);
@@ -6287,6 +6286,46 @@ export class ProjectActions {
         await this.page.keyboard.press('Escape');
         await this.page.waitForTimeout(300);
     }
+
+    /**
+ * HELPER — Clear an address input fully (handles existing saved value)
+ */
+    private async clearAddressInputFully(input: Locator): Promise<void> {
+        await input.click();
+        await input.press('Control+A');
+        await input.press('Delete');
+        await this.page.waitForTimeout(300);
+        await this.page.keyboard.press('Escape');
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Click the first Google Places suggestion and verify input is filled
+     */
+    private async selectFirstAddressSuggestion(input: Locator): Promise<string> {
+        await expect(this.googlePlacesSuggestions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.googlePlacesSuggestions.first().click();
+        await this.page.waitForTimeout(800);
+        const filledValue = await input.inputValue();
+        expect(filledValue.length).toBeGreaterThan(0);
+        return filledValue;
+    }
+
+    /**
+     * HELPER — Click General tab Save button (bottom)
+     */
+    private async clickGeneralTabSave(): Promise<void> {
+        await expect(this.generalTabSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.generalTabSaveButton.click();
+        await this.page.waitForTimeout(1500);
+    }
+
+    private async assertProjectUpdatedToast(): Promise<void> {
+        const toast = this.page.locator('div[aria-label="Project updated successfully"]', { hasText: /Project updated successfully/i }).first();
+        await expect(toast).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.page.waitForTimeout(500);
+    }
+
 
     /**
      * TC_01 — Verify clicking a project with lots opens the Pricelist tab by default
@@ -6355,6 +6394,24 @@ export class ProjectActions {
         await this.openProjectGeneralTab(projectName);
         await this.typeAddressAndAssertSuggestions(this.projectSetupAddressInput, searchQuery);
         await this.clearAddressInput(this.projectSetupAddressInput);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_07 — Add project address and save
+ */
+    async addProjectAddressAndSave(
+        projectName: string = 'Automation',
+        searchQuery: string = 'Australia'
+    ): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.clearAddressInputFully(this.projectSetupAddressInput);
+        await this.typeAddressAndAssertSuggestions(this.projectSetupAddressInput, searchQuery);
+        const savedAddress = await this.selectFirstAddressSuggestion(this.projectSetupAddressInput);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        const currentValue = await this.projectSetupAddressInput.inputValue();
+        expect(currentValue).toBe(savedAddress);
         await this.cleanupAfterProjectTest();
     }
 
