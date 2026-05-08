@@ -239,4 +239,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).applyBedFilterAndSwitchToProjectDropdown('2');
     });
 
+    test('TC_56: Verify no duplicate tag', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyNoDuplicateTag('adb');
+    });
+    
 });
