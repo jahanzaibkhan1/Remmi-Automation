@@ -28,4 +28,8 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).verifyProjectWithoutLotsOpensGeneralTab("Hina's Project");
     });
 
+    test('TC_03: Pricelist → Project Setup tab switch', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyProjectSetupTabSwitchFromPricelist('Automation');
+    });
+
 });
