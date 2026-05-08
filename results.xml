@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.2487100000009">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-08T10:15:03.088Z" hostname="chromium" tests="1" failures="0" skipped="0" time="61.612" errors="0">
-<testcase name="Project Setup Tests › Test 1: Project with lots opens Pricelist tab by default" classname="Pages\Projects\projectSetup.spec.ts" time="61.612">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="70.57219500000029">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-08T10:22:40.818Z" hostname="chromium" tests="1" failures="0" skipped="0" time="67.779" errors="0">
+<testcase name="Project Setup Tests › TC_02: Project without lots opens General tab" classname="Pages\Projects\projectSetup.spec.ts" time="67.779">
 </testcase>
 </testsuite>
 </testsuites>
