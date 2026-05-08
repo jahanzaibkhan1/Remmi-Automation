@@ -5858,4 +5858,19 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Select a project that has no lots created in this precinct and verify no lots shown
+ */
+    async selectProjectWithNoLots(projectName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.assertFirstOptionMatchesProject(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
 }

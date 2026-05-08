@@ -291,4 +291,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifySortingRemainsAfterFilters('East Village Vila', '2');
     });
 
+    test('TC_69: Select project with no lots created', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).selectProjectWithNoLots("Hina's Project");
+    });
+
 });
