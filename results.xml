@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="88.08198899999982">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-08T04:03:34.249Z" hostname="chromium" tests="1" failures="0" skipped="0" time="85.719" errors="0">
-<testcase name="Lot List Page › TC_58: Validate cleared price removes filter" classname="Pages\Projects\precinctLotList.spec.ts" time="85.719">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="72.19541399999987">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-08T04:46:32.361Z" hostname="chromium" tests="1" failures="0" skipped="0" time="69.758" errors="0">
+<testcase name="Lot List Page › TC_59: Validate cleared area removes filter" classname="Pages\Projects\precinctLotList.spec.ts" time="69.758">
 </testcase>
 </testsuite>
 </testsuites>

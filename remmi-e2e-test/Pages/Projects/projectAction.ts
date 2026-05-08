@@ -5666,5 +5666,20 @@ export class ProjectActions {
         await this.assertLotsExist();
         await this.cleanupAfterLotTest();
     }
-    
+
+    /**
+ * Validate cleared area removes filter and shows all lots
+ */
+    async validateClearedAreaRemovesFilter(min: string, max: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openInternalAreaFilter();
+        await this.setInternalArea(min, max);
+        await this.assertLotsExist();
+        await this.setInternalArea('', '');
+        await this.page.waitForTimeout(800);
+        await this.assertLotsExist();
+        await this.cleanupAfterLotTest();
+    }
+
 }
