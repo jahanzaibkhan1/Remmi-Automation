@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="76.65695299999997">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-08T03:44:44.190Z" hostname="chromium" tests="1" failures="0" skipped="0" time="74.314" errors="0">
-<testcase name="Lot List Page › TC_56: Verify no duplicate tag" classname="Pages\Projects\precinctLotList.spec.ts" time="74.314">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="95.98839899999997">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-08T03:50:18.632Z" hostname="chromium" tests="1" failures="0" skipped="0" time="93.404" errors="0">
+<testcase name="Lot List Page › TC_57: Validate deselected tag is removed from list" classname="Pages\Projects\precinctLotList.spec.ts" time="93.404">
 </testcase>
 </testsuite>
 </testsuites>

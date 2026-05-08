@@ -242,5 +242,9 @@ test.describe('Lot List Page', () => {
     test('TC_56: Verify no duplicate tag', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyNoDuplicateTag('adb');
     });
-    
+
+    test('TC_57: Validate deselected tag is removed from list', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).validateDeselectedTagIsRemoved('adb');
+    });
+
 });
