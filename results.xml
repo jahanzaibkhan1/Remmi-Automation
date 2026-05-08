@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="78.20470900000073">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-08T06:18:53.294Z" hostname="chromium" tests="1" failures="0" skipped="0" time="75.68" errors="0">
-<testcase name="Lot List Page › TC_69: Select project with no lots created" classname="Pages\Projects\precinctLotList.spec.ts" time="75.68">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="80.69947699999996">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-08T06:22:31.078Z" hostname="chromium" tests="1" failures="0" skipped="0" time="78.705" errors="0">
+<testcase name="Lot List Page › TC_70: Tags correctly removed on Reset" classname="Pages\Projects\precinctLotList.spec.ts" time="78.705">
 </testcase>
 </testsuite>
 </testsuites>

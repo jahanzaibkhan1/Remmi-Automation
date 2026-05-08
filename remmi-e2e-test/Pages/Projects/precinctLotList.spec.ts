@@ -295,4 +295,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).selectProjectWithNoLots("Hina's Project");
     });
 
+    test('TC_70: Tags correctly removed on Reset', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyTagsRemovedOnReset('adb', '2');
+    });
+
 });
