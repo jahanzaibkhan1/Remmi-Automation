@@ -1,6 +1,20 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="98.90844800000265">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-07T10:23:42.929Z" hostname="chromium" tests="1" failures="0" skipped="0" time="96.663" errors="0">
-<testcase name="Lot List Page › TC_55: Apply bed filter and switch to Project dropdown" classname="Pages\Projects\precinctLotList.spec.ts" time="96.663">
+<testsuites id="" name="" tests="8" failures="0" skipped="0" errors="0" time="110.84441199999861">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-08T11:43:22.336Z" hostname="chromium" tests="8" failures="0" skipped="0" time="108.021" errors="0">
+<testcase name="Project Setup Tests › Test 1: Project with lots opens Pricelist tab by default" classname="Pages\Projects\projectSetup.spec.ts" time="45.332">
+</testcase>
+<testcase name="Project Setup Tests › TC_02: Project without lots opens General tab" classname="Pages\Projects\projectSetup.spec.ts" time="4.541">
+</testcase>
+<testcase name="Project Setup Tests › TC_03: Pricelist → Project Setup tab switch" classname="Pages\Projects\projectSetup.spec.ts" time="5.586">
+</testcase>
+<testcase name="Project Setup Tests › TC_04: Project Name and Status appear first on General tab" classname="Pages\Projects\projectSetup.spec.ts" time="5.746">
+</testcase>
+<testcase name="Project Setup Tests › TC_05: Address fields appear below name/status" classname="Pages\Projects\projectSetup.spec.ts" time="5.676">
+</testcase>
+<testcase name="Project Setup Tests › TC_06: Project address autocomplete shows suggestions" classname="Pages\Projects\projectSetup.spec.ts" time="13.001">
+</testcase>
+<testcase name="Project Setup Tests › TC_07: Add project address and save" classname="Pages\Projects\projectSetup.spec.ts" time="16.824">
+</testcase>
+<testcase name="Project Setup Tests › TC_08: Save Project Address with empty fields" classname="Pages\Projects\projectSetup.spec.ts" time="11.315">
 </testcase>
 </testsuite>
 </testsuites>

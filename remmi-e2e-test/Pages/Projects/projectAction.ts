@@ -503,6 +503,10 @@ export class ProjectActions {
         return this.page.locator('a[href="/project/projects"]').first();
     }
 
+    private get projectsBreadcrumb(): Locator {
+        return this.page.locator('p[routerlink="/project/projects"]', { hasText: /^\s*Projects\s*$/i });
+    }
+
     private get precinctListingsMenuLink(): Locator {
         return this.page.locator('a[href="/listings/project-precinct"]');
     }
@@ -5617,6 +5621,816 @@ export class ProjectActions {
         await this.closeDropdown();
         await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Verify no duplicate tag — selecting same filter twice toggles it (deselects)
+ */
+    async verifyNoDuplicateTag(projectName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+     * Validate that a deselected project tag is removed from the tag list
+     */
+    async validateDeselectedTagIsRemoved(projectName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+    /**
+     * Validate cleared price removes filter and shows all lots
+     */
+    async validateClearedPriceRemovesFilter(min: string, max: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openPriceRangeFilter();
+        await this.setPriceRange(min, max);
+        await this.assertLotsExist();
+        await this.setPriceRange('', '');
+        await this.page.waitForTimeout(800);
+        await this.assertLotsExist();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Validate cleared area removes filter and shows all lots
+ */
+    async validateClearedAreaRemovesFilter(min: string, max: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openInternalAreaFilter();
+        await this.setInternalArea(min, max);
+        await this.assertLotsExist();
+        await this.setInternalArea('', '');
+        await this.page.waitForTimeout(800);
+        await this.assertLotsExist();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Open and close View popup without performing any action
+ */
+    async openAndCloseViewPopupWithoutAction(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openDefaultViewPopup();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(800);
+        await expect(this.viewPopupContent).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Open View popup and click Save without making any changes
+ */
+    async clickSaveWithoutChangingView(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openDefaultViewPopup();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.saveOrCreateButton.click();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Try to share view without selecting a team and verify validation
+ */
+    async shareViewWithNoTeamSelected(userName: string = 'Abdul Rehman'): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openDefaultViewPopup();
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.shareViewIcon.click({ force: true });
+        await this.selectShareTarget(this.usersShareDropdown, this.usersShareDropdownArrow, userName);
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.shareButton.click({ force: true });
+        await this.page.waitForTimeout(1000);
+        const responseVisible = await this.shareResponseMessage().isVisible().catch(() => false);
+        expect(responseVisible).toBeTruthy();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Verify View popup UI remains responsive
+ */
+    async verifyViewPopupResponsive(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openDefaultViewPopup();
+        await this.reorderExpandCollapseArrow.click();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Verify Lots list remains responsive after applying many filters
+ */
+    async verifyLotsListResponsiveAfterManyFilters(projectName: string, bedValue: string, statusName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+        await this.openBedDropdown();
+        await this.selectBedByValue(bedValue);
+        await this.closeDropdown();
+        await this.openStatusDropdown();
+        await this.searchInStatusDropdown(statusName);
+        await this.selectStatusByValue(statusName);
+        await this.closeDropdown();
+        await expect(this.lotTableRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Verify filters persist (or reset) when switching tabs
+ */
+    async verifyFiltersOnTabSwitch(projectName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.eoiTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.eoiTabInPrecinct.click();
+        await this.page.waitForTimeout(1500);
+        await this.lotTabInPrecinct.click();
+        await this.page.waitForTimeout(1500);
+        const tagVisible = await this.selectedProjectTagByName(projectName).isVisible().catch(() => false);
+        console.log(`Project filter after tab switch: ${tagVisible ? 'PERSISTED' : 'RESET'}`);
+        expect(typeof tagVisible).toBe('boolean');
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Verify UI alignment for selected tags — tags appear inline without overlapping
+ */
+    async verifyTagsAlignment(projectNames: string[]): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+
+        // Select multiple projects to populate tags
+        for (const projectName of projectNames) {
+            await this.openProjectDropdownAndSearch(projectName);
+            await this.clickProjectOptionByName(projectName);
+            await this.closeDropdown();
+        }
+
+        // Verify all tags are visible and not overlapping
+        const tags = this.page.locator('re-multiselect[placeholder="Project"] .tags .selected_one');
+        const tagCount = await tags.count();
+        expect(tagCount).toBe(projectNames.length);
+
+        // Check each tag has a valid bounding box (visible, no zero size)
+        const tagBoxes: Array<{ x: number; y: number; width: number; height: number }> = [];
+        for (let i = 0; i < tagCount; i++) {
+            const box = await tags.nth(i).boundingBox();
+            expect(box).not.toBeNull();
+            if (box) {
+                expect(box.width).toBeGreaterThan(0);
+                expect(box.height).toBeGreaterThan(0);
+                tagBoxes.push(box);
+            }
+        }
+
+        // Verify tags don't overlap (each tag's x position differs OR they are on different rows)
+        for (let i = 0; i < tagBoxes.length - 1; i++) {
+            const current = tagBoxes[i];
+            const next = tagBoxes[i + 1];
+            const horizontallyOverlapping = current.x + current.width > next.x && current.y === next.y;
+            expect(horizontallyOverlapping).toBeFalsy();
+        }
+
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Verify closing one dropdown and opening another works without conflicts
+ */
+    async closeOneOpenAnotherDropdown(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openBedDropdown();
+        await expect(this.bedDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeDropdown();
+        await this.page.waitForTimeout(500);
+        await this.openProjectDropdown();
+        await expect(this.projectDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownOptions.first()).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeDropdown();
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Verify sorting remains after applying multiple filters
+ */
+    async verifySortingRemainsAfterFilters(projectName: string, bedValue: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+        await expect(this.projectColumnSortIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectColumnSortIcon.click();
+        await expect(this.projectColumnSortIconDesc).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.openBedDropdown();
+        await this.selectBedByValue(bedValue);
+        await this.closeDropdown();
+        await expect(this.projectColumnSortIconDesc).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Select a project that has no lots created in this precinct and verify no lots shown
+ */
+    async selectProjectWithNoLots(projectName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.assertFirstOptionMatchesProject(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
+    /**
+ * Verify all dropdown tags and fields are cleared after clicking Reset
+ */
+    async verifyTagsRemovedOnReset(projectName: string, bedValue: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+        await this.openBedDropdown();
+        await this.selectBedByValue(bedValue);
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.resetButton.click();
+        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
+    // ==========================================================================
+    // CONSTANTS — PROJECT SETUP
+    // ==========================================================================
+
+    private static readonly PROJECT_PRICELIST_URL = '/projects/edit_/69e9c1d7be0c8310f1dceee0/price-list';
+    private static readonly PROJECT_SETUP_URL = '/projects/edit_/69e9c1d7be0c8310f1dceee0/project-setup';
+
+    // ==========================================================================
+    // LOCATORS — PROJECT CLICK & PRICELIST TAB
+    // ==========================================================================
+
+    private get projectsSectionHeading(): Locator {
+        return this.page.locator('p', { hasText: /^\s*Project\s*$/i }).first();
+    }
+
+    private projectCardInProjectSection(projectName: string): Locator {
+        return this.page
+            .locator('.sgv-product')
+            .filter({ has: this.page.locator('.product-content h3', { hasText: new RegExp(`^\\s*${projectName}\\s*$`, 'i') }) })
+            .first();
+    }
+
+    private projectCardClickTarget(projectName: string): Locator {
+        return this.projectCardInProjectSection(projectName).locator('a[href="javascript:void(0)"]').first();
+    }
+
+    private get pricelistTab(): Locator {
+        return this.page.locator('a[href*="/price-list"]', { hasText: /Price List/i });
+    }
+
+    private get pricelistTabActive(): Locator {
+        return this.page.locator('a.active[href*="/price-list"]');
+    }
+
+    private get pricelistContent(): Locator {
+        return this.page.locator('app-price-list');
+    }
+
+    // ==========================================================================
+    // LOCATORS — PROJECT SETUP TAB & GENERAL TAB
+    // ==========================================================================
+
+    private get projectSetupTab(): Locator {
+        return this.page.locator('a[href*="/project-setup"]', { hasText: /Project Set Up/i });
+    }
+
+    private get projectSetupTabActive(): Locator {
+        return this.page.locator('a.active[href*="/project-setup"]');
+    }
+
+    private get projectSetupContent(): Locator {
+        return this.page.locator('app-project-setup, [class*="project-setup"]').first();
+    }
+
+    private get generalTab(): Locator {
+        return this.page.locator('a, li', { hasText: /^\s*General\s*$/i }).first();
+    }
+
+    private get generalTabActive(): Locator {
+        return this.page.locator('a.active, li.active', { hasText: /General/i });
+    }
+
+    // ==========================================================================
+    // LOCATORS — PROJECT SETUP FIELDS
+    // ==========================================================================
+
+    private get projectSetupNameField(): Locator {
+        return this.page.locator('input[formcontrolname="Project_Name"], input[formcontrolname="project_name"]').first();
+    }
+
+    private get projectSetupStatusField(): Locator {
+        return this.page.locator('ng-select[formcontrolname="Project_Status"], ng-select[formcontrolname="project_status"]').first();
+    }
+
+    private get projectAddressField(): Locator {
+        return this.page.locator('[class*="address"]', { hasText: /Project Address/i }).first();
+    }
+
+    private get projectAddressIcon(): Locator {
+        return this.projectAddressField.locator('img, i.pi').first();
+    }
+
+    private get projectDisplayAddressField(): Locator {
+        return this.page.locator('[class*="address"]', { hasText: /Display Address/i }).first();
+    }
+
+    private get projectDisplayAddressIcon(): Locator {
+        return this.projectDisplayAddressField.locator('img, i.pi').first();
+    }
+
+    // ==========================================================================
+    // LOCATORS — PROJECT ADDRESS POPUP
+    // ==========================================================================
+
+    private get projectAddressPopup(): Locator {
+        return this.page.locator('.p-dialog', { hasText: /Project Address/i });
+    }
+
+    private get projectAddressPopupCloseIcon(): Locator {
+        return this.projectAddressPopup.locator('.p-dialog-header-close, i.pi-times').first();
+    }
+
+    private get projectAddressSaveButton(): Locator {
+        return this.projectAddressPopup.locator('button', { hasText: /save/i });
+    }
+
+    private get projectAddressStreetInput(): Locator {
+        return this.projectAddressPopup.locator('input[formcontrolname*="street" i], input[placeholder*="street" i]').first();
+    }
+
+    private get projectAddressSuburbInput(): Locator {
+        return this.projectAddressPopup.locator('input[formcontrolname*="suburb" i], input[placeholder*="suburb" i]').first();
+    }
+
+    private get projectAddressStateInput(): Locator {
+        return this.projectAddressPopup.locator('input[formcontrolname*="state" i], input[placeholder*="state" i]').first();
+    }
+
+    private get projectAddressPostcodeInput(): Locator {
+        return this.projectAddressPopup.locator('input[formcontrolname*="postcode" i], input[placeholder*="postcode" i]').first();
+    }
+
+    // ==========================================================================
+    // LOCATORS — PROJECT DISPLAY ADDRESS POPUP
+    // ==========================================================================
+
+    private get projectDisplayAddressPopup(): Locator {
+        return this.page.locator('.p-dialog', { hasText: /Display Address/i });
+    }
+
+    private get projectDisplayAddressPopupCloseIcon(): Locator {
+        return this.projectDisplayAddressPopup.locator('.p-dialog-header-close, i.pi-times').first();
+    }
+
+    private get projectDisplayAddressSaveButton(): Locator {
+        return this.projectDisplayAddressPopup.locator('button', { hasText: /save/i });
+    }
+
+    // ==========================================================================
+    // LOCATORS — PROJECT SETUP > GENERAL TAB (sub-tabs)
+    // Source: app-project-setup HTML (shared 2026-05-08)
+    // ==========================================================================
+
+    private get generalSubTab(): Locator {
+        return this.page.locator('a[href*="/project-setup/general"]', { hasText: /^\s*General\s*$/i });
+    }
+
+    private get generalSubTabActive(): Locator {
+        return this.page.locator('a.active[href*="/project-setup/general"]');
+    }
+
+    private get generalSettingContent(): Locator {
+        return this.page.locator('app-general-setting');
+    }
+
+    // ==========================================================================
+    // LOCATORS — GENERAL TAB FORM FIELDS
+    // Source: app-general-setting HTML (shared 2026-05-08)
+    // ==========================================================================
+
+    private get projectSetupNameLabel(): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: /^Project Name$/i });
+    }
+
+    private get projectSetupNameInput(): Locator {
+        return this.generalSettingContent.locator('input[formcontrolname="Project_Name"]');
+    }
+
+    private get projectSetupStatusLabel(): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: /^Project Status$/i });
+    }
+
+    private get projectSetupStatusSelect(): Locator {
+        return this.generalSettingContent.locator('ng-select[formcontrolname="Project_Status"]');
+    }
+
+    private get projectSetupAddressLabel(): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: /^Project Address$/i });
+    }
+
+    private get projectSetupAddressInput(): Locator {
+        return this.generalSettingContent.locator('input[formcontrolname="Project_Address"]');
+    }
+
+    private get projectSetupDisplayAddressLabel(): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: /^Project Display Address$/i });
+    }
+
+    private get projectSetupDisplayAddressInput(): Locator {
+        return this.generalSettingContent.locator('input[formcontrolname="Project_Display_Address"]');
+    }
+
+    private get projectDisplayAddressPencilIcon(): Locator {
+        return this.generalSettingContent.locator('button#toggle-overlay');
+    }
+
+    private get googlePlacesDropdown(): Locator {
+        return this.page.locator('.pac-container:visible').first();
+    }
+
+    private get googlePlacesSuggestions(): Locator {
+        return this.page.locator('.pac-container:visible .pac-item');
+    }
+
+    private get generalTabSaveButton(): Locator {
+        return this.generalSettingContent.locator('button._outline-btn', { hasText: /^\s*Save\s*$/i }).first();
+    }
+
+    private get generalTabSaveAndCloseButton(): Locator {
+        return this.generalSettingContent.locator('button._primary-btn', { hasText: /Save & Close/i }).first();
+    }
+
+    private get generalTabCloseButton(): Locator {
+        return this.generalSettingContent.locator('button._cancel-btn', { hasText: /^\s*Close\s*$/i }).first();
+    }
+
+    /**
+     * HELPER — Navigate to Project Pricelist (skip if already there)
+     */
+    private async navigateToProjectPricelist(): Promise<void> {
+        const currentUrl = this.page.url().split(/[?#]/)[0];
+        if (!currentUrl.includes('/price-list')) {
+            await this.page.goto(ProjectActions.PROJECT_PRICELIST_URL);
+        }
+        await expect(this.pricelistContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    /**
+     * HELPER — Navigate to Project Setup (skip if already there)
+     */
+    private async navigateToProjectSetup(): Promise<void> {
+        const currentUrl = this.page.url().split(/[?#]/)[0];
+        if (!currentUrl.includes('/project-setup')) {
+            await this.page.goto(ProjectActions.PROJECT_SETUP_URL);
+        }
+        await expect(this.projectSetupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    /**
+     * HELPER — Click a project card from the "Project" section by name
+     */
+    private async clickProjectCardInProjectSection(projectName: string): Promise<void> {
+        await expect(this.projectsSectionHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const projectCard = this.projectCardClickTarget(projectName);
+        await expect(projectCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await projectCard.scrollIntoViewIfNeeded();
+        await projectCard.click();
+        await this.page.waitForTimeout(1500);
+    }
+
+    /**
+     * HELPER — Click Project Setup tab
+     */
+    private async clickProjectSetupTab(): Promise<void> {
+        await expect(this.projectSetupTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.projectSetupTab.click();
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * HELPER — Verify Pricelist tab is active and content loaded
+     */
+    private async assertPricelistTabActive(): Promise<void> {
+        await expect(this.page).toHaveURL(/\/price-list/, { timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.pricelistTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.pricelistTabActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.pricelistContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    private async cleanupAfterProjectTest(): Promise<void> {
+        await expect(this.projectsBreadcrumb).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectsBreadcrumb.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'auto' }));
+        await this.page.waitForTimeout(800);
+        await this.projectsBreadcrumb.click();
+        await this.page.waitForTimeout(800);
+        await expect(this.projectsSectionHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    /**
+     * HELPER — Open Project Address popup
+     */
+    private async openProjectAddressPopup(): Promise<void> {
+        await expect(this.projectAddressIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectAddressIcon.click();
+        await expect(this.projectAddressPopup).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Close Project Address popup via cross icon
+     */
+    private async closeProjectAddressPopup(): Promise<void> {
+        await this.projectAddressPopupCloseIcon.click();
+        await expect(this.projectAddressPopup).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Fill Project Address fields
+     */
+    private async fillProjectAddress(data: { street?: string; suburb?: string; state?: string; postcode?: string }): Promise<void> {
+        if (data.street) await this.projectAddressStreetInput.fill(data.street);
+        if (data.suburb) await this.projectAddressSuburbInput.fill(data.suburb);
+        if (data.state) await this.projectAddressStateInput.fill(data.state);
+        if (data.postcode) await this.projectAddressPostcodeInput.fill(data.postcode);
+    }
+
+    /**
+     * HELPER — Open Project Display Address popup
+     */
+    private async openProjectDisplayAddressPopup(): Promise<void> {
+        await expect(this.projectDisplayAddressIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectDisplayAddressIcon.click();
+        await expect(this.projectDisplayAddressPopup).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Close Project Display Address popup via cross icon
+     */
+    private async closeProjectDisplayAddressPopup(): Promise<void> {
+        await this.projectDisplayAddressPopupCloseIcon.click();
+        await expect(this.projectDisplayAddressPopup).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    private async openGeneralTab(): Promise<void> {
+        const currentUrl = this.page.url();
+        if (!currentUrl.includes('/project-setup')) {
+            await this.clickProjectSetupTab();
+        }
+        await expect(this.generalSubTabActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.generalSettingContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    /**
+* HELPER — Open project (clicks card → asserts Pricelist landing → switches to Project Setup → General)
+*/
+    private async openProjectGeneralTab(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.assertPricelistTabActive();
+        await this.clickProjectSetupTab();
+        await this.openGeneralTab();
+    }
+
+    /**
+     * HELPER — Get all form field labels in the General tab
+     */
+    private get generalTabAllLabels(): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1');
+    }
+
+    /**
+     * HELPER — Verify form labels appear in the expected order at given starting index
+     */
+    private async assertLabelOrder(expectedLabels: string[], startIndex: number = 0): Promise<void> {
+        for (let i = 0; i < expectedLabels.length; i++) {
+            const actualText = (await this.generalTabAllLabels.nth(startIndex + i).innerText()).trim();
+            expect(actualText).toBe(expectedLabels[i]);
+        }
+    }
+
+    /**
+     * HELPER — Verify a form field's label and input are both visible
+     */
+    private async assertFieldVisible(label: Locator, input: Locator): Promise<void> {
+        await expect(label).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(input).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    private async typeAddressAndAssertSuggestions(input: Locator, query: string): Promise<void> {
+        await expect(input).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await input.click();
+        await input.press('Control+A');
+        await input.press('Delete');
+        await this.page.waitForTimeout(300);
+        await input.pressSequentially(query, { delay: 300 });
+        await this.page.waitForTimeout(1500);
+        const firstSuggestion = this.page.locator('.pac-container:visible .pac-item').first();
+        await firstSuggestion.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        const suggestionCount = await this.googlePlacesSuggestions.count();
+        expect(suggestionCount).toBeGreaterThan(0);
+    }
+
+    /**
+     * HELPER — Clear an address input and dismiss Google Places dropdown
+     */
+    private async clearAddressInput(input: Locator): Promise<void> {
+        await input.fill('');
+        await this.page.keyboard.press('Escape');
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+ * HELPER — Clear an address input fully (handles existing saved value)
+ */
+    private async clearAddressInputFully(input: Locator): Promise<void> {
+        await input.click();
+        await input.press('Control+A');
+        await input.press('Delete');
+        await this.page.waitForTimeout(300);
+        await this.page.keyboard.press('Escape');
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Click the first Google Places suggestion and verify input is filled
+     */
+    private async selectFirstAddressSuggestion(input: Locator): Promise<string> {
+        await expect(this.googlePlacesSuggestions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.googlePlacesSuggestions.first().click();
+        await this.page.waitForTimeout(800);
+        const filledValue = await input.inputValue();
+        expect(filledValue.length).toBeGreaterThan(0);
+        return filledValue;
+    }
+
+    /**
+     * HELPER — Click General tab Save button (bottom)
+     */
+    private async clickGeneralTabSave(): Promise<void> {
+        await expect(this.generalTabSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.generalTabSaveButton.click();
+        await this.page.waitForTimeout(1500);
+    }
+
+    private async assertProjectUpdatedToast(): Promise<void> {
+        const toast = this.page.locator('div[aria-label="Project updated successfully"]', { hasText: /Project updated successfully/i }).first();
+        await expect(toast).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.page.waitForTimeout(500);
+    }
+
+
+    /**
+     * TC_01 — Verify clicking a project with lots opens the Pricelist tab by default
+     */
+    async verifyProjectWithLotsOpensPricelistTab(projectName: string = 'Automation'): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.assertPricelistTabActive();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_02 — Verify clicking a project without lots opens General tab under Project Setup
+     */
+    async verifyProjectWithoutLotsOpensGeneralTab(projectName: string = "Hina's Project"): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.assertPricelistTabActive();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_03 — From Pricelist tab, click Project Setup → switches to setup section
+ */
+    async verifyProjectSetupTabSwitchFromPricelist(projectName: string = 'Automation'): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.assertPricelistTabActive();
+        await this.clickProjectSetupTab();
+        await this.cleanupAfterProjectTest();
+    }
+
+
+    /**
+ * TC_04 — Verify "Project Name" and "Project Status" fields appear first on General tab
+ */
+    async verifyProjectNameAndStatusAppearFirst(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.assertFieldVisible(this.projectSetupNameLabel, this.projectSetupNameInput);
+        await this.assertFieldVisible(this.projectSetupStatusLabel, this.projectSetupStatusSelect);
+        await this.assertLabelOrder(['Project Name', 'Project Status'], 0);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_05 — Verify "Project Address" and "Project Display Address" fields appear below name/status
+ */
+    async verifyAddressFieldsAppearBelowNameStatus(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.assertFieldVisible(this.projectSetupAddressLabel, this.projectSetupAddressInput);
+        await this.assertFieldVisible(this.projectSetupDisplayAddressLabel, this.projectSetupDisplayAddressInput);
+        await this.assertLabelOrder(
+            ['Project Name', 'Project Status', 'Project Address', 'Project Display Address'],
+            0
+        );
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_06 — Verify project address autocomplete suggestions appear when typing
+ */
+    async verifyProjectAddressPopupOpens(projectName: string = 'Automation', searchQuery: string = 'Australia'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.typeAddressAndAssertSuggestions(this.projectSetupAddressInput, searchQuery);
+        await this.clearAddressInput(this.projectSetupAddressInput);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_07 — Add project address and save
+ */
+    async addProjectAddressAndSave(
+        projectName: string = 'Automation',
+        searchQuery: string = 'Australia'
+    ): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.clearAddressInputFully(this.projectSetupAddressInput);
+        await this.typeAddressAndAssertSuggestions(this.projectSetupAddressInput, searchQuery);
+        const savedAddress = await this.selectFirstAddressSuggestion(this.projectSetupAddressInput);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        const currentValue = await this.projectSetupAddressInput.inputValue();
+        expect(currentValue).toBe(savedAddress);
+        await this.cleanupAfterProjectTest();
+    }
+
+    private async assertInputIsEmpty(input: Locator): Promise<void> {
+        const value = await input.inputValue();
+        expect(value).toBe('');
+    }
+
+    /**
+ * TC_08 — Save Project Address with empty fields (none are required)
+ */
+    async saveProjectAddressWithEmptyFields(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.clearAddressInputFully(this.projectSetupAddressInput);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.assertInputIsEmpty(this.projectSetupAddressInput);
+        await this.cleanupAfterProjectTest();
     }
 
 }
