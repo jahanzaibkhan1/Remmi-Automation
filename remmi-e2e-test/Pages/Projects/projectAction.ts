@@ -503,6 +503,10 @@ export class ProjectActions {
         return this.page.locator('a[href="/project/projects"]').first();
     }
 
+    private get projectsBreadcrumb(): Locator {
+        return this.page.locator('p[routerlink="/project/projects"]', { hasText: /^\s*Projects\s*$/i });
+    }
+
     private get precinctListingsMenuLink(): Locator {
         return this.page.locator('a[href="/listings/project-precinct"]');
     }
@@ -5893,4 +5897,272 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    // ==========================================================================
+    // CONSTANTS — PROJECT SETUP
+    // ==========================================================================
+
+    private static readonly PROJECT_PRICELIST_URL = '/projects/edit_/69e9c1d7be0c8310f1dceee0/price-list';
+    private static readonly PROJECT_SETUP_URL = '/projects/edit_/69e9c1d7be0c8310f1dceee0/project-setup';
+
+    // ==========================================================================
+    // LOCATORS — PROJECT CLICK & PRICELIST TAB
+    // ==========================================================================
+
+    private get projectsSectionHeading(): Locator {
+        return this.page.locator('p', { hasText: /^\s*Project\s*$/i }).first();
+    }
+
+    private projectCardInProjectSection(projectName: string): Locator {
+        return this.page
+            .locator('.sgv-product')
+            .filter({ has: this.page.locator('.product-content h3', { hasText: new RegExp(`^\\s*${projectName}\\s*$`, 'i') }) })
+            .first();
+    }
+
+    private projectCardClickTarget(projectName: string): Locator {
+        return this.projectCardInProjectSection(projectName).locator('a[href="javascript:void(0)"]').first();
+    }
+
+    private get pricelistTab(): Locator {
+        return this.page.locator('a[href*="/price-list"]', { hasText: /Price List/i });
+    }
+
+    private get pricelistTabActive(): Locator {
+        return this.page.locator('a.active[href*="/price-list"]');
+    }
+
+    private get pricelistContent(): Locator {
+        return this.page.locator('app-price-list');
+    }
+
+    // ==========================================================================
+    // LOCATORS — PROJECT SETUP TAB & GENERAL TAB
+    // ==========================================================================
+
+    private get projectSetupTab(): Locator {
+        return this.page.locator('a[href*="/project-setup"]', { hasText: /Project Set Up/i });
+    }
+
+    private get projectSetupTabActive(): Locator {
+        return this.page.locator('a.active[href*="/project-setup"]');
+    }
+
+    private get projectSetupContent(): Locator {
+        return this.page.locator('app-project-setup, [class*="project-setup"]').first();
+    }
+
+    private get generalTab(): Locator {
+        return this.page.locator('a, li', { hasText: /^\s*General\s*$/i }).first();
+    }
+
+    private get generalTabActive(): Locator {
+        return this.page.locator('a.active, li.active', { hasText: /General/i });
+    }
+
+    // ==========================================================================
+    // LOCATORS — PROJECT SETUP FIELDS
+    // ==========================================================================
+
+    private get projectSetupNameField(): Locator {
+        return this.page.locator('input[formcontrolname="Project_Name"], input[formcontrolname="project_name"]').first();
+    }
+
+    private get projectSetupStatusField(): Locator {
+        return this.page.locator('ng-select[formcontrolname="Project_Status"], ng-select[formcontrolname="project_status"]').first();
+    }
+
+    private get projectAddressField(): Locator {
+        return this.page.locator('[class*="address"]', { hasText: /Project Address/i }).first();
+    }
+
+    private get projectAddressIcon(): Locator {
+        return this.projectAddressField.locator('img, i.pi').first();
+    }
+
+    private get projectDisplayAddressField(): Locator {
+        return this.page.locator('[class*="address"]', { hasText: /Display Address/i }).first();
+    }
+
+    private get projectDisplayAddressIcon(): Locator {
+        return this.projectDisplayAddressField.locator('img, i.pi').first();
+    }
+
+    // ==========================================================================
+    // LOCATORS — PROJECT ADDRESS POPUP
+    // ==========================================================================
+
+    private get projectAddressPopup(): Locator {
+        return this.page.locator('.p-dialog', { hasText: /Project Address/i });
+    }
+
+    private get projectAddressPopupCloseIcon(): Locator {
+        return this.projectAddressPopup.locator('.p-dialog-header-close, i.pi-times').first();
+    }
+
+    private get projectAddressSaveButton(): Locator {
+        return this.projectAddressPopup.locator('button', { hasText: /save/i });
+    }
+
+    private get projectAddressStreetInput(): Locator {
+        return this.projectAddressPopup.locator('input[formcontrolname*="street" i], input[placeholder*="street" i]').first();
+    }
+
+    private get projectAddressSuburbInput(): Locator {
+        return this.projectAddressPopup.locator('input[formcontrolname*="suburb" i], input[placeholder*="suburb" i]').first();
+    }
+
+    private get projectAddressStateInput(): Locator {
+        return this.projectAddressPopup.locator('input[formcontrolname*="state" i], input[placeholder*="state" i]').first();
+    }
+
+    private get projectAddressPostcodeInput(): Locator {
+        return this.projectAddressPopup.locator('input[formcontrolname*="postcode" i], input[placeholder*="postcode" i]').first();
+    }
+
+    // ==========================================================================
+    // LOCATORS — PROJECT DISPLAY ADDRESS POPUP
+    // ==========================================================================
+
+    private get projectDisplayAddressPopup(): Locator {
+        return this.page.locator('.p-dialog', { hasText: /Display Address/i });
+    }
+
+    private get projectDisplayAddressPopupCloseIcon(): Locator {
+        return this.projectDisplayAddressPopup.locator('.p-dialog-header-close, i.pi-times').first();
+    }
+
+    private get projectDisplayAddressSaveButton(): Locator {
+        return this.projectDisplayAddressPopup.locator('button', { hasText: /save/i });
+    }
+
+    // ==========================================================================
+    // HELPERS — PROJECT NAVIGATION
+    // ==========================================================================
+
+    /**
+     * HELPER — Navigate to Project Pricelist (skip if already there)
+     */
+    private async navigateToProjectPricelist(): Promise<void> {
+        const currentUrl = this.page.url().split(/[?#]/)[0];
+        if (!currentUrl.includes('/price-list')) {
+            await this.page.goto(ProjectActions.PROJECT_PRICELIST_URL);
+        }
+        await expect(this.pricelistContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    /**
+     * HELPER — Navigate to Project Setup (skip if already there)
+     */
+    private async navigateToProjectSetup(): Promise<void> {
+        const currentUrl = this.page.url().split(/[?#]/)[0];
+        if (!currentUrl.includes('/project-setup')) {
+            await this.page.goto(ProjectActions.PROJECT_SETUP_URL);
+        }
+        await expect(this.projectSetupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    /**
+     * HELPER — Click a project card from the "Project" section by name
+     */
+    private async clickProjectCardInProjectSection(projectName: string): Promise<void> {
+        await expect(this.projectsSectionHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const projectCard = this.projectCardClickTarget(projectName);
+        await expect(projectCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await projectCard.scrollIntoViewIfNeeded();
+        await projectCard.click();
+        await this.page.waitForTimeout(1500);
+    }
+
+    /**
+     * HELPER — Click Project Setup tab
+     */
+    private async clickProjectSetupTab(): Promise<void> {
+        await expect(this.projectSetupTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.projectSetupTab.click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.projectSetupTabActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Verify Pricelist tab is active and content loaded
+     */
+    private async assertPricelistTabActive(): Promise<void> {
+        await expect(this.page).toHaveURL(/\/price-list/, { timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.pricelistTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.pricelistTabActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.pricelistContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Cleanup after project test
+     */
+    /**
+  * HELPER — Cleanup after project test (navigate back via breadcrumb)
+  */
+    private async cleanupAfterProjectTest(): Promise<void> {
+        await expect(this.projectsBreadcrumb).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectsBreadcrumb.click();
+        await this.page.waitForTimeout(800);
+        await expect(this.projectsSectionHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    // ==========================================================================
+    // HELPERS — ADDRESS POPUPS
+    // ==========================================================================
+
+    /**
+     * HELPER — Open Project Address popup
+     */
+    private async openProjectAddressPopup(): Promise<void> {
+        await expect(this.projectAddressIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectAddressIcon.click();
+        await expect(this.projectAddressPopup).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Close Project Address popup via cross icon
+     */
+    private async closeProjectAddressPopup(): Promise<void> {
+        await this.projectAddressPopupCloseIcon.click();
+        await expect(this.projectAddressPopup).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Fill Project Address fields
+     */
+    private async fillProjectAddress(data: { street?: string; suburb?: string; state?: string; postcode?: string }): Promise<void> {
+        if (data.street) await this.projectAddressStreetInput.fill(data.street);
+        if (data.suburb) await this.projectAddressSuburbInput.fill(data.suburb);
+        if (data.state) await this.projectAddressStateInput.fill(data.state);
+        if (data.postcode) await this.projectAddressPostcodeInput.fill(data.postcode);
+    }
+
+    /**
+     * HELPER — Open Project Display Address popup
+     */
+    private async openProjectDisplayAddressPopup(): Promise<void> {
+        await expect(this.projectDisplayAddressIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectDisplayAddressIcon.click();
+        await expect(this.projectDisplayAddressPopup).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Close Project Display Address popup via cross icon
+     */
+    private async closeProjectDisplayAddressPopup(): Promise<void> {
+        await this.projectDisplayAddressPopupCloseIcon.click();
+        await expect(this.projectDisplayAddressPopup).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * TC_01 — Verify clicking a project with lots opens the Pricelist tab by default
+     */
+    async verifyProjectWithLotsOpensPricelistTab(projectName: string = 'Automation'): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.assertPricelistTabActive();
+        await this.cleanupAfterProjectTest();
+    }
+    
 }
