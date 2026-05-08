@@ -279,4 +279,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyFiltersOnTabSwitch('adb');
     });
 
+    test('TC_66: UI alignment for selected tags', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyTagsAlignment(['adb', 'Nexton', 'Villa B1']);
+    });
+
 });

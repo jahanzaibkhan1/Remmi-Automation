@@ -5780,4 +5780,46 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Verify UI alignment for selected tags — tags appear inline without overlapping
+ */
+    async verifyTagsAlignment(projectNames: string[]): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+
+        // Select multiple projects to populate tags
+        for (const projectName of projectNames) {
+            await this.openProjectDropdownAndSearch(projectName);
+            await this.clickProjectOptionByName(projectName);
+            await this.closeDropdown();
+        }
+
+        // Verify all tags are visible and not overlapping
+        const tags = this.page.locator('re-multiselect[placeholder="Project"] .tags .selected_one');
+        const tagCount = await tags.count();
+        expect(tagCount).toBe(projectNames.length);
+
+        // Check each tag has a valid bounding box (visible, no zero size)
+        const tagBoxes: Array<{ x: number; y: number; width: number; height: number }> = [];
+        for (let i = 0; i < tagCount; i++) {
+            const box = await tags.nth(i).boundingBox();
+            expect(box).not.toBeNull();
+            if (box) {
+                expect(box.width).toBeGreaterThan(0);
+                expect(box.height).toBeGreaterThan(0);
+                tagBoxes.push(box);
+            }
+        }
+
+        // Verify tags don't overlap (each tag's x position differs OR they are on different rows)
+        for (let i = 0; i < tagBoxes.length - 1; i++) {
+            const current = tagBoxes[i];
+            const next = tagBoxes[i + 1];
+            const horizontallyOverlapping = current.x + current.width > next.x && current.y === next.y;
+            expect(horizontallyOverlapping).toBeFalsy();
+        }
+
+        await this.cleanupAfterLotTest();
+    }
+
 }
