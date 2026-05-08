@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="80.69947699999996">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-08T06:22:31.078Z" hostname="chromium" tests="1" failures="0" skipped="0" time="78.705" errors="0">
-<testcase name="Lot List Page › TC_70: Tags correctly removed on Reset" classname="Pages\Projects\precinctLotList.spec.ts" time="78.705">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="64.2487100000009">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-08T10:15:03.088Z" hostname="chromium" tests="1" failures="0" skipped="0" time="61.612" errors="0">
+<testcase name="Project Setup Tests › Test 1: Project with lots opens Pricelist tab by default" classname="Pages\Projects\projectSetup.spec.ts" time="61.612">
 </testcase>
 </testsuite>
 </testsuites>
