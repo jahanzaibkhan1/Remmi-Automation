@@ -259,4 +259,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).openAndCloseViewPopupWithoutAction();
     });
 
+    test('TC_61: View popup - click save without changing', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).clickSaveWithoutChangingView();
+    });
+
 });
