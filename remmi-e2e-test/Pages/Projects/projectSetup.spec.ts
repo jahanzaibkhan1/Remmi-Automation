@@ -48,4 +48,8 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).addProjectAddressAndSave('Automation', 'Australia');
     });
 
+    test('TC_08: Save Project Address with empty fields', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).saveProjectAddressWithEmptyFields('Automation');
+    });
+
 });
