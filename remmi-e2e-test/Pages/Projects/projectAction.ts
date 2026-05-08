@@ -6415,4 +6415,21 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    private async assertInputIsEmpty(input: Locator): Promise<void> {
+        const value = await input.inputValue();
+        expect(value).toBe('');
+    }
+
+    /**
+ * TC_08 — Save Project Address with empty fields (none are required)
+ */
+    async saveProjectAddressWithEmptyFields(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.clearAddressInputFully(this.projectSetupAddressInput);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.assertInputIsEmpty(this.projectSetupAddressInput);
+        await this.cleanupAfterProjectTest();
+    }
+
 }
