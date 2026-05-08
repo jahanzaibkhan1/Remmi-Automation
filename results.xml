@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="66.37733300000056">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-08T10:53:15.494Z" hostname="chromium" tests="1" failures="0" skipped="0" time="64.386" errors="0">
-<testcase name="Project Setup Tests › TC_04: Project Name and Status appear first on General tab" classname="Pages\Projects\projectSetup.spec.ts" time="64.386">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="76.30745500000008">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-08T10:56:40.014Z" hostname="chromium" tests="1" failures="0" skipped="0" time="74.301" errors="0">
+<testcase name="Project Setup Tests › TC_05: Address fields appear below name/status" classname="Pages\Projects\projectSetup.spec.ts" time="74.301">
 </testcase>
 </testsuite>
 </testsuites>
