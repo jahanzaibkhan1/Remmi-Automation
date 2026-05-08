@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="72.19541399999987">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-08T04:46:32.361Z" hostname="chromium" tests="1" failures="0" skipped="0" time="69.758" errors="0">
-<testcase name="Lot List Page › TC_59: Validate cleared area removes filter" classname="Pages\Projects\precinctLotList.spec.ts" time="69.758">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="69.0126660000002">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-08T04:49:37.633Z" hostname="chromium" tests="1" failures="0" skipped="0" time="66.759" errors="0">
+<testcase name="Lot List Page › TC_60: View popup - open and close without action" classname="Pages\Projects\precinctLotList.spec.ts" time="66.759">
 </testcase>
 </testsuite>
 </testsuites>
