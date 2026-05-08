@@ -6094,11 +6094,11 @@ export class ProjectActions {
     }
 
     private get googlePlacesDropdown(): Locator {
-        return this.page.locator('.pac-container').first();
+        return this.page.locator('.pac-container:visible').first();
     }
 
     private get googlePlacesSuggestions(): Locator {
-        return this.page.locator('.pac-container .pac-item');
+        return this.page.locator('.pac-container:visible .pac-item');
     }
 
     private get generalTabSaveButton(): Locator {
@@ -6268,12 +6268,13 @@ export class ProjectActions {
     private async typeAddressAndAssertSuggestions(input: Locator, query: string): Promise<void> {
         await expect(input).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await input.click();
-        // Type each character slowly to simulate a real user typing (for more reliable autocomplete)
-        for (const char of query) {
-            await input.type(char, { delay: 300 });
-        }
-        await this.page.waitForTimeout(1500); // wait for Google API response
-        await expect(this.googlePlacesDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await input.press('Control+A');
+        await input.press('Delete');
+        await this.page.waitForTimeout(300);
+        await input.pressSequentially(query, { delay: 300 });
+        await this.page.waitForTimeout(1500);
+        const firstSuggestion = this.page.locator('.pac-container:visible .pac-item').first();
+        await firstSuggestion.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
         const suggestionCount = await this.googlePlacesSuggestions.count();
         expect(suggestionCount).toBeGreaterThan(0);
     }
