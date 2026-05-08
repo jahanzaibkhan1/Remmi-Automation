@@ -263,4 +263,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).clickSaveWithoutChangingView();
     });
 
+    test('TC_62: Share view with no team selected', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).shareViewWithNoTeamSelected('Abdul Rehman');
+    });
+
 });
