@@ -247,4 +247,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).validateDeselectedTagIsRemoved('adb');
     });
 
+    test('TC_58: Validate cleared price removes filter', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).validateClearedPriceRemovesFilter('500000', '1000000');
+    });
+
 });

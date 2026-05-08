@@ -5652,4 +5652,19 @@ export class ProjectActions {
         await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
+    /**
+     * Validate cleared price removes filter and shows all lots
+     */
+    async validateClearedPriceRemovesFilter(min: string, max: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openPriceRangeFilter();
+        await this.setPriceRange(min, max);
+        await this.assertLotsExist();
+        await this.setPriceRange('', '');
+        await this.page.waitForTimeout(800);
+        await this.assertLotsExist();
+        await this.cleanupAfterLotTest();
+    }
+    
 }
