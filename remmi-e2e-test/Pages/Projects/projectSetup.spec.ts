@@ -35,5 +35,9 @@ test.describe('Project Setup Tests', () => {
     test('TC_04: Project Name and Status appear first on General tab', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyProjectNameAndStatusAppearFirst('Automation');
     });
-    
+
+    test('TC_05: Address fields appear below name/status', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyAddressFieldsAppearBelowNameStatus('Automation');
+    });
+
 });

@@ -6306,4 +6306,18 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    /**
+ * TC_05 — Verify "Project Address" and "Project Display Address" fields appear below name/status
+ */
+    async verifyAddressFieldsAppearBelowNameStatus(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.assertFieldVisible(this.projectSetupAddressLabel, this.projectSetupAddressInput);
+        await this.assertFieldVisible(this.projectSetupDisplayAddressLabel, this.projectSetupDisplayAddressInput);
+        await this.assertLabelOrder(
+            ['Project Name', 'Project Status', 'Project Address', 'Project Display Address'],
+            0
+        );
+        await this.cleanupAfterProjectTest();
+    }
+
 }
