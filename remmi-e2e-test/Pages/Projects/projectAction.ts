@@ -6036,6 +6036,64 @@ export class ProjectActions {
     }
 
     // ==========================================================================
+    // LOCATORS — PROJECT SETUP > GENERAL TAB (sub-tabs)
+    // Source: app-project-setup HTML (shared 2026-05-08)
+    // ==========================================================================
+
+    private get generalSubTab(): Locator {
+        return this.page.locator('a[href*="/project-setup/general"]', { hasText: /^\s*General\s*$/i });
+    }
+
+    private get generalSubTabActive(): Locator {
+        return this.page.locator('a.active[href*="/project-setup/general"]');
+    }
+
+    private get generalSettingContent(): Locator {
+        return this.page.locator('app-general-setting');
+    }
+
+    // ==========================================================================
+    // LOCATORS — GENERAL TAB FORM FIELDS
+    // Source: app-general-setting HTML (shared 2026-05-08)
+    // ==========================================================================
+
+    private get projectSetupNameLabel(): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: /^Project Name$/i });
+    }
+
+    private get projectSetupNameInput(): Locator {
+        return this.generalSettingContent.locator('input[formcontrolname="Project_Name"]');
+    }
+
+    private get projectSetupStatusLabel(): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: /^Project Status$/i });
+    }
+
+    private get projectSetupStatusSelect(): Locator {
+        return this.generalSettingContent.locator('ng-select[formcontrolname="Project_Status"]');
+    }
+
+    private get projectSetupAddressLabel(): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: /^Project Address$/i });
+    }
+
+    private get projectSetupAddressInput(): Locator {
+        return this.generalSettingContent.locator('input[formcontrolname="Project_Address"]');
+    }
+
+    private get projectSetupDisplayAddressLabel(): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: /^Project Display Address$/i });
+    }
+
+    private get projectSetupDisplayAddressInput(): Locator {
+        return this.generalSettingContent.locator('input[formcontrolname="Project_Display_Address"]');
+    }
+
+    private get projectDisplayAddressPencilIcon(): Locator {
+        return this.generalSettingContent.locator('button#toggle-overlay');
+    }
+
+    // ==========================================================================
     // HELPERS — PROJECT NAVIGATION
     // ==========================================================================
 
@@ -6155,6 +6213,53 @@ export class ProjectActions {
         await expect(this.projectDisplayAddressPopup).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
 
+    private async openGeneralTab(): Promise<void> {
+        const currentUrl = this.page.url();
+        if (!currentUrl.includes('/project-setup')) {
+            await this.clickProjectSetupTab();
+        }
+        await expect(this.generalSubTabActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.generalSettingContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    /**
+* HELPER — Open project (clicks card → asserts Pricelist landing → switches to Project Setup → General)
+*/
+    private async openProjectGeneralTab(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.assertPricelistTabActive();
+        await this.clickProjectSetupTab();
+        await this.openGeneralTab();
+    }
+
+    /**
+     * HELPER — Get all form field labels in the General tab
+     */
+    private get generalTabAllLabels(): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1');
+    }
+
+    /**
+     * HELPER — Verify form labels appear in the expected order at given starting index
+     * Example: assertLabelOrder(['Project Name', 'Project Status'], 0)
+     */
+    private async assertLabelOrder(expectedLabels: string[], startIndex: number = 0): Promise<void> {
+        for (let i = 0; i < expectedLabels.length; i++) {
+            const actualText = (await this.generalTabAllLabels.nth(startIndex + i).innerText()).trim();
+            expect(actualText).toBe(expectedLabels[i]);
+        }
+    }
+
+    /**
+     * HELPER — Verify a form field's label and input are both visible
+     */
+    private async assertFieldVisible(label: Locator, input: Locator): Promise<void> {
+        await expect(label).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(input).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
     /**
      * TC_01 — Verify clicking a project with lots opens the Pricelist tab by default
      */
@@ -6186,6 +6291,18 @@ export class ProjectActions {
         await this.clickProjectCardInProjectSection(projectName);
         await this.assertPricelistTabActive();
         await this.clickProjectSetupTab();
+        await this.cleanupAfterProjectTest();
+    }
+
+
+    /**
+ * TC_04 — Verify "Project Name" and "Project Status" fields appear first on General tab
+ */
+    async verifyProjectNameAndStatusAppearFirst(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.assertFieldVisible(this.projectSetupNameLabel, this.projectSetupNameInput);
+        await this.assertFieldVisible(this.projectSetupStatusLabel, this.projectSetupStatusSelect);
+        await this.assertLabelOrder(['Project Name', 'Project Status'], 0);
         await this.cleanupAfterProjectTest();
     }
 

@@ -32,4 +32,8 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).verifyProjectSetupTabSwitchFromPricelist('Automation');
     });
 
+    test('TC_04: Project Name and Status appear first on General tab', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyProjectNameAndStatusAppearFirst('Automation');
+    });
+    
 });
