@@ -24,4 +24,8 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).verifyProjectWithLotsOpensPricelistTab('Automation');
     });
 
+    test('TC_02: Project without lots opens General tab', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyProjectWithoutLotsOpensGeneralTab("Hina's Project");
+    });
+
 });

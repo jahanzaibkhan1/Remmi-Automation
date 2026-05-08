@@ -6164,5 +6164,16 @@ export class ProjectActions {
         await this.assertPricelistTabActive();
         await this.cleanupAfterProjectTest();
     }
-    
+
+    /**
+     * TC_02 — Verify clicking a project without lots opens General tab under Project Setup
+     */
+    async verifyProjectWithoutLotsOpensGeneralTab(projectName: string = "Hina's Project"): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.assertPricelistTabActive();
+        await this.cleanupAfterProjectTest();
+    }
+
 }
