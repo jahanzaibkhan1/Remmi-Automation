@@ -1,6 +1,10 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="80.46983000000007">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-08T05:46:50.550Z" hostname="chromium" tests="1" failures="0" skipped="0" time="78.501" errors="0">
-<testcase name="Lot List Page › TC_64: Lots list responsive after many filters" classname="Pages\Projects\precinctLotList.spec.ts" time="78.501">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="56.45605099999998">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-08T05:50:31.067Z" hostname="chromium" tests="1" failures="0" skipped="0" time="54.484" errors="0">
+<testcase name="Lot List Page › TC_65: Filters persist on tab switch" classname="Pages\Projects\precinctLotList.spec.ts" time="54.484">
+<system-out>
+<![CDATA[Project filter after tab switch: RESET
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>

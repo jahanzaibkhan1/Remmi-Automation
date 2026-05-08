@@ -275,4 +275,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyLotsListResponsiveAfterManyFilters('adb', '2', 'For Sale');
     });
 
+    test('TC_65: Filters persist on tab switch', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyFiltersOnTabSwitch('adb');
+    });
+
 });
