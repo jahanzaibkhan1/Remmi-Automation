@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="76.94682199999876">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-08T05:57:08.916Z" hostname="chromium" tests="1" failures="0" skipped="0" time="74.936" errors="0">
-<testcase name="Lot List Page › TC_67: Close one dropdown, open another" classname="Pages\Projects\precinctLotList.spec.ts" time="74.936">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="94.55752100000159">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-08T06:05:58.710Z" hostname="chromium" tests="1" failures="0" skipped="0" time="92.569" errors="0">
+<testcase name="Lot List Page › TC_68: Sorting remains after filters" classname="Pages\Projects\precinctLotList.spec.ts" time="92.569">
 </testcase>
 </testsuite>
 </testsuites>
