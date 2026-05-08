@@ -267,4 +267,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).shareViewWithNoTeamSelected('Abdul Rehman');
     });
 
+    test('TC_63: View popup UI remains responsive', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyViewPopupResponsive();
+    });
+
 });

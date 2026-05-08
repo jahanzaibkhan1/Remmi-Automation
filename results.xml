@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="58.27733099999931">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-08T04:58:22.763Z" hostname="chromium" tests="1" failures="0" skipped="0" time="56.006" errors="0">
-<testcase name="Lot List Page › TC_62: Share view with no team selected" classname="Pages\Projects\precinctLotList.spec.ts" time="56.006">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="78.41674100000039">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-08T05:35:00.389Z" hostname="chromium" tests="1" failures="0" skipped="0" time="76.412" errors="0">
+<testcase name="Lot List Page › TC_63: View popup UI remains responsive" classname="Pages\Projects\precinctLotList.spec.ts" time="76.412">
 </testcase>
 </testsuite>
 </testsuites>

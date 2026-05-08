@@ -5727,4 +5727,16 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Verify View popup UI remains responsive
+ */
+    async verifyViewPopupResponsive(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openDefaultViewPopup();
+        await this.reorderExpandCollapseArrow.click();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
 }
