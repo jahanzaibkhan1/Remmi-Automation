@@ -239,4 +239,64 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).applyBedFilterAndSwitchToProjectDropdown('2');
     });
 
+    test('TC_56: Verify no duplicate tag', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyNoDuplicateTag('adb');
+    });
+
+    test('TC_57: Validate deselected tag is removed from list', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).validateDeselectedTagIsRemoved('adb');
+    });
+
+    test('TC_58: Validate cleared price removes filter', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).validateClearedPriceRemovesFilter('500000', '1000000');
+    });
+
+    test('TC_59: Validate cleared area removes filter', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).validateClearedAreaRemovesFilter('50', '200');
+    });
+
+    test('TC_60: View popup - open and close without action', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).openAndCloseViewPopupWithoutAction();
+    });
+
+    test('TC_61: View popup - click save without changing', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).clickSaveWithoutChangingView();
+    });
+
+    test('TC_62: Share view with no team selected', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).shareViewWithNoTeamSelected('Abdul Rehman');
+    });
+
+    test('TC_63: View popup UI remains responsive', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyViewPopupResponsive();
+    });
+
+    test('TC_64: Lots list responsive after many filters', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotsListResponsiveAfterManyFilters('adb', '2', 'For Sale');
+    });
+
+    test('TC_65: Filters persist on tab switch', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyFiltersOnTabSwitch('adb');
+    });
+
+    test('TC_66: UI alignment for selected tags', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyTagsAlignment(['adb', 'Nexton', 'Villa B1']);
+    });
+
+    test('TC_67: Close one dropdown, open another', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).closeOneOpenAnotherDropdown();
+    });
+
+    test('TC_68: Sorting remains after filters', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySortingRemainsAfterFilters('East Village Vila', '2');
+    });
+
+    test('TC_69: Select project with no lots created', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).selectProjectWithNoLots("Hina's Project");
+    });
+
+    test('TC_70: Tags correctly removed on Reset', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyTagsRemovedOnReset('adb', '2');
+    });
+
 });
