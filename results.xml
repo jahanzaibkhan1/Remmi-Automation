@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.52133999999985">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-08T11:04:29.475Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.483" errors="0">
-<testcase name="Project Setup Tests › TC_06: Project address autocomplete shows suggestions" classname="Pages\Projects\projectSetup.spec.ts" time="45.483">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="91.91494000000134">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-08T11:29:15.106Z" hostname="chromium" tests="1" failures="0" skipped="0" time="89.849" errors="0">
+<testcase name="Project Setup Tests › TC_07: Add project address and save" classname="Pages\Projects\projectSetup.spec.ts" time="89.849">
 </testcase>
 </testsuite>
 </testsuites>
