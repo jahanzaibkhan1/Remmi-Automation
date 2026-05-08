@@ -255,4 +255,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).validateClearedAreaRemovesFilter('50', '200');
     });
 
+    test('TC_60: View popup - open and close without action', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).openAndCloseViewPopupWithoutAction();
+    });
+
 });
