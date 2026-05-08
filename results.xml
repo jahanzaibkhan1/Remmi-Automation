@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="76.30745500000008">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-08T10:56:40.014Z" hostname="chromium" tests="1" failures="0" skipped="0" time="74.301" errors="0">
-<testcase name="Project Setup Tests › TC_05: Address fields appear below name/status" classname="Pages\Projects\projectSetup.spec.ts" time="74.301">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="47.52133999999985">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-08T11:04:29.475Z" hostname="chromium" tests="1" failures="0" skipped="0" time="45.483" errors="0">
+<testcase name="Project Setup Tests › TC_06: Project address autocomplete shows suggestions" classname="Pages\Projects\projectSetup.spec.ts" time="45.483">
 </testcase>
 </testsuite>
 </testsuites>

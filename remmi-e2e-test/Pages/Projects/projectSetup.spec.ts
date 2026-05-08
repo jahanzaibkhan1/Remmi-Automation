@@ -40,4 +40,8 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).verifyAddressFieldsAppearBelowNameStatus('Automation');
     });
 
+    test('TC_06: Project address autocomplete shows suggestions', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyProjectAddressPopupOpens('Automation', 'Australia');
+    });
+
 });

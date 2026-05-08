@@ -6093,6 +6093,14 @@ export class ProjectActions {
         return this.generalSettingContent.locator('button#toggle-overlay');
     }
 
+    private get googlePlacesDropdown(): Locator {
+        return this.page.locator('.pac-container').first();
+    }
+
+    private get googlePlacesSuggestions(): Locator {
+        return this.page.locator('.pac-container .pac-item');
+    }
+
     // ==========================================================================
     // HELPERS — PROJECT NAVIGATION
     // ==========================================================================
@@ -6260,6 +6268,26 @@ export class ProjectActions {
         await expect(input).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
 
+    private async typeAddressAndAssertSuggestions(input: Locator, query: string): Promise<void> {
+        await expect(input).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await input.click();
+        await input.fill(query);
+        await this.page.waitForTimeout(1500); // wait for Google API response
+
+        await expect(this.googlePlacesDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const suggestionCount = await this.googlePlacesSuggestions.count();
+        expect(suggestionCount).toBeGreaterThan(0);
+    }
+
+    /**
+     * HELPER — Clear an address input and dismiss Google Places dropdown
+     */
+    private async clearAddressInput(input: Locator): Promise<void> {
+        await input.fill('');
+        await this.page.keyboard.press('Escape');
+        await this.page.waitForTimeout(300);
+    }
+
     /**
      * TC_01 — Verify clicking a project with lots opens the Pricelist tab by default
      */
@@ -6317,6 +6345,16 @@ export class ProjectActions {
             ['Project Name', 'Project Status', 'Project Address', 'Project Display Address'],
             0
         );
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_06 — Verify project address autocomplete suggestions appear when typing
+ */
+    async verifyProjectAddressPopupOpens(projectName: string = 'Automation', searchQuery: string = 'Australia'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.typeAddressAndAssertSuggestions(this.projectSetupAddressInput, searchQuery);
+        await this.clearAddressInput(this.projectSetupAddressInput);
         await this.cleanupAfterProjectTest();
     }
 
