@@ -5822,4 +5822,21 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Verify closing one dropdown and opening another works without conflicts
+ */
+    async closeOneOpenAnotherDropdown(): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openBedDropdown();
+        await expect(this.bedDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeDropdown();
+        await this.page.waitForTimeout(500);
+        await this.openProjectDropdown();
+        await expect(this.projectDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownOptions.first()).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeDropdown();
+        await this.cleanupAfterLotTest();
+    }
+
 }
