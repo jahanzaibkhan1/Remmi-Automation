@@ -287,4 +287,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).closeOneOpenAnotherDropdown();
     });
 
+    test('TC_68: Sorting remains after filters', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySortingRemainsAfterFilters('East Village Vila', '2');
+    });
+
 });
