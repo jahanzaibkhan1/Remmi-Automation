@@ -283,4 +283,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyTagsAlignment(['adb', 'Nexton', 'Villa B1']);
     });
 
+    test('TC_67: Close one dropdown, open another', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).closeOneOpenAnotherDropdown();
+    });
+
 });
