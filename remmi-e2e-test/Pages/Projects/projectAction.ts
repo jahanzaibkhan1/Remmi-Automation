@@ -5709,4 +5709,22 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Try to share view without selecting a team and verify validation
+ */
+    async shareViewWithNoTeamSelected(userName: string = 'Abdul Rehman'): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openDefaultViewPopup();
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.shareViewIcon.click({ force: true });
+        await this.selectShareTarget(this.usersShareDropdown, this.usersShareDropdownArrow, userName);
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.shareButton.click({ force: true });
+        await this.page.waitForTimeout(1000);
+        const responseVisible = await this.shareResponseMessage().isVisible().catch(() => false);
+        expect(responseVisible).toBeTruthy();
+        await this.cleanupAfterLotTest();
+    }
+
 }
