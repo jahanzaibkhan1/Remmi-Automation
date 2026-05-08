@@ -5873,4 +5873,24 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Verify all dropdown tags and fields are cleared after clicking Reset
+ */
+    async verifyTagsRemovedOnReset(projectName: string, bedValue: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+        await this.openBedDropdown();
+        await this.selectBedByValue(bedValue);
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.resetButton.click();
+        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterLotTest();
+    }
+
 }
