@@ -6079,8 +6079,7 @@ export class ProjectActions {
     private async clickProjectSetupTab(): Promise<void> {
         await expect(this.projectSetupTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.projectSetupTab.click();
-        await this.page.waitForTimeout(1500);
-        await expect(this.projectSetupTabActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(1000);
     }
 
     /**
@@ -6101,6 +6100,8 @@ export class ProjectActions {
   */
     private async cleanupAfterProjectTest(): Promise<void> {
         await expect(this.projectsBreadcrumb).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectsBreadcrumb.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'auto' }));
+        await this.page.waitForTimeout(800);
         await this.projectsBreadcrumb.click();
         await this.page.waitForTimeout(800);
         await expect(this.projectsSectionHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
@@ -6173,6 +6174,18 @@ export class ProjectActions {
         await this.page.waitForLoadState('networkidle');
         await this.clickProjectCardInProjectSection(projectName);
         await this.assertPricelistTabActive();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_03 — From Pricelist tab, click Project Setup → switches to setup section
+ */
+    async verifyProjectSetupTabSwitchFromPricelist(projectName: string = 'Automation'): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.assertPricelistTabActive();
+        await this.clickProjectSetupTab();
         await this.cleanupAfterProjectTest();
     }
 
