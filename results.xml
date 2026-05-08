@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="78.41674100000039">
-<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-08T05:35:00.389Z" hostname="chromium" tests="1" failures="0" skipped="0" time="76.412" errors="0">
-<testcase name="Lot List Page › TC_63: View popup UI remains responsive" classname="Pages\Projects\precinctLotList.spec.ts" time="76.412">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="80.46983000000007">
+<testsuite name="Pages\Projects\precinctLotList.spec.ts" timestamp="2026-05-08T05:46:50.550Z" hostname="chromium" tests="1" failures="0" skipped="0" time="78.501" errors="0">
+<testcase name="Lot List Page › TC_64: Lots list responsive after many filters" classname="Pages\Projects\precinctLotList.spec.ts" time="78.501">
 </testcase>
 </testsuite>
 </testsuites>

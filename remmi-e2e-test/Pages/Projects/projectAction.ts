@@ -5739,4 +5739,24 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Verify Lots list remains responsive after applying many filters
+ */
+    async verifyLotsListResponsiveAfterManyFilters(projectName: string, bedValue: string, statusName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+        await this.openBedDropdown();
+        await this.selectBedByValue(bedValue);
+        await this.closeDropdown();
+        await this.openStatusDropdown();
+        await this.searchInStatusDropdown(statusName);
+        await this.selectStatusByValue(statusName);
+        await this.closeDropdown();
+        await expect(this.lotTableRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.cleanupAfterLotTest();
+    }
+
 }

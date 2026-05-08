@@ -271,4 +271,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).verifyViewPopupResponsive();
     });
 
+    test('TC_64: Lots list responsive after many filters', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotsListResponsiveAfterManyFilters('adb', '2', 'For Sale');
+    });
+
 });
