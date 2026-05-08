@@ -251,4 +251,8 @@ test.describe('Lot List Page', () => {
         await new ProjectActions(sessionPage).validateClearedPriceRemovesFilter('500000', '1000000');
     });
 
+    test('TC_59: Validate cleared area removes filter', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).validateClearedAreaRemovesFilter('50', '200');
+    });
+
 });
