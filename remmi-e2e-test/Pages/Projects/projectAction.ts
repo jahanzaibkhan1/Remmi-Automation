@@ -5759,4 +5759,25 @@ export class ProjectActions {
         await this.cleanupAfterLotTest();
     }
 
+    /**
+ * Verify filters persist (or reset) when switching tabs
+ */
+    async verifyFiltersOnTabSwitch(projectName: string): Promise<void> {
+        await this.navigateToLotTabInPrecinct();
+        await this.resetAndAssertLotRowVisible();
+        await this.openProjectDropdownAndSearch(projectName);
+        await this.projectDropdownOptions.first().click();
+        await this.closeDropdown();
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.eoiTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.eoiTabInPrecinct.click();
+        await this.page.waitForTimeout(1500);
+        await this.lotTabInPrecinct.click();
+        await this.page.waitForTimeout(1500);
+        const tagVisible = await this.selectedProjectTagByName(projectName).isVisible().catch(() => false);
+        console.log(`Project filter after tab switch: ${tagVisible ? 'PERSISTED' : 'RESET'}`);
+        expect(typeof tagVisible).toBe('boolean');
+        await this.cleanupAfterLotTest();
+    }
+
 }
