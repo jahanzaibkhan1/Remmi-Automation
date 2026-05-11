@@ -116,5 +116,9 @@ test.describe('Project Setup Tests', () => {
             '1000'
         );
     });
+
+    test('TC_26: Add multiple upgrade groups', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).addMultipleUpgradeGroups('Automation');
+    });
     
 });
