@@ -80,4 +80,8 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).verifyDeveloperDropdownShowsContacts('Automation');
     });
 
+    test('TC_15: Add and remove developer', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).addAndRemoveDeveloper('Automation', '11 22');
+    });
+
 });
