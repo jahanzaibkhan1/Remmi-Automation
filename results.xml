@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="53.94605900000036">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-11T11:15:40.713Z" hostname="chromium" tests="1" failures="0" skipped="0" time="51.686" errors="0">
-<testcase name="Project Setup Tests › TC_23: Delete all selected floorplan types at once" classname="Pages\Projects\projectSetup.spec.ts" time="51.686">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="65.67952600000054">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-11T11:21:02.449Z" hostname="chromium" tests="1" failures="0" skipped="0" time="63.412" errors="0">
+<testcase name="Project Setup Tests › TC_24: Sort floorplan list ascending/descending" classname="Pages\Projects\projectSetup.spec.ts" time="63.412">
 </testcase>
 </testsuite>
 </testsuites>

@@ -6288,6 +6288,10 @@ export class ProjectActions {
         return this.floorplanTable.locator('thead p-checkbox .p-checkbox-box').first();
     }
 
+    private get floorplanTypeColumnHeader(): Locator {
+        return this.floorplanTable.locator('th.p-sortable-column[psortablecolumn="name"]').first();
+    }
+
     /**
  * HELPER — Fill all fields in the Display Address popup
  */
@@ -7029,6 +7033,41 @@ export class ProjectActions {
         await this.clickFloorplanHeaderDelete();
         const afterDeleteCount = await this.getFloorplanRowCount();
         expect(afterDeleteCount).toBe(initialCount);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * HELPER — Click the Type column header to sort
+ */
+    private async clickFloorplanTypeColumnSort(): Promise<void> {
+        await expect(this.floorplanTypeColumnHeader).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.floorplanTypeColumnHeader.scrollIntoViewIfNeeded();
+        await this.floorplanTypeColumnHeader.click();
+        await this.page.waitForTimeout(500);
+    }
+
+
+    private async assertFloorplanTypeColumnSortState(expectedState: 'none' | 'ascending' | 'descending'): Promise<void> {
+        await expect(this.floorplanTypeColumnHeader).toHaveAttribute('aria-sort', expectedState, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+    }
+
+    /**
+ * TC_24 — Sort floorplan list by Type column (ascending/descending)
+ */
+    async sortFloorplanListAscendingDescending(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToFloorplanSection();
+        await this.clickFloorplanPlusIcon();
+        await this.clickFloorplanPlusIcon();
+        await this.assertFloorplanTypeColumnSortState('none');
+        await this.clickFloorplanTypeColumnSort();
+        await this.assertFloorplanTypeColumnSortState('ascending');
+        await this.clickFloorplanTypeColumnSort();
+        await this.assertFloorplanTypeColumnSortState('descending');
+        await this.toggleFloorplanHeaderCheckboxAndWaitForDelete();
+        await this.clickFloorplanHeaderDelete();
         await this.cleanupAfterProjectTest();
     }
 
