@@ -56,4 +56,16 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).verifyProjectDisplayAddressPopupOpens('Automation');
     });
 
+    test('TC_11: Add project display address and save', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).addProjectDisplayAddressAndSave('Automation', {
+            buildingName: 'Test Building',
+            unitNo: '12',
+            streetNo: '456',
+            streetName: 'George Street',
+            state: 'NSW',
+            postCode: '2000',
+            country: 'Australia',
+        });
+    });
+
 });

@@ -6158,6 +6158,57 @@ export class ProjectActions {
     }
 
     /**
+ * HELPER — Fill all fields in the Display Address popup
+ */
+    private async fillDisplayAddressFields(data: {
+        buildingName?: string;
+        unitNo?: string;
+        streetNo?: string;
+        streetName?: string;
+        state?: string;
+        postCode?: string;
+        country?: string;
+    }): Promise<void> {
+        if (data.buildingName !== undefined) await this.displayAddressBuildingNameInput.fill(data.buildingName);
+        if (data.unitNo !== undefined) await this.displayAddressUnitNoInput.fill(data.unitNo);
+        if (data.streetNo !== undefined) await this.displayAddressStreetNoInput.fill(data.streetNo);
+        if (data.streetName !== undefined) await this.displayAddressStreetNameInput.fill(data.streetName);
+        if (data.state !== undefined) await this.displayAddressStateInput.fill(data.state);
+        if (data.postCode !== undefined) await this.displayAddressPostCodeInput.fill(data.postCode);
+        if (data.country !== undefined) await this.displayAddressCountryInput.fill(data.country);
+    }
+
+    /**
+     * HELPER — Click Save button inside Display Address popup
+     */
+    private async clickDisplayAddressPopupSave(): Promise<void> {
+        await expect(this.displayAddressPopupSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.displayAddressPopupSaveButton.click();
+        await this.page.waitForTimeout(1500);
+    }
+
+    /**
+     * HELPER — Assert all Display Address fields match expected data
+     */
+    private async assertDisplayAddressFieldsMatch(data: {
+        buildingName?: string;
+        unitNo?: string;
+        streetNo?: string;
+        streetName?: string;
+        state?: string;
+        postCode?: string;
+        country?: string;
+    }): Promise<void> {
+        if (data.buildingName !== undefined) expect(await this.displayAddressBuildingNameInput.inputValue()).toBe(data.buildingName);
+        if (data.unitNo !== undefined) expect(await this.displayAddressUnitNoInput.inputValue()).toBe(data.unitNo);
+        if (data.streetNo !== undefined) expect(await this.displayAddressStreetNoInput.inputValue()).toBe(data.streetNo);
+        if (data.streetName !== undefined) expect(await this.displayAddressStreetNameInput.inputValue()).toBe(data.streetName);
+        if (data.state !== undefined) expect(await this.displayAddressStateInput.inputValue()).toBe(data.state);
+        if (data.postCode !== undefined) expect(await this.displayAddressPostCodeInput.inputValue()).toBe(data.postCode);
+        if (data.country !== undefined) expect(await this.displayAddressCountryInput.inputValue()).toBe(data.country);
+    }
+
+    /**
      * HELPER — Navigate to Project Pricelist (skip if already there)
      */
     private async navigateToProjectPricelist(): Promise<void> {
@@ -6498,6 +6549,39 @@ export class ProjectActions {
         await expect(this.displayAddressPopupHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await expect(this.displayAddressBuildingNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await expect(this.displayAddressPopupSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeDisplayAddressPopup();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_11 — Add Display Address and save (verify values persist)
+     */
+    async addProjectDisplayAddressAndSave(
+        projectName: string = 'Automation',
+        addressData: {
+            buildingName?: string;
+            unitNo?: string;
+            streetNo?: string;
+            streetName?: string;
+            state?: string;
+            postCode?: string;
+            country?: string;
+        } = {
+                buildingName: 'Test Building',
+                unitNo: '12',
+                streetNo: '456',
+                streetName: 'George Street',
+                state: 'NSW',
+                postCode: '2000',
+                country: 'Australia',
+            }
+    ): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openDisplayAddressPopup();
+        await this.fillDisplayAddressFields(addressData);
+        await this.clickDisplayAddressPopupSave();
+        await this.openDisplayAddressPopup();
+        await this.assertDisplayAddressFieldsMatch(addressData);
         await this.closeDisplayAddressPopup();
         await this.cleanupAfterProjectTest();
     }
