@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="113.54874200000054">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-11T08:00:42.034Z" hostname="chromium" tests="1" failures="0" skipped="0" time="111.575" errors="0">
-<testcase name="Project Setup Tests › TC_15: Add and remove developer" classname="Pages\Projects\projectSetup.spec.ts" time="111.575">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="89.52323299999908">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-11T09:14:59.473Z" hostname="chromium" tests="1" failures="0" skipped="0" time="86.71" errors="0">
+<testcase name="Project Setup Tests › TC_18: Project Manager dropdown shows all staff" classname="Pages\Projects\projectSetup.spec.ts" time="86.71">
 </testcase>
 </testsuite>
 </testsuites>
