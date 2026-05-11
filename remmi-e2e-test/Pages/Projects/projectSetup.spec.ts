@@ -103,5 +103,9 @@ test.describe('Project Setup Tests', () => {
     test('TC_23: Delete all selected floorplan types at once', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).deleteAllSelectedFloorplanTypes('Automation');
     });
+
+    test('TC_24: Sort floorplan list ascending/descending', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).sortFloorplanListAscendingDescending('Automation');
+    });
     
 });
