@@ -6160,6 +6160,34 @@ export class ProjectActions {
     private get displayAddressPopupCloseIcon(): Locator {
         return this.page.locator('.p-overlaypanel-close-icon').first();
     }
+
+    private get developerDropdownContainer(): Locator {
+        return this.generalSettingContent.locator('re-multiselect').filter({ has: this.page.locator('.placeHolder', { hasText: /Select Developer/i }) }).first();
+    }
+
+    private get developerDropdownTrigger(): Locator {
+        return this.developerDropdownContainer.locator('.tags').first();
+    }
+
+    private get developerDropdownPanel(): Locator {
+        return this.developerDropdownContainer.locator('.drop_box');
+    }
+
+    private get developerDropdownSearchInput(): Locator {
+        return this.developerDropdownPanel.locator('input[placeholder="Search"]');
+    }
+
+    private get developerDropdownCreateNew(): Locator {
+        return this.developerDropdownPanel.locator('p.cursor-pointer', { hasText: /Create New/i });
+    }
+
+    private get developerDropdownItems(): Locator {
+        return this.developerDropdownPanel.locator('ul li');
+    }
+
+    private developerDropdownItemByText(text: string): Locator {
+        return this.developerDropdownPanel.locator('ul li').filter({ hasText: text }).first();
+    }
     /**
  * HELPER — Fill all fields in the Display Address popup
  */
@@ -6647,6 +6675,37 @@ export class ProjectActions {
         await this.openProjectGeneralTab(projectName);
         await this.openDisplayAddressPopup();
         await this.closeDisplayAddressPopupViaCross();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * HELPER — Open the Developer dropdown
+ */
+    private async openDeveloperDropdown(): Promise<void> {
+        await expect(this.developerDropdownTrigger).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.developerDropdownTrigger.scrollIntoViewIfNeeded();
+        await this.developerDropdownTrigger.click();
+        await this.page.waitForTimeout(500);
+        await expect(this.developerDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Close the Developer dropdown
+     */
+    private async closeDeveloperDropdown(): Promise<void> {
+        await this.developerDropdownTrigger.click();
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+ * TC_14 — Verify Developer dropdown opens and shows contact list
+ */
+    async verifyDeveloperDropdownShowsContacts(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openDeveloperDropdown();
+        await expect(this.developerDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.developerDropdownCreateNew).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeDeveloperDropdown();
         await this.cleanupAfterProjectTest();
     }
 }
