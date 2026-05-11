@@ -6113,6 +6113,50 @@ export class ProjectActions {
         return this.generalSettingContent.locator('button._cancel-btn', { hasText: /^\s*Close\s*$/i }).first();
     }
 
+    private get displayAddressPopup(): Locator {
+        return this.page.locator('.row', { hasText: /Property Address/i }).filter({ has: this.page.locator('h4', { hasText: /Property Address/i }) });
+    }
+
+    private get displayAddressPopupHeading(): Locator {
+        return this.page.locator('h4', { hasText: /^\s*Property Address\s*$/i });
+    }
+
+    private get displayAddressPopupSaveButton(): Locator {
+        return this.displayAddressPopup.locator('button.btn-primary', { hasText: /^\s*Save\s*$/i });
+    }
+
+    private get displayAddressBuildingNameInput(): Locator {
+        return this.page.locator('input[formcontrolname="building_name"]');
+    }
+
+    private get displayAddressUnitNoInput(): Locator {
+        return this.page.locator('input[formcontrolname="unit_no"]');
+    }
+
+    private get displayAddressStreetNoInput(): Locator {
+        return this.page.locator('input[formcontrolname="street_no"]');
+    }
+
+    private get displayAddressStreetNameInput(): Locator {
+        return this.page.locator('input[formcontrolname="street_name"]');
+    }
+
+    private get displayAddressSuburbAutocomplete(): Locator {
+        return this.page.locator('p-autocomplete[formcontrolname="suburb"] input');
+    }
+
+    private get displayAddressStateInput(): Locator {
+        return this.page.locator('input[formcontrolname="state"]');
+    }
+
+    private get displayAddressPostCodeInput(): Locator {
+        return this.page.locator('input[formcontrolname="post_code"]');
+    }
+
+    private get displayAddressCountryInput(): Locator {
+        return this.page.locator('input[formcontrolname="country"]');
+    }
+
     /**
      * HELPER — Navigate to Project Pricelist (skip if already there)
      */
@@ -6430,6 +6474,31 @@ export class ProjectActions {
         await this.clickGeneralTabSave();
         await this.assertProjectUpdatedToast();
         await this.assertInputIsEmpty(this.projectSetupAddressInput);
+        await this.cleanupAfterProjectTest();
+    }
+
+    private async openDisplayAddressPopup(): Promise<void> {
+        await expect(this.projectDisplayAddressPencilIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectDisplayAddressPencilIcon.click();
+        await this.page.waitForTimeout(800);
+        await expect(this.displayAddressPopupHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    private async closeDisplayAddressPopup(): Promise<void> {
+        await this.page.mouse.click(0, 100); // click outside the popup
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+ * TC_10 — Verify Project Display Address popup opens from General tab
+ */
+    async verifyProjectDisplayAddressPopupOpens(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openDisplayAddressPopup();
+        await expect(this.displayAddressPopupHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.displayAddressBuildingNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.displayAddressPopupSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeDisplayAddressPopup();
         await this.cleanupAfterProjectTest();
     }
 
