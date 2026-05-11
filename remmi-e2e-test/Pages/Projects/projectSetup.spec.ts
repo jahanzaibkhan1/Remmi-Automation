@@ -68,4 +68,8 @@ test.describe('Project Setup Tests', () => {
         });
     });
 
+    test('TC_12: Save Display Address popup with empty fields', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).saveDisplayAddressWithEmptyFields('Automation');
+    });
+
 });
