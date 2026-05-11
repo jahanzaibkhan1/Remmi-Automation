@@ -6113,6 +6113,281 @@ export class ProjectActions {
         return this.generalSettingContent.locator('button._cancel-btn', { hasText: /^\s*Close\s*$/i }).first();
     }
 
+    private get displayAddressPopup(): Locator {
+        return this.page.locator('.row', { hasText: /Property Address/i }).filter({ has: this.page.locator('h4', { hasText: /Property Address/i }) });
+    }
+
+    private get displayAddressPopupHeading(): Locator {
+        return this.page.locator('h4', { hasText: /^\s*Property Address\s*$/i });
+    }
+
+    private get displayAddressPopupSaveButton(): Locator {
+        return this.displayAddressPopup.locator('button.btn-primary', { hasText: /^\s*Save\s*$/i });
+    }
+
+    private get displayAddressBuildingNameInput(): Locator {
+        return this.page.locator('input[formcontrolname="building_name"]');
+    }
+
+    private get displayAddressUnitNoInput(): Locator {
+        return this.page.locator('input[formcontrolname="unit_no"]');
+    }
+
+    private get displayAddressStreetNoInput(): Locator {
+        return this.page.locator('input[formcontrolname="street_no"]');
+    }
+
+    private get displayAddressStreetNameInput(): Locator {
+        return this.page.locator('input[formcontrolname="street_name"]');
+    }
+
+    private get displayAddressSuburbAutocomplete(): Locator {
+        return this.page.locator('p-autocomplete[formcontrolname="suburb"] input');
+    }
+
+    private get displayAddressStateInput(): Locator {
+        return this.page.locator('input[formcontrolname="state"]');
+    }
+
+    private get displayAddressPostCodeInput(): Locator {
+        return this.page.locator('input[formcontrolname="post_code"]');
+    }
+
+    private get displayAddressCountryInput(): Locator {
+        return this.page.locator('input[formcontrolname="country"]');
+    }
+
+    private get displayAddressPopupCloseIcon(): Locator {
+        return this.page.locator('.p-overlaypanel-close-icon').first();
+    }
+
+    // ==========================================================================
+    // LOCATORS — DEVELOPER DROPDOWN (re-multiselect)
+    // Source: app-general-setting HTML (shared 2026-05-08)
+    // ==========================================================================
+
+    private get developerDropdownContainer(): Locator {
+        return this.page.locator('re-multiselect').first();
+    }
+
+    private get developerDropdownTrigger(): Locator {
+        return this.developerDropdownContainer.locator('.tags').first();
+    }
+
+    private get developerDropdownArrow(): Locator {
+        return this.developerDropdownContainer.locator('i.fas.fa-sort-down, i.fas.fa-sort-up').first();
+    }
+
+    private get developerDropdownPanel(): Locator {
+        return this.developerDropdownContainer.locator('.drop_box');
+    }
+
+    private get developerDropdownSearchInput(): Locator {
+        return this.developerDropdownPanel.locator('input[placeholder="Search"]');
+    }
+
+    private get developerDropdownCreateNew(): Locator {
+        return this.developerDropdownPanel.locator('p.cursor-pointer', { hasText: /Create New/i });
+    }
+
+    private get developerDropdownItems(): Locator {
+        return this.developerDropdownPanel.locator('ul li');
+    }
+
+    private developerDropdownItemByText(text: string): Locator {
+        return this.developerDropdownPanel.locator('ul li').filter({ hasText: text }).first();
+    }
+
+    private get developerPlaceholder(): Locator {
+        return this.developerDropdownContainer.locator('.placeHolder', { hasText: /Select Developer/i });
+    }
+
+    private get developerSelectedChips(): Locator {
+        return this.developerDropdownContainer.locator('.tags .selected_one');
+    }
+
+    private developerSelectedChipByName(name: string): Locator {
+        return this.developerSelectedChips.filter({ hasText: name }).first();
+    }
+
+    private get projectManagerLabel(): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: /^Project Manager$/ });
+    }
+
+    private get projectManagersDropdown(): Locator {
+        return this.page.locator('ng-select[formcontrolname="Project_Manager"]');
+    }
+
+    private get projectManagerDropdownPanel(): Locator {
+        return this.page.locator('ng-dropdown-panel');
+    }
+
+    private get projectManagerDropdownInput(): Locator {
+        return this.page.locator('.ng-input input').last();
+    }
+
+    private get projectManagerDropdownOptions(): Locator {
+        return this.projectManagerDropdownPanel.locator('.ng-option');
+    }
+
+    private projectManagerOptionByText(text: string): Locator {
+        return this.projectManagerDropdownPanel.locator('.ng-option').filter({ hasText: text }).first();
+    }
+
+    private generalTabLabelByText(text: string): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: new RegExp(`^${text}$`) }).first();
+    }
+
+    private get floorplanSectionHeading(): Locator {
+        return this.generalSettingContent.locator('p.f-14').filter({ hasText: 'Floorplan Types' }).first();
+    }
+
+    private get floorplanSectionHeader(): Locator {
+        return this.floorplanSectionHeading.locator('xpath=..').first();
+    }
+
+    private get floorplanToggleArrowUp(): Locator {
+        return this.page.locator('i.pi-angle-up').first();
+    }
+
+    private get floorplanToggleArrowDown(): Locator {
+        return this.page.locator('i.pi-angle-down').last();
+    }
+
+
+    private get floorplanTableWrapper(): Locator {
+        return this.generalSettingContent.locator('div.s-card-table.s-responsive-table').first();
+    }
+
+    // ==========================================================================
+    // LOCATORS — FLOORPLAN DELETE (TC_22)
+    // Source: app-general-setting HTML (verified — row with checkbox + delete icon)
+    // ==========================================================================
+
+    private get floorplanPlusIcon(): Locator {
+        return this.floorplanSectionHeader.locator('i.pi-plus').first();
+    }
+
+    private get floorplanHeaderDeleteIcon(): Locator {
+        return this.floorplanSectionHeader.locator('img[src*="delete_icon.svg"]').first();
+    }
+
+    private get floorplanTable(): Locator {
+        return this.floorplanTableWrapper.locator('p-table').first();
+    }
+
+    private get floorplanTableRows(): Locator {
+        return this.floorplanTable.locator('tbody tr');
+    }
+
+    private floorplanRowCheckbox(rowIndex: number): Locator {
+        return this.floorplanTableRows.nth(rowIndex).locator('p-checkbox.cbox .p-checkbox-box').first();
+    }
+
+    private get floorplanHeaderCheckbox(): Locator {
+        return this.floorplanTable.locator('thead p-checkbox .p-checkbox-box').first();
+    }
+
+    private get floorplanTypeColumnHeader(): Locator {
+        return this.floorplanTable.locator('th.p-sortable-column[psortablecolumn="name"]').first();
+    }
+
+    // ==========================================================================
+    // LOCATORS — PROJECT UPGRADES SECTION (TC_25)
+    // Source: app-general-setting HTML (verified — 2 upgrade boxes)
+    // ==========================================================================
+
+    private get projectUpgradesHeading(): Locator {
+        return this.generalSettingContent.locator('p.f-16._fw-600').filter({ hasText: 'Project Upgrades' }).first();
+    }
+
+    private get projectUpgradesSection(): Locator {
+        return this.projectUpgradesHeading.locator('xpath=../..').first();
+    }
+
+    private get addAdditionalUpgradeGroupButton(): Locator {
+        return this.projectUpgradesSection.locator('button._view-btn').filter({
+            has: this.page.locator('i.pi-plus')
+        }).first();
+    }
+
+    private get upgradeBoxes(): Locator {
+        return this.projectUpgradesSection.locator('.upgrade-box');
+    }
+
+    private upgradeBox(index: number): Locator {
+        return this.upgradeBoxes.nth(index);
+    }
+
+    private upgradeGroupInput(boxIndex: number): Locator {
+        return this.upgradeBox(boxIndex).locator('input.site-input').nth(0);
+    }
+
+    private upgradeInput(boxIndex: number): Locator {
+        return this.upgradeBox(boxIndex).locator('input.site-input').nth(1);
+    }
+
+    private upgradeCostInput(boxIndex: number): Locator {
+        return this.upgradeBox(boxIndex).locator('app-price-input input').first();
+    }
+
+    private upgradeBoxRemoveIcon(boxIndex: number): Locator {
+        return this.upgradeBox(boxIndex).locator('button._view-btn').filter({
+            has: this.page.locator('i.pi-times-circle')
+        }).first();
+    }
+
+    /**
+ * HELPER — Fill all fields in the Display Address popup
+ */
+    private async fillDisplayAddressFields(data: {
+        buildingName?: string;
+        unitNo?: string;
+        streetNo?: string;
+        streetName?: string;
+        state?: string;
+        postCode?: string;
+        country?: string;
+    }): Promise<void> {
+        if (data.buildingName !== undefined) await this.displayAddressBuildingNameInput.fill(data.buildingName);
+        if (data.unitNo !== undefined) await this.displayAddressUnitNoInput.fill(data.unitNo);
+        if (data.streetNo !== undefined) await this.displayAddressStreetNoInput.fill(data.streetNo);
+        if (data.streetName !== undefined) await this.displayAddressStreetNameInput.fill(data.streetName);
+        if (data.state !== undefined) await this.displayAddressStateInput.fill(data.state);
+        if (data.postCode !== undefined) await this.displayAddressPostCodeInput.fill(data.postCode);
+        if (data.country !== undefined) await this.displayAddressCountryInput.fill(data.country);
+    }
+
+    /**
+     * HELPER — Click Save button inside Display Address popup
+     */
+    private async clickDisplayAddressPopupSave(): Promise<void> {
+        await expect(this.displayAddressPopupSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.displayAddressPopupSaveButton.click();
+        await this.page.waitForTimeout(1500);
+    }
+
+    /**
+     * HELPER — Assert all Display Address fields match expected data
+     */
+    private async assertDisplayAddressFieldsMatch(data: {
+        buildingName?: string;
+        unitNo?: string;
+        streetNo?: string;
+        streetName?: string;
+        state?: string;
+        postCode?: string;
+        country?: string;
+    }): Promise<void> {
+        if (data.buildingName !== undefined) expect(await this.displayAddressBuildingNameInput.inputValue()).toBe(data.buildingName);
+        if (data.unitNo !== undefined) expect(await this.displayAddressUnitNoInput.inputValue()).toBe(data.unitNo);
+        if (data.streetNo !== undefined) expect(await this.displayAddressStreetNoInput.inputValue()).toBe(data.streetNo);
+        if (data.streetName !== undefined) expect(await this.displayAddressStreetNameInput.inputValue()).toBe(data.streetName);
+        if (data.state !== undefined) expect(await this.displayAddressStateInput.inputValue()).toBe(data.state);
+        if (data.postCode !== undefined) expect(await this.displayAddressPostCodeInput.inputValue()).toBe(data.postCode);
+        if (data.country !== undefined) expect(await this.displayAddressCountryInput.inputValue()).toBe(data.country);
+    }
+
     /**
      * HELPER — Navigate to Project Pricelist (skip if already there)
      */
@@ -6430,6 +6705,543 @@ export class ProjectActions {
         await this.clickGeneralTabSave();
         await this.assertProjectUpdatedToast();
         await this.assertInputIsEmpty(this.projectSetupAddressInput);
+        await this.cleanupAfterProjectTest();
+    }
+
+    private async openDisplayAddressPopup(): Promise<void> {
+        await expect(this.projectDisplayAddressPencilIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectDisplayAddressPencilIcon.click();
+        await this.page.waitForTimeout(800);
+        await expect(this.displayAddressPopupHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    private async closeDisplayAddressPopup(): Promise<void> {
+        await this.page.mouse.click(0, 100); // click outside the popup
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+ * TC_10 — Verify Project Display Address popup opens from General tab
+ */
+    async verifyProjectDisplayAddressPopupOpens(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openDisplayAddressPopup();
+        await expect(this.displayAddressPopupHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.displayAddressBuildingNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.displayAddressPopupSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeDisplayAddressPopup();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_11 — Add Display Address and save (verify values persist)
+     */
+    async addProjectDisplayAddressAndSave(
+        projectName: string = 'Automation',
+        addressData: {
+            buildingName?: string;
+            unitNo?: string;
+            streetNo?: string;
+            streetName?: string;
+            state?: string;
+            postCode?: string;
+            country?: string;
+        } = {
+                buildingName: 'Test Building',
+                unitNo: '12',
+                streetNo: '456',
+                streetName: 'George Street',
+                state: 'NSW',
+                postCode: '2000',
+                country: 'Australia',
+            }
+    ): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openDisplayAddressPopup();
+        await this.fillDisplayAddressFields(addressData);
+        await this.clickDisplayAddressPopupSave();
+        await this.openDisplayAddressPopup();
+        await this.assertDisplayAddressFieldsMatch(addressData);
+        await this.closeDisplayAddressPopup();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * HELPER — Clear all Display Address popup fields
+ */
+    private async clearAllDisplayAddressFields(): Promise<void> {
+        await this.displayAddressBuildingNameInput.fill('');
+        await this.displayAddressUnitNoInput.fill('');
+        await this.displayAddressStreetNoInput.fill('');
+        await this.displayAddressStreetNameInput.fill('');
+        await this.displayAddressStateInput.fill('');
+        await this.displayAddressPostCodeInput.fill('');
+        await this.displayAddressCountryInput.fill('');
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Assert all Display Address fields are empty
+     */
+    private async assertAllDisplayAddressFieldsEmpty(): Promise<void> {
+        expect(await this.displayAddressBuildingNameInput.inputValue()).toBe('');
+        expect(await this.displayAddressUnitNoInput.inputValue()).toBe('');
+        expect(await this.displayAddressStreetNoInput.inputValue()).toBe('');
+        expect(await this.displayAddressStreetNameInput.inputValue()).toBe('');
+        expect(await this.displayAddressStateInput.inputValue()).toBe('');
+        expect(await this.displayAddressPostCodeInput.inputValue()).toBe('');
+        expect(await this.displayAddressCountryInput.inputValue()).toBe('');
+    }
+
+    /**
+ * TC_12 — Save Display Address popup with empty fields (none are required)
+ */
+    async saveDisplayAddressWithEmptyFields(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openDisplayAddressPopup();
+        await this.clearAllDisplayAddressFields();
+        await this.clickDisplayAddressPopupSave();
+        await this.openDisplayAddressPopup();
+        await this.assertAllDisplayAddressFieldsEmpty();
+        await this.closeDisplayAddressPopup();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * HELPER — Close Display Address popup via the cross icon
+ */
+    private async closeDisplayAddressPopupViaCross(): Promise<void> {
+        await expect(this.displayAddressPopupCloseIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.displayAddressPopupCloseIcon.click();
+        await this.page.waitForTimeout(500);
+        await expect(this.displayAddressPopupHeading).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * TC_13 — Close Display Address popup using cross icon (data not saved)
+     */
+    async closeDisplayAddressPopupUsingCross(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openDisplayAddressPopup();
+        await this.closeDisplayAddressPopupViaCross();
+        await this.cleanupAfterProjectTest();
+    }
+
+    // ==========================================================================
+    // HELPERS — DEVELOPER DROPDOWN
+    // ==========================================================================
+
+    /**
+     * HELPER — Open the Developer dropdown by clicking the arrow (skip if already open)
+     */
+    private async openDeveloperDropdown(): Promise<void> {
+        const isOpen = await this.developerDropdownPanel.isVisible().catch(() => false);
+        if (isOpen) return;
+
+        await expect(this.developerDropdownArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.developerDropdownArrow.scrollIntoViewIfNeeded();
+        await this.developerDropdownArrow.click();
+        await this.page.waitForTimeout(500);
+        await expect(this.developerDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Close the Developer dropdown by clicking outside
+     */
+    private async closeDeveloperDropdown(): Promise<void> {
+        await this.page.mouse.click(10, 10);
+        await this.page.waitForTimeout(500);
+        await expect(this.developerDropdownPanel).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Click a developer item in the dropdown (toggles selection)
+     */
+    private async toggleDeveloperSelection(developerName: string): Promise<void> {
+        const developerItem = this.developerDropdownItemByText(developerName);
+        await expect(developerItem).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await developerItem.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Assert a developer is selected (.selected_one chip exists)
+     */
+    private async assertDeveloperSelected(developerName: string): Promise<void> {
+        await expect(this.developerSelectedChipByName(developerName)).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+    }
+
+    /**
+     * HELPER — Assert no developer is selected (no chips, placeholder visible)
+     */
+    private async assertDeveloperPlaceholderVisible(): Promise<void> {
+        const chipCount = await this.developerSelectedChips.count();
+        expect(chipCount).toBe(0);
+        await expect(this.developerPlaceholder).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * TC_14 — Verify Developer dropdown opens and shows contact list
+     */
+    async verifyDeveloperDropdownShowsContacts(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openDeveloperDropdown();
+        await expect(this.developerDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.developerDropdownCreateNew).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeDeveloperDropdown();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_15 — Add and remove developer (toggle by clicking same item twice)
+     */
+    async addAndRemoveDeveloper(projectName: string = 'Automation', developerName: string = '11 22'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openDeveloperDropdown();
+        await this.toggleDeveloperSelection(developerName);
+        await this.closeDeveloperDropdown();
+        await this.assertDeveloperSelected(developerName);
+        await this.openDeveloperDropdown();
+        await this.toggleDeveloperSelection(developerName);
+        await this.closeDeveloperDropdown();
+        await this.assertDeveloperPlaceholderVisible();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * HELPER — Open the Project Manager dropdown
+ */
+    private async openProjectsManagerDropdown(): Promise<void> {
+        await this.projectManagersDropdown.scrollIntoViewIfNeeded();
+        await this.projectManagersDropdown.click();
+        await this.page.waitForTimeout(500);
+        await expect(this.projectManagerDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Close the Project Manager dropdown by clicking outside
+     */
+    private async closeProjectManagerDropdown(): Promise<void> {
+        await this.page.mouse.click(10, 10);
+        await this.page.waitForTimeout(500);
+        await expect(this.projectManagerDropdownPanel).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+ * TC_18 — Verify Project Manager dropdown shows all staff
+ */
+    async verifyProjectManagerDropdownShowsAllStaff(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openProjectsManagerDropdown();
+        await expect(this.projectManagerDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.closeProjectManagerDropdown();
+        await this.cleanupAfterProjectTest();
+    }
+
+    private async assertLabelNotRequired(labelText: string): Promise<void> {
+        const label = this.generalTabLabelByText(labelText);
+        await expect(label).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const text = await label.textContent();
+        expect(text?.trim()).toBe(labelText);
+        expect(text).not.toContain('*');
+    }
+
+    /**
+ * TC_20 — Verify no field is required on General tab
+ */
+    async verifyNoFieldRequiredOnGeneralTab(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        const labels = [
+            'Project Name',
+            'Project Status',
+            'Project Address',
+            'Project Display Address',
+            'Developer',
+            'Project Manager',
+        ];
+        for (const labelText of labels) {
+            await this.assertLabelNotRequired(labelText);
+        }
+        await this.cleanupAfterProjectTest();
+    }
+
+    // ==========================================================================
+    // HELPERS — FLOORPLAN (TC_21)
+    // ==========================================================================
+
+    /**
+     * HELPER — Scroll to Floorplan section heading
+     */
+    private async scrollToFloorplanSection(): Promise<void> {
+        await this.floorplanSectionHeading.scrollIntoViewIfNeeded();
+        await expect(this.floorplanSectionHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Click the Floorplan toggle arrow
+     */
+    private async clickFloorplanToggleArrow(): Promise<void> {
+        await expect(this.floorplanToggleArrowDown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.floorplanToggleArrowDown.scrollIntoViewIfNeeded();
+        await this.page.waitForTimeout(800);
+        await this.floorplanToggleArrowDown.click();
+    }
+
+    /**
+ * TC_21 — Verify Floorplan list appears/hides on toggle arrow click
+ */
+    async verifyFloorplanListAppearsOnIconClick(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToFloorplanSection();
+        await this.clickFloorplanToggleArrow();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * HELPER — Click plus icon to add a new floorplan row
+     */
+    private async clickFloorplanPlusIcon(): Promise<void> {
+        await expect(this.floorplanPlusIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.floorplanPlusIcon.scrollIntoViewIfNeeded();
+        await this.floorplanPlusIcon.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Get current count of floorplan rows
+     */
+    private async getFloorplanRowCount(): Promise<number> {
+        return await this.floorplanTableRows.count();
+    }
+
+    /**
+     * HELPER — Check row checkbox AND wait for header delete icon to appear
+     */
+    private async checkFloorplanRowAndWaitForDelete(rowIndex: number): Promise<void> {
+        const checkbox = this.floorplanRowCheckbox(rowIndex);
+        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await checkbox.scrollIntoViewIfNeeded();
+        await checkbox.click();
+        await expect(this.floorplanHeaderDeleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Click header bulk delete icon (no confirmation popup)
+     */
+    private async clickFloorplanHeaderDelete(): Promise<void> {
+        await expect(this.floorplanHeaderDeleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.floorplanHeaderDeleteIcon.click();
+        await this.page.waitForTimeout(800);
+    }
+
+    /**
+ * TC_22 — Select and delete a floorplan type
+ */
+    async selectAndDeleteFloorplanType(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToFloorplanSection();
+        await this.clickFloorplanToggleArrow();;
+        const initialCount = await this.getFloorplanRowCount();
+        await this.clickFloorplanPlusIcon();
+        const afterAddCount = await this.getFloorplanRowCount();
+        expect(afterAddCount).toBe(initialCount + 1);
+        await this.checkFloorplanRowAndWaitForDelete(afterAddCount - 1);
+        await this.clickFloorplanHeaderDelete();
+        const afterDeleteCount = await this.getFloorplanRowCount();
+        expect(afterDeleteCount).toBe(initialCount);
+        await this.cleanupAfterProjectTest();
+    }
+
+
+    private async toggleFloorplanHeaderCheckboxAndWaitForDelete(): Promise<void> {
+        await expect(this.floorplanHeaderCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.floorplanHeaderCheckbox.scrollIntoViewIfNeeded();
+        await this.floorplanHeaderCheckbox.click();
+        await expect(this.floorplanHeaderDeleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+ * TC_23 — Delete all selected floorplan types at once
+ */
+    async deleteAllSelectedFloorplanTypes(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToFloorplanSection();
+        const initialCount = await this.getFloorplanRowCount();
+        await this.clickFloorplanPlusIcon();
+        await this.clickFloorplanPlusIcon();
+        const afterAddCount = await this.getFloorplanRowCount();
+        expect(afterAddCount).toBe(initialCount + 2);
+        await this.toggleFloorplanHeaderCheckboxAndWaitForDelete();
+        await this.clickFloorplanHeaderDelete();
+        const afterDeleteCount = await this.getFloorplanRowCount();
+        expect(afterDeleteCount).toBe(initialCount);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * HELPER — Click the Type column header to sort
+ */
+    private async clickFloorplanTypeColumnSort(): Promise<void> {
+        await expect(this.floorplanTypeColumnHeader).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.floorplanTypeColumnHeader.scrollIntoViewIfNeeded();
+        await this.floorplanTypeColumnHeader.click();
+        await this.page.waitForTimeout(500);
+    }
+
+
+    private async assertFloorplanTypeColumnSortState(expectedState: 'none' | 'ascending' | 'descending'): Promise<void> {
+        await expect(this.floorplanTypeColumnHeader).toHaveAttribute('aria-sort', expectedState, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+    }
+
+    /**
+ * TC_24 — Sort floorplan list by Type column (ascending/descending)
+ */
+    async sortFloorplanListAscendingDescending(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToFloorplanSection();
+        await this.clickFloorplanPlusIcon();
+        await this.clickFloorplanPlusIcon();
+        await this.assertFloorplanTypeColumnSortState('none');
+        await this.clickFloorplanTypeColumnSort();
+        await this.assertFloorplanTypeColumnSortState('ascending');
+        await this.clickFloorplanTypeColumnSort();
+        await this.assertFloorplanTypeColumnSortState('descending');
+        await this.toggleFloorplanHeaderCheckboxAndWaitForDelete();
+        await this.clickFloorplanHeaderDelete();
+        await this.cleanupAfterProjectTest();
+    }
+
+    // ==========================================================================
+    // HELPERS — PROJECT UPGRADES (TC_25)
+    // ==========================================================================
+
+    /**
+     * HELPER — Scroll to Project Upgrades section heading
+     */
+    private async scrollToProjectUpgradesSection(): Promise<void> {
+        await this.projectUpgradesHeading.scrollIntoViewIfNeeded();
+        await expect(this.projectUpgradesHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Get current count of upgrade boxes
+     */
+    private async getUpgradeBoxCount(): Promise<number> {
+        return await this.upgradeBoxes.count();
+    }
+
+    /**
+     * HELPER — Clear and fill an upgrade box with Group, Upgrade, Cost values
+     */
+    private async clearAndFillUpgradeBox(boxIndex: number, groupName: string, upgradeName: string, cost: string): Promise<void> {
+        await this.upgradeGroupInput(boxIndex).fill('');
+        await this.upgradeGroupInput(boxIndex).fill(groupName);
+
+        await this.upgradeInput(boxIndex).fill('');
+        await this.upgradeInput(boxIndex).fill(upgradeName);
+
+        await this.upgradeCostInput(boxIndex).fill('');
+        await this.upgradeCostInput(boxIndex).fill(cost);
+
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Assert upgrade box has expected values
+     */
+    private async assertUpgradeBoxValues(boxIndex: number, groupName: string, upgradeName: string, cost: string): Promise<void> {
+        await expect(this.upgradeGroupInput(boxIndex)).toHaveValue(groupName, { timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.upgradeInput(boxIndex)).toHaveValue(upgradeName, { timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    /**
+     * HELPER — Click remove (cross) icon on an upgrade box
+     */
+    private async removeUpgradeBox(boxIndex: number): Promise<void> {
+        await expect(this.upgradeBoxRemoveIcon(boxIndex)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.upgradeBoxRemoveIcon(boxIndex).scrollIntoViewIfNeeded();
+        await this.upgradeBoxRemoveIcon(boxIndex).click();
+        await this.page.waitForTimeout(500);
+    }
+    /**
+  * TC_25 — Add upgrade data to existing box, save, verify, and remove extra boxes
+  */
+    async addUpgradeGroupWithValidData(
+        projectName: string = 'Automation',
+        groupName: string = 'Test Group',
+        upgradeName: string = 'Test Upgrade',
+        cost: string = '1000'
+    ): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToProjectUpgradesSection();
+        await this.clearAndFillUpgradeBox(0, groupName, upgradeName, cost);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.scrollToProjectUpgradesSection();
+        await this.assertUpgradeBoxValues(0, groupName, upgradeName, cost);
+        let boxCount = await this.getUpgradeBoxCount();
+        while (boxCount > 1) {
+            await this.removeUpgradeBox(boxCount - 1);
+            boxCount = await this.getUpgradeBoxCount();
+        }
+        if ((await this.getUpgradeBoxCount()) === 1) {
+            await this.clickGeneralTabSave();
+            await this.assertProjectUpdatedToast();
+        }
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    private async clickAddAdditionalUpgradeGroup(): Promise<void> {
+        await expect(this.addAdditionalUpgradeGroupButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.addAdditionalUpgradeGroupButton.scrollIntoViewIfNeeded();
+        await this.addAdditionalUpgradeGroupButton.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+ * HELPER — Remove all additionally added upgrade boxes (boxes with cross icon)
+ */
+    private async removeAllAdditionallyAddedUpgradeBoxes(): Promise<void> {
+        const removeIconLocator = this.projectUpgradesSection.locator('button._view-btn').filter({
+            has: this.page.locator('i.pi-times-circle')
+        });
+
+        let removableCount = await removeIconLocator.count();
+        while (removableCount > 0) {
+            await removeIconLocator.first().click();
+            await this.page.waitForTimeout(500);
+            removableCount = await removeIconLocator.count();
+        }
+    }
+
+    async addMultipleUpgradeGroups(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToProjectUpgradesSection();
+        const initialCount = await this.getUpgradeBoxCount();
+        await this.clickAddAdditionalUpgradeGroup();
+        await this.clickAddAdditionalUpgradeGroup();
+        const afterAddCount = await this.getUpgradeBoxCount();
+        expect(afterAddCount).toBe(initialCount + 2);
+        const box1Index = initialCount;
+        const box2Index = initialCount + 1;
+        await this.clearAndFillUpgradeBox(box1Index, 'Group A', 'Upgrade A', '1000');
+        await this.clearAndFillUpgradeBox(box2Index, 'Group B', 'Upgrade B', '2000');
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.scrollToProjectUpgradesSection();
+        await this.assertUpgradeBoxValues(box1Index, 'Group A', 'Upgrade A', '1000');
+        await this.assertUpgradeBoxValues(box2Index, 'Group B', 'Upgrade B', '2000');
+        await this.removeAllAdditionallyAddedUpgradeBoxes();
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
         await this.cleanupAfterProjectTest();
     }
 
