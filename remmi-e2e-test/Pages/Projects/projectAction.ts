@@ -6283,6 +6283,11 @@ export class ProjectActions {
     private floorplanRowCheckbox(rowIndex: number): Locator {
         return this.floorplanTableRows.nth(rowIndex).locator('p-checkbox.cbox .p-checkbox-box').first();
     }
+
+    private get floorplanHeaderCheckbox(): Locator {
+        return this.floorplanTable.locator('thead p-checkbox .p-checkbox-box').first();
+    }
+
     /**
  * HELPER — Fill all fields in the Display Address popup
  */
@@ -6995,6 +7000,32 @@ export class ProjectActions {
         const afterAddCount = await this.getFloorplanRowCount();
         expect(afterAddCount).toBe(initialCount + 1);
         await this.checkFloorplanRowAndWaitForDelete(afterAddCount - 1);
+        await this.clickFloorplanHeaderDelete();
+        const afterDeleteCount = await this.getFloorplanRowCount();
+        expect(afterDeleteCount).toBe(initialCount);
+        await this.cleanupAfterProjectTest();
+    }
+
+
+    private async toggleFloorplanHeaderCheckboxAndWaitForDelete(): Promise<void> {
+        await expect(this.floorplanHeaderCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.floorplanHeaderCheckbox.scrollIntoViewIfNeeded();
+        await this.floorplanHeaderCheckbox.click();
+        await expect(this.floorplanHeaderDeleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+ * TC_23 — Delete all selected floorplan types at once
+ */
+    async deleteAllSelectedFloorplanTypes(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToFloorplanSection();
+        const initialCount = await this.getFloorplanRowCount();
+        await this.clickFloorplanPlusIcon();
+        await this.clickFloorplanPlusIcon();
+        const afterAddCount = await this.getFloorplanRowCount();
+        expect(afterAddCount).toBe(initialCount + 2);
+        await this.toggleFloorplanHeaderCheckboxAndWaitForDelete();
         await this.clickFloorplanHeaderDelete();
         const afterDeleteCount = await this.getFloorplanRowCount();
         expect(afterDeleteCount).toBe(initialCount);
