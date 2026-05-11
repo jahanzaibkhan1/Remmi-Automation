@@ -6292,6 +6292,51 @@ export class ProjectActions {
         return this.floorplanTable.locator('th.p-sortable-column[psortablecolumn="name"]').first();
     }
 
+    // ==========================================================================
+    // LOCATORS — PROJECT UPGRADES SECTION (TC_25)
+    // Source: app-general-setting HTML (verified — 2 upgrade boxes)
+    // ==========================================================================
+
+    private get projectUpgradesHeading(): Locator {
+        return this.generalSettingContent.locator('p.f-16._fw-600').filter({ hasText: 'Project Upgrades' }).first();
+    }
+
+    private get projectUpgradesSection(): Locator {
+        return this.projectUpgradesHeading.locator('xpath=../..').first();
+    }
+
+    private get addAdditionalUpgradeGroupButton(): Locator {
+        return this.projectUpgradesSection.locator('button._view-btn').filter({
+            has: this.page.locator('i.pi-plus')
+        }).first();
+    }
+
+    private get upgradeBoxes(): Locator {
+        return this.projectUpgradesSection.locator('.upgrade-box');
+    }
+
+    private upgradeBox(index: number): Locator {
+        return this.upgradeBoxes.nth(index);
+    }
+
+    private upgradeGroupInput(boxIndex: number): Locator {
+        return this.upgradeBox(boxIndex).locator('input.site-input').nth(0);
+    }
+
+    private upgradeInput(boxIndex: number): Locator {
+        return this.upgradeBox(boxIndex).locator('input.site-input').nth(1);
+    }
+
+    private upgradeCostInput(boxIndex: number): Locator {
+        return this.upgradeBox(boxIndex).locator('app-price-input input').first();
+    }
+
+    private upgradeBoxRemoveIcon(boxIndex: number): Locator {
+        return this.upgradeBox(boxIndex).locator('button._view-btn').filter({
+            has: this.page.locator('i.pi-times-circle')
+        }).first();
+    }
+
     /**
  * HELPER — Fill all fields in the Display Address popup
  */
@@ -7068,6 +7113,89 @@ export class ProjectActions {
         await this.assertFloorplanTypeColumnSortState('descending');
         await this.toggleFloorplanHeaderCheckboxAndWaitForDelete();
         await this.clickFloorplanHeaderDelete();
+        await this.cleanupAfterProjectTest();
+    }
+
+    // ==========================================================================
+    // HELPERS — PROJECT UPGRADES (TC_25)
+    // ==========================================================================
+
+    /**
+     * HELPER — Scroll to Project Upgrades section heading
+     */
+    private async scrollToProjectUpgradesSection(): Promise<void> {
+        await this.projectUpgradesHeading.scrollIntoViewIfNeeded();
+        await expect(this.projectUpgradesHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Get current count of upgrade boxes
+     */
+    private async getUpgradeBoxCount(): Promise<number> {
+        return await this.upgradeBoxes.count();
+    }
+
+    /**
+     * HELPER — Clear and fill an upgrade box with Group, Upgrade, Cost values
+     */
+    private async clearAndFillUpgradeBox(boxIndex: number, groupName: string, upgradeName: string, cost: string): Promise<void> {
+        await this.upgradeGroupInput(boxIndex).fill('');
+        await this.upgradeGroupInput(boxIndex).fill(groupName);
+
+        await this.upgradeInput(boxIndex).fill('');
+        await this.upgradeInput(boxIndex).fill(upgradeName);
+
+        await this.upgradeCostInput(boxIndex).fill('');
+        await this.upgradeCostInput(boxIndex).fill(cost);
+
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Assert upgrade box has expected values
+     */
+    private async assertUpgradeBoxValues(boxIndex: number, groupName: string, upgradeName: string, cost: string): Promise<void> {
+        await expect(this.upgradeGroupInput(boxIndex)).toHaveValue(groupName, { timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.upgradeInput(boxIndex)).toHaveValue(upgradeName, { timeout: ProjectActions.TIMEOUT_LONG});
+    }
+
+    /**
+     * HELPER — Click remove (cross) icon on an upgrade box
+     */
+    private async removeUpgradeBox(boxIndex: number): Promise<void> {
+        await expect(this.upgradeBoxRemoveIcon(boxIndex)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.upgradeBoxRemoveIcon(boxIndex).scrollIntoViewIfNeeded();
+        await this.upgradeBoxRemoveIcon(boxIndex).click();
+        await this.page.waitForTimeout(500);
+    }
+    /**
+  * TC_25 — Add upgrade data to existing box, save, verify, and remove extra boxes
+  */
+    async addUpgradeGroupWithValidData(
+        projectName: string = 'Automation',
+        groupName: string = 'Test Group',
+        upgradeName: string = 'Test Upgrade',
+        cost: string = '1000'
+    ): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToProjectUpgradesSection();
+        await this.clearAndFillUpgradeBox(0, groupName, upgradeName, cost);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.scrollToProjectUpgradesSection();
+        await this.assertUpgradeBoxValues(0, groupName, upgradeName, cost);
+        let boxCount = await this.getUpgradeBoxCount();
+        while (boxCount > 1) {
+            await this.removeUpgradeBox(boxCount - 1);
+            boxCount = await this.getUpgradeBoxCount();
+        }
+        if ((await this.getUpgradeBoxCount()) === 1) {
+            await this.clickGeneralTabSave();
+            await this.assertProjectUpdatedToast();
+        }
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
         await this.cleanupAfterProjectTest();
     }
 

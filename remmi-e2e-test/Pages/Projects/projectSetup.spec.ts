@@ -107,5 +107,14 @@ test.describe('Project Setup Tests', () => {
     test('TC_24: Sort floorplan list ascending/descending', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).sortFloorplanListAscendingDescending('Automation');
     });
+
+    test('TC_25: Add upgrade group with valid data', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).addUpgradeGroupWithValidData(
+            'Automation',
+            'Test Group',
+            'Test Upgrade',
+            '1000'
+        );
+    });
     
 });
