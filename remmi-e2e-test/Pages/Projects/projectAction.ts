@@ -6210,11 +6210,6 @@ export class ProjectActions {
         return this.developerSelectedChips.filter({ hasText: name }).first();
     }
 
-    // ==========================================================================
-    // LOCATORS — PROJECT MANAGER DROPDOWN (ng-select)
-    // Source: app-general-setting HTML (shared 2026-05-08)
-    // ==========================================================================
-
     private get projectManagerLabel(): Locator {
         return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: /^Project Manager$/ });
     }
@@ -6243,11 +6238,6 @@ export class ProjectActions {
         return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: new RegExp(`^${text}$`) }).first();
     }
 
-    // ==========================================================================
-    // LOCATORS — FLOORPLAN SECTION (TC_21)
-    // Source: app-general-setting HTML (verified 2026-05-08)
-    // ==========================================================================
-
     private get floorplanSectionHeading(): Locator {
         return this.generalSettingContent.locator('p.f-14').filter({ hasText: 'Floorplan Types' }).first();
     }
@@ -6267,6 +6257,31 @@ export class ProjectActions {
 
     private get floorplanTableWrapper(): Locator {
         return this.generalSettingContent.locator('div.s-card-table.s-responsive-table').first();
+    }
+
+    // ==========================================================================
+    // LOCATORS — FLOORPLAN DELETE (TC_22)
+    // Source: app-general-setting HTML (verified — row with checkbox + delete icon)
+    // ==========================================================================
+
+    private get floorplanPlusIcon(): Locator {
+        return this.floorplanSectionHeader.locator('i.pi-plus').first();
+    }
+
+    private get floorplanHeaderDeleteIcon(): Locator {
+        return this.floorplanSectionHeader.locator('img[src*="delete_icon.svg"]').first();
+    }
+
+    private get floorplanTable(): Locator {
+        return this.floorplanTableWrapper.locator('p-table').first();
+    }
+
+    private get floorplanTableRows(): Locator {
+        return this.floorplanTable.locator('tbody tr');
+    }
+
+    private floorplanRowCheckbox(rowIndex: number): Locator {
+        return this.floorplanTableRows.nth(rowIndex).locator('p-checkbox.cbox .p-checkbox-box').first();
     }
     /**
  * HELPER — Fill all fields in the Display Address popup
@@ -6922,28 +6937,67 @@ export class ProjectActions {
     }
 
     /**
-     * HELPER — Assert Floorplan section is expanded (arrow up + table visible)
-     */
-    private async assertFloorplanExpanded(): Promise<void> {
-        await expect(this.floorplanToggleArrowUp).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await expect(this.floorplanTableWrapper).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-    }
-
-    /**
-     * HELPER — Assert Floorplan section is collapsed (arrow down + table hidden)
-     */
-    private async assertFloorplanCollapsed(): Promise<void> {
-        await expect(this.floorplanToggleArrowDown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.floorplanTableWrapper).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-    }
-
-    /**
  * TC_21 — Verify Floorplan list appears/hides on toggle arrow click
  */
     async verifyFloorplanListAppearsOnIconClick(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectGeneralTab(projectName);
         await this.scrollToFloorplanSection();
         await this.clickFloorplanToggleArrow();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * HELPER — Click plus icon to add a new floorplan row
+     */
+    private async clickFloorplanPlusIcon(): Promise<void> {
+        await expect(this.floorplanPlusIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.floorplanPlusIcon.scrollIntoViewIfNeeded();
+        await this.floorplanPlusIcon.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Get current count of floorplan rows
+     */
+    private async getFloorplanRowCount(): Promise<number> {
+        return await this.floorplanTableRows.count();
+    }
+
+    /**
+     * HELPER — Check row checkbox AND wait for header delete icon to appear
+     */
+    private async checkFloorplanRowAndWaitForDelete(rowIndex: number): Promise<void> {
+        const checkbox = this.floorplanRowCheckbox(rowIndex);
+        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await checkbox.scrollIntoViewIfNeeded();
+        await checkbox.click();
+        await expect(this.floorplanHeaderDeleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Click header bulk delete icon (no confirmation popup)
+     */
+    private async clickFloorplanHeaderDelete(): Promise<void> {
+        await expect(this.floorplanHeaderDeleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.floorplanHeaderDeleteIcon.click();
+        await this.page.waitForTimeout(800);
+    }
+
+    /**
+ * TC_22 — Select and delete a floorplan type
+ */
+    async selectAndDeleteFloorplanType(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToFloorplanSection();
+        await this.clickFloorplanToggleArrow();;
+        const initialCount = await this.getFloorplanRowCount();
+        await this.clickFloorplanPlusIcon();
+        const afterAddCount = await this.getFloorplanRowCount();
+        expect(afterAddCount).toBe(initialCount + 1);
+        await this.checkFloorplanRowAndWaitForDelete(afterAddCount - 1);
+        await this.clickFloorplanHeaderDelete();
+        const afterDeleteCount = await this.getFloorplanRowCount();
+        expect(afterDeleteCount).toBe(initialCount);
         await this.cleanupAfterProjectTest();
     }
 
