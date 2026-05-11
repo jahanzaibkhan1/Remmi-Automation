@@ -52,4 +52,8 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).saveProjectAddressWithEmptyFields('Automation');
     });
 
+    test('TC_10: Project Display Address popup opens', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyProjectDisplayAddressPopupOpens('Automation');
+    });
+
 });
