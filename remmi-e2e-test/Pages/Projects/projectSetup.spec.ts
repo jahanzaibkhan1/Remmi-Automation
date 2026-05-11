@@ -95,5 +95,9 @@ test.describe('Project Setup Tests', () => {
     test('TC_21: Floorplan list appears on icon click', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyFloorplanListAppearsOnIconClick('Automation');
     });
+
+    test('TC_22: Select and delete a floorplan type', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).selectAndDeleteFloorplanType('Automation');
+    });
     
 });
