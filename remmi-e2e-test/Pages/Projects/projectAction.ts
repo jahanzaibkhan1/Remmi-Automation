@@ -7157,7 +7157,7 @@ export class ProjectActions {
      */
     private async assertUpgradeBoxValues(boxIndex: number, groupName: string, upgradeName: string, cost: string): Promise<void> {
         await expect(this.upgradeGroupInput(boxIndex)).toHaveValue(groupName, { timeout: ProjectActions.TIMEOUT_LONG });
-        await expect(this.upgradeInput(boxIndex)).toHaveValue(upgradeName, { timeout: ProjectActions.TIMEOUT_LONG});
+        await expect(this.upgradeInput(boxIndex)).toHaveValue(upgradeName, { timeout: ProjectActions.TIMEOUT_LONG });
     }
 
     /**
@@ -7194,6 +7194,52 @@ export class ProjectActions {
             await this.clickGeneralTabSave();
             await this.assertProjectUpdatedToast();
         }
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    private async clickAddAdditionalUpgradeGroup(): Promise<void> {
+        await expect(this.addAdditionalUpgradeGroupButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.addAdditionalUpgradeGroupButton.scrollIntoViewIfNeeded();
+        await this.addAdditionalUpgradeGroupButton.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+ * HELPER — Remove all additionally added upgrade boxes (boxes with cross icon)
+ */
+    private async removeAllAdditionallyAddedUpgradeBoxes(): Promise<void> {
+        const removeIconLocator = this.projectUpgradesSection.locator('button._view-btn').filter({
+            has: this.page.locator('i.pi-times-circle')
+        });
+
+        let removableCount = await removeIconLocator.count();
+        while (removableCount > 0) {
+            await removeIconLocator.first().click();
+            await this.page.waitForTimeout(500);
+            removableCount = await removeIconLocator.count();
+        }
+    }
+
+    async addMultipleUpgradeGroups(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToProjectUpgradesSection();
+        const initialCount = await this.getUpgradeBoxCount();
+        await this.clickAddAdditionalUpgradeGroup();
+        await this.clickAddAdditionalUpgradeGroup();
+        const afterAddCount = await this.getUpgradeBoxCount();
+        expect(afterAddCount).toBe(initialCount + 2);
+        const box1Index = initialCount;
+        const box2Index = initialCount + 1;
+        await this.clearAndFillUpgradeBox(box1Index, 'Group A', 'Upgrade A', '1000');
+        await this.clearAndFillUpgradeBox(box2Index, 'Group B', 'Upgrade B', '2000');
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.scrollToProjectUpgradesSection();
+        await this.assertUpgradeBoxValues(box1Index, 'Group A', 'Upgrade A', '1000');
+        await this.assertUpgradeBoxValues(box2Index, 'Group B', 'Upgrade B', '2000');
+        await this.removeAllAdditionallyAddedUpgradeBoxes();
         await this.clickGeneralTabSave();
         await this.assertProjectUpdatedToast();
         await this.cleanupAfterProjectTest();
