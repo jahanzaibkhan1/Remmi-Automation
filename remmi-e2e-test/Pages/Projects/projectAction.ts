@@ -6209,6 +6209,35 @@ export class ProjectActions {
     private developerSelectedChipByName(name: string): Locator {
         return this.developerSelectedChips.filter({ hasText: name }).first();
     }
+
+    // ==========================================================================
+    // LOCATORS — PROJECT MANAGER DROPDOWN (ng-select)
+    // Source: app-general-setting HTML (shared 2026-05-08)
+    // ==========================================================================
+
+    private get projectManagerLabel(): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: /^Project Manager$/ });
+    }
+
+    private get projectManagersDropdown(): Locator {
+        return this.page.locator('ng-select[formcontrolname="Project_Manager"]');
+    }
+
+    private get projectManagerDropdownPanel(): Locator {
+        return this.page.locator('ng-dropdown-panel');
+    }
+
+    private get projectManagerDropdownInput(): Locator {
+        return this.page.locator('.ng-input input').last();
+    }
+
+    private get projectManagerDropdownOptions(): Locator {
+        return this.projectManagerDropdownPanel.locator('.ng-option');
+    }
+
+    private projectManagerOptionByText(text: string): Locator {
+        return this.projectManagerDropdownPanel.locator('.ng-option').filter({ hasText: text }).first();
+    }
     /**
  * HELPER — Fill all fields in the Display Address popup
  */
@@ -6779,6 +6808,36 @@ export class ProjectActions {
         await this.toggleDeveloperSelection(developerName);
         await this.closeDeveloperDropdown();
         await this.assertDeveloperPlaceholderVisible();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * HELPER — Open the Project Manager dropdown
+ */
+    private async openProjectsManagerDropdown(): Promise<void> {
+        await this.projectManagersDropdown.scrollIntoViewIfNeeded();
+        await this.projectManagersDropdown.click();
+        await this.page.waitForTimeout(500);
+        await expect(this.projectManagerDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Close the Project Manager dropdown by clicking outside
+     */
+    private async closeProjectManagerDropdown(): Promise<void> {
+        await this.page.mouse.click(10, 10);
+        await this.page.waitForTimeout(500);
+        await expect(this.projectManagerDropdownPanel).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+ * TC_18 — Verify Project Manager dropdown shows all staff
+ */
+    async verifyProjectManagerDropdownShowsAllStaff(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openProjectsManagerDropdown();
+        await expect(this.projectManagerDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.closeProjectManagerDropdown();
         await this.cleanupAfterProjectTest();
     }
 

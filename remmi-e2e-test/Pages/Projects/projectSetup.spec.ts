@@ -84,4 +84,8 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).addAndRemoveDeveloper('Automation', '11 22');
     });
 
+    test('TC_18: Project Manager dropdown shows all staff', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyProjectManagerDropdownShowsAllStaff('Automation');
+    });
+
 });
