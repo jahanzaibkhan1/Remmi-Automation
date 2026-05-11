@@ -76,4 +76,8 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).closeDisplayAddressPopupUsingCross('Automation');
     });
 
+    test('TC_14: Developer dropdown shows contacts list', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyDeveloperDropdownShowsContacts('Automation');
+    });
+
 });
