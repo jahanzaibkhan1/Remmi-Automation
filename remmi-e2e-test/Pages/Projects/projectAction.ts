@@ -6157,6 +6157,9 @@ export class ProjectActions {
         return this.page.locator('input[formcontrolname="country"]');
     }
 
+    private get displayAddressPopupCloseIcon(): Locator {
+        return this.page.locator('.p-overlaypanel-close-icon').first();
+    }
     /**
  * HELPER — Fill all fields in the Display Address popup
  */
@@ -6624,6 +6627,26 @@ export class ProjectActions {
         await this.openDisplayAddressPopup();
         await this.assertAllDisplayAddressFieldsEmpty();
         await this.closeDisplayAddressPopup();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * HELPER — Close Display Address popup via the cross icon
+ */
+    private async closeDisplayAddressPopupViaCross(): Promise<void> {
+        await expect(this.displayAddressPopupCloseIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.displayAddressPopupCloseIcon.click();
+        await this.page.waitForTimeout(500);
+        await expect(this.displayAddressPopupHeading).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * TC_13 — Close Display Address popup using cross icon (data not saved)
+     */
+    async closeDisplayAddressPopupUsingCross(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openDisplayAddressPopup();
+        await this.closeDisplayAddressPopupViaCross();
         await this.cleanupAfterProjectTest();
     }
 }

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="67.44109100000001">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-11T04:13:51.979Z" hostname="chromium" tests="1" failures="0" skipped="0" time="64.266" errors="0">
-<testcase name="Project Setup Tests › TC_12: Save Display Address popup with empty fields" classname="Pages\Projects\projectSetup.spec.ts" time="64.266">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="54.66318200000003">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-11T04:22:06.282Z" hostname="chromium" tests="1" failures="0" skipped="0" time="52.232" errors="0">
+<testcase name="Project Setup Tests › TC_13: Close Display Address popup using cross icon" classname="Pages\Projects\projectSetup.spec.ts" time="52.232">
 </testcase>
 </testsuite>
 </testsuites>

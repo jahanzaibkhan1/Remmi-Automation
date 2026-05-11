@@ -72,4 +72,8 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).saveDisplayAddressWithEmptyFields('Automation');
     });
 
+    test('TC_13: Close Display Address popup using cross icon', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).closeDisplayAddressPopupUsingCross('Automation');
+    });
+
 });
