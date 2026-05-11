@@ -6238,6 +6238,10 @@ export class ProjectActions {
     private projectManagerOptionByText(text: string): Locator {
         return this.projectManagerDropdownPanel.locator('.ng-option').filter({ hasText: text }).first();
     }
+
+    private generalTabLabelByText(text: string): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: new RegExp(`^${text}$`) }).first();
+    }
     /**
  * HELPER — Fill all fields in the Display Address popup
  */
@@ -6838,6 +6842,33 @@ export class ProjectActions {
         await this.openProjectsManagerDropdown();
         await expect(this.projectManagerDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.closeProjectManagerDropdown();
+        await this.cleanupAfterProjectTest();
+    }
+
+    private async assertLabelNotRequired(labelText: string): Promise<void> {
+        const label = this.generalTabLabelByText(labelText);
+        await expect(label).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const text = await label.textContent();
+        expect(text?.trim()).toBe(labelText);
+        expect(text).not.toContain('*');
+    }
+
+    /**
+ * TC_20 — Verify no field is required on General tab
+ */
+    async verifyNoFieldRequiredOnGeneralTab(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        const labels = [
+            'Project Name',
+            'Project Status',
+            'Project Address',
+            'Project Display Address',
+            'Developer',
+            'Project Manager',
+        ];
+        for (const labelText of labels) {
+            await this.assertLabelNotRequired(labelText);
+        }
         await this.cleanupAfterProjectTest();
     }
 

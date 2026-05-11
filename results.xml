@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="89.52323299999908">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-11T09:14:59.473Z" hostname="chromium" tests="1" failures="0" skipped="0" time="86.71" errors="0">
-<testcase name="Project Setup Tests › TC_18: Project Manager dropdown shows all staff" classname="Pages\Projects\projectSetup.spec.ts" time="86.71">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="52.768639000002295">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-11T09:21:54.406Z" hostname="chromium" tests="1" failures="0" skipped="0" time="50.716" errors="0">
+<testcase name="Project Setup Tests › TC_20: Verify no field is required on General tab" classname="Pages\Projects\projectSetup.spec.ts" time="50.716">
 </testcase>
 </testsuite>
 </testsuites>

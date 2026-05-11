@@ -88,4 +88,8 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).verifyProjectManagerDropdownShowsAllStaff('Automation');
     });
 
+    test('TC_20: Verify no field is required on General tab', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyNoFieldRequiredOnGeneralTab('Automation');
+    });
+    
 });
