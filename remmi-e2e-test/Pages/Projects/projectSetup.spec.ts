@@ -91,5 +91,9 @@ test.describe('Project Setup Tests', () => {
     test('TC_20: Verify no field is required on General tab', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyNoFieldRequiredOnGeneralTab('Automation');
     });
+
+    test('TC_21: Floorplan list appears on icon click', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyFloorplanListAppearsOnIconClick('Automation');
+    });
     
 });

@@ -6242,6 +6242,32 @@ export class ProjectActions {
     private generalTabLabelByText(text: string): Locator {
         return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: new RegExp(`^${text}$`) }).first();
     }
+
+    // ==========================================================================
+    // LOCATORS — FLOORPLAN SECTION (TC_21)
+    // Source: app-general-setting HTML (verified 2026-05-08)
+    // ==========================================================================
+
+    private get floorplanSectionHeading(): Locator {
+        return this.generalSettingContent.locator('p.f-14').filter({ hasText: 'Floorplan Types' }).first();
+    }
+
+    private get floorplanSectionHeader(): Locator {
+        return this.floorplanSectionHeading.locator('xpath=..').first();
+    }
+
+    private get floorplanToggleArrowUp(): Locator {
+        return this.page.locator('i.pi-angle-up').first();
+    }
+
+    private get floorplanToggleArrowDown(): Locator {
+        return this.page.locator('i.pi-angle-down').last();
+    }
+
+
+    private get floorplanTableWrapper(): Locator {
+        return this.generalSettingContent.locator('div.s-card-table.s-responsive-table').first();
+    }
     /**
  * HELPER — Fill all fields in the Display Address popup
  */
@@ -6869,6 +6895,55 @@ export class ProjectActions {
         for (const labelText of labels) {
             await this.assertLabelNotRequired(labelText);
         }
+        await this.cleanupAfterProjectTest();
+    }
+
+    // ==========================================================================
+    // HELPERS — FLOORPLAN (TC_21)
+    // ==========================================================================
+
+    /**
+     * HELPER — Scroll to Floorplan section heading
+     */
+    private async scrollToFloorplanSection(): Promise<void> {
+        await this.floorplanSectionHeading.scrollIntoViewIfNeeded();
+        await expect(this.floorplanSectionHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Click the Floorplan toggle arrow
+     */
+    private async clickFloorplanToggleArrow(): Promise<void> {
+        await expect(this.floorplanToggleArrowDown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.floorplanToggleArrowDown.scrollIntoViewIfNeeded();
+        await this.page.waitForTimeout(800);
+        await this.floorplanToggleArrowDown.click();
+    }
+
+    /**
+     * HELPER — Assert Floorplan section is expanded (arrow up + table visible)
+     */
+    private async assertFloorplanExpanded(): Promise<void> {
+        await expect(this.floorplanToggleArrowUp).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.floorplanTableWrapper).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    /**
+     * HELPER — Assert Floorplan section is collapsed (arrow down + table hidden)
+     */
+    private async assertFloorplanCollapsed(): Promise<void> {
+        await expect(this.floorplanToggleArrowDown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.floorplanTableWrapper).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+ * TC_21 — Verify Floorplan list appears/hides on toggle arrow click
+ */
+    async verifyFloorplanListAppearsOnIconClick(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToFloorplanSection();
+        await this.clickFloorplanToggleArrow();
         await this.cleanupAfterProjectTest();
     }
 
