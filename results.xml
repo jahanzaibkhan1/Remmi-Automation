@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="52.768639000002295">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-11T09:21:54.406Z" hostname="chromium" tests="1" failures="0" skipped="0" time="50.716" errors="0">
-<testcase name="Project Setup Tests › TC_20: Verify no field is required on General tab" classname="Pages\Projects\projectSetup.spec.ts" time="50.716">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.96064699999988">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-11T10:58:35.848Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.605" errors="0">
+<testcase name="Project Setup Tests › TC_21: Floorplan list appears on icon click" classname="Pages\Projects\projectSetup.spec.ts" time="58.605">
 </testcase>
 </testsuite>
 </testsuites>
