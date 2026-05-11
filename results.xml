@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.850304999999935">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-11T03:50:00.290Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.399" errors="0">
-<testcase name="Project Setup Tests › TC_10: Project Display Address popup opens" classname="Pages\Projects\projectSetup.spec.ts" time="58.399">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="69.32761599999992">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-11T04:07:24.939Z" hostname="chromium" tests="1" failures="0" skipped="0" time="66.056" errors="0">
+<testcase name="Project Setup Tests › TC_11: Add project display address and save" classname="Pages\Projects\projectSetup.spec.ts" time="66.056">
 </testcase>
 </testsuite>
 </testsuites>
