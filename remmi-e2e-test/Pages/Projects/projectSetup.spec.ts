@@ -99,5 +99,9 @@ test.describe('Project Setup Tests', () => {
     test('TC_22: Select and delete a floorplan type', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).selectAndDeleteFloorplanType('Automation');
     });
+
+    test('TC_23: Delete all selected floorplan types at once', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).deleteAllSelectedFloorplanTypes('Automation');
+    });
     
 });
