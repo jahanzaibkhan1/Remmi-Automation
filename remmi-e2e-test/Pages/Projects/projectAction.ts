@@ -6161,12 +6161,21 @@ export class ProjectActions {
         return this.page.locator('.p-overlaypanel-close-icon').first();
     }
 
+    // ==========================================================================
+    // LOCATORS — DEVELOPER DROPDOWN (re-multiselect)
+    // Source: app-general-setting HTML (shared 2026-05-08)
+    // ==========================================================================
+
     private get developerDropdownContainer(): Locator {
-        return this.generalSettingContent.locator('re-multiselect').filter({ has: this.page.locator('.placeHolder', { hasText: /Select Developer/i }) }).first();
+        return this.page.locator('re-multiselect').first();
     }
 
     private get developerDropdownTrigger(): Locator {
         return this.developerDropdownContainer.locator('.tags').first();
+    }
+
+    private get developerDropdownArrow(): Locator {
+        return this.developerDropdownContainer.locator('i.fas.fa-sort-down, i.fas.fa-sort-up').first();
     }
 
     private get developerDropdownPanel(): Locator {
@@ -6187,6 +6196,18 @@ export class ProjectActions {
 
     private developerDropdownItemByText(text: string): Locator {
         return this.developerDropdownPanel.locator('ul li').filter({ hasText: text }).first();
+    }
+
+    private get developerPlaceholder(): Locator {
+        return this.developerDropdownContainer.locator('.placeHolder', { hasText: /Select Developer/i });
+    }
+
+    private get developerSelectedChips(): Locator {
+        return this.developerDropdownContainer.locator('.tags .selected_one');
+    }
+
+    private developerSelectedChipByName(name: string): Locator {
+        return this.developerSelectedChips.filter({ hasText: name }).first();
     }
     /**
  * HELPER — Fill all fields in the Display Address popup
@@ -6678,28 +6699,64 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    // ==========================================================================
+    // HELPERS — DEVELOPER DROPDOWN
+    // ==========================================================================
+
     /**
- * HELPER — Open the Developer dropdown
- */
+     * HELPER — Open the Developer dropdown by clicking the arrow (skip if already open)
+     */
     private async openDeveloperDropdown(): Promise<void> {
-        await expect(this.developerDropdownTrigger).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.developerDropdownTrigger.scrollIntoViewIfNeeded();
-        await this.developerDropdownTrigger.click();
+        const isOpen = await this.developerDropdownPanel.isVisible().catch(() => false);
+        if (isOpen) return;
+
+        await expect(this.developerDropdownArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.developerDropdownArrow.scrollIntoViewIfNeeded();
+        await this.developerDropdownArrow.click();
         await this.page.waitForTimeout(500);
         await expect(this.developerDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
 
     /**
-     * HELPER — Close the Developer dropdown
+     * HELPER — Close the Developer dropdown by clicking outside
      */
     private async closeDeveloperDropdown(): Promise<void> {
-        await this.developerDropdownTrigger.click();
-        await this.page.waitForTimeout(300);
+        await this.page.mouse.click(10, 10);
+        await this.page.waitForTimeout(500);
+        await expect(this.developerDropdownPanel).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
 
     /**
- * TC_14 — Verify Developer dropdown opens and shows contact list
- */
+     * HELPER — Click a developer item in the dropdown (toggles selection)
+     */
+    private async toggleDeveloperSelection(developerName: string): Promise<void> {
+        const developerItem = this.developerDropdownItemByText(developerName);
+        await expect(developerItem).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await developerItem.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Assert a developer is selected (.selected_one chip exists)
+     */
+    private async assertDeveloperSelected(developerName: string): Promise<void> {
+        await expect(this.developerSelectedChipByName(developerName)).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+    }
+
+    /**
+     * HELPER — Assert no developer is selected (no chips, placeholder visible)
+     */
+    private async assertDeveloperPlaceholderVisible(): Promise<void> {
+        const chipCount = await this.developerSelectedChips.count();
+        expect(chipCount).toBe(0);
+        await expect(this.developerPlaceholder).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * TC_14 — Verify Developer dropdown opens and shows contact list
+     */
     async verifyDeveloperDropdownShowsContacts(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectGeneralTab(projectName);
         await this.openDeveloperDropdown();
@@ -6708,4 +6765,21 @@ export class ProjectActions {
         await this.closeDeveloperDropdown();
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+     * TC_15 — Add and remove developer (toggle by clicking same item twice)
+     */
+    async addAndRemoveDeveloper(projectName: string = 'Automation', developerName: string = '11 22'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openDeveloperDropdown();
+        await this.toggleDeveloperSelection(developerName);
+        await this.closeDeveloperDropdown();
+        await this.assertDeveloperSelected(developerName);
+        await this.openDeveloperDropdown();
+        await this.toggleDeveloperSelection(developerName);
+        await this.closeDeveloperDropdown();
+        await this.assertDeveloperPlaceholderVisible();
+        await this.cleanupAfterProjectTest();
+    }
+
 }

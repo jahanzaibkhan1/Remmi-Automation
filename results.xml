@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.24427400000021">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-11T04:35:06.549Z" hostname="chromium" tests="1" failures="0" skipped="0" time="52.748" errors="0">
-<testcase name="Project Setup Tests › TC_14: Developer dropdown shows contacts list" classname="Pages\Projects\projectSetup.spec.ts" time="52.748">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="113.54874200000054">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-11T08:00:42.034Z" hostname="chromium" tests="1" failures="0" skipped="0" time="111.575" errors="0">
+<testcase name="Project Setup Tests › TC_15: Add and remove developer" classname="Pages\Projects\projectSetup.spec.ts" time="111.575">
 </testcase>
 </testsuite>
 </testsuites>
