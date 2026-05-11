@@ -6586,4 +6586,44 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    /**
+ * HELPER — Clear all Display Address popup fields
+ */
+    private async clearAllDisplayAddressFields(): Promise<void> {
+        await this.displayAddressBuildingNameInput.fill('');
+        await this.displayAddressUnitNoInput.fill('');
+        await this.displayAddressStreetNoInput.fill('');
+        await this.displayAddressStreetNameInput.fill('');
+        await this.displayAddressStateInput.fill('');
+        await this.displayAddressPostCodeInput.fill('');
+        await this.displayAddressCountryInput.fill('');
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Assert all Display Address fields are empty
+     */
+    private async assertAllDisplayAddressFieldsEmpty(): Promise<void> {
+        expect(await this.displayAddressBuildingNameInput.inputValue()).toBe('');
+        expect(await this.displayAddressUnitNoInput.inputValue()).toBe('');
+        expect(await this.displayAddressStreetNoInput.inputValue()).toBe('');
+        expect(await this.displayAddressStreetNameInput.inputValue()).toBe('');
+        expect(await this.displayAddressStateInput.inputValue()).toBe('');
+        expect(await this.displayAddressPostCodeInput.inputValue()).toBe('');
+        expect(await this.displayAddressCountryInput.inputValue()).toBe('');
+    }
+
+    /**
+ * TC_12 — Save Display Address popup with empty fields (none are required)
+ */
+    async saveDisplayAddressWithEmptyFields(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openDisplayAddressPopup();
+        await this.clearAllDisplayAddressFields();
+        await this.clickDisplayAddressPopupSave();
+        await this.openDisplayAddressPopup();
+        await this.assertAllDisplayAddressFieldsEmpty();
+        await this.closeDisplayAddressPopup();
+        await this.cleanupAfterProjectTest();
+    }
 }
