@@ -141,5 +141,9 @@ test.describe('Project Setup Tests', () => {
     test('TC_30: Remove individual upgrade fields', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).addUpgradeUnderSameGroup('Automation', 'Extra Upgrade', '500');
     });
-    
+
+    test('TC_31: Bonus Payable Upon accepts text tag', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyBonusPayableUponAcceptsText('Automation', 'Upon Contract Signing');
+    });
+
 });

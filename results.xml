@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="83.30451999999956">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T04:59:58.630Z" hostname="chromium" tests="1" failures="0" skipped="0" time="81.31" errors="0">
-<testcase name="Project Setup Tests › TC_30: Remove individual upgrade fields" classname="Pages\Projects\projectSetup.spec.ts" time="81.31">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="114.84340199999883">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T06:21:17.556Z" hostname="chromium" tests="1" failures="0" skipped="0" time="112.777" errors="0">
+<testcase name="Project Setup Tests › TC_30: Bonus Payable Upon accepts text tag" classname="Pages\Projects\projectSetup.spec.ts" time="112.777">
 </testcase>
 </testsuite>
 </testsuites>
