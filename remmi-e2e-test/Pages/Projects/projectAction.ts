@@ -409,6 +409,14 @@ export class ProjectActions {
         return this.projectDialog.locator('ng-select[formcontrolname="Project_Status"]');
     }
 
+    private get projectStatusDropdownPanel(): Locator {
+        return this.projectStatusField.locator('ng-dropdown-panel');
+    }
+
+    private projectStatusOptionByText(text: string): Locator {
+        return this.projectStatusDropdownPanel.locator('.ng-option').filter({ hasText: new RegExp(`^${text}$`) }).first();
+    }
+
     private get projectDialogSaveButton(): Locator {
         return this.page.getByRole('button', { name: /save/i });
     }
@@ -7895,5 +7903,44 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    private async selectProjectStatusInDialog(statusText: string): Promise<void> {
+        await expect(this.projectStatusField).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectStatusField.click();
+        await expect(this.projectStatusDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        const option = this.projectStatusOptionByText(statusText);
+        await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await option.click();
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+    * TC_48 — Create project with status 'Inactive'
+    */
+    async createProjectWithInactiveStatus(project?: { name?: string }): Promise<void> {
+        await this.navigateToProjects();
+        await this.openProjectPopup();
+        const projectName = project?.name ?? faker.company.name();
+        await this.projectNameField.fill(projectName);
+        await this.selectProjectStatusInDialog('Inactive');
+        await this.projectDialogSaveButton.click({ force: true });
+        await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectAddedToast
+            .waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM })
+            .catch(() => {
+            });
+        await this.projectTitleBanner(projectName).waitFor({
+            state: 'visible',
+            timeout: ProjectActions.TIMEOUT_MEDIUM,
+        });
+        const projectsText = this.page.locator('p', { hasText: 'Projects' });
+        await expect(projectsText).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await projectsText.click({ force: true });
+        await this.clickTabByLabel('Inactive');
+        const card = this.projectCardByName(projectName);
+        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await card.scrollIntoViewIfNeeded();
+        await this.clickResetIcon();
+    }
 
 }
