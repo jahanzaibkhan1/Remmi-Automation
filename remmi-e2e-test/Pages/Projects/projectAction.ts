@@ -7943,4 +7943,31 @@ export class ProjectActions {
         await this.clickResetIcon();
     }
 
+    /**
+     * TC_49 — Validate input trimming in project name
+     * Enter project name with excessive spaces and verify name is auto-trimmed (e.g. "     Name        Added     " becomes "Name Added")
+     */
+    async validateProjectNameTrimming(project?: { name?: string }): Promise<void> {
+        await this.navigateToProjects();
+        await this.openProjectPopup();
+        const nameWithExcessiveSpaces = project?.name ?? `     ${faker.word.words(2)}     `;   
+        const expectedTrimmedName = nameWithExcessiveSpaces.trim().replace(/\s+/g, ' ');
+        await this.projectNameField.fill(nameWithExcessiveSpaces);
+        await this.projectDialogSaveButton.click({ force: true });
+        await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectAddedToast
+            .waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM })
+            .catch(() => { });
+        await this.projectTitleBanner(expectedTrimmedName).waitFor({
+            state: 'visible',
+            timeout: ProjectActions.TIMEOUT_MEDIUM,
+        });
+        const projectsText = this.page.locator('p', { hasText: 'Projects' });
+        await expect(projectsText).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await projectsText.click({ force: true });
+        await this.navigateToProjects();
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.searchInput.fill(expectedTrimmedName);
+        await this.clickResetIcon();
+    }
 }

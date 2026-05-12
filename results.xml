@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="98.69477600000053">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T10:47:50.482Z" hostname="chromium" tests="1" failures="0" skipped="0" time="96.645" errors="0">
-<testcase name="Project Setup Tests › TC_47: Create project with status Inactive" classname="Pages\Projects\projectSetup.spec.ts" time="96.645">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="84.16148999999837">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T11:39:35.109Z" hostname="chromium" tests="1" failures="0" skipped="0" time="81.315" errors="0">
+<testcase name="Project Setup Tests › TC_48: Validate input trimming in project name" classname="Pages\Projects\projectSetup.spec.ts" time="81.315">
 </testcase>
 </testsuite>
 </testsuites>
