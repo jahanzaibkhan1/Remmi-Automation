@@ -62,6 +62,7 @@ test.describe('Project Setup Tests', () => {
             unitNo: '12',
             streetNo: '456',
             streetName: 'George Street',
+            suburb: 'East Albury',
             state: 'NSW',
             postCode: '2000',
             country: 'Australia',
@@ -214,5 +215,19 @@ test.describe('Project Setup Tests', () => {
     test('TC_45: Open address popup without entering data', async ({ sessionPage }) => {
         const project = new ProjectActions(sessionPage);
         await project.openAddressPopupWithoutData('Automation');
+    });
+
+    test('TC_46: Enter incomplete address and save', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.enterIncompleteAddressAndSave('Automation', {
+            buildingName: '',
+            unitNo: '',
+            streetNo: '',
+            streetName: '',
+            suburb: 'East Albury',
+            state: '',
+            postCode: '',
+            country: '',
+        });
     });
 });

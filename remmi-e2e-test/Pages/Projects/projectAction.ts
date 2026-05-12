@@ -6145,6 +6145,14 @@ export class ProjectActions {
         return this.page.locator('p-autocomplete[formcontrolname="suburb"] input');
     }
 
+    private get displayAddressSuburbSuggestionItems(): Locator {
+        return this.page.locator('li.p-autocomplete-item[role="option"]');
+    }
+
+    private displayAddressSuburbSuggestionByLabel(label: string): Locator {
+        return this.page.locator('li.p-autocomplete-item[role="option"][aria-label="' + label + '"]');
+    }
+
     private get displayAddressStateInput(): Locator {
         return this.page.locator('input[formcontrolname="state"]');
     }
@@ -6454,13 +6462,14 @@ export class ProjectActions {
         return this.bonusCampaignTokenByText(text).locator('timescircleicon').first();
     }
     /**
- * HELPER — Fill all fields in the Display Address popup
- */
+   * HELPER — Fill all fields in the Display Address popup, including suburb (with autocomplete select)
+   */
     private async fillDisplayAddressFields(data: {
         buildingName?: string;
         unitNo?: string;
         streetNo?: string;
         streetName?: string;
+        suburb?: string;
         state?: string;
         postCode?: string;
         country?: string;
@@ -6469,6 +6478,20 @@ export class ProjectActions {
         if (data.unitNo !== undefined) await this.displayAddressUnitNoInput.fill(data.unitNo);
         if (data.streetNo !== undefined) await this.displayAddressStreetNoInput.fill(data.streetNo);
         if (data.streetName !== undefined) await this.displayAddressStreetNameInput.fill(data.streetName);
+        if (data.suburb !== undefined) {
+            await this.displayAddressSuburbAutocomplete.fill('');
+            if (data.suburb) {
+                await this.displayAddressSuburbAutocomplete.fill(data.suburb);
+                await this.page.waitForTimeout(600);
+                const suggestion = this.displayAddressSuburbSuggestionByLabel(data.suburb);
+                try {
+                    await expect(suggestion).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+                    await suggestion.click();
+                } catch {
+                    await this.displayAddressSuburbAutocomplete.press('Enter');
+                }
+            }
+        }
         if (data.state !== undefined) await this.displayAddressStateInput.fill(data.state);
         if (data.postCode !== undefined) await this.displayAddressPostCodeInput.fill(data.postCode);
         if (data.country !== undefined) await this.displayAddressCountryInput.fill(data.country);
@@ -6859,6 +6882,7 @@ export class ProjectActions {
             unitNo?: string;
             streetNo?: string;
             streetName?: string;
+            suburb?: string;
             state?: string;
             postCode?: string;
             country?: string;
@@ -6867,6 +6891,7 @@ export class ProjectActions {
                 unitNo: '12',
                 streetNo: '456',
                 streetName: 'George Street',
+                suburb: 'East Albury',
                 state: 'NSW',
                 postCode: '2000',
                 country: 'Australia',
@@ -7833,5 +7858,42 @@ export class ProjectActions {
         await this.closeDisplayAddressPopup();
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+     * TC_xx — Enter incomplete address, fill only suburb, save, verify suburb saved and others blank
+     */
+    async enterIncompleteAddressAndSave(
+        projectName: string = 'Automation',
+        addressData: {
+            buildingName?: string;
+            unitNo?: string;
+            streetNo?: string;
+            streetName?: string;
+            suburb?: string;
+            state?: string;
+            postCode?: string;
+            country?: string;
+        } = {
+                buildingName: '',
+                unitNo: '',
+                streetNo: '',
+                streetName: '',
+                suburb: 'East Albury',
+                state: '',
+                postCode: '',
+                country: '',
+            }
+    ): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openDisplayAddressPopup();
+        await this.clearAllDisplayAddressFields();
+        await this.fillDisplayAddressFields(addressData);
+        await this.clickDisplayAddressPopupSave();
+        await this.openDisplayAddressPopup();
+        await this.assertDisplayAddressFieldsMatch(addressData);
+        await this.closeDisplayAddressPopup();
+        await this.cleanupAfterProjectTest();
+    }
+
 
 }

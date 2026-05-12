@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="98.45146700000018">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T10:05:07.652Z" hostname="chromium" tests="1" failures="0" skipped="0" time="96.402" errors="0">
-<testcase name="Project Setup Tests › TC_45: Open address popup without entering data" classname="Pages\Projects\projectSetup.spec.ts" time="96.402">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="76.7020230000019">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T10:32:34.898Z" hostname="chromium" tests="1" failures="0" skipped="0" time="73.874" errors="0">
+<testcase name="Project Setup Tests › TC_46: Enter incomplete address and save" classname="Pages\Projects\projectSetup.spec.ts" time="73.874">
 </testcase>
 </testsuite>
 </testsuites>
