@@ -120,5 +120,14 @@ test.describe('Project Setup Tests', () => {
     test('TC_26: Add multiple upgrade groups', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).addMultipleUpgradeGroups('Automation');
     });
+
+    test('TC_27: Remove an upgrade group using cross icon', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).addUpgradeGroupWithValidData(
+            'Automation',
+            'Test Group',
+            'Test Upgrade',
+            '1000'
+        );
+    });
     
 });
