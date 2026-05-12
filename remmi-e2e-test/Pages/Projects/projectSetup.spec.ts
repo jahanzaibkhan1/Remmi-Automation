@@ -172,4 +172,9 @@ test.describe('Project Setup Tests', () => {
         await project.verifyPrecinctUnderInactiveTab('Tested');
     });
 
+    test('TC_38: Add project with same name twice', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.addProjectWithSameNameTwice({ name: 'Project A' });
+    });
+
 });
