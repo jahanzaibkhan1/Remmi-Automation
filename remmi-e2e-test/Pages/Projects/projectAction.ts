@@ -7752,7 +7752,7 @@ export class ProjectActions {
         await this.projectNameField.fill(projectName);
         await this.projectDialogSaveButton.click({ force: true });
         await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.projectAddedToast.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM }).catch(() => {});
+        await this.projectAddedToast.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM }).catch(() => { });
         await this.projectTitleBanner(projectName).waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM });
         // Optionally: return to projects main view for clarity
         const projectsText = this.page.locator('p', { hasText: 'Projects' });
@@ -7765,7 +7765,7 @@ export class ProjectActions {
         await this.projectNameField.fill(projectName);
         await this.projectDialogSaveButton.click({ force: true });
         await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.projectAddedToast.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM }).catch(() => {});
+        await this.projectAddedToast.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM }).catch(() => { });
         await this.projectTitleBanner(projectName).waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM });
         await expect(projectsText).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await projectsText.click({ force: true });
@@ -7797,6 +7797,28 @@ export class ProjectActions {
         await newStatusOption.click();
         await this.clickGeneralTabSave();
         await this.assertProjectUpdatedToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * Assign developer, type, and manager fields together
+     */
+    async assignDeveloperTypeAndManager(
+        projectName: string,
+        developerName: string,
+        manager: string
+    ): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openDeveloperDropdown();
+        await this.toggleDeveloperSelection(developerName);
+        await this.closeDeveloperDropdown();
+        await this.assertDeveloperSelected(developerName);
+        await this.openProjectsManagerDropdown();
+        await expect(this.projectManagerDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const managerOption = this.projectManagerDropdownPanel.locator('div.ng-option', { hasText: manager }).first();
+        await expect(managerOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await managerOption.click();
+        await this.closeProjectManagerDropdown();
         await this.cleanupAfterProjectTest();
     }
 

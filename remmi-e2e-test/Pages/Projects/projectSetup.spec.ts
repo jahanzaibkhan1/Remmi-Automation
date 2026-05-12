@@ -199,4 +199,12 @@ test.describe('Project Setup Tests', () => {
         await project.updateProjectStatusAndSave(projectName, newStatus);
     });
 
+    test('TC_43: Assign developer, type, and manager together', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        const projectName = 'Automation';
+        const developer = '11 22';
+        const manager = 'Jahanzaib xenex';
+        await project.assignDeveloperTypeAndManager(projectName, developer, manager);
+    });
+
 });
