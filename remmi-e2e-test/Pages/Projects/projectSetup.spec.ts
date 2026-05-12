@@ -211,4 +211,8 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).addMultipleTagsInAllBonusFields('Automation');
     });
 
+    test('TC_45: Open address popup without entering data', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.openAddressPopupWithoutData('Automation');
+    });
 });
