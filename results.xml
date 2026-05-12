@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="116.33314300000016">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T04:52:08.930Z" hostname="chromium" tests="1" failures="0" skipped="0" time="114.32" errors="0">
-<testcase name="Project Setup Tests › TC_29: Add multiple upgrades under one group" classname="Pages\Projects\projectSetup.spec.ts" time="114.32">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="83.30451999999956">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T04:59:58.630Z" hostname="chromium" tests="1" failures="0" skipped="0" time="81.31" errors="0">
+<testcase name="Project Setup Tests › TC_30: Remove individual upgrade fields" classname="Pages\Projects\projectSetup.spec.ts" time="81.31">
 </testcase>
 </testsuite>
 </testsuites>

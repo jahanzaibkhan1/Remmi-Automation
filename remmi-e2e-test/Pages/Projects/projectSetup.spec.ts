@@ -137,5 +137,9 @@ test.describe('Project Setup Tests', () => {
     test('TC_29: Add multiple upgrades under one group', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).addMultipleUpgradesUnderOneGroup('Automation');
     });
+
+    test('TC_30: Remove individual upgrade fields', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).addUpgradeUnderSameGroup('Automation', 'Extra Upgrade', '500');
+    });
     
 });
