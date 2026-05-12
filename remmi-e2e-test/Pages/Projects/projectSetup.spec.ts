@@ -234,5 +234,9 @@ test.describe('Project Setup Tests', () => {
     test('TC_47: Create project with status Inactive', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).createProjectWithInactiveStatus();
     });
-    
+
+    test('TC_48: Validate input trimming in project name', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).validateProjectNameTrimming();
+    });
+
 });
