@@ -7786,4 +7786,18 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    /**
+     * Updates the project status in the Project Setup and saves the changes.
+     */
+    async updateProjectStatusAndSave(currentName: string, newStatus: string): Promise<void> {
+        await this.openProjectGeneralTab(currentName);
+        await this.assertFieldVisible(this.projectSetupStatusLabel, this.projectSetupStatusSelect);
+        await this.projectSetupStatusSelect.click();
+        const newStatusOption = this.page.locator('div.ng-option', { hasText: newStatus }).first();
+        await newStatusOption.click();
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.cleanupAfterProjectTest();
+    }
+
 }
