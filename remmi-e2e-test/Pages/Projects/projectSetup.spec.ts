@@ -150,4 +150,8 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).verifyBonusPayableUponAcceptsText('Automation', 'Upon Contract Signing');
     });
 
+    test('TC_33: Bonus Payable To accepts text tag', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyBonusPayableToAcceptsText('Automation', 'Selling Agent');
+    });
+
 });
