@@ -62,6 +62,7 @@ test.describe('Project Setup Tests', () => {
             unitNo: '12',
             streetNo: '456',
             streetName: 'George Street',
+            suburb: 'East Albury',
             state: 'NSW',
             postCode: '2000',
             country: 'Australia',
@@ -120,5 +121,122 @@ test.describe('Project Setup Tests', () => {
     test('TC_26: Add multiple upgrade groups', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).addMultipleUpgradeGroups('Automation');
     });
-    
+
+    test('TC_27: Remove an upgrade group using cross icon', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).addUpgradeGroupWithValidData(
+            'Automation',
+            'Test Group',
+            'Test Upgrade',
+            '1000'
+        );
+    });
+
+    test('TC_28: Add upgrade under same group with valid data', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).addUpgradeUnderSameGroup('Automation', 'Extra Upgrade', '500');
+    });
+
+    test('TC_29: Add multiple upgrades under one group', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).addMultipleUpgradesUnderOneGroup('Automation');
+    });
+
+    test('TC_30: Remove individual upgrade fields', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).addUpgradeUnderSameGroup('Automation', 'Extra Upgrade', '500');
+    });
+
+    test('TC_31: Bonus Payable Upon accepts text tag', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyBonusPayableUponAcceptsText('Automation', 'Upon Contract Signing');
+    });
+
+    test('TC_32: Remove Bonus Payable Upon tag', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyBonusPayableUponAcceptsText('Automation', 'Upon Contract Signing');
+    });
+
+    test('TC_33: Bonus Payable To accepts text tag', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyBonusPayableToAcceptsText('Automation', 'Selling Agent');
+    });
+
+    test('TC_34: Bonus Campaign accepts text tag', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyBonusCampaignAcceptsText('Automation', 'Spring Campaign');
+    });
+
+    test('TC_35: Add multiple tags in all bonus fields', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).addMultipleTagsInAllBonusFields('Automation');
+    });
+
+    test('Test 36: Search from inactive tab', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyProjectsUnderInactiveTab('Al kabir heights');
+    });
+
+    test('Test 37: Click precinct in inactive tab', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyPrecinctUnderInactiveTab('Tested');
+    });
+
+    test('TC_38: Add project with same name twice', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.addProjectWithSameNameTwice({ name: 'Project A' });
+    });
+
+    test('TC_39: Click project card to open Project Setup', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyProjectNameAndStatusAppearFirst('Automation');
+    });
+
+    test('TC_40: General tab shows entered project name and status', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyProjectNameAndStatusAppearFirst('Automation');
+    });
+
+    test('TC_41: Update project name and save', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        const originalName = 'Automation';
+        const newName = 'Automation Updated';
+        await project.updateProjectNameAndSave(originalName, newName);
+    });
+
+    test('TC_42: Update project status and save', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        const projectName = 'Automation';
+        const newStatus = 'Active';
+        await project.updateProjectStatusAndSave(projectName, newStatus);
+    });
+
+    test('TC_43: Assign developer, type, and manager together', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        const projectName = 'Automation';
+        const developer = '11 22';
+        const manager = 'Jahanzaib xenex';
+        await project.assignDeveloperTypeAndManager(projectName, developer, manager);
+    });
+
+    test('TC_44: Delete all bonus tags and save', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).addMultipleTagsInAllBonusFields('Automation');
+    });
+
+    test('TC_45: Open address popup without entering data', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.openAddressPopupWithoutData('Automation');
+    });
+
+    test('TC_46: Enter incomplete address and save', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.enterIncompleteAddressAndSave('Automation', {
+            buildingName: '',
+            unitNo: '',
+            streetNo: '',
+            streetName: '',
+            suburb: 'East Albury',
+            state: '',
+            postCode: '',
+            country: '',
+        });
+    });
+
+    test('TC_47: Create project with status Inactive', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).createProjectWithInactiveStatus();
+    });
+
+    test('TC_48: Validate input trimming in project name', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).validateProjectNameTrimming();
+    });
+
 });
