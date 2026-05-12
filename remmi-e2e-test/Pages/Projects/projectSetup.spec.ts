@@ -192,4 +192,11 @@ test.describe('Project Setup Tests', () => {
         await project.updateProjectNameAndSave(originalName, newName);
     });
 
+    test('TC_42: Update project status and save', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        const projectName = 'Automation';
+        const newStatus = 'Active';
+        await project.updateProjectStatusAndSave(projectName, newStatus);
+    });
+
 });
