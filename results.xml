@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="97.26212299999968">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T09:08:40.818Z" hostname="chromium" tests="1" failures="0" skipped="0" time="95.268" errors="0">
-<testcase name="Project Setup Tests › TC_42: Update project status and save" classname="Pages\Projects\projectSetup.spec.ts" time="95.268">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="114.97164900000021">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T09:40:49.503Z" hostname="chromium" tests="1" failures="0" skipped="0" time="112.265" errors="0">
+<testcase name="Project Setup Tests › TC_43: Assign developer, type, and manager together" classname="Pages\Projects\projectSetup.spec.ts" time="112.265">
 </testcase>
 </testsuite>
 </testsuites>
