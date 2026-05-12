@@ -158,4 +158,8 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).verifyBonusCampaignAcceptsText('Automation', 'Spring Campaign');
     });
 
+    test('TC_35: Add multiple tags in all bonus fields', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).addMultipleTagsInAllBonusFields('Automation');
+    });
+
 });
