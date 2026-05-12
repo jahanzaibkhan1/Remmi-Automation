@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="100.01639499999955">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T09:52:15.208Z" hostname="chromium" tests="1" failures="0" skipped="0" time="97.938" errors="0">
-<testcase name="Project Setup Tests › TC_44: Delete all bonus tags and save" classname="Pages\Projects\projectSetup.spec.ts" time="97.938">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="98.45146700000018">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T10:05:07.652Z" hostname="chromium" tests="1" failures="0" skipped="0" time="96.402" errors="0">
+<testcase name="Project Setup Tests › TC_45: Open address popup without entering data" classname="Pages\Projects\projectSetup.spec.ts" time="96.402">
 </testcase>
 </testsuite>
 </testsuites>

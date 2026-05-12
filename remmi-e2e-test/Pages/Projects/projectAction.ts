@@ -7822,4 +7822,16 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    /**
+     * Opens the Project Display Address popup without entering any data.
+     */
+    async openAddressPopupWithoutData(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openDisplayAddressPopup();
+        await expect(this.displayAddressPopupHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.displayAddressPopupSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeDisplayAddressPopup();
+        await this.cleanupAfterProjectTest();
+    }
+
 }
