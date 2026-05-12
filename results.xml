@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="114.84340199999883">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T06:21:17.556Z" hostname="chromium" tests="1" failures="0" skipped="0" time="112.777" errors="0">
-<testcase name="Project Setup Tests › TC_30: Bonus Payable Upon accepts text tag" classname="Pages\Projects\projectSetup.spec.ts" time="112.777">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.78473099999875">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T06:27:50.441Z" hostname="chromium" tests="1" failures="0" skipped="0" time="61.775" errors="0">
+<testcase name="Project Setup Tests › TC_32: Remove Bonus Payable Upon tag" classname="Pages\Projects\projectSetup.spec.ts" time="61.775">
 </testcase>
 </testsuite>
 </testsuites>
