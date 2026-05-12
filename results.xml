@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="118.52958700000123">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T07:58:16.587Z" hostname="chromium" tests="1" failures="0" skipped="0" time="116.455" errors="0">
-<testcase name="Project Setup Tests › Test 36: Search from inactive tab" classname="Pages\Projects\projectSetup.spec.ts" time="116.455">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="101.5553629999999">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T08:05:09.877Z" hostname="chromium" tests="1" failures="0" skipped="0" time="99.276" errors="0">
+<testcase name="Project Setup Tests › Test 37: Click precinct in inactive tab" classname="Pages\Projects\projectSetup.spec.ts" time="99.276">
 </testcase>
 </testsuite>
 </testsuites>

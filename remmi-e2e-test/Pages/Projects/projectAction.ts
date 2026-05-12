@@ -7727,4 +7727,17 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    async verifyPrecinctUnderInactiveTab(precinctName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickTabByLabel('Inactive');
+        await this.getFirstVisiblePrecinctCard();
+        for (const tab of ['project', 'lot', 'EOI']) {
+            const el = this.innerTabById(tab);
+            await expect(el).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+            await expect(el).toHaveText(new RegExp(tab, 'i'), { timeout: ProjectActions.TIMEOUT_LONG });
+        }
+        await this.projectsMenuLink.click();
+        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
 }
