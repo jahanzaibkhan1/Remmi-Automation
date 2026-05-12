@@ -146,4 +146,8 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).verifyBonusPayableUponAcceptsText('Automation', 'Upon Contract Signing');
     });
 
+    test('TC_32: Remove Bonus Payable Upon tag', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyBonusPayableUponAcceptsText('Automation', 'Upon Contract Signing');
+    });
+
 });
