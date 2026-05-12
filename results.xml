@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="101.97451899999939">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T06:53:38.279Z" hostname="chromium" tests="1" failures="0" skipped="0" time="99.941" errors="0">
-<testcase name="Project Setup Tests › TC_34: Bonus Campaign accepts text tag" classname="Pages\Projects\projectSetup.spec.ts" time="99.941">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="107.26355900000036">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T07:36:14.005Z" hostname="chromium" tests="1" failures="0" skipped="0" time="105.12" errors="0">
+<testcase name="Project Setup Tests › TC_35: Add multiple tags in all bonus fields" classname="Pages\Projects\projectSetup.spec.ts" time="105.12">
 </testcase>
 </testsuite>
 </testsuites>

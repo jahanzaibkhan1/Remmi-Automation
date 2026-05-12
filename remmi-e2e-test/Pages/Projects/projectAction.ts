@@ -7688,4 +7688,43 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    /**
+ * TC_33 — Add multiple tags in all bonus fields
+ */
+    async addMultipleTagsInAllBonusFields(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+
+        // Cleanup all leftover tags first
+        await this.scrollToBonusPayableUpon();
+        await this.removeAllBonusPayableUponTags();
+        await this.removeAllBonusPayableToTags();
+        await this.removeAllBonusCampaignTags();
+        await this.scrollToBonusPayableUpon();
+        await this.addBonusPayableUponTag('Contract Signing');
+        await this.addBonusPayableUponTag('Settlement');
+        await this.scrollToBonusPayableTo();
+        await this.addBonusPayableToTag('Selling Agent');
+        await this.addBonusPayableToTag('Buyer Agent');
+        await this.scrollToBonusCampaign();
+        await this.addBonusCampaignTag('Spring Campaign');
+        await this.addBonusCampaignTag('Winter Campaign');
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.scrollToBonusPayableUpon();
+        await this.assertBonusPayableUponTagExists('Contract Signing');
+        await this.assertBonusPayableUponTagExists('Settlement');
+        await this.scrollToBonusPayableTo();
+        await this.assertBonusPayableToTagExists('Selling Agent');
+        await this.assertBonusPayableToTagExists('Buyer Agent');
+        await this.scrollToBonusCampaign();
+        await this.assertBonusCampaignTagExists('Spring Campaign');
+        await this.assertBonusCampaignTagExists('Winter Campaign');
+        await this.removeAllBonusPayableUponTags();
+        await this.removeAllBonusPayableToTags();
+        await this.removeAllBonusCampaignTags();
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.cleanupAfterProjectTest();
+    }
+
 }
