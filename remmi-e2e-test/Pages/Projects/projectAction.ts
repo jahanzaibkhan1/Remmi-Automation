@@ -7773,4 +7773,17 @@ export class ProjectActions {
         await this.clickResetIcon();
     }
 
+    /**
+     * Updates the project name in the Project Setup and saves the changes.
+     * @param currentName - The current name of the project.
+     * @param newName - The new name to update to.
+     */
+    async updateProjectNameAndSave(currentName: string, newName: string): Promise<void> {
+        await this.openProjectGeneralTab(currentName);
+        await this.assertFieldVisible(this.projectSetupNameLabel, this.projectSetupNameInput);
+        await this.assertFieldVisible(this.projectSetupStatusLabel, this.projectSetupStatusSelect);
+        await this.projectSetupNameInput.fill(newName);
+        await this.cleanupAfterProjectTest();
+    }
+
 }
