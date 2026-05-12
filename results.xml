@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="114.97164900000021">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T09:40:49.503Z" hostname="chromium" tests="1" failures="0" skipped="0" time="112.265" errors="0">
-<testcase name="Project Setup Tests › TC_43: Assign developer, type, and manager together" classname="Pages\Projects\projectSetup.spec.ts" time="112.265">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="100.01639499999955">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T09:52:15.208Z" hostname="chromium" tests="1" failures="0" skipped="0" time="97.938" errors="0">
+<testcase name="Project Setup Tests › TC_44: Delete all bonus tags and save" classname="Pages\Projects\projectSetup.spec.ts" time="97.938">
 </testcase>
 </testsuite>
 </testsuites>
