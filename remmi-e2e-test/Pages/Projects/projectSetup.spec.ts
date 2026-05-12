@@ -181,4 +181,8 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).verifyProjectNameAndStatusAppearFirst('Automation');
     });
 
+    test('TC_40: General tab shows entered project name and status', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyProjectNameAndStatusAppearFirst('Automation');
+    });
+
 });
