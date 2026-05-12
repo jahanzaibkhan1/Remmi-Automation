@@ -6369,6 +6369,37 @@ export class ProjectActions {
     }
 
     // ==========================================================================
+    // LOCATORS — BONUS PAYABLE TO CHIPS (TC_31)
+    // Source: app-general-setting HTML (verified — same structure as bonus_payable_upon)
+    // ==========================================================================
+
+    private get bonusPayableToLabel(): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: /^Bonus Payable To$/ }).first();
+    }
+
+    private get bonusPayableToChips(): Locator {
+        return this.generalSettingContent.locator('p-chips[formcontrolname="bonus_payable_to"]').first();
+    }
+
+    private get bonusPayableToInput(): Locator {
+        return this.bonusPayableToChips.locator('li.p-chips-input-token input').first();
+    }
+
+    private get bonusPayableToTokens(): Locator {
+        return this.bonusPayableToChips.locator('li.p-chips-token');
+    }
+
+    private bonusPayableToTokenByText(text: string): Locator {
+        return this.bonusPayableToChips.locator('li.p-chips-token').filter({
+            has: this.page.locator('span.p-chips-token-label', { hasText: text })
+        }).first();
+    }
+
+    private bonusPayableToTokenRemoveIcon(text: string): Locator {
+        return this.bonusPayableToTokenByText(text).locator('timescircleicon').first();
+    }
+
+    // ==========================================================================
     // LOCATORS — UPGRADE ROWS INSIDE A BOX (TC_27)
     // Source: app-general-setting HTML (verified — 2 upgrade rows in box)
     // ==========================================================================
@@ -7497,6 +7528,80 @@ export class ProjectActions {
         await this.scrollToBonusPayableUpon();
         await this.assertBonusPayableUponTagExists(tagText);
         await this.removeBonusPayableUponTag(tagText);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * HELPER — Scroll to Bonus Payable To section
+     */
+    private async scrollToBonusPayableTo(): Promise<void> {
+        await this.bonusPayableToLabel.scrollIntoViewIfNeeded();
+        await expect(this.bonusPayableToLabel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Type text in Bonus Payable To input and press Enter
+     */
+    private async addBonusPayableToTag(tagText: string): Promise<void> {
+        await expect(this.bonusPayableToInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bonusPayableToInput.scrollIntoViewIfNeeded();
+        await this.bonusPayableToInput.fill(tagText);
+        await this.bonusPayableToInput.press('Enter');
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Assert a chip with given text exists
+     */
+    private async assertBonusPayableToTagExists(tagText: string): Promise<void> {
+        await expect(this.bonusPayableToTokenByText(tagText)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusPayableToTokenByText(tagText).locator('span.p-chips-token-label')).toHaveText(tagText, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+    }
+
+    /**
+     * HELPER — Remove a Bonus Payable To chip by text
+     */
+    private async removeBonusPayableToTag(tagText: string): Promise<void> {
+        await expect(this.bonusPayableToTokenRemoveIcon(tagText)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bonusPayableToTokenRemoveIcon(tagText).click();
+        await this.page.waitForTimeout(500);
+        await expect(this.bonusPayableToTokenByText(tagText)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Remove all existing Bonus Payable To chips (cleanup)
+     */
+    private async removeAllBonusPayableToTags(): Promise<void> {
+        let count = await this.bonusPayableToTokens.count();
+        while (count > 0) {
+            await this.bonusPayableToTokens.first().locator('timescircleicon').click();
+            await this.page.waitForTimeout(500);
+            count = await this.bonusPayableToTokens.count();
+        }
+    }
+
+    /**
+ * TC_33 — Verify Bonus Payable To accepts text tag
+ */
+    async verifyBonusPayableToAcceptsText(
+        projectName: string = 'Automation',
+        tagText: string = 'Selling Agent'
+    ): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToBonusPayableTo();
+        await this.removeAllBonusPayableToTags();
+        await this.addBonusPayableToTag(tagText);
+        await this.assertBonusPayableToTagExists(tagText);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.scrollToBonusPayableTo();
+        await this.assertBonusPayableToTagExists(tagText);
+        await this.removeBonusPayableToTag(tagText);
         await this.clickGeneralTabSave();
         await this.assertProjectUpdatedToast();
         await this.cleanupAfterProjectTest();
