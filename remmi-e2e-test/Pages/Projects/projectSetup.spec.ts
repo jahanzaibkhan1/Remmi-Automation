@@ -207,4 +207,8 @@ test.describe('Project Setup Tests', () => {
         await project.assignDeveloperTypeAndManager(projectName, developer, manager);
     });
 
+    test('TC_44: Delete all bonus tags and save', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).addMultipleTagsInAllBonusFields('Automation');
+    });
+
 });
