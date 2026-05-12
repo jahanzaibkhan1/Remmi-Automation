@@ -177,4 +177,8 @@ test.describe('Project Setup Tests', () => {
         await project.addProjectWithSameNameTwice({ name: 'Project A' });
     });
 
+    test('TC_39: Click project card to open Project Setup', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyProjectNameAndStatusAppearFirst('Automation');
+    });
+
 });

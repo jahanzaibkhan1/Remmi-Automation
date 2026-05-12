@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="86.96871600000188">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T08:27:03.744Z" hostname="chromium" tests="1" failures="0" skipped="0" time="84.496" errors="0">
-<testcase name="Project Setup Tests › TC_38: Add project with same name twice" classname="Pages\Projects\projectSetup.spec.ts" time="84.496">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="119.49010199999809">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T08:33:10.258Z" hostname="chromium" tests="1" failures="0" skipped="0" time="117.195" errors="0">
+<testcase name="Project Setup Tests › TC_39: Click project card to open Project Setup" classname="Pages\Projects\projectSetup.spec.ts" time="117.195">
 </testcase>
 </testsuite>
 </testsuites>
