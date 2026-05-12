@@ -7339,7 +7339,7 @@ export class ProjectActions {
     }
 
     /**
- * TC_27 — Add upgrade under same group with valid data
+ * TC_28 — Add upgrade under same group with valid data
  */
     async addUpgradeUnderSameGroup(
         projectName: string = 'Automation',
@@ -7360,6 +7360,34 @@ export class ProjectActions {
         await this.scrollToProjectUpgradesSection();
         await this.assertUpgradeRowValues(boxIndex, newRowIndex, upgradeName, cost);
         await this.removeUpgradeRow(boxIndex, newRowIndex);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_29 — Add multiple upgrades under one group
+ */
+    async addMultipleUpgradesUnderOneGroup(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToProjectUpgradesSection();
+        const boxIndex = 0;
+        const initialRowCount = await this.getUpgradeRowCount(boxIndex);
+        await this.clickAddUpgrade(boxIndex);
+        await this.clickAddUpgrade(boxIndex);
+        const afterAddCount = await this.getUpgradeRowCount(boxIndex);
+        expect(afterAddCount).toBe(initialRowCount + 2);
+        const row1Index = initialRowCount;
+        const row2Index = initialRowCount + 1;
+        await this.clearAndFillUpgradeRow(boxIndex, row1Index, 'Upgrade One', '1000');
+        await this.clearAndFillUpgradeRow(boxIndex, row2Index, 'Upgrade Two', '2000');
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.scrollToProjectUpgradesSection();
+        await this.assertUpgradeRowValues(boxIndex, row1Index, 'Upgrade One', '1000');
+        await this.assertUpgradeRowValues(boxIndex, row2Index, 'Upgrade Two', '2000');
+        await this.removeUpgradeRow(boxIndex, row2Index);
+        await this.removeUpgradeRow(boxIndex, row1Index);
         await this.clickGeneralTabSave();
         await this.assertProjectUpdatedToast();
         await this.cleanupAfterProjectTest();

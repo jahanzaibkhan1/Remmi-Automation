@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="107.42631400000025">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T04:41:23.559Z" hostname="chromium" tests="1" failures="0" skipped="0" time="104.619" errors="0">
-<testcase name="Project Setup Tests › TC_27: Add upgrade under same group with valid data" classname="Pages\Projects\projectSetup.spec.ts" time="104.619">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="116.33314300000016">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T04:52:08.930Z" hostname="chromium" tests="1" failures="0" skipped="0" time="114.32" errors="0">
+<testcase name="Project Setup Tests › TC_29: Add multiple upgrades under one group" classname="Pages\Projects\projectSetup.spec.ts" time="114.32">
 </testcase>
 </testsuite>
 </testsuites>

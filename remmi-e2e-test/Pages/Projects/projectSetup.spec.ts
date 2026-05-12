@@ -130,8 +130,12 @@ test.describe('Project Setup Tests', () => {
         );
     });
 
-    test('TC_27: Add upgrade under same group with valid data', async ({ sessionPage }) => {
+    test('TC_28: Add upgrade under same group with valid data', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).addUpgradeUnderSameGroup('Automation', 'Extra Upgrade', '500');
+    });
+
+    test('TC_29: Add multiple upgrades under one group', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).addMultipleUpgradesUnderOneGroup('Automation');
     });
     
 });
