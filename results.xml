@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="78.01458799999999">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T03:59:48.637Z" hostname="chromium" tests="1" failures="0" skipped="0" time="75.845" errors="0">
-<testcase name="Project Setup Tests › TC_27: Remove an upgrade group using cross icon" classname="Pages\Projects\projectSetup.spec.ts" time="75.845">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="107.42631400000025">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T04:41:23.559Z" hostname="chromium" tests="1" failures="0" skipped="0" time="104.619" errors="0">
+<testcase name="Project Setup Tests › TC_27: Add upgrade under same group with valid data" classname="Pages\Projects\projectSetup.spec.ts" time="104.619">
 </testcase>
 </testsuite>
 </testsuites>

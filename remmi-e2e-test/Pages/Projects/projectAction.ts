@@ -6337,6 +6337,49 @@ export class ProjectActions {
         }).first();
     }
 
+    // ==========================================================================
+    // LOCATORS — UPGRADE ROWS INSIDE A BOX (TC_27)
+    // Source: app-general-setting HTML (verified — 2 upgrade rows in box)
+    // ==========================================================================
+
+    /**
+     * All upgrade rows inside a specific upgrade box (rows containing Upgrade + Cost)
+     * Excludes the Upgrade Group row which is structured differently
+     */
+    private upgradeRowsInBox(boxIndex: number): Locator {
+        return this.upgradeBox(boxIndex).locator('div.mb-2.d-flex.position-relative');
+    }
+
+    /**
+     * Upgrade input within a specific row within a specific box
+     */
+    private upgradeRowInput(boxIndex: number, rowIndex: number): Locator {
+        return this.upgradeRowsInBox(boxIndex).nth(rowIndex).locator('input.site-input').first();
+    }
+
+    /**
+     * Cost input within a specific row within a specific box
+     */
+    private upgradeRowCostInput(boxIndex: number, rowIndex: number): Locator {
+        return this.upgradeRowsInBox(boxIndex).nth(rowIndex).locator('app-price-input input').first();
+    }
+
+    /**
+     * Cross icon on an upgrade row (only exists on added rows, not row 0)
+     */
+    private upgradeRowRemoveIcon(boxIndex: number, rowIndex: number): Locator {
+        return this.upgradeRowsInBox(boxIndex).nth(rowIndex).locator('i.pi-times-circle').first();
+    }
+
+    /**
+     * "Add Upgrade" button inside a specific upgrade box
+     */
+    private addUpgradeButton(boxIndex: number): Locator {
+        return this.upgradeBox(boxIndex).locator('button._view-btn').filter({
+            has: this.page.locator('i.pi-plus')
+        }).first();
+    }
+
     /**
  * HELPER — Fill all fields in the Display Address popup
  */
@@ -7240,6 +7283,83 @@ export class ProjectActions {
         await this.assertUpgradeBoxValues(box1Index, 'Group A', 'Upgrade A', '1000');
         await this.assertUpgradeBoxValues(box2Index, 'Group B', 'Upgrade B', '2000');
         await this.removeAllAdditionallyAddedUpgradeBoxes();
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * HELPER — Click "Add Upgrade" button within a specific upgrade box
+ */
+    private async clickAddUpgrade(boxIndex: number): Promise<void> {
+        await expect(this.addUpgradeButton(boxIndex)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.addUpgradeButton(boxIndex).scrollIntoViewIfNeeded();
+        await this.addUpgradeButton(boxIndex).click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Get count of upgrade rows in a specific box
+     */
+    private async getUpgradeRowCount(boxIndex: number): Promise<number> {
+        return await this.upgradeRowsInBox(boxIndex).count();
+    }
+
+    /**
+     * HELPER — Clear and fill an upgrade row (Upgrade + Cost)
+     */
+    private async clearAndFillUpgradeRow(boxIndex: number, rowIndex: number, upgradeName: string, cost: string): Promise<void> {
+        await this.upgradeRowInput(boxIndex, rowIndex).fill('');
+        await this.upgradeRowInput(boxIndex, rowIndex).fill(upgradeName);
+
+        await this.upgradeRowCostInput(boxIndex, rowIndex).fill('');
+        await this.upgradeRowCostInput(boxIndex, rowIndex).fill(cost);
+
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Assert upgrade row has expected values
+     */
+    private async assertUpgradeRowValues(boxIndex: number, rowIndex: number, upgradeName: string, cost: string): Promise<void> {
+        await expect(this.upgradeRowInput(boxIndex, rowIndex)).toHaveValue(upgradeName, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        const actualCost = await this.upgradeRowCostInput(boxIndex, rowIndex).inputValue();
+        const cleanCost = actualCost.replace(/[$,]/g, '').trim();
+        expect(cleanCost).toBe(cost);
+    }
+
+    /**
+     * HELPER — Click cross icon to remove an upgrade row
+     */
+    private async removeUpgradeRow(boxIndex: number, rowIndex: number): Promise<void> {
+        await expect(this.upgradeRowRemoveIcon(boxIndex, rowIndex)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.upgradeRowRemoveIcon(boxIndex, rowIndex).click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+ * TC_27 — Add upgrade under same group with valid data
+ */
+    async addUpgradeUnderSameGroup(
+        projectName: string = 'Automation',
+        upgradeName: string = 'Extra Upgrade',
+        cost: string = '500'
+    ): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToProjectUpgradesSection();
+        const boxIndex = 0;
+        const initialRowCount = await this.getUpgradeRowCount(boxIndex);
+        await this.clickAddUpgrade(boxIndex);
+        const afterAddCount = await this.getUpgradeRowCount(boxIndex);
+        expect(afterAddCount).toBe(initialRowCount + 1);
+        const newRowIndex = afterAddCount - 1;
+        await this.clearAndFillUpgradeRow(boxIndex, newRowIndex, upgradeName, cost);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.scrollToProjectUpgradesSection();
+        await this.assertUpgradeRowValues(boxIndex, newRowIndex, upgradeName, cost);
+        await this.removeUpgradeRow(boxIndex, newRowIndex);
         await this.clickGeneralTabSave();
         await this.assertProjectUpdatedToast();
         await this.cleanupAfterProjectTest();

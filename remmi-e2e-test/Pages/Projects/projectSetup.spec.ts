@@ -129,5 +129,9 @@ test.describe('Project Setup Tests', () => {
             '1000'
         );
     });
+
+    test('TC_27: Add upgrade under same group with valid data', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).addUpgradeUnderSameGroup('Automation', 'Extra Upgrade', '500');
+    });
     
 });
