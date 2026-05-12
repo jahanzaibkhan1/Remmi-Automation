@@ -162,4 +162,9 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).addMultipleTagsInAllBonusFields('Automation');
     });
 
+    test('Test 36: Search from inactive tab', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyProjectsUnderInactiveTab('Al kabir heights');
+    });
+
 });

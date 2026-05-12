@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="107.26355900000036">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T07:36:14.005Z" hostname="chromium" tests="1" failures="0" skipped="0" time="105.12" errors="0">
-<testcase name="Project Setup Tests › TC_35: Add multiple tags in all bonus fields" classname="Pages\Projects\projectSetup.spec.ts" time="105.12">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="118.52958700000123">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T07:58:16.587Z" hostname="chromium" tests="1" failures="0" skipped="0" time="116.455" errors="0">
+<testcase name="Project Setup Tests › Test 36: Search from inactive tab" classname="Pages\Projects\projectSetup.spec.ts" time="116.455">
 </testcase>
 </testsuite>
 </testsuites>
