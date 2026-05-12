@@ -230,4 +230,9 @@ test.describe('Project Setup Tests', () => {
             country: '',
         });
     });
+
+    test('TC_47: Create project with status Inactive', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).createProjectWithInactiveStatus();
+    });
+    
 });
