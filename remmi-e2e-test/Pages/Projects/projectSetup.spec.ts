@@ -154,4 +154,8 @@ test.describe('Project Setup Tests', () => {
         await new ProjectActions(sessionPage).verifyBonusPayableToAcceptsText('Automation', 'Selling Agent');
     });
 
+    test('TC_34: Bonus Campaign accepts text tag', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyBonusCampaignAcceptsText('Automation', 'Spring Campaign');
+    });
+
 });

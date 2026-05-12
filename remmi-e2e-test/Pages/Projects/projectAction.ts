@@ -6323,10 +6323,6 @@ export class ProjectActions {
     private bonusPayableUponTokenRemoveIcon(text: string): Locator {
         return this.bonusPayableUponTokenByText(text).locator('timescircleicon').first();
     }
-    // ==========================================================================
-    // LOCATORS — PROJECT UPGRADES SECTION (TC_25)
-    // Source: app-general-setting HTML (verified — 2 upgrade boxes)
-    // ==========================================================================
 
     private get projectUpgradesHeading(): Locator {
         return this.generalSettingContent.locator('p.f-16._fw-600').filter({ hasText: 'Project Upgrades' }).first();
@@ -6368,11 +6364,6 @@ export class ProjectActions {
         }).first();
     }
 
-    // ==========================================================================
-    // LOCATORS — BONUS PAYABLE TO CHIPS (TC_31)
-    // Source: app-general-setting HTML (verified — same structure as bonus_payable_upon)
-    // ==========================================================================
-
     private get bonusPayableToLabel(): Locator {
         return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: /^Bonus Payable To$/ }).first();
     }
@@ -6398,11 +6389,6 @@ export class ProjectActions {
     private bonusPayableToTokenRemoveIcon(text: string): Locator {
         return this.bonusPayableToTokenByText(text).locator('timescircleicon').first();
     }
-
-    // ==========================================================================
-    // LOCATORS — UPGRADE ROWS INSIDE A BOX (TC_27)
-    // Source: app-general-setting HTML (verified — 2 upgrade rows in box)
-    // ==========================================================================
 
     /**
      * All upgrade rows inside a specific upgrade box (rows containing Upgrade + Cost)
@@ -6442,6 +6428,31 @@ export class ProjectActions {
         }).first();
     }
 
+    private get bonusCampaignLabel(): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: /^Bonus Campaign$/ }).first();
+    }
+
+    private get bonusCampaignChips(): Locator {
+        return this.generalSettingContent.locator('p-chips[formcontrolname="bonus_campaign"]').first();
+    }
+
+    private get bonusCampaignInput(): Locator {
+        return this.bonusCampaignChips.locator('li.p-chips-input-token input').first();
+    }
+
+    private get bonusCampaignTokens(): Locator {
+        return this.bonusCampaignChips.locator('li.p-chips-token');
+    }
+
+    private bonusCampaignTokenByText(text: string): Locator {
+        return this.bonusCampaignChips.locator('li.p-chips-token').filter({
+            has: this.page.locator('span.p-chips-token-label', { hasText: text })
+        }).first();
+    }
+
+    private bonusCampaignTokenRemoveIcon(text: string): Locator {
+        return this.bonusCampaignTokenByText(text).locator('timescircleicon').first();
+    }
     /**
  * HELPER — Fill all fields in the Display Address popup
  */
@@ -7455,10 +7466,6 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
-    // ==========================================================================
-    // HELPERS — BONUS PAYABLE UPON CHIPS (TC_30)
-    // ==========================================================================
-
     /**
      * HELPER — Scroll to Bonus Payable Upon section
      */
@@ -7602,6 +7609,80 @@ export class ProjectActions {
         await this.scrollToBonusPayableTo();
         await this.assertBonusPayableToTagExists(tagText);
         await this.removeBonusPayableToTag(tagText);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * HELPER — Scroll to Bonus Campaign section
+     */
+    private async scrollToBonusCampaign(): Promise<void> {
+        await this.bonusCampaignLabel.scrollIntoViewIfNeeded();
+        await expect(this.bonusCampaignLabel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Type text in Bonus Campaign input and press Enter
+     */
+    private async addBonusCampaignTag(tagText: string): Promise<void> {
+        await expect(this.bonusCampaignInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bonusCampaignInput.scrollIntoViewIfNeeded();
+        await this.bonusCampaignInput.fill(tagText);
+        await this.bonusCampaignInput.press('Enter');
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Assert a chip with given text exists
+     */
+    private async assertBonusCampaignTagExists(tagText: string): Promise<void> {
+        await expect(this.bonusCampaignTokenByText(tagText)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusCampaignTokenByText(tagText).locator('span.p-chips-token-label')).toHaveText(tagText, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+    }
+
+    /**
+     * HELPER — Remove a Bonus Campaign chip by text
+     */
+    private async removeBonusCampaignTag(tagText: string): Promise<void> {
+        await expect(this.bonusCampaignTokenRemoveIcon(tagText)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bonusCampaignTokenRemoveIcon(tagText).click();
+        await this.page.waitForTimeout(500);
+        await expect(this.bonusCampaignTokenByText(tagText)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Remove all existing Bonus Campaign chips (cleanup)
+     */
+    private async removeAllBonusCampaignTags(): Promise<void> {
+        let count = await this.bonusCampaignTokens.count();
+        while (count > 0) {
+            await this.bonusCampaignTokens.first().locator('timescircleicon').click();
+            await this.page.waitForTimeout(500);
+            count = await this.bonusCampaignTokens.count();
+        }
+    }
+
+    /**
+ * TC_34 — Verify Bonus Campaign accepts text tag
+ */
+    async verifyBonusCampaignAcceptsText(
+        projectName: string = 'Automation',
+        tagText: string = 'Spring Campaign'
+    ): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToBonusCampaign();
+        await this.removeAllBonusCampaignTags();
+        await this.addBonusCampaignTag(tagText);
+        await this.assertBonusCampaignTagExists(tagText);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.scrollToBonusCampaign();
+        await this.assertBonusCampaignTagExists(tagText);
+        await this.removeBonusCampaignTag(tagText);
         await this.clickGeneralTabSave();
         await this.assertProjectUpdatedToast();
         await this.cleanupAfterProjectTest();
