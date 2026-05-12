@@ -7740,4 +7740,37 @@ export class ProjectActions {
         await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
     }
 
+    /**
+     * Adds a project with the same name twice to confirm that uniqueness is not enforced.
+     * Both projects named "Project A" should be created successfully.
+     */
+    async addProjectWithSameNameTwice(project?: { name?: string; status?: string }): Promise<void> {
+        await this.navigateToProjects();
+        const projectName = project?.name ?? faker.company.name();
+        // First creation
+        await this.openProjectPopup();
+        await this.projectNameField.fill(projectName);
+        await this.projectDialogSaveButton.click({ force: true });
+        await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectAddedToast.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM }).catch(() => {});
+        await this.projectTitleBanner(projectName).waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM });
+        // Optionally: return to projects main view for clarity
+        const projectsText = this.page.locator('p', { hasText: 'Projects' });
+        await expect(projectsText).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await projectsText.click({ force: true });
+        await this.verifyProjectCanBeSearchedByName(projectName);
+        await this.clickResetIcon();
+        // Second creation with the same name
+        await this.openProjectPopup();
+        await this.projectNameField.fill(projectName);
+        await this.projectDialogSaveButton.click({ force: true });
+        await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectAddedToast.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM }).catch(() => {});
+        await this.projectTitleBanner(projectName).waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(projectsText).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await projectsText.click({ force: true });
+        await this.verifyProjectCanBeSearchedByName(projectName);
+        await this.clickResetIcon();
+    }
+
 }
