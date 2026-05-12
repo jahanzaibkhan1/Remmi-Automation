@@ -167,4 +167,9 @@ test.describe('Project Setup Tests', () => {
         await project.verifyProjectsUnderInactiveTab('Al kabir heights');
     });
 
+    test('Test 37: Click precinct in inactive tab', async ({ sessionPage }) => {
+        const project = new ProjectActions(sessionPage);
+        await project.verifyPrecinctUnderInactiveTab('Tested');
+    });
+
 });
