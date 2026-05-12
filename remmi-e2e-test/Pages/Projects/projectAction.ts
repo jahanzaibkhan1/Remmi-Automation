@@ -409,6 +409,14 @@ export class ProjectActions {
         return this.projectDialog.locator('ng-select[formcontrolname="Project_Status"]');
     }
 
+    private get projectStatusDropdownPanel(): Locator {
+        return this.projectStatusField.locator('ng-dropdown-panel');
+    }
+
+    private projectStatusOptionByText(text: string): Locator {
+        return this.projectStatusDropdownPanel.locator('.ng-option').filter({ hasText: new RegExp(`^${text}$`) }).first();
+    }
+
     private get projectDialogSaveButton(): Locator {
         return this.page.getByRole('button', { name: /save/i });
     }
@@ -6145,6 +6153,14 @@ export class ProjectActions {
         return this.page.locator('p-autocomplete[formcontrolname="suburb"] input');
     }
 
+    private get displayAddressSuburbSuggestionItems(): Locator {
+        return this.page.locator('li.p-autocomplete-item[role="option"]');
+    }
+
+    private displayAddressSuburbSuggestionByLabel(label: string): Locator {
+        return this.page.locator('li.p-autocomplete-item[role="option"][aria-label="' + label + '"]');
+    }
+
     private get displayAddressStateInput(): Locator {
         return this.page.locator('input[formcontrolname="state"]');
     }
@@ -6292,10 +6308,37 @@ export class ProjectActions {
         return this.floorplanTable.locator('th.p-sortable-column[psortablecolumn="name"]').first();
     }
 
+
     // ==========================================================================
-    // LOCATORS — PROJECT UPGRADES SECTION (TC_25)
-    // Source: app-general-setting HTML (verified — 2 upgrade boxes)
+    // LOCATORS — BONUS PAYABLE UPON CHIPS (TC_30)
+    // Source: app-general-setting HTML (verified — empty + with chip)
     // ==========================================================================
+
+    private get bonusPayableUponLabel(): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: /^Bonus Payable Upon$/ }).first();
+    }
+
+    private get bonusPayableUponChips(): Locator {
+        return this.generalSettingContent.locator('p-chips[formcontrolname="bonus_payable_upon"]').first();
+    }
+
+    private get bonusPayableUponInput(): Locator {
+        return this.bonusPayableUponChips.locator('li.p-chips-input-token input').first();
+    }
+
+    private get bonusPayableUponTokens(): Locator {
+        return this.bonusPayableUponChips.locator('li.p-chips-token');
+    }
+
+    private bonusPayableUponTokenByText(text: string): Locator {
+        return this.bonusPayableUponChips.locator('li.p-chips-token').filter({
+            has: this.page.locator('span.p-chips-token-label', { hasText: text })
+        }).first();
+    }
+
+    private bonusPayableUponTokenRemoveIcon(text: string): Locator {
+        return this.bonusPayableUponTokenByText(text).locator('timescircleicon').first();
+    }
 
     private get projectUpgradesHeading(): Locator {
         return this.generalSettingContent.locator('p.f-16._fw-600').filter({ hasText: 'Project Upgrades' }).first();
@@ -6337,14 +6380,104 @@ export class ProjectActions {
         }).first();
     }
 
+    private get bonusPayableToLabel(): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: /^Bonus Payable To$/ }).first();
+    }
+
+    private get bonusPayableToChips(): Locator {
+        return this.generalSettingContent.locator('p-chips[formcontrolname="bonus_payable_to"]').first();
+    }
+
+    private get bonusPayableToInput(): Locator {
+        return this.bonusPayableToChips.locator('li.p-chips-input-token input').first();
+    }
+
+    private get bonusPayableToTokens(): Locator {
+        return this.bonusPayableToChips.locator('li.p-chips-token');
+    }
+
+    private bonusPayableToTokenByText(text: string): Locator {
+        return this.bonusPayableToChips.locator('li.p-chips-token').filter({
+            has: this.page.locator('span.p-chips-token-label', { hasText: text })
+        }).first();
+    }
+
+    private bonusPayableToTokenRemoveIcon(text: string): Locator {
+        return this.bonusPayableToTokenByText(text).locator('timescircleicon').first();
+    }
+
     /**
- * HELPER — Fill all fields in the Display Address popup
- */
+     * All upgrade rows inside a specific upgrade box (rows containing Upgrade + Cost)
+     * Excludes the Upgrade Group row which is structured differently
+     */
+    private upgradeRowsInBox(boxIndex: number): Locator {
+        return this.upgradeBox(boxIndex).locator('div.mb-2.d-flex.position-relative');
+    }
+
+    /**
+     * Upgrade input within a specific row within a specific box
+     */
+    private upgradeRowInput(boxIndex: number, rowIndex: number): Locator {
+        return this.upgradeRowsInBox(boxIndex).nth(rowIndex).locator('input.site-input').first();
+    }
+
+    /**
+     * Cost input within a specific row within a specific box
+     */
+    private upgradeRowCostInput(boxIndex: number, rowIndex: number): Locator {
+        return this.upgradeRowsInBox(boxIndex).nth(rowIndex).locator('app-price-input input').first();
+    }
+
+    /**
+     * Cross icon on an upgrade row (only exists on added rows, not row 0)
+     */
+    private upgradeRowRemoveIcon(boxIndex: number, rowIndex: number): Locator {
+        return this.upgradeRowsInBox(boxIndex).nth(rowIndex).locator('i.pi-times-circle').first();
+    }
+
+    /**
+     * "Add Upgrade" button inside a specific upgrade box
+     */
+    private addUpgradeButton(boxIndex: number): Locator {
+        return this.upgradeBox(boxIndex).locator('button._view-btn').filter({
+            has: this.page.locator('i.pi-plus')
+        }).first();
+    }
+
+    private get bonusCampaignLabel(): Locator {
+        return this.generalSettingContent.locator('p.f-12.mb-1', { hasText: /^Bonus Campaign$/ }).first();
+    }
+
+    private get bonusCampaignChips(): Locator {
+        return this.generalSettingContent.locator('p-chips[formcontrolname="bonus_campaign"]').first();
+    }
+
+    private get bonusCampaignInput(): Locator {
+        return this.bonusCampaignChips.locator('li.p-chips-input-token input').first();
+    }
+
+    private get bonusCampaignTokens(): Locator {
+        return this.bonusCampaignChips.locator('li.p-chips-token');
+    }
+
+    private bonusCampaignTokenByText(text: string): Locator {
+        return this.bonusCampaignChips.locator('li.p-chips-token').filter({
+            has: this.page.locator('span.p-chips-token-label', { hasText: text })
+        }).first();
+    }
+
+    private bonusCampaignTokenRemoveIcon(text: string): Locator {
+        return this.bonusCampaignTokenByText(text).locator('timescircleicon').first();
+    }
+    /**
+   * HELPER — Fill all fields in the Display Address popup, including suburb (with autocomplete select)
+   */
     private async fillDisplayAddressFields(data: {
         buildingName?: string;
         unitNo?: string;
         streetNo?: string;
         streetName?: string;
+        suburb?: string;
         state?: string;
         postCode?: string;
         country?: string;
@@ -6353,6 +6486,20 @@ export class ProjectActions {
         if (data.unitNo !== undefined) await this.displayAddressUnitNoInput.fill(data.unitNo);
         if (data.streetNo !== undefined) await this.displayAddressStreetNoInput.fill(data.streetNo);
         if (data.streetName !== undefined) await this.displayAddressStreetNameInput.fill(data.streetName);
+        if (data.suburb !== undefined) {
+            await this.displayAddressSuburbAutocomplete.fill('');
+            if (data.suburb) {
+                await this.displayAddressSuburbAutocomplete.fill(data.suburb);
+                await this.page.waitForTimeout(600);
+                const suggestion = this.displayAddressSuburbSuggestionByLabel(data.suburb);
+                try {
+                    await expect(suggestion).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+                    await suggestion.click();
+                } catch {
+                    await this.displayAddressSuburbAutocomplete.press('Enter');
+                }
+            }
+        }
         if (data.state !== undefined) await this.displayAddressStateInput.fill(data.state);
         if (data.postCode !== undefined) await this.displayAddressPostCodeInput.fill(data.postCode);
         if (data.country !== undefined) await this.displayAddressCountryInput.fill(data.country);
@@ -6743,6 +6890,7 @@ export class ProjectActions {
             unitNo?: string;
             streetNo?: string;
             streetName?: string;
+            suburb?: string;
             state?: string;
             postCode?: string;
             country?: string;
@@ -6751,6 +6899,7 @@ export class ProjectActions {
                 unitNo: '12',
                 streetNo: '456',
                 streetName: 'George Street',
+                suburb: 'East Albury',
                 state: 'NSW',
                 postCode: '2000',
                 country: 'Australia',
@@ -7245,4 +7394,580 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    /**
+ * HELPER — Click "Add Upgrade" button within a specific upgrade box
+ */
+    private async clickAddUpgrade(boxIndex: number): Promise<void> {
+        await expect(this.addUpgradeButton(boxIndex)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.addUpgradeButton(boxIndex).scrollIntoViewIfNeeded();
+        await this.addUpgradeButton(boxIndex).click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Get count of upgrade rows in a specific box
+     */
+    private async getUpgradeRowCount(boxIndex: number): Promise<number> {
+        return await this.upgradeRowsInBox(boxIndex).count();
+    }
+
+    /**
+     * HELPER — Clear and fill an upgrade row (Upgrade + Cost)
+     */
+    private async clearAndFillUpgradeRow(boxIndex: number, rowIndex: number, upgradeName: string, cost: string): Promise<void> {
+        await this.upgradeRowInput(boxIndex, rowIndex).fill('');
+        await this.upgradeRowInput(boxIndex, rowIndex).fill(upgradeName);
+
+        await this.upgradeRowCostInput(boxIndex, rowIndex).fill('');
+        await this.upgradeRowCostInput(boxIndex, rowIndex).fill(cost);
+
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Assert upgrade row has expected values
+     */
+    private async assertUpgradeRowValues(boxIndex: number, rowIndex: number, upgradeName: string, cost: string): Promise<void> {
+        await expect(this.upgradeRowInput(boxIndex, rowIndex)).toHaveValue(upgradeName, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        const actualCost = await this.upgradeRowCostInput(boxIndex, rowIndex).inputValue();
+        const cleanCost = actualCost.replace(/[$,]/g, '').trim();
+        expect(cleanCost).toBe(cost);
+    }
+
+    /**
+     * HELPER — Click cross icon to remove an upgrade row
+     */
+    private async removeUpgradeRow(boxIndex: number, rowIndex: number): Promise<void> {
+        await expect(this.upgradeRowRemoveIcon(boxIndex, rowIndex)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.upgradeRowRemoveIcon(boxIndex, rowIndex).click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+ * TC_28 — Add upgrade under same group with valid data
+ */
+    async addUpgradeUnderSameGroup(
+        projectName: string = 'Automation',
+        upgradeName: string = 'Extra Upgrade',
+        cost: string = '500'
+    ): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToProjectUpgradesSection();
+        const boxIndex = 0;
+        const initialRowCount = await this.getUpgradeRowCount(boxIndex);
+        await this.clickAddUpgrade(boxIndex);
+        const afterAddCount = await this.getUpgradeRowCount(boxIndex);
+        expect(afterAddCount).toBe(initialRowCount + 1);
+        const newRowIndex = afterAddCount - 1;
+        await this.clearAndFillUpgradeRow(boxIndex, newRowIndex, upgradeName, cost);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.scrollToProjectUpgradesSection();
+        await this.assertUpgradeRowValues(boxIndex, newRowIndex, upgradeName, cost);
+        await this.removeUpgradeRow(boxIndex, newRowIndex);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_29 — Add multiple upgrades under one group
+ */
+    async addMultipleUpgradesUnderOneGroup(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToProjectUpgradesSection();
+        const boxIndex = 0;
+        const initialRowCount = await this.getUpgradeRowCount(boxIndex);
+        await this.clickAddUpgrade(boxIndex);
+        await this.clickAddUpgrade(boxIndex);
+        const afterAddCount = await this.getUpgradeRowCount(boxIndex);
+        expect(afterAddCount).toBe(initialRowCount + 2);
+        const row1Index = initialRowCount;
+        const row2Index = initialRowCount + 1;
+        await this.clearAndFillUpgradeRow(boxIndex, row1Index, 'Upgrade One', '1000');
+        await this.clearAndFillUpgradeRow(boxIndex, row2Index, 'Upgrade Two', '2000');
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.scrollToProjectUpgradesSection();
+        await this.assertUpgradeRowValues(boxIndex, row1Index, 'Upgrade One', '1000');
+        await this.assertUpgradeRowValues(boxIndex, row2Index, 'Upgrade Two', '2000');
+        await this.removeUpgradeRow(boxIndex, row2Index);
+        await this.removeUpgradeRow(boxIndex, row1Index);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * HELPER — Scroll to Bonus Payable Upon section
+     */
+    private async scrollToBonusPayableUpon(): Promise<void> {
+        await this.bonusPayableUponLabel.scrollIntoViewIfNeeded();
+        await expect(this.bonusPayableUponLabel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Type text in Bonus Payable Upon input and press Enter
+     */
+    private async addBonusPayableUponTag(tagText: string): Promise<void> {
+        await expect(this.bonusPayableUponInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bonusPayableUponInput.scrollIntoViewIfNeeded();
+        await this.bonusPayableUponInput.fill(tagText);
+        await this.bonusPayableUponInput.press('Enter');
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Assert a chip with given text exists
+     */
+    private async assertBonusPayableUponTagExists(tagText: string): Promise<void> {
+        await expect(this.bonusPayableUponTokenByText(tagText)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusPayableUponTokenByText(tagText).locator('span.p-chips-token-label')).toHaveText(tagText, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+    }
+
+    /**
+     * HELPER — Remove a Bonus Payable Upon chip by text
+     */
+    private async removeBonusPayableUponTag(tagText: string): Promise<void> {
+        await expect(this.bonusPayableUponTokenRemoveIcon(tagText)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bonusPayableUponTokenRemoveIcon(tagText).click();
+        await this.page.waitForTimeout(500);
+        await expect(this.bonusPayableUponTokenByText(tagText)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Remove all existing Bonus Payable Upon chips (cleanup)
+     */
+    private async removeAllBonusPayableUponTags(): Promise<void> {
+        let count = await this.bonusPayableUponTokens.count();
+        while (count > 0) {
+            await this.bonusPayableUponTokens.first().locator('timescircleicon').click();
+            await this.page.waitForTimeout(500);
+            count = await this.bonusPayableUponTokens.count();
+        }
+    }
+
+    /**
+ * TC_30 — Verify Bonus Payable Upon accepts text tag
+ */
+    async verifyBonusPayableUponAcceptsText(
+        projectName: string = 'Automation',
+        tagText: string = 'Upon Contract Signing'
+    ): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToBonusPayableUpon();
+        await this.removeAllBonusPayableUponTags();
+        await this.addBonusPayableUponTag(tagText);
+        await this.assertBonusPayableUponTagExists(tagText);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.scrollToBonusPayableUpon();
+        await this.assertBonusPayableUponTagExists(tagText);
+        await this.removeBonusPayableUponTag(tagText);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * HELPER — Scroll to Bonus Payable To section
+     */
+    private async scrollToBonusPayableTo(): Promise<void> {
+        await this.bonusPayableToLabel.scrollIntoViewIfNeeded();
+        await expect(this.bonusPayableToLabel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Type text in Bonus Payable To input and press Enter
+     */
+    private async addBonusPayableToTag(tagText: string): Promise<void> {
+        await expect(this.bonusPayableToInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bonusPayableToInput.scrollIntoViewIfNeeded();
+        await this.bonusPayableToInput.fill(tagText);
+        await this.bonusPayableToInput.press('Enter');
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Assert a chip with given text exists
+     */
+    private async assertBonusPayableToTagExists(tagText: string): Promise<void> {
+        await expect(this.bonusPayableToTokenByText(tagText)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusPayableToTokenByText(tagText).locator('span.p-chips-token-label')).toHaveText(tagText, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+    }
+
+    /**
+     * HELPER — Remove a Bonus Payable To chip by text
+     */
+    private async removeBonusPayableToTag(tagText: string): Promise<void> {
+        await expect(this.bonusPayableToTokenRemoveIcon(tagText)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bonusPayableToTokenRemoveIcon(tagText).click();
+        await this.page.waitForTimeout(500);
+        await expect(this.bonusPayableToTokenByText(tagText)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Remove all existing Bonus Payable To chips (cleanup)
+     */
+    private async removeAllBonusPayableToTags(): Promise<void> {
+        let count = await this.bonusPayableToTokens.count();
+        while (count > 0) {
+            await this.bonusPayableToTokens.first().locator('timescircleicon').click();
+            await this.page.waitForTimeout(500);
+            count = await this.bonusPayableToTokens.count();
+        }
+    }
+
+    /**
+ * TC_33 — Verify Bonus Payable To accepts text tag
+ */
+    async verifyBonusPayableToAcceptsText(
+        projectName: string = 'Automation',
+        tagText: string = 'Selling Agent'
+    ): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToBonusPayableTo();
+        await this.removeAllBonusPayableToTags();
+        await this.addBonusPayableToTag(tagText);
+        await this.assertBonusPayableToTagExists(tagText);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.scrollToBonusPayableTo();
+        await this.assertBonusPayableToTagExists(tagText);
+        await this.removeBonusPayableToTag(tagText);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * HELPER — Scroll to Bonus Campaign section
+     */
+    private async scrollToBonusCampaign(): Promise<void> {
+        await this.bonusCampaignLabel.scrollIntoViewIfNeeded();
+        await expect(this.bonusCampaignLabel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Type text in Bonus Campaign input and press Enter
+     */
+    private async addBonusCampaignTag(tagText: string): Promise<void> {
+        await expect(this.bonusCampaignInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bonusCampaignInput.scrollIntoViewIfNeeded();
+        await this.bonusCampaignInput.fill(tagText);
+        await this.bonusCampaignInput.press('Enter');
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Assert a chip with given text exists
+     */
+    private async assertBonusCampaignTagExists(tagText: string): Promise<void> {
+        await expect(this.bonusCampaignTokenByText(tagText)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusCampaignTokenByText(tagText).locator('span.p-chips-token-label')).toHaveText(tagText, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+    }
+
+    /**
+     * HELPER — Remove a Bonus Campaign chip by text
+     */
+    private async removeBonusCampaignTag(tagText: string): Promise<void> {
+        await expect(this.bonusCampaignTokenRemoveIcon(tagText)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.bonusCampaignTokenRemoveIcon(tagText).click();
+        await this.page.waitForTimeout(500);
+        await expect(this.bonusCampaignTokenByText(tagText)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Remove all existing Bonus Campaign chips (cleanup)
+     */
+    private async removeAllBonusCampaignTags(): Promise<void> {
+        let count = await this.bonusCampaignTokens.count();
+        while (count > 0) {
+            await this.bonusCampaignTokens.first().locator('timescircleicon').click();
+            await this.page.waitForTimeout(500);
+            count = await this.bonusCampaignTokens.count();
+        }
+    }
+
+    /**
+ * TC_34 — Verify Bonus Campaign accepts text tag
+ */
+    async verifyBonusCampaignAcceptsText(
+        projectName: string = 'Automation',
+        tagText: string = 'Spring Campaign'
+    ): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.scrollToBonusCampaign();
+        await this.removeAllBonusCampaignTags();
+        await this.addBonusCampaignTag(tagText);
+        await this.assertBonusCampaignTagExists(tagText);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.scrollToBonusCampaign();
+        await this.assertBonusCampaignTagExists(tagText);
+        await this.removeBonusCampaignTag(tagText);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_33 — Add multiple tags in all bonus fields
+ */
+    async addMultipleTagsInAllBonusFields(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+
+        // Cleanup all leftover tags first
+        await this.scrollToBonusPayableUpon();
+        await this.removeAllBonusPayableUponTags();
+        await this.removeAllBonusPayableToTags();
+        await this.removeAllBonusCampaignTags();
+        await this.scrollToBonusPayableUpon();
+        await this.addBonusPayableUponTag('Contract Signing');
+        await this.addBonusPayableUponTag('Settlement');
+        await this.scrollToBonusPayableTo();
+        await this.addBonusPayableToTag('Selling Agent');
+        await this.addBonusPayableToTag('Buyer Agent');
+        await this.scrollToBonusCampaign();
+        await this.addBonusCampaignTag('Spring Campaign');
+        await this.addBonusCampaignTag('Winter Campaign');
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.scrollToBonusPayableUpon();
+        await this.assertBonusPayableUponTagExists('Contract Signing');
+        await this.assertBonusPayableUponTagExists('Settlement');
+        await this.scrollToBonusPayableTo();
+        await this.assertBonusPayableToTagExists('Selling Agent');
+        await this.assertBonusPayableToTagExists('Buyer Agent');
+        await this.scrollToBonusCampaign();
+        await this.assertBonusCampaignTagExists('Spring Campaign');
+        await this.assertBonusCampaignTagExists('Winter Campaign');
+        await this.removeAllBonusPayableUponTags();
+        await this.removeAllBonusPayableToTags();
+        await this.removeAllBonusCampaignTags();
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    async verifyPrecinctUnderInactiveTab(precinctName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickTabByLabel('Inactive');
+        await this.getFirstVisiblePrecinctCard();
+        for (const tab of ['project', 'lot', 'EOI']) {
+            const el = this.innerTabById(tab);
+            await expect(el).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+            await expect(el).toHaveText(new RegExp(tab, 'i'), { timeout: ProjectActions.TIMEOUT_LONG });
+        }
+        await this.projectsMenuLink.click();
+        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    /**
+     * Adds a project with the same name twice to confirm that uniqueness is not enforced.
+     * Both projects named "Project A" should be created successfully.
+     */
+    async addProjectWithSameNameTwice(project?: { name?: string; status?: string }): Promise<void> {
+        await this.navigateToProjects();
+        const projectName = project?.name ?? faker.company.name();
+        // First creation
+        await this.openProjectPopup();
+        await this.projectNameField.fill(projectName);
+        await this.projectDialogSaveButton.click({ force: true });
+        await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectAddedToast.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM }).catch(() => { });
+        await this.projectTitleBanner(projectName).waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM });
+        // Optionally: return to projects main view for clarity
+        const projectsText = this.page.locator('p', { hasText: 'Projects' });
+        await expect(projectsText).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await projectsText.click({ force: true });
+        await this.verifyProjectCanBeSearchedByName(projectName);
+        await this.clickResetIcon();
+        // Second creation with the same name
+        await this.openProjectPopup();
+        await this.projectNameField.fill(projectName);
+        await this.projectDialogSaveButton.click({ force: true });
+        await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectAddedToast.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM }).catch(() => { });
+        await this.projectTitleBanner(projectName).waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(projectsText).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await projectsText.click({ force: true });
+        await this.verifyProjectCanBeSearchedByName(projectName);
+        await this.clickResetIcon();
+    }
+
+    /**
+     * Updates the project name in the Project Setup and saves the changes.
+     * @param currentName - The current name of the project.
+     * @param newName - The new name to update to.
+     */
+    async updateProjectNameAndSave(currentName: string, newName: string): Promise<void> {
+        await this.openProjectGeneralTab(currentName);
+        await this.assertFieldVisible(this.projectSetupNameLabel, this.projectSetupNameInput);
+        await this.assertFieldVisible(this.projectSetupStatusLabel, this.projectSetupStatusSelect);
+        await this.projectSetupNameInput.fill(newName);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * Updates the project status in the Project Setup and saves the changes.
+     */
+    async updateProjectStatusAndSave(currentName: string, newStatus: string): Promise<void> {
+        await this.openProjectGeneralTab(currentName);
+        await this.assertFieldVisible(this.projectSetupStatusLabel, this.projectSetupStatusSelect);
+        await this.projectSetupStatusSelect.click();
+        const newStatusOption = this.page.locator('div.ng-option', { hasText: newStatus }).first();
+        await newStatusOption.click();
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * Assign developer, type, and manager fields together
+     */
+    async assignDeveloperTypeAndManager(
+        projectName: string,
+        developerName: string,
+        manager: string
+    ): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openDeveloperDropdown();
+        await this.toggleDeveloperSelection(developerName);
+        await this.closeDeveloperDropdown();
+        await this.assertDeveloperSelected(developerName);
+        await this.openProjectsManagerDropdown();
+        await expect(this.projectManagerDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const managerOption = this.projectManagerDropdownPanel.locator('div.ng-option', { hasText: manager }).first();
+        await expect(managerOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await managerOption.click();
+        await this.closeProjectManagerDropdown();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * Opens the Project Display Address popup without entering any data.
+     */
+    async openAddressPopupWithoutData(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openDisplayAddressPopup();
+        await expect(this.displayAddressPopupHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.displayAddressPopupSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.closeDisplayAddressPopup();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_xx — Enter incomplete address, fill only suburb, save, verify suburb saved and others blank
+     */
+    async enterIncompleteAddressAndSave(
+        projectName: string = 'Automation',
+        addressData: {
+            buildingName?: string;
+            unitNo?: string;
+            streetNo?: string;
+            streetName?: string;
+            suburb?: string;
+            state?: string;
+            postCode?: string;
+            country?: string;
+        } = {
+                buildingName: '',
+                unitNo: '',
+                streetNo: '',
+                streetName: '',
+                suburb: 'East Albury',
+                state: '',
+                postCode: '',
+                country: '',
+            }
+    ): Promise<void> {
+        await this.openProjectGeneralTab(projectName);
+        await this.openDisplayAddressPopup();
+        await this.clearAllDisplayAddressFields();
+        await this.fillDisplayAddressFields(addressData);
+        await this.clickDisplayAddressPopupSave();
+        await this.openDisplayAddressPopup();
+        await this.assertDisplayAddressFieldsMatch(addressData);
+        await this.closeDisplayAddressPopup();
+        await this.cleanupAfterProjectTest();
+    }
+
+    private async selectProjectStatusInDialog(statusText: string): Promise<void> {
+        await expect(this.projectStatusField).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectStatusField.click();
+        await expect(this.projectStatusDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        const option = this.projectStatusOptionByText(statusText);
+        await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await option.click();
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+    * TC_48 — Create project with status 'Inactive'
+    */
+    async createProjectWithInactiveStatus(project?: { name?: string }): Promise<void> {
+        await this.navigateToProjects();
+        await this.openProjectPopup();
+        const projectName = project?.name ?? faker.company.name();
+        await this.projectNameField.fill(projectName);
+        await this.selectProjectStatusInDialog('Inactive');
+        await this.projectDialogSaveButton.click({ force: true });
+        await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectAddedToast
+            .waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM })
+            .catch(() => {
+            });
+        await this.projectTitleBanner(projectName).waitFor({
+            state: 'visible',
+            timeout: ProjectActions.TIMEOUT_MEDIUM,
+        });
+        const projectsText = this.page.locator('p', { hasText: 'Projects' });
+        await expect(projectsText).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await projectsText.click({ force: true });
+        await this.clickTabByLabel('Inactive');
+        const card = this.projectCardByName(projectName);
+        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await card.scrollIntoViewIfNeeded();
+        await this.clickResetIcon();
+    }
+
+    /**
+     * TC_49 — Validate input trimming in project name
+     * Enter project name with excessive spaces and verify name is auto-trimmed (e.g. "     Name        Added     " becomes "Name Added")
+     */
+    async validateProjectNameTrimming(project?: { name?: string }): Promise<void> {
+        await this.navigateToProjects();
+        await this.openProjectPopup();
+        const nameWithExcessiveSpaces = project?.name ?? `     ${faker.word.words(2)}     `;   
+        const expectedTrimmedName = nameWithExcessiveSpaces.trim().replace(/\s+/g, ' ');
+        await this.projectNameField.fill(nameWithExcessiveSpaces);
+        await this.projectDialogSaveButton.click({ force: true });
+        await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.projectAddedToast
+            .waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM })
+            .catch(() => { });
+        await this.projectTitleBanner(expectedTrimmedName).waitFor({
+            state: 'visible',
+            timeout: ProjectActions.TIMEOUT_MEDIUM,
+        });
+        const projectsText = this.page.locator('p', { hasText: 'Projects' });
+        await expect(projectsText).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await projectsText.click({ force: true });
+        await this.navigateToProjects();
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.searchInput.fill(expectedTrimmedName);
+        await this.clickResetIcon();
+    }
 }
