@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="80.8500540000014">
-<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T08:38:25.041Z" hostname="chromium" tests="1" failures="0" skipped="0" time="78.46" errors="0">
-<testcase name="Project Setup Tests › TC_40: General tab shows entered project name and status" classname="Pages\Projects\projectSetup.spec.ts" time="78.46">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="109.3181400000006">
+<testsuite name="Pages\Projects\projectSetup.spec.ts" timestamp="2026-05-12T08:47:59.462Z" hostname="chromium" tests="1" failures="0" skipped="0" time="106.957" errors="0">
+<testcase name="Project Setup Tests › TC_41: Update project name and save" classname="Pages\Projects\projectSetup.spec.ts" time="106.957">
 </testcase>
 </testsuite>
 </testsuites>
