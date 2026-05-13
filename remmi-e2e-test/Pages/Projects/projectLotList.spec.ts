@@ -60,4 +60,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyStatusSearchInViewPopup('Lot', 'Automation');
     });
 
+    test('TC_11: Verify create view button functionality', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyCreateViewButtonFunctionality('Automation');
+    });
+
 });   
