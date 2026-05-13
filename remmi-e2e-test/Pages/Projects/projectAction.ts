@@ -8050,6 +8050,17 @@ export class ProjectActions {
     private get lotListSelectedRecordsLabel(): Locator {
         return this.page.locator('app-unit p', { hasText: /^Selected Records:\s*\d+/ }).first();
     }
+
+    private lotListColumnHeader(columnName: string): Locator {
+        return this.lotListTable.locator('thead th').filter({
+            has: this.page.locator('p', { hasText: new RegExp(`^${columnName}$`) })
+        }).first();
+    }
+
+    private lotListColumnSortIcon(columnName: string): Locator {
+        return this.lotListColumnHeader(columnName).locator('p-sorticon').first();
+    }
+
     /**
      * HELPER — Assert "Fill out the required field" error toast appears
      */
@@ -8661,6 +8672,49 @@ export class ProjectActions {
         await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await expect(this.lotListDeleteButton).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await expect(this.lotListSelectedRecordsLabel).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterProjectTest();
+    }
+
+    // ==========================================================================
+    // HELPERS — LOT LIST SORT (TC_18)
+    // ==========================================================================
+
+    /**
+     * HELPER — Click sort icon on a specific column
+     */
+    private async clickLotListColumnSortIcon(columnName: string): Promise<void> {
+        const sortIcon = this.lotListColumnSortIcon(columnName);
+        await expect(sortIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await sortIcon.scrollIntoViewIfNeeded();
+        await sortIcon.click();
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * HELPER — Assert sort state of a column (none/ascending/descending)
+     */
+    private async assertLotListColumnSortState(
+        columnName: string,
+        state: 'none' | 'ascending' | 'descending'
+    ): Promise<void> {
+        const sortIcon = this.lotListColumnSortIcon(columnName);
+        await expect(sortIcon).toHaveAttribute('aria-sort', state, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT
+        });
+    }
+
+    /**
+  * TC_18 — Verify sort icon works for ascending order
+  */
+    async verifyLotListSortAscending(
+        projectName: string = 'Automation',
+        columnName: string = 'Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotListColumnSortState(columnName, 'none');
+        await this.clickLotListColumnSortIcon(columnName);
+        await this.assertLotListColumnSortState(columnName, 'ascending');
         await this.cleanupAfterProjectTest();
     }
 }

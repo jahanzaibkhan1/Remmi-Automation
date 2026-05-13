@@ -100,4 +100,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyDeleteButtonHiddenWhenNoSelection('Automation');
     });
 
+    test('TC_22: Verify sort icon works for ascending order', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotListSortAscending('Automation', 'Lot');
+    });
+
 });   
