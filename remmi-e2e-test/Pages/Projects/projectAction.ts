@@ -8061,6 +8061,14 @@ export class ProjectActions {
         return this.lotListColumnHeader(columnName).locator('p-sorticon').first();
     }
 
+    private get lotListFilterPopup(): Locator {
+        return this.page.locator('div.p-overlaypanel').first();
+    }
+
+    private lotListColumnFilterIcon(columnName: string): Locator {
+        return this.lotListColumnHeader(columnName).locator('img[alt="filter"]').first();
+    }
+
     /**
      * HELPER — Assert "Fill out the required field" error toast appears
      */
@@ -8675,10 +8683,6 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
-    // ==========================================================================
-    // HELPERS — LOT LIST SORT (TC_18)
-    // ==========================================================================
-
     /**
      * HELPER — Click sort icon on a specific column
      */
@@ -8732,6 +8736,26 @@ export class ProjectActions {
         await this.assertLotListColumnSortState(columnName, 'ascending');
         await this.clickLotListColumnSortIcon(columnName);
         await this.assertLotListColumnSortState(columnName, 'descending');
+        await this.cleanupAfterProjectTest();
+    }
+    /**
+     * HELPER — Assert filter popup is visible
+     */
+    private async assertFilterPopupVisible(): Promise<void> {
+        await expect(this.lotListFilterPopup).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    /**
+ * TC_20 — Verify filter popup opens correctly for Project Status column
+ */
+    async verifyFilterPopupOpensForProjectStatus(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const filterIcon = this.page.locator('th:has-text("Project Status") img[alt="filter"]');
+        await filterIcon.click();
+        await this.page.waitForTimeout(700);
+        await filterIcon.click();
+        await this.assertFilterPopupVisible();
         await this.cleanupAfterProjectTest();
     }
 }
