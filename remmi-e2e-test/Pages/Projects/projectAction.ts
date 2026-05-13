@@ -7999,6 +7999,10 @@ export class ProjectActions {
         return this.lotListTable.locator('tbody tr').filter({ hasText: text }).first();
     }
 
+    private get lotListExportButton(): Locator {
+        return this.page.locator('app-unit button._cancel-btn', { hasText: /^\s*Export\s*$/ }).first();
+    }
+
     /**
      * HELPER — Click the Lot sub-tab inside Project Setup
      */
@@ -8048,6 +8052,17 @@ export class ProjectActions {
     private async assertLotListRowExists(text: string): Promise<void> {
         await expect(this.lotListRowByText(text)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
+
+    /**
+ * HELPER — Click Export button and wait for file download
+ */
+    private async clickLotListExportAndDownload(): Promise<void> {
+        await expect(this.lotListExportButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const downloadPromise = this.page.waitForEvent('download', { timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotListExportButton.click();
+        const download = await downloadPromise;
+        await download.saveAs(`./downloads/${download.suggestedFilename()}`);
+    }
     /**
  * TC_01 — Verify clicking Lot tab displays the lot list
  */
@@ -8093,6 +8108,16 @@ export class ProjectActions {
         await expect(this.lotListSearchInput).toHaveValue('');
         const rowCount = await this.getLotListRowCount();
         expect(rowCount).toBeGreaterThan(0);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_03 — Verify export button downloads the list
+ */
+    async verifyLotListExportDownload(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListExportAndDownload();
         await this.cleanupAfterProjectTest();
     }
 

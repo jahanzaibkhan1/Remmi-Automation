@@ -32,4 +32,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyLotListResetClearsSearch('Automation', 'Automation Lot');
     });
 
+    test('TC_04: Verify export button downloads the list', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotListExportDownload('Automation');
+    });
+
 });   
