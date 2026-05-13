@@ -55,5 +55,9 @@ test.describe('Project Lot List Tests', () => {
     test('TC_09: Verify status positions can be changed using arrows', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyArrowsChangeStatusPositions('Automation');
     });
-    
+
+    test('TC_10: Verify status search in view popup works', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyStatusSearchInViewPopup('Lot', 'Automation');
+    });
+
 });   

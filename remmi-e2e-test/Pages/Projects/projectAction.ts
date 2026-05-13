@@ -8248,4 +8248,24 @@ export class ProjectActions {
         await expect(this.viewPopupContent).toBeVisible();
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+     * TC_xx — Verify status search in view popup works
+     */
+    async verifyStatusSearchInViewPopup(statusName: string, projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickShowAll();
+        await expect(this.columnSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.columnSearchInput.fill(statusName);
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.columnItemByName(statusName).first()).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+        await this.columnSearchInput.fill('');
+        await this.page.waitForTimeout(1000);
+        await this.cleanupAfterProjectTest();
+    }
 }
