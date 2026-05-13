@@ -76,4 +76,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifySavedViewReflectsReorderedStatuses('Automation');
     });
 
+    test('TC_16: Verify error message when importing invalid file', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotImportWithInvalidFile('Automation', 'invalid.txt');
+    });
+
 });   
