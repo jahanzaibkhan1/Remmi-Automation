@@ -8149,4 +8149,19 @@ export class ProjectActions {
         await expect(this.viewPopupContent).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+ * TC_06 — Verify all statuses can be hidden/unhidden using eye icon
+ */
+    async verifyHideUnhideAllStatuses(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickHideAll();
+        await this.page.waitForTimeout(1200);
+        await this.clickShowAll();
+        await this.page.waitForTimeout(500);
+        await this.cleanupAfterProjectTest();
+    }
 }
