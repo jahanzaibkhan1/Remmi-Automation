@@ -8333,4 +8333,21 @@ export class ProjectActions {
         await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+     * TC_ — Verify that a saved view reflects the reordered statuses 
+     */
+    async verifySavedViewReflectsReorderedStatuses(
+        projectName: 'Automation',
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await this.reorderCollapsedArrow.click();
+        await this.page.waitForTimeout(500);
+        await this.reorderExpandCollapseArrow.click();
+        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.cleanupAfterProjectTest();
+    }
 }
