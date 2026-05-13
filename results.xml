@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="65.27497899999982">
-<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-13T04:15:56.485Z" hostname="chromium" tests="1" failures="0" skipped="0" time="62.951" errors="0">
-<testcase name="Project Lot List Tests › TC_04: Verify export button downloads the list" classname="Pages\Projects\projectLotList.spec.ts" time="62.951">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="120.50259999999963">
+<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-13T05:41:04.826Z" hostname="chromium" tests="1" failures="0" skipped="0" time="118.465" errors="0">
+<testcase name="Project Lot List Tests › TC_05: Verify view button is clickable" classname="Pages\Projects\projectLotList.spec.ts" time="118.465">
 </testcase>
 </testsuite>
 </testsuites>
