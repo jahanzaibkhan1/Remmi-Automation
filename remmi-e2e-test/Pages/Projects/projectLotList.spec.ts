@@ -72,4 +72,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyShareViewToTeam('Automation', 'Test View', 'Automation Team');
     });
 
+    test('TC_14: Verify saved view reflects reordered statuses', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySavedViewReflectsReorderedStatuses('Automation');
+    });
+
 });   
