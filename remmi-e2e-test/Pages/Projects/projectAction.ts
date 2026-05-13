@@ -7950,7 +7950,7 @@ export class ProjectActions {
     async validateProjectNameTrimming(project?: { name?: string }): Promise<void> {
         await this.navigateToProjects();
         await this.openProjectPopup();
-        const nameWithExcessiveSpaces = project?.name ?? `     ${faker.word.words(2)}     `;   
+        const nameWithExcessiveSpaces = project?.name ?? `     ${faker.word.words(2)}     `;
         const expectedTrimmedName = nameWithExcessiveSpaces.trim().replace(/\s+/g, ' ');
         await this.projectNameField.fill(nameWithExcessiveSpaces);
         await this.projectDialogSaveButton.click({ force: true });
@@ -7969,5 +7969,57 @@ export class ProjectActions {
         await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.searchInput.fill(expectedTrimmedName);
         await this.clickResetIcon();
+    }
+
+    private get lotSubTab(): Locator {
+        return this.page.locator('app-project-setup a[href*="/project-setup/unit"]').first();
+    }
+
+    private get lotSubTabActive(): Locator {
+        return this.page.locator('app-project-setup a[href*="/project-setup/unit"].active').first();
+    }
+
+    private get lotListTable(): Locator {
+        return this.page.locator('app-unit p-table#apartmentscolumns').first();
+    }
+
+    private get lotListRecordsCounter(): Locator {
+        return this.page.locator('app-unit p', { hasText: /^Records:\s*\d+/ }).first();
+    }
+
+    /**
+     * HELPER — Click the Lot sub-tab inside Project Setup
+     */
+    private async clickLotSubTab(): Promise<void> {
+        await expect(this.lotSubTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotSubTab.scrollIntoViewIfNeeded();
+        await this.lotSubTab.click();
+        await this.page.waitForURL(/\/project-setup\/unit/, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotSubTabActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForLoadState('networkidle');
+    }
+
+    /**
+     * HELPER — Open Project Setup → Lot tab (full flow)
+     */
+    private async openProjectLotTab(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.assertPricelistTabActive();
+        await this.clickProjectSetupTab();
+        await this.clickLotSubTab();
+    }
+
+    /**
+ * TC_01 — Verify clicking Lot tab displays the lot list
+ */
+    async verifyLotTabDisplaysLotList(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.page).toHaveURL(/\/project-setup\/unit/, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotSubTabActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListRecordsCounter).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterProjectTest();
     }
 }
