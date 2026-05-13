@@ -7987,6 +7987,18 @@ export class ProjectActions {
         return this.page.locator('app-unit p', { hasText: /^Records:\s*\d+/ }).first();
     }
 
+    private get lotListSearchInput(): Locator {
+        return this.page.locator('app-unit input#keywordInput').first();
+    }
+
+    private get lotListTableRows(): Locator {
+        return this.lotListTable.locator('tbody tr');
+    }
+
+    private lotListRowByText(text: string): Locator {
+        return this.lotListTable.locator('tbody tr').filter({ hasText: text }).first();
+    }
+
     /**
      * HELPER — Click the Lot sub-tab inside Project Setup
      */
@@ -8012,6 +8024,31 @@ export class ProjectActions {
     }
 
     /**
+     * HELPER — Type a keyword in the lot list search input and trigger filter
+     */
+    private async searchLotList(keyword: string): Promise<void> {
+        await expect(this.lotListSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotListSearchInput.scrollIntoViewIfNeeded();
+        await this.lotListSearchInput.fill('');
+        await this.lotListSearchInput.fill(keyword);
+        await this.lotListSearchInput.press('Enter');
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * HELPER — Get count of visible rows in lot list
+     */
+    private async getLotListRowCount(): Promise<number> {
+        return await this.lotListTableRows.count();
+    }
+
+    /**
+     * HELPER — Assert a row containing the given text is visible
+     */
+    private async assertLotListRowExists(text: string): Promise<void> {
+        await expect(this.lotListRowByText(text)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+    /**
  * TC_01 — Verify clicking Lot tab displays the lot list
  */
     async verifyLotTabDisplaysLotList(projectName: string = 'Automation'): Promise<void> {
@@ -8022,4 +8059,23 @@ export class ProjectActions {
         await expect(this.lotListRecordsCounter).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+ * TC_02 — Verify lot search functionality
+ */
+    async verifyLotSearchFunctionality(
+        projectName: string = 'Automation',
+        keyword: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListRecordsCounter).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.searchLotList(keyword);
+        await this.assertLotListRowExists(keyword);
+        await expect(this.lotListRecordsCounter).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const rowCount = await this.getLotListRowCount();
+        expect(rowCount).toBeGreaterThan(0);
+        await this.cleanupAfterProjectTest();
+    }
+
 }
