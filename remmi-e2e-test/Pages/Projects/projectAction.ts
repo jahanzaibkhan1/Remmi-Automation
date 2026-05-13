@@ -21,10 +21,6 @@ export class ProjectActions {
         this.page = page;
     }
 
-    // ==========================================================================
-    // LOCATORS — PRECINCT INNER VIEW (TC_01 to TC_08)
-    // ==========================================================================
-
     private get firstPrecinctOnProjectsPage(): Locator {
         return this.page.locator('.sgv-product.ng-star-inserted').first();
     }
@@ -84,12 +80,6 @@ export class ProjectActions {
         await this.projectImageInPrecinct.click();
     }
 
-
-
-    // ==========================================================================
-    // LOCATORS — SEARCH & TOP BAR
-    // ==========================================================================
-
     private get searchInput(): Locator {
         return this.page.getByPlaceholder('Search').last();
     }
@@ -109,10 +99,6 @@ export class ProjectActions {
     private tabByLabel(label: string): Locator {
         return this.page.getByText(label, { exact: true });
     }
-
-    // ==========================================================================
-    // LOCATORS — GRID VIEW (PROJECT CARDS)
-    // ==========================================================================
 
     private get firstGridProduct(): Locator {
         return this.page.locator('.projects-row.view-grid .sgv-product').first();
@@ -157,10 +143,6 @@ export class ProjectActions {
     private get precinctCardThumbnailWithImage(): Locator {
         return this.page.locator('.product-thumbnail.cp.ng-star-inserted[style*="projectimages"]');
     }
-
-    // ==========================================================================
-    // LOCATORS — LIST VIEW (TABLE)
-    // ==========================================================================
 
     private get firstTableRow(): Locator {
         // Scoped to datatable specifically
@@ -215,10 +197,6 @@ export class ProjectActions {
         return this.page.locator('ul.list-type li', { hasText: label }).first();
     }
 
-    // ==========================================================================
-    // LOCATORS — VIEW SWITCHING
-    // ==========================================================================
-
     private get gridViewButton(): Locator {
         return this.page.locator('.layout-changer a.grid-icon');
     }
@@ -227,10 +205,6 @@ export class ProjectActions {
         // Direct selector — no filter, no sub-query
         return this.page.locator('.layout-changer a:has(img[src*="list.svg"])');
     }
-
-    // ==========================================================================
-    // LOCATORS — VIEW POPUP (DEFAULT VIEW / SAVED VIEWS)
-    // ==========================================================================
 
     private get defaultViewButton(): Locator {
         return this.page.locator('._view-btn').filter({ hasText: /default view/i });
@@ -302,8 +276,6 @@ export class ProjectActions {
         return this.viewPopupContent.getByText('Hide All', { exact: true });
     }
 
-    // LOCATORS — Reorder section expand/collapse arrow
-
     private get reorderExpandCollapseArrow(): Locator {
         return this.page.locator('.icon-style i.pi');
     }
@@ -344,10 +316,6 @@ export class ProjectActions {
         return this.page.locator('.drop_box').last();
     }
 
-    // ==========================================================================
-    // LOCATORS — PROJECT MANAGER MULTISELECT
-    // ==========================================================================
-
     private get projectManagerDropdown(): Locator {
         return this.page.locator('re-multiselect[placeholder="Project Manager"] .box');
     }
@@ -382,10 +350,6 @@ export class ProjectActions {
     private get selectAllToggle(): Locator {
         return this.page.locator('label.select_all');
     }
-
-    // ==========================================================================
-    // LOCATORS — PROJECT CREATION DIALOG
-    // ==========================================================================
 
     private get addNewProjectButton(): Locator {
         return this.page.locator('button._addNew i.pi.pi-plus').first();
@@ -437,10 +401,6 @@ export class ProjectActions {
         return this.page.locator("//*[name()='path' and contains(@d,'M8.01186 7')]");
     }
 
-    // ==========================================================================
-    // LOCATORS — ACTION BUTTONS (LIST VIEW TOOLBAR)
-    // ==========================================================================
-
     private get duplicateButton(): Locator {
         return this.page.locator('button', { hasText: /duplicate/i });
     }
@@ -464,10 +424,6 @@ export class ProjectActions {
     private get confirmAnyButton(): Locator {
         return this.page.getByRole('button', { name: /confirm|yes|delete|ok/i }).first();
     }
-
-    // ==========================================================================
-    // LOCATORS — TOAST & MESSAGES
-    // ==========================================================================
 
     private toastByText(pattern: RegExp): Locator {
         return this.page.getByText(pattern).first();
@@ -503,10 +459,6 @@ export class ProjectActions {
         });
     }
 
-    // ==========================================================================
-    // LOCATORS — NAVIGATION MENU
-    // ==========================================================================
-
     private get projectsMenuLink(): Locator {
         return this.page.locator('a[href="/project/projects"]').first();
     }
@@ -518,12 +470,6 @@ export class ProjectActions {
     private get precinctListingsMenuLink(): Locator {
         return this.page.locator('a[href="/listings/project-precinct"]');
     }
-
-    // click project
-
-    // ==========================================================================
-    // LOCATORS — PRECINCT SUB-TABS & PANELS
-    // ==========================================================================
 
     private get precinctSubTab(): Locator {
         return this.page
@@ -570,10 +516,6 @@ export class ProjectActions {
     private innerTabById(tabName: string): Locator {
         return this.page.locator(`a#pills-${tabName}`).first();
     }
-
-    // ==========================================================================
-    // LOCATORS — ADD PRECINCT DIALOG
-    // ==========================================================================
 
     private get addPrecinctDialog(): Locator {
         return this.page.locator('.p-dialog[role="dialog"]');
@@ -8023,6 +7965,30 @@ export class ProjectActions {
         return row.locator('img[src*="up-arrow"]').first();
     }
 
+    private get lotListImportInput(): Locator {
+        return this.page.locator('app-unit input#csv[type="file"]').first();
+    }
+
+    private get lotListUpdateDataButton(): Locator {
+        return this.page.locator('app-unit button.btn-outline', { hasText: /Update Data/i }).first();
+    }
+
+    private get lotListConfirmUpdatesButton(): Locator {
+        return this.page.locator('button._outline-btn', { hasText: /Confirm Updates/i }).first();
+    }
+
+    private get lotListImportSuccessToast(): Locator {
+        return this.page.locator('div[role="alert"].toast-message', {
+            hasText: /Your file has successfully imported/i
+        }).first();
+    }
+
+    private get lotListImportInvalidFileToast(): Locator {
+        return this.page.locator('div[role="alert"].toast-message', {
+            hasText: /Only \.csv, \.xls, and \.xlsx files are allowed/i
+        }).first();
+    }
+
     /**
  * HELPER — Get column name at given index in visible list
  */
@@ -8123,6 +8089,49 @@ export class ProjectActions {
         await this.lotListViewButton.scrollIntoViewIfNeeded();
         await this.lotListViewButton.click();
         await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * HELPER — Upload a file to the lot list import input
+     */
+    private async uploadLotImportFile(fileName: string): Promise<void> {
+        const filePath = path.resolve(ProjectActions.IMAGES_DIR, fileName);
+        await this.lotListImportInput.setInputFiles(filePath);
+        await this.page.waitForTimeout(2000);
+    }
+
+    /**
+     * HELPER — Click Update Data button
+     */
+    private async clickUpdateDataButton(): Promise<void> {
+        await expect(this.lotListUpdateDataButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotListUpdateDataButton.scrollIntoViewIfNeeded();
+        await this.lotListUpdateDataButton.click();
+        await this.page.waitForTimeout(1500);
+    }
+
+    /**
+     * HELPER — Click Confirm Updates button
+     */
+    private async clickConfirmUpdatesButton(): Promise<void> {
+        await expect(this.lotListConfirmUpdatesButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotListConfirmUpdatesButton.scrollIntoViewIfNeeded();
+        await this.lotListConfirmUpdatesButton.click();
+        await this.page.waitForTimeout(2000);
+    }
+
+    /**
+     * HELPER — Assert import success toast appears
+     */
+    private async assertImportSuccessToast(): Promise<void> {
+        await expect(this.lotListImportSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    /**
+* HELPER — Assert invalid file error toast appears
+*/
+    private async assertInvalidFileToast(): Promise<void> {
+        await expect(this.lotListImportInvalidFileToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
     }
     /**
  * TC_01 — Verify clicking Lot tab displays the lot list
@@ -8348,6 +8357,20 @@ export class ProjectActions {
         await this.reorderExpandCollapseArrow.click();
         await this.page.waitForTimeout(500);
         await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_12 — Verify error message is displayed when importing invalid file
+ */
+    async verifyLotImportWithInvalidFile(
+        projectName: string = 'Automation',
+        fileName: string = 'invalid.txt'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.uploadLotImportFile(fileName);
+        await this.assertInvalidFileToast();
         await this.cleanupAfterProjectTest();
     }
 }
