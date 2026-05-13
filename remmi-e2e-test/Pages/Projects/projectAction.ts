@@ -8027,6 +8027,10 @@ export class ProjectActions {
         return this.lotCreateForm.locator('button._cancel-btn', { hasText: /^\s*Close\s*$/i }).first();
     }
 
+    private get lotListMasterCheckbox(): Locator {
+        return this.lotListTable.locator('thead p-tableheadercheckbox .p-checkbox-box').first();
+    }
+
     private get lotCreateRequiredFieldToast(): Locator {
         return this.page.locator('div[role="alert"].toast-message', {
             hasText: /Fill out the required field/i
@@ -8070,6 +8074,15 @@ export class ProjectActions {
         await this.lotCreateLotInput.click();
         await this.lotCreateLotInput.fill(lotName);
         await this.page.waitForTimeout(300);
+    }
+
+    /**
+ * HELPER — Click the master/header checkbox to select all rows
+ */
+    private async clickLotListMasterCheckbox(): Promise<void> {
+        await expect(this.lotListMasterCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotListMasterCheckbox.click();
+        await this.page.waitForTimeout(800);
     }
 
     /**
@@ -8614,14 +8627,27 @@ export class ProjectActions {
 
     /**
  * TC_15 — Verify individual lot deletion using checkbox
- * Skips first row (default lot "Automation Lot"), deletes second row
  */
     async verifyIndividualLotDeletion(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
         await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        const initialCount = await this.getLotListRowCount();
-        const lotNameToDelete = await this.getLotNameFromRow(1);
         await this.selectLotListRowCheckbox(1);
+        await this.assertSelectedRecordsLabel();
+        await this.clickLotListDeleteButton();
+        await this.cleanupAfterProjectTest();
+    }
+    private async selectMultipleLotListRowCheckboxes(rowIndexes: number[]): Promise<void> {
+        for (const index of rowIndexes) {
+            await this.selectLotListRowCheckbox(index);
+        }
+    }
+    /**
+ * TC_ — Verify bulk deletion of lots
+ */
+    async verifyBulkLotDeletion(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.selectMultipleLotListRowCheckboxes([1, 2]);
         await this.assertSelectedRecordsLabel();
         await this.clickLotListDeleteButton();
         await this.cleanupAfterProjectTest();

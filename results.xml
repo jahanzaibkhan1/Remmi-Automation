@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="70.3232899999991">
-<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-13T09:23:01.822Z" hostname="chromium" tests="1" failures="0" skipped="0" time="68.124" errors="0">
-<testcase name="Project Lot List Tests › TC_19: Verify individual lot deletion using checkbox" classname="Pages\Projects\projectLotList.spec.ts" time="68.124">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="72.37161899999901">
+<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-13T09:40:19.554Z" hostname="chromium" tests="1" failures="0" skipped="0" time="70.158" errors="0">
+<testcase name="Project Lot List Tests › TC_20: Verify bulk deletion of lots" classname="Pages\Projects\projectLotList.spec.ts" time="70.158">
 </testcase>
 </testsuite>
 </testsuites>
