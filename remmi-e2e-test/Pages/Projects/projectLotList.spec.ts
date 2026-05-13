@@ -44,4 +44,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyHideUnhideAllStatuses('Automation');
     });
 
+    test('TC_07: Verify individual status hide/unhide works', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHideUnhideAllStatuses('Automation');
+    });
+
 });   
