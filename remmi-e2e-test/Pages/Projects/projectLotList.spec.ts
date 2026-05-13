@@ -88,4 +88,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyLotCreationWithMissingFields('Automation');
     });
 
+    test('TC_19: Verify individual lot deletion using checkbox', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyIndividualLotDeletion('Automation');
+    });
+
 });   

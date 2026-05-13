@@ -8033,6 +8033,19 @@ export class ProjectActions {
         }).first();
     }
 
+    private lotListRowCheckbox(rowIndex: number): Locator {
+        return this.lotListTable.locator('tbody tr').nth(rowIndex).locator('p-tablecheckbox .p-checkbox-box').first();
+    }
+
+    private get lotListDeleteButton(): Locator {
+        return this.page.locator('app-unit button._cancel-btn').filter({
+            has: this.page.locator('img[src*="delete_icon.svg"]')
+        }).first();
+    }
+
+    private get lotListSelectedRecordsLabel(): Locator {
+        return this.page.locator('app-unit p', { hasText: /^Selected Records:\s*\d+/ }).first();
+    }
     /**
      * HELPER — Assert "Fill out the required field" error toast appears
      */
@@ -8276,6 +8289,44 @@ export class ProjectActions {
 */
     private async assertInvalidFileToast(): Promise<void> {
         await expect(this.lotListImportInvalidFileToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    /**
+     * HELPER — Select checkbox of a specific row (by index)
+     */
+    private async selectLotListRowCheckbox(rowIndex: number): Promise<void> {
+        const checkbox = this.lotListRowCheckbox(rowIndex);
+        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await checkbox.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Click the Delete button (appears after row selection)
+     */
+    private async clickLotListDeleteButton(): Promise<void> {
+        await expect(this.lotListDeleteButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotListDeleteButton.scrollIntoViewIfNeeded();
+        await this.lotListDeleteButton.click();
+        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForTimeout(2000);
+    }
+
+    /**
+     * HELPER — Get the lot name from a specific row (by index)
+     */
+    private async getLotNameFromRow(rowIndex: number): Promise<string> {
+        const row = this.lotListTable.locator('tbody tr').nth(rowIndex);
+        const lotCell = row.locator('td').nth(1).locator('p');
+        const text = await lotCell.innerText();
+        return text.trim();
+    }
+
+    /**
+     * HELPER — Assert "Selected Records: N" label is visible
+     */
+    private async assertSelectedRecordsLabel(): Promise<void> {
+        await expect(this.lotListSelectedRecordsLabel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
     /**
  * TC_01 — Verify clicking Lot tab displays the lot list
@@ -8561,4 +8612,18 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    /**
+ * TC_15 — Verify individual lot deletion using checkbox
+ * Skips first row (default lot "Automation Lot"), deletes second row
+ */
+    async verifyIndividualLotDeletion(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const initialCount = await this.getLotListRowCount();
+        const lotNameToDelete = await this.getLotNameFromRow(1);
+        await this.selectLotListRowCheckbox(1);
+        await this.assertSelectedRecordsLabel();
+        await this.clickLotListDeleteButton();
+        await this.cleanupAfterProjectTest();
+    }
 }
