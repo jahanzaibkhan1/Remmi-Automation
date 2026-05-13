@@ -68,4 +68,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyShareViewToAgent('Automation', 'Test View', 'Dawood Ahmad');
     });
 
+    test('TC_13: Verify share view to team', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyShareViewToTeam('Automation', 'Test View', 'Automation Team');
+    });
+
 });   
