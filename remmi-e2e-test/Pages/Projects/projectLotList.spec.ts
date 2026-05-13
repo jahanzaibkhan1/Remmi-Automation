@@ -107,5 +107,9 @@ test.describe('Project Lot List Tests', () => {
     test('TC_23: Verify sort icon works for descending order', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyLotListSortDescending('Automation', 'Lot');
     });
-    
+
+    test('TC_24: Verify filter popup opens correctly for Project Status', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyFilterPopupOpensForProjectStatus('Automation');
+    });
+
 });   
