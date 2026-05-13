@@ -84,4 +84,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyLotCreationViaPlusButton('Automation');
     });
 
+    test('TC_18: Verify validation error on lot creation with missing required fields', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotCreationWithMissingFields('Automation');
+    });
+
 });   
