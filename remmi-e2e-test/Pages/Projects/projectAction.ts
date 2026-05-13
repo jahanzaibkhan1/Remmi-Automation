@@ -8078,4 +8078,22 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    /**
+     * TC_03 — Verify reset button clears search in lot list
+     */
+    async verifyLotListResetClearsSearch(
+        projectName: string = 'Automation',
+        keyword: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.searchLotList(keyword);
+        await this.assertLotListRowExists(keyword);
+        await this.resetButton.click();
+        await expect(this.lotListSearchInput).toHaveValue('');
+        const rowCount = await this.getLotListRowCount();
+        expect(rowCount).toBeGreaterThan(0);
+        await this.cleanupAfterProjectTest();
+    }
+
 }
