@@ -92,4 +92,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyIndividualLotDeletion('Automation');
     });
 
+    test('TC_20: Verify bulk deletion of lots', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyBulkLotDeletion('Automation');
+    });
+
 });   
