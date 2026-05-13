@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="65.9489990000003">
-<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-13T04:04:21.415Z" hostname="chromium" tests="1" failures="0" skipped="0" time="63.491" errors="0">
-<testcase name="Project Lot List Tests › TC_02: Verify lot search functionality" classname="Pages\Projects\projectLotList.spec.ts" time="63.491">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="86.2533740000003">
+<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-13T04:08:18.074Z" hostname="chromium" tests="1" failures="0" skipped="0" time="83.854" errors="0">
+<testcase name="Project Lot List Tests › TC_03: Verify reset button clears lot search" classname="Pages\Projects\projectLotList.spec.ts" time="83.854">
 </testcase>
 </testsuite>
 </testsuites>

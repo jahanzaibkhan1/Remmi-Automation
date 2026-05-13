@@ -28,4 +28,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyLotSearchFunctionality('Automation', 'Automation Lot');
     });
 
+    test('TC_03: Verify reset button clears lot search', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotListResetClearsSearch('Automation', 'Automation Lot');
+    });
+
 });   
