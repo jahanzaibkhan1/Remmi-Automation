@@ -8311,4 +8311,26 @@ export class ProjectActions {
         await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+     * TC_ — Verify share view to team functionality
+     */
+    async verifyShareViewToTeam(
+        projectName: string = 'Automation',
+        viewName: string = 'Test View',
+        teamName: string = 'Automation Team'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.shareViewIcon.click({ force: true });
+        await this.selectShareTarget(this.teamsShareDropdown, this.teamsShareDropdownArrow, teamName);
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.shareButton.click({ force: true });
+        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.cleanupAfterProjectTest();
+    }
 }
