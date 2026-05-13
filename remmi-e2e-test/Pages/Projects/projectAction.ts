@@ -8164,4 +8164,21 @@ export class ProjectActions {
         await this.page.waitForTimeout(500);
         await this.cleanupAfterProjectTest();
     }
+
+    async verifyDragAndDropChangesStatusPositions(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await this.clickShowAll();
+        const firstHandle = this.visibleColumnList.nth(0);
+        const secondHandle = this.visibleColumnList.nth(1);
+        await firstHandle.scrollIntoViewIfNeeded();
+        await this.page.waitForTimeout(500);
+        await firstHandle.dragTo(secondHandle, {
+            force: true,
+            targetPosition: { x: 10, y: 30 }
+        });
+        await expect(this.viewPopupContent).toBeVisible();
+        await this.cleanupAfterProjectTest();
+    }
 }

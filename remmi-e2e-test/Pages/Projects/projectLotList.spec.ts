@@ -48,4 +48,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyHideUnhideAllStatuses('Automation');
     });
 
+    test('TC_08: Verify status positions can be changed using drag and drop', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyDragAndDropChangesStatusPositions('Automation');
+    });
+
 });   
