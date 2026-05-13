@@ -8717,4 +8717,21 @@ export class ProjectActions {
         await this.assertLotListColumnSortState(columnName, 'ascending');
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+ * TC_19 — Verify sort icon works for descending order
+ */
+    async verifyLotListSortDescending(
+        projectName: string = 'Automation',
+        columnName: string = 'Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotListColumnSortState(columnName, 'none');
+        await this.clickLotListColumnSortIcon(columnName);
+        await this.assertLotListColumnSortState(columnName, 'ascending');
+        await this.clickLotListColumnSortIcon(columnName);
+        await this.assertLotListColumnSortState(columnName, 'descending');
+        await this.cleanupAfterProjectTest();
+    }
 }
