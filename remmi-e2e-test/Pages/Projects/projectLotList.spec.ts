@@ -64,4 +64,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyCreateViewButtonFunctionality('Automation');
     });
 
+    test('TC_12: Verify share view to agent', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyShareViewToAgent('Automation', 'Test View', 'Dawood Ahmad');
+    });
+
 });   
