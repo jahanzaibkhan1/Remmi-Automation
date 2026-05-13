@@ -8003,6 +8003,10 @@ export class ProjectActions {
         return this.page.locator('app-unit button._cancel-btn', { hasText: /^\s*Export\s*$/ }).first();
     }
 
+    private get lotListViewButton(): Locator {
+        return this.page.locator('app-genaric-view div._view-btn').first();
+    }
+
     /**
      * HELPER — Click the Lot sub-tab inside Project Setup
      */
@@ -8063,6 +8067,16 @@ export class ProjectActions {
         const download = await downloadPromise;
         await download.saveAs(`./downloads/${download.suggestedFilename()}`);
     }
+
+    /**
+     * HELPER — Click the View button in lot list
+     */
+    private async clickLotListViewButton(): Promise<void> {
+        await expect(this.lotListViewButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotListViewButton.scrollIntoViewIfNeeded();
+        await this.lotListViewButton.click();
+        await this.page.waitForTimeout(1000);
+    }
     /**
  * TC_01 — Verify clicking Lot tab displays the lot list
  */
@@ -8112,7 +8126,7 @@ export class ProjectActions {
     }
 
     /**
- * TC_03 — Verify export button downloads the list
+ * TC_04 — Verify export button downloads the list
  */
     async verifyLotListExportDownload(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
@@ -8121,4 +8135,18 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    /**
+     * TC_05 — Verify view button is clickable
+     */
+    async verifyLotListViewButtonClickable(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListViewButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(800);
+        await expect(this.viewPopupContent).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterProjectTest();
+    }
 }

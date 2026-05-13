@@ -36,4 +36,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyLotListExportDownload('Automation');
     });
 
+    test('TC_05: Verify view button is clickable', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotListViewButtonClickable('Automation');
+    });
+
 });   
