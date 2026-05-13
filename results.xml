@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="72.37161899999901">
-<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-13T09:40:19.554Z" hostname="chromium" tests="1" failures="0" skipped="0" time="70.158" errors="0">
-<testcase name="Project Lot List Tests › TC_20: Verify bulk deletion of lots" classname="Pages\Projects\projectLotList.spec.ts" time="70.158">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="75.44922500000149">
+<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-13T09:44:00.478Z" hostname="chromium" tests="1" failures="0" skipped="0" time="73.253" errors="0">
+<testcase name="Project Lot List Tests › TC_21: Verify Delete button is hidden when no lot is selected" classname="Pages\Projects\projectLotList.spec.ts" time="73.253">
 </testcase>
 </testsuite>
 </testsuites>
