@@ -40,4 +40,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyLotListViewButtonClickable('Automation');
     });
 
+    test('TC_06: Verify all statuses can be hidden/unhidden using eye icon', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHideUnhideAllStatuses('Automation');
+    });
+
 });   
