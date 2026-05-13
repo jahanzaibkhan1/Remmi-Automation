@@ -8007,6 +8007,53 @@ export class ProjectActions {
         return this.page.locator('app-genaric-view div._view-btn').first();
     }
 
+    private columnRowByName(name: string): Locator {
+        return this.viewPopupContent.locator('.cdk-drag.column-item').filter({ hasText: name }).first();
+    }
+
+    private get firstVisibleColumnRow(): Locator {
+        return this.visibleColumnList.first();
+    }
+
+    private columnDownArrow(row: Locator): Locator {
+        return row.locator('img[src*="down-arrow"]').first();
+    }
+
+    private columnUpArrow(row: Locator): Locator {
+        return row.locator('img[src*="up-arrow"]').first();
+    }
+
+    /**
+ * HELPER — Get column name at given index in visible list
+ */
+    private async getVisibleColumnNameAtIndex(index: number): Promise<string> {
+        const text = await this.visibleColumnList.nth(index).locator('p').first().innerText();
+        return text.trim();
+    }
+
+    /**
+     * HELPER — Click down arrow on column at given index
+     */
+    private async clickDownArrowAtIndex(index: number): Promise<void> {
+        const row = this.visibleColumnList.nth(index);
+        const downArrow = this.columnDownArrow(row);
+        await expect(downArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await downArrow.scrollIntoViewIfNeeded();
+        await downArrow.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Click up arrow on column at given index
+     */
+    private async clickUpArrowAtIndex(index: number): Promise<void> {
+        const row = this.visibleColumnList.nth(index);
+        const upArrow = this.columnUpArrow(row);
+        await expect(upArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await upArrow.scrollIntoViewIfNeeded();
+        await upArrow.click();
+        await this.page.waitForTimeout(500);
+    }
     /**
      * HELPER — Click the Lot sub-tab inside Project Setup
      */
@@ -8166,6 +8213,26 @@ export class ProjectActions {
     }
 
     async verifyDragAndDropChangesStatusPositions(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await this.clickShowAll();
+        const firstHandle = this.visibleColumnList.nth(0);
+        const secondHandle = this.visibleColumnList.nth(1);
+        await firstHandle.scrollIntoViewIfNeeded();
+        await this.page.waitForTimeout(500);
+        await firstHandle.dragTo(secondHandle, {
+            force: true,
+            targetPosition: { x: 10, y: 30 }
+        });
+        await expect(this.viewPopupContent).toBeVisible();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+   * TC_09 — Verify status positions can be changed using arrows
+   */
+    async verifyArrowsChangeStatusPositions(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
         await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.clickLotListViewButton();

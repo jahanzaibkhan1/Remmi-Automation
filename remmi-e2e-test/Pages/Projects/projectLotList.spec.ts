@@ -52,4 +52,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyDragAndDropChangesStatusPositions('Automation');
     });
 
+    test('TC_09: Verify status positions can be changed using arrows', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyArrowsChangeStatusPositions('Automation');
+    });
+    
 });   
