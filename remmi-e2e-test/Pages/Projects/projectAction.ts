@@ -21,10 +21,6 @@ export class ProjectActions {
         this.page = page;
     }
 
-    // ==========================================================================
-    // LOCATORS — PRECINCT INNER VIEW (TC_01 to TC_08)
-    // ==========================================================================
-
     private get firstPrecinctOnProjectsPage(): Locator {
         return this.page.locator('.sgv-product.ng-star-inserted').first();
     }
@@ -84,12 +80,6 @@ export class ProjectActions {
         await this.projectImageInPrecinct.click();
     }
 
-
-
-    // ==========================================================================
-    // LOCATORS — SEARCH & TOP BAR
-    // ==========================================================================
-
     private get searchInput(): Locator {
         return this.page.getByPlaceholder('Search').last();
     }
@@ -109,10 +99,6 @@ export class ProjectActions {
     private tabByLabel(label: string): Locator {
         return this.page.getByText(label, { exact: true });
     }
-
-    // ==========================================================================
-    // LOCATORS — GRID VIEW (PROJECT CARDS)
-    // ==========================================================================
 
     private get firstGridProduct(): Locator {
         return this.page.locator('.projects-row.view-grid .sgv-product').first();
@@ -157,10 +143,6 @@ export class ProjectActions {
     private get precinctCardThumbnailWithImage(): Locator {
         return this.page.locator('.product-thumbnail.cp.ng-star-inserted[style*="projectimages"]');
     }
-
-    // ==========================================================================
-    // LOCATORS — LIST VIEW (TABLE)
-    // ==========================================================================
 
     private get firstTableRow(): Locator {
         // Scoped to datatable specifically
@@ -215,10 +197,6 @@ export class ProjectActions {
         return this.page.locator('ul.list-type li', { hasText: label }).first();
     }
 
-    // ==========================================================================
-    // LOCATORS — VIEW SWITCHING
-    // ==========================================================================
-
     private get gridViewButton(): Locator {
         return this.page.locator('.layout-changer a.grid-icon');
     }
@@ -227,10 +205,6 @@ export class ProjectActions {
         // Direct selector — no filter, no sub-query
         return this.page.locator('.layout-changer a:has(img[src*="list.svg"])');
     }
-
-    // ==========================================================================
-    // LOCATORS — VIEW POPUP (DEFAULT VIEW / SAVED VIEWS)
-    // ==========================================================================
 
     private get defaultViewButton(): Locator {
         return this.page.locator('._view-btn').filter({ hasText: /default view/i });
@@ -302,8 +276,6 @@ export class ProjectActions {
         return this.viewPopupContent.getByText('Hide All', { exact: true });
     }
 
-    // LOCATORS — Reorder section expand/collapse arrow
-
     private get reorderExpandCollapseArrow(): Locator {
         return this.page.locator('.icon-style i.pi');
     }
@@ -344,10 +316,6 @@ export class ProjectActions {
         return this.page.locator('.drop_box').last();
     }
 
-    // ==========================================================================
-    // LOCATORS — PROJECT MANAGER MULTISELECT
-    // ==========================================================================
-
     private get projectManagerDropdown(): Locator {
         return this.page.locator('re-multiselect[placeholder="Project Manager"] .box');
     }
@@ -382,10 +350,6 @@ export class ProjectActions {
     private get selectAllToggle(): Locator {
         return this.page.locator('label.select_all');
     }
-
-    // ==========================================================================
-    // LOCATORS — PROJECT CREATION DIALOG
-    // ==========================================================================
 
     private get addNewProjectButton(): Locator {
         return this.page.locator('button._addNew i.pi.pi-plus').first();
@@ -437,10 +401,6 @@ export class ProjectActions {
         return this.page.locator("//*[name()='path' and contains(@d,'M8.01186 7')]");
     }
 
-    // ==========================================================================
-    // LOCATORS — ACTION BUTTONS (LIST VIEW TOOLBAR)
-    // ==========================================================================
-
     private get duplicateButton(): Locator {
         return this.page.locator('button', { hasText: /duplicate/i });
     }
@@ -464,10 +424,6 @@ export class ProjectActions {
     private get confirmAnyButton(): Locator {
         return this.page.getByRole('button', { name: /confirm|yes|delete|ok/i }).first();
     }
-
-    // ==========================================================================
-    // LOCATORS — TOAST & MESSAGES
-    // ==========================================================================
 
     private toastByText(pattern: RegExp): Locator {
         return this.page.getByText(pattern).first();
@@ -503,10 +459,6 @@ export class ProjectActions {
         });
     }
 
-    // ==========================================================================
-    // LOCATORS — NAVIGATION MENU
-    // ==========================================================================
-
     private get projectsMenuLink(): Locator {
         return this.page.locator('a[href="/project/projects"]').first();
     }
@@ -518,12 +470,6 @@ export class ProjectActions {
     private get precinctListingsMenuLink(): Locator {
         return this.page.locator('a[href="/listings/project-precinct"]');
     }
-
-    // click project
-
-    // ==========================================================================
-    // LOCATORS — PRECINCT SUB-TABS & PANELS
-    // ==========================================================================
 
     private get precinctSubTab(): Locator {
         return this.page
@@ -570,10 +516,6 @@ export class ProjectActions {
     private innerTabById(tabName: string): Locator {
         return this.page.locator(`a#pills-${tabName}`).first();
     }
-
-    // ==========================================================================
-    // LOCATORS — ADD PRECINCT DIALOG
-    // ==========================================================================
 
     private get addPrecinctDialog(): Locator {
         return this.page.locator('.p-dialog[role="dialog"]');
@@ -7950,7 +7892,7 @@ export class ProjectActions {
     async validateProjectNameTrimming(project?: { name?: string }): Promise<void> {
         await this.navigateToProjects();
         await this.openProjectPopup();
-        const nameWithExcessiveSpaces = project?.name ?? `     ${faker.word.words(2)}     `;   
+        const nameWithExcessiveSpaces = project?.name ?? `     ${faker.word.words(2)}     `;
         const expectedTrimmedName = nameWithExcessiveSpaces.trim().replace(/\s+/g, ' ');
         await this.projectNameField.fill(nameWithExcessiveSpaces);
         await this.projectDialogSaveButton.click({ force: true });
@@ -7969,5 +7911,851 @@ export class ProjectActions {
         await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.searchInput.fill(expectedTrimmedName);
         await this.clickResetIcon();
+    }
+
+    private get lotSubTab(): Locator {
+        return this.page.locator('app-project-setup a[href*="/project-setup/unit"]').first();
+    }
+
+    private get lotSubTabActive(): Locator {
+        return this.page.locator('app-project-setup a[href*="/project-setup/unit"].active').first();
+    }
+
+    private get lotListTable(): Locator {
+        return this.page.locator('app-unit p-table#apartmentscolumns').first();
+    }
+
+    private get lotListRecordsCounter(): Locator {
+        return this.page.locator('app-unit p', { hasText: /^Records:\s*\d+/ }).first();
+    }
+
+    private get lotListSearchInput(): Locator {
+        return this.page.locator('app-unit input#keywordInput').first();
+    }
+
+    private get lotListTableRows(): Locator {
+        return this.lotListTable.locator('tbody tr');
+    }
+
+    private lotListRowByText(text: string): Locator {
+        return this.lotListTable.locator('tbody tr').filter({ hasText: text }).first();
+    }
+
+    private get lotListExportButton(): Locator {
+        return this.page.locator('app-unit button._cancel-btn', { hasText: /^\s*Export\s*$/ }).first();
+    }
+
+    private get lotListViewButton(): Locator {
+        return this.page.locator('app-genaric-view div._view-btn').first();
+    }
+
+    private columnRowByName(name: string): Locator {
+        return this.viewPopupContent.locator('.cdk-drag.column-item').filter({ hasText: name }).first();
+    }
+
+    private get firstVisibleColumnRow(): Locator {
+        return this.visibleColumnList.first();
+    }
+
+    private columnDownArrow(row: Locator): Locator {
+        return row.locator('img[src*="down-arrow"]').first();
+    }
+
+    private columnUpArrow(row: Locator): Locator {
+        return row.locator('img[src*="up-arrow"]').first();
+    }
+
+    private get lotListImportInput(): Locator {
+        return this.page.locator('app-unit input#csv[type="file"]').first();
+    }
+
+    private get lotListUpdateDataButton(): Locator {
+        return this.page.locator('app-unit button.btn-outline', { hasText: /Update Data/i }).first();
+    }
+
+    private get lotListConfirmUpdatesButton(): Locator {
+        return this.page.locator('button._outline-btn', { hasText: /Confirm Updates/i }).first();
+    }
+
+    private get lotListImportSuccessToast(): Locator {
+        return this.page.locator('div[role="alert"].toast-message', {
+            hasText: /Your file has successfully imported/i
+        }).first();
+    }
+
+    private get lotListImportInvalidFileToast(): Locator {
+        return this.page.locator('div[role="alert"].toast-message', {
+            hasText: /Only \.csv, \.xls, and \.xlsx files are allowed/i
+        }).first();
+    }
+
+    private get lotListAddNewButton(): Locator {
+        return this.page.locator('app-unit button._addNew').first();
+    }
+
+    private get lotCreateForm(): Locator {
+        return this.page.locator('app-add-unit').first();
+    }
+
+    private get lotCreateLotInput(): Locator {
+        return this.lotCreateForm.locator('input[formcontrolname="lot_name"]').first();
+    }
+
+    private get lotCreateStatusReasonSelect(): Locator {
+        return this.lotCreateForm.locator('ng-select[formcontrolname="status_reason"]').first();
+    }
+
+    private lotCreateStatusReasonOptionByText(text: string): Locator {
+        return this.page.locator('ng-dropdown-panel .ng-option').filter({
+            hasText: new RegExp(`^\\s*${text}\\s*$`, 'i')
+        }).first();
+    }
+
+    private get lotCreateBedInput(): Locator {
+        return this.lotCreateForm.locator('input[formcontrolname="bed"]').first();
+    }
+
+    private get lotCreateBathInput(): Locator {
+        return this.lotCreateForm.locator('input[formcontrolname="bath"]').first();
+    }
+
+    private get lotCreateSaveAndCloseButton(): Locator {
+        return this.lotCreateForm.locator('button._primary-btn', { hasText: /Save & Close/i }).first();
+    }
+
+    private get lotCreateCloseButton(): Locator {
+        return this.lotCreateForm.locator('button._cancel-btn', { hasText: /^\s*Close\s*$/i }).first();
+    }
+
+    private get lotListMasterCheckbox(): Locator {
+        return this.lotListTable.locator('thead p-tableheadercheckbox .p-checkbox-box').first();
+    }
+
+    private get lotCreateRequiredFieldToast(): Locator {
+        return this.page.locator('div[role="alert"].toast-message', {
+            hasText: /Fill out the required field/i
+        }).first();
+    }
+
+    private lotListRowCheckbox(rowIndex: number): Locator {
+        return this.lotListTable.locator('tbody tr').nth(rowIndex).locator('p-tablecheckbox .p-checkbox-box').first();
+    }
+
+    private get lotListDeleteButton(): Locator {
+        return this.page.locator('app-unit button._cancel-btn').filter({
+            has: this.page.locator('img[src*="delete_icon.svg"]')
+        }).first();
+    }
+
+    private get lotListSelectedRecordsLabel(): Locator {
+        return this.page.locator('app-unit p', { hasText: /^Selected Records:\s*\d+/ }).first();
+    }
+
+    private lotListColumnHeader(columnName: string): Locator {
+        return this.lotListTable.locator('thead th').filter({
+            has: this.page.locator('p', { hasText: new RegExp(`^${columnName}$`) })
+        }).first();
+    }
+
+    private lotListColumnSortIcon(columnName: string): Locator {
+        return this.lotListColumnHeader(columnName).locator('p-sorticon').first();
+    }
+
+    private get lotListFilterPopup(): Locator {
+        return this.page.locator('div.p-overlaypanel').first();
+    }
+
+    private lotListColumnFilterIcon(columnName: string): Locator {
+        return this.lotListColumnHeader(columnName).locator('img[alt="filter"]').first();
+    }
+
+    /**
+     * HELPER — Assert "Fill out the required field" error toast appears
+     */
+    private async assertRequiredFieldToast(): Promise<void> {
+        await expect(this.lotCreateRequiredFieldToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+    /**
+     * HELPER — Click the + (Add New) button to open lot create form
+     */
+    private async clickAddNewLotButton(): Promise<void> {
+        await expect(this.lotListAddNewButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotListAddNewButton.click();
+        await expect(this.lotCreateForm).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * HELPER — Fill Lot name input
+     */
+    private async fillLotName(lotName: string): Promise<void> {
+        await expect(this.lotCreateLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotCreateLotInput.click();
+        await this.lotCreateLotInput.fill(lotName);
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+ * HELPER — Click the master/header checkbox to select all rows
+ */
+    private async clickLotListMasterCheckbox(): Promise<void> {
+        await expect(this.lotListMasterCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotListMasterCheckbox.click();
+        await this.page.waitForTimeout(800);
+    }
+
+    /**
+     * HELPER — Select Status Reason from dropdown
+     */
+    private async selectLotStatusReason(statusReason: string): Promise<void> {
+        await expect(this.lotCreateStatusReasonSelect).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotCreateStatusReasonSelect.click();
+        await this.page.waitForTimeout(500);
+        const statusOption = this.lotCreateStatusReasonOptionByText(statusReason);
+        await expect(statusOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await statusOption.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Fill Bed input
+     */
+    private async fillLotBed(bed: string): Promise<void> {
+        await expect(this.lotCreateBedInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotCreateBedInput.click();
+        await this.lotCreateBedInput.fill(bed);
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Fill Bath input
+     */
+    private async fillLotBath(bath: string): Promise<void> {
+        await expect(this.lotCreateBathInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotCreateBathInput.click();
+        await this.lotCreateBathInput.fill(bath);
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Fill all required fields in lot create form
+     */
+    private async fillLotCreateForm(data: {
+        lotName: string;
+        statusReason: string;
+        bed: string;
+        bath: string;
+    }): Promise<void> {
+        await this.fillLotName(data.lotName);
+        await this.selectLotStatusReason(data.statusReason);
+        await this.fillLotBed(data.bed);
+        await this.fillLotBath(data.bath);
+    }
+
+    /**
+     * HELPER — Click Save & Close button in lot create form
+     */
+    private async clickLotCreateSaveAndClose(): Promise<void> {
+        await expect(this.lotCreateSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotCreateSaveAndCloseButton.scrollIntoViewIfNeeded();
+        await this.lotCreateSaveAndCloseButton.click();
+        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForTimeout(2000);
+    }
+
+    /**
+     * HELPER — Click Close button to dismiss lot create form
+     */
+    private async clickLotCreateClose(): Promise<void> {
+        await expect(this.lotCreateCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotCreateCloseButton.click();
+        await this.page.waitForTimeout(800);
+    }
+
+    /**
+     * HELPER — Assert lot create form is closed (no longer visible)
+     */
+    private async assertLotCreateFormClosed(): Promise<void> {
+        await expect(this.lotCreateForm).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+    /**
+ * HELPER — Get column name at given index in visible list
+ */
+    private async getVisibleColumnNameAtIndex(index: number): Promise<string> {
+        const text = await this.visibleColumnList.nth(index).locator('p').first().innerText();
+        return text.trim();
+    }
+
+    /**
+     * HELPER — Click down arrow on column at given index
+     */
+    private async clickDownArrowAtIndex(index: number): Promise<void> {
+        const row = this.visibleColumnList.nth(index);
+        const downArrow = this.columnDownArrow(row);
+        await expect(downArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await downArrow.scrollIntoViewIfNeeded();
+        await downArrow.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Click up arrow on column at given index
+     */
+    private async clickUpArrowAtIndex(index: number): Promise<void> {
+        const row = this.visibleColumnList.nth(index);
+        const upArrow = this.columnUpArrow(row);
+        await expect(upArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await upArrow.scrollIntoViewIfNeeded();
+        await upArrow.click();
+        await this.page.waitForTimeout(500);
+    }
+    /**
+     * HELPER — Click the Lot sub-tab inside Project Setup
+     */
+    private async clickLotSubTab(): Promise<void> {
+        await expect(this.lotSubTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotSubTab.scrollIntoViewIfNeeded();
+        await this.lotSubTab.click();
+        await this.page.waitForURL(/\/project-setup\/unit/, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotSubTabActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForLoadState('networkidle');
+    }
+
+    /**
+     * HELPER — Open Project Setup → Lot tab (full flow)
+     */
+    private async openProjectLotTab(projectName: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.page.waitForLoadState('networkidle');
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.assertPricelistTabActive();
+        await this.clickProjectSetupTab();
+        await this.clickLotSubTab();
+    }
+
+    /**
+     * HELPER — Type a keyword in the lot list search input and trigger filter
+     */
+    private async searchLotList(keyword: string): Promise<void> {
+        await expect(this.lotListSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotListSearchInput.scrollIntoViewIfNeeded();
+        await this.lotListSearchInput.fill('');
+        await this.lotListSearchInput.fill(keyword);
+        await this.lotListSearchInput.press('Enter');
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * HELPER — Get count of visible rows in lot list
+     */
+    private async getLotListRowCount(): Promise<number> {
+        return await this.lotListTableRows.count();
+    }
+
+    /**
+     * HELPER — Assert a row containing the given text is visible
+     */
+    private async assertLotListRowExists(text: string): Promise<void> {
+        await expect(this.lotListRowByText(text)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+ * HELPER — Click Export button and wait for file download
+ */
+    private async clickLotListExportAndDownload(): Promise<void> {
+        await expect(this.lotListExportButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const downloadPromise = this.page.waitForEvent('download', { timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotListExportButton.click();
+        const download = await downloadPromise;
+        await download.saveAs(`./downloads/${download.suggestedFilename()}`);
+    }
+
+    /**
+     * HELPER — Click the View button in lot list
+     */
+    private async clickLotListViewButton(): Promise<void> {
+        await expect(this.lotListViewButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotListViewButton.scrollIntoViewIfNeeded();
+        await this.lotListViewButton.click();
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * HELPER — Upload a file to the lot list import input
+     */
+    private async uploadLotImportFile(fileName: string): Promise<void> {
+        const filePath = path.resolve(ProjectActions.IMAGES_DIR, fileName);
+        await this.lotListImportInput.setInputFiles(filePath);
+        await this.page.waitForTimeout(2000);
+    }
+
+    /**
+     * HELPER — Click Update Data button
+     */
+    private async clickUpdateDataButton(): Promise<void> {
+        await expect(this.lotListUpdateDataButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotListUpdateDataButton.scrollIntoViewIfNeeded();
+        await this.lotListUpdateDataButton.click();
+        await this.page.waitForTimeout(1500);
+    }
+
+    /**
+     * HELPER — Click Confirm Updates button
+     */
+    private async clickConfirmUpdatesButton(): Promise<void> {
+        await expect(this.lotListConfirmUpdatesButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotListConfirmUpdatesButton.scrollIntoViewIfNeeded();
+        await this.lotListConfirmUpdatesButton.click();
+        await this.page.waitForTimeout(2000);
+    }
+
+    /**
+     * HELPER — Assert import success toast appears
+     */
+    private async assertImportSuccessToast(): Promise<void> {
+        await expect(this.lotListImportSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    /**
+* HELPER — Assert invalid file error toast appears
+*/
+    private async assertInvalidFileToast(): Promise<void> {
+        await expect(this.lotListImportInvalidFileToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    /**
+     * HELPER — Select checkbox of a specific row (by index)
+     */
+    private async selectLotListRowCheckbox(rowIndex: number): Promise<void> {
+        const checkbox = this.lotListRowCheckbox(rowIndex);
+        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await checkbox.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Click the Delete button (appears after row selection)
+     */
+    private async clickLotListDeleteButton(): Promise<void> {
+        await expect(this.lotListDeleteButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotListDeleteButton.scrollIntoViewIfNeeded();
+        await this.lotListDeleteButton.click();
+        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForTimeout(2000);
+    }
+
+    /**
+     * HELPER — Get the lot name from a specific row (by index)
+     */
+    private async getLotNameFromRow(rowIndex: number): Promise<string> {
+        const row = this.lotListTable.locator('tbody tr').nth(rowIndex);
+        const lotCell = row.locator('td').nth(1).locator('p');
+        const text = await lotCell.innerText();
+        return text.trim();
+    }
+
+    /**
+     * HELPER — Assert "Selected Records: N" label is visible
+     */
+    private async assertSelectedRecordsLabel(): Promise<void> {
+        await expect(this.lotListSelectedRecordsLabel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+    /**
+ * TC_01 — Verify clicking Lot tab displays the lot list
+ */
+    async verifyLotTabDisplaysLotList(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.page).toHaveURL(/\/project-setup\/unit/, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotSubTabActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListRecordsCounter).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_02 — Verify lot search functionality
+ */
+    async verifyLotSearchFunctionality(
+        projectName: string = 'Automation',
+        keyword: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListRecordsCounter).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.searchLotList(keyword);
+        await this.assertLotListRowExists(keyword);
+        await expect(this.lotListRecordsCounter).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const rowCount = await this.getLotListRowCount();
+        expect(rowCount).toBeGreaterThan(0);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_03 — Verify reset button clears search in lot list
+     */
+    async verifyLotListResetClearsSearch(
+        projectName: string = 'Automation',
+        keyword: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.searchLotList(keyword);
+        await this.assertLotListRowExists(keyword);
+        await this.resetButton.click();
+        await expect(this.lotListSearchInput).toHaveValue('');
+        const rowCount = await this.getLotListRowCount();
+        expect(rowCount).toBeGreaterThan(0);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_04 — Verify export button downloads the list
+ */
+    async verifyLotListExportDownload(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListExportAndDownload();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_05 — Verify view button is clickable
+     */
+    async verifyLotListViewButtonClickable(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListViewButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.mouse.click(0, 0);
+        await this.page.waitForTimeout(800);
+        await expect(this.viewPopupContent).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_06 — Verify all statuses can be hidden/unhidden using eye icon
+ */
+    async verifyHideUnhideAllStatuses(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickHideAll();
+        await this.page.waitForTimeout(1200);
+        await this.clickShowAll();
+        await this.page.waitForTimeout(500);
+        await this.cleanupAfterProjectTest();
+    }
+
+    async verifyDragAndDropChangesStatusPositions(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await this.clickShowAll();
+        const firstHandle = this.visibleColumnList.nth(0);
+        const secondHandle = this.visibleColumnList.nth(1);
+        await firstHandle.scrollIntoViewIfNeeded();
+        await this.page.waitForTimeout(500);
+        await firstHandle.dragTo(secondHandle, {
+            force: true,
+            targetPosition: { x: 10, y: 30 }
+        });
+        await expect(this.viewPopupContent).toBeVisible();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+   * TC_09 — Verify status positions can be changed using arrows
+   */
+    async verifyArrowsChangeStatusPositions(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await this.clickShowAll();
+        const firstHandle = this.visibleColumnList.nth(0);
+        const secondHandle = this.visibleColumnList.nth(1);
+        await firstHandle.scrollIntoViewIfNeeded();
+        await this.page.waitForTimeout(500);
+        await firstHandle.dragTo(secondHandle, {
+            force: true,
+            targetPosition: { x: 10, y: 30 }
+        });
+        await expect(this.viewPopupContent).toBeVisible();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_xx — Verify status search in view popup works
+     */
+    async verifyStatusSearchInViewPopup(statusName: string, projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickShowAll();
+        await expect(this.columnSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.columnSearchInput.fill(statusName);
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.columnItemByName(statusName).first()).toBeVisible({
+            timeout: ProjectActions.TIMEOUT_DEFAULT,
+        });
+        await this.columnSearchInput.fill('');
+        await this.page.waitForTimeout(1000);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_10 — Verify Create View button functionality
+ */
+    async verifyCreateViewButtonFunctionality(
+        projectName: string = 'Automation',
+        viewName: string = `Test View`
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        await this.addViewIcon.click();
+        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.viewNameInput.click();
+        await this.viewNameInput.fill(viewName);
+        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.saveOrCreateButton.click({ force: true });
+        await expect(this.viewCreatedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterProjectTest();
+    }
+    /**
+     * TC_ — Verify share view to agent functionality
+     */
+    async verifyShareViewToAgent(
+        projectName: string = 'Automation',
+        viewName: string = 'Test View',
+        userName: string = 'Dawood Ahmad',
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.shareViewIcon.click({ force: true });
+        await this.selectShareTarget(this.usersShareDropdown, this.usersShareDropdownArrow, userName);
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.shareButton.click({ force: true });
+        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_ — Verify share view to team functionality
+     */
+    async verifyShareViewToTeam(
+        projectName: string = 'Automation',
+        viewName: string = 'Test View',
+        teamName: string = 'Automation Team'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.shareViewIcon.click({ force: true });
+        await this.selectShareTarget(this.teamsShareDropdown, this.teamsShareDropdownArrow, teamName);
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.shareButton.click({ force: true });
+        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_ — Verify that a saved view reflects the reordered statuses 
+     */
+    async verifySavedViewReflectsReorderedStatuses(
+        projectName: 'Automation',
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await this.reorderCollapsedArrow.click();
+        await this.page.waitForTimeout(500);
+        await this.reorderExpandCollapseArrow.click();
+        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_12 — Verify error message is displayed when importing invalid file
+ */
+    async verifyLotImportWithInvalidFile(
+        projectName: string = 'Automation',
+        fileName: string = 'invalid.txt'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.uploadLotImportFile(fileName);
+        await this.assertInvalidFileToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_13 — Verify lot creation via "+" button
+ */
+    async verifyLotCreationViaPlusButton(
+        projectName: string = 'Automation',
+        lotData: {
+            lotName?: string;
+            statusReason?: string;
+            bed?: string;
+            bath?: string;
+        } = {}
+    ): Promise<void> {
+        const data = {
+            lotName: lotData.lotName ?? `Auto Lot ${Date.now()}`,
+            statusReason: lotData.statusReason ?? 'For Sale',
+            bed: lotData.bed ?? '2',
+            bath: lotData.bath ?? '1',
+        };
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickAddNewLotButton();
+        await this.fillLotCreateForm(data);
+        await this.clickLotCreateSaveAndClose();
+        await this.searchLotList(data.lotName);
+        await this.assertLotListRowExists(data.lotName);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_18 — Verify validation error on lot creation with missing required fields
+ */
+    async verifyLotCreationWithMissingFields(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickAddNewLotButton();
+        await expect(this.lotCreateSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotCreateSaveAndCloseButton.click();
+        await this.assertRequiredFieldToast();
+        await this.clickLotCreateClose();
+        await this.assertLotCreateFormClosed();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_15 — Verify individual lot deletion using checkbox
+ */
+    async verifyIndividualLotDeletion(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.selectLotListRowCheckbox(1);
+        await this.assertSelectedRecordsLabel();
+        await this.clickLotListDeleteButton();
+        await this.cleanupAfterProjectTest();
+    }
+    private async selectMultipleLotListRowCheckboxes(rowIndexes: number[]): Promise<void> {
+        for (const index of rowIndexes) {
+            await this.selectLotListRowCheckbox(index);
+        }
+    }
+    /**
+ * TC_ — Verify bulk deletion of lots
+ */
+    async verifyBulkLotDeletion(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.selectMultipleLotListRowCheckboxes([1, 2]);
+        await this.assertSelectedRecordsLabel();
+        // await this.clickLotListDeleteButton();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_21 — Verify Delete button is hidden when no lot is selected
+ */
+    async verifyDeleteButtonHiddenWhenNoSelection(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListDeleteButton).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListSelectedRecordsLabel).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * HELPER — Click sort icon on a specific column
+     */
+    private async clickLotListColumnSortIcon(columnName: string): Promise<void> {
+        const sortIcon = this.lotListColumnSortIcon(columnName);
+        await expect(sortIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await sortIcon.scrollIntoViewIfNeeded();
+        await sortIcon.click();
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * HELPER — Assert sort state of a column (none/ascending/descending)
+     */
+    private async assertLotListColumnSortState(
+        columnName: string,
+        state: 'none' | 'ascending' | 'descending'
+    ): Promise<void> {
+        const sortIcon = this.lotListColumnSortIcon(columnName);
+        await expect(sortIcon).toHaveAttribute('aria-sort', state, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT
+        });
+    }
+
+    /**
+  * TC_18 — Verify sort icon works for ascending order
+  */
+    async verifyLotListSortAscending(
+        projectName: string = 'Automation',
+        columnName: string = 'Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotListColumnSortState(columnName, 'none');
+        await this.clickLotListColumnSortIcon(columnName);
+        await this.assertLotListColumnSortState(columnName, 'ascending');
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_19 — Verify sort icon works for descending order
+ */
+    async verifyLotListSortDescending(
+        projectName: string = 'Automation',
+        columnName: string = 'Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotListColumnSortState(columnName, 'none');
+        await this.clickLotListColumnSortIcon(columnName);
+        await this.assertLotListColumnSortState(columnName, 'ascending');
+        await this.clickLotListColumnSortIcon(columnName);
+        await this.assertLotListColumnSortState(columnName, 'descending');
+        await this.cleanupAfterProjectTest();
+    }
+    /**
+     * HELPER — Assert filter popup is visible
+     */
+    private async assertFilterPopupVisible(): Promise<void> {
+        await expect(this.lotListFilterPopup).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    /**
+ * TC_20 — Verify filter popup opens correctly for Project Status column
+ */
+    async verifyFilterPopupOpensForProjectStatus(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const filterIcon = this.page.locator('th:has-text("Project Status") img[alt="filter"]');
+        await filterIcon.click();
+        await this.page.waitForTimeout(700);
+        await filterIcon.click();
+        await this.assertFilterPopupVisible();
+        await this.cleanupAfterProjectTest();
     }
 }
