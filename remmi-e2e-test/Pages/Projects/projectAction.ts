@@ -8027,6 +8027,18 @@ export class ProjectActions {
         return this.lotCreateForm.locator('button._cancel-btn', { hasText: /^\s*Close\s*$/i }).first();
     }
 
+    private get lotCreateRequiredFieldToast(): Locator {
+        return this.page.locator('div[role="alert"].toast-message', {
+            hasText: /Fill out the required field/i
+        }).first();
+    }
+
+    /**
+     * HELPER — Assert "Fill out the required field" error toast appears
+     */
+    private async assertRequiredFieldToast(): Promise<void> {
+        await expect(this.lotCreateRequiredFieldToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
     /**
      * HELPER — Click the + (Add New) button to open lot create form
      */
@@ -8509,28 +8521,44 @@ export class ProjectActions {
     /**
  * TC_13 — Verify lot creation via "+" button
  */
-async verifyLotCreationViaPlusButton(
-    projectName: string = 'Automation',
-    lotData: {
-        lotName?: string;
-        statusReason?: string;
-        bed?: string;
-        bath?: string;
-    } = {}
-): Promise<void> {
-    const data = {
-        lotName: lotData.lotName ?? `Auto Lot ${Date.now()}`,
-        statusReason: lotData.statusReason ?? 'For Sale',
-        bed: lotData.bed ?? '2',
-        bath: lotData.bath ?? '1',
-    };
-    await this.openProjectLotTab(projectName);
-    await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-    await this.clickAddNewLotButton();
-    await this.fillLotCreateForm(data);
-    await this.clickLotCreateSaveAndClose();
-    await this.searchLotList(data.lotName);
-    await this.assertLotListRowExists(data.lotName);
-    await this.cleanupAfterProjectTest();
-}
+    async verifyLotCreationViaPlusButton(
+        projectName: string = 'Automation',
+        lotData: {
+            lotName?: string;
+            statusReason?: string;
+            bed?: string;
+            bath?: string;
+        } = {}
+    ): Promise<void> {
+        const data = {
+            lotName: lotData.lotName ?? `Auto Lot ${Date.now()}`,
+            statusReason: lotData.statusReason ?? 'For Sale',
+            bed: lotData.bed ?? '2',
+            bath: lotData.bath ?? '1',
+        };
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickAddNewLotButton();
+        await this.fillLotCreateForm(data);
+        await this.clickLotCreateSaveAndClose();
+        await this.searchLotList(data.lotName);
+        await this.assertLotListRowExists(data.lotName);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_18 — Verify validation error on lot creation with missing required fields
+ */
+    async verifyLotCreationWithMissingFields(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickAddNewLotButton();
+        await expect(this.lotCreateSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotCreateSaveAndCloseButton.click();
+        await this.assertRequiredFieldToast();
+        await this.clickLotCreateClose();
+        await this.assertLotCreateFormClosed();
+        await this.cleanupAfterProjectTest();
+    }
+
 }
