@@ -80,4 +80,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyLotImportWithInvalidFile('Automation', 'invalid.txt');
     });
 
+    test('TC_17: Verify lot creation via "+" button', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotCreationViaPlusButton('Automation');
+    });
+
 });   

@@ -7989,6 +7989,138 @@ export class ProjectActions {
         }).first();
     }
 
+    private get lotListAddNewButton(): Locator {
+        return this.page.locator('app-unit button._addNew').first();
+    }
+
+    private get lotCreateForm(): Locator {
+        return this.page.locator('app-add-unit').first();
+    }
+
+    private get lotCreateLotInput(): Locator {
+        return this.lotCreateForm.locator('input[formcontrolname="lot_name"]').first();
+    }
+
+    private get lotCreateStatusReasonSelect(): Locator {
+        return this.lotCreateForm.locator('ng-select[formcontrolname="status_reason"]').first();
+    }
+
+    private lotCreateStatusReasonOptionByText(text: string): Locator {
+        return this.page.locator('ng-dropdown-panel .ng-option').filter({
+            hasText: new RegExp(`^\\s*${text}\\s*$`, 'i')
+        }).first();
+    }
+
+    private get lotCreateBedInput(): Locator {
+        return this.lotCreateForm.locator('input[formcontrolname="bed"]').first();
+    }
+
+    private get lotCreateBathInput(): Locator {
+        return this.lotCreateForm.locator('input[formcontrolname="bath"]').first();
+    }
+
+    private get lotCreateSaveAndCloseButton(): Locator {
+        return this.lotCreateForm.locator('button._primary-btn', { hasText: /Save & Close/i }).first();
+    }
+
+    private get lotCreateCloseButton(): Locator {
+        return this.lotCreateForm.locator('button._cancel-btn', { hasText: /^\s*Close\s*$/i }).first();
+    }
+
+    /**
+     * HELPER — Click the + (Add New) button to open lot create form
+     */
+    private async clickAddNewLotButton(): Promise<void> {
+        await expect(this.lotListAddNewButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotListAddNewButton.click();
+        await expect(this.lotCreateForm).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * HELPER — Fill Lot name input
+     */
+    private async fillLotName(lotName: string): Promise<void> {
+        await expect(this.lotCreateLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotCreateLotInput.click();
+        await this.lotCreateLotInput.fill(lotName);
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Select Status Reason from dropdown
+     */
+    private async selectLotStatusReason(statusReason: string): Promise<void> {
+        await expect(this.lotCreateStatusReasonSelect).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotCreateStatusReasonSelect.click();
+        await this.page.waitForTimeout(500);
+        const statusOption = this.lotCreateStatusReasonOptionByText(statusReason);
+        await expect(statusOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await statusOption.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Fill Bed input
+     */
+    private async fillLotBed(bed: string): Promise<void> {
+        await expect(this.lotCreateBedInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotCreateBedInput.click();
+        await this.lotCreateBedInput.fill(bed);
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Fill Bath input
+     */
+    private async fillLotBath(bath: string): Promise<void> {
+        await expect(this.lotCreateBathInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotCreateBathInput.click();
+        await this.lotCreateBathInput.fill(bath);
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Fill all required fields in lot create form
+     */
+    private async fillLotCreateForm(data: {
+        lotName: string;
+        statusReason: string;
+        bed: string;
+        bath: string;
+    }): Promise<void> {
+        await this.fillLotName(data.lotName);
+        await this.selectLotStatusReason(data.statusReason);
+        await this.fillLotBed(data.bed);
+        await this.fillLotBath(data.bath);
+    }
+
+    /**
+     * HELPER — Click Save & Close button in lot create form
+     */
+    private async clickLotCreateSaveAndClose(): Promise<void> {
+        await expect(this.lotCreateSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotCreateSaveAndCloseButton.scrollIntoViewIfNeeded();
+        await this.lotCreateSaveAndCloseButton.click();
+        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForTimeout(2000);
+    }
+
+    /**
+     * HELPER — Click Close button to dismiss lot create form
+     */
+    private async clickLotCreateClose(): Promise<void> {
+        await expect(this.lotCreateCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotCreateCloseButton.click();
+        await this.page.waitForTimeout(800);
+    }
+
+    /**
+     * HELPER — Assert lot create form is closed (no longer visible)
+     */
+    private async assertLotCreateFormClosed(): Promise<void> {
+        await expect(this.lotCreateForm).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
     /**
  * HELPER — Get column name at given index in visible list
  */
@@ -8373,4 +8505,32 @@ export class ProjectActions {
         await this.assertInvalidFileToast();
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+ * TC_13 — Verify lot creation via "+" button
+ */
+async verifyLotCreationViaPlusButton(
+    projectName: string = 'Automation',
+    lotData: {
+        lotName?: string;
+        statusReason?: string;
+        bed?: string;
+        bath?: string;
+    } = {}
+): Promise<void> {
+    const data = {
+        lotName: lotData.lotName ?? `Auto Lot ${Date.now()}`,
+        statusReason: lotData.statusReason ?? 'For Sale',
+        bed: lotData.bed ?? '2',
+        bath: lotData.bath ?? '1',
+    };
+    await this.openProjectLotTab(projectName);
+    await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    await this.clickAddNewLotButton();
+    await this.fillLotCreateForm(data);
+    await this.clickLotCreateSaveAndClose();
+    await this.searchLotList(data.lotName);
+    await this.assertLotListRowExists(data.lotName);
+    await this.cleanupAfterProjectTest();
+}
 }
