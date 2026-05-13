@@ -96,4 +96,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyBulkLotDeletion('Automation');
     });
 
+    test('TC_21: Verify Delete button is hidden when no lot is selected', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyDeleteButtonHiddenWhenNoSelection('Automation');
+    });
+
 });   

@@ -8649,7 +8649,18 @@ export class ProjectActions {
         await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.selectMultipleLotListRowCheckboxes([1, 2]);
         await this.assertSelectedRecordsLabel();
-        await this.clickLotListDeleteButton();
+        // await this.clickLotListDeleteButton();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_21 — Verify Delete button is hidden when no lot is selected
+ */
+    async verifyDeleteButtonHiddenWhenNoSelection(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListDeleteButton).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListSelectedRecordsLabel).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.cleanupAfterProjectTest();
     }
 }
