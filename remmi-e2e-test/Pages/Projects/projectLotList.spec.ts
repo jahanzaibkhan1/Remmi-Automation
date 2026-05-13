@@ -24,4 +24,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyLotTabDisplaysLotList('Automation');
     });
 
+    test('TC_02: Verify lot search functionality', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotSearchFunctionality('Automation', 'Automation Lot');
+    });
+
 });   
