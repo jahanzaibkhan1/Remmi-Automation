@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="107.48070899999887">
-<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-13T07:38:32.231Z" hostname="chromium" tests="1" failures="0" skipped="0" time="105.49" errors="0">
-<testcase name="Project Lot List Tests › TC_11: Verify create view button functionality" classname="Pages\Projects\projectLotList.spec.ts" time="105.49">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="85.00696700000017">
+<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-13T07:45:01.842Z" hostname="chromium" tests="1" failures="0" skipped="0" time="83.037" errors="0">
+<testcase name="Project Lot List Tests › TC_12: Verify share view to agent" classname="Pages\Projects\projectLotList.spec.ts" time="83.037">
 </testcase>
 </testsuite>
 </testsuites>
