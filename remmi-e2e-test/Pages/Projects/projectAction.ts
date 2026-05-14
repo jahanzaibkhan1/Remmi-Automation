@@ -8871,6 +8871,19 @@ export class ProjectActions {
     }
 
     /**
+ * Helper to click the "Deselect All" checkbox for Statuses in filter popup.
+ */
+    private async deselectAllStatusesInFilterPopup(): Promise<void> {
+        // Open the filterConditionDropdown, which shows the filter popup.
+        await this.filterConditionDropdown.click();
+        const searchBox = this.searchBoxInFilterPopup;
+        await expect(searchBox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.selectAllInFilterPopup();
+        await this.page.waitForTimeout(500);
+        await this.selectAllInFilterPopup();
+    }
+
+    /**
      * TC_22 — Verify condition dropdown is working in the filter popup
      */
     async verifyConditionDropdownIsWorking(projectName: string = 'Automation', searchTerm: string): Promise<void> {
@@ -8889,6 +8902,17 @@ export class ProjectActions {
         await this.openFilterPopup();
         await this.assertFilterPopupVisible();
         await this.selectAllStatusesInFilterPopup();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_xx — Verify "Deselect All" in status filter removes all selections
+     */
+    async verifyDeselectAllInStatusFilterRemovesAllSelections(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
+        await this.assertFilterPopupVisible();
+        await this.deselectAllStatusesInFilterPopup();
         await this.cleanupAfterProjectTest();
     }
 }

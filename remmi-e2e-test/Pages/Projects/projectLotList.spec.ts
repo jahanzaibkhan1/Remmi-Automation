@@ -124,4 +124,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifySelectAllInStatusFilterSelectsAllOptions('Automation');
     });
 
+    test('TC_28: Verify "Deselect All" in status filter removes all selections', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyDeselectAllInStatusFilterRemovesAllSelections('Automation');
+    });
+
 });   
