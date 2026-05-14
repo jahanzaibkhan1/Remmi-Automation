@@ -8797,6 +8797,13 @@ export class ProjectActions {
     }
 
     /**
+     * Locator for the "Clear" button inside the filter popup.
+     */
+    private get clearFilterButton(): Locator {
+        return this.filterPopup.getByRole('button', { name: /clear/i });
+    }
+
+    /**
      * Locator for the "Select all" checkbox inside the filter popup.
      */
     private get selectAllCheckboxInFilterPopup(): Locator {
@@ -8864,6 +8871,8 @@ export class ProjectActions {
             new RegExp(searchTerm, 'i'),
             { timeout: ProjectActions.TIMEOUT_DEFAULT }
         );
+
+        await this.filterByTasksRemoveIcon.click();
     }
 
     /**
@@ -8962,4 +8971,17 @@ export class ProjectActions {
         await this.filterPopupCloseIcon.click();
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+     * TC_xx — Verify closing filter popup with "Clear" button clears all filters
+     */
+    async verifyClosingFilterPopupWithClearButtonClearsAllFilters(projectName: string = 'Automation', searchTerm: string): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
+        await this.assertFilterPopupVisible();
+        await this.selectConditionDropdownOptionWithSearch(searchTerm);
+        await this.clearFilterButton.click();
+        await this.cleanupAfterProjectTest();
+    }
+    
 }

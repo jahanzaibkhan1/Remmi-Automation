@@ -140,5 +140,9 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyClosingFilterPopupWithCrossDoesNotApplyChanges('Automation');
     });
 
+    test('TC_32: Verify closing filter popup with "Clear" button clears all filters', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyClosingFilterPopupWithClearButtonClearsAllFilters('Automation', 'For sale');
+    });
+
 
 });   
