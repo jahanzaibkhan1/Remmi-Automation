@@ -132,5 +132,9 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyMultipleSelectionsInStatusFilterAreAllowed('Automation', ['For sale', 'Sold']);
     });
 
+    test('TC_30: Verify search in filter dropdown filters options', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyConditionDropdownIsWorking('Automation', 'For sale');
+    });
+
 
 });   
