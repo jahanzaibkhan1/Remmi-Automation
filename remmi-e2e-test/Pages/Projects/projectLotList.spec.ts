@@ -40,8 +40,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyLotListViewButtonClickable('Automation');
     });
 
-    test('TC_06: Verify all statuses can be hidden/unhidden using eye icon', async ({ sessionPage }) => {
-        await new ProjectActions(sessionPage).verifyHideUnhideAllStatuses('Automation');
+    test('TC_6: Verify create view button functionality', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyCreateViewButtonFunctionality('Automation');
     });
 
     test('TC_07: Verify individual status hide/unhide works', async ({ sessionPage }) => {
@@ -60,8 +60,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyStatusSearchInViewPopup('Lot', 'Automation');
     });
 
-    test('TC_11: Verify create view button functionality', async ({ sessionPage }) => {
-        await new ProjectActions(sessionPage).verifyCreateViewButtonFunctionality('Automation');
+    test('TC_011: Verify all statuses can be hidden/unhidden using eye icon', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHideUnhideAllStatuses('Automation');
     });
 
     test('TC_12: Verify share view to agent', async ({ sessionPage }) => {
@@ -110,6 +110,10 @@ test.describe('Project Lot List Tests', () => {
 
     test('TC_24: Verify filter popup opens correctly for Project Status', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyFilterPopupOpensForProjectStatus('Automation');
+    });
+
+    test('TC_25: Verify dropdowns are shown in filter popup', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyFilterDropdownsAreVisible('Automation');
     });
 
 });   

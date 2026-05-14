@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="94.14101300000027">
-<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-13T10:39:47.179Z" hostname="chromium" tests="1" failures="0" skipped="0" time="91.854" errors="0">
-<testcase name="Project Lot List Tests › TC_23: Verify sort icon works for descending order" classname="Pages\Projects\projectLotList.spec.ts" time="91.854">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="71.27431900000013">
+<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-14T06:35:03.074Z" hostname="chromium" tests="1" failures="0" skipped="0" time="69.163" errors="0">
+<testcase name="Project Lot List Tests › TC_25: Verify dropdowns are shown in filter popup" classname="Pages\Projects\projectLotList.spec.ts" time="69.163">
 </testcase>
 </testsuite>
 </testsuites>
