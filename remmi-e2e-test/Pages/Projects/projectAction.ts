@@ -9046,4 +9046,21 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+
+    /**
+     * TC_xx — Verify pagination loads all lots via scroll (infinite scroll)
+     */
+    async verifyAllLotsLoadOnScroll(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        let prevCount = 0, count = await this.lotTableRows.count(), tries = 0;
+        while (tries++ < 20 && count > prevCount) {
+            prevCount = count;
+            await this.lotTableRows.nth(count - 1).scrollIntoViewIfNeeded();
+            await this.page.waitForTimeout(1200);
+            count = await this.lotTableRows.count();
+        }
+        await expect(this.lotTableRows.nth(count - 1)).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.cleanupAfterProjectTest();
+    }
+
 }

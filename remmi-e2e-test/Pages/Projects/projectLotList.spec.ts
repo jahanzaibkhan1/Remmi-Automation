@@ -164,5 +164,9 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyRecordCountDisplayedAtBottom('Automation');
     });
 
+    test('TC_38: Verify all lots load via infinite scroll pagination', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyAllLotsLoadOnScroll('Automation');
+    });
+
 
 });   
