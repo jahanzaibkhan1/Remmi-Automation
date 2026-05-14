@@ -128,4 +128,9 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyDeselectAllInStatusFilterRemovesAllSelections('Automation');
     });
 
+    test('TC_29: Verify multiple selections in status filter are allowed', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyMultipleSelectionsInStatusFilterAreAllowed('Automation', ['For sale', 'Sold']);
+    });
+
+
 });   
