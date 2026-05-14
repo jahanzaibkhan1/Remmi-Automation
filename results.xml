@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="88.79580999999865">
-<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-14T11:51:08.366Z" hostname="chromium" tests="1" failures="0" skipped="0" time="86.817" errors="0">
-<testcase name="Project Lot List Tests › TC_37: Verify records count displays correctly at bottom of project lots list" classname="Pages\Projects\projectLotList.spec.ts" time="86.817">
-<system-out>
-<![CDATA[Records: 2
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="100.82439499999956">
+<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-14T12:04:40.134Z" hostname="chromium" tests="1" failures="0" skipped="0" time="98.025" errors="0">
+<testcase name="Project Lot List Tests › TC_38: Verify all lots load via infinite scroll pagination" classname="Pages\Projects\projectLotList.spec.ts" time="98.025">
 </testcase>
 </testsuite>
 </testsuites>
