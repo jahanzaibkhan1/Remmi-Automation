@@ -156,5 +156,9 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyInvalidDataInFilterDropdownSearch('Automation', 'InvalidStatusXYZ');
     });
 
+    test('TC_36: Verify other fields have condition + search in filter popup', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyFilterPopupOpensForProjectStatus();
+    });
+
 
 });   
