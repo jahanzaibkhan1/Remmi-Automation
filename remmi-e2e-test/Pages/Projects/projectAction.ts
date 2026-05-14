@@ -9009,4 +9009,26 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    /**
+     * Helper to type a value in the filter dropdown search
+     */
+    private async typeInFilterDropdownSearch(value: string): Promise<void> {
+        await this.filterConditionDropdown.click();
+        const searchBox = this.searchBoxInFilterPopup;
+        await expect(searchBox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await searchBox.click();
+        await searchBox.fill(value);
+    }
+
+    /**
+     * TC_xx — Typing an invalid value in filter dropdown search should show no results
+     */
+    async verifyInvalidDataInFilterDropdownSearch(projectName: string = 'Automation', invalidValue: string ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
+        await this.assertFilterPopupVisible();
+        await this.typeInFilterDropdownSearch(invalidValue);
+        await this.cleanupAfterProjectTest();
+    }
+
 }

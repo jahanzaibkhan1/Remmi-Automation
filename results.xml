@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="67.03900200000032">
-<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-14T11:35:22.330Z" hostname="chromium" tests="1" failures="0" skipped="0" time="65.074" errors="0">
-<testcase name="Project Lot List Tests › TC_34: Verify valid filter applies correctly in Project Lots" classname="Pages\Projects\projectLotList.spec.ts" time="65.074">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="86.55390499999933">
+<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-14T11:41:36.792Z" hostname="chromium" tests="1" failures="0" skipped="0" time="84.531" errors="0">
+<testcase name="Project Lot List Tests › TC_35: Invalid value typed in filter dropdown search" classname="Pages\Projects\projectLotList.spec.ts" time="84.531">
 </testcase>
 </testsuite>
 </testsuites>

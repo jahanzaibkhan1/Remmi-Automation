@@ -152,5 +152,9 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyValidFilterAppliesCorrectly('Automation', 'For sale');
     });
 
+    test('TC_35: Invalid value typed in filter dropdown search', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyInvalidDataInFilterDropdownSearch('Automation', 'InvalidStatusXYZ');
+    });
+
 
 });   
