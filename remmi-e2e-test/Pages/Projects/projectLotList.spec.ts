@@ -40,8 +40,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyLotListViewButtonClickable('Automation');
     });
 
-    test('TC_06: Verify all statuses can be hidden/unhidden using eye icon', async ({ sessionPage }) => {
-        await new ProjectActions(sessionPage).verifyHideUnhideAllStatuses('Automation');
+    test('TC_6: Verify create view button functionality', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyCreateViewButtonFunctionality('Automation');
     });
 
     test('TC_07: Verify individual status hide/unhide works', async ({ sessionPage }) => {
@@ -60,8 +60,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyStatusSearchInViewPopup('Lot', 'Automation');
     });
 
-    test('TC_11: Verify create view button functionality', async ({ sessionPage }) => {
-        await new ProjectActions(sessionPage).verifyCreateViewButtonFunctionality('Automation');
+    test('TC_011: Verify all statuses can be hidden/unhidden using eye icon', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHideUnhideAllStatuses('Automation');
     });
 
     test('TC_12: Verify share view to agent', async ({ sessionPage }) => {
@@ -111,5 +111,62 @@ test.describe('Project Lot List Tests', () => {
     test('TC_24: Verify filter popup opens correctly for Project Status', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyFilterPopupOpensForProjectStatus('Automation');
     });
+
+    test('TC_25: Verify dropdowns are shown in filter popup', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyFilterDropdownsAreVisible('Automation');
+    });
+
+    test('TC_26: Verify condition dropdown is working', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyConditionDropdownIsWorking('Automation', 'For sale');
+    });
+
+    test('TC_27: Verify "Select All" in status filter selects all options', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySelectAllInStatusFilterSelectsAllOptions('Automation');
+    });
+
+    test('TC_28: Verify "Deselect All" in status filter removes all selections', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyDeselectAllInStatusFilterRemovesAllSelections('Automation');
+    });
+
+    test('TC_29: Verify multiple selections in status filter are allowed', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyMultipleSelectionsInStatusFilterAreAllowed('Automation', ['For sale', 'Sold']);
+    });
+
+    test('TC_30: Verify search in filter dropdown filters options', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyConditionDropdownIsWorking('Automation', 'For sale');
+    });
+
+    test('TC_31: Verify closing filter popup with cross does not apply changes', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyClosingFilterPopupWithCrossDoesNotApplyChanges('Automation');
+    });
+
+    test('TC_32: Verify closing filter popup with "Clear" button clears all filters', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyClosingFilterPopupWithClearButtonClearsAllFilters('Automation', 'For sale');
+    });
+
+    test('TC_33: Apply filter without any selection', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).applyFilterWithoutAnySelection('Automation');
+    });
+
+    test('TC_34: Verify valid filter applies correctly in Project Lots', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyValidFilterAppliesCorrectly('Automation', 'For sale');
+    });
+
+    test('TC_35: Invalid value typed in filter dropdown search', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyInvalidDataInFilterDropdownSearch('Automation', 'InvalidStatusXYZ');
+    });
+
+    test('TC_36: Verify other fields have condition + search in filter popup', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyFilterPopupOpensForProjectStatus();
+    });
+
+    test('TC_37: Verify records count displays correctly at bottom of project lots list', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyRecordCountDisplayedAtBottom('Automation');
+    });
+
+    test('TC_38: Verify all lots load via infinite scroll pagination', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyAllLotsLoadOnScroll('Automation');
+    });
+
 
 });   
