@@ -8983,5 +8983,16 @@ export class ProjectActions {
         await this.clearFilterButton.click();
         await this.cleanupAfterProjectTest();
     }
-    
+
+    /**
+     * TC_xx — Apply filter without any selection (should not filter results)
+     */
+    async applyFilterWithoutAnySelection(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
+        await this.assertFilterPopupVisible();
+        await this.applyFilterButton.click();
+        await this.cleanupAfterProjectTest();
+    }
+
 }
