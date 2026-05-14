@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="80.14720399999992">
-<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-14T11:17:21.322Z" hostname="chromium" tests="1" failures="0" skipped="0" time="77.329" errors="0">
-<testcase name="Project Lot List Tests › TC_29: Verify multiple selections in status filter are allowed" classname="Pages\Projects\projectLotList.spec.ts" time="77.329">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="72.0139170000013">
+<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-14T11:19:40.981Z" hostname="chromium" tests="1" failures="0" skipped="0" time="69.991" errors="0">
+<testcase name="Project Lot List Tests › TC_30: Verify search in filter dropdown filters options" classname="Pages\Projects\projectLotList.spec.ts" time="69.991">
 </testcase>
 </testsuite>
 </testsuites>
