@@ -8790,6 +8790,22 @@ export class ProjectActions {
     }
 
     /**
+     * Locator for the "Select all" checkbox inside the filter popup.
+     */
+    private get selectAllCheckboxInFilterPopup(): Locator {
+        return this.page.locator('div.checkbox__checkmark').first();
+    }
+
+    /**
+     * Clicks the "Select all" checkbox in the filter popup.
+     */
+    private async selectAllInFilterPopup(): Promise<void> {
+        const selectAllCheckbox = this.selectAllCheckboxInFilterPopup;
+        await expect(selectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await selectAllCheckbox.click();
+    }
+
+    /**
      * HELPER — Assert both Condition (re-multiselect) and Values (ng-select) dropdowns are visible in filter popup
      */
     private async assertFilterDropdownsVisible(): Promise<void> {
@@ -8844,6 +8860,17 @@ export class ProjectActions {
     }
 
     /**
+     * Helper to click the "Select All" checkbox for Statuses in filter popup.
+     */
+    private async selectAllStatusesInFilterPopup(): Promise<void> {
+        // Open the filterConditionDropdown, which shows the filter popup.
+        await this.filterConditionDropdown.click();
+        const searchBox = this.searchBoxInFilterPopup;
+        await expect(searchBox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.selectAllInFilterPopup();
+    }
+
+    /**
      * TC_22 — Verify condition dropdown is working in the filter popup
      */
     async verifyConditionDropdownIsWorking(projectName: string = 'Automation', searchTerm: string): Promise<void> {
@@ -8851,6 +8878,17 @@ export class ProjectActions {
         await this.openFilterPopup();
         await this.assertFilterPopupVisible();
         await this.selectConditionDropdownOptionWithSearch(searchTerm);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_27 — Verify "Select All" in status filter selects all options
+     */
+    async verifySelectAllInStatusFilterSelectsAllOptions(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
+        await this.assertFilterPopupVisible();
+        await this.selectAllStatusesInFilterPopup();
         await this.cleanupAfterProjectTest();
     }
 }

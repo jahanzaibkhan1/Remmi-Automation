@@ -120,4 +120,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyConditionDropdownIsWorking('Automation', 'For sale');
     });
 
+    test('TC_27: Verify "Select All" in status filter selects all options', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySelectAllInStatusFilterSelectsAllOptions('Automation');
+    });
+
 });   
