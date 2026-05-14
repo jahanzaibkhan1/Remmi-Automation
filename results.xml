@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="71.27431900000013">
-<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-14T06:35:03.074Z" hostname="chromium" tests="1" failures="0" skipped="0" time="69.163" errors="0">
-<testcase name="Project Lot List Tests › TC_25: Verify dropdowns are shown in filter popup" classname="Pages\Projects\projectLotList.spec.ts" time="69.163">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="66.96970600000024">
+<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-14T10:48:27.295Z" hostname="chromium" tests="1" failures="0" skipped="0" time="64.069" errors="0">
+<testcase name="Project Lot List Tests › TC_26: Verify condition dropdown is working" classname="Pages\Projects\projectLotList.spec.ts" time="64.069">
 </testcase>
 </testsuite>
 </testsuites>

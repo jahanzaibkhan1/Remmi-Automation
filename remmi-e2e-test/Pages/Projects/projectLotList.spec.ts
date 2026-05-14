@@ -116,4 +116,8 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyFilterDropdownsAreVisible('Automation');
     });
 
+    test('TC_26: Verify condition dropdown is working', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyConditionDropdownIsWorking('Automation', 'For sale');
+    });
+
 });   
