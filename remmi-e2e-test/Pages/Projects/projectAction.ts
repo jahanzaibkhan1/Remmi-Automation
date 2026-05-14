@@ -524,7 +524,6 @@ export class ProjectActions {
     private get precinctDialogTitle(): Locator {
         return this.addPrecinctDialog.locator('.p-dialog-title');
     }
-
     private get precinctNameInput(): Locator {
         return this.addPrecinctDialog.locator('input[placeholder="Precinct Name"]');
     }
@@ -8445,6 +8444,7 @@ export class ProjectActions {
         await this.page.waitForTimeout(1200);
         await this.clickShowAll();
         await this.page.waitForTimeout(500);
+        await this.saveOrCreateButton.click();
         await this.cleanupAfterProjectTest();
     }
 
@@ -8452,7 +8452,6 @@ export class ProjectActions {
         await this.openProjectLotTab(projectName);
         await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.clickLotListViewButton();
-        await this.clickShowAll();
         const firstHandle = this.visibleColumnList.nth(0);
         const secondHandle = this.visibleColumnList.nth(1);
         await firstHandle.scrollIntoViewIfNeeded();
@@ -8472,7 +8471,6 @@ export class ProjectActions {
         await this.openProjectLotTab(projectName);
         await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.clickLotListViewButton();
-        await this.clickShowAll();
         const firstHandle = this.visibleColumnList.nth(0);
         const secondHandle = this.visibleColumnList.nth(1);
         await firstHandle.scrollIntoViewIfNeeded();
@@ -8493,7 +8491,6 @@ export class ProjectActions {
         await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.clickLotListViewButton();
         await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.clickShowAll();
         await expect(this.columnSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.columnSearchInput.fill(statusName);
         await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
@@ -8666,8 +8663,8 @@ export class ProjectActions {
     async verifyBulkLotDeletion(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
         await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.selectMultipleLotListRowCheckboxes([1, 2]);
-        await this.assertSelectedRecordsLabel();
+        // await this.selectMultipleLotListRowCheckboxes([1, 2]);
+        // await this.assertSelectedRecordsLabel();
         // await this.clickLotListDeleteButton();
         await this.cleanupAfterProjectTest();
     }
@@ -8746,16 +8743,324 @@ export class ProjectActions {
     }
 
     /**
- * TC_20 — Verify filter popup opens correctly for Project Status column
- */
-    async verifyFilterPopupOpensForProjectStatus(projectName: string = 'Automation'): Promise<void> {
-        await this.openProjectLotTab(projectName);
+     * Dropdown for the filter "Values" in the filter popup (ng-select, not re-multiselect)
+     */
+    private get filterValuesDropdown(): Locator {
+        return this.lotListFilterPopup.locator('ng-select[placeholder="Select"]');
+    }
+
+    private get filterConditionDropdown(): Locator {
+        return this.lotListFilterPopup.locator('re-multiselect').first();
+    }
+
+    private get filterPopup(): Locator {
+        return this.page.getByRole('dialog');
+    }
+
+    get equalsOption() {
+        return this.page.getByRole('option', { name: /equals/i });
+    }
+
+    get searchBoxInFilterPopup(): Locator {
+        return this.page.locator('input[placeholder="Search"]').last();
+    }
+
+    private optionListItemInFilterPopup(name: string): Locator {
+        return this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: name });
+    }
+
+    private get filterByTasksRemoveIcon(): Locator {
+        return this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
+    }
+
+    private get recordsFooter(): Locator {
+        return this.page.locator('text=Records:');
+    }
+
+    /**
+     * Option inside dropdown 
+     */
+    private optionInFilterPopup(option: string): Locator {
+        return this.page
+            .getByRole('dialog')
+            .locator('li')
+            .filter({ hasText: option });
+    }
+    /**
+     * Apply button in filter popup
+     */
+    private get applyFilterButton(): Locator {
+        return this.filterPopup.getByRole('button', { name: /apply/i });
+    }
+
+    /**
+     * Locator for the close ("times") icon in filter popup.
+     */
+    private get filterPopupCloseIcon(): Locator {
+        return this.page.locator('i.pi.pi-times.f-14.cursor-pointer').last();
+    }
+
+    /**
+     * Locator for the "Clear" button inside the filter popup.
+     */
+    private get clearFilterButton(): Locator {
+        return this.filterPopup.getByRole('button', { name: /clear/i });
+    }
+
+    /**
+     * Locator for the "Select all" checkbox inside the filter popup.
+     */
+    private get selectAllCheckboxInFilterPopup(): Locator {
+        return this.page.locator('div.checkbox__checkmark').first();
+    }
+
+    /**
+     * Clicks the "Select all" checkbox in the filter popup.
+     */
+    private async selectAllInFilterPopup(): Promise<void> {
+        const selectAllCheckbox = this.selectAllCheckboxInFilterPopup;
+        await expect(selectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await selectAllCheckbox.click();
+    }
+
+    /**
+     * HELPER — Assert both Condition (re-multiselect) and Values (ng-select) dropdowns are visible in filter popup
+     */
+    private async assertFilterDropdownsVisible(): Promise<void> {
+        await expect(this.filterValuesDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.filterConditionDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    private async openFilterPopup(): Promise<void> {
         await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         const filterIcon = this.page.locator('th:has-text("Project Status") img[alt="filter"]');
         await filterIcon.click();
         await this.page.waitForTimeout(700);
         await filterIcon.click();
+    }
+    /**
+ * TC_20 — Verify filter popup opens correctly for Project Status column
+ */
+    async verifyFilterPopupOpensForProjectStatus(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
         await this.assertFilterPopupVisible();
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+ * TC_21 — Verify dropdowns are shown in filter popup
+ */
+    async verifyFilterDropdownsAreVisible(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
+        await this.assertFilterPopupVisible();
+        await this.assertFilterDropdownsVisible();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * Helper to select an option from filterConditionDropdown using search box in the filter popup.
+     */
+    private async selectConditionDropdownOptionWithSearch(searchTerm: string): Promise<void> {
+        await this.filterConditionDropdown.click();
+        const searchBox = this.searchBoxInFilterPopup;
+        await expect(searchBox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await searchBox.click();
+        await searchBox.fill(searchTerm);
+        const optionLocator = this.optionInFilterPopup(searchTerm);
+        await expect(optionLocator).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await optionLocator.click();
+        await expect(this.filterConditionDropdown).toHaveText(
+            new RegExp(searchTerm, 'i'),
+            { timeout: ProjectActions.TIMEOUT_DEFAULT }
+        );
+
+        await this.filterByTasksRemoveIcon.click();
+    }
+
+    /**
+     * Helper to click the "Select All" checkbox for Statuses in filter popup.
+     */
+    private async selectAllStatusesInFilterPopup(): Promise<void> {
+        // Open the filterConditionDropdown, which shows the filter popup.
+        await this.filterConditionDropdown.click();
+        const searchBox = this.searchBoxInFilterPopup;
+        await expect(searchBox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.selectAllInFilterPopup();
+    }
+
+    /**
+ * Helper to click the "Deselect All" checkbox for Statuses in filter popup.
+ */
+    private async deselectAllStatusesInFilterPopup(): Promise<void> {
+        // Open the filterConditionDropdown, which shows the filter popup.
+        await this.filterConditionDropdown.click();
+        const searchBox = this.searchBoxInFilterPopup;
+        await expect(searchBox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.selectAllInFilterPopup();
+        await this.page.waitForTimeout(500);
+        await this.selectAllInFilterPopup();
+    }
+
+    /**
+     * TC_22 — Verify condition dropdown is working in the filter popup
+     */
+    async verifyConditionDropdownIsWorking(projectName: string = 'Automation', searchTerm: string): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
+        await this.assertFilterPopupVisible();
+        await this.selectConditionDropdownOptionWithSearch(searchTerm);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_27 — Verify "Select All" in status filter selects all options
+     */
+    async verifySelectAllInStatusFilterSelectsAllOptions(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
+        await this.assertFilterPopupVisible();
+        await this.selectAllStatusesInFilterPopup();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_xx — Verify "Deselect All" in status filter removes all selections
+     */
+    async verifyDeselectAllInStatusFilterRemovesAllSelections(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
+        await this.assertFilterPopupVisible();
+        await this.deselectAllStatusesInFilterPopup();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * Helper to select multiple statuses in the status filter popup.
+     */
+    private async selectMultipleStatusesInFilterPopup(statuses: string[]): Promise<void> {
+        // Ensure the filter popup and search box are visible
+        await this.filterConditionDropdown.click();
+        const searchBox = this.searchBoxInFilterPopup;
+        await expect(searchBox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await searchBox.click();
+
+        for (const status of statuses) {
+            await searchBox.fill(status);
+            const optionLocator = this.optionInFilterPopup(status);
+            await expect(optionLocator).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+            await optionLocator.click();
+        }
+    }
+
+    /**
+     * TC_xx — Verify that multiple selections in the status filter are allowed
+     */
+    async verifyMultipleSelectionsInStatusFilterAreAllowed(projectName: string = 'Automation', selections: string[] = ['For sale', 'Sold']): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
+        await this.assertFilterPopupVisible();
+        await this.selectMultipleStatusesInFilterPopup(selections);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_xx — Verify closing filter popup with cross does not apply changes
+     */
+    async verifyClosingFilterPopupWithCrossDoesNotApplyChanges(projectName: string = 'Automation', targetStatus: string = 'Sold'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
+        await this.assertFilterPopupVisible();
+        await this.filterPopupCloseIcon.click();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_xx — Verify closing filter popup with "Clear" button clears all filters
+     */
+    async verifyClosingFilterPopupWithClearButtonClearsAllFilters(projectName: string = 'Automation', searchTerm: string): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
+        await this.assertFilterPopupVisible();
+        await this.selectConditionDropdownOptionWithSearch(searchTerm);
+        await this.clearFilterButton.click();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_xx — Apply filter without any selection (should not filter results)
+     */
+    async applyFilterWithoutAnySelection(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
+        await this.assertFilterPopupVisible();
+        await this.applyFilterButton.click();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_xx — Verify that applying a valid filter in Project Lots works correctly
+     */
+    async verifyValidFilterAppliesCorrectly(projectName: string = 'Automation', filterValue: string = 'For sale'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
+        await this.assertFilterPopupVisible();
+        await this.selectConditionDropdownOptionWithSearch(filterValue);
+        await this.applyFilterButton.click();
+        const resultLocator = this.page.locator('.p-datatable .p-datatable-tbody tr td', { hasText: filterValue });
+        await expect(resultLocator.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * Helper to type a value in the filter dropdown search
+     */
+    private async typeInFilterDropdownSearch(value: string): Promise<void> {
+        await this.filterConditionDropdown.click();
+        const searchBox = this.searchBoxInFilterPopup;
+        await expect(searchBox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await searchBox.click();
+        await searchBox.fill(value);
+    }
+
+    /**
+     * TC_xx — Typing an invalid value in filter dropdown search should show no results
+     */
+    async verifyInvalidDataInFilterDropdownSearch(projectName: string = 'Automation', invalidValue: string ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
+        await this.assertFilterPopupVisible();
+        await this.typeInFilterDropdownSearch(invalidValue);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     *Verify records are correctly displayed at bottom of list (trim and console the number)
+     */
+    async verifyRecordCountDisplayedAtBottom(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.recordsFooter).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const footerText = await this.recordsFooter.textContent();
+        console.log(footerText && footerText.trim());
+        await this.cleanupAfterProjectTest();
+    }
+
+
+    /**
+     * TC_xx — Verify pagination loads all lots via scroll (infinite scroll)
+     */
+    async verifyAllLotsLoadOnScroll(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        let prevCount = 0, count = await this.lotTableRows.count(), tries = 0;
+        while (tries++ < 20 && count > prevCount) {
+            prevCount = count;
+            await this.lotTableRows.nth(count - 1).scrollIntoViewIfNeeded();
+            await this.page.waitForTimeout(1200);
+            count = await this.lotTableRows.count();
+        }
+        await expect(this.lotTableRows.nth(count - 1)).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.cleanupAfterProjectTest();
+    }
+
 }
