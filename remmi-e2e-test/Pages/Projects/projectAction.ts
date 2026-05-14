@@ -8915,4 +8915,33 @@ export class ProjectActions {
         await this.deselectAllStatusesInFilterPopup();
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+     * Helper to select multiple statuses in the status filter popup.
+     */
+    private async selectMultipleStatusesInFilterPopup(statuses: string[]): Promise<void> {
+        // Ensure the filter popup and search box are visible
+        await this.filterConditionDropdown.click();
+        const searchBox = this.searchBoxInFilterPopup;
+        await expect(searchBox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await searchBox.click();
+
+        for (const status of statuses) {
+            await searchBox.fill(status);
+            const optionLocator = this.optionInFilterPopup(status);
+            await expect(optionLocator).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+            await optionLocator.click();
+        }
+    }
+
+    /**
+     * TC_xx — Verify that multiple selections in the status filter are allowed
+     */
+    async verifyMultipleSelectionsInStatusFilterAreAllowed(projectName: string = 'Automation', selections: string[] = ['For sale', 'Sold']): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
+        await this.assertFilterPopupVisible();
+        await this.selectMultipleStatusesInFilterPopup(selections);
+        await this.cleanupAfterProjectTest();
+    }
 }
