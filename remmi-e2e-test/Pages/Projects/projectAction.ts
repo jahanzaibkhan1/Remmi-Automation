@@ -8773,6 +8773,10 @@ export class ProjectActions {
         return this.page.locator('.filter-by-tasks > re-multiselect > .box > .tags > .fas');
     }
 
+    private get recordsFooter(): Locator {
+        return this.page.locator('text=Records:');
+    }
+
     /**
      * Option inside dropdown 
      */
@@ -9028,6 +9032,17 @@ export class ProjectActions {
         await this.openFilterPopup();
         await this.assertFilterPopupVisible();
         await this.typeInFilterDropdownSearch(invalidValue);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     *Verify records are correctly displayed at bottom of list (trim and console the number)
+     */
+    async verifyRecordCountDisplayedAtBottom(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.recordsFooter).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const footerText = await this.recordsFooter.textContent();
+        console.log(footerText && footerText.trim());
         await this.cleanupAfterProjectTest();
     }
 

@@ -160,5 +160,9 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyFilterPopupOpensForProjectStatus();
     });
 
+    test('TC_37: Verify records count displays correctly at bottom of project lots list', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyRecordCountDisplayedAtBottom('Automation');
+    });
+
 
 });   
