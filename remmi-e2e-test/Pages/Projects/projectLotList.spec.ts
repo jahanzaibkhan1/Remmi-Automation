@@ -136,5 +136,9 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyConditionDropdownIsWorking('Automation', 'For sale');
     });
 
+    test('TC_31: Verify closing filter popup with cross does not apply changes', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyClosingFilterPopupWithCrossDoesNotApplyChanges('Automation');
+    });
+
 
 });   

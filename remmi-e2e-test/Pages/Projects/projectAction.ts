@@ -8790,6 +8790,13 @@ export class ProjectActions {
     }
 
     /**
+     * Locator for the close ("times") icon in filter popup.
+     */
+    private get filterPopupCloseIcon(): Locator {
+        return this.page.locator('i.pi.pi-times.f-14.cursor-pointer').last();
+    }
+
+    /**
      * Locator for the "Select all" checkbox inside the filter popup.
      */
     private get selectAllCheckboxInFilterPopup(): Locator {
@@ -8942,6 +8949,17 @@ export class ProjectActions {
         await this.openFilterPopup();
         await this.assertFilterPopupVisible();
         await this.selectMultipleStatusesInFilterPopup(selections);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_xx — Verify closing filter popup with cross does not apply changes
+     */
+    async verifyClosingFilterPopupWithCrossDoesNotApplyChanges(projectName: string = 'Automation', targetStatus: string = 'Sold'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
+        await this.assertFilterPopupVisible();
+        await this.filterPopupCloseIcon.click();
         await this.cleanupAfterProjectTest();
     }
 }
