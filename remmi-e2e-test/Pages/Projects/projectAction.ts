@@ -8995,4 +8995,18 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    /**
+     * TC_xx — Verify that applying a valid filter in Project Lots works correctly
+     */
+    async verifyValidFilterAppliesCorrectly(projectName: string = 'Automation', filterValue: string = 'For sale'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.openFilterPopup();
+        await this.assertFilterPopupVisible();
+        await this.selectConditionDropdownOptionWithSearch(filterValue);
+        await this.applyFilterButton.click();
+        const resultLocator = this.page.locator('.p-datatable .p-datatable-tbody tr td', { hasText: filterValue });
+        await expect(resultLocator.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await this.cleanupAfterProjectTest();
+    }
+
 }

@@ -148,5 +148,9 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).applyFilterWithoutAnySelection('Automation');
     });
 
+    test('TC_34: Verify valid filter applies correctly in Project Lots', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyValidFilterAppliesCorrectly('Automation', 'For sale');
+    });
+
 
 });   
