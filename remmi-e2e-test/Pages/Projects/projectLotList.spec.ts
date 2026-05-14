@@ -144,5 +144,9 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyClosingFilterPopupWithClearButtonClearsAllFilters('Automation', 'For sale');
     });
 
+    test('TC_33: Apply filter without any selection', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).applyFilterWithoutAnySelection('Automation');
+    });
+
 
 });   
