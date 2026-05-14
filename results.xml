@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="55.403768999999386">
-<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-14T11:23:58.562Z" hostname="chromium" tests="1" failures="0" skipped="0" time="53.427" errors="0">
-<testcase name="Project Lot List Tests › TC_31: Verify closing filter popup with cross does not apply changes" classname="Pages\Projects\projectLotList.spec.ts" time="53.427">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="71.59018400000036">
+<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-14T11:30:44.871Z" hostname="chromium" tests="1" failures="0" skipped="0" time="69.629" errors="0">
+<testcase name="Project Lot List Tests › TC_32: Verify closing filter popup with &quot;Clear&quot; button clears all filters" classname="Pages\Projects\projectLotList.spec.ts" time="69.629">
 </testcase>
 </testsuite>
 </testsuites>
