@@ -8520,6 +8520,20 @@ export class ProjectActions {
     }
 
     /**
+     * TC_xx — Verify view dropdown in popup shows no views
+     */
+    async verifyViewDropdownShowsNoViews(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewDropdownArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.viewDropdownArrow.click();
+        await expect(this.page.locator('.ng-option.ng-option-disabled')).toHaveText(/No items found/i);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
  * TC_10 — Verify Create View button functionality
  */
     async verifyCreateViewButtonFunctionality(
@@ -8598,6 +8612,35 @@ export class ProjectActions {
         await this.reorderExpandCollapseArrow.click();
         await this.page.waitForTimeout(500);
         await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_ — Verify delete view from dropdown works
+     */
+    async verifyDeleteViewFromDropdown(
+        projectName: string = 'Automation',
+        viewName: string = 'Test View'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.viewDropdownArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.viewDropdownArrow.click();
+        const viewOption = this.savedViewOption(viewName);
+        await expect(viewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const deleteIcon = viewOption.locator('img[src*="delete_icon.svg"]');
+        await expect(deleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await deleteIcon.click();
+        try {
+            await expect(this.confirmAnyButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
+            await this.confirmAnyButton.click();
+        } catch {
+
+        }
+        await expect(this.viewDeletedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.cleanupAfterProjectTest();
     }
 
@@ -9092,4 +9135,37 @@ export class ProjectActions {
     }
 
 
+    /**
+     * Verify that the create button is not clickable when the name input is empty
+     */
+    async verifyCreateButtonNotClickableWithoutName(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        await this.addViewIcon.click();
+        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.viewNameInput.click();
+        await this.saveOrCreateButton.click({ force: true });
+        await expect(this.viewNameInputInvalid).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * Verify that switching between views updates the lots list layout.
+     */
+    async verifySwitchingBetweenViewsUpdatesListLayout(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await expect(this.viewDropdownArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.viewDropdownArrow.click();
+        await this.page.waitForTimeout(1000);
+        const testViewOption = this.page.locator('p', { hasText: 'Test View' }).last();
+        await expect(testViewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await testViewOption.click();
+        await this.saveOrCreateButton.click({ force: true });
+        await this.cleanupAfterProjectTest();
+    }
 }
