@@ -8040,6 +8040,23 @@ export class ProjectActions {
         return this.lotListTable.locator('tbody tr').nth(rowIndex).locator('p-tablecheckbox .p-checkbox-box').first();
     }
 
+    /**
+     * HELPER — Verify checkboxes in the lot list table are properly aligned.
+     */
+    private async verifyLotListCheckboxesAlignment(): Promise<void> {
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListMasterCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const headerCheckboxBox = this.lotListMasterCheckbox;
+        const firstRowCheckboxBox = this.lotListRowCheckbox(0);
+        const headerBox = await headerCheckboxBox.boundingBox();
+        const rowBox = await firstRowCheckboxBox.boundingBox();
+        if (!headerBox || !rowBox) {
+            throw new Error('Could not get bounding boxes for checkboxes');
+        }
+        const alignmentDiff = Math.abs(headerBox.x - rowBox.x);
+        expect(alignmentDiff).toBeLessThanOrEqual(2);
+    }
+
     private get lotListDeleteButton(): Locator {
         return this.page.locator('app-unit button._cancel-btn').filter({
             has: this.page.locator('img[src*="delete_icon.svg"]')
@@ -9027,7 +9044,7 @@ export class ProjectActions {
     /**
      * TC_xx — Typing an invalid value in filter dropdown search should show no results
      */
-    async verifyInvalidDataInFilterDropdownSearch(projectName: string = 'Automation', invalidValue: string ): Promise<void> {
+    async verifyInvalidDataInFilterDropdownSearch(projectName: string = 'Automation', invalidValue: string): Promise<void> {
         await this.openProjectLotTab(projectName);
         await this.openFilterPopup();
         await this.assertFilterPopupVisible();
@@ -9040,9 +9057,11 @@ export class ProjectActions {
      */
     async verifyRecordCountDisplayedAtBottom(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.recordsFooter).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        const footerText = await this.recordsFooter.textContent();
-        console.log(footerText && footerText.trim());
+        await expect(this.lotListRecordsCounter).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const footerText = await this.lotListRecordsCounter.textContent();
+        const recordText = footerText ? footerText.trim() : '';
+        console.log(recordText);
+        expect(recordText.length).toBeGreaterThan(0);
         await this.cleanupAfterProjectTest();
     }
 
@@ -9062,5 +9081,15 @@ export class ProjectActions {
         await expect(this.lotTableRows.nth(count - 1)).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.cleanupAfterProjectTest();
     }
+    /**
+     * Check vertical alignment of header and row checkboxes in Lot table
+     */
+    async verifyLotTableCheckboxAlignment(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.verifyLotListCheckboxesAlignment();
+        await this.cleanupAfterProjectTest();
+    }
+
 
 }

@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="100.82439499999956">
-<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-14T12:04:40.134Z" hostname="chromium" tests="1" failures="0" skipped="0" time="98.025" errors="0">
-<testcase name="Project Lot List Tests › TC_38: Verify all lots load via infinite scroll pagination" classname="Pages\Projects\projectLotList.spec.ts" time="98.025">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="93.1786490000002">
+<testsuite name="Pages\Projects\projectLotList.spec.ts" timestamp="2026-05-15T04:06:59.030Z" hostname="chromium" tests="1" failures="0" skipped="0" time="89.553" errors="0">
+<testcase name="Project Lot List Tests › TC_39: Verify checkboxes are properly aligned in lot table" classname="Pages\Projects\projectLotList.spec.ts" time="89.553">
 </testcase>
 </testsuite>
 </testsuites>
