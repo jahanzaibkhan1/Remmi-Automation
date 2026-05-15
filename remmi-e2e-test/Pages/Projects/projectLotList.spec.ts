@@ -168,5 +168,9 @@ test.describe('Project Lot List Tests', () => {
         await new ProjectActions(sessionPage).verifyAllLotsLoadOnScroll('Automation');
     });
 
+    test('TC_39: Verify checkboxes are properly aligned in lot table', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotTableCheckboxAlignment('Automation');
+    });
+
 
 });   
