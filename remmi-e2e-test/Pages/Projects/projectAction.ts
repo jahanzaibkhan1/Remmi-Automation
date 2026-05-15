@@ -9168,4 +9168,23 @@ export class ProjectActions {
         await this.saveOrCreateButton.click({ force: true });
         await this.cleanupAfterProjectTest();
     }
+
+
+    /**
+     * Clicks a lot row to open the lot form/details panel.
+     */
+    async clickLotOpensLotForm(projectName: string = 'Automation', lotName: string = 'Automation Lot'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const targetLotRow = lotName
+            ? this.lotTableRows.filter({ hasText: lotName }).first()
+            : this.lotTableRows.first();
+        await expect(targetLotRow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await targetLotRow.click();
+        await expect(this.saveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.saveAndCloseButton.click();
+        await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
+
 }
