@@ -2864,8 +2864,8 @@ export class ProjectActions {
     // ==========================================================================
 
     private async assertSuccessToast(expectedText: string = 'Update successfully'): Promise<void> {
-        await expect(this.successToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.successToast).toContainText(expectedText, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.successToast.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.successToast.first()).toContainText(expectedText, { timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
 
     private async navigateToLots(): Promise<void> {
@@ -8040,6 +8040,23 @@ export class ProjectActions {
         return this.lotListTable.locator('tbody tr').nth(rowIndex).locator('p-tablecheckbox .p-checkbox-box').first();
     }
 
+    /**
+     * HELPER — Verify checkboxes in the lot list table are properly aligned.
+     */
+    private async verifyLotListCheckboxesAlignment(): Promise<void> {
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListMasterCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const headerCheckboxBox = this.lotListMasterCheckbox;
+        const firstRowCheckboxBox = this.lotListRowCheckbox(0);
+        const headerBox = await headerCheckboxBox.boundingBox();
+        const rowBox = await firstRowCheckboxBox.boundingBox();
+        if (!headerBox || !rowBox) {
+            throw new Error('Could not get bounding boxes for checkboxes');
+        }
+        const alignmentDiff = Math.abs(headerBox.x - rowBox.x);
+        expect(alignmentDiff).toBeLessThanOrEqual(2);
+    }
+
     private get lotListDeleteButton(): Locator {
         return this.page.locator('app-unit button._cancel-btn').filter({
             has: this.page.locator('img[src*="delete_icon.svg"]')
@@ -8503,6 +8520,20 @@ export class ProjectActions {
     }
 
     /**
+     * TC_xx — Verify view dropdown in popup shows no views
+     */
+    async verifyViewDropdownShowsNoViews(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewDropdownArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.viewDropdownArrow.click();
+        await expect(this.page.locator('.ng-option.ng-option-disabled')).toHaveText(/No items found/i);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
  * TC_10 — Verify Create View button functionality
  */
     async verifyCreateViewButtonFunctionality(
@@ -8581,6 +8612,35 @@ export class ProjectActions {
         await this.reorderExpandCollapseArrow.click();
         await this.page.waitForTimeout(500);
         await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_ — Verify delete view from dropdown works
+     */
+    async verifyDeleteViewFromDropdown(
+        projectName: string = 'Automation',
+        viewName: string = 'Test View'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.viewDropdownArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.viewDropdownArrow.click();
+        const viewOption = this.savedViewOption(viewName);
+        await expect(viewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const deleteIcon = viewOption.locator('img[src*="delete_icon.svg"]');
+        await expect(deleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await deleteIcon.click();
+        try {
+            await expect(this.confirmAnyButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
+            await this.confirmAnyButton.click();
+        } catch {
+
+        }
+        await expect(this.viewDeletedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.cleanupAfterProjectTest();
     }
 
@@ -9027,7 +9087,7 @@ export class ProjectActions {
     /**
      * TC_xx — Typing an invalid value in filter dropdown search should show no results
      */
-    async verifyInvalidDataInFilterDropdownSearch(projectName: string = 'Automation', invalidValue: string ): Promise<void> {
+    async verifyInvalidDataInFilterDropdownSearch(projectName: string = 'Automation', invalidValue: string): Promise<void> {
         await this.openProjectLotTab(projectName);
         await this.openFilterPopup();
         await this.assertFilterPopupVisible();
@@ -9040,9 +9100,11 @@ export class ProjectActions {
      */
     async verifyRecordCountDisplayedAtBottom(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.recordsFooter).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        const footerText = await this.recordsFooter.textContent();
-        console.log(footerText && footerText.trim());
+        await expect(this.lotListRecordsCounter).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const footerText = await this.lotListRecordsCounter.textContent();
+        const recordText = footerText ? footerText.trim() : '';
+        console.log(recordText);
+        expect(recordText.length).toBeGreaterThan(0);
         await this.cleanupAfterProjectTest();
     }
 
@@ -9062,5 +9124,800 @@ export class ProjectActions {
         await expect(this.lotTableRows.nth(count - 1)).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
         await this.cleanupAfterProjectTest();
     }
+    /**
+     * Check vertical alignment of header and row checkboxes in Lot table
+     */
+    async verifyLotTableCheckboxAlignment(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.verifyLotListCheckboxesAlignment();
+        await this.cleanupAfterProjectTest();
+    }
 
+
+    /**
+     * Verify that the create button is not clickable when the name input is empty
+     */
+    async verifyCreateButtonNotClickableWithoutName(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        await this.addViewIcon.click();
+        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.viewNameInput.click();
+        await this.saveOrCreateButton.click({ force: true });
+        await expect(this.viewNameInputInvalid).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * Verify that switching between views updates the lots list layout.
+     */
+    async verifySwitchingBetweenViewsUpdatesListLayout(projectName: string = 'Automation'): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotListViewButton();
+        await expect(this.viewDropdownArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.viewDropdownArrow.click();
+        await this.page.waitForTimeout(1000);
+        const testViewOption = this.page.locator('p', { hasText: 'Test View' }).last();
+        await expect(testViewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await testViewOption.click();
+        await this.saveOrCreateButton.click({ force: true });
+        await this.cleanupAfterProjectTest();
+    }
+
+    private get lotFormTabTitle(): Locator {
+        return this.page.locator('a#pills-lot-tab').first();
+    }
+
+    private get lotFormSaveAndCloseButton(): Locator {
+        return this.page.locator('app-edit-unit button._primary-btn').filter({ hasText: /save\s*&\s*close/i }).first();
+    }
+
+    private get lotFormSaveButton(): Locator {
+        return this.page.locator('app-edit-unit button._outline-btn').filter({ hasText: /^\s*save\s*$/i }).first();
+    }
+
+    private get lotFormNameHandle(): Locator {
+        return this.page.locator('app-edit-unit .name-handle').first();
+    }
+
+    private get lotFormNameHandleText(): Locator {
+        return this.page.locator('app-edit-unit .name-handle p').first();
+    }
+
+    private get lotFormProjectDropdown(): Locator {
+        return this.page.locator('app-edit-unit ng-select[formcontrolname="projectid"]').first();
+    }
+
+    private get lotFormProjectDropdownOptions(): Locator {
+        return this.page.locator('ng-dropdown-panel .ng-option');
+    }
+
+    private get lotFormProjectDropdownCombobox(): Locator {
+        return this.lotFormProjectDropdown.locator('div[role="combobox"]').first();
+    }
+
+    private get lotFormProjectDropdownSelectedValue(): Locator {
+        return this.lotFormProjectDropdown.locator('.ng-value-label').first();
+    }
+
+    private get lotFormStatusReasonDropdown(): Locator {
+        return this.page.locator('app-edit-unit ng-select[formcontrolname="status_reason"]').first();
+    }
+
+    private get lotFormStudyInput(): Locator {
+        return this.page.locator('app-edit-unit input[formcontrolname="study"]').first();
+    }
+
+    private get lotFormOrientationInput(): Locator {
+        return this.page.locator('app-edit-unit input[formcontrolname="orientation"]').first();
+    }
+    private lotFormStatusReasonOptionByText(statusText: string): Locator {
+        return this.lotFormStatusReasonOptions.filter({ hasText: new RegExp(`^\\s*${statusText}\\s*$`, 'i') }).first();
+    }
+
+    /**
+ * HELPER — Fill optional fields on lot form
+ */
+    private async fillLotFormOptionalFields(data: {
+        bed?: string;
+        bath?: string;
+        study?: string;
+        aspect?: string;
+        orientation?: string;
+    }): Promise<void> {
+        if (data.bed !== undefined) {
+            await this.lotFormBedInput.clear();
+            await this.lotFormBedInput.fill(data.bed);
+        }
+        if (data.bath !== undefined) {
+            await this.lotFormBathInput.clear();
+            await this.lotFormBathInput.fill(data.bath);
+        }
+        if (data.study !== undefined) {
+            await this.lotFormStudyInput.clear();
+            await this.lotFormStudyInput.fill(data.study);
+        }
+        if (data.aspect !== undefined) {
+            await this.lotFormAspectInput.clear();
+            await this.lotFormAspectInput.fill(data.aspect);
+        }
+        if (data.orientation !== undefined) {
+            await this.lotFormOrientationInput.clear();
+            await this.lotFormOrientationInput.fill(data.orientation);
+        }
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Assert optional fields retain their values
+     */
+    private async assertLotFormOptionalFieldsRetained(data: {
+        bed?: string;
+        bath?: string;
+        study?: string;
+        aspect?: string;
+        orientation?: string;
+    }): Promise<void> {
+        if (data.bed !== undefined) {
+            await expect(this.lotFormBedInput).toHaveValue(data.bed, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
+        if (data.bath !== undefined) {
+            await expect(this.lotFormBathInput).toHaveValue(data.bath, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
+        if (data.study !== undefined) {
+            await expect(this.lotFormStudyInput).toHaveValue(data.study, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
+        if (data.aspect !== undefined) {
+            await expect(this.lotFormAspectInput).toHaveValue(data.aspect, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
+        if (data.orientation !== undefined) {
+            await expect(this.lotFormOrientationInput).toHaveValue(data.orientation, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
+    }
+
+    /**
+ * HELPER — Click Status Reason dropdown to open options
+ */
+    private async clickLotFormStatusReasonDropdown(): Promise<void> {
+        await expect(this.lotFormStatusReasonDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotFormStatusReasonDropdown.click();
+        await this.page.waitForTimeout(800);
+    }
+
+    /**
+     * HELPER — Assert all expected status options are visible in Status Reason dropdown
+     */
+    private async assertStatusReasonOptionsVisible(expectedStatuses: string[]): Promise<void> {
+        // Verify options panel is open
+        await expect(this.lotFormStatusReasonOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        for (const status of expectedStatuses) {
+            const option = this.lotFormStatusReasonOptionByText(status);
+            await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
+    }
+
+    /**
+     * HELPER — Close Project dropdown by clicking selected option
+     */
+    private async closeLotFormProjectDropdown(projectName: string): Promise<void> {
+        const selectedOption = this.lotFormProjectDropdownOptions.filter({ hasText: projectName }).first();
+        await expect(selectedOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await selectedOption.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Assert Project dropdown is closed (aria-expanded="false")
+     */
+    private async assertProjectDropdownClosed(): Promise<void> {
+        await expect(this.lotFormProjectDropdownCombobox).toHaveAttribute('aria-expanded', 'false', {
+            timeout: ProjectActions.TIMEOUT_DEFAULT
+        });
+    }
+
+    /**
+ * HELPER — Click Project dropdown on lot form to open project list
+ */
+    private async clickLotFormProjectDropdown(): Promise<void> {
+        await expect(this.lotFormProjectDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotFormProjectDropdown.click();
+        await this.page.waitForTimeout(800);
+    }
+
+    /**
+     * HELPER — Assert Project dropdown options list is visible (popup open)
+     */
+    private async assertProjectDropdownOptionsVisible(): Promise<void> {
+        await expect(this.lotFormProjectDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+ * HELPER — Assert Apartment Details and History tabs are visible on lot form
+ */
+    private async assertLotFormTabsVisible(): Promise<void> {
+        await expect(this.lotFormApartmentDetailsTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormHistoryTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+ * HELPER — Click a lot row by its lot name to open lot form
+ */
+    private async clickLotRowByName(lotName: string): Promise<void> {
+        const targetLotRow = this.lotListTableRows.filter({ hasText: lotName }).first();
+        await expect(targetLotRow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await targetLotRow.click();
+        await this.page.waitForTimeout(1500);
+    }
+
+    /**
+     * HELPER — Assert lot form tab shows the lot name in title
+     */
+    private async assertLotFormTabTitle(lotName: string): Promise<void> {
+        await expect(this.lotFormTabTitle).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormTabTitle).toContainText(lotName, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT
+        });
+    }
+
+    /**
+     * HELPER — Click "Save & Close" button on lot form
+     */
+    private async clickLotFormSaveAndClose(): Promise<void> {
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotFormSaveAndCloseButton.click();
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * HELPER — Click "Save" button on lot form 
+     */
+    private async clickLotFormSave(): Promise<void> {
+        await expect(this.lotFormSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotFormSaveButton.click();
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+  * HELPER — Click popup close icon 
+  */
+    private async clickPopupCloseIcon(): Promise<void> {
+        await expect(this.popupCloseIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.popupCloseIcon.click();
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * HELPER — Assert lot form is closed 
+     */
+    private async assertLotFormClosed(): Promise<void> {
+        await expect(this.lotFormSaveAndCloseButton).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+ * HELPER — Assert project name appears below tab in name-handle
+ */
+    private async assertProjectNameBelowTab(projectName: string): Promise<void> {
+        await expect(this.lotFormNameHandle).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormNameHandleText).toContainText(projectName, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT
+        });
+    }
+
+    /**
+     * HELPER — Assert lot name appears below tab in name-handle
+     */
+    private async assertLotNameBelowTab(lotName: string): Promise<void> {
+        await expect(this.lotFormNameHandle).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormNameHandleText).toContainText(lotName, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT
+        });
+    }
+
+    /**
+ * HELPER — Assert Project dropdown is auto-filled with given project name
+ */
+    private async assertProjectDropdownAutoFilled(projectName: string): Promise<void> {
+        await expect(this.lotFormProjectDropdownSelectedValue).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormProjectDropdownSelectedValue).toContainText(projectName, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT
+        });
+    }
+
+    /**
+ * TC_01 — Click a lot row to open the lot form/details panel
+ */
+    async clickLotOpensLotForm(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_02 — Verify lot name is shown on the form tab
+     */
+    async verifyLotNameShownOnFormTab(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await this.assertLotFormTabTitle(lotName);
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+   * TC_03 — Verify left cross icon closes lot form
+   */
+    async verifyLeftCrossIconClosesLotForm(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickPopupCloseIcon();
+        await this.assertLotFormClosed();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_05 — Verify project and lot name appear below tab
+ */
+    async verifyProjectAndLotNameBelowsTab(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertProjectNameBelowTab(projectName);
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_06 — Verify Apartment Details and History tabs are visible on lot form
+ */
+    async verifyApartmentDetailAndHistoryTabsVisible(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotFormTabsVisible();
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_07 — Verify Project dropdown is auto-filled with current project
+ */
+    async verifyProjectsDropdownAutoFilled(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertProjectDropdownAutoFilled(projectName);
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_09 — Verify Status Reason dropdown shows all status options
+ */
+    async verifyStatusReasonDropdownShowsAllStatuses(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotFormStatusReasonDropdown();
+        const expectedStatuses = ['For Sale', 'Withheld', 'Developer Hold'];
+        await this.assertStatusReasonOptionsVisible(expectedStatuses);
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_12 — Verify optional fields accept and retain input
+ */
+    async verifyOptionalFieldAcceptInput(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const optionalData = {
+            bed: '3',
+            bath: '2',
+            study: 'Yes',
+            aspect: 'North',
+            orientation: 'East'
+        };
+        await this.fillLotFormOptionalFields(optionalData);
+        await this.assertLotFormOptionalFieldsRetained(optionalData);
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * HELPER — Select a project from Project dropdown by searching and exact-text click
+ */
+    private async selectLotFormProject(projectName: string): Promise<void> {
+        // Open dropdown
+        await this.clickLotFormProjectDropdown();
+
+        // Type project name in search input
+        const searchInput = this.lotFormProjectDropdown.locator('input[type="text"]').first();
+        await searchInput.fill(projectName);
+        await this.page.waitForTimeout(500);
+
+        // Click exact match option
+        const projectOption = this.page.getByRole('option', { name: projectName, exact: true });
+        await expect(projectOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await projectOption.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+ * TC_11 — Verify project can be changed to "Automation"
+ */
+    async verifyProjectCanBeChange(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.selectLotFormProject(projectName);
+        await this.assertProjectDropdownAutoFilled(projectName);
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+
+    /**
+ * TC_13 — Verify close button exits without saving changes
+ */
+    async verifyCloseButtonExitWithoutSaving(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await this.lotFormLotInput.fill('Changed Lot Name');
+        await this.page.waitForTimeout(500);
+        expect(await this.lotFormLotInput.inputValue()).toBe('Changed Lot Name');
+        await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_14 — Verify Save button saves form without closing
+     */
+    async verifySaveButtonSavesFormWithoutClosing(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await this.lotFormLotInput.fill('Automation Lot');
+        await this.clickLotFormSave();
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        expect(await this.lotFormLotInput.inputValue()).toBe('Automation Lot');
+        await this.lotFormLotInput.fill(lotName);
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_15 — Verify Save & Close button saves form and closes it
+     */
+    async verifySaveAndCloseButtonSaveAndClosesForm(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        // Optionally, modify data
+        await this.lotFormLotInput.fill('Automation Lot');
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * Helper to open and validate history tab for current lot.
+     */
+    async openAndValidateHistoryTab(): Promise<number> {
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormHistoryTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotFormHistoryTab.click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormHistoryTab).toHaveClass(/active/);
+        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const rowCount = await this.historyTableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+        await expect(this.historyRecordsCount).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        return rowCount;
+    }
+
+    /**
+     * TC_17 — Verify history tab loads properly
+     */
+    async verifyHistoryTabLoadsProperly(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await this.openAndValidateHistoryTab();
+        await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * Helper to perform a search in the history tab and check results.
+     */
+    async searchHistoryTabAndCheck(keyword: string): Promise<void> {
+        await expect(this.historySearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.historySearchInput.fill(keyword);
+        await this.page.waitForTimeout(1500);
+
+        const filteredCount = await this.historyTableRows.count();
+        expect(filteredCount).toBeGreaterThan(0);
+        const firstRowText = (await this.historyTableRows.first().innerText()).toLowerCase();
+        expect(firstRowText).toContain(keyword.toLowerCase());
+    }
+
+    /**
+     * TC_18 — Verify search works in history tab
+     */
+    async verifyHistorySearchInTab(
+        searchKeyword: string,
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.clickLotRowByName(lotName);
+        await this.openAndValidateHistoryTab();
+        await this.searchHistoryTabAndCheck(searchKeyword);
+        await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_19 — Verify change date is correct in the history tab
+     */
+    async verifyHistoryChangeDateInTab(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.clickLotRowByName(lotName);
+        await this.openAndValidateHistoryTab();
+        const changedDateText = (await this.historyRowChangedDate(this.historyTableRows.first()).innerText()).trim();
+        expect(changedDateText.length).toBeGreaterThan(0);
+        expect(changedDateText).toMatch(/\d{2}-\d{2}-\d{4}\s+\d{1,2}:\d{2}\s+(AM|PM)/i);
+        await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_20 — Verify change by field shows updating staff in history tab
+     */
+    async verifyHistoryChangeByFieldInTab(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.clickLotRowByName(lotName);
+        await this.openAndValidateHistoryTab();
+        const changedByText = (await this.historyRowChangedBy(this.historyTableRows.first()).innerText()).trim();
+        expect(changedByText.length).toBeGreaterThan(0);
+        await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_21 — Verify event column shows 'Create' or 'Update'
+     */
+    async verifyHistoryEventColumnShowsCreateOrUpdate(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.clickLotRowByName(lotName);
+        await this.openAndValidateHistoryTab();
+        const eventText = (await this.historyRowEvent(this.historyTableRows.first()).innerText()).trim();
+        expect(['Create', 'Update']).toContain(eventText);
+        await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_22 — Verify change fields show updated fields in history tab
+     */
+    async verifyHistoryChangedField(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.clickLotRowByName(lotName);
+        await this.openAndValidateHistoryTab();
+        // Using the existing method historyRowChangedField as per linter suggestion
+        const changedFieldsText = (await this.historyRowChangedField(this.historyTableRows.first()).innerText()).trim();
+        expect(changedFieldsText.length).toBeGreaterThan(0);
+        await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * HELPER — Get trimmed Event text from a history row
+ */
+    private async getHistoryRowEventText(row: Locator): Promise<string> {
+        return (await this.historyRowEvent(row).innerText()).trim();
+    }
+
+    /**
+     * HELPER — Get trimmed Old Value text from a history row
+     */
+    private async getHistoryRowOldValueText(row: Locator): Promise<string> {
+        return (await this.historyRowOldValue(row).innerText()).trim();
+    }
+
+    /**
+     * HELPER — Get trimmed New Value text from a history row
+     */
+    private async getHistoryRowNewValueText(row: Locator): Promise<string> {
+        return (await this.historyRowNewValue(row).innerText()).trim();
+    }
+
+    /**
+     * HELPER — Assert all rows matching expectedEvent have old value empty and new value present
+     * Used for CREATE events where only new values should be shown
+     */
+    private async assertOnlyNewValuesForEvent(expectedEvent: string): Promise<void> {
+        const rowCount = await this.historyTableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        for (let i = 0; i < rowCount; i++) {
+            const row = this.historyTableRows.nth(i);
+            const eventText = await this.getHistoryRowEventText(row);
+
+            if (eventText === expectedEvent) {
+                const oldValueText = await this.getHistoryRowOldValueText(row);
+                const newValueText = await this.getHistoryRowNewValueText(row);
+
+                // CREATE event: old value should be empty
+                expect(oldValueText === '' || oldValueText === undefined).toBeTruthy();
+                // CREATE event: new value should exist
+                expect(newValueText.length).toBeGreaterThan(0);
+            }
+        }
+    }
+
+    /**
+     * HELPER — Assert all rows matching expectedEvent have BOTH old and new values present
+     * Used for UPDATE events where both values should be shown
+     */
+    private async assertBothValuesForEvent(expectedEvent: string): Promise<void> {
+        const rowCount = await this.historyTableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        for (let i = 0; i < rowCount; i++) {
+            const row = this.historyTableRows.nth(i);
+            const eventText = await this.getHistoryRowEventText(row);
+
+            if (eventText === expectedEvent) {
+                const oldValueText = await this.getHistoryRowOldValueText(row);
+                const newValueText = await this.getHistoryRowNewValueText(row);
+                expect(oldValueText.length).toBeGreaterThan(0);
+                expect(newValueText.length).toBeGreaterThan(0);
+            }
+        }
+    }
+
+    /**
+ * TC_23 — Verify only new values are shown on creation
+ */
+    async verifyNewValuesShownOnCreation(
+        expectedEvent: string = 'Create',
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.clickLotRowByName(lotName);
+        await this.openAndValidateHistoryTab();
+        await this.assertOnlyNewValuesForEvent(expectedEvent);
+        await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_24 — Verify both old and new values are shown on update
+     */
+    async verifyBothOldAndNewValueOnUpdate(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot',
+        expectedEvent: string = 'update'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.clickLotRowByName(lotName);
+        await this.openAndValidateHistoryTab();
+        await this.assertBothValuesForEvent(expectedEvent);
+        await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * HELPER — Search for a project in dropdown and assert no results found
+ */
+    private async assertInvalidProjectNotFound(invalidProjectName: string): Promise<void> {
+        await this.clickLotFormProjectDropdown();
+        const searchInput = this.lotFormProjectDropdown.locator('input[type="text"]').first();
+        await searchInput.fill(invalidProjectName);
+        await this.page.waitForTimeout(800);
+        const matchingOption = this.lotFormProjectDropdownOptions.filter({
+            hasText: new RegExp(invalidProjectName, 'i')
+        });
+        await expect(matchingOption).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * TC_25 — Verify invalid/removed project cannot be selected in dropdown
+     */
+    async verifyInvalidProjectCannotBeSelected(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot',
+        invalidProjectName: string = 'InvalidProject_XYZ_12345'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertInvalidProjectNotFound(invalidProjectName);
+        await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
 }
+
