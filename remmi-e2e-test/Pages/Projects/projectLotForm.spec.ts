@@ -52,5 +52,9 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifyLotNameShownOnFormTab('Automation', 'Automation Lot');
     });
 
+    test('TC_09: Verify status reason dropdown shows all statuses', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyStatusReasonDropdownShowsAllStatuses('Automation', 'Automation Lot');
+    });
+
 
 });
