@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="78.14855600000173">
-<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T10:26:41.146Z" hostname="chromium" tests="1" failures="0" skipped="0" time="75.772" errors="0">
-<testcase name="Project Lot Form Tests › TC_17 - Verify search works in history tab" classname="Pages\Projects\projectLotForm.spec.ts" time="75.772">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="82.04605000000075">
+<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T10:29:52.330Z" hostname="chromium" tests="1" failures="0" skipped="0" time="79.726" errors="0">
+<testcase name="Project Lot Form Tests › TC_18 - Verify change date is correct in the history tab" classname="Pages\Projects\projectLotForm.spec.ts" time="79.726">
 </testcase>
 </testsuite>
 </testsuites>
