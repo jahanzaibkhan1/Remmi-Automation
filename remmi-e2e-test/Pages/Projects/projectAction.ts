@@ -9189,6 +9189,30 @@ export class ProjectActions {
         return this.page.locator('app-edit-unit .name-handle p').first();
     }
 
+    private get lotFormProjectDropdown(): Locator {
+        return this.page.locator('app-edit-unit ng-select[formcontrolname="projectid"]').first();
+    }
+
+    private get lotFormProjectDropdownOptions(): Locator {
+        return this.page.locator('ng-dropdown-panel .ng-option');
+    }
+
+    /**
+ * HELPER — Click Project dropdown on lot form to open project list
+ */
+    private async clickLotFormProjectDropdown(): Promise<void> {
+        await expect(this.lotFormProjectDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotFormProjectDropdown.click();
+        await this.page.waitForTimeout(800);
+    }
+
+    /**
+     * HELPER — Assert Project dropdown options list is visible (popup open)
+     */
+    private async assertProjectDropdownOptionsVisible(): Promise<void> {
+        await expect(this.lotFormProjectDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
     /**
  * HELPER — Assert Apartment Details and History tabs are visible on lot form
  */
@@ -9348,6 +9372,25 @@ export class ProjectActions {
         await this.clickLotRowByName(lotName);
         await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.assertLotFormTabsVisible();
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+
+    /**
+ * TC_07 — Verify clicking Project field opens Project list popup
+ */
+    async verifyProjectFieldOpensProjectList(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotFormProjectDropdown();
+        await this.assertProjectDropdownOptionsVisible();
         await this.clickLotFormSaveAndClose();
         await this.assertSuccessToast();
         await this.cleanupAfterProjectTest();

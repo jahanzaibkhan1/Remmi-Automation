@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="78.64871400000062">
-<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T06:32:04.859Z" hostname="chromium" tests="1" failures="0" skipped="0" time="76.667" errors="0">
-<testcase name="Project Lot Form Tests › TC_06: Verify Apartment Detail and History tabs are visible" classname="Pages\Projects\projectLotForm.spec.ts" time="76.667">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="93.75174399999995">
+<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T06:47:08.664Z" hostname="chromium" tests="1" failures="0" skipped="0" time="90.893" errors="0">
+<testcase name="Project Lot Form Tests › TC_07: Verify clicking Project field opens Project list popup" classname="Pages\Projects\projectLotForm.spec.ts" time="90.893">
 </testcase>
 </testsuite>
 </testsuites>
