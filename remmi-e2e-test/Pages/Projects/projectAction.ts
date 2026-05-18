@@ -9757,4 +9757,20 @@ export class ProjectActions {
         await this.clickPopupCloseIcon();
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+     * TC_21 — Verify event column shows 'Create' or 'Update'
+     */
+    async verifyHistoryEventColumnShowsCreateOrUpdate(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.clickLotRowByName(lotName);
+        await this.openAndValidateHistoryTab();
+        const eventText = (await this.historyRowEvent(this.historyTableRows.first()).innerText()).trim();
+        expect(['Create', 'Update']).toContain(eventText);
+        await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
 }

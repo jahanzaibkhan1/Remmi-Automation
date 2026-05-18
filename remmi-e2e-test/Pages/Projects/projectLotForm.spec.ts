@@ -96,4 +96,8 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifyHistoryChangeByFieldInTab('Automation', 'Automation Lot');
     });
 
+    test('TC_20 - Verify event column shows Create or Update', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHistoryEventColumnShowsCreateOrUpdate('Automation', 'Automation Lot');
+    });
+
 });
