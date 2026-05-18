@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="84.4675540000014">
-<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T10:40:42.629Z" hostname="chromium" tests="1" failures="0" skipped="0" time="82.198" errors="0">
-<testcase name="Project Lot Form Tests › TC_21 - Verify change fields show updated fields in history tab" classname="Pages\Projects\projectLotForm.spec.ts" time="82.198">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="112.35779200000316">
+<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T10:54:00.524Z" hostname="chromium" tests="1" failures="0" skipped="0" time="107.673" errors="0">
+<testcase name="Project Lot Form Tests › TC_22 - Verify only new values are shown on creation" classname="Pages\Projects\projectLotForm.spec.ts" time="107.673">
 </testcase>
 </testsuite>
 </testsuites>

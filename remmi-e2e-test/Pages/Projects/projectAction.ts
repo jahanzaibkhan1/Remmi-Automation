@@ -9790,4 +9790,36 @@ export class ProjectActions {
         await this.clickPopupCloseIcon();
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+     * TC_23 — Verify only new values are shown on creation
+     *
+     * For each history row where Event === 'Create',
+     * verifies that 'Old Value' is empty and 'New Value' is present and not empty.
+     */
+    async verifyNewValuesShownOnCreation(
+        expectedEvent: string = 'Create',
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.clickLotRowByName(lotName);
+        await this.openAndValidateHistoryTab();
+        const rowCount = await this.historyTableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+        for (let i = 0; i < rowCount; i++) {
+            const row = this.historyTableRows.nth(i);
+            const eventText = (await this.historyRowEvent(row).innerText()).trim();
+            if (eventText === expectedEvent) {
+                const oldValueText = (await this.historyRowOldValue(row).innerText()).trim();
+                expect(
+                    oldValueText === '' || oldValueText === undefined
+                ).toBeTruthy();
+                const newValueText = (await this.historyRowNewValue(row).innerText()).trim();
+                expect(newValueText.length).toBeGreaterThan(0);
+            }
+        }
+        await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
 }
