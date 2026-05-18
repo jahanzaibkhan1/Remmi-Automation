@@ -20,7 +20,12 @@ const test = base.extend<{ sessionPage: any }>({
 
 test.describe('Project Lot Form Tests', () => {
 
-   test('Lot form opens on clicking a lot', async ({ sessionPage }) => {
-       await new ProjectActions(sessionPage).clickLotOpensLotForm('Automation');
-   });
+    test('Test 1: Lot form opens on clicking a lot', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).clickLotOpensLotForm('Automation');
+    });
+
+    test('Test 2: Verify lot name is shown on the form tab', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotNameShownOnFormTab('Automation', 'Automation Lot');
+    });
+
 });

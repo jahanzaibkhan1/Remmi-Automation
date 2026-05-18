@@ -9169,22 +9169,90 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    private get lotFormTabTitle(): Locator {
+        return this.page.locator('a#pills-lot-tab').first();
+    }
+
+    private get lotFormSaveAndCloseButton(): Locator {
+        return this.page.locator('app-edit-unit button._primary-btn').filter({ hasText: /save\s*&\s*close/i }).first();
+    }
+
+    private get lotFormSaveButton(): Locator {
+        return this.page.locator('app-edit-unit button._outline-btn').filter({ hasText: /^\s*save\s*$/i }).first();
+    }
+
+    private get lotFormLeftCrossIcon(): Locator {
+        return this.page.locator('app-edit-unit').locator('.p-dialog-header-close, .close-icon, i.pi-times').first();
+    }
+
 
     /**
-     * Clicks a lot row to open the lot form/details panel.
-     */
-    async clickLotOpensLotForm(projectName: string = 'Automation', lotName: string = 'Automation Lot'): Promise<void> {
-        await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        const targetLotRow = lotName
-            ? this.lotTableRows.filter({ hasText: lotName }).first()
-            : this.lotTableRows.first();
+ * HELPER — Click a lot row by its lot name to open lot form
+ */
+    private async clickLotRowByName(lotName: string): Promise<void> {
+        const targetLotRow = this.lotListTableRows.filter({ hasText: lotName }).first();
         await expect(targetLotRow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await targetLotRow.click();
-        await expect(this.saveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.saveAndCloseButton.click();
+        await this.page.waitForTimeout(1500);
+    }
+
+    /**
+     * HELPER — Assert lot form tab shows the lot name in title
+     */
+    private async assertLotFormTabTitle(lotName: string): Promise<void> {
+        await expect(this.lotFormTabTitle).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormTabTitle).toContainText(lotName, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT
+        });
+    }
+
+    /**
+     * HELPER — Click "Save & Close" button on lot form
+     */
+    private async clickLotFormSaveAndClose(): Promise<void> {
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotFormSaveAndCloseButton.click();
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * HELPER — Click "Save" button on lot form 
+     */
+    private async clickLotFormSave(): Promise<void> {
+        await expect(this.lotFormSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotFormSaveButton.click();
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+ * TC_01 — Click a lot row to open the lot form/details panel
+ */
+    async clickLotOpensLotForm(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotFormSaveAndClose();
         await this.assertSuccessToast();
         await this.cleanupAfterProjectTest();
     }
 
+    /**
+     * TC_02 — Verify lot name is shown on the form tab
+     */
+    async verifyLotNameShownOnFormTab(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await this.assertLotFormTabTitle(lotName);
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
 }
