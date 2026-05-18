@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="82.04605000000075">
-<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T10:29:52.330Z" hostname="chromium" tests="1" failures="0" skipped="0" time="79.726" errors="0">
-<testcase name="Project Lot Form Tests › TC_18 - Verify change date is correct in the history tab" classname="Pages\Projects\projectLotForm.spec.ts" time="79.726">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="87.47724700000137">
+<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T10:34:01.421Z" hostname="chromium" tests="1" failures="0" skipped="0" time="85.003" errors="0">
+<testcase name="Project Lot Form Tests › TC_19 - Verify change by field shows updating staff in history tab" classname="Pages\Projects\projectLotForm.spec.ts" time="85.003">
 </testcase>
 </testsuite>
 </testsuites>
