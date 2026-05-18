@@ -9201,6 +9201,10 @@ export class ProjectActions {
         return this.lotFormProjectDropdown.locator('div[role="combobox"]').first();
     }
 
+    private get lotFormProjectDropdownSelectedValue(): Locator {
+        return this.lotFormProjectDropdown.locator('.ng-value-label').first();
+    }
+
     /**
      * HELPER — Close Project dropdown by clicking selected option
      */
@@ -9319,6 +9323,16 @@ export class ProjectActions {
     }
 
     /**
+ * HELPER — Assert Project dropdown is auto-filled with given project name
+ */
+    private async assertProjectDropdownAutoFilled(projectName: string): Promise<void> {
+        await expect(this.lotFormProjectDropdownSelectedValue).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormProjectDropdownSelectedValue).toContainText(projectName, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT
+        });
+    }
+
+    /**
  * TC_01 — Click a lot row to open the lot form/details panel
  */
     async clickLotOpensLotForm(
@@ -9400,11 +9414,10 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
-
     /**
- * TC_07 — Verify clicking Project field opens Project list popup
+ * TC_07 — Verify Project dropdown is auto-filled with current project
  */
-    async verifyProjectFieldOpensProjectList(
+    async verifyProjectsDropdownAutoFilled(
         projectName: string = 'Automation',
         lotName: string = 'Automation Lot'
     ): Promise<void> {
@@ -9412,30 +9425,9 @@ export class ProjectActions {
         await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.clickLotRowByName(lotName);
         await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.clickLotFormProjectDropdown();
-        await this.assertProjectDropdownOptionsVisible();
+        await this.assertProjectDropdownAutoFilled(projectName);
         await this.clickLotFormSaveAndClose();
         await this.assertSuccessToast();
-        await this.cleanupAfterProjectTest();
-    }
-
-    /**
- * TC_08 — Verify clicking selected option closes Project list popup
- */
-    async verifyCloseIconClosesProjectList(
-        projectName: string = 'Automation',
-        lotName: string = 'Automation Lot'
-    ): Promise<void> {
-        await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.clickLotRowByName(lotName);
-        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.clickLotFormProjectDropdown();
-        await this.assertProjectDropdownOptionsVisible();
-        await this.closeLotFormProjectDropdown(projectName);
-        await this.assertProjectDropdownClosed();
-        await this.clickPopupCloseIcon();
-        await this.assertLotFormClosed();
         await this.cleanupAfterProjectTest();
     }
 }

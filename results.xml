@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="84.33582099999953">
-<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T07:00:37.786Z" hostname="chromium" tests="1" failures="0" skipped="0" time="82.29" errors="0">
-<testcase name="Project Lot Form Tests › TC_08: Verify close icon closes Project Tag popup" classname="Pages\Projects\projectLotForm.spec.ts" time="82.29">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="92.32376300000027">
+<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T07:28:06.827Z" hostname="chromium" tests="1" failures="0" skipped="0" time="90.142" errors="0">
+<testcase name="Project Lot Form Tests › TC_07: Verify project dropdown is auto-filled" classname="Pages\Projects\projectLotForm.spec.ts" time="90.142">
 </testcase>
 </testsuite>
 </testsuites>
