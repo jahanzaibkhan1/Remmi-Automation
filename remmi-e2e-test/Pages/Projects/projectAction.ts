@@ -9181,10 +9181,13 @@ export class ProjectActions {
         return this.page.locator('app-edit-unit button._outline-btn').filter({ hasText: /^\s*save\s*$/i }).first();
     }
 
-    private get lotFormLeftCrossIcon(): Locator {
-        return this.page.locator('app-edit-unit').locator('.p-dialog-header-close, .close-icon, i.pi-times').first();
+    private get lotFormNameHandle(): Locator {
+        return this.page.locator('app-edit-unit .name-handle').first();
     }
 
+    private get lotFormNameHandleText(): Locator {
+        return this.page.locator('app-edit-unit .name-handle p').first();
+    }
 
     /**
  * HELPER — Click a lot row by its lot name to open lot form
@@ -9241,6 +9244,26 @@ export class ProjectActions {
     }
 
     /**
+ * HELPER — Assert project name appears below tab in name-handle
+ */
+    private async assertProjectNameBelowTab(projectName: string): Promise<void> {
+        await expect(this.lotFormNameHandle).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormNameHandleText).toContainText(projectName, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT
+        });
+    }
+
+    /**
+     * HELPER — Assert lot name appears below tab in name-handle
+     */
+    private async assertLotNameBelowTab(lotName: string): Promise<void> {
+        await expect(this.lotFormNameHandle).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormNameHandleText).toContainText(lotName, {
+            timeout: ProjectActions.TIMEOUT_DEFAULT
+        });
+    }
+
+    /**
  * TC_01 — Click a lot row to open the lot form/details panel
  */
     async clickLotOpensLotForm(
@@ -9285,6 +9308,23 @@ export class ProjectActions {
         await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.clickPopupCloseIcon();
         await this.assertLotFormClosed();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_05 — Verify project and lot name appear below tab
+ */
+    async verifyProjectAndLotNameBelowsTab(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertProjectNameBelowTab(projectName);
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
         await this.cleanupAfterProjectTest();
     }
 }
