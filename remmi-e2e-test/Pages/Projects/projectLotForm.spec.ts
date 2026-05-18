@@ -28,4 +28,8 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifyLotNameShownOnFormTab('Automation', 'Automation Lot');
     });
 
+    test('TC_03: Verify left cross icon closes lot form', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLeftCrossIconClosesLotForm('Automation', 'Automation Lot');
+    });
+
 });
