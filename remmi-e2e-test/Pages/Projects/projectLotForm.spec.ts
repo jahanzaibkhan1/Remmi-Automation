@@ -40,4 +40,8 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifyProjectAndLotNameBelowsTab('Automation', 'Automation Lot');
     });
 
+    test('TC_06: Verify Apartment Detail and History tabs are visible', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyApartmentDetailAndHistoryTabsVisible('Automation', 'Automation Lot');
+    });
+
 });
