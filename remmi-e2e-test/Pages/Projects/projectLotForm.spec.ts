@@ -112,4 +112,8 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifyBothOldAndNewValueOnUpdate('Automation', 'Automation Lot');
     });
 
+    test('TC_24 - Save with empty required fields', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotCreationWithMissingFields('Automation');
+    });
+    
 });
