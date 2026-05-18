@@ -9190,6 +9190,14 @@ export class ProjectActions {
     }
 
     /**
+ * HELPER — Assert Apartment Details and History tabs are visible on lot form
+ */
+    private async assertLotFormTabsVisible(): Promise<void> {
+        await expect(this.lotFormApartmentDetailsTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormHistoryTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
  * HELPER — Click a lot row by its lot name to open lot form
  */
     private async clickLotRowByName(lotName: string): Promise<void> {
@@ -9323,6 +9331,23 @@ export class ProjectActions {
         await this.clickLotRowByName(lotName);
         await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.assertProjectNameBelowTab(projectName);
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_06 — Verify Apartment Details and History tabs are visible on lot form
+ */
+    async verifyApartmentDetailAndHistoryTabsVisible(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertLotFormTabsVisible();
         await this.clickLotFormSaveAndClose();
         await this.assertSuccessToast();
         await this.cleanupAfterProjectTest();
