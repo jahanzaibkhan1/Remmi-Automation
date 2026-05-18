@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.04627400000021">
-<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T06:08:04.217Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.026" errors="0">
-<testcase name="Project Lot Form Tests › TC_03: Verify left cross icon closes lot form" classname="Pages\Projects\projectLotForm.spec.ts" time="58.026">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="91.58752199999988">
+<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T06:19:08.077Z" hostname="chromium" tests="1" failures="0" skipped="0" time="89.548" errors="0">
+<testcase name="Project Lot Form Tests › TC_04: Verify tabs cross icon closes form" classname="Pages\Projects\projectLotForm.spec.ts" time="89.548">
 </testcase>
 </testsuite>
 </testsuites>
