@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="70.7506630000025">
-<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T11:14:38.354Z" hostname="chromium" tests="1" failures="0" skipped="0" time="66.135" errors="0">
-<testcase name="Project Lot Form Tests › TC_23 - Verify both old and new values are shown on update" classname="Pages\Projects\projectLotForm.spec.ts" time="66.135">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="82.77414900000021">
+<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T11:19:17.326Z" hostname="chromium" tests="1" failures="0" skipped="0" time="78.217" errors="0">
+<testcase name="Project Lot Form Tests › TC_24 - Save with empty required fields" classname="Pages\Projects\projectLotForm.spec.ts" time="78.217">
 </testcase>
 </testsuite>
 </testsuites>
