@@ -32,4 +32,8 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifyLeftCrossIconClosesLotForm('Automation', 'Automation Lot');
     });
 
+    test('TC_04: Verify tabs cross icon closes form', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLeftCrossIconClosesLotForm('Automation', 'Automation Lot');
+    });
+
 });
