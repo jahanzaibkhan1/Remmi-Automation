@@ -56,5 +56,9 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifyStatusReasonDropdownShowsAllStatuses('Automation', 'Automation Lot');
     });
 
+    test('TC_10: Verify validation error on lot creation with missing required fields', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotCreationWithMissingFields('Automation');
+    });
+
 
 });
