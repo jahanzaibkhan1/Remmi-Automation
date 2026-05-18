@@ -2864,8 +2864,8 @@ export class ProjectActions {
     // ==========================================================================
 
     private async assertSuccessToast(expectedText: string = 'Update successfully'): Promise<void> {
-        await expect(this.successToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.successToast).toContainText(expectedText, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.successToast.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.successToast.first()).toContainText(expectedText, { timeout: ProjectActions.TIMEOUT_DEFAULT });
     }
 
     private async navigateToLots(): Promise<void> {
@@ -9623,6 +9623,27 @@ export class ProjectActions {
         await this.page.waitForTimeout(500);
         expect(await this.lotFormLotInput.inputValue()).toBe('Changed Lot Name');
         await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+     * TC_14 — Verify Save button saves form without closing
+     */
+    async verifySaveButtonSavesFormWithoutClosing(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await this.lotFormLotInput.fill('Automation Lot');
+        await this.clickLotFormSave();
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        expect(await this.lotFormLotInput.inputValue()).toBe('Automation Lot');
+        await this.lotFormLotInput.fill(lotName);
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
         await this.cleanupAfterProjectTest();
     }
 }
