@@ -80,5 +80,9 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifySaveAndCloseButtonSaveAndClosesForm('Automation', 'Automation Lot');
     });
 
+    test('TC_17 - Verify history tab loads properly', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHistoryTabLoadsProperly('Automation', 'Automation Lot');
+    });
+
 
 });
