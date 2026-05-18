@@ -9209,8 +9209,75 @@ export class ProjectActions {
         return this.page.locator('app-edit-unit ng-select[formcontrolname="status_reason"]').first();
     }
 
+    private get lotFormStudyInput(): Locator {
+        return this.page.locator('app-edit-unit input[formcontrolname="study"]').first();
+    }
+
+    private get lotFormOrientationInput(): Locator {
+        return this.page.locator('app-edit-unit input[formcontrolname="orientation"]').first();
+    }
     private lotFormStatusReasonOptionByText(statusText: string): Locator {
         return this.lotFormStatusReasonOptions.filter({ hasText: new RegExp(`^\\s*${statusText}\\s*$`, 'i') }).first();
+    }
+
+    /**
+ * HELPER — Fill optional fields on lot form
+ */
+    private async fillLotFormOptionalFields(data: {
+        bed?: string;
+        bath?: string;
+        study?: string;
+        aspect?: string;
+        orientation?: string;
+    }): Promise<void> {
+        if (data.bed !== undefined) {
+            await this.lotFormBedInput.clear();
+            await this.lotFormBedInput.fill(data.bed);
+        }
+        if (data.bath !== undefined) {
+            await this.lotFormBathInput.clear();
+            await this.lotFormBathInput.fill(data.bath);
+        }
+        if (data.study !== undefined) {
+            await this.lotFormStudyInput.clear();
+            await this.lotFormStudyInput.fill(data.study);
+        }
+        if (data.aspect !== undefined) {
+            await this.lotFormAspectInput.clear();
+            await this.lotFormAspectInput.fill(data.aspect);
+        }
+        if (data.orientation !== undefined) {
+            await this.lotFormOrientationInput.clear();
+            await this.lotFormOrientationInput.fill(data.orientation);
+        }
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * HELPER — Assert optional fields retain their values
+     */
+    private async assertLotFormOptionalFieldsRetained(data: {
+        bed?: string;
+        bath?: string;
+        study?: string;
+        aspect?: string;
+        orientation?: string;
+    }): Promise<void> {
+        if (data.bed !== undefined) {
+            await expect(this.lotFormBedInput).toHaveValue(data.bed, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
+        if (data.bath !== undefined) {
+            await expect(this.lotFormBathInput).toHaveValue(data.bath, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
+        if (data.study !== undefined) {
+            await expect(this.lotFormStudyInput).toHaveValue(data.study, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
+        if (data.aspect !== undefined) {
+            await expect(this.lotFormAspectInput).toHaveValue(data.aspect, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
+        if (data.orientation !== undefined) {
+            await expect(this.lotFormOrientationInput).toHaveValue(data.orientation, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
     }
 
     /**
@@ -9474,6 +9541,31 @@ export class ProjectActions {
         await this.clickLotFormStatusReasonDropdown();
         const expectedStatuses = ['For Sale', 'Withheld', 'Developer Hold'];
         await this.assertStatusReasonOptionsVisible(expectedStatuses);
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_12 — Verify optional fields accept and retain input
+ */
+    async verifyOptionalFieldAcceptInput(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const optionalData = {
+            bed: '3',
+            bath: '2',
+            study: 'Yes',
+            aspect: 'North',
+            orientation: 'East'
+        };
+        await this.fillLotFormOptionalFields(optionalData);
+        await this.assertLotFormOptionalFieldsRetained(optionalData);
         await this.clickLotFormSaveAndClose();
         await this.assertSuccessToast();
         await this.cleanupAfterProjectTest();
