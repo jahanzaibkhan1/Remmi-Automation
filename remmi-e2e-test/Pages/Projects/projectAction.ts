@@ -9724,4 +9724,21 @@ export class ProjectActions {
         await this.clickPopupCloseIcon();
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+     * TC_19 — Verify change date is correct in the history tab
+     */
+    async verifyHistoryChangeDateInTab(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.clickLotRowByName(lotName);
+        await this.openAndValidateHistoryTab();
+        const changedDateText = (await this.historyRowChangedDate(this.historyTableRows.first()).innerText()).trim();
+        expect(changedDateText.length).toBeGreaterThan(0);
+        expect(changedDateText).toMatch(/\d{2}-\d{2}-\d{4}\s+\d{1,2}:\d{2}\s+(AM|PM)/i);
+        await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
 }

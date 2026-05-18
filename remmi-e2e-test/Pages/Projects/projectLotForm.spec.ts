@@ -88,5 +88,8 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifyHistorySearchInTab('Bed', 'Automation', 'Automation Lot');
     });
 
+    test('TC_18 - Verify change date is correct in the history tab', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHistoryChangeDateInTab('Automation', 'Automation Lot');
+    });
 
 });
