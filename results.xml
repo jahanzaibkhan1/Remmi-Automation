@@ -1,8 +1,6 @@
-<testsuites id="" name="" tests="2" failures="0" skipped="0" errors="0" time="104.45970900000026">
-<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T05:57:18.219Z" hostname="chromium" tests="2" failures="0" skipped="0" time="102.227" errors="0">
-<testcase name="Project Lot Form Tests › Test 1: Lot form opens on clicking a lot" classname="Pages\Projects\projectLotForm.spec.ts" time="91">
-</testcase>
-<testcase name="Project Lot Form Tests › Test 2: Verify lot name is shown on the form tab" classname="Pages\Projects\projectLotForm.spec.ts" time="11.227">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="60.04627400000021">
+<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T06:08:04.217Z" hostname="chromium" tests="1" failures="0" skipped="0" time="58.026" errors="0">
+<testcase name="Project Lot Form Tests › TC_03: Verify left cross icon closes lot form" classname="Pages\Projects\projectLotForm.spec.ts" time="58.026">
 </testcase>
 </testsuite>
 </testsuites>

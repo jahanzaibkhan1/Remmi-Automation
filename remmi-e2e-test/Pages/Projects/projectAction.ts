@@ -9225,6 +9225,22 @@ export class ProjectActions {
     }
 
     /**
+  * HELPER — Click popup close icon 
+  */
+    private async clickPopupCloseIcon(): Promise<void> {
+        await expect(this.popupCloseIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.popupCloseIcon.click();
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * HELPER — Assert lot form is closed 
+     */
+    private async assertLotFormClosed(): Promise<void> {
+        await expect(this.lotFormSaveAndCloseButton).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
  * TC_01 — Click a lot row to open the lot form/details panel
  */
     async clickLotOpensLotForm(
@@ -9253,6 +9269,22 @@ export class ProjectActions {
         await this.assertLotFormTabTitle(lotName);
         await this.clickLotFormSaveAndClose();
         await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+   * TC_03 — Verify left cross icon closes lot form
+   */
+    async verifyLeftCrossIconClosesLotForm(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickPopupCloseIcon();
+        await this.assertLotFormClosed();
         await this.cleanupAfterProjectTest();
     }
 }
