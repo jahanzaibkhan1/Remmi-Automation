@@ -48,4 +48,8 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifyProjectFieldOpensProjectList('Automation', 'Automation Lot');
     });
 
+    test('TC_08: Verify close icon closes Project Tag popup', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyCloseIconClosesProjectList('Automation', 'Automation Lot');
+    });
+
 });
