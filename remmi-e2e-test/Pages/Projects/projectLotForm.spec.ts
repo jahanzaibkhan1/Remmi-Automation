@@ -92,4 +92,8 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifyHistoryChangeDateInTab('Automation', 'Automation Lot');
     });
 
+    test('TC_19 - Verify change by field shows updating staff in history tab', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHistoryChangeByFieldInTab('Automation', 'Automation Lot');
+    });
+
 });

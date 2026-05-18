@@ -9741,4 +9741,20 @@ export class ProjectActions {
         await this.clickPopupCloseIcon();
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+     * TC_20 — Verify change by field shows updating staff in history tab
+     */
+    async verifyHistoryChangeByFieldInTab(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.clickLotRowByName(lotName);
+        await this.openAndValidateHistoryTab();
+        const changedByText = (await this.historyRowChangedBy(this.historyTableRows.first()).innerText()).trim();
+        expect(changedByText.length).toBeGreaterThan(0);
+        await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
 }
