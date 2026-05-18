@@ -20,52 +20,57 @@ const test = base.extend<{ sessionPage: any }>({
 
 test.describe('Project Lot Form Tests', () => {
 
-    test('Test 1: Lot form opens on clicking a lot', async ({ sessionPage }) => {
+    test('TC_01 - Verify lot form opens on clicking a lot', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).clickLotOpensLotForm('Automation');
     });
 
-    test('Test 2: Verify lot name is shown on the form tab', async ({ sessionPage }) => {
+    test('TC_02 - Verify lot name is shown on the form tab', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyLotNameShownOnFormTab('Automation', 'Automation Lot');
     });
 
-    test('TC_03: Verify left cross icon closes lot form', async ({ sessionPage }) => {
+    test('TC_03 - Verify left cross icon closes lot form', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyLeftCrossIconClosesLotForm('Automation', 'Automation Lot');
     });
 
-    test('TC_04: Verify tabs cross icon closes form', async ({ sessionPage }) => {
+    test('TC_04 - Verify tab\'s cross icon closes form', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyLeftCrossIconClosesLotForm('Automation', 'Automation Lot');
     });
 
-    test('TC_05: Verify project and lot name below tab', async ({ sessionPage }) => {
+    test('TC_05 - Verify project and lot name below tab', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyProjectAndLotNameBelowsTab('Automation', 'Automation Lot');
     });
 
-    test('TC_06: Verify Apartment Detail and History tabs are visible', async ({ sessionPage }) => {
+    test('TC_06 - Verify apartment detail and history tabs are visible', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyApartmentDetailAndHistoryTabsVisible('Automation', 'Automation Lot');
     });
 
-    test('TC_07: Verify project dropdown is auto-filled', async ({ sessionPage }) => {
+    test('TC_07 - Verify project dropdown is auto-filled', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyProjectsDropdownAutoFilled('Automation', 'Automation Lot');
     });
 
-    test('Test 08: Verify lot field shows correct lot name', async ({ sessionPage }) => {
+    test('TC_08 - Verify project can be changed', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyProjectCanBeChange('Automation', 'Automation Lot');
+    });
+
+    test('TC_09 - Verify lot field shows correct lot name', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyLotNameShownOnFormTab('Automation', 'Automation Lot');
     });
 
-    test('TC_09: Verify status reason dropdown shows all statuses', async ({ sessionPage }) => {
+    test('TC_10 - Verify status reason dropdown shows all statuses', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyStatusReasonDropdownShowsAllStatuses('Automation', 'Automation Lot');
     });
 
-    test('TC_10: Verify validation error on lot creation with missing required fields', async ({ sessionPage }) => {
+    test('TC_11 - Verify required field validations work', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyLotCreationWithMissingFields('Automation');
     });
 
-    test('TC_11: Verify optional fields accept input', async ({ sessionPage }) => {
+    test('TC_12 - Verify optional fields accept input', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyOptionalFieldAcceptInput('Automation', 'Automation Lot');
     });
 
-    test('TC_12: Verify project can be changed to Automation', async ({ sessionPage }) => {
-        await new ProjectActions(sessionPage).verifyProjectCanBeChange('Automation', 'Automation Lot');
+    test('TC_13: Verify close button exits without saving', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyCloseButtonExitWithoutSaving('Automation', 'Automation Lot');
     });
+
 
 });
