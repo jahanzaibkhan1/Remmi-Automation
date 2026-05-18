@@ -60,5 +60,9 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifyLotCreationWithMissingFields('Automation');
     });
 
+    test('TC_11: Verify optional fields accept input', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyOptionalFieldAcceptInput('Automation', 'Automation Lot');
+    });
+
 
 });
