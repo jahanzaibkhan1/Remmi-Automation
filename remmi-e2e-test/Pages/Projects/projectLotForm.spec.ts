@@ -72,5 +72,9 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifyCloseButtonExitWithoutSaving('Automation', 'Automation Lot');
     });
 
+    test('TC_14 - Verify Save button saves form without closing', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySaveButtonSavesFormWithoutClosing('Automation', 'Automation Lot');
+    });
+
 
 });
