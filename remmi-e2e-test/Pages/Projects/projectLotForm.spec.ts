@@ -115,5 +115,13 @@ test.describe('Project Lot Form Tests', () => {
     test('TC_24 - Save with empty required fields', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyLotCreationWithMissingFields('Automation');
     });
+
+    test('TC_25: Verify invalid/removed project cannot be selected', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyInvalidProjectCannotBeSelected(
+            'Automation',
+            'Automation Lot',
+            'InvalidProject_XYZ_12345'
+        );
+    });
     
 });

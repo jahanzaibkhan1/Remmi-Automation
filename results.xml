@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="82.77414900000021">
-<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T11:19:17.326Z" hostname="chromium" tests="1" failures="0" skipped="0" time="78.217" errors="0">
-<testcase name="Project Lot Form Tests › TC_24 - Save with empty required fields" classname="Pages\Projects\projectLotForm.spec.ts" time="78.217">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="57.669809000000356">
+<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T11:31:17.427Z" hostname="chromium" tests="1" failures="0" skipped="0" time="55.643" errors="0">
+<testcase name="Project Lot Form Tests › TC_25: Verify invalid/removed project cannot be selected" classname="Pages\Projects\projectLotForm.spec.ts" time="55.643">
 </testcase>
 </testsuite>
 </testsuites>
