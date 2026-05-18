@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="93.75174399999995">
-<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T06:47:08.664Z" hostname="chromium" tests="1" failures="0" skipped="0" time="90.893" errors="0">
-<testcase name="Project Lot Form Tests › TC_07: Verify clicking Project field opens Project list popup" classname="Pages\Projects\projectLotForm.spec.ts" time="90.893">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="84.33582099999953">
+<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T07:00:37.786Z" hostname="chromium" tests="1" failures="0" skipped="0" time="82.29" errors="0">
+<testcase name="Project Lot Form Tests › TC_08: Verify close icon closes Project Tag popup" classname="Pages\Projects\projectLotForm.spec.ts" time="82.29">
 </testcase>
 </testsuite>
 </testsuites>

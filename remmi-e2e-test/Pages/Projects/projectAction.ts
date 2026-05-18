@@ -9197,6 +9197,29 @@ export class ProjectActions {
         return this.page.locator('ng-dropdown-panel .ng-option');
     }
 
+    private get lotFormProjectDropdownCombobox(): Locator {
+        return this.lotFormProjectDropdown.locator('div[role="combobox"]').first();
+    }
+
+    /**
+     * HELPER — Close Project dropdown by clicking selected option
+     */
+    private async closeLotFormProjectDropdown(projectName: string): Promise<void> {
+        const selectedOption = this.lotFormProjectDropdownOptions.filter({ hasText: projectName }).first();
+        await expect(selectedOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await selectedOption.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+     * HELPER — Assert Project dropdown is closed (aria-expanded="false")
+     */
+    private async assertProjectDropdownClosed(): Promise<void> {
+        await expect(this.lotFormProjectDropdownCombobox).toHaveAttribute('aria-expanded', 'false', {
+            timeout: ProjectActions.TIMEOUT_DEFAULT
+        });
+    }
+
     /**
  * HELPER — Click Project dropdown on lot form to open project list
  */
@@ -9393,6 +9416,26 @@ export class ProjectActions {
         await this.assertProjectDropdownOptionsVisible();
         await this.clickLotFormSaveAndClose();
         await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_08 — Verify clicking selected option closes Project list popup
+ */
+    async verifyCloseIconClosesProjectList(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotFormProjectDropdown();
+        await this.assertProjectDropdownOptionsVisible();
+        await this.closeLotFormProjectDropdown(projectName);
+        await this.assertProjectDropdownClosed();
+        await this.clickPopupCloseIcon();
+        await this.assertLotFormClosed();
         await this.cleanupAfterProjectTest();
     }
 }
