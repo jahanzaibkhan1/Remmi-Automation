@@ -64,5 +64,8 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifyOptionalFieldAcceptInput('Automation', 'Automation Lot');
     });
 
+    test('TC_12: Verify project can be changed to Automation', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyProjectCanBeChange('Automation', 'Automation Lot');
+    });
 
 });

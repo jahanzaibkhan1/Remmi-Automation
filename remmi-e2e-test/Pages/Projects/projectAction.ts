@@ -9570,4 +9570,41 @@ export class ProjectActions {
         await this.assertSuccessToast();
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+ * HELPER — Select a project from Project dropdown by searching and exact-text click
+ */
+    private async selectLotFormProject(projectName: string): Promise<void> {
+        // Open dropdown
+        await this.clickLotFormProjectDropdown();
+
+        // Type project name in search input
+        const searchInput = this.lotFormProjectDropdown.locator('input[type="text"]').first();
+        await searchInput.fill(projectName);
+        await this.page.waitForTimeout(500);
+
+        // Click exact match option
+        const projectOption = this.page.getByRole('option', { name: projectName, exact: true });
+        await expect(projectOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await projectOption.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    /**
+ * TC_11 — Verify project can be changed to "Automation"
+ */
+    async verifyProjectCanBeChange(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.selectLotFormProject(projectName);
+        await this.assertProjectDropdownAutoFilled(projectName);
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
 }
