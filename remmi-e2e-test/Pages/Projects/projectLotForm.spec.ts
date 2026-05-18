@@ -36,4 +36,8 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifyLeftCrossIconClosesLotForm('Automation', 'Automation Lot');
     });
 
+    test('TC_05: Verify project and lot name below tab', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyProjectAndLotNameBelowsTab('Automation', 'Automation Lot');
+    });
+
 });
