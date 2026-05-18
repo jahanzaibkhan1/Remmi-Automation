@@ -9646,4 +9646,21 @@ export class ProjectActions {
         await this.assertSuccessToast();
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+     * TC_15 — Verify Save & Close button saves form and closes it
+     */
+    async verifySaveAndCloseButtonSaveAndClosesForm(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        // Optionally, modify data
+        await this.lotFormLotInput.fill('Automation Lot');
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
 }

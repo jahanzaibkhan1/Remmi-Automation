@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="81.41964400000126">
-<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T09:47:29.188Z" hostname="chromium" tests="1" failures="0" skipped="0" time="78.136" errors="0">
-<testcase name="Project Lot Form Tests › TC_14 - Verify Save button saves form without closing" classname="Pages\Projects\projectLotForm.spec.ts" time="78.136">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="78.160875">
+<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T09:57:53.066Z" hostname="chromium" tests="1" failures="0" skipped="0" time="75.693" errors="0">
+<testcase name="Project Lot Form Tests › TC_15 - Verify Save &amp; Close button saves form and closes it" classname="Pages\Projects\projectLotForm.spec.ts" time="75.693">
 </testcase>
 </testsuite>
 </testsuites>
