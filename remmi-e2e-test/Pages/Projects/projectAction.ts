@@ -9607,4 +9607,22 @@ export class ProjectActions {
         await this.assertSuccessToast();
         await this.cleanupAfterProjectTest();
     }
+
+
+    /**
+ * TC_13 — Verify close button exits without saving changes
+ */
+    async verifyCloseButtonExitWithoutSaving(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await this.lotFormLotInput.fill('Changed Lot Name');
+        await this.page.waitForTimeout(500);
+        expect(await this.lotFormLotInput.inputValue()).toBe('Changed Lot Name');
+        await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
 }

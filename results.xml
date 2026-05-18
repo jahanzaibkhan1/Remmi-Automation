@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="87.89884499999881">
-<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T08:13:29.306Z" hostname="chromium" tests="1" failures="0" skipped="0" time="85.881" errors="0">
-<testcase name="Project Lot Form Tests › TC_12: Verify project can be changed to Automation" classname="Pages\Projects\projectLotForm.spec.ts" time="85.881">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="122.29141699999943">
+<testsuite name="Pages\Projects\projectLotForm.spec.ts" timestamp="2026-05-18T08:59:23.765Z" hostname="chromium" tests="1" failures="0" skipped="0" time="119.881" errors="0">
+<testcase name="Project Lot Form Tests › TC_13: Verify close button exits without saving" classname="Pages\Projects\projectLotForm.spec.ts" time="119.881">
 </testcase>
 </testsuite>
 </testsuites>
