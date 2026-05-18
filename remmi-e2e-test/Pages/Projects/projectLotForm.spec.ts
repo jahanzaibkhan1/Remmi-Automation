@@ -48,4 +48,9 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifyProjectsDropdownAutoFilled('Automation', 'Automation Lot');
     });
 
+    test('Test 08: Verify lot field shows correct lot name', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotNameShownOnFormTab('Automation', 'Automation Lot');
+    });
+
+
 });
