@@ -104,4 +104,8 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifyHistoryChangedField('Automation', 'Automation Lot');
     });
 
+    test('TC_22 - Verify only new values are shown on creation', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyNewValuesShownOnCreation('Create', 'Automation', 'Automation Lot');
+    });
+
 });
