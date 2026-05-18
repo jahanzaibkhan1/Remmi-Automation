@@ -100,4 +100,8 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifyHistoryEventColumnShowsCreateOrUpdate('Automation', 'Automation Lot');
     });
 
+    test('TC_21 - Verify change fields show updated fields in history tab', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyHistoryChangedField('Automation', 'Automation Lot');
+    });
+
 });
