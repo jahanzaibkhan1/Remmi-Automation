@@ -9205,6 +9205,35 @@ export class ProjectActions {
         return this.lotFormProjectDropdown.locator('.ng-value-label').first();
     }
 
+    private get lotFormStatusReasonDropdown(): Locator {
+        return this.page.locator('app-edit-unit ng-select[formcontrolname="status_reason"]').first();
+    }
+
+    private lotFormStatusReasonOptionByText(statusText: string): Locator {
+        return this.lotFormStatusReasonOptions.filter({ hasText: new RegExp(`^\\s*${statusText}\\s*$`, 'i') }).first();
+    }
+
+    /**
+ * HELPER — Click Status Reason dropdown to open options
+ */
+    private async clickLotFormStatusReasonDropdown(): Promise<void> {
+        await expect(this.lotFormStatusReasonDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotFormStatusReasonDropdown.click();
+        await this.page.waitForTimeout(800);
+    }
+
+    /**
+     * HELPER — Assert all expected status options are visible in Status Reason dropdown
+     */
+    private async assertStatusReasonOptionsVisible(expectedStatuses: string[]): Promise<void> {
+        // Verify options panel is open
+        await expect(this.lotFormStatusReasonOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        for (const status of expectedStatuses) {
+            const option = this.lotFormStatusReasonOptionByText(status);
+            await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
+    }
+
     /**
      * HELPER — Close Project dropdown by clicking selected option
      */
@@ -9426,6 +9455,25 @@ export class ProjectActions {
         await this.clickLotRowByName(lotName);
         await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.assertProjectDropdownAutoFilled(projectName);
+        await this.clickLotFormSaveAndClose();
+        await this.assertSuccessToast();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_09 — Verify Status Reason dropdown shows all status options
+ */
+    async verifyStatusReasonDropdownShowsAllStatuses(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotFormStatusReasonDropdown();
+        const expectedStatuses = ['For Sale', 'Withheld', 'Developer Hold'];
+        await this.assertStatusReasonOptionsVisible(expectedStatuses);
         await this.clickLotFormSaveAndClose();
         await this.assertSuccessToast();
         await this.cleanupAfterProjectTest();
