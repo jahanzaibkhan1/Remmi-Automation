@@ -9694,4 +9694,34 @@ export class ProjectActions {
         await this.clickPopupCloseIcon();
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+     * Helper to perform a search in the history tab and check results.
+     */
+    async searchHistoryTabAndCheck(keyword: string): Promise<void> {
+        await expect(this.historySearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.historySearchInput.fill(keyword);
+        await this.page.waitForTimeout(1500);
+
+        const filteredCount = await this.historyTableRows.count();
+        expect(filteredCount).toBeGreaterThan(0);
+        const firstRowText = (await this.historyTableRows.first().innerText()).toLowerCase();
+        expect(firstRowText).toContain(keyword.toLowerCase());
+    }
+
+    /**
+     * TC_18 — Verify search works in history tab
+     */
+    async verifyHistorySearchInTab(
+        searchKeyword: string,
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await this.clickLotRowByName(lotName);
+        await this.openAndValidateHistoryTab();
+        await this.searchHistoryTabAndCheck(searchKeyword);
+        await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
 }
