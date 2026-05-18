@@ -9663,4 +9663,35 @@ export class ProjectActions {
         await this.assertSuccessToast();
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+     * Helper to open and validate history tab for current lot.
+     */
+    async openAndValidateHistoryTab(): Promise<number> {
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormHistoryTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotFormHistoryTab.click();
+        await this.page.waitForTimeout(1500);
+        await expect(this.lotFormHistoryTab).toHaveClass(/active/);
+        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        const rowCount = await this.historyTableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+        await expect(this.historyRecordsCount).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        return rowCount;
+    }
+
+    /**
+     * TC_17 — Verify history tab loads properly
+     */
+    async verifyHistoryTabLoadsProperly(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await this.openAndValidateHistoryTab();
+        await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
 }
