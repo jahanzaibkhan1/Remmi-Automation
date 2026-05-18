@@ -108,4 +108,8 @@ test.describe('Project Lot Form Tests', () => {
         await new ProjectActions(sessionPage).verifyNewValuesShownOnCreation('Create', 'Automation', 'Automation Lot');
     });
 
+    test('TC_23 - Verify both old and new values are shown on update', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyBothOldAndNewValueOnUpdate('Automation', 'Automation Lot');
+    });
+
 });
