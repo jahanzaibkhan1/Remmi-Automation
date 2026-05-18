@@ -9792,8 +9792,74 @@ export class ProjectActions {
     }
 
     /**
-     * TC_23 — Verify only new values are shown on creation
+ * HELPER — Get trimmed Event text from a history row
+ */
+    private async getHistoryRowEventText(row: Locator): Promise<string> {
+        return (await this.historyRowEvent(row).innerText()).trim();
+    }
+
+    /**
+     * HELPER — Get trimmed Old Value text from a history row
      */
+    private async getHistoryRowOldValueText(row: Locator): Promise<string> {
+        return (await this.historyRowOldValue(row).innerText()).trim();
+    }
+
+    /**
+     * HELPER — Get trimmed New Value text from a history row
+     */
+    private async getHistoryRowNewValueText(row: Locator): Promise<string> {
+        return (await this.historyRowNewValue(row).innerText()).trim();
+    }
+
+    /**
+     * HELPER — Assert all rows matching expectedEvent have old value empty and new value present
+     * Used for CREATE events where only new values should be shown
+     */
+    private async assertOnlyNewValuesForEvent(expectedEvent: string): Promise<void> {
+        const rowCount = await this.historyTableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        for (let i = 0; i < rowCount; i++) {
+            const row = this.historyTableRows.nth(i);
+            const eventText = await this.getHistoryRowEventText(row);
+
+            if (eventText === expectedEvent) {
+                const oldValueText = await this.getHistoryRowOldValueText(row);
+                const newValueText = await this.getHistoryRowNewValueText(row);
+
+                // CREATE event: old value should be empty
+                expect(oldValueText === '' || oldValueText === undefined).toBeTruthy();
+                // CREATE event: new value should exist
+                expect(newValueText.length).toBeGreaterThan(0);
+            }
+        }
+    }
+
+    /**
+     * HELPER — Assert all rows matching expectedEvent have BOTH old and new values present
+     * Used for UPDATE events where both values should be shown
+     */
+    private async assertBothValuesForEvent(expectedEvent: string): Promise<void> {
+        const rowCount = await this.historyTableRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        for (let i = 0; i < rowCount; i++) {
+            const row = this.historyTableRows.nth(i);
+            const eventText = await this.getHistoryRowEventText(row);
+
+            if (eventText === expectedEvent) {
+                const oldValueText = await this.getHistoryRowOldValueText(row);
+                const newValueText = await this.getHistoryRowNewValueText(row);
+                expect(oldValueText.length).toBeGreaterThan(0);
+                expect(newValueText.length).toBeGreaterThan(0);
+            }
+        }
+    }
+
+    /**
+ * TC_23 — Verify only new values are shown on creation
+ */
     async verifyNewValuesShownOnCreation(
         expectedEvent: string = 'Create',
         projectName: string = 'Automation',
@@ -9802,20 +9868,7 @@ export class ProjectActions {
         await this.openProjectLotTab(projectName);
         await this.clickLotRowByName(lotName);
         await this.openAndValidateHistoryTab();
-        const rowCount = await this.historyTableRows.count();
-        expect(rowCount).toBeGreaterThan(0);
-        for (let i = 0; i < rowCount; i++) {
-            const row = this.historyTableRows.nth(i);
-            const eventText = (await this.historyRowEvent(row).innerText()).trim();
-            if (eventText === expectedEvent) {
-                const oldValueText = (await this.historyRowOldValue(row).innerText()).trim();
-                expect(
-                    oldValueText === '' || oldValueText === undefined
-                ).toBeTruthy();
-                const newValueText = (await this.historyRowNewValue(row).innerText()).trim();
-                expect(newValueText.length).toBeGreaterThan(0);
-            }
-        }
+        await this.assertOnlyNewValuesForEvent(expectedEvent);
         await this.clickPopupCloseIcon();
         await this.cleanupAfterProjectTest();
     }
@@ -9831,19 +9884,40 @@ export class ProjectActions {
         await this.openProjectLotTab(projectName);
         await this.clickLotRowByName(lotName);
         await this.openAndValidateHistoryTab();
-        const rowCount = await this.historyTableRows.count();
-        expect(rowCount).toBeGreaterThan(0);
-        for (let i = 0; i < rowCount; i++) {
-            const row = this.historyTableRows.nth(i);
-            const eventText = (await this.historyRowEvent(row).innerText()).trim();
-            if (eventText === expectedEvent) {
-                const oldValueText = (await this.historyRowOldValue(row).innerText()).trim();
-                expect(oldValueText.length).toBeGreaterThan(0);
-                const newValueText = (await this.historyRowNewValue(row).innerText()).trim();
-                expect(newValueText.length).toBeGreaterThan(0);
-            }
-        }
+        await this.assertBothValuesForEvent(expectedEvent);
+        await this.clickPopupCloseIcon();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * HELPER — Search for a project in dropdown and assert no results found
+ */
+    private async assertInvalidProjectNotFound(invalidProjectName: string): Promise<void> {
+        await this.clickLotFormProjectDropdown();
+        const searchInput = this.lotFormProjectDropdown.locator('input[type="text"]').first();
+        await searchInput.fill(invalidProjectName);
+        await this.page.waitForTimeout(800);
+        const matchingOption = this.lotFormProjectDropdownOptions.filter({
+            hasText: new RegExp(invalidProjectName, 'i')
+        });
+        await expect(matchingOption).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * TC_25 — Verify invalid/removed project cannot be selected in dropdown
+     */
+    async verifyInvalidProjectCannotBeSelected(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot',
+        invalidProjectName: string = 'InvalidProject_XYZ_12345'
+    ): Promise<void> {
+        await this.openProjectLotTab(projectName);
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLotRowByName(lotName);
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.assertInvalidProjectNotFound(invalidProjectName);
         await this.clickPopupCloseIcon();
         await this.cleanupAfterProjectTest();
     }
 }
+
