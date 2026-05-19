@@ -72,4 +72,8 @@ test.describe('Project Price List Tests', () => {
         await new ProjectActions(sessionPage).filterWithoutSelectingAnyStatusInPriceList('Automation');
     });
 
+    test('TC_14: Remove a status filter tag', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyRemoveStatusFilterTag('Automation', 'For Sale');
+    });
+
 });
