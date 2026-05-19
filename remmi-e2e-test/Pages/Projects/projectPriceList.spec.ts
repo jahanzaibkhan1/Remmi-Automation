@@ -52,4 +52,8 @@ test.describe('Project Price List Tests', () => {
         await new ProjectActions(sessionPage).verifySingleStatusFilter('Automation', 'For Sale');
     });
 
+    test('TC_09: Apply multiple status filters in Price List', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).applyMultipleStatusFiltersInPriceList('Automation', ['For Sale', 'Sold']);
+    });
+    
 });
