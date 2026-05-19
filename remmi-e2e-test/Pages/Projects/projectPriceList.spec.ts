@@ -55,5 +55,9 @@ test.describe('Project Price List Tests', () => {
     test('TC_09: Apply multiple status filters in Price List', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).applyMultipleStatusFiltersInPriceList('Automation', ['For Sale', 'Sold']);
     });
-    
+
+    test('TC_10: Use "Select All" in status filter', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).useSelectAllInStatusFilterOnPriceList('Automation');
+    });
+
 });

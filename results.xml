@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="62.06640099999867">
-<testsuite name="Pages\Projects\projectPriceList.spec.ts" timestamp="2026-05-19T08:47:06.633Z" hostname="chromium" tests="1" failures="0" skipped="0" time="60.042" errors="0">
-<testcase name="Project Price List Tests › TC_09: Apply multiple status filters in Price List" classname="Pages\Projects\projectPriceList.spec.ts" time="60.042">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="78.53574799999967">
+<testsuite name="Pages\Projects\projectPriceList.spec.ts" timestamp="2026-05-19T08:50:42.449Z" hostname="chromium" tests="1" failures="0" skipped="0" time="76.536" errors="0">
+<testcase name="Project Price List Tests › TC_10: Use &quot;Select All&quot; in status filter" classname="Pages\Projects\projectPriceList.spec.ts" time="76.536">
 </testcase>
 </testsuite>
 </testsuites>
