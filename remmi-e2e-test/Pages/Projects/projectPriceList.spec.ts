@@ -76,4 +76,8 @@ test.describe('Project Price List Tests', () => {
         await new ProjectActions(sessionPage).verifyRemoveStatusFilterTag('Automation', 'For Sale');
     });
 
+    test('TC_19: Apply Bed filter (1 Bed)', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyBedFilter('Automation', '1');
+    });
+
 });
