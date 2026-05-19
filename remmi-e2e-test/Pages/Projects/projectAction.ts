@@ -10485,6 +10485,27 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    /**
+     * Select multiple levels in the Level filter dropdown
+     */
+    async selectMultipleLevelsInLevelDropdown(
+        projectName: string = 'Automation',
+        levelValues: string[]
+    ): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.clickPriceListTab();
+        await expect(this.priceListTableRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickPriceListGlobalFilterIcon();
+        await this.page.waitForTimeout(5000);
+        await this.openLevelDropdown();
+        for (const level of levelValues) {
+            await this.levelDropdownSearchInput.fill(level);
+            await this.selectLevelByValue(level);
+        }
+        await this.cleanupAfterProjectTest();
+    }
+
 
 }
 

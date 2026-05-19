@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="68.16083899999782">
-<testsuite name="Pages\Projects\projectPriceList.spec.ts" timestamp="2026-05-19T11:53:51.656Z" hostname="chromium" tests="1" failures="0" skipped="0" time="66.131" errors="0">
-<testcase name="Project Price List Tests › TC_15: Select level filter from dropdown" classname="Pages\Projects\projectPriceList.spec.ts" time="66.131">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="78.63042199999839">
+<testsuite name="Pages\Projects\projectPriceList.spec.ts" timestamp="2026-05-19T11:58:05.726Z" hostname="chromium" tests="1" failures="0" skipped="0" time="76.563" errors="0">
+<testcase name="Project Price List Tests › TC_16: Select multiple levels from dropdown" classname="Pages\Projects\projectPriceList.spec.ts" time="76.563">
 </testcase>
 </testsuite>
 </testsuites>
