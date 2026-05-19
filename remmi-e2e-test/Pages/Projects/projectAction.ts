@@ -10506,6 +10506,47 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    private get levelDropdownSelectAllCheckbox(): Locator {
+        return this.levelDropdownPanel.locator('label.select_all').first();
+    }
+
+    private get levelDropdownSelectAllInput(): Locator {
+        return this.levelDropdownSelectAllCheckbox.locator('input[type="checkbox"]').first();
+    }
+
+    private async clickLevelSelectAll(): Promise<void> {
+        await expect(this.levelDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.levelDropdownSelectAllCheckbox.click();
+        await this.page.waitForTimeout(500);
+    }
+
+    private async assertLevelSelectAllChecked(): Promise<void> {
+        await expect(this.levelDropdownSelectAllInput).toBeChecked({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    private async assertLevelSelectAllUnchecked(): Promise<void> {
+        await expect(this.levelDropdownSelectAllInput).not.toBeChecked({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+ * TC_18 — Use Select All / Deselect All in Level dropdown
+ */
+    async verifyLevelSelectAllDeselectAll(projectName: string = 'Automation'): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.clickPriceListTab();
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickPriceListGlobalFilterIcon();
+        await this.page.waitForTimeout(5000);
+        await this.openLevelDropdown();
+        await expect(this.levelDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickLevelSelectAll();
+        await this.assertLevelSelectAllChecked();
+        await this.clickLevelSelectAll();
+        await this.assertLevelSelectAllUnchecked();
+        await this.cleanupAfterProjectTest();
+    }
+
 
 }
 
