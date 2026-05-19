@@ -47,5 +47,9 @@ test.describe('Project Price List Tests', () => {
     test('TC_07: Open filter dropdown for Status', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyPriceListFilterStatusDropdownOpens('Automation');
     });
-    
+
+    test('TC_08: Select a single status filter', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifySingleStatusFilter('Automation', 'For Sale');
+    });
+
 });
