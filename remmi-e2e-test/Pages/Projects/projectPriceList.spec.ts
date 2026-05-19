@@ -60,4 +60,8 @@ test.describe('Project Price List Tests', () => {
         await new ProjectActions(sessionPage).useSelectAllInStatusFilterOnPriceList('Automation');
     });
 
+    test('TC_11: Use "Deselect All" in status filter', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).useDeselectAllInStatusFilterOnPriceList('Automation');
+    });
+
 });

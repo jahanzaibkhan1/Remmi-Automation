@@ -10312,5 +10312,21 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    /**
+     * TC_xx — Use "Deselect All" in status filter on Price List
+     */
+    async useDeselectAllInStatusFilterOnPriceList(
+        projectName: string = 'Automation'
+    ): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.clickPriceListTab();
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickPriceListColumnFilterIcon('Status');
+        await this.assertPriceListFilterPopupVisible();
+        await this.clickPriceListFilterStatusDropdown();
+        await this.deselectAllStatusesInFilterPopup();
+        await this.cleanupAfterProjectTest();
+    }
 }
 
