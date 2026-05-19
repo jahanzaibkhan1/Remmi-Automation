@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="120.00429199999944">
-<testsuite name="Pages\Projects\projectPriceList.spec.ts" timestamp="2026-05-19T07:06:23.493Z" hostname="chromium" tests="1" failures="0" skipped="0" time="117.478" errors="0">
-<testcase name="Project Price List Tests › TC_04: Search existing lot by name" classname="Pages\Projects\projectPriceList.spec.ts" time="117.478">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.53187399999984">
+<testsuite name="Pages\Projects\projectPriceList.spec.ts" timestamp="2026-05-19T08:05:45.582Z" hostname="chromium" tests="1" failures="0" skipped="0" time="61.463" errors="0">
+<testcase name="Project Price List Tests › TC_05: Search non-existent lot shows no results" classname="Pages\Projects\projectPriceList.spec.ts" time="61.463">
 </testcase>
 </testsuite>
 </testsuites>

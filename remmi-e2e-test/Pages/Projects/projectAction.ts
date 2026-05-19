@@ -9972,6 +9972,10 @@ export class ProjectActions {
         return this.page.locator('app-price-list input[placeholder="Search"]').first();
     }
 
+    private get priceListNoResultsMessage(): Locator {
+        return this.page.locator('app-price-list td').filter({ hasText: /^\s*No lots available\s*$/i }).first();
+    }
+
     /**
  * HELPER — Click on Price List tab
  */
@@ -10123,6 +10127,29 @@ export class ProjectActions {
         await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.searchPriceListLot(lotName);
         await this.assertPriceListLotRowExists(lotName);
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * HELPER — Assert "No lots available" message is shown
+ */
+    private async assertNoPriceListLotsFound(): Promise<void> {
+        await expect(this.priceListNoResultsMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+ * TC_05 — Search non-existent lot shows "No lots available"
+ */
+    async verifyPriceListSearchNonExistentLot(
+        projectName: string = 'Automation',
+        nonExistentLotName: string = 'NonExistentLot_XYZ_12345'
+    ): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.clickPriceListTab();
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.searchPriceListLot(nonExistentLotName);
+        await this.assertNoPriceListLotsFound();
         await this.cleanupAfterProjectTest();
     }
 

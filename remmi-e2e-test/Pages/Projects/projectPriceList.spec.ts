@@ -36,4 +36,8 @@ test.describe('Project Price List Tests', () => {
         await new ProjectActions(sessionPage).verifyPriceListLotSearch('Automation', 'Automation Lot');
     });
 
+    test('TC_05: Search non-existent lot shows no results', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyPriceListSearchNonExistentLot('Automation', 'NonExistentLot_XYZ_12345');
+    });
+
 });
