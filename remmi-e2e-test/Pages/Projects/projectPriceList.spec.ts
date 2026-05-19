@@ -84,6 +84,10 @@ test.describe('Project Price List Tests', () => {
         await new ProjectActions(sessionPage).selectMultipleLevelsInLevelDropdown('Automation Testing', ['Level 15', 'Level 16']);
     });
     
+    test('TC_17: Use Select All / Deselect All in Level dropdown', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLevelSelectAllDeselectAll('Automation Testing');
+    });
+
     test('TC_19: Apply Bed filter (1 Bed)', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyBedFilter('Automation', '1');
     });
