@@ -10278,5 +10278,22 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    /**
+     * TC_09 — Apply multiple status filters in the Price List
+     */
+    async applyMultipleStatusFiltersInPriceList(
+        projectName: string = 'Automation',
+        statuses: string[] = ['For Sale', 'Sold']
+    ): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.clickPriceListTab();
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickPriceListColumnFilterIcon('Status');
+        await this.assertPriceListFilterPopupVisible();
+        await this.selectMultipleStatusesInFilterPopup(statuses)
+        await this.cleanupAfterProjectTest();
+    }
+
 }
 
