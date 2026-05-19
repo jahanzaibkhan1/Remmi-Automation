@@ -28,4 +28,8 @@ test.describe('Project Price List Tests', () => {
         await new ProjectActions(sessionPage).verifyPriceListRedirectsToGeneralWhenNoLots("Hina's Project");
     });
 
+    test('TC_03: Verify Lot Preview toggle shows popup on lot click', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLotPreviewTogglePopup('Automation', 'Automation Lot');
+    });
+
 });
