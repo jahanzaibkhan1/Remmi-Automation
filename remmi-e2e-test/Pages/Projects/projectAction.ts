@@ -9976,6 +9976,26 @@ export class ProjectActions {
         return this.page.locator('app-price-list td').filter({ hasText: /^\s*No lots available\s*$/i }).first();
     }
 
+    private get priceListSearchCrossIcon(): Locator {
+        return this.page.locator('app-price-list i.pi-times._cross-icon').first();
+    }
+
+    /**
+ * HELPER — Click cross icon to clear search input
+ */
+    private async clickPriceListSearchCrossIcon(): Promise<void> {
+        await expect(this.priceListSearchCrossIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.priceListSearchCrossIcon.click();
+        await this.page.waitForTimeout(800);
+    }
+
+    /**
+     * HELPER — Assert search input is empty
+     */
+    private async assertPriceListSearchInputEmpty(): Promise<void> {
+        await expect(this.priceListSearchInput).toHaveValue('', { timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
     /**
  * HELPER — Click on Price List tab
  */
@@ -10150,6 +10170,24 @@ export class ProjectActions {
         await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.searchPriceListLot(nonExistentLotName);
         await this.assertNoPriceListLotsFound();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_06 — Clear search using cross icon shows full lot list
+ */
+    async verifyPriceListSearchClearByCrossIcon(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.clickPriceListTab();
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.searchPriceListLot(lotName);
+        await this.assertPriceListLotRowExists(lotName);
+        await this.clickPriceListSearchCrossIcon();
+        await this.assertPriceListSearchInputEmpty();
         await this.cleanupAfterProjectTest();
     }
 
