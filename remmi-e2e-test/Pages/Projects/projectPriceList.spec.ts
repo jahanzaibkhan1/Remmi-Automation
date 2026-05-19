@@ -88,6 +88,10 @@ test.describe('Project Price List Tests', () => {
         await new ProjectActions(sessionPage).verifyLevelSelectAllDeselectAll('Automation Testing');
     });
 
+    test('TC_18: Apply filter with empty level list', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLevelSelectAllDeselectAll('Automation Testing');
+    });
+
     test('TC_19: Apply Bed filter (1 Bed)', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyBedFilter('Automation', '1');
     });
