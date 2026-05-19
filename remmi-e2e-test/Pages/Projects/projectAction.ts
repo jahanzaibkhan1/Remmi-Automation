@@ -9980,6 +9980,48 @@ export class ProjectActions {
         return this.page.locator('app-price-list i.pi-times._cross-icon').first();
     }
 
+    private get priceListFilterPopup(): Locator {
+        return this.page.locator('div.p-overlaypanel').first();
+    }
+
+    private priceListColumnFilterIcon(columnName: string): Locator {
+        return this.page.locator(`app-price-list th:has-text("${columnName}") img[alt="filter"]`).first();
+    }
+
+    private get priceListFilterStatusDropdown(): Locator {
+        return this.priceListFilterPopup.locator('re-multiselect, ng-select').first();
+    }
+
+    /**
+ * HELPER — Click filter icon on specific column (Price List)
+ */
+    private async clickPriceListColumnFilterIcon(columnName: string): Promise<void> {
+        const filterIcon = this.priceListColumnFilterIcon(columnName);
+        await expect(filterIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+
+        // Double-click pattern (PrimeNG OverlayPanel requirement)
+        await filterIcon.click();
+        await this.page.waitForTimeout(700);
+        await filterIcon.click();
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * HELPER — Assert Price List filter popup is visible
+     */
+    private async assertPriceListFilterPopupVisible(): Promise<void> {
+        await expect(this.priceListFilterPopup).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Click Status dropdown inside filter popup
+     */
+    private async clickPriceListFilterStatusDropdown(): Promise<void> {
+        await expect(this.priceListFilterStatusDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.priceListFilterStatusDropdown.click();
+        await this.page.waitForTimeout(800);
+    }
+
     /**
  * HELPER — Click cross icon to clear search input
  */
@@ -10188,6 +10230,21 @@ export class ProjectActions {
         await this.assertPriceListLotRowExists(lotName);
         await this.clickPriceListSearchCrossIcon();
         await this.assertPriceListSearchInputEmpty();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_07 — Open filter dropdown for Status column
+ */
+    async verifyPriceListFilterStatusDropdownOpens(projectName: string = 'Automation'): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.clickPriceListTab();
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickPriceListColumnFilterIcon('Status');
+        await this.assertPriceListFilterPopupVisible();
+        await this.clickPriceListFilterStatusDropdown();
+        await expect(this.priceListFilterStatusDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.cleanupAfterProjectTest();
     }
 

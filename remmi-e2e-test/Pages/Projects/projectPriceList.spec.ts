@@ -44,4 +44,8 @@ test.describe('Project Price List Tests', () => {
         await new ProjectActions(sessionPage).verifyPriceListSearchClearByCrossIcon('Automation', 'Automation Lot');
     });
 
+    test('TC_07: Open filter dropdown for Status', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyPriceListFilterStatusDropdownOpens('Automation');
+    });
+    
 });
