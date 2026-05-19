@@ -9962,5 +9962,15 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    /**
+ * TC_02 — Open Price List when no lots exist → redirects to General tab
+ */
+    async verifyPriceListRedirectsToGeneralWhenNoLots(projectName: string = "Hina's Project"): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.clickPriceListTab();
+        await this.cleanupAfterProjectTest();
+    }
+
 }
 
