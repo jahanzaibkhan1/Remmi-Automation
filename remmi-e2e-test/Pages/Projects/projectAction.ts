@@ -9919,5 +9919,48 @@ export class ProjectActions {
         await this.clickPopupCloseIcon();
         await this.cleanupAfterProjectTest();
     }
+
+    // ==========================================================================
+    // LOCATORS — PRICE LIST
+    // ==========================================================================
+
+    private get priceListTab(): Locator {
+        return this.page.locator('a, button, li').filter({ hasText: /^\s*Price List\s*$/i }).first();
+    }
+
+    private get priceListTable(): Locator {
+        return this.page.locator('app-price-list table, p-table table').first();
+    }
+
+    private get priceListTableRows(): Locator {
+        return this.priceListTable.locator('tbody tr');
+    }
+
+    /**
+ * HELPER — Click on Price List tab
+ */
+    private async clickPriceListTab(): Promise<void> {
+        await expect(this.priceListTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.priceListTab.click();
+    }
+
+    private async getRecordsCountText(): Promise<string> {
+        await expect(this.lotRecordsCount).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const text = (await this.lotRecordsCount.innerText()).trim();
+        console.log(text);
+        return text;
+    }
+
+    /**
+ * TC_01 — Open Price List with valid lots
+ */
+    async openPriceListWithValidLots(projectName: string = 'Automation'): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.clickPriceListTab();
+        await this.getRecordsCountText();
+        await this.cleanupAfterProjectTest();
+    }
+
 }
 
