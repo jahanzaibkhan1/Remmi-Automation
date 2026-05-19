@@ -10436,5 +10436,55 @@ export class ProjectActions {
         await this.selectBedByValue(bedValue);
         await this.cleanupAfterProjectTest();
     }
+
+    private get levelDropdown(): Locator {
+        return this.page.locator('app-price-list re-multiselect[placeholder="Level"]').first();
+    }
+
+    private get levelDropdownPanel(): Locator {
+        return this.page.locator('re-multiselect[placeholder="Level"] .drop_box').first();
+    }
+
+    private get levelDropdownSearchInput(): Locator {
+        return this.levelDropdownPanel.locator('input[placeholder="Search"]').first();
+    }
+
+    private levelDropdownOption(value: string): Locator {
+        return this.page.locator('re-multiselect[placeholder="Level"] ul li').filter({ hasText: new RegExp(`^\\s*${value}\\s*$`) }).first();
+    }
+
+    private async openLevelDropdown(): Promise<void> {
+        await expect(this.levelDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.levelDropdown.click();
+        await this.page.waitForTimeout(800);
+    }
+
+    private async selectLevelByValue(levelValue: string): Promise<void> {
+        const levelOption = this.levelDropdownOption(levelValue);
+        await expect(levelOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await levelOption.click();
+        await this.page.waitForTimeout(700);
+    }
+
+    /**
+ * TC_16 — Select level filter from dropdown
+ */
+    async verifyLevelFilter(
+        projectName: string = 'Automation',
+        levelValue: string = 'Level 16'
+    ): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.clickPriceListTab();
+        await expect(this.priceListTableRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickPriceListGlobalFilterIcon();
+        await this.page.waitForTimeout(5000);
+        await this.openLevelDropdown();
+        await this.levelDropdownSearchInput.fill(levelValue);
+        await this.selectLevelByValue(levelValue);
+        await this.cleanupAfterProjectTest();
+    }
+
+
 }
 

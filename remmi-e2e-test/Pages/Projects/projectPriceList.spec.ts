@@ -76,6 +76,10 @@ test.describe('Project Price List Tests', () => {
         await new ProjectActions(sessionPage).verifyRemoveStatusFilterTag('Automation', 'For Sale');
     });
 
+    test('TC_15: Select level filter from dropdown', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyLevelFilter('Automation Testing', 'Level 16');
+    });
+
     test('TC_19: Apply Bed filter (1 Bed)', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).verifyBedFilter('Automation', '1');
     });
