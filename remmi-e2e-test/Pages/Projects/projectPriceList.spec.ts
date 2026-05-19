@@ -32,4 +32,8 @@ test.describe('Project Price List Tests', () => {
         await new ProjectActions(sessionPage).verifyLotPreviewTogglePopup('Automation', 'Automation Lot');
     });
 
+    test('TC_04: Search existing lot by name', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyPriceListLotSearch('Automation', 'Automation Lot');
+    });
+
 });

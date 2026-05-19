@@ -9968,6 +9968,10 @@ export class ProjectActions {
         return this.page.locator('div[role="alert"].toast-message').filter({ hasText: /lot preview off successfully/i }).first();
     }
 
+    private get priceListSearchInput(): Locator {
+        return this.page.locator('app-price-list input[placeholder="Search"]').first();
+    }
+
     /**
  * HELPER — Click on Price List tab
  */
@@ -10077,7 +10081,7 @@ export class ProjectActions {
         lotName: string = 'Automation Lot'
     ): Promise<void> {
         await this.navigateToProjects();
-        await this.clickProjectCardInProjectSection(projectName); 
+        await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
         await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.enableLotPreviewToggle();
@@ -10087,6 +10091,38 @@ export class ProjectActions {
         await this.closeLotPreviewPopup();
         await this.disableLotPreviewToggle();
         await this.assertLotPreviewToastOff();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * HELPER — Search for a lot in Price List by name
+ */
+    private async searchPriceListLot(keyword: string): Promise<void> {
+        await expect(this.priceListSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.priceListSearchInput.fill(keyword);
+    }
+
+    /**
+     * HELPER — Assert lot row with given name is visible in Price List
+     */
+    private async assertPriceListLotRowExists(lotName: string): Promise<void> {
+        const row = this.priceListRowByLotName(lotName);
+        await expect(row).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+    }
+
+    /**
+ * TC_04 — Search existing lot by name
+ */
+    async verifyPriceListLotSearch(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.clickPriceListTab();
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.searchPriceListLot(lotName);
+        await this.assertPriceListLotRowExists(lotName);
         await this.cleanupAfterProjectTest();
     }
 
