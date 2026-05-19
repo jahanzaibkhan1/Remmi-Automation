@@ -10328,5 +10328,23 @@ export class ProjectActions {
         await this.deselectAllStatusesInFilterPopup();
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+     * TC_12 — Search inside status dropdown in the Price List
+     */
+    async searchInsideStatusDropdownInPriceList(
+        projectName: string = 'Automation',
+        searchTerm: string
+    ): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.clickPriceListTab();
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickPriceListColumnFilterIcon('Status');
+        await this.assertPriceListFilterPopupVisible();
+        await this.clickPriceListFilterStatusDropdown();
+        await this.selectConditionDropdownOptionWithSearch(searchTerm);
+        await this.cleanupAfterProjectTest();
+    }
 }
 
