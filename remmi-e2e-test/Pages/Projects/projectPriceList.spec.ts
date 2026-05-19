@@ -96,4 +96,8 @@ test.describe('Project Price List Tests', () => {
         await new ProjectActions(sessionPage).verifyBedFilter('Automation', '1');
     });
 
+    test('TC_20: Select invalid bed option', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).selectInvalidBedOption('Automation', 'invalidBed');
+    });
+
 });
