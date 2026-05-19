@@ -40,4 +40,8 @@ test.describe('Project Price List Tests', () => {
         await new ProjectActions(sessionPage).verifyPriceListSearchNonExistentLot('Automation', 'NonExistentLot_XYZ_12345');
     });
 
+    test('TC_06: Clear search using cross icon', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyPriceListSearchClearByCrossIcon('Automation', 'Automation Lot');
+    });
+
 });

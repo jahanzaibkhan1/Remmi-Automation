@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="63.53187399999984">
-<testsuite name="Pages\Projects\projectPriceList.spec.ts" timestamp="2026-05-19T08:05:45.582Z" hostname="chromium" tests="1" failures="0" skipped="0" time="61.463" errors="0">
-<testcase name="Project Price List Tests › TC_05: Search non-existent lot shows no results" classname="Pages\Projects\projectPriceList.spec.ts" time="61.463">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="95.01409400000051">
+<testsuite name="Pages\Projects\projectPriceList.spec.ts" timestamp="2026-05-19T08:24:39.035Z" hostname="chromium" tests="1" failures="0" skipped="0" time="93.039" errors="0">
+<testcase name="Project Price List Tests › TC_06: Clear search using cross icon" classname="Pages\Projects\projectPriceList.spec.ts" time="93.039">
 </testcase>
 </testsuite>
 </testsuites>
