@@ -10547,6 +10547,20 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+    /**
+     * Selects an invalid bed option in the bed dropdown and asserts expected outcome
+     */
+    async selectInvalidBedOption(projectName: string, invalidBed: string): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.clickPriceListTab();
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickPriceListGlobalFilterIcon();
+        await this.openBedDropdown();
+        await this.bedDropdownSearchInput.fill(invalidBed);
+        await this.cleanupAfterProjectTest();
+    }
+
 
 }
 
