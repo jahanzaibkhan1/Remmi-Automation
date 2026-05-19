@@ -9992,6 +9992,34 @@ export class ProjectActions {
         return this.priceListFilterPopup.locator('re-multiselect, ng-select').first();
     }
 
+    private priceListFilterSelectedTag(value: string): Locator {
+        return this.priceListFilterPopup
+            .locator('re-multiselect .selected_one')
+            .filter({ hasText: value })
+            .first();
+    }
+
+    private priceListFilterTagRemoveIcon(value: string): Locator {
+        return this.priceListFilterSelectedTag(value).locator('span.pi-times-circle').first();
+    }
+
+    /**
+     * HELPER — Click the cross icon on a selected filter tag to remove it
+     */
+    private async removePriceListFilterTag(value: string): Promise<void> {
+        const removeIcon = this.priceListFilterTagRemoveIcon(value);
+        await expect(removeIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await removeIcon.click();
+        await this.page.waitForTimeout(800);
+    }
+
+    /**
+     * HELPER — Assert a filter tag is no longer visible
+     */
+    private async assertPriceListFilterTagNotVisible(value: string): Promise<void> {
+        await expect(this.priceListFilterSelectedTag(value)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
     /**
  * HELPER — Click filter icon on specific column (Price List)
  */
@@ -10248,18 +10276,6 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
-
-
-    /**
-     * HELPER — Assert all visible rows have given status
-     */
-    private async assertAllPriceListRowsHaveStatus(status: string): Promise<void> {
-        const totalRows = await this.priceListTableRows.count();
-        expect(totalRows).toBeGreaterThan(0);
-        for (let i = 0; i < totalRows; i++) {
-            await expect(this.priceListTableRows.nth(i)).toContainText(status, { timeout: ProjectActions.TIMEOUT_DEFAULT });
-        }
-    }
     /**
  * TC_08 — Verify single status filter selection
  */
@@ -10273,7 +10289,6 @@ export class ProjectActions {
         await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.clickPriceListColumnFilterIcon('Status');
         await this.assertPriceListFilterPopupVisible();
-        await this.clickPriceListFilterStatusDropdown();
         await this.selectConditionDropdownOptionWithSearch(statusToFilter);
         await this.cleanupAfterProjectTest();
     }
@@ -10307,7 +10322,6 @@ export class ProjectActions {
         await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.clickPriceListColumnFilterIcon('Status');
         await this.assertPriceListFilterPopupVisible();
-        await this.clickPriceListFilterStatusDropdown();
         await this.selectAllStatusesInFilterPopup();
         await this.cleanupAfterProjectTest();
     }
@@ -10324,7 +10338,6 @@ export class ProjectActions {
         await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.clickPriceListColumnFilterIcon('Status');
         await this.assertPriceListFilterPopupVisible();
-        await this.clickPriceListFilterStatusDropdown();
         await this.deselectAllStatusesInFilterPopup();
         await this.cleanupAfterProjectTest();
     }
@@ -10342,13 +10355,12 @@ export class ProjectActions {
         await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
         await this.clickPriceListColumnFilterIcon('Status');
         await this.assertPriceListFilterPopupVisible();
-        await this.clickPriceListFilterStatusDropdown();
         await this.selectConditionDropdownOptionWithSearch(searchTerm);
         await this.cleanupAfterProjectTest();
     }
 
     /**
-     * TC_xx — Try filtering without selecting any status in the Price List
+     * TC_13 — Try filtering without selecting any status in the Price List
      */
     async filterWithoutSelectingAnyStatusInPriceList(
         projectName: string = 'Automation'
@@ -10360,6 +10372,25 @@ export class ProjectActions {
         await this.clickPriceListColumnFilterIcon('Status');
         await this.assertPriceListFilterPopupVisible();
         await this.applyFilterButton.click();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * TC_14 — Remove a status filter tag
+ */
+    async verifyRemoveStatusFilterTag(
+        projectName: string = 'Automation',
+        statusToFilter: string = 'For Sale'
+    ): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.clickPriceListTab();
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickPriceListColumnFilterIcon('Status');
+        await this.assertPriceListFilterPopupVisible();
+        await this.selectConditionDropdownOptionWithSearch(statusToFilter);
+        await this.removePriceListFilterTag(statusToFilter);
+        await this.assertPriceListFilterTagNotVisible(statusToFilter);
         await this.cleanupAfterProjectTest();
     }
 }
