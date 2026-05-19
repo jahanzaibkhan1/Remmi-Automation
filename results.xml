@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="94.7219879999999">
-<testsuite name="Pages\Projects\projectPriceList.spec.ts" timestamp="2026-05-19T05:57:57.844Z" hostname="chromium" tests="1" failures="0" skipped="0" time="91.586" errors="0">
-<testcase name="Project Price List Tests › TC_02 - Open Price List when no lots exist" classname="Pages\Projects\projectPriceList.spec.ts" time="91.586">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="72.0959849999994">
+<testsuite name="Pages\Projects\projectPriceList.spec.ts" timestamp="2026-05-19T06:42:15.866Z" hostname="chromium" tests="1" failures="0" skipped="0" time="69.677" errors="0">
+<testcase name="Project Price List Tests › TC_03: Verify Lot Preview toggle shows popup on lot click" classname="Pages\Projects\projectPriceList.spec.ts" time="69.677">
 </testcase>
 </testsuite>
 </testsuites>

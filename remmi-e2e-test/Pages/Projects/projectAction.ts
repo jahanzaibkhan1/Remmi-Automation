@@ -9936,6 +9936,38 @@ export class ProjectActions {
         return this.priceListTable.locator('tbody tr');
     }
 
+    private get lotPreviewToggle(): Locator {
+        return this.page.locator('app-price-list p-inputswitch').first();
+    }
+
+    private get lotPreviewToggleSlider(): Locator {
+        return this.lotPreviewToggle.locator('.p-inputswitch').first();
+    }
+
+    private priceListRowByLotName(lotName: string): Locator {
+        return this.priceListTableRows.filter({ hasText: lotName }).first();
+    }
+
+    private get lotPreviewPopup(): Locator {
+        return this.page.locator('.confirmation-dialog-body, .unit-detail-popup').first();
+    }
+
+    private get lotPreviewPopupTitle(): Locator {
+        return this.page.locator('.confirmation-dialog-header p.f-24').first();
+    }
+
+    private get lotPreviewPopupCloseIcon(): Locator {
+        return this.page.locator('.confirmation-dialog-header img[src*="Close_square"]').first();
+    }
+
+    private get lotPreviewToastOn(): Locator {
+        return this.page.locator('div[role="alert"].toast-message').filter({ hasText: /lot preview on successfully/i }).first();
+    }
+
+    private get lotPreviewToastOff(): Locator {
+        return this.page.locator('div[role="alert"].toast-message').filter({ hasText: /lot preview off successfully/i }).first();
+    }
+
     /**
  * HELPER — Click on Price List tab
  */
@@ -9969,6 +10001,92 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
+        await this.cleanupAfterProjectTest();
+    }
+
+    /**
+ * HELPER — Toggle Lot Preview switch ON
+ */
+    private async enableLotPreviewToggle(): Promise<void> {
+        await expect(this.lotPreviewToggle).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const isChecked = await this.lotPreviewToggleSlider.evaluate(el => el.classList.contains('p-inputswitch-checked'));
+        if (!isChecked) {
+            await this.lotPreviewToggle.click();
+            await this.page.waitForTimeout(800);
+        }
+    }
+
+    /**
+     * HELPER — Toggle Lot Preview switch OFF
+     */
+    private async disableLotPreviewToggle(): Promise<void> {
+        await expect(this.lotPreviewToggle).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        const isChecked = await this.lotPreviewToggleSlider.evaluate(el => el.classList.contains('p-inputswitch-checked'));
+        if (isChecked) {
+            await this.lotPreviewToggle.click();
+            await this.page.waitForTimeout(800);
+        }
+    }
+
+    /**
+     * HELPER — Click on a lot row in Price List by lot name
+     */
+    private async clickPriceListLotByName(lotName: string): Promise<void> {
+        const row = this.priceListRowByLotName(lotName);
+        await expect(row).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await row.click();
+        await this.page.waitForTimeout(1000);
+    }
+
+    /**
+     * HELPER — Assert Lot Preview popup is visible with lot details
+     */
+    private async assertLotPreviewPopupVisible(lotName: string): Promise<void> {
+        await expect(this.lotPreviewPopup).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotPreviewPopupTitle).toContainText(lotName, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Click close icon on Lot Preview popup
+     */
+    private async closeLotPreviewPopup(): Promise<void> {
+        await expect(this.lotPreviewPopupCloseIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.lotPreviewPopupCloseIcon.click();
+        await this.page.waitForTimeout(800);
+    }
+
+    /**
+ * HELPER — Assert "Lot preview on successfully" toast is visible
+ */
+    private async assertLotPreviewToastOn(): Promise<void> {
+        await expect(this.lotPreviewToastOn).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+     * HELPER — Assert "Lot preview off successfully" toast is visible
+     */
+    private async assertLotPreviewToastOff(): Promise<void> {
+        await expect(this.lotPreviewToastOff).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+    }
+
+    /**
+   * TC_03 — Verify Lot Preview toggle enables popup on lot click
+   */
+    async verifyLotPreviewTogglePopup(
+        projectName: string = 'Automation',
+        lotName: string = 'Automation Lot'
+    ): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickProjectCardInProjectSection(projectName); 
+        await this.clickPriceListTab();
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.enableLotPreviewToggle();
+        await this.assertLotPreviewToastOn();
+        await this.clickPriceListLotByName(lotName);
+        await this.assertLotPreviewPopupVisible(lotName);
+        await this.closeLotPreviewPopup();
+        await this.disableLotPreviewToggle();
+        await this.assertLotPreviewToastOff();
         await this.cleanupAfterProjectTest();
     }
 
