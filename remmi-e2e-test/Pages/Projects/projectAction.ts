@@ -10393,5 +10393,48 @@ export class ProjectActions {
         await this.assertPriceListFilterTagNotVisible(statusToFilter);
         await this.cleanupAfterProjectTest();
     }
+
+    private get priceListGlobalFilterIcon(): Locator {
+        return this.page.locator('app-price-list img[src*="filter_icon"]').first();
+    }
+
+    private get priceListGlobalFilterBar(): Locator {
+        return this.page.locator('app-price-list .filtero').first();
+    }
+
+    private priceListGlobalFilterByPlaceholder(placeholder: string): Locator {
+        return this.priceListGlobalFilterBar.locator(`re-multiselect[placeholder="${placeholder}"]`).first();
+    }
+
+    private get priceListFilterResetButton(): Locator {
+        return this.priceListGlobalFilterBar.getByRole('button', { name: /^\s*reset\s*$/i }).first();
+    }
+
+    /**
+ * HELPER — Click global filter icon to open the filter bar
+ */
+    private async clickPriceListGlobalFilterIcon(): Promise<void> {
+        await expect(this.priceListGlobalFilterIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.priceListGlobalFilterIcon.click();
+        await this.page.waitForTimeout(800);
+    }
+
+    /**
+ * TC_15 — Apply Bed filter (1 Bed) from global filter bar
+ */
+    async verifyBedFilter(
+        projectName: string = 'Automation',
+        bedValue: string = '1'
+    ): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.clickPriceListTab();
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickPriceListGlobalFilterIcon();
+        await this.openBedDropdown();
+        await this.bedDropdownSearchInput.fill(bedValue);
+        await this.selectBedByValue(bedValue);
+        await this.cleanupAfterProjectTest();
+    }
 }
 
