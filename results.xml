@@ -1,48 +1,6 @@
-<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="119.09334100000187">
-<testsuite name="Pages\Projects\projectPriceList.spec.ts" timestamp="2026-05-19T10:57:10.708Z" hostname="chromium" tests="1" failures="1" skipped="0" time="116.877" errors="0">
-<testcase name="Project Price List Tests › TC_15: Select level filter from dropdown" classname="Pages\Projects\projectPriceList.spec.ts" time="116.877">
-<failure message="projectPriceList.spec.ts:79:5 TC_15: Select level filter from dropdown" type="FAILURE">
-<![CDATA[  [chromium] › Pages\Projects\projectPriceList.spec.ts:79:5 › Project Price List Tests › TC_15: Select level filter from dropdown 
-
-    Error: expect(locator).toBeVisible() failed
-
-    Locator: getByRole('dialog').first().locator('li').filter({ hasText: /^\s*Level 6\s*$/ }).first()
-    Expected: visible
-    Timeout: 10000ms
-    Error: element(s) not found
-
-    Call log:
-      - Expect "toBeVisible" with timeout 10000ms
-      - waiting for getByRole('dialog').first().locator('li').filter({ hasText: /^\s*Level 6\s*$/ }).first()
-
-
-       at Pages\Projects\projectAction.ts:10464
-
-      10462 |     private async selectLevelByValue(value: string): Promise<void> {
-      10463 |         const option = this.levelDropdownOptionByValue(value);
-    > 10464 |         await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-            |                              ^
-      10465 |         await option.click();
-      10466 |         await this.page.waitForTimeout(500);
-      10467 |     }
-        at ProjectActions.selectLevelByValue (E:\Remmi-E2E-Test\remmi-qa-automation\remmi-e2e-test\Pages\Projects\projectAction.ts:10464:30)
-        at ProjectActions.verifyLevelFilter (E:\Remmi-E2E-Test\remmi-qa-automation\remmi-e2e-test\Pages\Projects\projectAction.ts:10484:20)
-        at E:\Remmi-E2E-Test\remmi-qa-automation\remmi-e2e-test\Pages\Projects\projectPriceList.spec.ts:80:9
-
-    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ..\test-results\Pages-Projects-projectPric-ac59e--level-filter-from-dropdown-chromium\test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Error Context: ..\test-results\Pages-Projects-projectPric-ac59e--level-filter-from-dropdown-chromium\error-context.md
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|test-results\Pages-Projects-projectPric-ac59e--level-filter-from-dropdown-chromium\test-failed-1.png]]
-
-[[ATTACHMENT|test-results\Pages-Projects-projectPric-ac59e--level-filter-from-dropdown-chromium\error-context.md]]
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="68.16083899999782">
+<testsuite name="Pages\Projects\projectPriceList.spec.ts" timestamp="2026-05-19T11:53:51.656Z" hostname="chromium" tests="1" failures="0" skipped="0" time="66.131" errors="0">
+<testcase name="Project Price List Tests › TC_15: Select level filter from dropdown" classname="Pages\Projects\projectPriceList.spec.ts" time="66.131">
 </testcase>
 </testsuite>
 </testsuites>
