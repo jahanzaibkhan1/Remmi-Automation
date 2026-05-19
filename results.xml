@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="95.01409400000051">
-<testsuite name="Pages\Projects\projectPriceList.spec.ts" timestamp="2026-05-19T08:24:39.035Z" hostname="chromium" tests="1" failures="0" skipped="0" time="93.039" errors="0">
-<testcase name="Project Price List Tests › TC_06: Clear search using cross icon" classname="Pages\Projects\projectPriceList.spec.ts" time="93.039">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="117.88563199999929">
+<testsuite name="Pages\Projects\projectPriceList.spec.ts" timestamp="2026-05-19T08:33:06.509Z" hostname="chromium" tests="1" failures="0" skipped="0" time="115.863" errors="0">
+<testcase name="Project Price List Tests › TC_07: Open filter dropdown for Status" classname="Pages\Projects\projectPriceList.spec.ts" time="115.863">
 </testcase>
 </testsuite>
 </testsuites>
