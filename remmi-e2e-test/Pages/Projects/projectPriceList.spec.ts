@@ -23,5 +23,9 @@ test.describe('Project Price List Tests', () => {
     test('TC_01 - Open Price List with valid lots', async ({ sessionPage }) => {
         await new ProjectActions(sessionPage).openPriceListWithValidLots('Automation');
     });
-    
+
+    test('TC_02 - Open Price List when no lots exist', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).verifyPriceListRedirectsToGeneralWhenNoLots("Hina's Project");
+    });
+
 });

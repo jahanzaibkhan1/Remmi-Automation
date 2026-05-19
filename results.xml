@@ -1,10 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="75.61541100000008">
-<testsuite name="Pages\Projects\projectPriceList.spec.ts" timestamp="2026-05-19T05:48:48.548Z" hostname="chromium" tests="1" failures="0" skipped="0" time="73.105" errors="0">
-<testcase name="Project Price List Tests › TC_01 - Open Price List with valid lots" classname="Pages\Projects\projectPriceList.spec.ts" time="73.105">
-<system-out>
-<![CDATA[Records: 1
-]]>
-</system-out>
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="94.7219879999999">
+<testsuite name="Pages\Projects\projectPriceList.spec.ts" timestamp="2026-05-19T05:57:57.844Z" hostname="chromium" tests="1" failures="0" skipped="0" time="91.586" errors="0">
+<testcase name="Project Price List Tests › TC_02 - Open Price List when no lots exist" classname="Pages\Projects\projectPriceList.spec.ts" time="91.586">
 </testcase>
 </testsuite>
 </testsuites>
