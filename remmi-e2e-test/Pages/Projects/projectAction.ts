@@ -10248,5 +10248,35 @@ export class ProjectActions {
         await this.cleanupAfterProjectTest();
     }
 
+
+
+    /**
+     * HELPER — Assert all visible rows have given status
+     */
+    private async assertAllPriceListRowsHaveStatus(status: string): Promise<void> {
+        const totalRows = await this.priceListTableRows.count();
+        expect(totalRows).toBeGreaterThan(0);
+        for (let i = 0; i < totalRows; i++) {
+            await expect(this.priceListTableRows.nth(i)).toContainText(status, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        }
+    }
+    /**
+ * TC_08 — Verify single status filter selection
+ */
+    async verifySingleStatusFilter(
+        projectName: string = 'Automation',
+        statusToFilter: string = 'For Sale'
+    ): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.clickPriceListTab();
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickPriceListColumnFilterIcon('Status');
+        await this.assertPriceListFilterPopupVisible();
+        await this.clickPriceListFilterStatusDropdown();
+        await this.selectConditionDropdownOptionWithSearch(statusToFilter);
+        await this.cleanupAfterProjectTest();
+    }
+
 }
 
