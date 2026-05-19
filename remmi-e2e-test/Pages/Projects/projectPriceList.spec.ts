@@ -68,4 +68,8 @@ test.describe('Project Price List Tests', () => {
         await new ProjectActions(sessionPage).searchInsideStatusDropdownInPriceList('Automation', 'For Sale');
     });
 
+    test('TC_13: Try filtering without selecting any status', async ({ sessionPage }) => {
+        await new ProjectActions(sessionPage).filterWithoutSelectingAnyStatusInPriceList('Automation');
+    });
+
 });

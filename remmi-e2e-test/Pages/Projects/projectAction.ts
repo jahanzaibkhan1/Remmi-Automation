@@ -10346,5 +10346,21 @@ export class ProjectActions {
         await this.selectConditionDropdownOptionWithSearch(searchTerm);
         await this.cleanupAfterProjectTest();
     }
+
+    /**
+     * TC_xx — Try filtering without selecting any status in the Price List
+     */
+    async filterWithoutSelectingAnyStatusInPriceList(
+        projectName: string = 'Automation'
+    ): Promise<void> {
+        await this.navigateToProjects();
+        await this.clickProjectCardInProjectSection(projectName);
+        await this.clickPriceListTab();
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.clickPriceListColumnFilterIcon('Status');
+        await this.assertPriceListFilterPopupVisible();
+        await this.applyFilterButton.click();
+        await this.cleanupAfterProjectTest();
+    }
 }
 
