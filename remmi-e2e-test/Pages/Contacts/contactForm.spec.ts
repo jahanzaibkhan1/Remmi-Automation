@@ -5,7 +5,7 @@ import * as fs from 'fs';
 import { faker } from '@faker-js/faker'; // <-- FIX: add import for faker
 
 const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
-const DASHBOARD_URL = process.env.DASHBOARD_URL || 'https://remmi-app-stage-ui.azurewebsites.net/dashboard';
+const DASHBOARD_URL = process.env.DASHBOARD_URL;
 
 const IMAGE_DIR = path.resolve(__dirname, 'Images');
 

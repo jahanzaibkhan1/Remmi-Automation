@@ -96,7 +96,7 @@ export class ContactLocators {
   }
 
   DeleteIcon(): Locator {
-    return this.page.locator('div:nth-child(8) > .cursor-pointer');
+    return this.page.locator('._circle-btn[data-help-target="contacts-bulk-delete-desktop"] > img.cursor-pointer[src="assets/img/menuIcon/delete_icon.svg"]').first();
   }
 
   ConfirmYesButton(): Locator {
@@ -128,7 +128,7 @@ export class ContactLocators {
   }
 
   ContactCreationForm(): Locator {
-    return this.page.locator('section');
+    return this.page.locator('section.body-details');
   }
 
   CloseFormIcon(): Locator {
