@@ -96,7 +96,7 @@ test.describe('Related Contact', () => {
 
     test('Search should return accurate results', async ({ sessionPage }) => {
         const contactActions = new ContactActions(sessionPage);
-        await contactActions.verifySearchReturnsAccurateResults('11 22', ['11 22']);
+        await contactActions.verifySearchReturnsAccurateResults('11 22');
     });
 
     test('Contacts should be sorted correctly when clicking the sort icon', async ({ sessionPage }) => {

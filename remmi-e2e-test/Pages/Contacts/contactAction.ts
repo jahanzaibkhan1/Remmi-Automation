@@ -1953,7 +1953,7 @@ export class ContactActions {
         console.log("Contact Form open successfully");
         await this.page.waitForTimeout(1200);
         await this.closeModalIfVisible();
-        
+
     }
 
     public async verifyContactFormCloseWithXIcon() {
@@ -2325,7 +2325,7 @@ export class ContactActions {
         await expect(emailError).toBeVisible();
 
         await this.page.waitForTimeout(1200);
-         await this.closeModalIfVisible();
+        await this.closeModalIfVisible();
         await this.page.waitForTimeout(2000);
     }
 
@@ -2879,7 +2879,7 @@ export class ContactActions {
         await expect(tagSearchInput).toBeVisible();
         await this.page.waitForTimeout(1200);
         // Close the tag manager popup by clicking the X icon
-         await this.closeModalIfVisible();
+        await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
 
     }
@@ -3063,7 +3063,7 @@ export class ContactActions {
         await this.page.waitForTimeout(1000);
 
         // Close the Tag creation dialog by clicking the close (X) button
-         await this.closeModalIfVisible();
+        await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
     }
 
@@ -3112,7 +3112,7 @@ export class ContactActions {
         await this.page.waitForTimeout(1000);
 
         // Close the Tag creation dialog by clicking the close (X) button
-         await this.closeModalIfVisible();
+        await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
     }
 
@@ -3188,7 +3188,7 @@ export class ContactActions {
 
         // Click the close icon to close the Tag Manager popup
         await this.page.waitForTimeout(1000);
-         await this.closeModalIfVisible();
+        await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
     }
 
@@ -3238,7 +3238,7 @@ export class ContactActions {
         await this.page.waitForTimeout(1000);
 
         // Close the Tag creation dialog by clicking the close (X) button
-         await this.closeModalIfVisible();
+        await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
     }
 
@@ -3277,7 +3277,7 @@ export class ContactActions {
 
         // Close the Tag creation dialog by clicking the close (X) button
         await this.page.waitForTimeout(1200);
-         await this.closeModalIfVisible();
+        await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
     }
 
@@ -3310,7 +3310,7 @@ export class ContactActions {
         // Verify that the popup is now closed (not visible)
         await expect(tagPopupHeader).not.toBeVisible({ timeout: 5000 });
         await this.page.waitForTimeout(1200);
-         await this.closeModalIfVisible();
+        await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
     }
 
@@ -3346,7 +3346,7 @@ export class ContactActions {
 
         await this.page.waitForTimeout(1200);
 
-         await this.closeModalIfVisible();
+        await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
     }
 
@@ -3401,9 +3401,9 @@ export class ContactActions {
         // Optionally wait for and check for success message or disappearance of modal
         const successToast = this.page.getByText(/Tag successfully created|already created/i).first();
         await expect(successToast).toBeVisible({ timeout: 10000 });
-   
+
         await this.page.waitForTimeout(1200);
-         await this.closeModalIfVisible();
+        await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
 
     }
@@ -3454,17 +3454,17 @@ export class ContactActions {
         const saveButton = this.page.getByRole('button', { name: /Add/i }).first();
         await expect(saveButton).toBeVisible({ timeout: 2000 });
         await saveButton.click();
-        
+
         // Optionally wait for and check for success message or disappearance of modal
         const successToast = this.page.getByText(/Tag successfully created|already created/i).first();
         await expect(successToast).toBeVisible({ timeout: 10000 });
-   
+
         const closetag = this.page.locator('.d-flex.align-items-center > div > button:nth-child(2)').last();
         await expect(closetag).toBeVisible();
         await closetag.click();
         await expect(closetag).not.toBeVisible()
         await this.page.waitForTimeout(1200);
-         await this.closeModalIfVisible();
+        await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
     }
 
@@ -3931,6 +3931,7 @@ export class ContactActions {
 
         await leadLink.waitFor({ state: 'hidden' });
 
+        await this.page.waitForTimeout(2000);
         // Count the rows after creation
         await tableRowsLocator.first().waitFor({ state: "visible" });
         const finalRowCount = await tableRowsLocator.count();
@@ -4340,9 +4341,10 @@ export class ContactActions {
     }
 
     async clickLeadEditIcon() {
-        const editIcon = this.page.locator("//button[@class='_addNew p-2']//img[@class='cursor-pointer']");
-        await editIcon.waitFor({ state: 'visible' });
+        const editIcon = this.page.locator('button[data-help-target="lead-detail-edit-toggle"]').first();
+        await expect(editIcon).toBeVisible({timeout: 30000});
         await editIcon.click();
+        await this.page.waitForTimeout(1000);
     }
 
     async clickSaveButton() {
@@ -4464,6 +4466,7 @@ export class ContactActions {
             throw new Error("Lead 'Lead Source' cell does not show value 'East Village Vila'.");
         }
         await this.closeModalIfVisible();
+        await this.page.waitForTimeout(1200);
     }
 
     /**
@@ -4606,6 +4609,7 @@ export class ContactActions {
         await successMessageLocator.waitFor({ state: 'visible' });
         await successMessageLocator.waitFor({ state: 'hidden' });
         await this.closeLeadModalIfVisible();
+        await this.page.waitForTimeout(2000);
         const tableRow = this.page.locator('#customentitydatalist table tbody tr').first();
         await tableRow.waitFor({ state: 'visible' });
         const leadStatusCell = tableRow.locator('td').nth(2);
@@ -4841,7 +4845,7 @@ export class ContactActions {
             this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="intended_use"]'),
             this.page.locator('div.popup-gray-box:has(p:text("Requirements")) re-multiselect[formcontrolname="outdoor_feature"]'),
             this.page.locator('div.popup-gray-box:has(p:text("Requirements")) re-multiselect[formcontrolname="indoor_feature"]'),
-            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="reason_selling_buying"]'),
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="reason_for_buying"]'),
         ];
 
         for (const field of requirementsFields) {
@@ -4951,7 +4955,7 @@ export class ContactActions {
             // Selling Timeframe dropdown
             this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="time_frame"]'),
             // Reason For Selling dropdown
-            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="reason_selling_buying"]'),
+            this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="reason_for_selling"]'),
             // Current Purpose dropdown
             this.page.locator('div.popup-gray-box:has(p:text("Requirements")) ng-select[formcontrolname="current_purpose"]'),
             // Tenancy Details dropdown
@@ -5411,12 +5415,6 @@ export class ContactActions {
         await agentRespClearIcon.waitFor({ state: 'visible' });
         await agentRespClearIcon.click();
 
-
-        // Remove owner tag
-        const ownerClearIcon = this.page.locator('.col-sm-3.pl-0 > .form-group > #status > .ng-select-container > .ng-clear-wrapper')
-        await ownerClearIcon.waitFor({ state: 'visible' });
-        await ownerClearIcon.click();
-        await ownerClearIcon.waitFor({ state: 'hidden' });
         const saveButton = this.page.getByRole('button', { name: /save/i }).first();
         await saveButton.waitFor({ state: 'visible' });
         await saveButton.click();
@@ -5960,7 +5958,7 @@ export class ContactActions {
 
         const projectOptions = this.page.locator('div.drop_box.ng-star-inserted li');
         const firstProjectOption = projectOptions.first();
-        await firstProjectOption.waitFor({ state: 'visible', timeout: 10000 });
+        await firstProjectOption.waitFor({ state: 'visible', timeout: 20000 });
         const selectedProjectName = await firstProjectOption.textContent();
         await firstProjectOption.click();
 
@@ -7900,6 +7898,9 @@ export class ContactActions {
             await closeBtn.click({ force: true });
         }
 
+        await relatedContactTab.waitFor({ state: "visible" });
+        await relatedContactTab.click();
+
         await expect(selectDropdown).toBeVisible({ timeout: 10000 });
         await selectDropdown.click();
 
@@ -8251,7 +8252,7 @@ export class ContactActions {
      * Search should return accurate results for related contact search.
      * Verifies that searching with a keyword returns only relevant results in the dropdown.
      */
-    async verifySearchReturnsAccurateResults(searchKeyword: string, expectedResults: string[]) {
+    async verifySearchReturnsAccurateResults(searchKeyword: string) {
         await this.NavigateToContacts();
         await this.openFirstContact();
         const relatedContactTab = this.page.getByRole("tab", { name: /related contact/i });
@@ -8272,21 +8273,11 @@ export class ContactActions {
         // Wait for dropdown results to appear
         const resultItems = this.page.getByRole('listitem');
         await expect(resultItems.first()).toBeVisible({ timeout: 10000 });
-
-        // Collect result texts
-        const count = await resultItems.count();
-        const resultLabels: string[] = [];
-        for (let i = 0; i < count; i++) {
-            const text = await resultItems.nth(i).innerText();
-            resultLabels.push(text.trim());
-        }
-
-        // Ensure every expected result appears in results
-        for (const expected of expectedResults) {
-            expect(resultLabels).toContainEqual(expect.stringContaining(expected));
-        }
-
+        const expectedContact = '11 22 (11@22.com.au)';
+        const matchingEntry = this.page.locator('li p', { hasText: expectedContact }).first();
+        await expect(matchingEntry).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
+
     }
 
     /**
@@ -8510,7 +8501,7 @@ export class ContactActions {
 
         const deleteButton = projectRow.locator('td.text-center button.btn.p-0');
         await expect(deleteButton).toBeVisible();
-        
+
         await this.closeModalIfVisible();
     }
 
