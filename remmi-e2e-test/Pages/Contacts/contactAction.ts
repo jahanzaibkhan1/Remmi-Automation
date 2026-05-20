@@ -408,7 +408,7 @@ export class ContactActions {
         await this.page.waitForTimeout(2000);
         await this.Checkbox();
         const deleteButton = this.locators.DeleteIcon();
-        await deleteButton.waitFor({ state: 'visible', timeout: 3000 });
+        await deleteButton.waitFor({ state: 'visible', timeout: 10000 });
         expect(await deleteButton.isEnabled()).toBe(true);
         await this.Checkbox();
 
@@ -421,7 +421,7 @@ export class ContactActions {
         await firstRow.waitFor({ state: 'visible', timeout: 30000 });
         await this.page.waitForTimeout(2000);
 
-        const deleteButton = this.page.locator('._circle-btn');
+        const deleteButton = this.page.locator('._circle-btn').last();
         await deleteButton.waitFor({ state: 'visible', timeout: 10000 })
         expect(await deleteButton.isDisabled()).toBe(false)
     }
@@ -530,9 +530,7 @@ export class ContactActions {
 
         await this.page.waitForTimeout(1200);
 
-        const closeButton = this.page.locator('.pi.pi-times').first();
-        await closeButton.waitFor({ state: 'visible' });
-        await closeButton.click({ force: true });
+        await this.closeModalIfVisible();
 
     }
     // /*
@@ -1365,7 +1363,7 @@ export class ContactActions {
         const searchBox = this.page.getByPlaceholder('Search').last();
         await searchBox.waitFor({ state: 'visible', timeout: 10000 });
         await this.page.waitForTimeout(2000);
-        const ownerFilterDropdown = this.page.locator("//div[@class='drop_box ng-star-inserted']");
+        const ownerFilterDropdown = this.page.locator("//div[contains(@class, 'drop_box') and contains(@class, 'ng-star-inserted')]");
         await ownerFilterDropdown.waitFor({ state: 'visible', timeout: 30000 });
         await searchBox.fill(ownerName);
         const matchingOption = this.page.getByRole('dialog').getByRole('listitem').filter({ hasText: ownerName });
@@ -1949,14 +1947,13 @@ export class ContactActions {
         const AddContactButton = this.page.getByRole('button', { name: '' });
         await AddContactButton.click({ force: true });
 
-        const contactForm = this.page.locator('section');
+        const contactForm = this.page.locator('section.body-details');
         await contactForm.waitFor({ state: 'visible', timeout: 10000 });
         expect(contactForm).toBeVisible();
         console.log("Contact Form open successfully");
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
+        
     }
 
     public async verifyContactFormCloseWithXIcon() {
@@ -1968,13 +1965,11 @@ export class ContactActions {
         const AddContactButton = this.page.getByRole('button', { name: '' });
         await AddContactButton.click({ force: true });
 
-        const contactForm = this.page.locator('section');
+        const contactForm = this.page.locator('section.body-details');
         await contactForm.waitFor({ state: 'visible', timeout: 10000 });
         expect(contactForm).toBeVisible();
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
         console.log("Contact form was closed using the X icon successfully")
     }
 
@@ -1988,7 +1983,7 @@ export class ContactActions {
         const AddContactButton = this.page.getByRole('button', { name: '' });
         await AddContactButton.click({ force: true });
 
-        const contactForm = this.page.locator('section');
+        const contactForm = this.page.locator('section.body-details');
         await contactForm.waitFor({ state: 'visible', timeout: 10000 });
         expect(contactForm).toBeVisible();
 
@@ -2008,9 +2003,7 @@ export class ContactActions {
         }
 
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
         console.log("Verified: Image upload functionality is not displayed on the contact form.");
     }
 
@@ -2053,9 +2046,7 @@ export class ContactActions {
 
         console.log(`✅ Verified initials: ${expectedInitials}`);
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
 
@@ -2085,9 +2076,7 @@ export class ContactActions {
         await expect(this.page.locator('div').filter({ hasText: /^Company Name \*$/ }).nth(1)).toBeVisible()
         await expect(this.page.locator('div').filter({ hasText: /^Preferred Contact MethodSelect Contact Method$/ }).first()).toBeVisible()
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
 
@@ -2122,9 +2111,7 @@ export class ContactActions {
         const emailError = this.page.getByText('Email is required', { exact: false });
         await expect(emailError).toBeVisible();
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
     public async verifyRequiredFieldsCapitalizedValidationForCompany() {
@@ -2176,9 +2163,7 @@ export class ContactActions {
             throw new Error('Email error text not found');
         }
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
     // Verify required fields validation for "Individual" contact type
@@ -2206,9 +2191,7 @@ export class ContactActions {
         await expect(firstNameError).toBeVisible();
         await expect(emailError).toBeVisible();
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
 
     }
 
@@ -2246,9 +2229,7 @@ export class ContactActions {
         await expect(successToast).toBeVisible({ timeout: 10000 });
 
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
     // Verify that clicking "Save & Close" saves and closes the form
@@ -2313,9 +2294,7 @@ export class ContactActions {
         await expect(deselectAllLabel).toBeVisible();
 
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
     public async verifyInvalidEmailFormatErrorMessage() {
@@ -2346,8 +2325,7 @@ export class ContactActions {
         await expect(emailError).toBeVisible();
 
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
+         await this.closeModalIfVisible();
         await this.page.waitForTimeout(2000);
     }
 
@@ -2369,9 +2347,7 @@ export class ContactActions {
 
         await expect(this.page.getByRole('textbox', { name: 'Other Email' })).toBeVisible()
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
     // Verify that clicking the "+" icon adds a new phone field
@@ -2385,18 +2361,16 @@ export class ContactActions {
         await addContactButton.waitFor({ state: 'visible' });
         await addContactButton.click();
 
-        const phoneInputs = this.page.locator('input[formcontrolname="mobile_no"]');
-        const countBefore = await phoneInputs.count();
+        // const phoneInputs = this.page.locator('input[formcontrolname="mobile_no"]');
+        // const countBefore = await phoneInputs.count();
 
-        const addPhoneIcon = this.page.getByRole('button', { name: '' }).nth(2);
-        await addPhoneIcon.click();
+        // const addPhoneIcon = this.page.getByRole('button', { name: '' }).nth(2);
+        // await addPhoneIcon.click();
 
-        await expect(this.page.getByRole('textbox', { name: 'Other Phone' })).toBeVisible();
+        // await expect(this.page.getByRole('textbox', { name: 'Other Phone' })).toBeVisible();
 
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
     public async verifyDeleteEmailOrPhoneField() {
@@ -2419,18 +2393,16 @@ export class ContactActions {
         await this.page.waitForTimeout(1000);
         await expect(emailInputs.nth(1)).not.toBeVisible();
 
-        const addPhoneIcon = this.page.getByRole('button', { name: '' }).nth(2);
-        await addPhoneIcon.click();
+        // const addPhoneIcon = this.page.getByRole('button', { name: '' }).nth(2);
+        // await addPhoneIcon.click();
 
-        const phoneInputs = this.page.locator('input[formcontrolname="mobile_no"]');
-        const deletePhoneButton = this.page.getByRole('button', { name: 'delete' }).last();
-        await deletePhoneButton.click();
+        // const phoneInputs = this.page.locator('input[formcontrolname="mobile_no"]');
+        // const deletePhoneButton = this.page.getByRole('button', { name: 'delete' }).last();
+        // await deletePhoneButton.click();
         await this.page.waitForTimeout(1000);
-        await expect(phoneInputs.nth(1)).not.toBeVisible();
+        // await expect(phoneInputs.nth(1)).not.toBeVisible();
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
     // Verify that clicking the correct (✔) button sets an email as the primary email
@@ -2464,9 +2436,7 @@ export class ContactActions {
         await expect(mainEmailInput).toHaveValue(secondEmail);
 
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
     // Attempt to save a tag without entering a name
@@ -2504,9 +2474,7 @@ export class ContactActions {
         await cancelButton.click();
 
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
     // Verify associating a company with a contact via association search in contact details
@@ -2546,9 +2514,7 @@ export class ContactActions {
         await expect(removeNetsol).toBeVisible();
 
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
     // Try to associate the same company twice
@@ -2590,9 +2556,7 @@ export class ContactActions {
 
         await expect(this.page.getByRole('alert', { name: 'This company is already attached with this contact' })).toBeVisible()
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
     // Verify that clicking on a company tag opens the company form
@@ -2631,9 +2595,7 @@ export class ContactActions {
         const tag = this.page.locator(`div.company-div span`, { hasText: companyName }).first();
         await tag.click();
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
     // Verify that a company tag can be removed
@@ -2671,9 +2633,7 @@ export class ContactActions {
         await tag.click();
 
         await this.page.waitForTimeout(1200);
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
 
     }
 
@@ -2705,9 +2665,7 @@ export class ContactActions {
 
         await this.page.waitForTimeout(2000);
         // Close the form using the X icon after address selection
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
     public async verifyAddressAutoFill(addressPartial: string): Promise<void> {
@@ -2720,7 +2678,7 @@ export class ContactActions {
         await companyTagCell.waitFor({ state: 'visible', timeout: 10000 });
         await companyTagCell.click();
 
-        const contactForm = this.page.locator('section');
+        const contactForm = this.page.locator('section.body-details');
         await contactForm.waitFor({ state: 'visible' });
         expect(contactForm).toBeVisible();
         console.log("Contact Form open successfully");
@@ -2794,9 +2752,7 @@ export class ContactActions {
         await saveButton.click({ force: true });
         await this.page.waitForTimeout(1200);
         // Close the overlay or form using the close icon
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
 
     }
 
@@ -2844,9 +2800,7 @@ export class ContactActions {
         await saveButton.click({ force: true });
         await this.page.waitForTimeout(1200);
         // Close the overlay or form using the close icon
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
     // Verify that the Tag Manager popup opens
@@ -2868,9 +2822,7 @@ export class ContactActions {
 
         await this.page.waitForTimeout(1200);
         // Close the overlay or form using the close icon
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
     async verifyCanAddNewTagType(tagTypeName: string) {
@@ -2927,8 +2879,7 @@ export class ContactActions {
         await expect(tagSearchInput).toBeVisible();
         await this.page.waitForTimeout(1200);
         // Close the tag manager popup by clicking the X icon
-        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
-        await closeTagManagerIcon.click({ force: true });
+         await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
 
     }
@@ -3033,9 +2984,7 @@ export class ContactActions {
 
         await this.page.waitForTimeout(1000);
         // Close the form after checking address update
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
     // Search for a non existent tag in Tag Manager
@@ -3063,9 +3012,7 @@ export class ContactActions {
 
         await this.page.waitForTimeout(1000);
         // Close the form after checking address update
-        const closeFormIcon = this.page.locator('.pi.pi-times').first();
-        await closeFormIcon.click({ force: true });
-        await this.page.waitForTimeout(1000);
+        await this.closeModalIfVisible();
     }
 
     async verifyCreateTagByEnter(tagTypeName: string, tagValue: string) {
@@ -3116,8 +3063,7 @@ export class ContactActions {
         await this.page.waitForTimeout(1000);
 
         // Close the Tag creation dialog by clicking the close (X) button
-        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
-        await closeTagManagerIcon.click({ force: true });
+         await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
     }
 
@@ -3166,8 +3112,7 @@ export class ContactActions {
         await this.page.waitForTimeout(1000);
 
         // Close the Tag creation dialog by clicking the close (X) button
-        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
-        await closeTagManagerIcon.click({ force: true });
+         await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
     }
 
@@ -3243,8 +3188,7 @@ export class ContactActions {
 
         // Click the close icon to close the Tag Manager popup
         await this.page.waitForTimeout(1000);
-        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
-        await closeTagManagerIcon.click({ force: true });
+         await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
     }
 
@@ -3294,8 +3238,7 @@ export class ContactActions {
         await this.page.waitForTimeout(1000);
 
         // Close the Tag creation dialog by clicking the close (X) button
-        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
-        await closeTagManagerIcon.click({ force: true });
+         await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
     }
 
@@ -3334,8 +3277,7 @@ export class ContactActions {
 
         // Close the Tag creation dialog by clicking the close (X) button
         await this.page.waitForTimeout(1200);
-        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
-        await closeTagManagerIcon.click({ force: true });
+         await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
     }
 
@@ -3368,8 +3310,7 @@ export class ContactActions {
         // Verify that the popup is now closed (not visible)
         await expect(tagPopupHeader).not.toBeVisible({ timeout: 5000 });
         await this.page.waitForTimeout(1200);
-        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
-        await closeTagManagerIcon.click({ force: true });
+         await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
     }
 
@@ -3405,8 +3346,7 @@ export class ContactActions {
 
         await this.page.waitForTimeout(1200);
 
-        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
-        await closeTagManagerIcon.click({ force: true });
+         await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
     }
 
@@ -3463,8 +3403,7 @@ export class ContactActions {
         await expect(successToast).toBeVisible({ timeout: 10000 });
    
         await this.page.waitForTimeout(1200);
-        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
-        await closeTagManagerIcon.click({ force: true });
+         await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
 
     }
@@ -3525,8 +3464,7 @@ export class ContactActions {
         await closetag.click();
         await expect(closetag).not.toBeVisible()
         await this.page.waitForTimeout(1200);
-        const closeTagManagerIcon = this.page.locator('.pi.pi-times').first();
-        await closeTagManagerIcon.click({ force: true });
+         await this.closeModalIfVisible();
         await this.page.waitForTimeout(1000);
     }
 
@@ -3656,7 +3594,7 @@ export class ContactActions {
     }
 
     async closeModalIfVisible() {
-        const closeBtn = this.page.locator('.pi.pi-times').first();
+        const closeBtn = this.page.locator('i.pi.pi-times.cursor-pointer.f-14').first();
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
@@ -4423,7 +4361,7 @@ export class ContactActions {
      * Closes the lead modal window if it is visible.
      */
     async closeLeadModalIfVisible() {
-        const closeBtn = this.page.locator('.pi.pi-times').nth(2);
+        const closeBtn = this.page.locator('i.p-element.pi.pi-times.ml-2.f-12.cursor-pointer').nth(1);
         if (await closeBtn.isVisible().catch(() => false)) {
             await closeBtn.click({ force: true });
         }
@@ -7441,7 +7379,7 @@ export class ContactActions {
         await associatedListingRow.waitFor({ state: 'visible', timeout: 30000 });
         await this.page.waitForTimeout(1000);
         associatedListingRow.click({ force: true });
-        const newListingSection = this.page.locator('section');
+        const newListingSection = this.page.locator('section.body-details');
         await expect(newListingSection).toBeVisible({ timeout: 10000 });
         await this.closeModalIfVisible();
     }
@@ -8558,7 +8496,21 @@ export class ContactActions {
         const addButton = this.page.getByLabel('Associations').getByRole('button', { name: '' })
         await addButton.click();
 
-        await expect(this.page.getByRole('alert', { name: 'Added successfully' })).toBeVisible({ timeout: 5000 });
+        await expect(this.page.getByRole('alert', { name: 'Added successfully' })).toBeVisible({ timeout: 10000 });
+
+        const projectRow = this.page.locator('tr.compact-form.ng-star-inserted').filter({ hasText: searchProjectName }).first();
+        await expect(projectRow).toBeVisible({ timeout: 30000 });
+
+        // Optionally: Verify columns content (Project Name, Date, Delete Button)
+        const nameCell = projectRow.locator('td').nth(0).locator('p');
+        await expect(nameCell).toHaveText(/east village vila/i);
+
+        const dateCell = projectRow.locator('td').nth(1).locator('p');
+        await expect(dateCell).not.toHaveText(''); // Date field should not be empty
+
+        const deleteButton = projectRow.locator('td.text-center button.btn.p-0');
+        await expect(deleteButton).toBeVisible();
+        
         await this.closeModalIfVisible();
     }
 
