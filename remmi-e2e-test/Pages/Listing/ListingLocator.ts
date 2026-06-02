@@ -70,8 +70,7 @@ export class ListingLocators {
         return this.page.locator('//span[@class="placeHolder ng-star-inserted" and text()="Select by Agent"]');
     }
     selectByAgentSearchInput(): Locator {
-        // Try common search input patterns (fallback to a broad match for stability)
-        return this.page.locator('re-multiselect').filter({ hasText: 'Select by Agent Abdul Live' }).getByPlaceholder('Search').first();
+        return this.page.locator('re-multiselect[placeholder="Select by Agent"] input[placeholder="Search"]');
     }
     selectByAgentSelectAll(): Locator {
         return this.page.locator('.checkbox__checkmark').first(); // May need .first() if multiple checkmarks on page

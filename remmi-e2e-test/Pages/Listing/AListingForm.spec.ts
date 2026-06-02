@@ -3,7 +3,7 @@ import { ListingActions } from './ListingAction';
 import * as path from 'path';
 
 const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
-const DASHBOARD_URL = process.env.DASHBOARD_URL || 'https://remmi-app-stage-ui.azurewebsites.net/dashboard';
+const DASHBOARD_URL = process.env.DASHBOARD_URL;
 
 const test = base.extend<{ sessionPage: any }>({
   sessionPage: [async ({ browser }, use) => {
@@ -78,7 +78,6 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
   test('Test 10: Declining listing copy', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.navigateToListings();
-    // This test should trigger the "Would you like to copy this" dialog and then decline it (click "No")
     await listingActions.declineListingCopy()
   });
 
@@ -179,7 +178,6 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
   test('Test 25: Searching in feature dropdown by name', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.navigateToListings();
-    // Provide the feature name you want to search for
     const featureName = "Air Conditioning";
     await listingActions.searchFeatureInDropdown(featureName);
   });
@@ -245,7 +243,6 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
   test('Test 35: Upload unsupported image format', async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.navigateToListings();
-    // Use a relative image path within the repo's PropertyImages folder
     const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
     const imagePath = path.join(IMAGE_DIR, 'invalidImage.webp');
     await listingActions.uploadunsupportedImageFormat(imagePath);
