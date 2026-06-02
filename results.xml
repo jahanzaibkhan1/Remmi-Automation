@@ -1,52 +1,40 @@
-<testsuites id="" name="" tests="5" failures="1" skipped="2" errors="0" time="267.9141640000008">
-<testsuite name="Pages\Contacts\contactLead.spec.ts" timestamp="2026-05-20T08:01:34.307Z" hostname="chromium" tests="5" failures="1" skipped="2" time="263.29" errors="0">
-<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead listing/project details" classname="Pages\Contacts\contactLead.spec.ts" time="105.179">
-</testcase>
-<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead modification" classname="Pages\Contacts\contactLead.spec.ts" time="2.98">
-</testcase>
-<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead status can be changed and displayed correctly" classname="Pages\Contacts\contactLead.spec.ts" time="120.413">
-<failure message="contactLead.spec.ts:78:5 Verify lead status can be changed and displayed correctly" type="FAILURE">
-<![CDATA[  [chromium] › Pages\Contacts\contactLead.spec.ts:78:5 › Contacts "Lead" Tab - E2E Tests › Verify lead status can be changed and displayed correctly 
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="122.44326600000076">
+<testsuite name="Pages\Listing\listingImages.spec.ts" timestamp="2026-05-21T08:28:28.249Z" hostname="chromium" tests="1" failures="1" skipped="0" time="120.142" errors="0">
+<testcase name="Listing side Menu Tests - Remmi E2E › Test 16: Verify that right clicking a folder shows options for Share, Rename, Make a Copy, and Remove" classname="Pages\Listing\listingImages.spec.ts" time="120.142">
+<failure message="listingImages.spec.ts:108:3 Test 16: Verify that right clicking a folder shows options for Share, Rename, Make a Copy, and Remove" type="FAILURE">
+<![CDATA[  [chromium] › Pages\Listing\listingImages.spec.ts:108:3 › Listing side Menu Tests - Remmi E2E › Test 16: Verify that right clicking a folder shows options for Share, Rename, Make a Copy, and Remove 
 
     Test timeout of 120000ms exceeded.
 
-    Error: locator.click: Target page, context or browser has been closed
+    Error: page.goto: Target page, context or browser has been closed
 
-       at Pages\Contacts\contactAction.ts:4344
+       at Pages\Listing\ListingAction.ts:24
 
-      4342 |     async clickLeadEditIcon() {
-      4343 |         const editIcon = this.page.locator("//button[@class='_addNew p-2']//img[@class='cursor-pointer']");
-    > 4344 |         await editIcon.waitFor({ state: 'visible' });
-           |                          ^
-      4345 |         await editIcon.click();
-      4346 |     }
-      4347 |
-        at ContactActions.clickLeadEditIcon (E:\Remmi-E2E-Test\remmi-qa-automation\remmi-e2e-test\Pages\Contacts\contactAction.ts:4344:26)
-        at ContactActions.verifyLeadStatusChange (E:\Remmi-E2E-Test\remmi-qa-automation\remmi-e2e-test\Pages\Contacts\contactAction.ts:4533:20)
-        at E:\Remmi-E2E-Test\remmi-qa-automation\remmi-e2e-test\Pages\Contacts\contactLead.spec.ts:80:9
+      22 |         const currentUrl = this.page.url().split(/[?#]/)[0];
+      23 |         if (!currentUrl.endsWith('/listings/listing-properties')) {
+    > 24 |             await this.page.goto('/listings/listing-properties');
+         |                             ^
+      25 |         }
+      26 |     }
+      27 |
+        at ListingActions.navigateToListings (E:\Remmi-E2E-Test\remmi-qa-automation\remmi-e2e-test\Pages\Listing\ListingAction.ts:24:29)
+        at ListingActions.verifyFolderContextMenuOptions (E:\Remmi-E2E-Test\remmi-qa-automation\remmi-e2e-test\Pages\Listing\ListingAction.ts:8917:20)
+        at E:\Remmi-E2E-Test\remmi-qa-automation\remmi-e2e-test\Pages\Listing\listingImages.spec.ts:110:26
 
     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ..\test-results\Pages-Contacts-contactLead-7cf34-ged-and-displayed-correctly-chromium\test-failed-1.png
+    ..\test-results\Pages-Listing-listingImage-c8004-name-Make-a-Copy-and-Remove-chromium\test-failed-1.png
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Error Context: ..\test-results\Pages-Contacts-contactLead-7cf34-ged-and-displayed-correctly-chromium\error-context.md
+    Error Context: ..\test-results\Pages-Listing-listingImage-c8004-name-Make-a-Copy-and-Remove-chromium\error-context.md
 ]]>
 </failure>
 <system-out>
 <![CDATA[
-[[ATTACHMENT|test-results\Pages-Contacts-contactLead-7cf34-ged-and-displayed-correctly-chromium\test-failed-1.png]]
+[[ATTACHMENT|test-results\Pages-Listing-listingImage-c8004-name-Make-a-Copy-and-Remove-chromium\test-failed-1.png]]
 
-[[ATTACHMENT|test-results\Pages-Contacts-contactLead-7cf34-ged-and-displayed-correctly-chromium\error-context.md]]
+[[ATTACHMENT|test-results\Pages-Listing-listingImage-c8004-name-Make-a-Copy-and-Remove-chromium\error-context.md]]
 ]]>
 </system-out>
-</testcase>
-<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify lead record time and date" classname="Pages\Contacts\contactLead.spec.ts" time="34.718">
-<skipped>
-</skipped>
-</testcase>
-<testcase name="Contacts &quot;Lead&quot; Tab - E2E Tests › Verify navigation between tabs" classname="Pages\Contacts\contactLead.spec.ts" time="0">
-<skipped>
-</skipped>
 </testcase>
 </testsuite>
 </testsuites>

@@ -3,7 +3,7 @@ import { ListingActions } from './ListingAction';
 import * as path from 'path';
 
 const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
-const DASHBOARD_URL = process.env.DASHBOARD_URL || 'https://remmi-app-stage-ui.azurewebsites.net/dashboard';
+const DASHBOARD_URL = process.env.DASHBOARD_URL;
 
 const test = base.extend<{ sessionPage: any }>({
   sessionPage: [async ({ browser }, use) => {
@@ -70,7 +70,6 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
   test("Test 10: Verify that Public File Upload allows downloading files", async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
-    // Use an image path within your repo's PropertyImages folder for this test file
     const path = require('path');
     const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
     const imagePath = path.join(IMAGE_DIR, 'PropertyImage2.jpg');
@@ -260,13 +259,11 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
     await listingActions.verifySaveWithoutDataAllowsSubmission();
   });
 
-  // Verify that entering a video URL and saving updates the library
   test("Test 47: Verify that entering a video URL and saving updates the library", async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyEnteringVideoURLAndSavingUpdatesLibrary();
   });
 
-  // Verify that adding Online Tour links updates the library
   test("Test 48: Verify that adding Online Tour links updates the library", async ({ sessionPage }) => {
     const listingActions = new ListingActions(sessionPage);
     await listingActions.verifyAddingOnlineTourLinkUpdatesLibrary();
