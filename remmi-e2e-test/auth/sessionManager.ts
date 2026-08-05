@@ -1,6 +1,6 @@
 import { Browser } from '@playwright/test';
-import { LoginActions } from '../Pages/Login/LoginAction';
-import { LoginUsers } from '../fixture/test-data';
+import { LoginPage } from '../pages/login/LoginPage';
+import { LoginUsers } from '../fixtures/test-data';
 import path from 'path';
 import fs from 'fs';
 
@@ -38,7 +38,7 @@ export async function getSessionForRole(browser: Browser, role: keyof typeof Log
   const context = await browser.newContext();
   const page = await context.newPage();
 
-  const login = new LoginActions(page);
+  const login = new LoginPage(page);
 
   try {
     await login.login(user.email, user.password, user.otpSecret);

@@ -13,12 +13,12 @@ npx playwright install chromium
 npx playwright test
 
 # Run a specific module
-npx playwright test remmi-e2e-test/Pages/Listing
-npx playwright test remmi-e2e-test/Pages/Contacts
-npx playwright test remmi-e2e-test/Pages/Projects
+npx playwright test remmi-e2e-test/tests/listing
+npx playwright test remmi-e2e-test/tests/contacts
+npx playwright test remmi-e2e-test/tests/projects
 
 # Run a single spec file
-npx playwright test remmi-e2e-test/Pages/Login/login.spec.ts
+npx playwright test remmi-e2e-test/tests/login/login.spec.ts
 
 # Run a single test by title
 npx playwright test --grep "Test 1: Open listing form"
@@ -55,32 +55,56 @@ E2E_MANAGER_GOOGLE_SECRET=
 
 `playwright.config.ts` will exit immediately if `BASE_URL` is missing.
 
-## Architecture
+## Architecture (POM)
 
-### Layer pattern (per module)
+```
+remmi-e2e-test/
+├── pages/            # Page Object classes (one per module)
+│   ├── login/        LoginPage.ts + LoginLocators.ts + LoginMessages.ts
+│   ├── contacts/     ContactPage.ts + ContactLocators.ts
+│   ├── listing/      ListingPage.ts + ListingLocators.ts
+│   ├── dashboard/    DashboardPage.ts + DashboardLocators.ts
+│   ├── myprofile/    MyProfilePage.ts + MyProfileLocators.ts
+│   └── projects/     ProjectPage.ts
+├── tests/            # Spec files only (no page logic here)
+│   ├── login/
+│   ├── contacts/     (+ Images/ subfolder for test attachments)
+│   ├── listing/      (+ PropertyImages/ subfolder)
+│   ├── dashboard/
+│   ├── myprofile/    (+ Images/ subfolder)
+│   └── projects/     (+ Images/ subfolder)
+├── fixtures/         test-data.ts — role → env-var credential map
+├── helpers/          getOtp.ts, mfaHelper.ts, updateEnvVariable.ts
+├── auth/             sessionManager.ts
+└── sessions/         *.json auth state files (gitignored)
+```
 
-Each module under `remmi-e2e-test/Pages/<Module>/` has three layers:
+### Layer responsibilities
 
-| File | Role |
-|---|---|
-| `*Locator.ts` | Returns `Locator` objects only — no actions, no assertions |
-| `*Action.ts` | Orchestrates user flows using the Locator class; contains `expect()` assertions |
-| `*.spec.ts` | Extends `base` test with a session fixture, then calls Action methods |
+| Layer | Location | Role |
+|---|---|---|
+| Locators | `pages/*/<Module>Locators.ts` | Returns `Locator` objects only — no assertions |
+| Page Object | `pages/*/<Module>Page.ts` | Orchestrates flows using locators; owns `expect()` calls |
+| Tests | `tests/*/*.spec.ts` | Fixture setup + calls one Page method per test |
 
 ### Session management
 
-Tests do not log in per-test. Instead, each spec file creates a `sessionPage` fixture by loading a pre-saved browser storage state from `remmi-e2e-test/sessions/<role>-session.json` (gitignored).
+Tests do not log in per-test. Each spec loads a pre-saved browser storage state:
 
-- `auth/sessionManager.ts` — creates a session by running the full login flow and saving `storageState` to disk; reuses the file if it already exists
-- `helper/mfaHelper.ts` — decodes QR codes and fetches OTP via `POST https://staging.remmi.com.au/api/v1/verify-mfa`
-- `fixture/test-data.ts` — maps role names (`manager`, `sales`, `admin`) to env-var credentials
+```ts
+const context = await browser.newContext({ storageState: managerSessionPath });
+```
 
-Session files are created lazily on first run. If a session expires, delete the relevant `sessions/*.json` file and re-run to regenerate.
+- `auth/sessionManager.ts` — creates the session via full login flow, saves `storageState` to `sessions/<role>-session.json`; reuses the file if it exists
+- `helpers/mfaHelper.ts` — decodes QR codes and fetches OTP via `POST https://staging.remmi.com.au/api/v1/verify-mfa`
+- `fixtures/test-data.ts` — maps role names (`manager`, `sales`, `admin`) to env-var credentials
+
+If a session expires, delete `sessions/<role>-session.json` and re-run to regenerate.
 
 ### How a spec file is structured
 
 ```ts
-// 1. Extend base test with a session-backed page fixture
+// 1. Extend base with a session-backed page fixture (worker scope = shared across tests)
 const test = base.extend<{ sessionPage: any }>({
   sessionPage: [async ({ browser }, use) => {
     const context = await browser.newContext({ storageState: managerSessionPath });
@@ -90,10 +114,10 @@ const test = base.extend<{ sessionPage: any }>({
   }, { scope: 'worker' }]
 });
 
-// 2. Each test case instantiates Action class and calls a single method
+// 2. Instantiate the Page Object and call one method per test
 test('Test 1: ...', async ({ sessionPage }) => {
-  const actions = new ListingActions(sessionPage);
-  await actions.someFlow();
+  const listingPage = new ListingPage(sessionPage);
+  await listingPage.someFlow();
 });
 ```
 
