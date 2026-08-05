@@ -5,8 +5,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 const manager = LoginUsers.manager;
-const sales = LoginUsers.sales;
-const admin = LoginUsers.admin;
 
 // Path to store manager session
 const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
@@ -41,24 +39,15 @@ const test = base.extend<{ sessionPage: any, sessionContext: any }>({
 test.describe('Login Tests - Remmi E2E', () => {
   // Save manager session before running other tests
   test('Test case 0: Login and save manager session', async ({ browser }) => {
-    // Only save if session file doesn't exist
-    if (!fs.existsSync(managerSessionPath)) {
-      const context = await browser.newContext();
-      const page = await context.newPage();
-      const login = new LoginPage(page);
-      await login.login(
-        manager.email!,
-        manager.password!,
-        process.env.E2E_MANAGER_OTP_SECRET!
-      );
-      // Ensure directory exists
-      const dir = path.dirname(managerSessionPath);
-      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-
-      await context.storageState({ path: managerSessionPath });
-      console.log(`✅ Manager session saved at: ${managerSessionPath}`);
-      await context.close();
-    }
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const login = new LoginPage(page);
+    await login.login(manager.email!, manager.password!, process.env.E2E_MANAGER_OTP_SECRET!);
+    const dir = path.dirname(managerSessionPath);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    await context.storageState({ path: managerSessionPath });
+    console.log(`✅ Manager session saved at: ${managerSessionPath}`);
+    await context.close();
   });
 
   // All other tests can reuse the manager session

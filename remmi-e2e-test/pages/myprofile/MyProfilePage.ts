@@ -1766,8 +1766,7 @@ export class MyProfilePage {
   }
   async VerifyTeamCreationWithValidDetails(OfficeName: string, memberName: string, leaderName: string) {
     await test.step('Verify successful team creation with all valid details', async () => {
-      await this.page.evaluate(() => location.reload());
-      await this.page.waitForLoadState('networkidle');
+      await this.page.reload();
       await this.NavigateToTeamsTab();
 
       // Open Add Team popup
@@ -2360,8 +2359,7 @@ export class MyProfilePage {
 
   async VerifyConfirmationMessageColor(OfficeName: string, memberName: string, leaderName: string) {
     await test.step('Verify confirmation message color (green for success).', async () => {
-      await this.page.evaluate(() => location.reload());
-      await this.page.waitForLoadState('networkidle');
+      await this.page.reload();
       await this.NavigateToTeamsTab();
 
       // Open Add Team popup

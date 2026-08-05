@@ -1,24 +1,5 @@
 import { test } from '../../fixtures/session.fixture';
 import { ContactPage } from '../../pages/contacts/ContactPage';
-import * as path from 'path';
-import * as fs from 'fs';
-
-const IMAGE_DIR = path.resolve(__dirname, 'Images');
-
-// Utility functions to ensure directory and file existence
-function ensureDirExists(dirPath: string) {
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
-  }
-}
-function ensureFileExists(filePath: string) {
-  if (!fs.existsSync(filePath)) {
-    // Create a dummy file if it does not exist.
-    fs.writeFileSync(filePath, '');
-  }
-}
-
-// Extend test to provide sessionPage for authenticated context
 
 test.describe('Contacts side Menu Tests - Remmi E2E', () => {
 

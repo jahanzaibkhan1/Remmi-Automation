@@ -338,7 +338,6 @@ test.describe('Listing side Menu Tests - Remmi E2E', () => {
   test('Test 53: Verify image and thumbnails in preview listing ', async ({ sessionPage }) => {
     const listingActions = new ListingPage(sessionPage);
     await listingActions.navigateToListings();
-    const path = require('path');
     const IMAGE_DIR = path.resolve(__dirname, 'PropertyImages');
     const images = [
       path.join(IMAGE_DIR, 'propertyImage.jpg'),

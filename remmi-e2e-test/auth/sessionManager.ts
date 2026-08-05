@@ -25,12 +25,10 @@ export async function getSessionForRole(browser: Browser, role: keyof typeof Log
     throw new Error(`Role '${role}' not found.`);
   }
 
-  // --- Soft validation (won't crash test suite) ---
   if (!user.email || !user.password || !user.otpSecret) {
-    console.warn(
-      `⚠️ Missing credentials for role '${role}'.\n` +
-      `Provided → email="${user.email}", password="${user.password}", otp="${user.otpSecret}".\n`
-      + `Login will probably fail — but tests will continue.`
+    throw new Error(
+      `Missing credentials for role '${role}'. Set E2E_${role.toUpperCase()}_EMAIL, ` +
+      `E2E_${role.toUpperCase()}_PASSWORD, and E2E_${role.toUpperCase()}_OTP_SECRET in .env.`
     );
   }
 
@@ -49,7 +47,7 @@ export async function getSessionForRole(browser: Browser, role: keyof typeof Log
 
   } catch (err) {
     console.error(`❌ Login failed for role '${role}' — session not saved.`);
-    console.error(err);
+    throw err;
   } finally {
     await context.close();
   }
