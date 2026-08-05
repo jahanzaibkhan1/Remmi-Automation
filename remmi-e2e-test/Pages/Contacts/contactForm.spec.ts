@@ -5,7 +5,7 @@ import * as fs from 'fs';
 import { faker } from '@faker-js/faker'; // <-- FIX: add import for faker
 
 const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
-const DASHBOARD_URL = process.env.DASHBOARD_URL || 'https://remmi-app-stage-ui.azurewebsites.net/dashboard';
+const DASHBOARD_URL = process.env.DASHBOARD_URL;
 
 const IMAGE_DIR = path.resolve(__dirname, 'Images');
 
@@ -154,7 +154,7 @@ test.describe('Contacts side Menu Tests - Remmi E2E', () => {
 
   test('Test 23: Verify that entering an address auto-fills the relevant fields', async ({ sessionPage }) => {
     const contact = new ContactActions(sessionPage);
-    await contact.verifyAddressAutoFill('1600 Amphitheatre');
+    await contact.verifyAddressAutoFill('1600 Amphitheatre Road');
   });
 
   test('Test 24: Verify that entering data in address fields updates the main address field', async ({ sessionPage }) => {

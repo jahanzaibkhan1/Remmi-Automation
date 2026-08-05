@@ -4,7 +4,7 @@ export class ListingLocators {
     constructor(private page: Page) { }
 
     ListingTab(): Locator {
-        return this.page.locator("li.list.sideMenu.justify-center[data-label='Listings']");
+        return this.page.locator("//li[@data-label='Listings' and contains(@class, 'sideMenu') and .//img[@src='assets/img/dashboadIcon/listing.svg']]");
     }
     SearchBox(): Locator {
         return this.page.locator('#keywordInput, [role="textbox"][name="Search"]');
@@ -70,8 +70,7 @@ export class ListingLocators {
         return this.page.locator('//span[@class="placeHolder ng-star-inserted" and text()="Select by Agent"]');
     }
     selectByAgentSearchInput(): Locator {
-        // Try common search input patterns (fallback to a broad match for stability)
-        return this.page.locator('re-multiselect').filter({ hasText: 'Select by Agent Abdul Live' }).getByPlaceholder('Search').first();
+        return this.page.locator('re-multiselect[placeholder="Select by Agent"] input[placeholder="Search"]');
     }
     selectByAgentSelectAll(): Locator {
         return this.page.locator('.checkbox__checkmark').first(); // May need .first() if multiple checkmarks on page
@@ -115,7 +114,7 @@ export class ListingLocators {
     }
 
     adminDefaultButton(): Locator {
-        return this.page.getByText('Admin Default').first()
+        return this.page.locator('._view-btn').first();
     }
 
     // Admin view button (if any specific admin-only UI element needed)
