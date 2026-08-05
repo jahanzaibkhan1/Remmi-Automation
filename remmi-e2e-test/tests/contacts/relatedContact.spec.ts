@@ -1,4 +1,3 @@
-import { expect } from '@playwright/test';
 import { test } from '../../fixtures/session.fixture';
 import { ContactPage } from '../../pages/contacts/ContactPage';
 

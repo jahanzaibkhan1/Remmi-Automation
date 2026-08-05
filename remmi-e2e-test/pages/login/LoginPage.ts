@@ -21,7 +21,6 @@ export class LoginPage {
 
   async gotoLogin() {
     await this.page.goto('/login', { waitUntil: 'domcontentloaded', timeout: 60000 });
-    await this.page.waitForLoadState('networkidle', { timeout: 60000 });
   }
 
   async fillCredentials(email: string, password: string) {

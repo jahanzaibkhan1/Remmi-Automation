@@ -1,4 +1,3 @@
-import { type Page } from '@playwright/test';
 import { test } from '../../fixtures/session.fixture';
 import { DashboardPage } from "../../pages/dashboard/DashboardPage";
 

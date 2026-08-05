@@ -31,6 +31,7 @@ console.log('✅ BASE_URL:', BASE_URL);
  */
 export default defineConfig({
   testDir: './remmi-e2e-test',
+  globalSetup: './remmi-e2e-test/auth/globalSetup.ts',
 
   fullyParallel: false,
   forbidOnly: !!process.env.CI,

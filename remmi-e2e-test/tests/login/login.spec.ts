@@ -10,8 +10,9 @@ const manager = LoginUsers.manager;
 const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
 
 test.describe('Login Tests - Remmi E2E', () => {
-  // Save manager session before running other tests
-  test('Test case 0: Login and save manager session', async ({ browser }) => {
+
+  // Positive login test — verifies the full flow and refreshes the shared session token
+  test('Test case 1: Verify sign in with valid email and password', async ({ browser }) => {
     const context = await browser.newContext();
     try {
       const page = await context.newPage();
@@ -20,16 +21,9 @@ test.describe('Login Tests - Remmi E2E', () => {
       const dir = path.dirname(managerSessionPath);
       if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
       await context.storageState({ path: managerSessionPath });
-      console.log(`✅ Manager session saved at: ${managerSessionPath}`);
     } finally {
       await context.close();
     }
-  });
-
-  // All other tests can reuse the manager session
-  test('Test case 1: Verify sign in with valid email and password', async ({ page }) => {
-    const login = new LoginPage(page);
-    await login.login(manager.email!, manager.password!, process.env.E2E_MANAGER_OTP_SECRET!);
   });
 
   test('Test case 2: Verify password visibility toggle', async ({ page }) => {
