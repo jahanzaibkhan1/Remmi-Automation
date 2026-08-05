@@ -7,9 +7,12 @@ export const test = base.extend<{ sessionPage: any }>({
   sessionPage: async ({ browser }, use) => {
     const sessionPath = await getSessionForRole(browser, 'manager');
     const context = await browser.newContext({ storageState: sessionPath });
-    const page = await context.newPage();
-    await page.goto(DASHBOARD_URL, { waitUntil: 'domcontentloaded' });
-    await use(page);
-    await context.close();
+    try {
+      const page = await context.newPage();
+      await page.goto(DASHBOARD_URL, { waitUntil: 'domcontentloaded' });
+      await use(page);
+    } finally {
+      await context.close();
+    }
   }
 });

@@ -1766,7 +1766,7 @@ export class MyProfilePage {
   }
   async VerifyTeamCreationWithValidDetails(OfficeName: string, memberName: string, leaderName: string) {
     await test.step('Verify successful team creation with all valid details', async () => {
-      await this.page.reload();
+      await this.page.reload({ waitUntil: 'networkidle' });
       await this.NavigateToTeamsTab();
 
       // Open Add Team popup
@@ -1905,7 +1905,7 @@ export class MyProfilePage {
 
   async verifyNewTeamAppearsInListAndDropdown(OfficeName: string, memberName: string, leaderName: string) {
     await test.step('Verify newly created team appears in dropdown and team list.', async () => {
-      await this.page.reload();
+      await this.page.reload({ waitUntil: 'networkidle' });
       await this.NavigateToTeamsTab();
       // Open Add Team popup
       const selectTeamInput = this.page.locator('ng-select[name="team"] input');
@@ -2359,7 +2359,7 @@ export class MyProfilePage {
 
   async VerifyConfirmationMessageColor(OfficeName: string, memberName: string, leaderName: string) {
     await test.step('Verify confirmation message color (green for success).', async () => {
-      await this.page.reload();
+      await this.page.reload({ waitUntil: 'networkidle' });
       await this.NavigateToTeamsTab();
 
       // Open Add Team popup

@@ -4,16 +4,35 @@ import { LoginUsers } from '../fixtures/test-data';
 import path from 'path';
 import fs from 'fs';
 
+const SESSION_MAX_AGE_MS = 23 * 60 * 60 * 1000; // treat sessions older than 23 h as stale
+
+// Module-level cache: avoids redundant fs.existsSync calls across tests in the same run
+const resolvedSessions = new Map<string, string>();
+let sessionsDirEnsured = false;
+
 export async function getSessionForRole(browser: Browser, role: keyof typeof LoginUsers) {
+  // Fast path: already resolved this role this run
+  if (resolvedSessions.has(role)) {
+    return resolvedSessions.get(role)!;
+  }
+
   const sessionsDir = path.join(__dirname, '..', 'sessions');
-  if (!fs.existsSync(sessionsDir)) fs.mkdirSync(sessionsDir);
+  if (!sessionsDirEnsured) {
+    if (!fs.existsSync(sessionsDir)) fs.mkdirSync(sessionsDir);
+    sessionsDirEnsured = true;
+  }
 
   const sessionFile = path.join(sessionsDir, `${role}-session.json`);
 
-  // Reuse if session already exists
+  // Reuse if session file exists and is less than 23 hours old
   if (fs.existsSync(sessionFile)) {
-    console.log(`🔄 Using existing session for role: ${role}`);
-    return sessionFile;
+    const ageMs = Date.now() - fs.statSync(sessionFile).mtimeMs;
+    if (ageMs < SESSION_MAX_AGE_MS) {
+      console.log(`🔄 Using existing session for role: ${role}`);
+      resolvedSessions.set(role, sessionFile);
+      return sessionFile;
+    }
+    console.log(`⚠️  Session for '${role}' is stale (>${Math.round(ageMs / 3600000)}h old) — re-logging in.`);
   }
 
   console.log(`⚡ Creating NEW session for role: ${role}`);
@@ -32,19 +51,15 @@ export async function getSessionForRole(browser: Browser, role: keyof typeof Log
     );
   }
 
-  // --- Actual login ---
   const context = await browser.newContext();
   const page = await context.newPage();
-
   const login = new LoginPage(page);
 
   try {
     await login.login(user.email, user.password, user.otpSecret);
-
-    // Save session
     await context.storageState({ path: sessionFile });
     console.log(`✅ Saved session for ${role} at: ${sessionFile}`);
-
+    resolvedSessions.set(role, sessionFile);
   } catch (err) {
     console.error(`❌ Login failed for role '${role}' — session not saved.`);
     throw err;

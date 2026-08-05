@@ -1,4 +1,4 @@
-import { test as base } from '@playwright/test';
+import { test } from '@playwright/test';
 import { LoginPage } from '../../pages/login/LoginPage';
 import { LoginUsers } from '../../fixtures/test-data';
 import * as fs from 'fs';
@@ -9,45 +9,21 @@ const manager = LoginUsers.manager;
 // Path to store manager session
 const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
 
-// Extend the test object with a fixture for loading the manager session
-const test = base.extend<{ sessionPage: any, sessionContext: any }>({
-  // Provide page and context with manager session storage state if available
-  sessionPage: async ({ browser }, use) => {
-    let context, page;
-    if (fs.existsSync(managerSessionPath)) {
-      context = await browser.newContext({ storageState: managerSessionPath });
-      page = await context.newPage();
-      await use(page);
-      await context.close();
-    } else {
-      // Fallback to default test page, for cases like session creation test
-      await use(undefined);
-    }
-  },
-  sessionContext: async ({ browser }, use) => {
-    let context;
-    if (fs.existsSync(managerSessionPath)) {
-      context = await browser.newContext({ storageState: managerSessionPath });
-      await use(context);
-      await context.close();
-    } else {
-      await use(undefined);
-    }
-  }
-});
-
 test.describe('Login Tests - Remmi E2E', () => {
   // Save manager session before running other tests
   test('Test case 0: Login and save manager session', async ({ browser }) => {
     const context = await browser.newContext();
-    const page = await context.newPage();
-    const login = new LoginPage(page);
-    await login.login(manager.email!, manager.password!, process.env.E2E_MANAGER_OTP_SECRET!);
-    const dir = path.dirname(managerSessionPath);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    await context.storageState({ path: managerSessionPath });
-    console.log(`✅ Manager session saved at: ${managerSessionPath}`);
-    await context.close();
+    try {
+      const page = await context.newPage();
+      const login = new LoginPage(page);
+      await login.login(manager.email!, manager.password!, process.env.E2E_MANAGER_OTP_SECRET!);
+      const dir = path.dirname(managerSessionPath);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      await context.storageState({ path: managerSessionPath });
+      console.log(`✅ Manager session saved at: ${managerSessionPath}`);
+    } finally {
+      await context.close();
+    }
   });
 
   // All other tests can reuse the manager session
