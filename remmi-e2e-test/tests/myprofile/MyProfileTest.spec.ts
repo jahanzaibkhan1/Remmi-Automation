@@ -1,5 +1,5 @@
 import { test as base } from '@playwright/test';
-import { MyProfileActions } from './MyProfileActions';
+import { MyProfilePage } from '../../pages/myprofile/MyProfilePage';
 import * as path from 'path';
 
 const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
@@ -21,7 +21,7 @@ const test = base.extend<{ sessionPage: any }>({
 test.describe('My Profile Tests - Remmi E2E', () => {
   // 1. Profile fields show data & are non-editable
   test('1. Profile fields show data & are non-editable', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     await profile.verifyAllProfileFields();
@@ -29,7 +29,7 @@ test.describe('My Profile Tests - Remmi E2E', () => {
 
   // 2. Fields remain non-editable if data missing
   test('2. Fields remain non-editable if data missing', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     await profile.verifyAllProfileFields();
@@ -37,7 +37,7 @@ test.describe('My Profile Tests - Remmi E2E', () => {
 
   // 3. PIN field allows input and updates profile
   test('3. PIN field allows input and updates profile', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     await profile.enterPinAndSave('1234');
@@ -45,14 +45,14 @@ test.describe('My Profile Tests - Remmi E2E', () => {
 
   // 4. Calendar color selection updates correctly
   test('4. Calendar color selection updates correctly', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
     await profile.navigateToProfilePage();
     await profile.updateCalendarColor('#c0add5');
   });
 
   // 5. Correct PIN allows private download
   test('5. Correct PIN allows private download', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToLibrary();
     const imagePath = path.join(__dirname, '../MyProfile/Images/Profile.jpg');
@@ -62,7 +62,7 @@ test.describe('My Profile Tests - Remmi E2E', () => {
 
   // 6. PIN is required for private download (empty PIN case)
   test('6. PIN is required for private download (empty PIN case)', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToLibrary();
     await profile.downloadWithEmptyPin();
@@ -70,7 +70,7 @@ test.describe('My Profile Tests - Remmi E2E', () => {
 
   // 7. PIN is required for private download (validation)
   test('7. PIN is required for private download (validation)', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToLibrary();
     await profile.verifyPINIsRequired();
@@ -78,7 +78,7 @@ test.describe('My Profile Tests - Remmi E2E', () => {
 
   // 8. Incorrect PIN prevents private download
   test('8. Incorrect PIN prevents private download', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToLibrary();
     await profile.downloadWithIncorrectPin('1230');
@@ -86,7 +86,7 @@ test.describe('My Profile Tests - Remmi E2E', () => {
 
   // 9. System does not allow invalid calendar color (commented out by default)
   // test('9. System does not allow invalid calendar color', async ({ sessionPage }) => {
-  //   const profile = new MyProfileActions(sessionPage);
+  //   const profile = new MyProfilePage(sessionPage);
   //   await profile.navigateToProfilePage();
   //   await profile.tryInvalidCalendarColor('INVALID_COLOR');
   // });

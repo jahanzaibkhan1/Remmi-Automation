@@ -1,5 +1,5 @@
 import { test as base } from '@playwright/test';
-import { MyProfileActions } from './MyProfileActions';
+import { MyProfilePage } from '../../pages/myprofile/MyProfilePage';
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -37,7 +37,7 @@ const test = base.extend<{ sessionPage: any }>({
 
 test.describe('My Profile Image Tests - Remmi E2E', () => {
   test('Test 1: User can upload a profile image', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     const imagePath = path.join(IMAGE_DIR, 'High.jpg');
@@ -45,7 +45,7 @@ test.describe('My Profile Image Tests - Remmi E2E', () => {
   });
 
   test('Test 2: User can open the upload multiple images flow', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     const imagePath = path.join(IMAGE_DIR, 'Profile.jpg');
@@ -53,14 +53,14 @@ test.describe('My Profile Image Tests - Remmi E2E', () => {
   });
 
   test('Test 3: Verify selected image is set as the profile image', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     await profile.setImageAsDefaultProfile();
   });
 
   test('Test 4: Verify thumbnails appear after image upload', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     const imagePath = path.join(IMAGE_DIR, 'High.jpg');
@@ -68,7 +68,7 @@ test.describe('My Profile Image Tests - Remmi E2E', () => {
   });
 
   test('Test 5: Verify thumbnails are removed when clicking cross button', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     const imagePath = path.join(IMAGE_DIR, 'High.jpg');
@@ -76,7 +76,7 @@ test.describe('My Profile Image Tests - Remmi E2E', () => {
   });
 
   test('Test 6: User can edit and delete low resolution and agent face thumbnails', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     const imagePath1 = path.join(IMAGE_DIR, 'High.jpg');
@@ -85,7 +85,7 @@ test.describe('My Profile Image Tests - Remmi E2E', () => {
   });
 
   test('Test 7: Verify system shows a warning when low resolution image is too small', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     const imagePath = path.join(IMAGE_DIR, 'High.jpg');
@@ -93,7 +93,7 @@ test.describe('My Profile Image Tests - Remmi E2E', () => {
   });
 
   test('Test 8: Verify invalid image formats cannot be uploaded', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     const invalidImagePath = path.join(IMAGE_DIR, 'invalidImage.webp');
@@ -103,7 +103,7 @@ test.describe('My Profile Image Tests - Remmi E2E', () => {
   });
 
   test('Test 9: Verify system allows changing profile image', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     const imagePath = path.join(IMAGE_DIR, 'Profile.jpg');
@@ -111,7 +111,7 @@ test.describe('My Profile Image Tests - Remmi E2E', () => {
   });
 
   test('Test 10: Verified profile image persists after reload', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     const imagePath = path.join(IMAGE_DIR, 'Profile.jpg');
@@ -119,21 +119,21 @@ test.describe('My Profile Image Tests - Remmi E2E', () => {
   });
 
   test('Test 11: Verify the default placeholder is visible when no image is uploaded', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     await profile.VerifyDefaultPlaceholder();
   });
 
   test('Test 12: Verify user can remove the selected profile image', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     await profile.removeSelectedProfileImage();
   });
   
   test('Test 13: Verify correct aspect ratio is maintained for uploaded images', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     const imagePath = path.join(IMAGE_DIR, 'High.jpg');
@@ -141,7 +141,7 @@ test.describe('My Profile Image Tests - Remmi E2E', () => {
   });
 
   test('Test 14: Verify system does not allow uploading broken/corrupt image files', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     const brokenImagePath = path.join(IMAGE_DIR, 'broken_image.jpg');
@@ -151,7 +151,7 @@ test.describe('My Profile Image Tests - Remmi E2E', () => {
   });
 
   test('Test 15: Verify system allows only specific file formats (e.g., JPG, PNG)', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     const validPaths = [
@@ -166,7 +166,7 @@ test.describe('My Profile Image Tests - Remmi E2E', () => {
   });
 
   // test('Test 16: Verify proper error message is shown when upload fails', async ({ sessionPage }) => {
-  //   const profile = new MyProfileActions(sessionPage);
+  //   const profile = new MyProfilePage(sessionPage);
 
   //   await profile.navigateToProfilePage();
   //   const imagePath = path.join(IMAGE_DIR, 'Profile.jpg');

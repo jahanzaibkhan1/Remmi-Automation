@@ -1,7 +1,7 @@
 import { Locator, Page, expect } from "@playwright/test";
-import { DashboardLocator } from "./DashboardLocator";
+import { DashboardLocator } from "./DashboardLocators";
 
-export class DashboardAction {
+export class DashboardPage {
   locators: DashboardLocator;
 
   constructor(public page: Page) {

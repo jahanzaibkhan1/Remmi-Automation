@@ -1,5 +1,5 @@
 import { test as base } from '@playwright/test';
-import { MyProfileActions } from './MyProfileActions';
+import { MyProfilePage } from '../../pages/myprofile/MyProfilePage';
 import * as path from 'path';
 
 const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
@@ -20,7 +20,7 @@ const test = base.extend<{ sessionPage: any }>({
 
 test.describe('Social Settings Tests - Remmi E2E', () => {
   test('Test 1: The user can successfully upload social media links and the page updates correctly', async ({ sessionPage }) => {
-    const profile = new MyProfileActions(sessionPage);
+    const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToProfilePage();
     await profile.updateSocialSettings({

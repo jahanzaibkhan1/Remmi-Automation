@@ -3,6 +3,7 @@ import { Page, Locator } from '@playwright/test';
 export class ContactLocators {
   constructor(private page: Page) {}
 
+  
   // ─── Navigation ───────────────────────────────────────────────────────────
 
   Contacts(): Locator {

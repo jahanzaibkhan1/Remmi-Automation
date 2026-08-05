@@ -1,5 +1,5 @@
 import { test as base } from '@playwright/test';
-import { ListingActions } from './ListingAction';
+import { ListingPage } from '../../pages/listing/ListingPage';
 import * as path from 'path';
 
 const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
@@ -21,12 +21,12 @@ const test = base.extend<{ sessionPage: any }>({
 test.describe('Listing side Menu Tests - Remmi E2E', () => {
 
     test('Test 1: Verify that the Conjunction Tab opens correctly', async ({ sessionPage }) => {
-        const listingActions = new ListingActions(sessionPage);
+        const listingActions = new ListingPage(sessionPage);
         await listingActions.verifyConjunctionTabOpensCorrectly();
     });
 
     test('Test 2: Verify that Sale Commission accepts only numeric values', async ({ sessionPage }) => {
-        const listingActions = new ListingActions(sessionPage);
+        const listingActions = new ListingPage(sessionPage);
         await listingActions.verifySaleCommissionAcceptsOnlyNumeric();
     });
 

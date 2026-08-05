@@ -1,6 +1,6 @@
 import { Page, expect, test, Locator } from '@playwright/test';
 import { LocatorLogin } from './LoginLocators';
-import { generateOtp } from '../../helper/getOtp';
+import { generateOtp } from '../../helpers/getOtp';
 import { LoginMessages } from './LoginMessages';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
@@ -12,7 +12,7 @@ dotenv.config();
  * LoginActions class for handling login operations and validation steps.
  * Now ensures that the session token is updated after every login.
  */
-export class LoginActions {
+export class LoginPage {
   private locators: LocatorLogin;
 
   constructor(private page: Page) {
