@@ -1,5 +1,5 @@
 import { expect, Page, Locator } from '@playwright/test';
-import { faker, th } from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import * as path from 'path';
 
 export class ProjectPage {
@@ -10,7 +10,7 @@ export class ProjectPage {
     private static readonly TIMEOUT_LONG = 30_000;
     private static readonly TIMEOUT_EXTRA_LONG = 40_000;
     private static readonly UI_SETTLE_DELAY = 500;
-    private static readonly IMAGES_DIR = path.resolve(__dirname, 'Images');
+    private static readonly IMAGES_DIR = path.resolve(__dirname, '../../tests/projects/Images');
     private static readonly DEFAULT_TEST_IMAGE = 'propertyImage.jpg';
     private static readonly PROJECTS_URL = '/project/projects';
     private static readonly PRECINCT_LISTINGS_URL = '/listings/project-precinct';
