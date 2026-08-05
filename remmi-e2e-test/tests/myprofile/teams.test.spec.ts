@@ -1,10 +1,7 @@
-import { test as base } from '@playwright/test';
+import { test } from '../../fixtures/session.fixture';
 import { MyProfilePage } from '../../pages/myprofile/MyProfilePage';
 import * as path from 'path';
 import * as fs from 'fs';
-
-const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
-const DASHBOARD_URL = process.env.DASHBOARD_URL || 'https://remmi-app-stage-ui.azurewebsites.net/dashboard';
 
 const IMAGE_DIR = path.resolve(__dirname, 'Images');
 
@@ -22,18 +19,6 @@ function ensureFileExists(filePath: string) {
 }
 
 // Extend test to provide sessionPage for authenticated context
-const test = base.extend<{ sessionPage: any }>({
-  sessionPage: [async ({ browser }, use) => {
-    const context = await browser.newContext({ storageState: managerSessionPath });
-    try {
-      const page = await context.newPage();
-      await page.goto(DASHBOARD_URL);
-      await use(page);
-    } finally {
-      // Optionally close context if desired in cleanup
-    }
-  }, { scope: 'worker' }]
-});
 
 test.describe('Teams Tab Tests - Remmi E2E', () => {
 

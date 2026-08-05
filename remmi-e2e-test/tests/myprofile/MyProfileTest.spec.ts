@@ -1,22 +1,6 @@
-import { test as base } from '@playwright/test';
+import { test } from '../../fixtures/session.fixture';
 import { MyProfilePage } from '../../pages/myprofile/MyProfilePage';
 import * as path from 'path';
-
-const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
-const DASHBOARD_URL = process.env.DASHBOARD_URL || 'https://remmi-app-stage-ui.azurewebsites.net/dashboard';
-
-const test = base.extend<{ sessionPage: any }>({
-  sessionPage: [async ({ browser }, use) => {
-    const context = await browser.newContext({ storageState: managerSessionPath });
-    try {
-      const page = await context.newPage();
-      await page.goto(DASHBOARD_URL);
-      await use(page);
-    } finally {
-      // Optionally close context if desired in cleanup
-    }
-  }, { scope: 'worker' }]
-});
 
 test.describe('My Profile Tests - Remmi E2E', () => {
   // 1. Profile fields show data & are non-editable
@@ -55,7 +39,7 @@ test.describe('My Profile Tests - Remmi E2E', () => {
     const profile = new MyProfilePage(sessionPage);
 
     await profile.navigateToLibrary();
-    const imagePath = path.join(__dirname, '../MyProfile/Images/Profile.jpg');
+    const imagePath = path.join(__dirname, 'Images/Profile.jpg');
     await profile.uploadImageToLibrary(imagePath);
     await profile.downloadWithCorrectPin('1234');
   });

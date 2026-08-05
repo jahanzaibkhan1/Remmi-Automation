@@ -1,10 +1,7 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { ListingLocators } from './ListingLocators';
-import { addAbortListener } from 'events';
 import path from 'path';
-import { count, table } from 'console';
-import { en, faker, th } from '@faker-js/faker';
-import { text } from 'stream/consumers';
+import { faker } from '@faker-js/faker';
 
 export class ListingPage {
     private page: Page;

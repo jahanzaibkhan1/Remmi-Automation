@@ -1,18 +1,5 @@
-import { test as base } from '@playwright/test';
+import { test } from '../../fixtures/session.fixture';
 import { ProjectPage } from '../../pages/projects/ProjectPage';
-import * as path from 'path';
-
-const managerSessionPath = path.join(__dirname, '../../sessions/manager-session.json');
-const DASHBOARD_URL = process.env.DASHBOARD_URL;
-
-const test = base.extend<{ sessionPage: any }>({
-    sessionPage: [async ({ browser }, use) => {
-        const context = await browser.newContext({ storageState: managerSessionPath });
-        const page = await context.newPage();
-        await page.goto(DASHBOARD_URL!, { waitUntil: 'domcontentloaded' });
-        await use(page);
-    }, { scope: 'worker' }]
-});
 
 test.describe('Precinct Inner View - E2E Tests', () => {
 

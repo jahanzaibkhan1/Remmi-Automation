@@ -1,6 +1,6 @@
 import { Page, Locator, expect, test } from '@playwright/test';
 import { MyProfileLocators } from './MyProfileLocators';
-import { faker, tr } from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import * as dotenv from 'dotenv';
 import { extractSecretFromQr } from '../../helpers/mfaHelper';
 import { generateOtp } from '../../helpers/getOtp';
@@ -1767,6 +1767,7 @@ export class MyProfilePage {
   async VerifyTeamCreationWithValidDetails(OfficeName: string, memberName: string, leaderName: string) {
     await test.step('Verify successful team creation with all valid details', async () => {
       await this.page.evaluate(() => location.reload());
+      await this.page.waitForLoadState('networkidle');
       await this.NavigateToTeamsTab();
 
       // Open Add Team popup
@@ -2360,6 +2361,7 @@ export class MyProfilePage {
   async VerifyConfirmationMessageColor(OfficeName: string, memberName: string, leaderName: string) {
     await test.step('Verify confirmation message color (green for success).', async () => {
       await this.page.evaluate(() => location.reload());
+      await this.page.waitForLoadState('networkidle');
       await this.NavigateToTeamsTab();
 
       // Open Add Team popup

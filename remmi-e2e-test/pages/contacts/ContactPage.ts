@@ -1,6 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { ContactLocators } from './ContactLocators';
-import { faker, tr } from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 
 export class ContactPage {
     private locators: ContactLocators;
