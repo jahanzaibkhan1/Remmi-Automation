@@ -2,7 +2,7 @@ import { expect, Page, Locator } from '@playwright/test';
 import { faker, th } from '@faker-js/faker';
 import * as path from 'path';
 
-export class ProjectActions {
+export class ProjectPage {
     // ========== CONSTANTS ==========
     private static readonly TIMEOUT_SHORT = 5_000;
     private static readonly TIMEOUT_DEFAULT = 10_000;
@@ -991,8 +991,8 @@ export class ProjectActions {
 
     private async navigateToProjects(): Promise<void> {
         const currentUrl = this.page.url().split(/[?#]/)[0];
-        if (!currentUrl.endsWith(ProjectActions.PROJECTS_URL)) {
-            await this.page.goto(ProjectActions.PROJECTS_URL);
+        if (!currentUrl.endsWith(ProjectPage.PROJECTS_URL)) {
+            await this.page.goto(ProjectPage.PROJECTS_URL);
         }
     }
 
@@ -1008,22 +1008,22 @@ export class ProjectActions {
 
     async gotoPrecinctListings(): Promise<void> {
         const currentUrl = this.page.url().split(/[?#]/)[0];
-        if (!currentUrl.endsWith(ProjectActions.PRECINCT_LISTINGS_URL)) {
-            await this.page.goto(ProjectActions.PRECINCT_LISTINGS_URL);
+        if (!currentUrl.endsWith(ProjectPage.PRECINCT_LISTINGS_URL)) {
+            await this.page.goto(ProjectPage.PRECINCT_LISTINGS_URL);
         }
     }
 
     private async openPrecinctSetup(): Promise<void> {
         await this.gotoPrecinctListings();
-        await expect(this.precinctListingsMenuLink).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.precinctListingsMenuLink).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.precinctListingsMenuLink.click();
     }
 
     private async openAddPrecinctDialog(): Promise<void> {
         await this.openPrecinctSetup();
-        await expect(this.createNewPrecinctButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.createNewPrecinctButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.createNewPrecinctButton.click();
-        await expect(this.addPrecinctDialog).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.addPrecinctDialog).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     private async prepareListView(): Promise<void> {
@@ -1038,17 +1038,17 @@ export class ProjectActions {
 
     async switchToGridView(): Promise<void> {
         if (await this.firstGridProduct.isVisible().catch(() => false)) return;
-        await expect(this.gridViewButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.gridViewButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.gridViewButton.click({ force: true });
-        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
     }
     async switchToListView(): Promise<void> {
         if (await this.firstTableRow.isVisible().catch(() => false)) return;
         await this.page.waitForSelector('.loading-overlay', { state: 'detached', timeout: 43000 }).catch(() => { });
-        await expect(this.listViewButton).toBeEnabled({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.listViewButton).toBeEnabled({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.listViewButton.evaluate((el: HTMLElement) => el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' }));
         await this.listViewButton.click();
-        await this.firstTableRow.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        await this.firstTableRow.waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_LONG });
         const text = await this.firstTableRow.textContent();
         if (!text || text.trim().length < 2) {
             await this.page.waitForTimeout(500);
@@ -1071,7 +1071,7 @@ export class ProjectActions {
     async waitForFirstTableRow(): Promise<void> {
         await this.page.waitForSelector('tbody tr', {
             state: 'attached',
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
         await this.page.waitForFunction(
             () => {
@@ -1079,9 +1079,9 @@ export class ProjectActions {
                 if (rows.length === 0) return false;
                 return (rows[0].textContent?.trim() ?? '').length > 5;
             },
-            { timeout: ProjectActions.TIMEOUT_LONG }
+            { timeout: ProjectPage.TIMEOUT_LONG }
         );
-        await this.firstTableRow.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        await this.firstTableRow.waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     // ==========================================================================
@@ -1089,26 +1089,26 @@ export class ProjectActions {
     // ==========================================================================
 
     async resetListView(): Promise<void> {
-        await expect(this.resetButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.resetButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.resetButton.click();
         await this.waitForFirstTableRow();
     }
 
     private async clickResetIcon(): Promise<void> {
-        await expect(this.resetIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.resetIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.resetIcon.click();
     }
 
     private async clickTabByLabel(tabLabel: string): Promise<void> {
         const tab = this.tabByLabel(tabLabel);
-        await expect(tab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(tab).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await tab.click();
     }
 
     private async openDefaultViewPopup(): Promise<void> {
-        await this.defaultViewButton.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await this.defaultViewButton.waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_MEDIUM });
         await this.defaultViewButton.click();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_MEDIUM });
     }
 
     private async closeOverlay(): Promise<void> {
@@ -1126,12 +1126,12 @@ export class ProjectActions {
     private async selectManagerByName(name: string): Promise<void> {
         await this.projectManagerSearchInput.waitFor({
             state: 'visible',
-            timeout: ProjectActions.TIMEOUT_MEDIUM,
+            timeout: ProjectPage.TIMEOUT_MEDIUM,
         });
         await this.projectManagerSearchInput.fill(name);
 
         const option = this.listOptionByText(name);
-        await option.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await option.waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_MEDIUM });
         await option.click();
         await this.projectManagerSearchInput.fill('');
     }
@@ -1139,7 +1139,7 @@ export class ProjectActions {
     private async verifyManagerTagsVisible(names: string[]): Promise<void> {
         for (const name of names) {
             await expect(this.projectManagerTag(name)).toBeVisible({
-                timeout: ProjectActions.TIMEOUT_MEDIUM,
+                timeout: ProjectPage.TIMEOUT_MEDIUM,
             });
         }
     }
@@ -1156,20 +1156,20 @@ export class ProjectActions {
 
     async verifyProjectCanBeSearchedByName(projectName: string): Promise<void> {
         await this.navigateToProjects();
-        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.searchInput.fill(projectName);
         await expect(this.projectCardByName(projectName)).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
     }
 
     async verifyProjectCanBeSearchedByPartialName(partialName: string): Promise<void> {
         await this.navigateToProjects();
-        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.searchInput.fill(partialName);
 
         const firstResult = this.projectCardContainingText(partialName);
-        await expect(firstResult).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(firstResult).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
 
         const resultText = await firstResult.textContent();
         expect(resultText?.toLowerCase()).toContain(partialName.toLowerCase());
@@ -1177,7 +1177,7 @@ export class ProjectActions {
 
     async verifyProjectSearchWithInvalidName(invalidName: string): Promise<void> {
         await this.navigateToProjects();
-        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.searchInput.fill(invalidName);
         await expect(this.allProjectCardsByName(invalidName)).toHaveCount(0);
         await this.clickResetIcon();
@@ -1189,14 +1189,14 @@ export class ProjectActions {
 
     async verifyProjectImageDisplayedInGridView(projectName: string): Promise<void> {
         await this.navigateToProjects();
-        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.searchInput.fill(projectName);
 
         const card = this.projectCardByName(projectName);
-        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(card).toBeVisible({ timeout: ProjectPage.TIMEOUT_MEDIUM });
 
         const thumbnail = this.thumbnailForCard(card);
-        await expect(thumbnail).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(thumbnail).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         const styleAttr = await thumbnail.getAttribute('style');
         expect(styleAttr).toBeTruthy();
@@ -1209,13 +1209,13 @@ export class ProjectActions {
     async verifyPlaceholderImageForProjectWithNoImage(): Promise<void> {
         const projectName = 'Al kabir heights';
         await this.navigateToProjects();
-        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.searchInput.fill(projectName);
 
         const card = this.projectCardByName(projectName);
-        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(card).toBeVisible({ timeout: ProjectPage.TIMEOUT_MEDIUM });
         await expect(this.thumbnailForCard(card)).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
         await this.clickResetIcon();
     }
@@ -1226,7 +1226,7 @@ export class ProjectActions {
 
     async verifyTabsAndResetAfterSearch(searchText: string): Promise<void> {
         await this.navigateToProjects();
-        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.searchInput.fill(searchText);
         await this.clickTabByLabel('Inactive');
         await this.clickTabByLabel('Active');
@@ -1237,7 +1237,7 @@ export class ProjectActions {
     async verifyDefaultTabIsActive(): Promise<void> {
         await this.navigateToProjects();
         const activeTab = this.tabByLabel('Active');
-        await expect(activeTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(activeTab).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
 
         const ariaSelected = await activeTab.getAttribute('aria-selected');
         if (ariaSelected !== null) {
@@ -1250,7 +1250,7 @@ export class ProjectActions {
 
     async verifyProjectsUnderActiveTab(projectName: string): Promise<void> {
         await this.navigateToProjects();
-        await expect(this.tabByLabel('Active')).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.tabByLabel('Active')).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.projectCardByName(projectName).scrollIntoViewIfNeeded();
     }
 
@@ -1258,16 +1258,16 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickTabByLabel('Inactive');
         const card = this.projectCardByName(projectName);
-        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(card).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await card.scrollIntoViewIfNeeded();
     }
 
     async verifyPrecinctIsGroupedUnderTab(precinctName: string): Promise<void> {
         await this.navigateToProjects();
         const container = this.precinctContainerByName(precinctName);
-        await expect(container).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(container).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         await expect(container.locator(this.precinctCardThumbnailWithImage)).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
     }
 
@@ -1276,13 +1276,13 @@ export class ProjectActions {
     // ==========================================================================
 
     private async getFirstVisiblePrecinctCard(): Promise<void> {
-        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await expect(this.firstGridProduct).toBeEnabled({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
+        await expect(this.firstGridProduct).toBeEnabled({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.firstGridProduct.click();
     }
 
     private async clickVisibleBackButton(): Promise<void> {
-        await expect(this.backButton).toBeEnabled({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(this.backButton).toBeEnabled({ timeout: ProjectPage.TIMEOUT_MEDIUM });
         await this.backButton.click({ force: true });
     }
 
@@ -1292,12 +1292,12 @@ export class ProjectActions {
 
         for (const tab of ['project', 'lot', 'EOI']) {
             const el = this.innerTabById(tab);
-            await expect(el).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-            await expect(el).toHaveText(new RegExp(tab, 'i'), { timeout: ProjectActions.TIMEOUT_LONG });
+            await expect(el).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
+            await expect(el).toHaveText(new RegExp(tab, 'i'), { timeout: ProjectPage.TIMEOUT_LONG });
         }
 
         await this.projectsMenuLink.click();
-        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     async verifyPrecinctAllocatedProjectNotInActiveTabAfterPrecinctClick(): Promise<void> {
@@ -1312,10 +1312,10 @@ export class ProjectActions {
         await this.page.waitForLoadState('networkidle');
         await this.page.waitForSelector('.sgv-product .product-content h3', {
             state: 'visible',
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
 
-        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.searchInput.fill(insidePrecinctHeading);
 
         const escapedName = insidePrecinctHeading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -1325,12 +1325,12 @@ export class ProjectActions {
     async verifyProjectReappearsInActiveTabAfterPrecinctDeletion(): Promise<void> {
         await this.navigateToProjects();
         await expect(this.precinctListingsMenuLink).toBeEnabled({
-            timeout: ProjectActions.TIMEOUT_EXTRA_LONG,
+            timeout: ProjectPage.TIMEOUT_EXTRA_LONG,
         });
         await this.precinctListingsMenuLink.click();
 
         await expect(this.precinctAllocationTabById).toBeEnabled({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
         await this.precinctAllocationTabById.click();
 
@@ -1364,13 +1364,13 @@ export class ProjectActions {
 
     async openProjectPopup(): Promise<void> {
         await this.page.reload();
-        await expect(this.addNewProjectButton).toBeEnabled({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.addNewProjectButton).toBeEnabled({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.addNewProjectButton.click();
-        await expect(this.projectDialog).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.projectNameField).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.projectStatusField).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.projectDialogSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.projectDialogCancelButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDialog).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.projectNameField).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.projectStatusField).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.projectDialogSaveButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.projectDialogCancelButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
     }
 
@@ -1378,7 +1378,7 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.openProjectPopup();
         await this.projectDialogCancelButton.click({ force: true });
-        await expect(this.projectDialogContent).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDialogContent).toBeHidden({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     async clickOnProjects(): Promise<void> {
@@ -1393,20 +1393,20 @@ export class ProjectActions {
 
         await this.projectNameField.fill(projectName);
         await this.projectDialogSaveButton.click({ force: true });
-        await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDialog).toBeHidden({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         await this.projectAddedToast
-            .waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM })
+            .waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_MEDIUM })
             .catch(() => {
                 /* Toast may disappear too quickly — non-fatal */
             });
 
         await this.projectTitleBanner(projectName).waitFor({
             state: 'visible',
-            timeout: ProjectActions.TIMEOUT_MEDIUM,
+            timeout: ProjectPage.TIMEOUT_MEDIUM,
         });
         const projectsText = this.page.locator('p', { hasText: 'Projects' });
-        await expect(projectsText).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(projectsText).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await projectsText.click({ force: true });
         await this.verifyProjectCanBeSearchedByName(projectName);
         await this.clickResetIcon();
@@ -1419,18 +1419,18 @@ export class ProjectActions {
         await this.projectNameField.fill('');
         await this.projectDialogSaveButton.click({ force: true });
         await expect(this.projectNameValidationError).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_SHORT,
+            timeout: ProjectPage.TIMEOUT_SHORT,
         });
 
         await this.projectDialogCancelButton.click();
-        await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDialog).toBeHidden({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     async closeProjectPopupWithCrossIcon(): Promise<void> {
         await this.navigateToProjects();
         await this.openProjectPopup();
         await this.projectDialogCloseIcon.click({ force: true });
-        await expect(this.projectDialogContent).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDialogContent).toBeHidden({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     // ==========================================================================
@@ -1442,13 +1442,13 @@ export class ProjectActions {
         await this.verifyProjectCanBeSearchedByName(projectName);
 
         const card = this.projectCardByName(projectName);
-        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(card).toBeVisible({ timeout: ProjectPage.TIMEOUT_MEDIUM });
         await card.click({ button: 'right' });
 
-        await expect(this.pinToDashboardOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.pinToDashboardOption).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.page.mouse.click(0, 0);
         await expect(this.pinToDashboardOption).not.toBeVisible({
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
         await this.page.waitForTimeout(1200);
     }
@@ -1461,13 +1461,13 @@ export class ProjectActions {
         await card.evaluate((el) =>
             el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' })
         );
-        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(card).toBeVisible({ timeout: ProjectPage.TIMEOUT_MEDIUM });
         await card.click({ button: 'right' });
 
-        await expect(this.pinToDashboardOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.pinToDashboardOption).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.pinToDashboardOption.click();
 
-        await expect(this.pinnedIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.pinnedIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.page.waitForTimeout(1200);
     }
 
@@ -1477,14 +1477,14 @@ export class ProjectActions {
 
         const card = this.projectCardByName(projectName);
         await card.scrollIntoViewIfNeeded();
-        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(card).toBeVisible({ timeout: ProjectPage.TIMEOUT_MEDIUM });
         await card.click({ button: 'right' });
 
-        await expect(this.unpinFromDashboardOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.unpinFromDashboardOption).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.unpinFromDashboardOption.click();
 
         await expect(this.pinnedIcon.filter({ has: card })).toHaveCount(0, {
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
     }
 
@@ -1497,7 +1497,7 @@ export class ProjectActions {
         await this.searchInputByPlaceholder.fill('');
         await this.searchInputByPlaceholder.fill(projectName);
         await expect(this.tableRowWithText(projectName)).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
         await this.clickResetIcon();
     }
@@ -1508,7 +1508,7 @@ export class ProjectActions {
         await this.searchInputByPlaceholder.fill(invalidName);
         await this.page.waitForLoadState('networkidle');
         await expect(this.noProjectsAvailableMessage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
         await expect(this.page.locator('tr').filter({ hasText: new RegExp(invalidName, 'i') })).toHaveCount(0);
         await this.clickResetIcon();
@@ -1518,7 +1518,7 @@ export class ProjectActions {
         await this.prepareListView();
         await this.searchInputByPlaceholder.fill('@#$%^&*');
         await expect(this.noProjectsAvailableMessage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
         await this.resetListView();
     }
@@ -1575,7 +1575,7 @@ export class ProjectActions {
         await this.openProjectManagerDropdown();
         await this.selectAllManagersLabel.waitFor({
             state: 'visible',
-            timeout: ProjectActions.TIMEOUT_MEDIUM,
+            timeout: ProjectPage.TIMEOUT_MEDIUM,
         });
         await this.selectAllManagersLabel.click();
         await this.page.keyboard.press('Escape');
@@ -1588,20 +1588,20 @@ export class ProjectActions {
         await this.openProjectManagerDropdown();
         await this.selectAllToggle.waitFor({
             state: 'visible',
-            timeout: ProjectActions.TIMEOUT_MEDIUM,
+            timeout: ProjectPage.TIMEOUT_MEDIUM,
         });
 
         const currentState = await this.selectAllToggle.getAttribute('data');
         if (currentState === 'Select All') {
             await this.selectAllToggle.click();
             await expect(this.selectAllToggle).toHaveAttribute('data', 'Deselect All', {
-                timeout: ProjectActions.TIMEOUT_DEFAULT,
+                timeout: ProjectPage.TIMEOUT_DEFAULT,
             });
         }
 
         await this.selectAllToggle.click();
         await expect(this.selectAllToggle).toHaveAttribute('data', 'Select All', {
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
 
         await this.page.keyboard.press('Escape');
@@ -1630,27 +1630,27 @@ export class ProjectActions {
         await this.prepareListView();
         await this.openDefaultViewPopup();
 
-        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.addViewIcon.click();
 
-        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.viewNameInput.click();
         await this.viewNameInput.fill(viewName);
 
-        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.saveOrCreateButton.click({ force: true });
 
-        await expect(this.viewCreatedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewCreatedToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.resetToDefaultView();
     }
 
     async resetToDefaultView(): Promise<void> {
         await this.activeViewButton.click();
 
-        await expect(this.viewDropdownArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewDropdownArrow).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.viewDropdownArrow.click();
         await this.page.waitForTimeout(1000);
-        await expect(this.defaultViewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.defaultViewOption).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.defaultViewOption.click();
 
         await this.closeOverlay();
@@ -1665,18 +1665,18 @@ export class ProjectActions {
         await this.prepareListView();
         await this.openDefaultViewPopup();
 
-        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.shareViewIcon.click({ force: true });
 
         await this.selectShareTarget(this.usersShareDropdown, this.usersShareDropdownArrow, userName);
         await this.selectShareTarget(this.teamsShareDropdown, this.teamsShareDropdownArrow, teamName);
 
-        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.shareButton.click({ force: true });
 
-        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
         await this.closeOverlay();
         await this.resetListView();
         await this.waitForFirstTableRow();
@@ -1687,18 +1687,18 @@ export class ProjectActions {
         dropdownArrow: Locator,
         targetName: string
     ): Promise<void> {
-        await expect(dropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(dropdown).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await dropdown.click();
 
         const dropBox = this.lastDropBox;
-        await expect(dropBox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(dropBox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         const searchField = dropBox.locator('input[placeholder="Search"]');
         await searchField.fill(targetName);
         await this.page.waitForTimeout(800);
 
         const option = dropBox.locator('li', { hasText: targetName }).first();
-        await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(option).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await option.locator('label.checkbox').click({ force: true });
 
         await dropdownArrow.click({ force: true });
@@ -1751,26 +1751,26 @@ export class ProjectActions {
         await this.page.mouse.move(endX, endY, { steps: 25 });
         await this.page.waitForTimeout(300);
         await this.page.mouse.up();
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
     }
 
     async hideAndShowStatus(): Promise<void> {
         await this.prepareListView();
         await this.openDefaultViewPopup();
 
-        await expect(this.hideAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.hideAllButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.hideAllButton.click();
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
 
-        await expect(this.visibleColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.visibleColumnList).toHaveCount(0, { timeout: ProjectPage.TIMEOUT_DEFAULT });
 
-        await expect(this.showAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.showAllButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.showAllButton.click();
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
 
-        await expect(this.hiddenColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.hiddenColumnList).toHaveCount(0, { timeout: ProjectPage.TIMEOUT_DEFAULT });
         await expect(this.visibleColumnList.first()).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
 
         await this.closeOverlay();
@@ -1781,12 +1781,12 @@ export class ProjectActions {
         await this.openDefaultViewPopup();
 
         const searchTerm = 'Project Name';
-        await expect(this.columnSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.columnSearchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.columnSearchInput.fill(searchTerm);
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
 
         await expect(this.columnItemByName(searchTerm).first()).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
 
         await this.closeOverlay();
@@ -1796,25 +1796,25 @@ export class ProjectActions {
         await this.prepareListView();
         await this.openDefaultViewPopup();
 
-        await expect(this.savedViewDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.savedViewDropdown).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.savedViewDropdown.click();
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
 
         const viewOption = this.savedViewOption(viewName);
-        await expect(viewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(viewOption).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         const deleteIcon = viewOption.locator('img[src*="delete_icon.svg"]');
-        await expect(deleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(deleteIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await deleteIcon.click();
 
         try {
-            await expect(this.confirmAnyButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
+            await expect(this.confirmAnyButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_SHORT });
             await this.confirmAnyButton.click();
         } catch {
             // No confirmation dialog — deletion was immediate
         }
 
-        await expect(this.viewDeletedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewDeletedToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.closeOverlay();
     }
 
@@ -1824,10 +1824,10 @@ export class ProjectActions {
 
     async openProjectCreatePopup(): Promise<void> {
         await this.prepareListView();
-        await expect(this.addNewProjectButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.addNewProjectButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.addNewProjectButton.click();
 
-        await expect(this.projectDialog).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDialog).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await expect(this.projectNameField).toBeVisible();
         await expect(this.projectStatusField).toBeVisible();
         await expect(this.projectDialogSaveButton).toBeVisible();
@@ -1837,7 +1837,7 @@ export class ProjectActions {
 
     async selectMultipleProjects(): Promise<void> {
         await this.prepareListView();
-        await expect(this.selectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.selectAllCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.selectAllCheckbox.click();
         await this.page.waitForTimeout(1000);
         await this.selectAllCheckbox.click();
@@ -1848,7 +1848,7 @@ export class ProjectActions {
         await this.prepareListView();
         await this.firstRowCheckbox.click();
         await this.duplicateButton.click();
-        await expect(this.duplicateSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.duplicateSuccessToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.page.waitForTimeout(1000);
         await this.resetListView();
     }
@@ -1858,29 +1858,29 @@ export class ProjectActions {
         await this.firstRowCheckbox.click();
         await this.deleteButtonFirst.click();
         await this.deleteButtonLast.click();
-        await expect(this.deleteSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.deleteSuccessToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     async deleteProjectViaRowIcon(): Promise<void> {
         await this.prepareListView();
-        await expect(this.firstRowDeleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.firstRowDeleteIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.firstRowDeleteIcon.click();
         await this.confirmDeleteButton.click();
-        await expect(this.deleteSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.deleteSuccessToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     async cancelDeleteFromPopup(): Promise<void> {
         await this.prepareListView();
         await this.firstRowDeleteIcon.click();
-        await expect(this.cancelDeleteButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.cancelDeleteButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cancelDeleteButton.click();
-        await expect(this.cancelDeleteButton).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+        await expect(this.cancelDeleteButton).toBeHidden({ timeout: ProjectPage.TIMEOUT_SHORT });
     }
 
     async sortProjectsAscending(columnName: string = 'Project Name'): Promise<void> {
         await this.prepareListView();
         await this.sortIconForColumn(columnName).click();
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
         await this.verifyColumnSort('asc', columnName);
     }
 
@@ -1888,7 +1888,7 @@ export class ProjectActions {
         await this.prepareListView();
         await this.columnFilterIcon(columnName).click();
         await expect(this.columnHeader(columnName).locator('sortamountdownicon')).toHaveCount(1, {
-            timeout: ProjectActions.TIMEOUT_SHORT,
+            timeout: ProjectPage.TIMEOUT_SHORT,
         });
         await this.verifyColumnSort('desc', columnName);
     }
@@ -1918,14 +1918,14 @@ export class ProjectActions {
 
     async createViewWithoutName(): Promise<void> {
         await this.openAddViewAndClickSave();
-        await expect(this.viewNameInputInvalid).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
+        await expect(this.viewNameInputInvalid).toBeVisible({ timeout: ProjectPage.TIMEOUT_SHORT });
         await this.page.keyboard.press('Escape');
         await this.resetListView();
     }
 
     async saveViewWithoutChanges(): Promise<void> {
         await this.openAddViewAndClickSave();
-        await expect(this.viewNameInputInvalid).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
+        await expect(this.viewNameInputInvalid).toBeVisible({ timeout: ProjectPage.TIMEOUT_SHORT });
         await this.page.keyboard.press('Escape');
         await this.resetListView();
     }
@@ -1933,30 +1933,30 @@ export class ProjectActions {
     private async openAddViewAndClickSave(): Promise<void> {
         await this.prepareListView();
         await this.defaultViewButton.click();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_MEDIUM });
 
-        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.addViewIcon.click();
 
-        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.saveOrCreateButton.click({ force: true });
     }
 
     async shareViewWithNoSelection(): Promise<void> {
         await this.prepareListView();
         await this.defaultViewButton.click();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_MEDIUM });
 
-        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.shareViewIcon.click({ force: true });
 
-        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.shareButton.click({ force: true });
 
-        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
         await this.closeOverlay();
         await this.resetListView();
         await this.waitForFirstTableRow();
@@ -1965,14 +1965,14 @@ export class ProjectActions {
     async viewStatusOutOfSync(): Promise<void> {
         await this.prepareListView();
         await this.defaultViewButton.click();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         await this.columnItemByName('developer').locator('img[src*="Eye.svg"]').click();
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
 
         await this.closeOverlay();
         await this.defaultViewButton.click();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         // Intentional debug log — tracks view persistence behavior
         const developerCount = await this.columnItemByName('developer').count();
@@ -1985,7 +1985,7 @@ export class ProjectActions {
     async verifyRecordsCountAtEnd(): Promise<void> {
         await this.prepareListView();
         await this.recordsCountLabel.scrollIntoViewIfNeeded();
-        await expect(this.recordsCountLabel).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(this.recordsCountLabel).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
 
         const text = await this.recordsCountLabel.textContent();
         const count = parseInt(text?.match(/\d+/)?.[0] ?? '0', 10);
@@ -2000,9 +2000,9 @@ export class ProjectActions {
 
     async verifyPrecinctSetupSubTabs(): Promise<void> {
         await this.openPrecinctSetup();
-        await expect(this.precinctSubTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.precinctSubTab).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await expect(this.precinctAllocationSubTab).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
     }
 
@@ -2010,10 +2010,10 @@ export class ProjectActions {
         await this.openPrecinctSetup();
         await expect(this.precinctTab).toHaveClass(/active/);
         await expect(this.selectProjectDropdown).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
         await expect(this.createNewPrecinctButton).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
     }
 
@@ -2026,7 +2026,7 @@ export class ProjectActions {
 
         await expect(this.precinctCancelButton).toBeVisible();
         await this.precinctCancelButton.click();
-        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectPage.TIMEOUT_SHORT });
     }
 
     async verifyPrecinctCreationWithImage(): Promise<void> {
@@ -2036,43 +2036,43 @@ export class ProjectActions {
         const precinctName = this.generateUniquePrecinctName();
         await this.precinctNameInput.fill(precinctName);
 
-        const imagePath = path.resolve(ProjectActions.IMAGES_DIR, ProjectActions.DEFAULT_TEST_IMAGE);
+        const imagePath = path.resolve(ProjectPage.IMAGES_DIR, ProjectPage.DEFAULT_TEST_IMAGE);
         await this.precinctFileInput.setInputFiles(imagePath);
         await this.page.waitForTimeout(1000);
 
         await this.precinctSaveButton.click();
-        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectPage.TIMEOUT_MEDIUM });
         await expect(this.precinctAddSuccessToast).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
         if (await this.precinctCancelButton.isVisible().catch(() => false)) {
             await this.precinctCancelButton.click();
-            await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+            await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectPage.TIMEOUT_SHORT });
         }
         const newCard = this.precinctCardByName(precinctName);
         await newCard.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
-        await expect(newCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(newCard).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     async verifyImageRemovalViaCrossIcon(): Promise<void> {
         await this.openAddPrecinctDialog();
 
-        const imagePath = path.resolve(ProjectActions.IMAGES_DIR, ProjectActions.DEFAULT_TEST_IMAGE);
+        const imagePath = path.resolve(ProjectPage.IMAGES_DIR, ProjectPage.DEFAULT_TEST_IMAGE);
         await this.precinctFileInput.setInputFiles(imagePath);
 
-        await expect(this.precinctUploadedImage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.precinctUploadedImage).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await expect(this.precinctRemoveImageIcon).toBeVisible();
 
         await this.precinctRemoveImageIcon.click();
 
-        await expect(this.precinctUploadedImage).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
-        await expect(this.precinctRemoveImageIcon).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+        await expect(this.precinctUploadedImage).toBeHidden({ timeout: ProjectPage.TIMEOUT_SHORT });
+        await expect(this.precinctRemoveImageIcon).toBeHidden({ timeout: ProjectPage.TIMEOUT_SHORT });
         await expect(this.precinctNoImagePlaceholder).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_SHORT,
+            timeout: ProjectPage.TIMEOUT_SHORT,
         });
 
         await this.precinctCancelButton.click();
-        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectPage.TIMEOUT_SHORT });
     }
 
     private generateUniquePrecinctName(): string {
@@ -2083,17 +2083,17 @@ export class ProjectActions {
         await this.openAddPrecinctDialog();
         await expect(this.precinctDialogTitle).toHaveText(/add precinct/i);
         const closeIcon = this.addPrecinctDialog.locator('.p-dialog-header-close');
-        await expect(closeIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(closeIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await closeIcon.click();
-        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectPage.TIMEOUT_SHORT });
     }
 
     async cancelAddPrecinctPopupUsingCancelButton(): Promise<void> {
         await this.openAddPrecinctDialog();
         await expect(this.precinctDialogTitle).toHaveText(/add precinct/i);
-        await expect(this.precinctCancelButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.precinctCancelButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.precinctCancelButton.click();
-        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectPage.TIMEOUT_SHORT });
     }
 
     // ==========================================================================
@@ -2108,15 +2108,15 @@ export class ProjectActions {
         await this.openPrecinctSetup();
 
         const firstCard = this.page.locator('#precinct .sgv-product').first();
-        await expect(firstCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(firstCard).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
 
         // Capture original name before opening dialog
         const originalName = (await this.firstPrecinctCardName.innerText()).trim();
 
-        await expect(this.firstPrecinctEditIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.firstPrecinctEditIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.firstPrecinctEditIcon.click();
 
-        await expect(this.addPrecinctDialog).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.addPrecinctDialog).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         return originalName;
     }
 
@@ -2133,7 +2133,7 @@ export class ProjectActions {
         await expect(this.precinctCancelButton).toBeVisible();
         // Close dialog cleanly
         await this.precinctCancelButton.click();
-        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectPage.TIMEOUT_SHORT });
     }
 
     private get precinctUpdateSuccessToast(): Locator {
@@ -2159,40 +2159,40 @@ export class ProjectActions {
         await expect(this.precinctNameInput).toHaveValue(newName);
 
         await this.precinctSaveButton.click();
-        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectPage.TIMEOUT_MEDIUM });
         await expect(this.precinctUpdateSuccessToast).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
 
         const editedCard = this.precinctCardByName(newName).first();
         await editedCard.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
-        await expect(editedCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(editedCard).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
 
     }
 
     async validatePrecinctDeletionFromCard(): Promise<void> {
         await this.openPrecinctSetup();
         const firstCard = this.page.locator('#precinct .sgv-product').first();
-        await expect(firstCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(firstCard).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const cardsBefore = await this.page.locator('#precinct .sgv-product').count();
         expect(cardsBefore).toBeGreaterThan(0);
         const precinctNameToDelete = (await this.firstPrecinctCardName.innerText()).trim();
-        await expect(this.firstPrecinctDeleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.firstPrecinctDeleteIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.firstPrecinctDeleteIcon.click();
         await expect(this.precinctDeleteSuccessToast).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
         const cardsAfter = await this.page.locator('#precinct .sgv-product').count();
         expect(cardsAfter).toBe(cardsBefore - 1);
     }
 
     async verifyDropdownSelectAndClearInPrecinctTab(): Promise<void> {
         await this.openPrecinctSetup();
-        await expect(this.selectProjectDropdownContainer).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectProjectDropdownContainer).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.selectProjectDropdownContainer.click();
-        await this.selectProjectDropdownPanel.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.firstSelectProjectOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.selectProjectDropdownPanel.waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.firstSelectProjectOption).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.page.waitForTimeout(1000);
         await this.firstSelectProjectOption.click({ force: true });
         await this.selectProjectClearIcon.click();
@@ -2208,12 +2208,12 @@ export class ProjectActions {
         await expect(this.precinctAllocationTabQuick).toHaveClass(/active/);
 
         // Verify all layout elements
-        await expect(this.selectPrecinctDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectPrecinctDropdown).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await expect(this.allocationSaveButton).toBeVisible();
         await expect(this.allocationSearchField).toBeVisible();
         await expect(this.allocationProjectTable).toBeVisible();
         await expect(this.allocationProjectCheckboxes.first()).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
         await expect(this.allocationSelectedListPanel).toBeVisible();
     }
@@ -2226,8 +2226,8 @@ export class ProjectActions {
         await expect(this.precinctAllocationTabQuick).toHaveClass(/active/);
 
         await this.selectPrecinctDropdown.locator('.ng-select-container').click();
-        await expect(this.selectProjectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.page.locator('.ng-dropdown-panel .ng-option-label').first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectProjectDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.page.locator('.ng-dropdown-panel .ng-option-label').first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         const optionCount = await this.page.locator('.ng-dropdown-panel .ng-option-label').count();
         expect(optionCount).toBeGreaterThan(0);
@@ -2237,7 +2237,7 @@ export class ProjectActions {
     async verifySearchFieldFiltersProjectList(): Promise<void> {
         await this.openPrecinctSetup();
         await this.precinctAllocationSubTab.click();
-        await expect(this.allocationProjectRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.allocationProjectRows.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const searchTerm = 'Automation Testing';
         await this.allocationSearchField.type(searchTerm, { delay: 120 });
         await expect(this.allocationProjectRows.first()).toContainText(new RegExp(searchTerm, 'i'));
@@ -2250,38 +2250,38 @@ export class ProjectActions {
         await this.precinctAllocationSubTab.click();
         await expect(this.precinctAllocationTabQuick).toHaveClass(/active/);
         await this.selectPrecinctDropdown.locator('.ng-select-container').click();
-        await expect(this.selectProjectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectProjectDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const firstPrecinctOption = this.page.locator('.ng-dropdown-panel .ng-option-label').first();
         const precinctName = (await firstPrecinctOption.innerText()).trim();
         await firstPrecinctOption.click();
         await this.page.waitForTimeout(1200);
-        await expect(this.allocationProjectRows.nth(1)).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.allocationProjectRows.nth(1)).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const projectName = (await this.allocationProjectRows.nth(1).innerText()).trim();
         await this.allocationProjectCheckboxes.nth(1).click();
         await this.allocationSaveButton.click();
-        await expect(this.genericToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.genericToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectsMenuLink.click();
-        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.searchInput.fill(precinctName);
         const precinctCard = this.precinctContainerByName(precinctName);
-        await expect(precinctCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(precinctCard).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await precinctCard.click();
         await expect(
             this.page.locator('.sgv-product .product-content h3', {
                 hasText: new RegExp(`^\\s*${projectName}\\s*$`, 'i'),
             }).first()
-        ).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        ).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     async attemptAllocationWithoutPrecinct(): Promise<void> {
         await this.openPrecinctSetup();
         await this.precinctAllocationSubTab.click();
         await expect(this.precinctAllocationTabQuick).toHaveClass(/active/);
-        await expect(this.allocationProjectCheckboxes.nth(1)).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.allocationProjectCheckboxes.nth(1)).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.allocationProjectCheckboxes.nth(1).click();
         await this.allocationSaveButton.click();
         const errorMessage = this.page.getByText(/please select a precinct/i);
-        await expect(errorMessage).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_SHORT });
+        await expect(errorMessage).toHaveCount(0, { timeout: ProjectPage.TIMEOUT_SHORT });
         console.log('[BUG] No validation error shown when saving allocation without selecting a precinct');
         await this.allocationProjectCheckboxes.nth(1).click();
     }
@@ -2292,7 +2292,7 @@ export class ProjectActions {
         await expect(this.precinctAllocationTabQuick).toHaveClass(/active/);
         await this.allocationSaveButton.click();
         await expect(this.page.getByText(/please select at least one project/i))
-            .toHaveCount(0, { timeout: ProjectActions.TIMEOUT_SHORT });
+            .toHaveCount(0, { timeout: ProjectPage.TIMEOUT_SHORT });
         console.log('[BUG] No validation error shown when saving allocation without selecting any project');
     }
 
@@ -2303,14 +2303,14 @@ export class ProjectActions {
 
         // Select first precinct and capture its name
         await this.selectPrecinctDropdown.locator('.ng-select-container').click();
-        await expect(this.selectProjectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectProjectDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const precinctOption = this.page.locator('.ng-dropdown-panel .ng-option-label').first();
         const precinctName = (await precinctOption.innerText()).trim();
         await precinctOption.click();
         await this.page.waitForTimeout(1000);
 
         // Wait for project list and verify at least one checkbox is already highlighted (pre-allocated)
-        await expect(this.allocationProjectCheckboxes.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.allocationProjectCheckboxes.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const highlightedCheckboxes = this.precinctAllocationPanel.locator(
             'tbody p-checkbox .p-checkbox-box.p-highlight'
         );
@@ -2319,32 +2319,32 @@ export class ProjectActions {
 
         // Navigate to Projects and verify the precinct shows the allocated projects
         await this.projectsMenuLink.click();
-        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.searchInput.fill(precinctName);
 
         const precinctCard = this.precinctContainerByName(precinctName);
-        await expect(precinctCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(precinctCard).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await precinctCard.click();
 
         // Verify at least one project card exists inside the precinct view
-        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     async validateDeletedPrecinctNotInAllocationDropdown(): Promise<void> {
         await this.openPrecinctSetup();
 
         // Capture first precinct name and delete it
-        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const deletedPrecinctName = (await this.firstPrecinctCardName.innerText()).trim();
 
         await this.firstPrecinctDeleteIcon.click();
-        await expect(this.precinctDeleteSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.precinctDeleteSuccessToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         // Go to Precinct Allocation tab and open the dropdown
         await this.precinctAllocationSubTab.click();
         await this.selectPrecinctDropdown.locator('.ng-select-container').click();
         await expect(this.page.locator('.ng-dropdown-panel .ng-option-label').first())
-            .toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+            .toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         // Verify deleted precinct is NOT in the dropdown
         await expect(
@@ -2362,72 +2362,72 @@ export class ProjectActions {
 
         // Select first precinct and capture its name
         await this.selectPrecinctDropdown.locator('.ng-select-container').click();
-        await expect(this.selectProjectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectProjectDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.page.waitForTimeout(1200);
         const precinctOption = this.page.locator('.ng-dropdown-panel .ng-option-label').first();
         const allocatedPrecinctName = (await precinctOption.innerText()).trim();
         await precinctOption.click();
         await this.page.waitForTimeout(1200);
         // Select first project and capture its name
-        await expect(this.allocationProjectRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.allocationProjectRows.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const allocatedProjectName = (await this.allocationProjectRows.first().innerText()).trim();
         await this.allocationProjectCheckboxes.first().click();
 
         // Save allocation
         await this.allocationSaveButton.click();
-        await expect(this.genericToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.genericToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         // Switch to Precinct tab and filter by the allocated project
         await this.precinctSubTab.click();
         await this.selectProjectDropdownContainer.click();
-        await expect(this.selectProjectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectProjectDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.page.locator('.ng-dropdown-panel .ng-option', {
             hasText: new RegExp(`^\\s*${allocatedProjectName}\\s*$`, 'i')
         }).first().click();
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
         // Verify only the allocated precinct appears
         await expect(this.precinctCardByName(allocatedPrecinctName))
-            .toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+            .toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     async verifyImageFileTypeValidation(): Promise<void> {
         await this.openAddPrecinctDialog();
-        const invalidFile = path.resolve(ProjectActions.IMAGES_DIR, 'invalid.txt');
+        const invalidFile = path.resolve(ProjectPage.IMAGES_DIR, 'invalid.txt');
         await this.precinctFileInput.setInputFiles(invalidFile);
         await expect(this.page.getByText(/"invalid.txt" is not a valid image/i))
-            .toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+            .toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await expect(this.precinctUploadedImage).toHaveCount(0);
         await this.precinctCancelButton.click();
-        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectPage.TIMEOUT_SHORT });
     }
 
     async verifyLongPrecinctNameTruncatedInCard(): Promise<void> {
         await this.openAddPrecinctDialog();
         const longName = `A ${faker.word.words(10)}`.replace(/[^a-zA-Z0-9 ]/g, '');
         await this.precinctNameInput.fill(longName);
-        const imagePath = path.resolve(ProjectActions.IMAGES_DIR, ProjectActions.DEFAULT_TEST_IMAGE);
+        const imagePath = path.resolve(ProjectPage.IMAGES_DIR, ProjectPage.DEFAULT_TEST_IMAGE);
         await this.precinctFileInput.setInputFiles(imagePath);
         await this.page.waitForTimeout(1000);
         await this.precinctSaveButton.click();
-        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_MEDIUM });
-        await expect(this.precinctAddSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectPage.TIMEOUT_MEDIUM });
+        await expect(this.precinctAddSuccessToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const card = this.precinctCardByName(longName);
         await card.evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
-        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(card).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     async validateNoDuplicatePrecinctNameAllowed(): Promise<void> {
         await this.openPrecinctSetup();
 
         // Capture an existing precinct name
-        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const existingName = (await this.firstPrecinctCardName.innerText()).trim();
 
         // Try to create a precinct with the same name
         await this.openAddPrecinctDialog();
         await this.precinctNameInput.fill(existingName);
 
-        const imagePath = path.resolve(ProjectActions.IMAGES_DIR, ProjectActions.DEFAULT_TEST_IMAGE);
+        const imagePath = path.resolve(ProjectPage.IMAGES_DIR, ProjectPage.DEFAULT_TEST_IMAGE);
         await this.precinctFileInput.setInputFiles(imagePath);
         await this.page.waitForTimeout(1000);
 
@@ -2436,11 +2436,11 @@ export class ProjectActions {
         // [BUG] Expected: validation error, dialog stays open. Actual: duplicate created.
         // TODO: Uncomment when validation is implemented
         // await expect(this.page.getByText(/precinct name already exists/i))
-        //     .toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        //     .toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         // await expect(this.addPrecinctDialog).toBeVisible();
 
         // Current behavior — duplicate is accepted
-        await expect(this.precinctAddSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.precinctAddSuccessToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         console.log(`[BUG] Duplicate precinct "${existingName}" created without validation error`);
     }
 
@@ -2462,9 +2462,9 @@ export class ProjectActions {
         await this.openAddPrecinctDialog();
         await expect(this.precinctNoImagePlaceholder).toBeVisible();
         await expect(this.precinctUploadedImage).toHaveCount(0);
-        const imagePath = path.resolve(ProjectActions.IMAGES_DIR, ProjectActions.DEFAULT_TEST_IMAGE);
+        const imagePath = path.resolve(ProjectPage.IMAGES_DIR, ProjectPage.DEFAULT_TEST_IMAGE);
         await this.precinctFileInput.setInputFiles(imagePath);
-        await expect(this.precinctUploadedImage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.precinctUploadedImage).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await expect(this.precinctNoImagePlaceholder).toHaveCount(0);
         await this.precinctCancelButton.click();
     }
@@ -2478,10 +2478,10 @@ export class ProjectActions {
         await this.precinctNameInput.fill(newName);
 
         await this.precinctCancelButton.click();
-        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_SHORT });
+        await expect(this.addPrecinctDialog).toBeHidden({ timeout: ProjectPage.TIMEOUT_SHORT });
 
         // Verify original name still exists and new name was not saved
-        await expect(this.precinctCardByName(originalName).first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.precinctCardByName(originalName).first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await expect(this.precinctCardByName(newName)).toHaveCount(0);
     }
 
@@ -2493,17 +2493,17 @@ export class ProjectActions {
     async verifyPrecinctNameDisplayedCorrectly(): Promise<void> {
         await this.navigateToProjects();
         await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
         const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
         await this.firstPrecinctOnProjectsPage.click();
         await console.log(precinctName);
-        await expect(this.precinctNameUnderActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.precinctNameUnderActive).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const displayedName = (await this.precinctNameUnderActive.innerText()).trim();
         expect(displayedName.length).toBeGreaterThan(0);
         await this.projectsMenuLink.click();
         await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
     }
 
@@ -2511,17 +2511,17 @@ export class ProjectActions {
     async verifyTabsVisibleAfterPrecinctSelection(): Promise<void> {
         await this.navigateToProjects();
         await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
         const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
         await this.firstPrecinctOnProjectsPage.click();
         await console.log(precinctName);
-        await expect(this.projectTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.eoiTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectTabInPrecinct).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
+        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.eoiTabInPrecinct).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectsMenuLink.click();
         await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
     }
 
@@ -2529,12 +2529,12 @@ export class ProjectActions {
     async verifyAllocatedProjectsUnderProjectTab(): Promise<void> {
         await this.navigateToProjects();
         await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
         const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
         await this.firstPrecinctOnProjectsPage.click();
         await console.log(precinctName);
-        await expect(this.precinctNameUnderActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.precinctNameUnderActive).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const displayedName = (await this.precinctNameUnderActive.innerText()).trim();
         expect(displayedName.length).toBeGreaterThan(0);
         await this.projectsMenuLink.click();
@@ -2544,19 +2544,19 @@ export class ProjectActions {
     async verifyProjectCardShowsImageNameAndPrice(projectName: string): Promise<void> {
         await this.navigateToProjects();
         await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
         const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
         await console.log(precinctName);
-        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.searchInput.fill(projectName);
 
         const card = this.projectCardByName(projectName);
-        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(card).toBeVisible({ timeout: ProjectPage.TIMEOUT_MEDIUM });
 
         // Image
         const thumbnail = this.thumbnailForCard(card);
-        await expect(thumbnail).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(thumbnail).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         const styleAttr = await thumbnail.getAttribute('style');
         const bgUrlMatch = styleAttr?.match(/background-image:\s*url\((['"]?)(.*?)\1\)/i);
@@ -2565,11 +2565,11 @@ export class ProjectActions {
 
         // Name
         const name = this.projectCardName;
-        await expect(name).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(name).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         // "Priced From" label
         const priceLabel = this.projectCardPriceContent();
-        await expect(priceLabel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(priceLabel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
 
     }
@@ -2578,21 +2578,21 @@ export class ProjectActions {
     async verifyExpandProjectCard(projectName: string): Promise<void> {
         await this.navigateToProjects();
         await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
         const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
         await console.log(precinctName);
-        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.searchInput.click();
         await this.searchInput.fill(projectName);
-        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.searchInput.fill(projectName);
 
         const card = this.projectCardByName(projectName);
-        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
-        await expect(this.projectCardArrowIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(card).toBeVisible({ timeout: ProjectPage.TIMEOUT_MEDIUM });
+        await expect(this.projectCardArrowIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectCardArrowIcon.click();
-        await expect(this.projectCardCollapseIcon()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectCardCollapseIcon()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectCardCollapseIcon().click();
     }
 
@@ -2600,25 +2600,25 @@ export class ProjectActions {
     async verifyCollapseProjectCard(projectName: string): Promise<void> {
         await this.navigateToProjects();
         await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
         const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
         await console.log(precinctName);
-        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.searchInput.click();
         await this.searchInput.fill(projectName);
-        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.searchInput.fill(projectName);
 
         const card = this.projectCardByName(projectName);
-        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
-        await expect(this.projectCardArrowIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(card).toBeVisible({ timeout: ProjectPage.TIMEOUT_MEDIUM });
+        await expect(this.projectCardArrowIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectCardArrowIcon.click();
-        await expect(this.projectCardCollapseIcon()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectCardCollapseIcon()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectCardCollapseIcon().click();
         await this.clickResetIcon();
         await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
     }
 
@@ -2626,7 +2626,7 @@ export class ProjectActions {
     async verifyOpenProjectFromPrecinctCard(): Promise<void> {
         await this.navigateToProjects();
         await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
         const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
         await this.firstPrecinctOnProjectsPage.click();
@@ -2637,16 +2637,16 @@ export class ProjectActions {
         await this.clickProjectImageInPrecinct();
 
         await expect(this.projectBreadcrumbName(displayedName)).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
-        await expect(this.projectsBreadcrumbLink).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectsBreadcrumbLink).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectsBreadcrumbLink.click();
         await this.page.waitForTimeout(1200);
         await this.projectsMenuLink.click();
         await this.page.waitForTimeout(1200);
         await this.projectsMenuLink.click();
-        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.page.getByText('Precinct', { exact: true })).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.firstPrecinctOnProjectsPage).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.page.getByText('Precinct', { exact: true })).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
     }
 
@@ -2655,15 +2655,15 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.page.waitForLoadState('networkidle')
         await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
         const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
         await this.firstPrecinctOnProjectsPage.click();
         await console.log(precinctName);
-        await expect(this.precinctNameUnderActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.precinctNameUnderActive).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const displayedName = (await this.precinctNameUnderActive.innerText()).trim();
         expect(displayedName.length).toBeGreaterThan(0);
-        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotTabInPrecinct.click();
     }
 
@@ -2864,8 +2864,8 @@ export class ProjectActions {
     // ==========================================================================
 
     private async assertSuccessToast(expectedText: string = 'Update successfully'): Promise<void> {
-        await expect(this.successToast.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.successToast.first()).toContainText(expectedText, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.successToast.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.successToast.first()).toContainText(expectedText, { timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     private async navigateToLots(): Promise<void> {
@@ -2873,7 +2873,7 @@ export class ProjectActions {
         if (!url.includes('/listings/lot')) {
             await this.page.goto('/listings/lot');
         }
-        await expect(this.lotSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotSearchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     private async searchLot(keyword: string): Promise<void> {
@@ -2896,14 +2896,14 @@ export class ProjectActions {
     }
 
     private async assertFirstRowContains(keyword: string): Promise<void> {
-        await this.lotTableRows.first().waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotTableRows.first().waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     // Project dropdown helpers
     private async openProjectDropdown(): Promise<void> {
-        await expect(this.projectDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.projectDropdownInLot).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.projectDropdownInLot.click();
-        await expect(this.projectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     private async closeDropdown(): Promise<void> {
@@ -2913,7 +2913,7 @@ export class ProjectActions {
     }
 
     private async searchInProjectDropdown(projectName: string): Promise<void> {
-        await expect(this.projectDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDropdownSearchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectDropdownSearchInput.fill(projectName);
         await this.page.waitForTimeout(800);
     }
@@ -2929,7 +2929,7 @@ export class ProjectActions {
             const option = this.projectDropdownOptions.nth(i);
             const text = (await option.innerText()).trim().toLowerCase();
             if (text.includes(projectName.toLowerCase())) {
-                await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+                await expect(option).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
                 await option.click();
                 return;
             }
@@ -2978,9 +2978,9 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         const checkbox = this.rowCheckbox(firstRow);
-        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(checkbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         await this.searchLot(lotKeyword);
         await this.assertLotsExist();
         await this.assertFirstRowContains(lotKeyword);
@@ -3044,7 +3044,7 @@ export class ProjectActions {
         await this.navigateToLots();
         await this.openProjectDropdown();
 
-        await expect(this.projectDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const totalOptions = await this.projectDropdownOptions.count();
         expect(totalOptions).toBeGreaterThan(0);
 
@@ -3061,7 +3061,7 @@ export class ProjectActions {
         await this.openProjectDropdown();
 
         // First select all
-        await expect(this.projectDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectDropdownSelectAllCheckbox.click();
         await this.page.waitForTimeout(800);
 
@@ -3081,7 +3081,7 @@ export class ProjectActions {
         await this.navigateToLots();
         await this.openProjectDropdown();
 
-        await expect(this.projectDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const totalOptions = await this.projectDropdownOptions.count();
         expect(totalOptions).toBeGreaterThan(0);
 
@@ -3100,16 +3100,16 @@ export class ProjectActions {
         await this.searchInProjectDropdown(projectName);
         await this.selectProjectByName(projectName);
         await this.closeDropdown();
-        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectTagCrossIcon(projectName).click();
         await this.page.waitForTimeout(800);
         await this.resetButton.click();
     }
 
     private async openBedDropdown(): Promise<void> {
-        await expect(this.bedDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.bedDropdownInLot).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.bedDropdownInLot.click();
-        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     private async selectBedByValue(bedValue: string): Promise<void> {
@@ -3118,7 +3118,7 @@ export class ProjectActions {
             const option = this.bedDropdownOptions.nth(i);
             const text = (await option.innerText()).trim();
             if (text === bedValue || text.includes(bedValue)) {
-                await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+                await expect(option).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
                 await option.click();
                 return;
             }
@@ -3129,7 +3129,7 @@ export class ProjectActions {
     async verifyBedDropdownFilter(): Promise<void> {
         await this.navigateToLots();
         await this.openBedDropdown();
-        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const optionsCount = await this.bedDropdownOptions.count();
         expect(optionsCount).toBeGreaterThan(0);
         await this.closeDropdown();
@@ -3139,8 +3139,8 @@ export class ProjectActions {
     async verifySearchBedInDropdown(bedValue: string): Promise<void> {
         await this.navigateToLots();
         await this.openBedDropdown();
-        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.bedDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownSearchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.bedDropdownSearchInput.fill(bedValue);
         await this.selectBedByValue(bedValue);
         await this.bedDropdownSearchInput.fill('');
@@ -3154,10 +3154,10 @@ export class ProjectActions {
     async selectBedNumber(bedValue: string): Promise<void> {
         await this.navigateToLots();
         await this.openBedDropdown();
-        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.selectBedByValue(bedValue);
         await this.closeDropdown();
-        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.resetButton.click();
     }
 
@@ -3167,13 +3167,13 @@ export class ProjectActions {
     async selectMultipleBedNumbers(bedValues: string[]): Promise<void> {
         await this.navigateToLots();
         await this.openBedDropdown();
-        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         for (const bedValue of bedValues) {
             await this.selectBedByValue(bedValue);
         }
         await this.closeDropdown();
         for (const bedValue of bedValues) {
-            await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+            await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         }
         await this.resetButton.click();
     }
@@ -3184,8 +3184,8 @@ export class ProjectActions {
     async verifySelectAllBedsInDropdown(): Promise<void> {
         await this.navigateToLots();
         await this.openBedDropdown();
-        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.bedDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.bedDropdownSelectAllCheckbox.click();
         const optionsCount = await this.bedDropdownOptions.count();
         await expect(async () => {
@@ -3202,13 +3202,13 @@ export class ProjectActions {
     async verifyDeselectAllBedsInDropdown(): Promise<void> {
         await this.navigateToLots();
         await this.openBedDropdown();
-        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.bedDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.bedDropdownSelectAllCheckbox.click();
         await this.page.waitForTimeout(800);
         await this.bedDropdownSelectAllCheckbox.click();
         await this.page.waitForTimeout(800);
-        await expect(this.selectedBedTags).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTags).toHaveCount(0, { timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.closeDropdown();
         await this.resetButton.click();
     }
@@ -3221,21 +3221,21 @@ export class ProjectActions {
         await this.openBedDropdown();
         await this.selectBedByValue(bedValue);
         await this.closeDropdown();
-        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.bedTagCrossIcon(bedValue).click();
-        await expect(this.selectedBedTagByValue(bedValue)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.resetButton.click();
     }
 
     private async openStatusDropdown(): Promise<void> {
-        await expect(this.statusDropdownInLot).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.statusDropdownInLot).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.statusDropdownInLot.click();
-        await expect(this.statusDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.statusDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.statusDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.statusDropdownOptions.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     private async searchInStatusDropdown(statusValue: string): Promise<void> {
-        await expect(this.statusDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.statusDropdownSearchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.statusDropdownSearchInput.fill(statusValue);
         await this.page.waitForTimeout(800);
     }
@@ -3246,7 +3246,7 @@ export class ProjectActions {
             const option = this.statusDropdownOptions.nth(i);
             const text = (await option.innerText()).trim().toLowerCase();
             if (text.includes(statusValue.toLowerCase())) {
-                await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+                await expect(option).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
                 await option.click();
                 return;
             }
@@ -3269,7 +3269,7 @@ export class ProjectActions {
         await this.searchInStatusDropdown(statusValue);
         await this.selectStatusByValue(statusValue);
         await this.closeDropdown();
-        await expect(this.selectedStatusTagByValue(statusValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedStatusTagByValue(statusValue)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.assertLotsExist();
         await this.resetFilters();
     }
@@ -3287,7 +3287,7 @@ export class ProjectActions {
 
         await this.closeDropdown();
         for (const statusValue of statusValues) {
-            await expect(this.selectedStatusTagByValue(statusValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+            await expect(this.selectedStatusTagByValue(statusValue)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         }
         await this.assertLotsExist();
         await this.resetFilters();
@@ -3296,7 +3296,7 @@ export class ProjectActions {
     // Search statuses in dropdown
     async verifySearchStatusInDropdown(statusValue: string): Promise<void> {
         await this.navigateToLots();
-        await this.lotTableRows.first().waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        await this.lotTableRows.first().waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_LONG });
         await this.openStatusDropdown();
         await this.searchInStatusDropdown(statusValue);
         await this.closeDropdown();
@@ -3308,7 +3308,7 @@ export class ProjectActions {
         await this.navigateToLots();
         await this.openStatusDropdown();
 
-        await expect(this.statusDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.statusDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const totalOptions = await this.statusDropdownOptions.count();
         expect(totalOptions).toBeGreaterThan(0);
 
@@ -3325,7 +3325,7 @@ export class ProjectActions {
         await this.navigateToLots();
         await this.openStatusDropdown();
 
-        await expect(this.statusDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.statusDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         // Select all first
         await this.statusDropdownSelectAllCheckbox.click();
@@ -3347,15 +3347,15 @@ export class ProjectActions {
         await this.searchInStatusDropdown(statusValue);
         await this.selectStatusByValue(statusValue);
         await this.closeDropdown();
-        await expect(this.selectedStatusTagByValue(statusValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedStatusTagByValue(statusValue)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.statusTagCrossIcon(statusValue).click();
-        await expect(this.selectedStatusTagByValue(statusValue)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedStatusTagByValue(statusValue)).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.assertLotsExist();
         await this.resetButton.click();
     }
 
     private async openPriceRangeFilter(): Promise<void> {
-        await expect(this.priceRangeFilter).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.priceRangeFilter).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.priceRangeFilter.click();
     }
 
@@ -3365,7 +3365,7 @@ export class ProjectActions {
     }
 
     private async openInternalAreaFilter(): Promise<void> {
-        await expect(this.internalAreaFilter).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.internalAreaFilter).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.internalAreaFilter.click();
     }
 
@@ -3403,20 +3403,20 @@ export class ProjectActions {
         await this.selectProjectByName('Nexton');
         await this.closeDropdown();
         await expect(this.lotSearchInput).toHaveValue('2308');
-        await expect(this.selectedProjectTagByName('Nexton')).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName('Nexton')).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.resetFilters();
         await expect(this.lotSearchInput).toHaveValue('');
-        await expect(this.selectedProjectTagByName('Nexton')).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName('Nexton')).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.assertLotsExist();
     }
 
     // TC — View popup opens on View button click
     async verifyViewPopupOpens(): Promise<void> {
         await this.navigateToLots();
-        await expect(this.viewButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.viewButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.viewButton.click();
         await this.page.waitForTimeout(800);
-        await expect(this.viewPopup).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewPopup).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.closeDropdown();
     }
 
@@ -3424,14 +3424,14 @@ export class ProjectActions {
     async verifyCreateNewView(viewName: string): Promise<void> {
         await this.navigateToLots();
         await this.openDefaultViewPopup();
-        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_LONG });
         await this.addViewIcon.click();
-        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.viewNameInput.click();
         await this.viewNameInput.fill(viewName);
-        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.saveOrCreateButton.click({ force: true });
-        await expect(this.viewCreatedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewCreatedToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.resetToDefaultView();
     }
 
@@ -3442,14 +3442,14 @@ export class ProjectActions {
     ): Promise<void> {
         await this.navigateToLots();
         await this.openDefaultViewPopup();
-        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.shareViewIcon.click({ force: true });
         await this.selectShareTarget(this.usersShareDropdown, this.usersShareDropdownArrow, userName);
         await this.selectShareTarget(this.teamsShareDropdown, this.teamsShareDropdownArrow, teamName);
-        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.shareButton.click({ force: true });
-        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
         await this.closeOverlay();
         await this.resetListView();
         await this.waitForFirstTableRow();
@@ -3487,21 +3487,21 @@ export class ProjectActions {
     async deleteSavedViewInLotList(viewName: string): Promise<void> {
         await this.navigateToLots();
         await this.openDefaultViewPopup();
-        await expect(this.savedViewDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.savedViewDropdown).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.savedViewDropdown.click();
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
         const viewOption = this.savedViewOption(viewName);
-        await expect(viewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(viewOption).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const deleteIcon = viewOption.locator('img[src*="delete_icon.svg"]');
-        await expect(deleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(deleteIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await deleteIcon.click();
         try {
-            await expect(this.confirmAnyButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
+            await expect(this.confirmAnyButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_SHORT });
             await this.confirmAnyButton.click();
         } catch {
 
         }
-        await expect(this.viewDeletedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewDeletedToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.closeOverlay();
         await this.resetListView();
         await this.waitForFirstTableRow();
@@ -3514,11 +3514,11 @@ export class ProjectActions {
         await this.navigateToLots();
         await this.openDefaultViewPopup();
         const searchTerm = 'Project';
-        await expect(this.columnSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.columnSearchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.columnSearchInput.fill(searchTerm);
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
         await expect(this.columnItemByName(searchTerm).first()).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
         await this.columnSearchInput.fill('');
         await this.page.waitForTimeout(1000);
@@ -3531,20 +3531,20 @@ export class ProjectActions {
     async verifyHideUnhideStatus(): Promise<void> {
         await this.navigateToLots();
         await this.openDefaultViewPopup();
-        await expect(this.hideAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.hideAllButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.hideAllButton.click();
         await this.page.waitForTimeout(1000);
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
-        await expect(this.visibleColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.showAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
+        await expect(this.visibleColumnList).toHaveCount(0, { timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.showAllButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.showAllButton.evaluate(button => button.scrollIntoView({ behavior: 'instant', block: 'center' }));
         await this.page.waitForTimeout(1000);
         await this.showAllButton.click();
         await this.page.waitForTimeout(1000);
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
-        await expect(this.hiddenColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
+        await expect(this.hiddenColumnList).toHaveCount(0, { timeout: ProjectPage.TIMEOUT_DEFAULT });
         await expect(this.visibleColumnList.first()).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
         await this.page.waitForTimeout(1000);
         await this.closeOverlay();
@@ -3558,7 +3558,7 @@ export class ProjectActions {
         await this.page.waitForTimeout(500);
         await this.reorderExpandCollapseArrow.click();
         await this.page.waitForTimeout(500);
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
         await this.closeOverlay();
     }
 
@@ -3575,9 +3575,9 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         const checkbox = this.rowCheckbox(firstRow);
-        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(checkbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         await checkbox.click();
         await this.page.waitForTimeout(500);
         // Verify checkbox is selected
@@ -3594,14 +3594,14 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         const totalRows = await this.lotTableRows.count();
         expect(totalRows).toBeGreaterThanOrEqual(count);
         // Click checkboxes of first N rows
         for (let i = 0; i < count; i++) {
             const row = this.lotTableRows.nth(i);
             const checkbox = this.rowCheckbox(row);
-            await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+            await expect(checkbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
             await checkbox.click();
             await this.page.waitForTimeout(300);
         }
@@ -3626,9 +3626,9 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         // Click master checkbox
-        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.selectAllLotCheckbox.click();
         await this.page.waitForTimeout(800);
 
@@ -3644,7 +3644,7 @@ export class ProjectActions {
             expect(isSelected).toBeTruthy();
         }
         await this.page.waitForTimeout(800);
-        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.selectAllLotCheckbox.click();
         await this.page.waitForTimeout(800);
 
@@ -3657,13 +3657,13 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         // Select all lots first to ensure some are selected
-        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.selectAllLotCheckbox.click();
         await this.page.waitForTimeout(800);
         // Deselect all using master checkbox
-        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.selectAllLotCheckbox.click();
         await this.page.waitForTimeout(800);
         // Verify master checkbox is NOT selected
@@ -3685,16 +3685,16 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
-        await expect(this.bulkEditButton).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
+        await expect(this.bulkEditButton).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.rowCheckbox(firstRow).click();
         await this.page.waitForTimeout(500);
         // Verify Bulk Edit becomes visible
-        await expect(this.bulkEditButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bulkEditButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.page.waitForTimeout(500);
         await this.rowCheckbox(firstRow).click();
         await this.page.waitForTimeout(500);
-        await expect(this.bulkEditButton).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bulkEditButton).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     // Edit selected lots using Edit Bulk
@@ -3704,17 +3704,17 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         await firstCheckbox.click();
         await this.page.waitForTimeout(500);
-        await expect(this.bulkEditButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bulkEditButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.bulkEditButton.click();
-        await expect(this.saveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.saveAndCloseButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.saveAndCloseButton.click();
         await this.assertSuccessToast();
         await this.rowCheckbox(firstRow).click();
         await this.page.waitForTimeout(500);
-        await expect(this.bulkEditButton).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bulkEditButton).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     async verifySortLotsByStatus(): Promise<void> {
@@ -3723,10 +3723,10 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
-        await expect(this.statusColumnSortIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
+        await expect(this.statusColumnSortIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.statusColumnSortIcon.click();
-        await expect(this.statusColumnSortIconDesc).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.statusColumnSortIconDesc).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.assertLotsExist();
         await this.statusColumnSortIcon.click();
         await this.assertLotsExist();
@@ -3738,9 +3738,9 @@ export class ProjectActions {
         await this.openProjectDropdown();
         const optionsCount = await this.projectDropdownOptions.count();
         if (optionsCount === 0) {
-            await expect(this.noRecordFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+            await expect(this.noRecordFoundMessage).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         } else {
-            await expect(this.noRecordFoundMessage).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+            await expect(this.noRecordFoundMessage).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
             expect(optionsCount).toBeGreaterThan(0);
         }
         await this.closeDropdown();
@@ -3753,11 +3753,11 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         const checkbox = this.rowCheckbox(firstRow);
-        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(checkbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         await this.searchLot(invalidKeyword);
-        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clearLotSearch();
     }
 
@@ -3777,10 +3777,10 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         await this.openPriceRangeFilter();
         await this.setPriceRange(min, max);
-        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.openPriceRangeFilter();
         await this.resetFilters();
     }
@@ -3792,10 +3792,10 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         await this.openInternalAreaFilter();
         await this.setInternalArea(min, max);
-        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.openInternalAreaFilter();
         await this.resetFilters();
     }
@@ -3807,18 +3807,18 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
         const lotEditHeader = this.page.locator('.name-handle p');
-        await expect(lotEditHeader).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await expect(this.page.locator('a#pills-lot-tab.active')).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(lotEditHeader).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
+        await expect(this.page.locator('a#pills-lot-tab.active')).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const fieldsToCheck = ['Lot Price', 'Car Park Price', 'Storage Price', 'Total', 'Bed', 'Bath', 'Internal Area', 'Aspect', 'Orientation'];
         for (const fieldLabel of fieldsToCheck) {
             const fieldLabelLocator = this.page.locator('p.f-12.mb-2', { hasText: new RegExp(`^${fieldLabel}$`) }).first();
-            await expect(fieldLabelLocator).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+            await expect(fieldLabelLocator).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         }
-        await expect(this.saveAndCloseButton.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.saveAndCloseButton.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.saveAndCloseButton.click();
         await this.assertSuccessToast();
         await this.resetButton.click();
@@ -3831,15 +3831,15 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
         const lotEditHeader = this.page.locator('.name-handle p');
-        await expect(lotEditHeader).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await expect(this.popupCloseIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(lotEditHeader).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
+        await expect(this.popupCloseIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.popupCloseIcon.click();
         await this.page.waitForTimeout(800);
-        await expect(lotEditHeader).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(lotEditHeader).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     // TC — Share popup fails on empty selection
@@ -3848,13 +3848,13 @@ export class ProjectActions {
         await this.assertLotsExist();
         await this.resetButton.click();
         await this.defaultViewButton.click();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
-        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_MEDIUM });
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.shareViewIcon.click({ force: true });
-        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.shareButton.click({ force: true });
-        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
         await this.closeOverlay();
         await this.resetListView();
         await this.waitForFirstTableRow();
@@ -3866,13 +3866,13 @@ export class ProjectActions {
         await this.assertLotsExist();
         await this.resetButton.click();
         await this.defaultViewButton.click();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
-        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_MEDIUM });
+        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_LONG });
         await this.addViewIcon.click();
-        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.saveOrCreateButton.click({ force: true });
-        await expect(this.viewNameInputInvalid).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
+        await expect(this.viewNameInputInvalid).toBeVisible({ timeout: ProjectPage.TIMEOUT_SHORT });
         await this.closeOverlay();
         await this.resetListView();
         await this.waitForFirstTableRow();
@@ -3884,11 +3884,11 @@ export class ProjectActions {
         await this.assertLotsExist();
         await this.resetButton.click();
         await this.defaultViewButton.click();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
-        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_MEDIUM });
+        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.saveOrCreateButton.click({ force: true });
         const invalidToastMessage = this.page.getByRole('alert', { name: 'You cannot change the default view' });
-        await expect(invalidToastMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(invalidToastMessage).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.closeOverlay();
         await this.resetListView();
         await this.waitForFirstTableRow();
@@ -3902,7 +3902,7 @@ export class ProjectActions {
         await this.searchInProjectDropdown('adb');
         await this.selectProjectByName('adb');
         await this.closeDropdown();
-        await expect(this.selectedProjectTagByName('adb')).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName('adb')).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.resetFilters();
         await this.waitForFirstTableRow();
     }
@@ -3914,7 +3914,7 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         await this.openProjectDropdown();
         await this.searchInProjectDropdown(projectName);
         await this.selectProjectByName(projectName);
@@ -3936,15 +3936,15 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         await firstCheckbox.click();
         await this.page.waitForTimeout(500);
-        await expect(this.bulkEditButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bulkEditButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.bulkEditButton.click();
-        await expect(this.saveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.saveAndCloseButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.saveAndCloseButton.click();
         await this.assertSuccessToast();
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         await this.page.waitForTimeout(1000);
     }
 
@@ -3957,12 +3957,12 @@ export class ProjectActions {
         await this.searchInProjectDropdown(projectName);
         await this.selectProjectByName(projectName);
         await this.closeDropdown();
-        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.openProjectDropdown();
         await this.searchInProjectDropdown(projectName);
         await this.selectProjectByName(projectName);
         await this.closeDropdown();
-        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.resetFilters();
         await this.waitForFirstTableRow();
     }
@@ -3974,15 +3974,15 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
         const lotEditHeader = this.page.locator('.name-handle p');
-        await expect(lotEditHeader).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await expect(this.page.locator('a#pills-lot-tab.active')).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.page.locator('a#pills-history-tab')).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(lotEditHeader).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
+        await expect(this.page.locator('a#pills-lot-tab.active')).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.page.locator('a#pills-history-tab')).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const saveAndCloseBtn = this.saveAndCloseButton.first();
-        await expect(saveAndCloseBtn).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(saveAndCloseBtn).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await saveAndCloseBtn.click();
         await this.assertSuccessToast();
         await this.assertLotsExist();
@@ -3999,11 +3999,11 @@ export class ProjectActions {
         expect(expectedLotName.length).toBeGreaterThan(0);
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const actualLotName = await this.lotFormLotInput.inputValue();
         expect(actualLotName.trim()).toBe(expectedLotName);
         const saveAndCloseBtn = this.saveAndCloseButton.first();
-        await expect(saveAndCloseBtn).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(saveAndCloseBtn).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await saveAndCloseBtn.click();
         await this.assertSuccessToast();
         await this.assertLotsExist();
@@ -4017,14 +4017,14 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await expect(this.popupCloseIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
+        await expect(this.popupCloseIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.popupCloseIcon.click();
         await this.page.waitForTimeout(800);
-        await expect(this.lotFormLotInput).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormLotInput).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.assertLotsExist();
     }
 
@@ -4036,20 +4036,20 @@ export class ProjectActions {
         const firstRow = this.lotTableRows.first();
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await expect(this.lotFormPinIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
+        await expect(this.lotFormPinIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotFormPinIcon.click();
-        await expect(this.pinSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.lotFormHistoryTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.pinSuccessToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.lotFormHistoryTab).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotFormHistoryTab.click();
-        await expect(this.lotFormPinIconPinned).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormPinIconPinned).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotFormPinIcon.click();
-        await expect(this.pinDeleteSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.lotFormPinIconPinned).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.popupCloseIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.pinDeleteSuccessToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.lotFormPinIconPinned).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.popupCloseIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.popupCloseIcon.click();
         await this.page.waitForTimeout(800);
-        await expect(this.lotFormLotInput).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormLotInput).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.assertLotsExist();
     }
 
@@ -4065,14 +4065,14 @@ export class ProjectActions {
         expect(expectedLotName.length).toBeGreaterThan(0);
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormProjectValue).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormProjectValue).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const actualProjectName = (await this.lotFormProjectValue.innerText()).trim();
         expect(actualProjectName).toBe(expectedProjectName);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const actualLotName = await this.lotFormLotInput.inputValue();
         expect(actualLotName.trim()).toBe(expectedLotName);
         const saveAndCloseBtn = this.saveAndCloseButton.first();
-        await expect(saveAndCloseBtn).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(saveAndCloseBtn).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await saveAndCloseBtn.click();
         await this.assertSuccessToast();
         await this.assertLotsExist();
@@ -4086,9 +4086,9 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         await this.rowLotCell(firstRow).click();
-        await expect(this.lotFormApartmentDetailsTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormApartmentDetailsTab).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await expect(this.lotFormApartmentDetailsTab).toHaveClass(/active/);
-        await expect(this.lotFormHistoryTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormHistoryTab).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.closePopupIfVisible();
     }
 
@@ -4102,7 +4102,7 @@ export class ProjectActions {
         expect(expectedProjectName.length).toBeGreaterThan(0);
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormProjectValue).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormProjectValue).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const actualProjectName = (await this.lotFormProjectValue.innerText()).trim();
         expect(actualProjectName).toBe(expectedProjectName);
         await this.closePopupIfVisible();
@@ -4118,13 +4118,13 @@ export class ProjectActions {
         const originalLotName = (await this.rowLotCell(firstRow).innerText()).trim();
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.lotFormProjectArrow.click();
-        await expect(this.lotFormProjectDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormProjectDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotFormProjectSearchInput.fill(newProjectName);
         await this.page.waitForTimeout(800);
         const newOption = this.projectOptionInForm(newProjectName).first();
-        await expect(newOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(newOption).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await newOption.click();
         await this.page.waitForTimeout(800);
 
@@ -4135,7 +4135,7 @@ export class ProjectActions {
         await this.page.waitForTimeout(1500);
         await this.page.reload();
         await this.page.waitForTimeout(2000);
-        await expect(this.lotSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotSearchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.assertLotsExist();
         await this.searchLot(originalLotName);
         await this.assertLotsExist();
@@ -4158,7 +4158,7 @@ export class ProjectActions {
         expect(expectedLotName.length).toBeGreaterThan(0);
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1200);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         // Get lot name input value in the form
         const actualLotName = (await this.lotFormLotInput.inputValue()).trim();
         expect(actualLotName).toBe(expectedLotName);
@@ -4173,9 +4173,9 @@ export class ProjectActions {
         const firstRow = this.lotTableRows.first();
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.lotFormStatusReasonArrow.click();
-        await expect(this.lotFormStatusReasonDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormStatusReasonDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const totalOptions = await this.lotFormStatusReasonOptions.count();
         expect(totalOptions).toBeGreaterThanOrEqual(15);
         const expectedStatuses = [
@@ -4185,7 +4185,7 @@ export class ProjectActions {
         ];
         for (const status of expectedStatuses) {
             const option = this.statusReasonOptionInForm(status).first();
-            await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+            await expect(option).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         }
         await this.closePopupIfVisible();
     }
@@ -4199,7 +4199,7 @@ export class ProjectActions {
         const firstRow = this.lotTableRows.first();
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         // Fill optional fields
         await this.lotFormBedInput.fill('3');
         await this.page.waitForTimeout(300);
@@ -4221,7 +4221,7 @@ export class ProjectActions {
         const firstRow = this.lotTableRows.first();
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.lotFormLotInput.fill('Changed Lot Name');
         await this.page.waitForTimeout(500);
         expect(await this.lotFormLotInput.inputValue()).toBe('Changed Lot Name');
@@ -4236,7 +4236,7 @@ export class ProjectActions {
         const firstRow = this.lotTableRows.first();
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.lotFormBedInput.fill('4');
         await this.page.waitForTimeout(300);
         expect(await this.lotFormBedInput.inputValue()).toBe('4');
@@ -4247,10 +4247,10 @@ export class ProjectActions {
         await this.page.waitForTimeout(300);
         expect(await this.lotFormAspectInput.inputValue()).toBe('East');
         const saveButton = this.page.locator('button', { hasText: /^save$/i }).first();
-        await expect(saveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(saveButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await saveButton.click();
         await this.assertSuccessToast();
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         expect(await this.lotFormBedInput.inputValue()).toBe('4');
         expect(await this.lotFormBathInput.inputValue()).toBe('3');
         expect(await this.lotFormAspectInput.inputValue()).toBe('East');
@@ -4260,7 +4260,7 @@ export class ProjectActions {
         const updatedRow = this.lotTableRows.first();
         await this.rowLotCell(updatedRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         expect(await this.lotFormBedInput.inputValue()).toBe('4');
         expect(await this.lotFormBathInput.inputValue()).toBe('3');
         expect(await this.lotFormAspectInput.inputValue()).toBe('East');
@@ -4275,7 +4275,7 @@ export class ProjectActions {
         const firstRow = this.lotTableRows.first();
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.lotFormBedInput.fill('5');
         await this.page.waitForTimeout(300);
         expect(await this.lotFormBedInput.inputValue()).toBe('5');
@@ -4286,16 +4286,16 @@ export class ProjectActions {
         await this.page.waitForTimeout(300);
         expect(await this.lotFormAspectInput.inputValue()).toBe('West');
         const saveAndCloseBtn = this.saveAndCloseButton.first();
-        await expect(saveAndCloseBtn).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(saveAndCloseBtn).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await saveAndCloseBtn.click();
         await this.assertSuccessToast();
-        await expect(this.lotFormLotInput).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormLotInput).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.assertLotsExist();
         await this.resetButton.click();
         const updatedRow = this.lotTableRows.first();
         await this.rowLotCell(updatedRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         expect(await this.lotFormBedInput.inputValue()).toBe('5');
         expect(await this.lotFormBathInput.inputValue()).toBe('2');
         expect(await this.lotFormAspectInput.inputValue()).toBe('West');
@@ -4310,15 +4310,15 @@ export class ProjectActions {
         const firstRow = this.lotTableRows.first();
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await expect(this.lotFormHistoryTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
+        await expect(this.lotFormHistoryTab).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotFormHistoryTab.click();
         await this.page.waitForTimeout(1500);
         await expect(this.lotFormHistoryTab).toHaveClass(/active/);
-        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const rowCount = await this.historyTableRows.count();
         expect(rowCount).toBeGreaterThan(0);
-        await expect(this.historyRecordsCount).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.historyRecordsCount).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.closePopupIfVisible();
     }
 
@@ -4331,19 +4331,19 @@ export class ProjectActions {
         const firstRow = this.lotTableRows.first();
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
 
         // Open the History tab
         await this.lotFormHistoryTab.click();
         await this.page.waitForTimeout(1500);
-        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
 
         // Count initial rows
         const initialCount = await this.historyTableRows.count();
         expect(initialCount).toBeGreaterThan(0);
 
         // Search
-        await expect(this.historySearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.historySearchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.historySearchInput.fill(searchKeyword);
         await this.page.waitForTimeout(1500);
 
@@ -4369,12 +4369,12 @@ export class ProjectActions {
         const firstRow = this.lotTableRows.first();
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
 
         // Click History tab
         await this.lotFormHistoryTab.click();
         await this.page.waitForTimeout(1500);
-        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
 
         // Verify history rows exist
         const rowCount = await this.historyTableRows.count();
@@ -4397,12 +4397,12 @@ export class ProjectActions {
         const firstRow = this.lotTableRows.first();
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
 
         // Click History tab
         await this.lotFormHistoryTab.click();
         await this.page.waitForTimeout(1500);
-        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
 
         // Verify history rows exist
         const rowCount = await this.historyTableRows.count();
@@ -4424,12 +4424,12 @@ export class ProjectActions {
         const firstRow = this.lotTableRows.first();
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
 
         // Click History tab
         await this.lotFormHistoryTab.click();
         await this.page.waitForTimeout(1500);
-        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
 
         // Verify history rows exist
         const rowCount = await this.historyTableRows.count();
@@ -4453,12 +4453,12 @@ export class ProjectActions {
         const firstRow = this.lotTableRows.first();
         await this.rowLotCell(firstRow).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
 
         // Click History tab
         await this.lotFormHistoryTab.click();
         await this.page.waitForTimeout(1500);
-        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
 
         // Verify history rows exist
         const rowCount = await this.historyTableRows.count();
@@ -4481,12 +4481,12 @@ export class ProjectActions {
         // Open lot form
         await this.rowLotCell(this.lotTableRows.first()).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
 
         // Open History tab
         await this.lotFormHistoryTab.click();
         await this.page.waitForTimeout(1500);
-        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
 
         // Search in history
         await this.historySearchInput.fill(searchValue);
@@ -4519,10 +4519,10 @@ export class ProjectActions {
         await this.resetButton.click();
         await this.rowLotCell(this.lotTableRows.first()).click();
         await this.page.waitForTimeout(1500);
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.lotFormHistoryTab.click();
         await this.page.waitForTimeout(1500);
-        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const rowCount = await this.historyTableRows.count();
         expect(rowCount).toBeGreaterThan(0);
         let verified = false;
@@ -4555,10 +4555,10 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.page.waitForLoadState('networkidle');
         await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
         await this.firstPrecinctOnProjectsPage.click();
-        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.lotTabInPrecinct.click();
     }
 
@@ -4569,7 +4569,7 @@ export class ProjectActions {
         await this.resetButton.click();
         const firstRow = this.lotTableRows.first();
         const firstCheckbox = this.rowCheckbox(firstRow);
-        await expect(firstCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(firstCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         await this.resetButton.click();
         await this.page.waitForTimeout(2000);
     }
@@ -4614,7 +4614,7 @@ export class ProjectActions {
             const option = this.projectDropdownOptions.nth(i);
             const text = (await option.innerText()).trim().toLowerCase();
             if (text.includes(projectName.toLowerCase())) {
-                await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+                await expect(option).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
                 await option.click();
                 return;
             }
@@ -4633,17 +4633,17 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.page.waitForLoadState('networkidle');
         await expect(this.firstPrecinctOnProjectsPage).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_LONG,
+            timeout: ProjectPage.TIMEOUT_LONG,
         });
         const precinctName = (await this.firstPrecinctOnProjectsPage.locator('h3').first().innerText()).trim();
         await this.firstPrecinctOnProjectsPage.click();
         console.log(precinctName);
 
-        await expect(this.precinctNameUnderActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.precinctNameUnderActive).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const displayedName = (await this.precinctNameUnderActive.innerText()).trim();
         expect(displayedName.length).toBeGreaterThan(0);
 
-        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotTabInPrecinct).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotTabInPrecinct.click();
         await this.clickOnProjects();
         await this.page.waitForTimeout(1000);
@@ -4656,7 +4656,7 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.searchLot(keyword);
 
-        await expect(this.lotTable.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(this.lotTable.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_MEDIUM });
         expect(await this.lotTable.count()).toBeGreaterThan(0);
 
         await this.clickOnProjects();
@@ -4668,7 +4668,7 @@ export class ProjectActions {
     async searchNonExistingLot(keyword: string): Promise<void> {
         await this.navigateToLotTabInPrecinct();
         await this.searchLot(keyword);
-        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         await this.clickOnProjects();
     }
@@ -4681,7 +4681,7 @@ export class ProjectActions {
         await this.resetAndAssertLotRowVisible();
 
         await this.projectFilter.click();
-        await expect(this.projectDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.projectDropdownOptions.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
 
         await this.cleanupAfterLotTest();
     }
@@ -4737,7 +4737,7 @@ export class ProjectActions {
         await this.resetAndAssertLotRowVisible();
 
         await this.openProjectDropdown();
-        await expect(this.projectDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const totalOptions = await this.projectDropdownOptions.count();
         expect(totalOptions).toBeGreaterThan(0);
         await this.projectDropdownSelectAllCheckbox.click();
@@ -4751,7 +4751,7 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openProjectDropdown();
-        await expect(this.projectDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const totalOptions = await this.projectDropdownOptions.count();
         expect(totalOptions).toBeGreaterThan(0);
         await this.projectDropdownSelectAllCheckbox.click();
@@ -4771,10 +4771,10 @@ export class ProjectActions {
         await this.assertFirstOptionMatchesProject(projectName);
         await this.projectDropdownOptions.first().click();
         await this.closeDropdown();
-        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectTagCrossIcon(projectName).click();
         await this.page.waitForTimeout(800);
-        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 
@@ -4785,7 +4785,7 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openBedDropdown();
-        await expect(this.bedDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.bedDropdownOptions.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const optionsCount = await this.bedDropdownOptions.count();
         expect(optionsCount).toBeGreaterThan(0);
         await this.cleanupAfterLotTest();
@@ -4798,8 +4798,8 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openBedDropdown();
-        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.bedDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownSearchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.bedDropdownSearchInput.fill(bedValue);
         await this.selectBedByValue(bedValue);
         await this.bedDropdownSearchInput.fill('');
@@ -4814,10 +4814,10 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openBedDropdown();
-        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.selectBedByValue(bedValue);
         await this.closeDropdown();
-        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 
@@ -4828,14 +4828,14 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openBedDropdown();
-        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         for (const bedValue of bedValues) {
             await this.selectBedByValue(bedValue);
             await this.page.waitForTimeout(500);
         }
         await this.closeDropdown();
         for (const bedValue of bedValues) {
-            await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+            await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         }
         await this.cleanupAfterLotTest();
     }
@@ -4847,7 +4847,7 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openBedDropdown();
-        await expect(this.bedDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const totalOptions = await this.bedDropdownOptions.count();
         expect(totalOptions).toBeGreaterThan(0);
         await this.bedDropdownSelectAllCheckbox.click();
@@ -4862,7 +4862,7 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openBedDropdown();
-        await expect(this.bedDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.bedDropdownSelectAllCheckbox.click();
         await this.page.waitForTimeout(500);
         await this.bedDropdownSelectAllCheckbox.click();
@@ -4877,13 +4877,13 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openBedDropdown();
-        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.selectBedByValue(bedValue);
         await this.closeDropdown();
-        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.bedTagCrossIcon(bedValue).click();
         await this.page.waitForTimeout(800);
-        await expect(this.selectedBedTagByValue(bedValue)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 
@@ -4894,7 +4894,7 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openStatusDropdown();
-        await expect(this.statusDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.statusDropdownOptions.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const optionsCount = await this.statusDropdownOptions.count();
         expect(optionsCount).toBeGreaterThan(0);
         await this.cleanupAfterLotTest();
@@ -4907,12 +4907,12 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openStatusDropdown();
-        await expect(this.statusDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.statusDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.statusDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.statusDropdownSearchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.statusDropdownSearchInput.fill(statusName);
         await this.page.waitForTimeout(500);
         const matchingOption = this.statusDropdownOptions.filter({ hasText: statusName }).first();
-        await expect(matchingOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(matchingOption).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.statusDropdownSearchInput.fill('');
         await this.cleanupAfterLotTest();
     }
@@ -4984,7 +4984,7 @@ export class ProjectActions {
         await this.searchInStatusDropdown(statusValue);
         await this.selectStatusByValue(statusValue);
         await this.closeDropdown();
-        await expect(this.selectedStatusTagByValue(statusValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedStatusTagByValue(statusValue)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.statusTagCrossIcon(statusValue).click();
         await this.cleanupAfterLotTest();
     }
@@ -4996,9 +4996,9 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openStatusDropdown();
-        await expect(this.statusDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.statusDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.closeDropdown();
-        await expect(this.statusDropdownPanel).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.statusDropdownPanel).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 
@@ -5032,7 +5032,7 @@ export class ProjectActions {
         await this.resetAndAssertLotRowVisible();
         await this.openPriceRangeFilter();
         await this.setPriceRange(min, max);
-        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 
@@ -5066,7 +5066,7 @@ export class ProjectActions {
         await this.resetAndAssertLotRowVisible();
         await this.openInternalAreaFilter();
         await this.setInternalArea(min, max);
-        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 
@@ -5080,10 +5080,10 @@ export class ProjectActions {
         await this.assertFirstOptionMatchesProject(projectName);
         await this.projectDropdownOptions.first().click();
         await this.closeDropdown();
-        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.resetButton.click();
         await this.page.waitForTimeout(1000);
-        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.assertLotsExist();
         await this.cleanupAfterLotTest();
     }
@@ -5106,7 +5106,7 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.defaultViewButton.click();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 
@@ -5117,14 +5117,14 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openDefaultViewPopup();
-        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_LONG });
         await this.addViewIcon.click();
-        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.viewNameInput.click();
         await this.viewNameInput.fill(viewName);
-        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.saveOrCreateButton.click({ force: true });
-        await expect(this.viewCreatedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewCreatedToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.resetToDefaultView();
         await this.cleanupAfterLotTest();
     }
@@ -5139,14 +5139,14 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openDefaultViewPopup();
-        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.shareViewIcon.click({ force: true });
         await this.selectShareTarget(this.usersShareDropdown, this.usersShareDropdownArrow, userName);
         await this.selectShareTarget(this.teamsShareDropdown, this.teamsShareDropdownArrow, teamName);
-        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.shareButton.click({ force: true });
-        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
         await this.cleanupAfterLotTest();
     }
 
@@ -5157,21 +5157,21 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openDefaultViewPopup();
-        await expect(this.savedViewDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.savedViewDropdown).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.savedViewDropdown.click();
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
         const viewOption = this.savedViewOption(viewName);
-        await expect(viewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(viewOption).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const deleteIcon = viewOption.locator('img[src*="delete_icon.svg"]');
-        await expect(deleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(deleteIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await deleteIcon.click();
         try {
-            await expect(this.confirmAnyButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
+            await expect(this.confirmAnyButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_SHORT });
             await this.confirmAnyButton.click();
         } catch {
             // Confirmation dialog may not appear in some flows
         }
-        await expect(this.viewDeletedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewDeletedToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 
@@ -5182,11 +5182,11 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openDefaultViewPopup();
-        await expect(this.columnSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.columnSearchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.columnSearchInput.fill(searchTerm);
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
         await expect(this.columnItemByName(searchTerm).first()).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
         await this.columnSearchInput.fill('');
         await this.page.waitForTimeout(1000);
@@ -5197,23 +5197,23 @@ export class ProjectActions {
  * HELPER — Click 'Hide All' button and verify Shown list is empty
  */
     private async clickHideAll(): Promise<void> {
-        await expect(this.hideAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.hideAllButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.hideAllButton.click();
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
-        await expect(this.visibleColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
+        await expect(this.visibleColumnList).toHaveCount(0, { timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
      * HELPER — Click 'Show All' button and verify Hidden list is empty
      */
     private async clickShowAll(): Promise<void> {
-        await expect(this.showAllButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.showAllButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.showAllButton.evaluate(button => button.scrollIntoView({ behavior: 'instant', block: 'center' }));
         await this.page.waitForTimeout(1300);
         await this.showAllButton.click();
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
-        await expect(this.hiddenColumnList).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.visibleColumnList.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
+        await expect(this.hiddenColumnList).toHaveCount(0, { timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.visibleColumnList.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -5265,7 +5265,7 @@ export class ProjectActions {
         await this.page.waitForTimeout(500);
         await this.reorderExpandCollapseArrow.click();
         await this.page.waitForTimeout(500);
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
         await this.cleanupAfterLotTest();
     }
 
@@ -5321,7 +5321,7 @@ export class ProjectActions {
      * HELPER — Verify table column order matches expected names
      */
     private async assertTableColumnOrder(): Promise<void> {
-        await expect(this.tableColumnHeaderByIndex(0)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.tableColumnHeaderByIndex(0)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -5353,7 +5353,7 @@ export class ProjectActions {
  */
     private async toggleRowCheckboxAndVerify(row: Locator, expectSelected: boolean): Promise<void> {
         const checkbox = this.rowCheckbox(row);
-        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(checkbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         await checkbox.click();
         await this.page.waitForTimeout(500);
         const isSelected = await this.isRowCheckboxSelected(row);
@@ -5392,7 +5392,7 @@ export class ProjectActions {
     async selectAllLotsUsingMasterCheckbox(): Promise<void> {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
-        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_EXTRA_LONG });
+        await expect(this.selectAllLotCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_EXTRA_LONG });
         await this.selectAllLotCheckbox.click();
         await this.cleanupAfterLotTest();
     }
@@ -5413,7 +5413,7 @@ export class ProjectActions {
      * HELPER — Open Bulk Edit dialog (assumes lots are already selected)
      */
     private async openBulkEditDialog(): Promise<void> {
-        await expect(this.bulkEditButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bulkEditButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.bulkEditButton.click();
     }
 
@@ -5421,7 +5421,7 @@ export class ProjectActions {
      * HELPER — Save & Close Bulk Edit and verify success toast
      */
     private async saveAndCloseBulkEdit(): Promise<void> {
-        await expect(this.saveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.saveAndCloseButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.saveAndCloseButton.click();
         await this.assertSuccessToast();
     }
@@ -5446,9 +5446,9 @@ export class ProjectActions {
     async sortLotsByStatus(): Promise<void> {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
-        await expect(this.projectColumnSortIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectColumnSortIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectColumnSortIcon.click();
-        await expect(this.projectColumnSortIconDesc).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectColumnSortIconDesc).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 
@@ -5458,11 +5458,11 @@ export class ProjectActions {
     async toggleStatusSorting(): Promise<void> {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
-        await expect(this.projectColumnSortIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectColumnSortIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectColumnSortIcon.click();
-        await expect(this.projectColumnSortIconDesc).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectColumnSortIconDesc).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectColumnSortIconDesc.click();
-        await expect(this.projectColumnSortIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectColumnSortIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 
@@ -5491,9 +5491,9 @@ export class ProjectActions {
         await this.closeDropdown();
 
         // Verify all selected tags are visible
-        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.selectedStatusTagByValue(statusName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.selectedStatusTagByValue(statusName)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         await this.cleanupAfterLotTest();
     }
@@ -5517,16 +5517,16 @@ export class ProjectActions {
         await this.closeDropdown();
 
         // Verify both tags visible
-        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         // Remove only the Project tag
         await this.projectTagCrossIcon(projectName).click();
         await this.page.waitForTimeout(800);
 
         // Verify Project tag is removed but Bed tag remains
-        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         await this.cleanupAfterLotTest();
     }
@@ -5543,11 +5543,11 @@ export class ProjectActions {
         await this.assertFirstOptionMatchesProject(projectName);
         await this.projectDropdownOptions.first().click();
         await this.closeDropdown();
-        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.openProjectDropdown();
         await this.page.waitForTimeout(800);
         const selectedOption = this.projectDropdownOptions.filter({ hasText: projectName }).first();
-        await expect(selectedOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(selectedOption).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const isChecked = await selectedOption.locator('.p-checkbox-box.p-highlight, input[type="checkbox"]:checked').count();
         expect(isChecked).toBeGreaterThan(0);
         await this.closeDropdown();
@@ -5563,12 +5563,12 @@ export class ProjectActions {
         await this.openBedDropdown();
         await this.selectBedByValue(bedValue);
         await this.closeDropdown();
-        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.openProjectDropdown();
         await this.page.waitForTimeout(800);
-        await expect(this.projectDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDropdownOptions.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.closeDropdown();
-        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 
@@ -5581,11 +5581,11 @@ export class ProjectActions {
         await this.openProjectDropdownAndSearch(projectName);
         await this.projectDropdownOptions.first().click();
         await this.closeDropdown();
-        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.openProjectDropdownAndSearch(projectName);
         await this.projectDropdownOptions.first().click();
         await this.closeDropdown();
-        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 
@@ -5598,11 +5598,11 @@ export class ProjectActions {
         await this.openProjectDropdownAndSearch(projectName);
         await this.projectDropdownOptions.first().click();
         await this.closeDropdown();
-        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.openProjectDropdownAndSearch(projectName);
         await this.projectDropdownOptions.first().click();
         await this.closeDropdown();
-        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
     /**
@@ -5642,10 +5642,10 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openDefaultViewPopup();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.page.mouse.click(0, 0);
         await this.page.waitForTimeout(800);
-        await expect(this.viewPopupContent).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewPopupContent).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 
@@ -5656,8 +5656,8 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openDefaultViewPopup();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.saveOrCreateButton.click();
         await this.cleanupAfterLotTest();
     }
@@ -5669,10 +5669,10 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openDefaultViewPopup();
-        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.shareViewIcon.click({ force: true });
         await this.selectShareTarget(this.usersShareDropdown, this.usersShareDropdownArrow, userName);
-        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.shareButton.click({ force: true });
         await this.page.waitForTimeout(1000);
         const responseVisible = await this.shareResponseMessage().isVisible().catch(() => false);
@@ -5688,7 +5688,7 @@ export class ProjectActions {
         await this.resetAndAssertLotRowVisible();
         await this.openDefaultViewPopup();
         await this.reorderExpandCollapseArrow.click();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 
@@ -5708,7 +5708,7 @@ export class ProjectActions {
         await this.searchInStatusDropdown(statusName);
         await this.selectStatusByValue(statusName);
         await this.closeDropdown();
-        await expect(this.lotTableRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotTableRows.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.cleanupAfterLotTest();
     }
 
@@ -5721,8 +5721,8 @@ export class ProjectActions {
         await this.openProjectDropdownAndSearch(projectName);
         await this.projectDropdownOptions.first().click();
         await this.closeDropdown();
-        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.eoiTabInPrecinct).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.eoiTabInPrecinct).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.eoiTabInPrecinct.click();
         await this.page.waitForTimeout(1500);
         await this.lotTabInPrecinct.click();
@@ -5782,12 +5782,12 @@ export class ProjectActions {
         await this.navigateToLotTabInPrecinct();
         await this.resetAndAssertLotRowVisible();
         await this.openBedDropdown();
-        await expect(this.bedDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownOptions.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.closeDropdown();
         await this.page.waitForTimeout(500);
         await this.openProjectDropdown();
-        await expect(this.projectDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.bedDropdownOptions.first()).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDropdownOptions.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.bedDropdownOptions.first()).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.closeDropdown();
         await this.cleanupAfterLotTest();
     }
@@ -5801,13 +5801,13 @@ export class ProjectActions {
         await this.openProjectDropdownAndSearch(projectName);
         await this.projectDropdownOptions.first().click();
         await this.closeDropdown();
-        await expect(this.projectColumnSortIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectColumnSortIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectColumnSortIcon.click();
-        await expect(this.projectColumnSortIconDesc).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectColumnSortIconDesc).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.openBedDropdown();
         await this.selectBedByValue(bedValue);
         await this.closeDropdown();
-        await expect(this.projectColumnSortIconDesc).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectColumnSortIconDesc).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 
@@ -5821,8 +5821,8 @@ export class ProjectActions {
         await this.assertFirstOptionMatchesProject(projectName);
         await this.projectDropdownOptions.first().click();
         await this.closeDropdown();
-        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.noLotFoundMessage).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 
@@ -5838,11 +5838,11 @@ export class ProjectActions {
         await this.openBedDropdown();
         await this.selectBedByValue(bedValue);
         await this.closeDropdown();
-        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.resetButton.click();
-        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.selectedBedTagByValue(bedValue)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.selectedProjectTagByName(projectName)).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.selectedBedTagByValue(bedValue)).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterLotTest();
     }
 
@@ -6434,7 +6434,7 @@ export class ProjectActions {
                 await this.page.waitForTimeout(600);
                 const suggestion = this.displayAddressSuburbSuggestionByLabel(data.suburb);
                 try {
-                    await expect(suggestion).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+                    await expect(suggestion).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
                     await suggestion.click();
                 } catch {
                     await this.displayAddressSuburbAutocomplete.press('Enter');
@@ -6450,7 +6450,7 @@ export class ProjectActions {
      * HELPER — Click Save button inside Display Address popup
      */
     private async clickDisplayAddressPopupSave(): Promise<void> {
-        await expect(this.displayAddressPopupSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.displayAddressPopupSaveButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.displayAddressPopupSaveButton.click();
         await this.page.waitForTimeout(1500);
     }
@@ -6482,9 +6482,9 @@ export class ProjectActions {
     private async navigateToProjectPricelist(): Promise<void> {
         const currentUrl = this.page.url().split(/[?#]/)[0];
         if (!currentUrl.includes('/price-list')) {
-            await this.page.goto(ProjectActions.PROJECT_PRICELIST_URL);
+            await this.page.goto(ProjectPage.PROJECT_PRICELIST_URL);
         }
-        await expect(this.pricelistContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.pricelistContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     /**
@@ -6493,18 +6493,18 @@ export class ProjectActions {
     private async navigateToProjectSetup(): Promise<void> {
         const currentUrl = this.page.url().split(/[?#]/)[0];
         if (!currentUrl.includes('/project-setup')) {
-            await this.page.goto(ProjectActions.PROJECT_SETUP_URL);
+            await this.page.goto(ProjectPage.PROJECT_SETUP_URL);
         }
-        await expect(this.projectSetupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.projectSetupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     /**
      * HELPER — Click a project card from the "Project" section by name
      */
     private async clickProjectCardInProjectSection(projectName: string): Promise<void> {
-        await expect(this.projectsSectionHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.projectsSectionHeading).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const projectCard = this.projectCardClickTarget(projectName);
-        await expect(projectCard).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(projectCard).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await projectCard.scrollIntoViewIfNeeded();
         await projectCard.click();
         await this.page.waitForTimeout(1500);
@@ -6514,7 +6514,7 @@ export class ProjectActions {
      * HELPER — Click Project Setup tab
      */
     private async clickProjectSetupTab(): Promise<void> {
-        await expect(this.projectSetupTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.projectSetupTab).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.projectSetupTab.click();
         await this.page.waitForTimeout(1000);
     }
@@ -6523,28 +6523,28 @@ export class ProjectActions {
      * HELPER — Verify Pricelist tab is active and content loaded
      */
     private async assertPricelistTabActive(): Promise<void> {
-        await expect(this.page).toHaveURL(/\/price-list/, { timeout: ProjectActions.TIMEOUT_LONG });
-        await expect(this.pricelistTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await expect(this.pricelistTabActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.pricelistContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.page).toHaveURL(/\/price-list/, { timeout: ProjectPage.TIMEOUT_LONG });
+        await expect(this.pricelistTab).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
+        await expect(this.pricelistTabActive).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.pricelistContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     private async cleanupAfterProjectTest(): Promise<void> {
-        await expect(this.projectsBreadcrumb).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectsBreadcrumb).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectsBreadcrumb.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'auto' }));
         await this.page.waitForTimeout(800);
         await this.projectsBreadcrumb.click();
         await this.page.waitForTimeout(800);
-        await expect(this.projectsSectionHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.projectsSectionHeading).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     /**
      * HELPER — Open Project Address popup
      */
     private async openProjectAddressPopup(): Promise<void> {
-        await expect(this.projectAddressIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectAddressIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectAddressIcon.click();
-        await expect(this.projectAddressPopup).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectAddressPopup).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -6552,7 +6552,7 @@ export class ProjectActions {
      */
     private async closeProjectAddressPopup(): Promise<void> {
         await this.projectAddressPopupCloseIcon.click();
-        await expect(this.projectAddressPopup).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectAddressPopup).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -6569,9 +6569,9 @@ export class ProjectActions {
      * HELPER — Open Project Display Address popup
      */
     private async openProjectDisplayAddressPopup(): Promise<void> {
-        await expect(this.projectDisplayAddressIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDisplayAddressIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectDisplayAddressIcon.click();
-        await expect(this.projectDisplayAddressPopup).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDisplayAddressPopup).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -6579,7 +6579,7 @@ export class ProjectActions {
      */
     private async closeProjectDisplayAddressPopup(): Promise<void> {
         await this.projectDisplayAddressPopupCloseIcon.click();
-        await expect(this.projectDisplayAddressPopup).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDisplayAddressPopup).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     private async openGeneralTab(): Promise<void> {
@@ -6587,8 +6587,8 @@ export class ProjectActions {
         if (!currentUrl.includes('/project-setup')) {
             await this.clickProjectSetupTab();
         }
-        await expect(this.generalSubTabActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await expect(this.generalSettingContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.generalSubTabActive).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
+        await expect(this.generalSettingContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     /**
@@ -6624,12 +6624,12 @@ export class ProjectActions {
      * HELPER — Verify a form field's label and input are both visible
      */
     private async assertFieldVisible(label: Locator, input: Locator): Promise<void> {
-        await expect(label).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(input).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(label).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(input).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     private async typeAddressAndAssertSuggestions(input: Locator, query: string): Promise<void> {
-        await expect(input).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(input).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await input.click();
         await input.press('Control+A');
         await input.press('Delete');
@@ -6637,7 +6637,7 @@ export class ProjectActions {
         await input.pressSequentially(query, { delay: 300 });
         await this.page.waitForTimeout(1500);
         const firstSuggestion = this.page.locator('.pac-container:visible .pac-item').first();
-        await firstSuggestion.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        await firstSuggestion.waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_LONG });
         const suggestionCount = await this.googlePlacesSuggestions.count();
         expect(suggestionCount).toBeGreaterThan(0);
     }
@@ -6667,7 +6667,7 @@ export class ProjectActions {
      * HELPER — Click the first Google Places suggestion and verify input is filled
      */
     private async selectFirstAddressSuggestion(input: Locator): Promise<string> {
-        await expect(this.googlePlacesSuggestions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.googlePlacesSuggestions.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.googlePlacesSuggestions.first().click();
         await this.page.waitForTimeout(800);
         const filledValue = await input.inputValue();
@@ -6679,14 +6679,14 @@ export class ProjectActions {
      * HELPER — Click General tab Save button (bottom)
      */
     private async clickGeneralTabSave(): Promise<void> {
-        await expect(this.generalTabSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.generalTabSaveButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.generalTabSaveButton.click();
         await this.page.waitForTimeout(1500);
     }
 
     private async assertProjectUpdatedToast(): Promise<void> {
         const toast = this.page.locator('div[aria-label="Project updated successfully"]', { hasText: /Project updated successfully/i }).first();
-        await expect(toast).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(toast).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.page.waitForTimeout(500);
     }
 
@@ -6797,10 +6797,10 @@ export class ProjectActions {
     }
 
     private async openDisplayAddressPopup(): Promise<void> {
-        await expect(this.projectDisplayAddressPencilIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDisplayAddressPencilIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectDisplayAddressPencilIcon.click();
         await this.page.waitForTimeout(800);
-        await expect(this.displayAddressPopupHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.displayAddressPopupHeading).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     private async closeDisplayAddressPopup(): Promise<void> {
@@ -6814,9 +6814,9 @@ export class ProjectActions {
     async verifyProjectDisplayAddressPopupOpens(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectGeneralTab(projectName);
         await this.openDisplayAddressPopup();
-        await expect(this.displayAddressPopupHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.displayAddressBuildingNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.displayAddressPopupSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.displayAddressPopupHeading).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.displayAddressBuildingNameInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.displayAddressPopupSaveButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.closeDisplayAddressPopup();
         await this.cleanupAfterProjectTest();
     }
@@ -6901,10 +6901,10 @@ export class ProjectActions {
  * HELPER — Close Display Address popup via the cross icon
  */
     private async closeDisplayAddressPopupViaCross(): Promise<void> {
-        await expect(this.displayAddressPopupCloseIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.displayAddressPopupCloseIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.displayAddressPopupCloseIcon.click();
         await this.page.waitForTimeout(500);
-        await expect(this.displayAddressPopupHeading).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.displayAddressPopupHeading).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -6928,11 +6928,11 @@ export class ProjectActions {
         const isOpen = await this.developerDropdownPanel.isVisible().catch(() => false);
         if (isOpen) return;
 
-        await expect(this.developerDropdownArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.developerDropdownArrow).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.developerDropdownArrow.scrollIntoViewIfNeeded();
         await this.developerDropdownArrow.click();
         await this.page.waitForTimeout(500);
-        await expect(this.developerDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.developerDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -6941,7 +6941,7 @@ export class ProjectActions {
     private async closeDeveloperDropdown(): Promise<void> {
         await this.page.mouse.click(10, 10);
         await this.page.waitForTimeout(500);
-        await expect(this.developerDropdownPanel).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.developerDropdownPanel).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -6949,7 +6949,7 @@ export class ProjectActions {
      */
     private async toggleDeveloperSelection(developerName: string): Promise<void> {
         const developerItem = this.developerDropdownItemByText(developerName);
-        await expect(developerItem).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(developerItem).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await developerItem.click();
         await this.page.waitForTimeout(500);
     }
@@ -6959,7 +6959,7 @@ export class ProjectActions {
      */
     private async assertDeveloperSelected(developerName: string): Promise<void> {
         await expect(this.developerSelectedChipByName(developerName)).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
     }
 
@@ -6969,7 +6969,7 @@ export class ProjectActions {
     private async assertDeveloperPlaceholderVisible(): Promise<void> {
         const chipCount = await this.developerSelectedChips.count();
         expect(chipCount).toBe(0);
-        await expect(this.developerPlaceholder).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.developerPlaceholder).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -6978,8 +6978,8 @@ export class ProjectActions {
     async verifyDeveloperDropdownShowsContacts(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectGeneralTab(projectName);
         await this.openDeveloperDropdown();
-        await expect(this.developerDropdownSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.developerDropdownCreateNew).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.developerDropdownSearchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.developerDropdownCreateNew).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.closeDeveloperDropdown();
         await this.cleanupAfterProjectTest();
     }
@@ -7007,7 +7007,7 @@ export class ProjectActions {
         await this.projectManagersDropdown.scrollIntoViewIfNeeded();
         await this.projectManagersDropdown.click();
         await this.page.waitForTimeout(500);
-        await expect(this.projectManagerDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectManagerDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -7016,7 +7016,7 @@ export class ProjectActions {
     private async closeProjectManagerDropdown(): Promise<void> {
         await this.page.mouse.click(10, 10);
         await this.page.waitForTimeout(500);
-        await expect(this.projectManagerDropdownPanel).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectManagerDropdownPanel).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -7025,14 +7025,14 @@ export class ProjectActions {
     async verifyProjectManagerDropdownShowsAllStaff(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectGeneralTab(projectName);
         await this.openProjectsManagerDropdown();
-        await expect(this.projectManagerDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.projectManagerDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.closeProjectManagerDropdown();
         await this.cleanupAfterProjectTest();
     }
 
     private async assertLabelNotRequired(labelText: string): Promise<void> {
         const label = this.generalTabLabelByText(labelText);
-        await expect(label).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(label).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const text = await label.textContent();
         expect(text?.trim()).toBe(labelText);
         expect(text).not.toContain('*');
@@ -7066,7 +7066,7 @@ export class ProjectActions {
      */
     private async scrollToFloorplanSection(): Promise<void> {
         await this.floorplanSectionHeading.scrollIntoViewIfNeeded();
-        await expect(this.floorplanSectionHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.floorplanSectionHeading).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.page.waitForTimeout(300);
     }
 
@@ -7074,7 +7074,7 @@ export class ProjectActions {
      * HELPER — Click the Floorplan toggle arrow
      */
     private async clickFloorplanToggleArrow(): Promise<void> {
-        await expect(this.floorplanToggleArrowDown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.floorplanToggleArrowDown).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.floorplanToggleArrowDown.scrollIntoViewIfNeeded();
         await this.page.waitForTimeout(800);
         await this.floorplanToggleArrowDown.click();
@@ -7094,7 +7094,7 @@ export class ProjectActions {
      * HELPER — Click plus icon to add a new floorplan row
      */
     private async clickFloorplanPlusIcon(): Promise<void> {
-        await expect(this.floorplanPlusIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.floorplanPlusIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.floorplanPlusIcon.scrollIntoViewIfNeeded();
         await this.floorplanPlusIcon.click();
         await this.page.waitForTimeout(500);
@@ -7112,17 +7112,17 @@ export class ProjectActions {
      */
     private async checkFloorplanRowAndWaitForDelete(rowIndex: number): Promise<void> {
         const checkbox = this.floorplanRowCheckbox(rowIndex);
-        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(checkbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await checkbox.scrollIntoViewIfNeeded();
         await checkbox.click();
-        await expect(this.floorplanHeaderDeleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.floorplanHeaderDeleteIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
      * HELPER — Click header bulk delete icon (no confirmation popup)
      */
     private async clickFloorplanHeaderDelete(): Promise<void> {
-        await expect(this.floorplanHeaderDeleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.floorplanHeaderDeleteIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.floorplanHeaderDeleteIcon.click();
         await this.page.waitForTimeout(800);
     }
@@ -7147,10 +7147,10 @@ export class ProjectActions {
 
 
     private async toggleFloorplanHeaderCheckboxAndWaitForDelete(): Promise<void> {
-        await expect(this.floorplanHeaderCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.floorplanHeaderCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.floorplanHeaderCheckbox.scrollIntoViewIfNeeded();
         await this.floorplanHeaderCheckbox.click();
-        await expect(this.floorplanHeaderDeleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.floorplanHeaderDeleteIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -7175,7 +7175,7 @@ export class ProjectActions {
  * HELPER — Click the Type column header to sort
  */
     private async clickFloorplanTypeColumnSort(): Promise<void> {
-        await expect(this.floorplanTypeColumnHeader).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.floorplanTypeColumnHeader).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.floorplanTypeColumnHeader.scrollIntoViewIfNeeded();
         await this.floorplanTypeColumnHeader.click();
         await this.page.waitForTimeout(500);
@@ -7184,7 +7184,7 @@ export class ProjectActions {
 
     private async assertFloorplanTypeColumnSortState(expectedState: 'none' | 'ascending' | 'descending'): Promise<void> {
         await expect(this.floorplanTypeColumnHeader).toHaveAttribute('aria-sort', expectedState, {
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
     }
 
@@ -7215,7 +7215,7 @@ export class ProjectActions {
      */
     private async scrollToProjectUpgradesSection(): Promise<void> {
         await this.projectUpgradesHeading.scrollIntoViewIfNeeded();
-        await expect(this.projectUpgradesHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectUpgradesHeading).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.page.waitForTimeout(300);
     }
 
@@ -7246,15 +7246,15 @@ export class ProjectActions {
      * HELPER — Assert upgrade box has expected values
      */
     private async assertUpgradeBoxValues(boxIndex: number, groupName: string, upgradeName: string, cost: string): Promise<void> {
-        await expect(this.upgradeGroupInput(boxIndex)).toHaveValue(groupName, { timeout: ProjectActions.TIMEOUT_LONG });
-        await expect(this.upgradeInput(boxIndex)).toHaveValue(upgradeName, { timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.upgradeGroupInput(boxIndex)).toHaveValue(groupName, { timeout: ProjectPage.TIMEOUT_LONG });
+        await expect(this.upgradeInput(boxIndex)).toHaveValue(upgradeName, { timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     /**
      * HELPER — Click remove (cross) icon on an upgrade box
      */
     private async removeUpgradeBox(boxIndex: number): Promise<void> {
-        await expect(this.upgradeBoxRemoveIcon(boxIndex)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.upgradeBoxRemoveIcon(boxIndex)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.upgradeBoxRemoveIcon(boxIndex).scrollIntoViewIfNeeded();
         await this.upgradeBoxRemoveIcon(boxIndex).click();
         await this.page.waitForTimeout(500);
@@ -7290,7 +7290,7 @@ export class ProjectActions {
     }
 
     private async clickAddAdditionalUpgradeGroup(): Promise<void> {
-        await expect(this.addAdditionalUpgradeGroupButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.addAdditionalUpgradeGroupButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.addAdditionalUpgradeGroupButton.scrollIntoViewIfNeeded();
         await this.addAdditionalUpgradeGroupButton.click();
         await this.page.waitForTimeout(500);
@@ -7339,7 +7339,7 @@ export class ProjectActions {
  * HELPER — Click "Add Upgrade" button within a specific upgrade box
  */
     private async clickAddUpgrade(boxIndex: number): Promise<void> {
-        await expect(this.addUpgradeButton(boxIndex)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.addUpgradeButton(boxIndex)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.addUpgradeButton(boxIndex).scrollIntoViewIfNeeded();
         await this.addUpgradeButton(boxIndex).click();
         await this.page.waitForTimeout(500);
@@ -7369,7 +7369,7 @@ export class ProjectActions {
      * HELPER — Assert upgrade row has expected values
      */
     private async assertUpgradeRowValues(boxIndex: number, rowIndex: number, upgradeName: string, cost: string): Promise<void> {
-        await expect(this.upgradeRowInput(boxIndex, rowIndex)).toHaveValue(upgradeName, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.upgradeRowInput(boxIndex, rowIndex)).toHaveValue(upgradeName, { timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         const actualCost = await this.upgradeRowCostInput(boxIndex, rowIndex).inputValue();
         const cleanCost = actualCost.replace(/[$,]/g, '').trim();
@@ -7380,7 +7380,7 @@ export class ProjectActions {
      * HELPER — Click cross icon to remove an upgrade row
      */
     private async removeUpgradeRow(boxIndex: number, rowIndex: number): Promise<void> {
-        await expect(this.upgradeRowRemoveIcon(boxIndex, rowIndex)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.upgradeRowRemoveIcon(boxIndex, rowIndex)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.upgradeRowRemoveIcon(boxIndex, rowIndex).click();
         await this.page.waitForTimeout(500);
     }
@@ -7445,7 +7445,7 @@ export class ProjectActions {
      */
     private async scrollToBonusPayableUpon(): Promise<void> {
         await this.bonusPayableUponLabel.scrollIntoViewIfNeeded();
-        await expect(this.bonusPayableUponLabel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusPayableUponLabel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.page.waitForTimeout(300);
     }
 
@@ -7453,7 +7453,7 @@ export class ProjectActions {
      * HELPER — Type text in Bonus Payable Upon input and press Enter
      */
     private async addBonusPayableUponTag(tagText: string): Promise<void> {
-        await expect(this.bonusPayableUponInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusPayableUponInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.bonusPayableUponInput.scrollIntoViewIfNeeded();
         await this.bonusPayableUponInput.fill(tagText);
         await this.bonusPayableUponInput.press('Enter');
@@ -7464,9 +7464,9 @@ export class ProjectActions {
      * HELPER — Assert a chip with given text exists
      */
     private async assertBonusPayableUponTagExists(tagText: string): Promise<void> {
-        await expect(this.bonusPayableUponTokenByText(tagText)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusPayableUponTokenByText(tagText)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await expect(this.bonusPayableUponTokenByText(tagText).locator('span.p-chips-token-label')).toHaveText(tagText, {
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
     }
 
@@ -7474,10 +7474,10 @@ export class ProjectActions {
      * HELPER — Remove a Bonus Payable Upon chip by text
      */
     private async removeBonusPayableUponTag(tagText: string): Promise<void> {
-        await expect(this.bonusPayableUponTokenRemoveIcon(tagText)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusPayableUponTokenRemoveIcon(tagText)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.bonusPayableUponTokenRemoveIcon(tagText).click();
         await this.page.waitForTimeout(500);
-        await expect(this.bonusPayableUponTokenByText(tagText)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusPayableUponTokenByText(tagText)).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -7519,7 +7519,7 @@ export class ProjectActions {
      */
     private async scrollToBonusPayableTo(): Promise<void> {
         await this.bonusPayableToLabel.scrollIntoViewIfNeeded();
-        await expect(this.bonusPayableToLabel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusPayableToLabel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.page.waitForTimeout(300);
     }
 
@@ -7527,7 +7527,7 @@ export class ProjectActions {
      * HELPER — Type text in Bonus Payable To input and press Enter
      */
     private async addBonusPayableToTag(tagText: string): Promise<void> {
-        await expect(this.bonusPayableToInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusPayableToInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.bonusPayableToInput.scrollIntoViewIfNeeded();
         await this.bonusPayableToInput.fill(tagText);
         await this.bonusPayableToInput.press('Enter');
@@ -7538,9 +7538,9 @@ export class ProjectActions {
      * HELPER — Assert a chip with given text exists
      */
     private async assertBonusPayableToTagExists(tagText: string): Promise<void> {
-        await expect(this.bonusPayableToTokenByText(tagText)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusPayableToTokenByText(tagText)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await expect(this.bonusPayableToTokenByText(tagText).locator('span.p-chips-token-label')).toHaveText(tagText, {
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
     }
 
@@ -7548,10 +7548,10 @@ export class ProjectActions {
      * HELPER — Remove a Bonus Payable To chip by text
      */
     private async removeBonusPayableToTag(tagText: string): Promise<void> {
-        await expect(this.bonusPayableToTokenRemoveIcon(tagText)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusPayableToTokenRemoveIcon(tagText)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.bonusPayableToTokenRemoveIcon(tagText).click();
         await this.page.waitForTimeout(500);
-        await expect(this.bonusPayableToTokenByText(tagText)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusPayableToTokenByText(tagText)).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -7593,7 +7593,7 @@ export class ProjectActions {
      */
     private async scrollToBonusCampaign(): Promise<void> {
         await this.bonusCampaignLabel.scrollIntoViewIfNeeded();
-        await expect(this.bonusCampaignLabel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusCampaignLabel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.page.waitForTimeout(300);
     }
 
@@ -7601,7 +7601,7 @@ export class ProjectActions {
      * HELPER — Type text in Bonus Campaign input and press Enter
      */
     private async addBonusCampaignTag(tagText: string): Promise<void> {
-        await expect(this.bonusCampaignInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusCampaignInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.bonusCampaignInput.scrollIntoViewIfNeeded();
         await this.bonusCampaignInput.fill(tagText);
         await this.bonusCampaignInput.press('Enter');
@@ -7612,9 +7612,9 @@ export class ProjectActions {
      * HELPER — Assert a chip with given text exists
      */
     private async assertBonusCampaignTagExists(tagText: string): Promise<void> {
-        await expect(this.bonusCampaignTokenByText(tagText)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusCampaignTokenByText(tagText)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await expect(this.bonusCampaignTokenByText(tagText).locator('span.p-chips-token-label')).toHaveText(tagText, {
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
     }
 
@@ -7622,10 +7622,10 @@ export class ProjectActions {
      * HELPER — Remove a Bonus Campaign chip by text
      */
     private async removeBonusCampaignTag(tagText: string): Promise<void> {
-        await expect(this.bonusCampaignTokenRemoveIcon(tagText)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusCampaignTokenRemoveIcon(tagText)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.bonusCampaignTokenRemoveIcon(tagText).click();
         await this.page.waitForTimeout(500);
-        await expect(this.bonusCampaignTokenByText(tagText)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.bonusCampaignTokenByText(tagText)).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -7707,11 +7707,11 @@ export class ProjectActions {
         await this.getFirstVisiblePrecinctCard();
         for (const tab of ['project', 'lot', 'EOI']) {
             const el = this.innerTabById(tab);
-            await expect(el).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-            await expect(el).toHaveText(new RegExp(tab, 'i'), { timeout: ProjectActions.TIMEOUT_LONG });
+            await expect(el).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
+            await expect(el).toHaveText(new RegExp(tab, 'i'), { timeout: ProjectPage.TIMEOUT_LONG });
         }
         await this.projectsMenuLink.click();
-        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.firstGridProduct).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     /**
@@ -7725,12 +7725,12 @@ export class ProjectActions {
         await this.openProjectPopup();
         await this.projectNameField.fill(projectName);
         await this.projectDialogSaveButton.click({ force: true });
-        await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.projectAddedToast.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM }).catch(() => { });
-        await this.projectTitleBanner(projectName).waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM });
+        await expect(this.projectDialog).toBeHidden({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await this.projectAddedToast.waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_MEDIUM }).catch(() => { });
+        await this.projectTitleBanner(projectName).waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_MEDIUM });
         // Optionally: return to projects main view for clarity
         const projectsText = this.page.locator('p', { hasText: 'Projects' });
-        await expect(projectsText).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(projectsText).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await projectsText.click({ force: true });
         await this.verifyProjectCanBeSearchedByName(projectName);
         await this.clickResetIcon();
@@ -7738,10 +7738,10 @@ export class ProjectActions {
         await this.openProjectPopup();
         await this.projectNameField.fill(projectName);
         await this.projectDialogSaveButton.click({ force: true });
-        await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.projectAddedToast.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM }).catch(() => { });
-        await this.projectTitleBanner(projectName).waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM });
-        await expect(projectsText).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDialog).toBeHidden({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await this.projectAddedToast.waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_MEDIUM }).catch(() => { });
+        await this.projectTitleBanner(projectName).waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_MEDIUM });
+        await expect(projectsText).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await projectsText.click({ force: true });
         await this.verifyProjectCanBeSearchedByName(projectName);
         await this.clickResetIcon();
@@ -7788,9 +7788,9 @@ export class ProjectActions {
         await this.closeDeveloperDropdown();
         await this.assertDeveloperSelected(developerName);
         await this.openProjectsManagerDropdown();
-        await expect(this.projectManagerDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.projectManagerDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const managerOption = this.projectManagerDropdownPanel.locator('div.ng-option', { hasText: manager }).first();
-        await expect(managerOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(managerOption).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await managerOption.click();
         await this.closeProjectManagerDropdown();
         await this.cleanupAfterProjectTest();
@@ -7802,8 +7802,8 @@ export class ProjectActions {
     async openAddressPopupWithoutData(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectGeneralTab(projectName);
         await this.openDisplayAddressPopup();
-        await expect(this.displayAddressPopupHeading).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.displayAddressPopupSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.displayAddressPopupHeading).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.displayAddressPopupSaveButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.closeDisplayAddressPopup();
         await this.cleanupAfterProjectTest();
     }
@@ -7845,12 +7845,12 @@ export class ProjectActions {
     }
 
     private async selectProjectStatusInDialog(statusText: string): Promise<void> {
-        await expect(this.projectStatusField).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectStatusField).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectStatusField.click();
-        await expect(this.projectStatusDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectStatusDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         const option = this.projectStatusOptionByText(statusText);
-        await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(option).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await option.click();
         await this.page.waitForTimeout(300);
     }
@@ -7865,21 +7865,21 @@ export class ProjectActions {
         await this.projectNameField.fill(projectName);
         await this.selectProjectStatusInDialog('Inactive');
         await this.projectDialogSaveButton.click({ force: true });
-        await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDialog).toBeHidden({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectAddedToast
-            .waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM })
+            .waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_MEDIUM })
             .catch(() => {
             });
         await this.projectTitleBanner(projectName).waitFor({
             state: 'visible',
-            timeout: ProjectActions.TIMEOUT_MEDIUM,
+            timeout: ProjectPage.TIMEOUT_MEDIUM,
         });
         const projectsText = this.page.locator('p', { hasText: 'Projects' });
-        await expect(projectsText).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(projectsText).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await projectsText.click({ force: true });
         await this.clickTabByLabel('Inactive');
         const card = this.projectCardByName(projectName);
-        await expect(card).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(card).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await card.scrollIntoViewIfNeeded();
         await this.clickResetIcon();
     }
@@ -7895,19 +7895,19 @@ export class ProjectActions {
         const expectedTrimmedName = nameWithExcessiveSpaces.trim().replace(/\s+/g, ' ');
         await this.projectNameField.fill(nameWithExcessiveSpaces);
         await this.projectDialogSaveButton.click({ force: true });
-        await expect(this.projectDialog).toBeHidden({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.projectDialog).toBeHidden({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.projectAddedToast
-            .waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_MEDIUM })
+            .waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_MEDIUM })
             .catch(() => { });
         await this.projectTitleBanner(expectedTrimmedName).waitFor({
             state: 'visible',
-            timeout: ProjectActions.TIMEOUT_MEDIUM,
+            timeout: ProjectPage.TIMEOUT_MEDIUM,
         });
         const projectsText = this.page.locator('p', { hasText: 'Projects' });
-        await expect(projectsText).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(projectsText).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await projectsText.click({ force: true });
         await this.navigateToProjects();
-        await expect(this.searchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.searchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.searchInput.fill(expectedTrimmedName);
         await this.clickResetIcon();
     }
@@ -8044,8 +8044,8 @@ export class ProjectActions {
      * HELPER — Verify checkboxes in the lot list table are properly aligned.
      */
     private async verifyLotListCheckboxesAlignment(): Promise<void> {
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.lotListMasterCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.lotListMasterCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const headerCheckboxBox = this.lotListMasterCheckbox;
         const firstRowCheckboxBox = this.lotListRowCheckbox(0);
         const headerBox = await headerCheckboxBox.boundingBox();
@@ -8089,15 +8089,15 @@ export class ProjectActions {
      * HELPER — Assert "Fill out the required field" error toast appears
      */
     private async assertRequiredFieldToast(): Promise<void> {
-        await expect(this.lotCreateRequiredFieldToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotCreateRequiredFieldToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
     }
     /**
      * HELPER — Click the + (Add New) button to open lot create form
      */
     private async clickAddNewLotButton(): Promise<void> {
-        await expect(this.lotListAddNewButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListAddNewButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotListAddNewButton.click();
-        await expect(this.lotCreateForm).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotCreateForm).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.page.waitForTimeout(1000);
     }
 
@@ -8105,7 +8105,7 @@ export class ProjectActions {
      * HELPER — Fill Lot name input
      */
     private async fillLotName(lotName: string): Promise<void> {
-        await expect(this.lotCreateLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotCreateLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotCreateLotInput.click();
         await this.lotCreateLotInput.fill(lotName);
         await this.page.waitForTimeout(300);
@@ -8115,7 +8115,7 @@ export class ProjectActions {
  * HELPER — Click the master/header checkbox to select all rows
  */
     private async clickLotListMasterCheckbox(): Promise<void> {
-        await expect(this.lotListMasterCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListMasterCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotListMasterCheckbox.click();
         await this.page.waitForTimeout(800);
     }
@@ -8124,11 +8124,11 @@ export class ProjectActions {
      * HELPER — Select Status Reason from dropdown
      */
     private async selectLotStatusReason(statusReason: string): Promise<void> {
-        await expect(this.lotCreateStatusReasonSelect).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotCreateStatusReasonSelect).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotCreateStatusReasonSelect.click();
         await this.page.waitForTimeout(500);
         const statusOption = this.lotCreateStatusReasonOptionByText(statusReason);
-        await expect(statusOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(statusOption).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await statusOption.click();
         await this.page.waitForTimeout(500);
     }
@@ -8137,7 +8137,7 @@ export class ProjectActions {
      * HELPER — Fill Bed input
      */
     private async fillLotBed(bed: string): Promise<void> {
-        await expect(this.lotCreateBedInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotCreateBedInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotCreateBedInput.click();
         await this.lotCreateBedInput.fill(bed);
         await this.page.waitForTimeout(300);
@@ -8147,7 +8147,7 @@ export class ProjectActions {
      * HELPER — Fill Bath input
      */
     private async fillLotBath(bath: string): Promise<void> {
-        await expect(this.lotCreateBathInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotCreateBathInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotCreateBathInput.click();
         await this.lotCreateBathInput.fill(bath);
         await this.page.waitForTimeout(300);
@@ -8172,7 +8172,7 @@ export class ProjectActions {
      * HELPER — Click Save & Close button in lot create form
      */
     private async clickLotCreateSaveAndClose(): Promise<void> {
-        await expect(this.lotCreateSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotCreateSaveAndCloseButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotCreateSaveAndCloseButton.scrollIntoViewIfNeeded();
         await this.lotCreateSaveAndCloseButton.click();
         await this.page.waitForLoadState('networkidle');
@@ -8183,7 +8183,7 @@ export class ProjectActions {
      * HELPER — Click Close button to dismiss lot create form
      */
     private async clickLotCreateClose(): Promise<void> {
-        await expect(this.lotCreateCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotCreateCloseButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotCreateCloseButton.click();
         await this.page.waitForTimeout(800);
     }
@@ -8192,7 +8192,7 @@ export class ProjectActions {
      * HELPER — Assert lot create form is closed (no longer visible)
      */
     private async assertLotCreateFormClosed(): Promise<void> {
-        await expect(this.lotCreateForm).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotCreateForm).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
     /**
  * HELPER — Get column name at given index in visible list
@@ -8208,7 +8208,7 @@ export class ProjectActions {
     private async clickDownArrowAtIndex(index: number): Promise<void> {
         const row = this.visibleColumnList.nth(index);
         const downArrow = this.columnDownArrow(row);
-        await expect(downArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(downArrow).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await downArrow.scrollIntoViewIfNeeded();
         await downArrow.click();
         await this.page.waitForTimeout(500);
@@ -8220,7 +8220,7 @@ export class ProjectActions {
     private async clickUpArrowAtIndex(index: number): Promise<void> {
         const row = this.visibleColumnList.nth(index);
         const upArrow = this.columnUpArrow(row);
-        await expect(upArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(upArrow).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await upArrow.scrollIntoViewIfNeeded();
         await upArrow.click();
         await this.page.waitForTimeout(500);
@@ -8229,11 +8229,11 @@ export class ProjectActions {
      * HELPER — Click the Lot sub-tab inside Project Setup
      */
     private async clickLotSubTab(): Promise<void> {
-        await expect(this.lotSubTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotSubTab).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotSubTab.scrollIntoViewIfNeeded();
         await this.lotSubTab.click();
-        await this.page.waitForURL(/\/project-setup\/unit/, { timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.lotSubTabActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await this.page.waitForURL(/\/project-setup\/unit/, { timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.lotSubTabActive).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.page.waitForLoadState('networkidle');
     }
 
@@ -8253,7 +8253,7 @@ export class ProjectActions {
      * HELPER — Type a keyword in the lot list search input and trigger filter
      */
     private async searchLotList(keyword: string): Promise<void> {
-        await expect(this.lotListSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListSearchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotListSearchInput.scrollIntoViewIfNeeded();
         await this.lotListSearchInput.fill('');
         await this.lotListSearchInput.fill(keyword);
@@ -8272,15 +8272,15 @@ export class ProjectActions {
      * HELPER — Assert a row containing the given text is visible
      */
     private async assertLotListRowExists(text: string): Promise<void> {
-        await expect(this.lotListRowByText(text)).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListRowByText(text)).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
  * HELPER — Click Export button and wait for file download
  */
     private async clickLotListExportAndDownload(): Promise<void> {
-        await expect(this.lotListExportButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        const downloadPromise = this.page.waitForEvent('download', { timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotListExportButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        const downloadPromise = this.page.waitForEvent('download', { timeout: ProjectPage.TIMEOUT_LONG });
         await this.lotListExportButton.click();
         const download = await downloadPromise;
         await download.saveAs(`./downloads/${download.suggestedFilename()}`);
@@ -8290,7 +8290,7 @@ export class ProjectActions {
      * HELPER — Click the View button in lot list
      */
     private async clickLotListViewButton(): Promise<void> {
-        await expect(this.lotListViewButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListViewButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotListViewButton.scrollIntoViewIfNeeded();
         await this.lotListViewButton.click();
         await this.page.waitForTimeout(1000);
@@ -8300,7 +8300,7 @@ export class ProjectActions {
      * HELPER — Upload a file to the lot list import input
      */
     private async uploadLotImportFile(fileName: string): Promise<void> {
-        const filePath = path.resolve(ProjectActions.IMAGES_DIR, fileName);
+        const filePath = path.resolve(ProjectPage.IMAGES_DIR, fileName);
         await this.lotListImportInput.setInputFiles(filePath);
         await this.page.waitForTimeout(2000);
     }
@@ -8309,7 +8309,7 @@ export class ProjectActions {
      * HELPER — Click Update Data button
      */
     private async clickUpdateDataButton(): Promise<void> {
-        await expect(this.lotListUpdateDataButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListUpdateDataButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotListUpdateDataButton.scrollIntoViewIfNeeded();
         await this.lotListUpdateDataButton.click();
         await this.page.waitForTimeout(1500);
@@ -8319,7 +8319,7 @@ export class ProjectActions {
      * HELPER — Click Confirm Updates button
      */
     private async clickConfirmUpdatesButton(): Promise<void> {
-        await expect(this.lotListConfirmUpdatesButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListConfirmUpdatesButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotListConfirmUpdatesButton.scrollIntoViewIfNeeded();
         await this.lotListConfirmUpdatesButton.click();
         await this.page.waitForTimeout(2000);
@@ -8329,14 +8329,14 @@ export class ProjectActions {
      * HELPER — Assert import success toast appears
      */
     private async assertImportSuccessToast(): Promise<void> {
-        await expect(this.lotListImportSuccessToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotListImportSuccessToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     /**
 * HELPER — Assert invalid file error toast appears
 */
     private async assertInvalidFileToast(): Promise<void> {
-        await expect(this.lotListImportInvalidFileToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotListImportInvalidFileToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     /**
@@ -8344,7 +8344,7 @@ export class ProjectActions {
      */
     private async selectLotListRowCheckbox(rowIndex: number): Promise<void> {
         const checkbox = this.lotListRowCheckbox(rowIndex);
-        await expect(checkbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(checkbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await checkbox.click();
         await this.page.waitForTimeout(500);
     }
@@ -8353,7 +8353,7 @@ export class ProjectActions {
      * HELPER — Click the Delete button (appears after row selection)
      */
     private async clickLotListDeleteButton(): Promise<void> {
-        await expect(this.lotListDeleteButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListDeleteButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotListDeleteButton.scrollIntoViewIfNeeded();
         await this.lotListDeleteButton.click();
         await this.page.waitForLoadState('networkidle');
@@ -8374,17 +8374,17 @@ export class ProjectActions {
      * HELPER — Assert "Selected Records: N" label is visible
      */
     private async assertSelectedRecordsLabel(): Promise<void> {
-        await expect(this.lotListSelectedRecordsLabel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListSelectedRecordsLabel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
     /**
  * TC_01 — Verify clicking Lot tab displays the lot list
  */
     async verifyLotTabDisplaysLotList(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.page).toHaveURL(/\/project-setup\/unit/, { timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.lotSubTabActive).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.lotListRecordsCounter).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.page).toHaveURL(/\/project-setup\/unit/, { timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.lotSubTabActive).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.lotListRecordsCounter).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterProjectTest();
     }
 
@@ -8396,11 +8396,11 @@ export class ProjectActions {
         keyword: string = 'Automation Lot'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.lotListRecordsCounter).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.lotListRecordsCounter).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.searchLotList(keyword);
         await this.assertLotListRowExists(keyword);
-        await expect(this.lotListRecordsCounter).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListRecordsCounter).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const rowCount = await this.getLotListRowCount();
         expect(rowCount).toBeGreaterThan(0);
         await this.cleanupAfterProjectTest();
@@ -8414,7 +8414,7 @@ export class ProjectActions {
         keyword: string = 'Automation Lot'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.searchLotList(keyword);
         await this.assertLotListRowExists(keyword);
         await this.resetButton.click();
@@ -8429,7 +8429,7 @@ export class ProjectActions {
  */
     async verifyLotListExportDownload(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotListExportAndDownload();
         await this.cleanupAfterProjectTest();
     }
@@ -8439,13 +8439,13 @@ export class ProjectActions {
      */
     async verifyLotListViewButtonClickable(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.lotListViewButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.lotListViewButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotListViewButton();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.page.mouse.click(0, 0);
         await this.page.waitForTimeout(800);
-        await expect(this.viewPopupContent).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewPopupContent).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterProjectTest();
     }
 
@@ -8454,9 +8454,9 @@ export class ProjectActions {
  */
     async verifyHideUnhideAllStatuses(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotListViewButton();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickHideAll();
         await this.page.waitForTimeout(1200);
         await this.clickShowAll();
@@ -8467,7 +8467,7 @@ export class ProjectActions {
 
     async verifyDragAndDropChangesStatusPositions(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotListViewButton();
         const firstHandle = this.visibleColumnList.nth(0);
         const secondHandle = this.visibleColumnList.nth(1);
@@ -8486,7 +8486,7 @@ export class ProjectActions {
    */
     async verifyArrowsChangeStatusPositions(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotListViewButton();
         const firstHandle = this.visibleColumnList.nth(0);
         const secondHandle = this.visibleColumnList.nth(1);
@@ -8505,14 +8505,14 @@ export class ProjectActions {
      */
     async verifyStatusSearchInViewPopup(statusName: string, projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotListViewButton();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.columnSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.columnSearchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.columnSearchInput.fill(statusName);
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
         await expect(this.columnItemByName(statusName).first()).toBeVisible({
-            timeout: ProjectActions.TIMEOUT_DEFAULT,
+            timeout: ProjectPage.TIMEOUT_DEFAULT,
         });
         await this.columnSearchInput.fill('');
         await this.page.waitForTimeout(1000);
@@ -8524,10 +8524,10 @@ export class ProjectActions {
      */
     async verifyViewDropdownShowsNoViews(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotListViewButton();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.viewDropdownArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.viewDropdownArrow).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.viewDropdownArrow.click();
         await expect(this.page.locator('.ng-option.ng-option-disabled')).toHaveText(/No items found/i);
         await this.cleanupAfterProjectTest();
@@ -8541,17 +8541,17 @@ export class ProjectActions {
         viewName: string = `Test View`
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotListViewButton();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_LONG });
         await this.addViewIcon.click();
-        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.viewNameInput.click();
         await this.viewNameInput.fill(viewName);
-        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.saveOrCreateButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.saveOrCreateButton.click({ force: true });
-        await expect(this.viewCreatedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewCreatedToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterProjectTest();
     }
     /**
@@ -8563,16 +8563,16 @@ export class ProjectActions {
         userName: string = 'Dawood Ahmad',
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotListViewButton();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.shareViewIcon.click({ force: true });
         await this.selectShareTarget(this.usersShareDropdown, this.usersShareDropdownArrow, userName);
-        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.shareButton.click({ force: true });
-        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
         await this.cleanupAfterProjectTest();
     }
 
@@ -8585,16 +8585,16 @@ export class ProjectActions {
         teamName: string = 'Automation Team'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotListViewButton();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.shareViewIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.shareViewIcon.click({ force: true });
         await this.selectShareTarget(this.teamsShareDropdown, this.teamsShareDropdownArrow, teamName);
-        await expect(this.shareButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.shareButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.shareButton.click({ force: true });
-        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await expect(this.shareResponseMessage()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
         await this.cleanupAfterProjectTest();
     }
 
@@ -8605,13 +8605,13 @@ export class ProjectActions {
         projectName: 'Automation',
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotListViewButton();
         await this.reorderCollapsedArrow.click();
         await this.page.waitForTimeout(500);
         await this.reorderExpandCollapseArrow.click();
         await this.page.waitForTimeout(500);
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
         await this.cleanupAfterProjectTest();
     }
 
@@ -8623,24 +8623,24 @@ export class ProjectActions {
         viewName: string = 'Test View'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotListViewButton();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.page.waitForTimeout(ProjectActions.UI_SETTLE_DELAY);
-        await expect(this.viewDropdownArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await this.page.waitForTimeout(ProjectPage.UI_SETTLE_DELAY);
+        await expect(this.viewDropdownArrow).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.viewDropdownArrow.click();
         const viewOption = this.savedViewOption(viewName);
-        await expect(viewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(viewOption).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const deleteIcon = viewOption.locator('img[src*="delete_icon.svg"]');
-        await expect(deleteIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(deleteIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await deleteIcon.click();
         try {
-            await expect(this.confirmAnyButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
+            await expect(this.confirmAnyButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_SHORT });
             await this.confirmAnyButton.click();
         } catch {
 
         }
-        await expect(this.viewDeletedToast).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewDeletedToast).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterProjectTest();
     }
 
@@ -8652,7 +8652,7 @@ export class ProjectActions {
         fileName: string = 'invalid.txt'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.uploadLotImportFile(fileName);
         await this.assertInvalidFileToast();
         await this.cleanupAfterProjectTest();
@@ -8677,7 +8677,7 @@ export class ProjectActions {
             bath: lotData.bath ?? '1',
         };
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickAddNewLotButton();
         await this.fillLotCreateForm(data);
         await this.clickLotCreateSaveAndClose();
@@ -8691,9 +8691,9 @@ export class ProjectActions {
  */
     async verifyLotCreationWithMissingFields(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickAddNewLotButton();
-        await expect(this.lotCreateSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotCreateSaveAndCloseButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotCreateSaveAndCloseButton.click();
         await this.assertRequiredFieldToast();
         await this.clickLotCreateClose();
@@ -8706,7 +8706,7 @@ export class ProjectActions {
  */
     async verifyIndividualLotDeletion(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.selectLotListRowCheckbox(1);
         await this.assertSelectedRecordsLabel();
         await this.clickLotListDeleteButton();
@@ -8722,7 +8722,7 @@ export class ProjectActions {
  */
     async verifyBulkLotDeletion(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         // await this.selectMultipleLotListRowCheckboxes([1, 2]);
         // await this.assertSelectedRecordsLabel();
         // await this.clickLotListDeleteButton();
@@ -8734,9 +8734,9 @@ export class ProjectActions {
  */
     async verifyDeleteButtonHiddenWhenNoSelection(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.lotListDeleteButton).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.lotListSelectedRecordsLabel).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.lotListDeleteButton).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.lotListSelectedRecordsLabel).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterProjectTest();
     }
 
@@ -8745,7 +8745,7 @@ export class ProjectActions {
      */
     private async clickLotListColumnSortIcon(columnName: string): Promise<void> {
         const sortIcon = this.lotListColumnSortIcon(columnName);
-        await expect(sortIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(sortIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await sortIcon.scrollIntoViewIfNeeded();
         await sortIcon.click();
         await this.page.waitForTimeout(1000);
@@ -8760,7 +8760,7 @@ export class ProjectActions {
     ): Promise<void> {
         const sortIcon = this.lotListColumnSortIcon(columnName);
         await expect(sortIcon).toHaveAttribute('aria-sort', state, {
-            timeout: ProjectActions.TIMEOUT_DEFAULT
+            timeout: ProjectPage.TIMEOUT_DEFAULT
         });
     }
 
@@ -8772,7 +8772,7 @@ export class ProjectActions {
         columnName: string = 'Lot'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.assertLotListColumnSortState(columnName, 'none');
         await this.clickLotListColumnSortIcon(columnName);
         await this.assertLotListColumnSortState(columnName, 'ascending');
@@ -8787,7 +8787,7 @@ export class ProjectActions {
         columnName: string = 'Lot'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.assertLotListColumnSortState(columnName, 'none');
         await this.clickLotListColumnSortIcon(columnName);
         await this.assertLotListColumnSortState(columnName, 'ascending');
@@ -8799,7 +8799,7 @@ export class ProjectActions {
      * HELPER — Assert filter popup is visible
      */
     private async assertFilterPopupVisible(): Promise<void> {
-        await expect(this.lotListFilterPopup).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotListFilterPopup).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     /**
@@ -8879,7 +8879,7 @@ export class ProjectActions {
      */
     private async selectAllInFilterPopup(): Promise<void> {
         const selectAllCheckbox = this.selectAllCheckboxInFilterPopup;
-        await expect(selectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(selectAllCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await selectAllCheckbox.click();
     }
 
@@ -8887,12 +8887,12 @@ export class ProjectActions {
      * HELPER — Assert both Condition (re-multiselect) and Values (ng-select) dropdowns are visible in filter popup
      */
     private async assertFilterDropdownsVisible(): Promise<void> {
-        await expect(this.filterValuesDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.filterConditionDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.filterValuesDropdown).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.filterConditionDropdown).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     private async openFilterPopup(): Promise<void> {
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const filterIcon = this.page.locator('th:has-text("Project Status") img[alt="filter"]');
         await filterIcon.click();
         await this.page.waitForTimeout(700);
@@ -8925,15 +8925,15 @@ export class ProjectActions {
     private async selectConditionDropdownOptionWithSearch(searchTerm: string): Promise<void> {
         await this.filterConditionDropdown.click();
         const searchBox = this.searchBoxInFilterPopup;
-        await expect(searchBox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(searchBox).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await searchBox.click();
         await searchBox.fill(searchTerm);
         const optionLocator = this.optionInFilterPopup(searchTerm);
-        await expect(optionLocator).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(optionLocator).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await optionLocator.click();
         await expect(this.filterConditionDropdown).toHaveText(
             new RegExp(searchTerm, 'i'),
-            { timeout: ProjectActions.TIMEOUT_DEFAULT }
+            { timeout: ProjectPage.TIMEOUT_DEFAULT }
         );
 
         await this.filterByTasksRemoveIcon.click();
@@ -8946,7 +8946,7 @@ export class ProjectActions {
         // Open the filterConditionDropdown, which shows the filter popup.
         await this.filterConditionDropdown.click();
         const searchBox = this.searchBoxInFilterPopup;
-        await expect(searchBox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(searchBox).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.selectAllInFilterPopup();
     }
 
@@ -8957,7 +8957,7 @@ export class ProjectActions {
         // Open the filterConditionDropdown, which shows the filter popup.
         await this.filterConditionDropdown.click();
         const searchBox = this.searchBoxInFilterPopup;
-        await expect(searchBox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(searchBox).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.selectAllInFilterPopup();
         await this.page.waitForTimeout(500);
         await this.selectAllInFilterPopup();
@@ -9003,13 +9003,13 @@ export class ProjectActions {
         // Ensure the filter popup and search box are visible
         await this.filterConditionDropdown.click();
         const searchBox = this.searchBoxInFilterPopup;
-        await expect(searchBox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(searchBox).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await searchBox.click();
 
         for (const status of statuses) {
             await searchBox.fill(status);
             const optionLocator = this.optionInFilterPopup(status);
-            await expect(optionLocator).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+            await expect(optionLocator).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
             await optionLocator.click();
         }
     }
@@ -9069,7 +9069,7 @@ export class ProjectActions {
         await this.selectConditionDropdownOptionWithSearch(filterValue);
         await this.applyFilterButton.click();
         const resultLocator = this.page.locator('.p-datatable .p-datatable-tbody tr td', { hasText: filterValue });
-        await expect(resultLocator.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(resultLocator.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.cleanupAfterProjectTest();
     }
 
@@ -9079,7 +9079,7 @@ export class ProjectActions {
     private async typeInFilterDropdownSearch(value: string): Promise<void> {
         await this.filterConditionDropdown.click();
         const searchBox = this.searchBoxInFilterPopup;
-        await expect(searchBox).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(searchBox).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await searchBox.click();
         await searchBox.fill(value);
     }
@@ -9100,7 +9100,7 @@ export class ProjectActions {
      */
     async verifyRecordCountDisplayedAtBottom(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListRecordsCounter).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotListRecordsCounter).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const footerText = await this.lotListRecordsCounter.textContent();
         const recordText = footerText ? footerText.trim() : '';
         console.log(recordText);
@@ -9121,7 +9121,7 @@ export class ProjectActions {
             await this.page.waitForTimeout(1200);
             count = await this.lotTableRows.count();
         }
-        await expect(this.lotTableRows.nth(count - 1)).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.lotTableRows.nth(count - 1)).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await this.cleanupAfterProjectTest();
     }
     /**
@@ -9129,7 +9129,7 @@ export class ProjectActions {
      */
     async verifyLotTableCheckboxAlignment(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.verifyLotListCheckboxesAlignment();
         await this.cleanupAfterProjectTest();
     }
@@ -9140,15 +9140,15 @@ export class ProjectActions {
      */
     async verifyCreateButtonNotClickableWithoutName(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotListViewButton();
-        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.viewPopupContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await this.addViewIcon.waitFor({ state: 'visible', timeout: ProjectPage.TIMEOUT_LONG });
         await this.addViewIcon.click();
-        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewNameInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.viewNameInput.click();
         await this.saveOrCreateButton.click({ force: true });
-        await expect(this.viewNameInputInvalid).toBeVisible({ timeout: ProjectActions.TIMEOUT_SHORT });
+        await expect(this.viewNameInputInvalid).toBeVisible({ timeout: ProjectPage.TIMEOUT_SHORT });
         await this.cleanupAfterProjectTest();
     }
 
@@ -9157,13 +9157,13 @@ export class ProjectActions {
      */
     async verifySwitchingBetweenViewsUpdatesListLayout(projectName: string = 'Automation'): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotListViewButton();
-        await expect(this.viewDropdownArrow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.viewDropdownArrow).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.viewDropdownArrow.click();
         await this.page.waitForTimeout(1000);
         const testViewOption = this.page.locator('p', { hasText: 'Test View' }).last();
-        await expect(testViewOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(testViewOption).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await testViewOption.click();
         await this.saveOrCreateButton.click({ force: true });
         await this.cleanupAfterProjectTest();
@@ -9264,19 +9264,19 @@ export class ProjectActions {
         orientation?: string;
     }): Promise<void> {
         if (data.bed !== undefined) {
-            await expect(this.lotFormBedInput).toHaveValue(data.bed, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+            await expect(this.lotFormBedInput).toHaveValue(data.bed, { timeout: ProjectPage.TIMEOUT_DEFAULT });
         }
         if (data.bath !== undefined) {
-            await expect(this.lotFormBathInput).toHaveValue(data.bath, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+            await expect(this.lotFormBathInput).toHaveValue(data.bath, { timeout: ProjectPage.TIMEOUT_DEFAULT });
         }
         if (data.study !== undefined) {
-            await expect(this.lotFormStudyInput).toHaveValue(data.study, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+            await expect(this.lotFormStudyInput).toHaveValue(data.study, { timeout: ProjectPage.TIMEOUT_DEFAULT });
         }
         if (data.aspect !== undefined) {
-            await expect(this.lotFormAspectInput).toHaveValue(data.aspect, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+            await expect(this.lotFormAspectInput).toHaveValue(data.aspect, { timeout: ProjectPage.TIMEOUT_DEFAULT });
         }
         if (data.orientation !== undefined) {
-            await expect(this.lotFormOrientationInput).toHaveValue(data.orientation, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+            await expect(this.lotFormOrientationInput).toHaveValue(data.orientation, { timeout: ProjectPage.TIMEOUT_DEFAULT });
         }
     }
 
@@ -9284,7 +9284,7 @@ export class ProjectActions {
  * HELPER — Click Status Reason dropdown to open options
  */
     private async clickLotFormStatusReasonDropdown(): Promise<void> {
-        await expect(this.lotFormStatusReasonDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormStatusReasonDropdown).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotFormStatusReasonDropdown.click();
         await this.page.waitForTimeout(800);
     }
@@ -9294,10 +9294,10 @@ export class ProjectActions {
      */
     private async assertStatusReasonOptionsVisible(expectedStatuses: string[]): Promise<void> {
         // Verify options panel is open
-        await expect(this.lotFormStatusReasonOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormStatusReasonOptions.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         for (const status of expectedStatuses) {
             const option = this.lotFormStatusReasonOptionByText(status);
-            await expect(option).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+            await expect(option).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         }
     }
 
@@ -9306,7 +9306,7 @@ export class ProjectActions {
      */
     private async closeLotFormProjectDropdown(projectName: string): Promise<void> {
         const selectedOption = this.lotFormProjectDropdownOptions.filter({ hasText: projectName }).first();
-        await expect(selectedOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(selectedOption).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await selectedOption.click();
         await this.page.waitForTimeout(500);
     }
@@ -9316,7 +9316,7 @@ export class ProjectActions {
      */
     private async assertProjectDropdownClosed(): Promise<void> {
         await expect(this.lotFormProjectDropdownCombobox).toHaveAttribute('aria-expanded', 'false', {
-            timeout: ProjectActions.TIMEOUT_DEFAULT
+            timeout: ProjectPage.TIMEOUT_DEFAULT
         });
     }
 
@@ -9324,7 +9324,7 @@ export class ProjectActions {
  * HELPER — Click Project dropdown on lot form to open project list
  */
     private async clickLotFormProjectDropdown(): Promise<void> {
-        await expect(this.lotFormProjectDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormProjectDropdown).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotFormProjectDropdown.click();
         await this.page.waitForTimeout(800);
     }
@@ -9333,15 +9333,15 @@ export class ProjectActions {
      * HELPER — Assert Project dropdown options list is visible (popup open)
      */
     private async assertProjectDropdownOptionsVisible(): Promise<void> {
-        await expect(this.lotFormProjectDropdownOptions.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormProjectDropdownOptions.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
  * HELPER — Assert Apartment Details and History tabs are visible on lot form
  */
     private async assertLotFormTabsVisible(): Promise<void> {
-        await expect(this.lotFormApartmentDetailsTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.lotFormHistoryTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormApartmentDetailsTab).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.lotFormHistoryTab).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -9349,7 +9349,7 @@ export class ProjectActions {
  */
     private async clickLotRowByName(lotName: string): Promise<void> {
         const targetLotRow = this.lotListTableRows.filter({ hasText: lotName }).first();
-        await expect(targetLotRow).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(targetLotRow).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await targetLotRow.click();
         await this.page.waitForTimeout(1500);
     }
@@ -9358,9 +9358,9 @@ export class ProjectActions {
      * HELPER — Assert lot form tab shows the lot name in title
      */
     private async assertLotFormTabTitle(lotName: string): Promise<void> {
-        await expect(this.lotFormTabTitle).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormTabTitle).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await expect(this.lotFormTabTitle).toContainText(lotName, {
-            timeout: ProjectActions.TIMEOUT_DEFAULT
+            timeout: ProjectPage.TIMEOUT_DEFAULT
         });
     }
 
@@ -9368,7 +9368,7 @@ export class ProjectActions {
      * HELPER — Click "Save & Close" button on lot form
      */
     private async clickLotFormSaveAndClose(): Promise<void> {
-        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotFormSaveAndCloseButton.click();
         await this.page.waitForTimeout(1000);
     }
@@ -9377,7 +9377,7 @@ export class ProjectActions {
      * HELPER — Click "Save" button on lot form 
      */
     private async clickLotFormSave(): Promise<void> {
-        await expect(this.lotFormSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormSaveButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotFormSaveButton.click();
         await this.page.waitForTimeout(1000);
     }
@@ -9386,7 +9386,7 @@ export class ProjectActions {
   * HELPER — Click popup close icon 
   */
     private async clickPopupCloseIcon(): Promise<void> {
-        await expect(this.popupCloseIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.popupCloseIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.popupCloseIcon.click();
         await this.page.waitForTimeout(1000);
     }
@@ -9395,16 +9395,16 @@ export class ProjectActions {
      * HELPER — Assert lot form is closed 
      */
     private async assertLotFormClosed(): Promise<void> {
-        await expect(this.lotFormSaveAndCloseButton).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormSaveAndCloseButton).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
  * HELPER — Assert project name appears below tab in name-handle
  */
     private async assertProjectNameBelowTab(projectName: string): Promise<void> {
-        await expect(this.lotFormNameHandle).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormNameHandle).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await expect(this.lotFormNameHandleText).toContainText(projectName, {
-            timeout: ProjectActions.TIMEOUT_DEFAULT
+            timeout: ProjectPage.TIMEOUT_DEFAULT
         });
     }
 
@@ -9412,9 +9412,9 @@ export class ProjectActions {
      * HELPER — Assert lot name appears below tab in name-handle
      */
     private async assertLotNameBelowTab(lotName: string): Promise<void> {
-        await expect(this.lotFormNameHandle).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormNameHandle).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await expect(this.lotFormNameHandleText).toContainText(lotName, {
-            timeout: ProjectActions.TIMEOUT_DEFAULT
+            timeout: ProjectPage.TIMEOUT_DEFAULT
         });
     }
 
@@ -9422,9 +9422,9 @@ export class ProjectActions {
  * HELPER — Assert Project dropdown is auto-filled with given project name
  */
     private async assertProjectDropdownAutoFilled(projectName: string): Promise<void> {
-        await expect(this.lotFormProjectDropdownSelectedValue).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormProjectDropdownSelectedValue).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await expect(this.lotFormProjectDropdownSelectedValue).toContainText(projectName, {
-            timeout: ProjectActions.TIMEOUT_DEFAULT
+            timeout: ProjectPage.TIMEOUT_DEFAULT
         });
     }
 
@@ -9436,9 +9436,9 @@ export class ProjectActions {
         lotName: string = 'Automation Lot'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotRowByName(lotName);
-        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotFormSaveAndClose();
         await this.assertSuccessToast();
         await this.cleanupAfterProjectTest();
@@ -9452,7 +9452,7 @@ export class ProjectActions {
         lotName: string = 'Automation Lot'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotRowByName(lotName);
         await this.assertLotFormTabTitle(lotName);
         await this.clickLotFormSaveAndClose();
@@ -9468,9 +9468,9 @@ export class ProjectActions {
         lotName: string = 'Automation Lot'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotRowByName(lotName);
-        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickPopupCloseIcon();
         await this.assertLotFormClosed();
         await this.cleanupAfterProjectTest();
@@ -9484,9 +9484,9 @@ export class ProjectActions {
         lotName: string = 'Automation Lot'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotRowByName(lotName);
-        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.assertProjectNameBelowTab(projectName);
         await this.clickLotFormSaveAndClose();
         await this.assertSuccessToast();
@@ -9501,9 +9501,9 @@ export class ProjectActions {
         lotName: string = 'Automation Lot'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotRowByName(lotName);
-        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.assertLotFormTabsVisible();
         await this.clickLotFormSaveAndClose();
         await this.assertSuccessToast();
@@ -9518,9 +9518,9 @@ export class ProjectActions {
         lotName: string = 'Automation Lot'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotRowByName(lotName);
-        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.assertProjectDropdownAutoFilled(projectName);
         await this.clickLotFormSaveAndClose();
         await this.assertSuccessToast();
@@ -9535,9 +9535,9 @@ export class ProjectActions {
         lotName: string = 'Automation Lot'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotRowByName(lotName);
-        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotFormStatusReasonDropdown();
         const expectedStatuses = ['For Sale', 'Withheld', 'Developer Hold'];
         await this.assertStatusReasonOptionsVisible(expectedStatuses);
@@ -9554,9 +9554,9 @@ export class ProjectActions {
         lotName: string = 'Automation Lot'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotRowByName(lotName);
-        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const optionalData = {
             bed: '3',
             bath: '2',
@@ -9585,7 +9585,7 @@ export class ProjectActions {
 
         // Click exact match option
         const projectOption = this.page.getByRole('option', { name: projectName, exact: true });
-        await expect(projectOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(projectOption).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await projectOption.click();
         await this.page.waitForTimeout(500);
     }
@@ -9598,9 +9598,9 @@ export class ProjectActions {
         lotName: string = 'Automation Lot'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotRowByName(lotName);
-        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.selectLotFormProject(projectName);
         await this.assertProjectDropdownAutoFilled(projectName);
         await this.clickLotFormSaveAndClose();
@@ -9617,7 +9617,7 @@ export class ProjectActions {
         lotName: string = 'Automation Lot'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotRowByName(lotName);
         await this.lotFormLotInput.fill('Changed Lot Name');
         await this.page.waitForTimeout(500);
@@ -9634,12 +9634,12 @@ export class ProjectActions {
         lotName: string = 'Automation Lot'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotRowByName(lotName);
         await this.lotFormLotInput.fill('Automation Lot');
         await this.clickLotFormSave();
-        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.lotFormSaveButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.lotFormSaveButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         expect(await this.lotFormLotInput.inputValue()).toBe('Automation Lot');
         await this.lotFormLotInput.fill(lotName);
         await this.clickLotFormSaveAndClose();
@@ -9655,7 +9655,7 @@ export class ProjectActions {
         lotName: string = 'Automation Lot'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotRowByName(lotName);
         // Optionally, modify data
         await this.lotFormLotInput.fill('Automation Lot');
@@ -9668,15 +9668,15 @@ export class ProjectActions {
      * Helper to open and validate history tab for current lot.
      */
     async openAndValidateHistoryTab(): Promise<number> {
-        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
-        await expect(this.lotFormHistoryTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormLotInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
+        await expect(this.lotFormHistoryTab).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotFormHistoryTab.click();
         await this.page.waitForTimeout(1500);
         await expect(this.lotFormHistoryTab).toHaveClass(/active/);
-        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(this.historyTabContent).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         const rowCount = await this.historyTableRows.count();
         expect(rowCount).toBeGreaterThan(0);
-        await expect(this.historyRecordsCount).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.historyRecordsCount).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         return rowCount;
     }
 
@@ -9688,7 +9688,7 @@ export class ProjectActions {
         lotName: string = 'Automation Lot'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotRowByName(lotName);
         await this.openAndValidateHistoryTab();
         await this.clickPopupCloseIcon();
@@ -9699,7 +9699,7 @@ export class ProjectActions {
      * Helper to perform a search in the history tab and check results.
      */
     async searchHistoryTabAndCheck(keyword: string): Promise<void> {
-        await expect(this.historySearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.historySearchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.historySearchInput.fill(keyword);
         await this.page.waitForTimeout(1500);
 
@@ -9900,7 +9900,7 @@ export class ProjectActions {
         const matchingOption = this.lotFormProjectDropdownOptions.filter({
             hasText: new RegExp(invalidProjectName, 'i')
         });
-        await expect(matchingOption).toHaveCount(0, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(matchingOption).toHaveCount(0, { timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -9912,9 +9912,9 @@ export class ProjectActions {
         invalidProjectName: string = 'InvalidProject_XYZ_12345'
     ): Promise<void> {
         await this.openProjectLotTab(projectName);
-        await expect(this.lotListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLotRowByName(lotName);
-        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotFormSaveAndCloseButton).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.assertInvalidProjectNotFound(invalidProjectName);
         await this.clickPopupCloseIcon();
         await this.cleanupAfterProjectTest();
@@ -10008,7 +10008,7 @@ export class ProjectActions {
      */
     private async removePriceListFilterTag(value: string): Promise<void> {
         const removeIcon = this.priceListFilterTagRemoveIcon(value);
-        await expect(removeIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(removeIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await removeIcon.click();
         await this.page.waitForTimeout(800);
     }
@@ -10017,7 +10017,7 @@ export class ProjectActions {
      * HELPER — Assert a filter tag is no longer visible
      */
     private async assertPriceListFilterTagNotVisible(value: string): Promise<void> {
-        await expect(this.priceListFilterSelectedTag(value)).not.toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListFilterSelectedTag(value)).not.toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -10025,7 +10025,7 @@ export class ProjectActions {
  */
     private async clickPriceListColumnFilterIcon(columnName: string): Promise<void> {
         const filterIcon = this.priceListColumnFilterIcon(columnName);
-        await expect(filterIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(filterIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
 
         // Double-click pattern (PrimeNG OverlayPanel requirement)
         await filterIcon.click();
@@ -10038,14 +10038,14 @@ export class ProjectActions {
      * HELPER — Assert Price List filter popup is visible
      */
     private async assertPriceListFilterPopupVisible(): Promise<void> {
-        await expect(this.priceListFilterPopup).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListFilterPopup).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
      * HELPER — Click Status dropdown inside filter popup
      */
     private async clickPriceListFilterStatusDropdown(): Promise<void> {
-        await expect(this.priceListFilterStatusDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListFilterStatusDropdown).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.priceListFilterStatusDropdown.click();
         await this.page.waitForTimeout(800);
     }
@@ -10054,7 +10054,7 @@ export class ProjectActions {
  * HELPER — Click cross icon to clear search input
  */
     private async clickPriceListSearchCrossIcon(): Promise<void> {
-        await expect(this.priceListSearchCrossIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListSearchCrossIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.priceListSearchCrossIcon.click();
         await this.page.waitForTimeout(800);
     }
@@ -10063,19 +10063,19 @@ export class ProjectActions {
      * HELPER — Assert search input is empty
      */
     private async assertPriceListSearchInputEmpty(): Promise<void> {
-        await expect(this.priceListSearchInput).toHaveValue('', { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListSearchInput).toHaveValue('', { timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
  * HELPER — Click on Price List tab
  */
     private async clickPriceListTab(): Promise<void> {
-        await expect(this.priceListTab).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListTab).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.priceListTab.click();
     }
 
     private async getRecordsCountText(): Promise<string> {
-        await expect(this.lotRecordsCount).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotRecordsCount).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const text = (await this.lotRecordsCount.innerText()).trim();
         console.log(text);
         return text;
@@ -10106,7 +10106,7 @@ export class ProjectActions {
  * HELPER — Toggle Lot Preview switch ON
  */
     private async enableLotPreviewToggle(): Promise<void> {
-        await expect(this.lotPreviewToggle).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotPreviewToggle).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const isChecked = await this.lotPreviewToggleSlider.evaluate(el => el.classList.contains('p-inputswitch-checked'));
         if (!isChecked) {
             await this.lotPreviewToggle.click();
@@ -10118,7 +10118,7 @@ export class ProjectActions {
      * HELPER — Toggle Lot Preview switch OFF
      */
     private async disableLotPreviewToggle(): Promise<void> {
-        await expect(this.lotPreviewToggle).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotPreviewToggle).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         const isChecked = await this.lotPreviewToggleSlider.evaluate(el => el.classList.contains('p-inputswitch-checked'));
         if (isChecked) {
             await this.lotPreviewToggle.click();
@@ -10131,7 +10131,7 @@ export class ProjectActions {
      */
     private async clickPriceListLotByName(lotName: string): Promise<void> {
         const row = this.priceListRowByLotName(lotName);
-        await expect(row).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(row).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await row.click();
         await this.page.waitForTimeout(1000);
     }
@@ -10140,15 +10140,15 @@ export class ProjectActions {
      * HELPER — Assert Lot Preview popup is visible with lot details
      */
     private async assertLotPreviewPopupVisible(lotName: string): Promise<void> {
-        await expect(this.lotPreviewPopup).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
-        await expect(this.lotPreviewPopupTitle).toContainText(lotName, { timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotPreviewPopup).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
+        await expect(this.lotPreviewPopupTitle).toContainText(lotName, { timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
      * HELPER — Click close icon on Lot Preview popup
      */
     private async closeLotPreviewPopup(): Promise<void> {
-        await expect(this.lotPreviewPopupCloseIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotPreviewPopupCloseIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.lotPreviewPopupCloseIcon.click();
         await this.page.waitForTimeout(800);
     }
@@ -10157,14 +10157,14 @@ export class ProjectActions {
  * HELPER — Assert "Lot preview on successfully" toast is visible
  */
     private async assertLotPreviewToastOn(): Promise<void> {
-        await expect(this.lotPreviewToastOn).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotPreviewToastOn).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
      * HELPER — Assert "Lot preview off successfully" toast is visible
      */
     private async assertLotPreviewToastOff(): Promise<void> {
-        await expect(this.lotPreviewToastOff).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.lotPreviewToastOff).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -10177,7 +10177,7 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
-        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.enableLotPreviewToggle();
         await this.assertLotPreviewToastOn();
         await this.clickPriceListLotByName(lotName);
@@ -10192,7 +10192,7 @@ export class ProjectActions {
  * HELPER — Search for a lot in Price List by name
  */
     private async searchPriceListLot(keyword: string): Promise<void> {
-        await expect(this.priceListSearchInput).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListSearchInput).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.priceListSearchInput.fill(keyword);
     }
 
@@ -10201,7 +10201,7 @@ export class ProjectActions {
      */
     private async assertPriceListLotRowExists(lotName: string): Promise<void> {
         const row = this.priceListRowByLotName(lotName);
-        await expect(row).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(row).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
     }
 
     /**
@@ -10214,7 +10214,7 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
-        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.searchPriceListLot(lotName);
         await this.assertPriceListLotRowExists(lotName);
         await this.cleanupAfterProjectTest();
@@ -10224,7 +10224,7 @@ export class ProjectActions {
  * HELPER — Assert "No lots available" message is shown
  */
     private async assertNoPriceListLotsFound(): Promise<void> {
-        await expect(this.priceListNoResultsMessage).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListNoResultsMessage).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -10237,7 +10237,7 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
-        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.searchPriceListLot(nonExistentLotName);
         await this.assertNoPriceListLotsFound();
         await this.cleanupAfterProjectTest();
@@ -10253,7 +10253,7 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
-        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.searchPriceListLot(lotName);
         await this.assertPriceListLotRowExists(lotName);
         await this.clickPriceListSearchCrossIcon();
@@ -10268,11 +10268,11 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
-        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickPriceListColumnFilterIcon('Status');
         await this.assertPriceListFilterPopupVisible();
         await this.clickPriceListFilterStatusDropdown();
-        await expect(this.priceListFilterStatusDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListFilterStatusDropdown).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.cleanupAfterProjectTest();
     }
 
@@ -10286,7 +10286,7 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
-        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickPriceListColumnFilterIcon('Status');
         await this.assertPriceListFilterPopupVisible();
         await this.selectConditionDropdownOptionWithSearch(statusToFilter);
@@ -10303,7 +10303,7 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
-        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickPriceListColumnFilterIcon('Status');
         await this.assertPriceListFilterPopupVisible();
         await this.selectMultipleStatusesInFilterPopup(statuses)
@@ -10319,7 +10319,7 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
-        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickPriceListColumnFilterIcon('Status');
         await this.assertPriceListFilterPopupVisible();
         await this.selectAllStatusesInFilterPopup();
@@ -10335,7 +10335,7 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
-        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickPriceListColumnFilterIcon('Status');
         await this.assertPriceListFilterPopupVisible();
         await this.deselectAllStatusesInFilterPopup();
@@ -10352,7 +10352,7 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
-        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickPriceListColumnFilterIcon('Status');
         await this.assertPriceListFilterPopupVisible();
         await this.selectConditionDropdownOptionWithSearch(searchTerm);
@@ -10368,7 +10368,7 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
-        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickPriceListColumnFilterIcon('Status');
         await this.assertPriceListFilterPopupVisible();
         await this.applyFilterButton.click();
@@ -10385,7 +10385,7 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
-        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickPriceListColumnFilterIcon('Status');
         await this.assertPriceListFilterPopupVisible();
         await this.selectConditionDropdownOptionWithSearch(statusToFilter);
@@ -10414,7 +10414,7 @@ export class ProjectActions {
  * HELPER — Click global filter icon to open the filter bar
  */
     private async clickPriceListGlobalFilterIcon(): Promise<void> {
-        await expect(this.priceListGlobalFilterIcon).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListGlobalFilterIcon).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.priceListGlobalFilterIcon.click();
         await this.page.waitForTimeout(800);
     }
@@ -10429,7 +10429,7 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
-        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickPriceListGlobalFilterIcon();
         await this.openBedDropdown();
         await this.bedDropdownSearchInput.fill(bedValue);
@@ -10454,14 +10454,14 @@ export class ProjectActions {
     }
 
     private async openLevelDropdown(): Promise<void> {
-        await expect(this.levelDropdown).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.levelDropdown).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.levelDropdown.click();
         await this.page.waitForTimeout(800);
     }
 
     private async selectLevelByValue(levelValue: string): Promise<void> {
         const levelOption = this.levelDropdownOption(levelValue);
-        await expect(levelOption).toBeVisible({ timeout: ProjectActions.TIMEOUT_LONG });
+        await expect(levelOption).toBeVisible({ timeout: ProjectPage.TIMEOUT_LONG });
         await levelOption.click();
         await this.page.waitForTimeout(700);
     }
@@ -10476,7 +10476,7 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
-        await expect(this.priceListTableRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListTableRows.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickPriceListGlobalFilterIcon();
         await this.page.waitForTimeout(5000);
         await this.openLevelDropdown();
@@ -10495,7 +10495,7 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
-        await expect(this.priceListTableRows.first()).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListTableRows.first()).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickPriceListGlobalFilterIcon();
         await this.page.waitForTimeout(5000);
         await this.openLevelDropdown();
@@ -10515,17 +10515,17 @@ export class ProjectActions {
     }
 
     private async clickLevelSelectAll(): Promise<void> {
-        await expect(this.levelDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.levelDropdownSelectAllCheckbox).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.levelDropdownSelectAllCheckbox.click();
         await this.page.waitForTimeout(500);
     }
 
     private async assertLevelSelectAllChecked(): Promise<void> {
-        await expect(this.levelDropdownSelectAllInput).toBeChecked({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.levelDropdownSelectAllInput).toBeChecked({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     private async assertLevelSelectAllUnchecked(): Promise<void> {
-        await expect(this.levelDropdownSelectAllInput).not.toBeChecked({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.levelDropdownSelectAllInput).not.toBeChecked({ timeout: ProjectPage.TIMEOUT_DEFAULT });
     }
 
     /**
@@ -10535,11 +10535,11 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
-        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickPriceListGlobalFilterIcon();
         await this.page.waitForTimeout(5000);
         await this.openLevelDropdown();
-        await expect(this.levelDropdownPanel).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.levelDropdownPanel).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickLevelSelectAll();
         await this.assertLevelSelectAllChecked();
         await this.clickLevelSelectAll();
@@ -10554,7 +10554,7 @@ export class ProjectActions {
         await this.navigateToProjects();
         await this.clickProjectCardInProjectSection(projectName);
         await this.clickPriceListTab();
-        await expect(this.priceListTable).toBeVisible({ timeout: ProjectActions.TIMEOUT_DEFAULT });
+        await expect(this.priceListTable).toBeVisible({ timeout: ProjectPage.TIMEOUT_DEFAULT });
         await this.clickPriceListGlobalFilterIcon();
         await this.openBedDropdown();
         await this.bedDropdownSearchInput.fill(invalidBed);

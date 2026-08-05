@@ -1,7 +1,7 @@
 // import { test, expect } from '@playwright/test';
-// import { MyProfileActions } from './MyProfileActions';
+// import { MyProfilePage } from '../../pages/myprofile/MyProfilePage';
 // import { LoginActions } from '../Login/LoginAction';
-// import { LoginUsers } from '../../fixture/test-data';
+// import { LoginUsers } from '../../fixtures/test-data';
 // import * as dotenv from 'dotenv';
 // import fs from 'fs';
 
@@ -36,7 +36,7 @@
 
 //   test(' Enable Google Authenticator MFA for a user', async ({ page }) => {
 //     const login = new LoginActions(page);
-//     const profile = new MyProfileActions(page);
+//     const profile = new MyProfilePage(page);
 
 //     await login.login(
 //       operationManager.email!,
@@ -54,7 +54,7 @@
 
 //   test(' Enable Microsoft Authenticator MFA for a user', async ({ page }) => {
 //     const login = new LoginActions(page);
-//     const profile = new MyProfileActions(page);
+//     const profile = new MyProfilePage(page);
 
 //     await login.login(
 //       operationManager.email!,
@@ -70,7 +70,7 @@
 
 //   test(' Enable Authy Authenticator MFA for a user', async ({ page }) => {
 //     const login = new LoginActions(page);
-//     const profile = new MyProfileActions(page);
+//     const profile = new MyProfilePage(page);
 //     reloadEnv();
 //     await login.login(
 //       operationManager.email!,
@@ -106,7 +106,7 @@
 //     await page.reload(); // Explicit reload before test logic
 //     reloadEnv(); // Reload environment variables to ensure fresh values
 //     const login = new LoginActions(page);
-//     const profile = new MyProfileActions(page);
+//     const profile = new MyProfilePage(page);
 
 //     await login.login(
 //       operationManager.email!,
@@ -122,7 +122,7 @@
 //     await page.reload(); // Explicit reload before test logic
 //     reloadEnv(); // Reload environment variables to ensure fresh values
 //     const login = new LoginActions(page);
-//     const profile = new MyProfileActions(page);
+//     const profile = new MyProfilePage(page);
 
 //     await login.login(
 //       operationManager.email!,
@@ -138,7 +138,7 @@
 //     await page.reload(); // Explicit reload before test logic
 //     reloadEnv(); // Reload environment variables to ensure fresh values
 //     const login = new LoginActions(page);
-//     const profile = new MyProfileActions(page);
+//     const profile = new MyProfilePage(page);
 
 //     await login.login(
 //       operationManager.email!,

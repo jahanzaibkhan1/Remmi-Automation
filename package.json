@@ -8,7 +8,13 @@
     "type": "git",
     "url": "git+https://github.com/jahanzaibkhan1/Remmi-Automation.git"
   },
-  "keywords": ["playwright", "e2e", "automation", "typescript", "remmi"],
+  "keywords": [
+    "playwright",
+    "e2e",
+    "automation",
+    "typescript",
+    "remmi"
+  ],
   "author": "Muhammad Jahanzaib",
   "license": "ISC",
   "bugs": {
@@ -19,7 +25,8 @@
     "@faker-js/faker": "^10.1.0",
     "@playwright/test": "^1.56.0",
     "@types/node": "^24.12.2",
-    "dotenv": "^17.2.3"
+    "dotenv": "^17.2.3",
+    "typescript": "^7.0.2"
   },
   "dependencies": {
     "jsqr": "^1.4.0",

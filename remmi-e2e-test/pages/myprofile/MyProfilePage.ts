@@ -2,15 +2,15 @@ import { Page, Locator, expect, test } from '@playwright/test';
 import { MyProfileLocators } from './MyProfileLocators';
 import { faker, tr } from '@faker-js/faker';
 import * as dotenv from 'dotenv';
-import { extractSecretFromQr } from '../../helper/mfaHelper';
-import { generateOtp } from '../../helper/getOtp';
-import { updateEnvVariable } from '../../helper/updateEnvVariable';
+import { extractSecretFromQr } from '../../helpers/mfaHelper';
+import { generateOtp } from '../../helpers/getOtp';
+import { updateEnvVariable } from '../../helpers/updateEnvVariable';
 
 
 /**
  * Actions and verifications for the My Profile page.
  */
-export class MyProfileActions {
+export class MyProfilePage {
   private locators: MyProfileLocators;
 
   constructor(private page: Page) {
