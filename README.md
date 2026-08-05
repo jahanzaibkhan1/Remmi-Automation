@@ -1,45 +1,119 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
+# Remmi QA Automation
 
-When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
-
-*We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
+End-to-end test suite for the [Remmi](https://remmi.com.au) real estate platform, built with [Playwright](https://playwright.dev) and TypeScript.
 
 ---
 
-## Edit a file
+## Tech Stack
 
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
-
-1. Click **Source** on the left side.
-2. Click the README.md link from the list of files.
-3. Click the **Edit** button.
-4. Delete the following text: *Delete this line to make a change to the README from Bitbucket.*
-5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
-6. Go back to the **Source** page.
-
----
-
-## Create a file
-
-Next, you’ll add a new file to this repository.
-
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
-
-Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
+| Tool | Purpose |
+|---|---|
+| Playwright | Browser automation & test runner |
+| TypeScript | Language |
+| Faker.js | Dynamic test data generation |
+| OTPlib | MFA / OTP handling |
+| dotenv | Environment variable management |
 
 ---
 
-## Clone a repository
+## Project Structure
 
-Use these steps to clone from SourceTree, our client for using the repository command-line free. Cloning allows you to work on your files locally. If you don't yet have SourceTree, [download and install first](https://www.sourcetreeapp.com/). If you prefer to clone from the command line, see [Clone a repository](https://confluence.atlassian.com/x/4whODQ).
+```
+remmi-qa-automation/
+├── remmi-e2e-test/
+│   ├── Pages/
+│   │   ├── Contacts/       # Contact module tests
+│   │   ├── Dashboard/      # Dashboard tests
+│   │   ├── Listing/        # Listing module tests
+│   │   ├── Login/          # Authentication tests
+│   │   ├── MyProfile/      # Profile & settings tests
+│   │   └── Projects/       # Projects module tests
+│   ├── auth/               # Session management
+│   ├── fixture/            # Shared test data
+│   ├── helper/             # Utility functions (OTP, env)
+│   └── sessions/           # Auth session storage (gitignored)
+├── playwright.config.ts
+├── .env                    # Environment variables (gitignored)
+└── package.json
+```
 
-1. You’ll see the clone button under the **Source** heading. Click that button.
-2. Now click **Check out in SourceTree**. You may need to create a SourceTree account or log in.
-3. When you see the **Clone New** dialog in SourceTree, update the destination path and name if you’d like to and then click **Clone**.
-4. Open the directory you just created to see your repository’s files.
+---
 
-Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+## Setup
+
+### 1. Install dependencies
+
+```bash
+npm install
+npx playwright install chromium
+```
+
+### 2. Configure environment variables
+
+Create a `.env` file in the project root:
+
+```env
+BASE_URL=https://portal-staging.remmi.com.au
+DASHBOARD_URL=https://portal-staging.remmi.com.au/dashboard
+EMAIL=your-test-email@example.com
+PASSWORD=your-test-password
+```
+
+---
+
+## Running Tests
+
+### Run all tests
+```bash
+npx playwright test
+```
+
+### Run a specific module
+```bash
+npx playwright test remmi-e2e-test/Pages/Listing
+npx playwright test remmi-e2e-test/Pages/Contacts
+npx playwright test remmi-e2e-test/Pages/Projects
+```
+
+### Run a specific spec file
+```bash
+npx playwright test remmi-e2e-test/Pages/Login/login.spec.ts
+```
+
+### Run with UI mode (headed)
+```bash
+npx playwright test --headed
+```
+
+### View HTML report
+```bash
+npx playwright show-report
+```
+
+---
+
+## Configuration
+
+Key settings in `playwright.config.ts`:
+
+| Setting | Value |
+|---|---|
+| Browser | Chromium (maximized) |
+| Workers | 1 (sequential) |
+| Retries | 3 |
+| Timeout | 120s per test |
+| Screenshots | On failure only |
+| Video | Retained on failure |
+
+---
+
+## Test Modules
+
+| Module | Specs |
+|---|---|
+| Login | Sign in, MFA |
+| Dashboard | Overview, notice board |
+| Contacts | CRUD, leads, tasks, notes, streams, associations |
+| Listing | Forms, images, calendar, documents, portals, legal, inspections |
+| Projects | Setup, lot lists, precincts, price lists, grid view |
+| My Profile | Profile info, images, MFA, social settings, teams, notifications |

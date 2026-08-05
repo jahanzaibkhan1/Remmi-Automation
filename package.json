@@ -1,20 +1,20 @@
 {
   "name": "remmi-qa-automation",
   "version": "1.0.0",
-  "description": "**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**",
+  "description": "End-to-end test suite for the Remmi real estate platform, built with Playwright and TypeScript.",
   "main": "index.js",
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://jahanzaib4@bitbucket.org/icentra/remmi-qa-automation.git"
+    "url": "git+https://github.com/jahanzaibkhan1/Remmi-Automation.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["playwright", "e2e", "automation", "typescript", "remmi"],
+  "author": "Muhammad Jahanzaib",
   "license": "ISC",
   "bugs": {
-    "url": "https://bitbucket.org/icentra/remmi-qa-automation/issues"
+    "url": "https://github.com/jahanzaibkhan1/Remmi-Automation/issues"
   },
-  "homepage": "https://bitbucket.org/icentra/remmi-qa-automation#readme",
+  "homepage": "https://github.com/jahanzaibkhan1/Remmi-Automation#readme",
   "devDependencies": {
     "@faker-js/faker": "^10.1.0",
     "@playwright/test": "^1.56.0",
