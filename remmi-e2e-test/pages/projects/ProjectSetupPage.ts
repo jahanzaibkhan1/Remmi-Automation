@@ -60,6 +60,8 @@ export class ProjectSetupPage extends ProjectBasePage {
         await this.assertFieldVisible(this.projectSetupNameLabel, this.projectSetupNameInput);
         await this.assertFieldVisible(this.projectSetupStatusLabel, this.projectSetupStatusSelect);
         await this.projectSetupNameInput.fill(newName);
+        await this.clickGeneralTabSave();
+        await this.assertProjectUpdatedToast();
         await this.cleanupAfterProjectTest();
     }
 

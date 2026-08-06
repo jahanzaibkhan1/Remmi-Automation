@@ -151,10 +151,6 @@ export abstract class ListingBasePage extends BasePage {
         await expect(selectAllCheckbox).toBeVisible();
         await selectAllCheckbox.click({ force: true });
         await this.page.waitForTimeout(500);
-
-        // Optionally click again if toggle required for deselect scenario
-        await selectAllCheckbox.click({ force: true });
-        await this.page.waitForTimeout(700);
     }
 
     // Protected functions for "Contract Status" filter
@@ -179,10 +175,6 @@ export abstract class ListingBasePage extends BasePage {
         await expect(selectAllCheckbox).toBeVisible();
         await selectAllCheckbox.click({ force: true });
         await this.page.waitForTimeout(500);
-
-        // Optionally click again if toggle required for deselect scenario
-        await selectAllCheckbox.click({ force: true });
-        await this.page.waitForTimeout(700);
     }
 
 
@@ -242,10 +234,6 @@ export abstract class ListingBasePage extends BasePage {
         await expect(selectAllCheckbox).toBeVisible();
         await selectAllCheckbox.click({ force: true });
         await this.page.waitForTimeout(500);
-
-        // Optionally click again if toggle required for deselect scenario
-        await selectAllCheckbox.click({ force: true });
-        await this.page.waitForTimeout(700);
     }
 
     // Public function to reset filters (clicks the Reset button)

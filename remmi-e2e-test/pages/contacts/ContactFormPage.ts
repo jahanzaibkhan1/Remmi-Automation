@@ -15,7 +15,7 @@ export class ContactFormPage extends ContactBasePage {
 
         const contactForm = this.page.locator('section.body-details');
         await contactForm.waitFor({ state: 'visible', timeout: 10000 });
-        expect(contactForm).toBeVisible();
+        await expect(contactForm).toBeVisible();
         console.log("Contact Form open successfully");
         await this.page.waitForTimeout(1200);
         await this.closeModalIfVisible();
@@ -33,7 +33,7 @@ export class ContactFormPage extends ContactBasePage {
 
         const contactForm = this.page.locator('section.body-details');
         await contactForm.waitFor({ state: 'visible', timeout: 10000 });
-        expect(contactForm).toBeVisible();
+        await expect(contactForm).toBeVisible();
         await this.page.waitForTimeout(1200);
         await this.closeModalIfVisible();
         console.log("Contact form was closed using the X icon successfully")
@@ -51,7 +51,7 @@ export class ContactFormPage extends ContactBasePage {
 
         const contactForm = this.page.locator('section.body-details');
         await contactForm.waitFor({ state: 'visible', timeout: 10000 });
-        expect(contactForm).toBeVisible();
+        await expect(contactForm).toBeVisible();
 
         const imageUploadSelectors = [
             'input[type="file"]', // file input
@@ -746,7 +746,7 @@ export class ContactFormPage extends ContactBasePage {
 
         const contactForm = this.page.locator('section.body-details');
         await contactForm.waitFor({ state: 'visible' });
-        expect(contactForm).toBeVisible();
+        await expect(contactForm).toBeVisible();
         console.log("Contact Form open successfully");
 
         // Find the address input field
