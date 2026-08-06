@@ -24,17 +24,17 @@ remmi-qa-automation/
 │   ├── pages/
 │   │   ├── common/         # BasePage (abstract base for all modules)
 │   │   ├── contacts/       # ContactBasePage + 12 sub-module page classes
-│   │   ├── dashboard/      # DashboardPage
+│   │   ├── dashboard/      # DashboardPage + NoticeBoardPage
 │   │   ├── listing/        # ListingBasePage + 17 sub-module page classes
 │   │   ├── login/          # LoginPage
-│   │   ├── myprofile/      # MyProfilePage
+│   │   ├── myprofile/      # MyProfileBasePage + 8 sub-module page classes
 │   │   └── projects/       # ProjectBasePage + 11 sub-module page classes
 │   ├── tests/
 │   │   ├── contacts/       # 12 contact spec files
-│   │   ├── dashboard/
+│   │   ├── dashboard/      # 2 spec files
 │   │   ├── listing/        # 17 listing spec files
 │   │   ├── login/
-│   │   ├── myprofile/
+│   │   ├── myprofile/      # 8 spec files
 │   │   └── projects/       # 11 project spec files
 │   ├── auth/               # Session management (sessionManager.ts)
 │   ├── fixtures/           # test-data.ts — role → credential map
@@ -149,11 +149,11 @@ Key settings in `playwright.config.ts`:
 
 ## Test Modules
 
-| Module | Specs |
-|---|---|
-| Login | Sign in, MFA |
-| Dashboard | Overview, notice board |
-| Contacts | CRUD, leads, tasks, notes, streams, associations |
-| Listing | Forms, images, calendar, documents, portals, legal, inspections |
-| Projects | Setup, lot lists, precincts, price lists, grid view |
-| My Profile | Profile info, images, MFA, social settings, teams, notifications |
+| Module | Specs | Coverage |
+|---|---|---|
+| Login | 1 | Sign in, MFA |
+| Dashboard | 2 | Overview, notice board |
+| Contacts | 12 | List, form, leads, lead forms, tasks, task forms, notes, streams, history, related contacts, related properties, associations |
+| Listing | 17 | Form, grid view, list view, images, calendar, documents, portals, legal, inspections, leads, tasks, task forms, notes, history, streams, conjunction, related |
+| Projects | 11 | Setup, overview, lot list, lot list form, lot form, lot list view, precinct setup, precinct lot list, price list, grid view, list view |
+| My Profile | 8 | Profile info, images, MFA, social settings, access, teams, notifications, associations |
