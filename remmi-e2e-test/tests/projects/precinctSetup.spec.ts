@@ -1,5 +1,5 @@
-import { test } from '../../fixtures/session.fixture';
-import { ProjectPage } from '../../pages/projects/ProjectPage';
+﻿import { test } from '../../fixtures/session.fixture';
+import { ProjectPrecinctSetupPage as ProjectPage } from '../../pages/projects/ProjectPrecinctSetupPage';
 
 test.describe('Precinct Setup Tab', () => {
     test('should display "Precinct" and "Precinct Allocation" sub-tabs when "Precinct Setup" tab is clicked', async ({ sessionPage }) => {

@@ -1,5 +1,5 @@
-import { test } from '../../fixtures/session.fixture';
-import { ContactPage } from '../../pages/contacts/ContactPage';
+﻿import { test } from '../../fixtures/session.fixture';
+import { ContactRelatedContactPage as ContactPage } from '../../pages/contacts/ContactRelatedContactPage';
 
 test.describe('Related Contact', () => {
 

@@ -21,21 +21,47 @@ End-to-end test suite for the [Remmi](https://remmi.com.au) real estate platform
 ```
 remmi-qa-automation/
 ├── remmi-e2e-test/
-│   ├── Pages/
-│   │   ├── Contacts/       # Contact module tests
-│   │   ├── Dashboard/      # Dashboard tests
-│   │   ├── Listing/        # Listing module tests
-│   │   ├── Login/          # Authentication tests
-│   │   ├── MyProfile/      # Profile & settings tests
-│   │   └── Projects/       # Projects module tests
-│   ├── auth/               # Session management
-│   ├── fixture/            # Shared test data
-│   ├── helper/             # Utility functions (OTP, env)
-│   └── sessions/           # Auth session storage (gitignored)
+│   ├── pages/
+│   │   ├── common/         # BasePage (abstract base for all modules)
+│   │   ├── contacts/       # ContactBasePage + 12 sub-module page classes
+│   │   ├── dashboard/      # DashboardPage
+│   │   ├── listing/        # ListingBasePage + 17 sub-module page classes
+│   │   ├── login/          # LoginPage
+│   │   ├── myprofile/      # MyProfilePage
+│   │   └── projects/       # ProjectBasePage + 11 sub-module page classes
+│   ├── tests/
+│   │   ├── contacts/       # 12 contact spec files
+│   │   ├── dashboard/
+│   │   ├── listing/        # 17 listing spec files
+│   │   ├── login/
+│   │   ├── myprofile/
+│   │   └── projects/       # 11 project spec files
+│   ├── auth/               # Session management (sessionManager.ts)
+│   ├── fixtures/           # test-data.ts — role → credential map
+│   ├── helpers/            # getOtp.ts, mfaHelper.ts, updateEnvVariable.ts
+│   └── sessions/           # Auth state JSON files (gitignored)
 ├── playwright.config.ts
 ├── .env                    # Environment variables (gitignored)
 └── package.json
 ```
+
+### Page Object Architecture
+
+All page classes follow a three-layer hierarchy:
+
+```
+BasePage  (common/BasePage.ts)
+└── [Module]BasePage  (e.g. ListingBasePage, ContactBasePage, ProjectBasePage)
+    └── [Feature]Page  (e.g. ListingFormPage, ContactLeadPage, ProjectSetupPage)
+```
+
+Each spec file imports exactly one leaf page class and calls one page method per test.
+
+| Layer | Responsibility |
+|---|---|
+| `BasePage` | Shared helpers: `goto`, `assertVisible`, `clickWhenReady`, `fillAndVerify` |
+| `[Module]BasePage` | Module navigation, shared locators, cross-section helpers |
+| `[Feature]Page` | Feature-specific test methods and locators |
 
 ---
 
@@ -55,9 +81,23 @@ Create a `.env` file in the project root:
 ```env
 BASE_URL=https://portal-staging.remmi.com.au
 DASHBOARD_URL=https://portal-staging.remmi.com.au/dashboard
-EMAIL=your-test-email@example.com
-PASSWORD=your-test-password
+
+E2E_MANAGER_EMAIL=
+E2E_MANAGER_PASSWORD=
+E2E_MANAGER_OTP_SECRET=
+
+E2E_SALES_EMAIL=
+E2E_SALES_PASSWORD=
+E2E_SALES_OTP_SECRET=
+
+E2E_ADMIN_EMAIL=
+E2E_ADMIN_PASSWORD=
+E2E_ADMIN_OTP_SECRET=
+
+E2E_MANAGER_GOOGLE_SECRET=
 ```
+
+Tests load pre-saved browser sessions from `sessions/<role>-session.json`. If a session expires, delete the file and re-run to regenerate it.
 
 ---
 
@@ -70,14 +110,14 @@ npx playwright test
 
 ### Run a specific module
 ```bash
-npx playwright test remmi-e2e-test/Pages/Listing
-npx playwright test remmi-e2e-test/Pages/Contacts
-npx playwright test remmi-e2e-test/Pages/Projects
+npx playwright test remmi-e2e-test/tests/listing
+npx playwright test remmi-e2e-test/tests/contacts
+npx playwright test remmi-e2e-test/tests/projects
 ```
 
 ### Run a specific spec file
 ```bash
-npx playwright test remmi-e2e-test/Pages/Login/login.spec.ts
+npx playwright test remmi-e2e-test/tests/login/login.spec.ts
 ```
 
 ### Run with UI mode (headed)

@@ -1,5 +1,5 @@
-import { test } from '../../fixtures/session.fixture';
-import { ProjectPage } from '../../pages/projects/ProjectPage';
+﻿import { test } from '../../fixtures/session.fixture';
+import { ProjectPrecinctLotListPage as ProjectPage } from '../../pages/projects/ProjectPrecinctLotListPage';
 
 test.describe('Lot List Page', () => {
     test('TC_01: Verify only new values are shown on creation', async ({ sessionPage }) => {

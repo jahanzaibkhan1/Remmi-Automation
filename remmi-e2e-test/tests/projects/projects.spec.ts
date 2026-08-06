@@ -1,5 +1,5 @@
-import { test } from '../../fixtures/session.fixture';
-import { ProjectPage } from '../../pages/projects/ProjectPage';
+﻿import { test } from '../../fixtures/session.fixture';
+import { ProjectOverviewPage as ProjectPage } from '../../pages/projects/ProjectOverviewPage';
 
 test.describe('Precinct Inner View - E2E Tests', () => {
 

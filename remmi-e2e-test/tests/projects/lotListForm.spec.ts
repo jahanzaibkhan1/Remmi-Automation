@@ -1,5 +1,5 @@
-import { test } from '../../fixtures/session.fixture';
-import { ProjectPage } from '../../pages/projects/ProjectPage';
+﻿import { test } from '../../fixtures/session.fixture';
+import { ProjectLotListFormPage as ProjectPage } from '../../pages/projects/ProjectLotListFormPage';
 
 test.describe('Lot Form', () => {
 

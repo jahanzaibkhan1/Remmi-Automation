@@ -1,5 +1,5 @@
-import { test } from '../../fixtures/session.fixture';
-import { ListingPage } from '../../pages/listing/ListingPage';
+﻿import { test } from '../../fixtures/session.fixture';
+import { ListingNotesPage as ListingPage } from '../../pages/listing/ListingNotesPage';
 
 test.describe('Listing side Menu Tests - Remmi E2E', () => {
     test('Test 1: Verify that the NOTE Tab opens correctly', async ({ sessionPage }) => {

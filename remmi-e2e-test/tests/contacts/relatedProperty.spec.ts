@@ -1,5 +1,5 @@
-import { test } from '../../fixtures/session.fixture';
-import { ContactPage } from '../../pages/contacts/ContactPage';
+﻿import { test } from '../../fixtures/session.fixture';
+import { ContactRelatedPropertyPage as ContactPage } from '../../pages/contacts/ContactRelatedPropertyPage';
 
 test.describe('Contact Related Property Tabs - Remmi E2E', () => {
 

@@ -1,5 +1,5 @@
-import { test } from '../../fixtures/session.fixture';
-import { ListingPage } from '../../pages/listing/ListingPage';
+﻿import { test } from '../../fixtures/session.fixture';
+import { ListingHistoryPage as ListingPage } from '../../pages/listing/ListingHistoryPage';
 
 test.describe('Listing History Tab - Remmi E2E', () => {
   test('Test 1: Verify that the history tab displays details for the newly created listing', async ({ sessionPage }) => {

@@ -1,5 +1,5 @@
-import { test } from '../../fixtures/session.fixture';
-import { ProjectPage } from '../../pages/projects/ProjectPage';
+﻿import { test } from '../../fixtures/session.fixture';
+import { ProjectGridViewPage as ProjectPage } from '../../pages/projects/ProjectGridViewPage';
 
 // Extend test to provide sessionPage for authenticated context
 

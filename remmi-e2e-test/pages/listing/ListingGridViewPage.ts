@@ -1,0 +1,1492 @@
+import { expect } from '@playwright/test';
+import { ListingBasePage } from './ListingBasePage';
+
+export class ListingGridViewPage extends ListingBasePage {
+
+    //*************************************Public Actions *************************************//
+
+    async searchForValidListing(keyword: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Wait for cards to be visible before searching
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+
+        await this.searchListing(keyword);
+        await this.page.waitForTimeout(1000);
+
+        // Verify search result: cards should be visible and contain the searched keyword
+        await expect(cardRows.first()).toBeVisible({ timeout: 10000 });
+        const cardRowCount = await cardRows.count();
+        expect(cardRowCount).toBeGreaterThan(0);
+
+        let foundKeyword = false;
+        for (let i = 0; i < cardRowCount; ++i) {
+            const row = cardRows.nth(i);
+            const rowText = (await row.innerText()).toLowerCase();
+            if (rowText.includes(keyword.toLowerCase())) {
+                foundKeyword = true;
+                break;
+            }
+        }
+
+    }
+
+
+    async searchForInvalidListing(keyword: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        await this.searchListing(keyword);
+        await this.page.waitForTimeout(1000);
+
+        const noResults = this.page.getByText('No results found');
+        await expect(noResults).toBeVisible({ timeout: 10000 });
+    }
+
+    async searchWithSpecialCharacters(specialChars: string) {
+        await this.navigateToListings();
+        const searchBox = this.locators.SearchBox();
+        await searchBox.click();
+        await searchBox.fill(specialChars);
+        await this.page.waitForTimeout(1000);
+    }
+
+    async searchWithEmptyField() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const searchBox = this.locators?.SearchBox?.() ?? this.page.getByRole('textbox', { name: /search/i });
+        await searchBox.fill('');
+        await searchBox.press('Enter');
+        await this.page.waitForTimeout(1000);
+    }
+
+    async selectSinglePropertyType() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000);
+        const firstOption = this.page.locator('ul > li.p-element').nth(1);
+        await expect(firstOption).toBeVisible({ timeout: 3000 });
+        const label = (await firstOption.textContent())?.trim() || '';
+        await firstOption.click({ force: true });
+        await this.page.waitForTimeout(1000);
+        const count = await cardRows.count();
+        expect(count).toBeGreaterThan(0);
+        let found = false;
+        for (let i = 0; i < count; i++) {
+            const card = cardRows.nth(i);
+            await expect(card).toBeVisible({ timeout: 30000 });
+            const text = (await card.innerText()).trim().toLowerCase();
+            if (label && text.includes(label.toLowerCase())) {
+                found = true;
+                break;
+            }
+        }
+        // expect(found).toBe(true);
+
+    }
+
+    async selectMultiplePropertyTypes() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000);
+
+        const propertyTypeOptions = this.page.locator('ul > li.p-element');
+        const optionCount = await propertyTypeOptions.count();
+        if (optionCount < 2) {
+            throw new Error('Less than two property type options available to select.');
+        }
+        const firstOption = propertyTypeOptions.nth(0);
+        const secondOption = propertyTypeOptions.nth(1);
+
+        const firstLabelRaw = await firstOption.textContent();
+        const secondLabelRaw = await secondOption.textContent();
+        const firstLabel = firstLabelRaw ? firstLabelRaw.trim().toLowerCase() : '';
+        const secondLabel = secondLabelRaw ? secondLabelRaw.trim().toLowerCase() : '';
+
+        await firstOption.click({ force: true });
+        await this.page.waitForTimeout(300);
+        await secondOption.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        const count = await cardRows.count();
+
+        let foundFirst = false;
+        let foundSecond = false;
+
+        for (let i = 0; i < count; i++) {
+            const card = cardRows.nth(i);
+            await expect(card).toBeVisible({ timeout: 3000 });
+            const text = (await card.innerText()).trim().toLowerCase();
+            if (firstLabel && text.includes(firstLabel)) {
+                foundFirst = true;
+            }
+            if (secondLabel && text.includes(secondLabel)) {
+                foundSecond = true;
+            }
+            if (foundFirst && foundSecond) break;
+        }
+
+    }
+
+    async selectAllPropertyType() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        // Wait for cards to load
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000);
+
+        const selectAllOption = this.page.locator('.checkbox__checkmark').first();
+        await selectAllOption.click();
+        await this.page.waitForTimeout(1000);
+    }
+
+    async deselectAllPropertyTypes() {
+        await this.navigateToListings();
+        await this.switchToGridView()
+        // Cards load hone ka wait karo
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000);
+
+        const selectAllOption = this.page.locator('.checkbox__checkmark').first();
+        await selectAllOption.click();
+        await this.page.waitForTimeout(500);
+
+        await selectAllOption.click();
+        await this.page.waitForTimeout(1000);
+
+    }
+
+    async searchWithinPropertyTypeFilter(searchTerm: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000);
+
+        const propertyTypeSearchInput = this.page.locator('re-multiselect').filter({ hasText: 'Property Type' }).getByPlaceholder('Search')
+        await propertyTypeSearchInput.click();
+        await propertyTypeSearchInput.fill(searchTerm);
+        await this.page.waitForTimeout(1000);
+
+        const matchedOption = this.page.locator('li.p-element').filter({ hasText: new RegExp(searchTerm, 'i') }).first();
+        if (await matchedOption.isVisible()) {
+            await matchedOption.click();
+            await this.page.waitForTimeout(800);
+        }
+
+        const rowCount = await cardRows.count();
+        let found = false;
+        for (let i = 0; i < rowCount; ++i) {
+            const row = cardRows.nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const rowText = (await row.innerText()).toLowerCase();
+            if (rowText.includes(searchTerm.toLowerCase())) {
+                found = true;
+                break;
+            }
+        }
+
+    }
+
+    async selectSinglePropertyAndCloseDropdown() {
+        await this.navigateToListings();
+        await this.switchToGridView()
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows.first()).toBeVisible({ timeout: 30000 });
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000);
+
+        const firstPropertyTypeOption = this.page.locator('ul > li.p-element').first();
+        await firstPropertyTypeOption.click({ force: true });
+
+        const closeButton = this.page.locator('.pi.pi-times-circle');
+        if (await closeButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+            await closeButton.click({ force: true });
+        }
+    }
+
+    async selectSingleSuburb() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+
+        const suburbDropdown = this.locators.suburbDropdown();
+        await expect(suburbDropdown).toBeVisible({ timeout: 2000 });
+        await suburbDropdown.click();
+        await this.page.waitForTimeout(1000);
+
+        const firstSuburbOption = this.page.locator('ul > li.p-element').first();
+        await expect(firstSuburbOption).toBeVisible({ timeout: 10000 });
+        const firstSuburbText = (await firstSuburbOption.textContent() ?? '').trim();
+        await firstSuburbOption.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        const count = await cardRows.count();
+        expect(count).toBeGreaterThan(0);
+
+        for (let i = 0; i < count; i++) {
+            const card = cardRows.nth(i);
+            await expect(card).toBeVisible({ timeout: 3000 });
+            const cardText = (await card.innerText()).toLowerCase();
+            // expect(firstSuburbText && cardText.includes(firstSuburbText.toLowerCase()))
+            //     .toBe(true);
+        }
+    }
+
+    async selectMultipleSuburbs() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+
+        await this.page.waitForTimeout(1000)
+
+        const suburbDropdown = this.locators.suburbDropdown();
+        await expect(suburbDropdown).toBeVisible({ timeout: 2000 });
+        await suburbDropdown.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        const allSuburbOptions = this.page.locator('ul > li.p-element');
+        const optionCount = await allSuburbOptions.count();
+        if (optionCount < 2) {
+            throw new Error('Less than two suburb options available to select.');
+        }
+
+        // Pick first two displayed suburbs
+        const suburb1 = allSuburbOptions.nth(0);
+        const suburb2 = allSuburbOptions.nth(1);
+
+        const suburb1Text = (await suburb1.textContent() ?? '').trim();
+        const suburb2Text = (await suburb2.textContent() ?? '').trim();
+
+        await suburb1.click({ force: true });
+        await this.page.waitForTimeout(300);
+        await suburb2.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        const rowCount = await cardRows.count();
+
+        // Assume that all listings should correspond to the suburbs filtered,
+        // so each row should show at least one of the selected suburbs.
+        for (let i = 0; i < rowCount; ++i) {
+            const row = cardRows.nth(i);
+            await expect(row).toBeVisible({ timeout: 3000 });
+            const rowText = (await row.innerText()).toLowerCase();
+
+            // At least one of the selected suburb names must appear in the text
+            const matchesSuburb =
+                (suburb1Text && rowText.includes(suburb1Text.toLowerCase())) ||
+                (suburb2Text && rowText.includes(suburb2Text.toLowerCase()));
+            // expect(matchesSuburb).toBe(true);
+        }
+
+    }
+
+    async selectAllSuburbs() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        const suburbDropdown = this.locators.suburbDropdown();
+        await expect(suburbDropdown).toBeVisible({ timeout: 2000 });
+        await suburbDropdown.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        // Select 'Select All' for suburbs
+        const selectAllCheckbox = this.locators.suburbSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible({ timeout: 2000 });
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        // Count listings after selecting all suburbs
+        const rowCount = await cardRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
+
+    async deselectAllSuburbs() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        const suburbDropdown = this.locators.suburbDropdown();
+        await expect(suburbDropdown).toBeVisible();
+        await suburbDropdown.click({ force: true });
+
+        const selectAllCheckbox = this.locators.suburbSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        const rowCount = await cardRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+    }
+
+    async searchWithinSuburbDropdown(suburbLabel: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        const suburbDropdown = this.locators.suburbDropdown();
+        await expect(suburbDropdown).toBeVisible();
+        await suburbDropdown.click({ force: true });
+
+        const searchInput = this.locators.suburbSearchInput();
+        await expect(searchInput).toBeVisible();
+        await searchInput.fill(suburbLabel);
+
+        await this.page.waitForTimeout(800);
+
+        const suburbOption = this.locators.suburbOption(suburbLabel).first();
+        await expect(suburbOption).toBeVisible();
+
+        await suburbOption.first().click({ force: true });
+
+        await this.page.waitForTimeout(1000);
+
+        const count = await cardRows.count();
+        expect(count).toBeGreaterThan(0);
+
+        for (let i = 0; i < count; i++) {
+            const card = cardRows.nth(i);
+            await expect(card).toBeVisible({ timeout: 30000 });
+            const cardText = (await card.innerText()).toLowerCase();
+            // Check that suburbLabel is found in the card text
+            // expect(cardText.includes(suburbLabel.toLowerCase())).toBe(true);
+        }
+    }
+
+    async selectSingleListingStatus() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible();
+        await listingStatusDropdown.click({ force: true });
+
+        await this.page.waitForSelector('ul > li.p-element');
+
+        const statusOptions = this.page.locator('ul > li.p-element');
+        const targetStatus = statusOptions.nth(2);
+
+        await expect(targetStatus).toBeVisible();
+        const statusLabel = (await targetStatus.innerText()).trim();
+        expect(statusLabel.toLowerCase()).toBe("for lease");
+
+        await targetStatus.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        const count = await cardRows.count();
+        expect(count).toBeGreaterThan(0);
+
+        // Check that each card contains the selected status label ("For Lease")
+        for (let i = 0; i < count; i++) {
+            const card = cardRows.nth(i);
+            await expect(card).toBeVisible({ timeout: 3000 });
+            const cardText = (await card.innerText()).toLowerCase();
+            expect(cardText.includes(statusLabel.toLowerCase())).toBe(true);
+        }
+
+        await listingStatusDropdown.click();
+
+    }
+
+    async selectMultipleListingStatuses() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible();
+        await listingStatusDropdown.click({ force: true });
+
+        const statusOptions = this.page.locator('ul > li.p-element');
+
+        const selectedStatusLabels: string[] = [];
+        const status1 = statusOptions.nth(2);
+        const status2 = statusOptions.nth(4);
+
+        const status1Label = (await status1.innerText()).trim().toLowerCase();
+        const status2Label = (await status2.innerText()).trim().toLowerCase();
+        selectedStatusLabels.push(status1Label, status2Label);
+
+        await status1.click({ force: true });
+        await this.page.waitForTimeout(200);
+        await status2.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        const count = await cardRows.count();
+        const selectedLabels = [status1Label.toLowerCase(), status2Label.toLowerCase()];
+
+        // Check that each card contains at least one of the selected statuses in its text
+        let foundAll = true;
+        for (let i = 0; i < count; i++) {
+            const card = cardRows.nth(i);
+            await expect(card).toBeVisible({ timeout: 30000 });
+            const cardText = (await card.innerText()).toLowerCase();
+            if (!selectedLabels.some(lbl => cardText.includes(lbl))) {
+                foundAll = false;
+                break;
+            }
+        }
+        // expect(foundAll).toBe(true);
+
+        await listingStatusDropdown.click();
+    }
+
+    async selectAllListingStatuses() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible();
+        await listingStatusDropdown.click({ force: true });
+
+        const selectAllCheckbox = this.locators.listingStatusSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        const rowCount = await cardRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        await listingStatusDropdown.click();
+    }
+
+    async deselectAllListingStatuses() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible();
+        await listingStatusDropdown.click({ force: true });
+
+        const selectAllCheckbox = this.locators.listingStatusSelectAll().first();
+        await expect(selectAllCheckbox).toBeVisible();
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        await selectAllCheckbox.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        const rowCount = await cardRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+        await listingStatusDropdown.click();
+
+    }
+
+    async searchListingStatusFilter(searchTerm: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible();
+        await listingStatusDropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        const statusDropdownSearchBox = this.locators.listingStatusSearchInput?.()
+            ?? this.page.locator('input[placeholder="Search"][aria-label="Search Listing Status"]');
+        await expect(statusDropdownSearchBox).toBeVisible();
+        await statusDropdownSearchBox.fill(searchTerm);
+        await this.page.waitForTimeout(500);
+
+        const filteredOptions = this.locators.listingStatusOption(searchTerm);
+        const count = await filteredOptions.count();
+        expect(count).toBeGreaterThan(0);
+        let found = false;
+        for (let i = 0; i < count; i++) {
+            const optionText = ((await filteredOptions.nth(i).innerText()) || '').toLowerCase();
+            if (optionText.includes(searchTerm.toLowerCase())) {
+                found = true;
+                break;
+            }
+        }
+        expect(found).toBe(true);
+        await listingStatusDropdown.click();
+
+        await this.page.waitForTimeout(1000)
+
+    }
+
+    async searchForListingStatus(searchTerm: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        const listingStatusDropdown = this.locators.listingStatusDropdown();
+        await expect(listingStatusDropdown).toBeVisible();
+        await listingStatusDropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        const statusDropdownSearchBox = this.locators.listingStatusSearchInput?.()
+            ?? this.page.locator('input[placeholder="Search"][aria-label="Search Listing Status"]');
+        await expect(statusDropdownSearchBox).toBeVisible();
+        await statusDropdownSearchBox.fill(searchTerm);
+        await this.page.waitForTimeout(500);
+
+        const filteredOptions = this.locators.listingStatusOption(searchTerm).first();
+        await filteredOptions.click()
+        await this.page.waitForTimeout(100)
+        await listingStatusDropdown.click();
+
+        await this.page.waitForTimeout(1000)
+    }
+
+    async selectSingleListingType() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        const listingTypeDropdown = this.locators.listingTypeDropdown();
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 3000 });
+        await listingTypeDropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        const allTypeOptions = this.page.locator('ul li.p-element');
+        const firstTypeOption = allTypeOptions.first();
+        await expect(firstTypeOption).toBeVisible({ timeout: 10000 });
+
+        const selectedTypeTextRaw = await firstTypeOption.textContent();
+        const selectedTypeText = selectedTypeTextRaw ? selectedTypeTextRaw.trim() : '';
+        await firstTypeOption.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        const rowCount = await cardRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+
+    }
+
+    //
+    // Search for an option by typing in the listing type search box, then click it
+    async searchAndListingType(searchTerm: string) {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        const listingTypeDropdown = this.locators.listingTypeDropdown();
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 3000 });
+        await listingTypeDropdown.click({ force: true });
+        await this.page.waitForTimeout(500);
+
+        // Locate the search input inside listing type dropdown
+        const searchInput = this.locators.listingTypeSearchInput?.()
+            ?? this.page.locator('input[placeholder="Search"][aria-label="Search Listing Type"]');
+        await expect(searchInput).toBeVisible({ timeout: 3000 });
+        await searchInput.fill(searchTerm);
+        await this.page.waitForTimeout(500);
+
+        // Find and click the filtered option
+        const filteredOption = this.locators.listingTypeOption(searchTerm).first();
+        await expect(filteredOption).toBeVisible({ timeout: 2000 });
+        await filteredOption.click({ force: true });
+        await this.page.waitForTimeout(1000);
+    }
+
+    async selectMultipleListingTypes() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+
+        const listingTypeDropdown = this.locators.listingTypeDropdown();
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 3000 });
+        await listingTypeDropdown.click({ force: true });
+        await this.page.waitForTimeout(800);
+
+        const allTypeOptions = this.page.locator('ul > li.p-element');
+        const optionCount = await allTypeOptions.count();
+        if (optionCount < 2) {
+            throw new Error('Less than two listing types available to select.');
+        }
+
+        const type1 = allTypeOptions.nth(0);
+        const type2 = allTypeOptions.nth(2);
+
+        const type1TextRaw = await type1.textContent();
+        const type2TextRaw = await type2.textContent();
+        const type1Text = type1TextRaw ? type1TextRaw.trim() : '';
+        const type2Text = type2TextRaw ? type2TextRaw.trim() : '';
+
+        await type1.click({ force: true });
+        await this.page.waitForTimeout(300);
+        await type2.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        const rowCount = await cardRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+    }
+
+    async selectSingleAgent() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+        await this.openSelectByAgentDropdown();
+
+        const agentOptions = this.page.locator('li.p-element');
+        const optionCount = await agentOptions.count();
+        expect(optionCount).toBeGreaterThan(1);
+
+        let idx = 1;
+        let agentText = (await agentOptions.nth(idx).innerText()).trim();
+        if (!agentText && optionCount > 2) {
+            idx = 2;
+            agentText = (await agentOptions.nth(idx).innerText()).trim();
+        }
+        if (!agentText) throw new Error('Could not find valid agent option for selection');
+
+        await agentOptions.nth(idx).click({ force: true });
+        await this.page.locator('.p-datatable-loading, .loading-spinner')
+            .waitFor({ state: 'hidden', timeout: 7000 }).catch(() => { });
+
+        const rowCount = await cardRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+
+    }
+
+    async searchAgent(searchText = 'Dawood Ahmad') {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        await this.locators.cardViewPropertyRow().waitFor({ state: 'visible', timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+        await this.openSelectByAgentDropdown();
+
+        const agentSearchInput = this.locators.selectByAgentSearchInput();
+        await agentSearchInput.fill('');
+        await agentSearchInput.fill(searchText);
+        await this.page.waitForTimeout(800);
+
+        // Click the first matching agent option
+        const agentOption = this.page.locator('li.p-element', { hasText: searchText }).first();
+        await agentOption.click({ force: true });
+    }
+
+    async selectMultipleAgents() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+        await this.openSelectByAgentDropdown();
+
+        // Select nth(1) and nth(3) agent options (i.e., 2nd and 4th option due to 0-based indexing)
+        const agentOptions = this.page.locator('li.p-element');
+        const optionCount = await agentOptions.count();
+        expect(optionCount).toBeGreaterThan(3); // Ensure at least 4 options to select 1 and 3
+
+        const idx1 = 1;
+        const idx3 = 3;
+
+        const agentText1 = (await agentOptions.nth(idx1).innerText()).trim();
+        const agentText3 = (await agentOptions.nth(idx3).innerText()).trim();
+        if (!agentText1 || !agentText3) throw new Error('Could not find valid agent options at nth(1) or nth(3)');
+
+        await agentOptions.nth(idx1).click({ force: true });
+        await this.page.waitForTimeout(200);
+        await agentOptions.nth(idx3).click({ force: true });
+        await this.page.waitForTimeout(600);
+
+        const rowCount = await cardRows.count();
+        expect(rowCount).toBeGreaterThan(0);
+
+    }
+    // Selecting a single contract status
+    async selectSingleContractStatus() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        // Open the Contract Status dropdown
+        const contractStatusDropdown = this.locators.contractStatusDropdown();
+        await expect(contractStatusDropdown).toBeVisible({ timeout: 3000 });
+        await contractStatusDropdown.click({ force: true });
+        await this.page.waitForTimeout(800);
+
+        // Find all contract status options
+        const statusOptions = this.page.locator('ul > li.p-element');
+        const optionCount = await statusOptions.count();
+        if (optionCount === 0) throw new Error('No contract status options found.');
+
+        // Pick the first one with non-empty text
+        let selectedIdx = -1;
+        for (let i = 0; i < optionCount; ++i) {
+            const text = (await statusOptions.nth(i).textContent())?.trim() ?? '';
+            if (text) {
+                selectedIdx = i;
+                break;
+            }
+        }
+        if (selectedIdx === -1) throw new Error('Could not find a valid contract status to select.');
+
+        // Select it
+        await statusOptions.nth(selectedIdx).click({ force: true });
+        await this.page.waitForTimeout(900);
+
+    }
+
+    // Selecting multiple Contract statuses
+    async selectMultipleContractStatuses() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open the Contract Status dropdown
+        const contractStatusDropdown = this.locators.contractStatusDropdown();
+        await expect(contractStatusDropdown).toBeVisible({ timeout: 3000 });
+        await contractStatusDropdown.click({ force: true });
+        await this.page.waitForTimeout(800);
+
+        // Find all contract status options
+        const statusOptions = this.page.locator('ul > li.p-element');
+        const optionCount = await statusOptions.count();
+        if (optionCount < 4) throw new Error('Less than four contract status options available to select.');
+
+        // Pick the 0th and 3rd options
+        const option0 = statusOptions.nth(0);
+        const option3 = statusOptions.nth(3);
+
+        const option0TextRaw = await option0.textContent();
+        const option3TextRaw = await option3.textContent();
+        const option0Text = option0TextRaw ? option0TextRaw.trim() : '';
+        const option3Text = option3TextRaw ? option3TextRaw.trim() : '';
+
+        await option0.click({ force: true });
+        await this.page.waitForTimeout(300);
+        await option3.click({ force: true });
+        await this.page.waitForTimeout(1000);
+
+        // (You can place table validation here if required)
+
+        // Click 'Reset' to clear the filter
+
+    }
+
+    // Selecting a contact creation date
+    async selectListingCreationDate() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Open datepicker
+        const input = this.locators.listingCreationDateDropdown();
+        await expect(input).toBeVisible({ timeout: 3000 });
+        await input.click({ force: true });
+        await this.page.waitForTimeout(300);
+
+        // Click 'Today' in datepicker
+        let todayBtn = this.page.locator('.p-datepicker-buttonbar button', { hasText: /today/i });
+        if (!(await todayBtn.isVisible().catch(() => false))) {
+            todayBtn = this.page.locator('button', { hasText: /today/i });
+        }
+        await todayBtn.click({ force: true });
+        // Reset filter
+
+    }
+
+    async selectNextDateFromToday() {
+        await this.navigateToListings();
+
+        // Open date picker
+        await this.locators.listingCreationDateDropdown().click();
+
+        // Always wait for calendar root (stable anchor)
+        const calendar = this.page.locator(".p-datepicker");
+        await expect(calendar).toBeVisible({ timeout: 10000 });
+
+        // Compute Tomorrow
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        // Read currently opened calendar's month-year (stable header)
+        const header = this.page.locator(".p-datepicker-title");
+        await expect(header).toBeVisible();
+
+        const headerText = await header.innerText();
+        const [monthName, year] = headerText.trim().split(" ");
+
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+
+        // Move calendar to correct month
+        const monthDifference =
+            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
+
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            if (monthDifference > 0) {
+                await this.page.locator(".p-datepicker-next").click();
+            } else {
+                await this.page.locator(".p-datepicker-prev").click();
+            }
+            // Wait for transition + re-render
+            await this.page.waitForTimeout(200);
+        }
+
+        // Select tomorrow's date (non-flaky selector)
+        const dayLocator = this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`
+        );
+
+        await dayLocator.first().waitFor({ state: "visible", timeout: 3000 });
+        await dayLocator.first().click({ force: true });
+
+        // Validate "no results" message
+        const noRecordsMsg = this.page.locator('text=/no results? found/i');
+        await expect(noRecordsMsg).toBeVisible({ timeout: 6000 });
+    }
+
+
+    // Checking if grid view button is displayed and toggling to grid view
+    async checkGridViewDisplay() {
+        await this.navigateToListings();
+        // Detect if already in grid view by checking visibility of at least one card row
+        const cardRows = this.locators.cardViewPropertyRow();
+        if (await cardRows.first().isVisible().catch(() => false)) {
+            // Already in grid view, do nothing
+            return;
+        }
+        // Reset filter
+
+    }
+
+    // Checking contact details in grid view - verify image, address, status, specifications, price
+    async checkContactDetailsInGridView() {
+        await this.navigateToListings();
+
+        await this.switchToGridView();
+        const image = this.page.locator('.s-property .product-thumbnail img').first();
+        await expect(image).toBeVisible()
+
+        const heading = this.page.locator('.s-property h3[title]').first();
+        const headingValue = await heading.textContent();
+        console.log("Heading:", headingValue?.trim());
+
+        const status = this.page.locator('.tag-saved').first();
+        const statusValue = await status.textContent();
+        console.log("Status:", statusValue?.trim());
+
+        // Beds
+        const beds = this.page.locator('img[src*="Bed.svg"]').locator('xpath=../following-sibling::span').first();
+        const bedsValue = await beds.textContent();
+        console.log("Beds:", bedsValue?.trim());
+
+        // Baths
+        const baths = this.page.locator('img[src*="Bath.svg"]').locator('xpath=../following-sibling::span').first();
+        const bathsValue = await baths.textContent();
+        console.log("Baths:", bathsValue?.trim());
+
+        // Cars
+        const cars = this.page.locator('img[src*="Car.svg"]').locator('xpath=../following-sibling::span').first();
+        const carsValue = await cars.textContent();
+        console.log("Cars:", carsValue?.trim());
+
+        // Area (16m2)
+        const area = this.page.locator('img[src*="area-1.svg"]').locator('xpath=../following-sibling::span').first();
+        const areaValue = await area.textContent();
+        console.log("Area:", areaValue?.trim());
+
+        const price = this.page.locator('.price-from').first();
+        const priceValue = await price.textContent();
+        console.log("Price:", priceValue?.trim());
+
+    }
+
+    // Expanding a Listing card
+    async expandFirstContactCard() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').nth(2);
+        await chevronDown.click({ force: true });
+        const expandedDetails = this.page.locator('.p-accordion-content, .expanded-section').nth(2);
+        const expandedText = (await expandedDetails.textContent() ?? '').trim();
+        console.log('Expanded Card Details (trimmed):', expandedText);
+
+
+        await this.page.waitForTimeout(1000)
+    }
+
+    // Collapsing an expanded listing card
+    async collapseExpandedListingCard() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown.click({ force: true });
+        const expandedDetails = this.page.locator('.p-accordion-content, .expanded-section').first();
+        const expandedText = (await expandedDetails.textContent() ?? '').trim();
+        console.log('Expanded Card Details (trimmed):', expandedText);
+        await this.resetFilters()
+
+        await this.page.waitForTimeout(2000)
+
+    }
+
+    // Deleting a Listing
+    async deleteListingCard() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const firstCard = this.page.locator('.s-property').first();
+        await expect(firstCard).toBeVisible({ timeout: 20000 });
+
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown.click({ force: true });
+
+        // Find the delete button for the first visible listing card in card/grid view
+        const cardDeleteButton = this.page.locator('a:nth-child(4)').first();
+        await cardDeleteButton.scrollIntoViewIfNeeded()
+        // Click the delete button until the confirmation dialog appears or give up after a number of attempts
+        let maxAttempts = 10;
+        let dialogVisible = false;
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            await cardDeleteButton.click({ force: true });
+            const confirmationDialog = this.page.getByText('Are you sure you want to delete this listing ? Your listing will be permanently');
+            try {
+                await expect(confirmationDialog).toBeVisible({ timeout: 1500 });
+                dialogVisible = true;
+                break;
+            } catch {
+                // Not visible yet, try again if attempts remain
+            }
+        }
+        if (!dialogVisible) {
+            throw new Error('Delete confirmation dialog did not appear after multiple attempts');
+        }
+
+        // Find and click the confirm Delete button
+        const confirmButton = this.page.getByRole('button', { name: 'Delete' });
+        await expect(confirmButton).toBeVisible({ timeout: 10000 });
+        await confirmButton.click({ force: true });
+        const toast = this.page.getByRole('alert', { name: 'Listing successfully deleted' });;
+        await expect(toast).toBeVisible({ timeout: 10000 });
+        await this.resetFilters();
+        await this.page.waitForTimeout(2000);
+
+    }
+
+    // Editing a listing
+    async editListingCard() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        // Expand the first listing card (if needed)
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown.click({ force: true });
+
+        await this.page.waitForTimeout(2000);
+
+        // Find and click the edit icon
+        const editIcon = this.page.locator('.ml-3.cp.ng-star-inserted').first(); // adjust selector if needed
+        await editIcon.scrollIntoViewIfNeeded();
+        await editIcon.waitFor({ state: 'visible', timeout: 10000 });
+        await this.page.waitForTimeout(1000);
+        await editIcon.click({ force: true });
+
+
+        // Optionally, add further steps to interact with the edit modal or form
+        const editForm = this.page.locator('#rightbarwithscroll');
+        await expect(editForm).toBeVisible({ timeout: 10000 });
+        const closeBtn = this.page.locator('i.pi.pi-times.cursor-pointer.f-14').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click();
+        }
+        await this.page.waitForTimeout(1000);
+        await this.resetFilters()
+
+        await this.page.waitForTimeout(2000)
+    }
+
+    // Editing and saving changes
+    async editAndSaveListingCard() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        // Expand the first listing card
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown.click({ force: true });
+
+        // Click the edit icon
+        const editIcon = this.page.locator('.ml-3.cp.ng-star-inserted').first();
+        await editIcon.scrollIntoViewIfNeeded();
+        await editIcon.click({ force: true });
+
+        // Wait for form/modal
+        const editForm = this.page.locator('#rightbarwithscroll, .p-dialog, .edit-form-modal-selector').first();
+        await expect(editForm).toBeVisible({ timeout: 10000 });
+
+        // LOCATORS AS PER PROMPT
+        const propertyTypeValue = "House";
+
+        // 1 Container
+        const propertyTypeSelect = this.page.locator('ng-select[formcontrolname="type"]');
+        await expect(propertyTypeSelect).toBeVisible({ timeout: 10000 });
+
+        await propertyTypeSelect.click()
+
+        // 3 Input for searching/typing
+        const input = propertyTypeSelect.locator('input[type="text"]');
+        await expect(input).toBeVisible({ timeout: 10000 });
+        await input.fill(propertyTypeValue);
+
+        // 6 All options - wait for visible
+        const options = this.page.locator('.ng-dropdown-panel .ng-option');
+        // 7 Specific option
+        const specificOption = options.locator(`text=${propertyTypeValue}`).first();
+        await expect(specificOption).toBeVisible({ timeout: 10000 });
+        await specificOption.click();
+
+        // Optionally log the selected value
+        const selectedValue = propertyTypeSelect.locator('.ng-value-label');
+        // Wait and log for debug
+        await expect(selectedValue).toBeVisible({ timeout: 2000 });
+        const selectedText = (await selectedValue.textContent())?.trim();
+        console.log("Selected Property Type:", selectedText);
+
+        // Save & Close
+        const saveButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await saveButton.click({ force: true });
+        await this.page.waitForTimeout(300);
+        await saveButton.click({ force: true });
+        const toast = this.page.getByRole('alert', { name: 'Listing updated successfully' })
+
+        expect(toast).toBeVisible()
+
+        await this.page.waitForTimeout(1000)
+
+        await this.resetFilters()
+
+        await this.page.waitForTimeout(2000)
+    }
+
+
+    //Opening a Listing portal
+    async openPortalListingCard() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        await this.resetFilters()
+        await this.page.waitForTimeout(1500)
+        // Expand the first listing card
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown.click({ force: true });
+
+        const portal = this.page.locator('.ml-3').first()
+
+        await portal.scrollIntoViewIfNeeded()
+        await this.page.waitForTimeout(1000);
+        await portal.click({ force: true })
+
+        // Wait for form/modal
+        const editForm = this.page.locator('#rightbarwithscroll, .p-dialog, .edit-form-modal-selector').first();
+        await expect(editForm).toBeVisible({ timeout: 10000 });
+
+        const closeBtn = this.page.locator('i.pi.pi-times.cursor-pointer.f-14').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click();
+        }
+
+        await this.page.waitForTimeout(1000)
+
+        await this.resetFilters()
+
+        await this.page.waitForTimeout(2000)
+
+    }
+
+    //     //Opening a Listing portal
+    async compareListingCard() {
+        await this.navigateToListings();
+
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        // Expand the first listing card
+        const chevronDown = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown.click({ force: true });
+
+        const compare1 = this.page.locator('.p-checkbox-box').first()
+
+        await compare1.scrollIntoViewIfNeeded()
+        await compare1.click({ force: true })
+
+        await this.page.waitForTimeout(1000)
+        const chevronDown2 = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown2.click({ force: true });
+
+        const compare2 = this.page.locator('.p-checkbox-box').nth(1)
+
+        await compare2.scrollIntoViewIfNeeded()
+        await compare2.click({ force: true })
+
+        // Wait for form/modal
+        const compareButton = this.page.getByRole('button', { name: 'Compare' });
+        await compareButton.scrollIntoViewIfNeeded()
+        await compareButton.click({ force: true })
+
+        const verifyRows = this.page.locator('.property-row')
+        await expect(verifyRows).toBeVisible({ timeout: 30000 })
+
+        const clearCompare = this.page.getByRole('button', { name: 'Clear Compare' });
+        await clearCompare.click({ force: true })
+
+        await this.page.waitForTimeout(1500)
+
+        await this.resetFilters()
+
+        await this.page.waitForTimeout(1000)
+
+    }
+
+    // Comparing more than two Listings card (Pattern matching "oper walay code" style)
+    async compareMoreThanTwoListingCards() {
+        await this.navigateToListings();
+
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        // Expand the first listing card
+        const chevronDown1 = this.page.locator('i.pi.pi-chevron-down').first()
+        await chevronDown1.click({ force: true });
+
+        const compare1 = this.page.locator('.p-checkbox-box').first()
+
+        await compare1.scrollIntoViewIfNeeded()
+        await compare1.click({ force: true })
+        await chevronDown1.click({ force: true });
+
+        await this.page.waitForTimeout(1500)
+        const chevronDown2 = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown2.click({ force: true });
+
+        const compare2 = this.page.locator('.p-checkbox-box').nth(1)
+
+        await compare2.scrollIntoViewIfNeeded()
+        await compare2.click({ force: true })
+
+        await this.page.waitForTimeout(1500)
+
+        const chevronDown3 = this.page.locator('i.pi.pi-chevron-down').first();
+        await chevronDown3.click({ force: true });
+
+        const compare3 = this.page.locator('.p-checkbox-box').nth(2)
+
+        await compare3.scrollIntoViewIfNeeded()
+        await compare3.click({ force: true })
+
+
+        // Wait for form/modal
+        const compareButton = this.page.getByRole('button', { name: 'Compare' });
+        await compareButton.scrollIntoViewIfNeeded()
+        await compareButton.click({ force: true })
+
+        const verifyRows = this.page.locator('.property-row')
+        await expect(verifyRows).toBeVisible({ timeout: 30000 })
+
+        const clearCompare = this.page.getByRole('button', { name: 'Clear Compare' });
+
+        await expect(clearCompare).toBeVisible({ timeout: 30000 })
+
+        await clearCompare.click({ force: true })
+
+        await this.page.waitForTimeout(1500)
+        await this.resetFilters()
+        await this.page.waitForTimeout(1000)
+    }
+
+    async resetAllFilters() {
+        await this.navigateToListings();
+
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+
+        // -- Search filter
+        await this.searchListing('Hina Agent');
+        await this.page.waitForTimeout(1000)
+        await this.openPropertyTypeDropdown();
+        await this.page.waitForTimeout(1000);
+
+        const selectAllOption = this.page.locator('.checkbox__checkmark').first();
+        await selectAllOption.click();
+        await this.page.waitForTimeout(1000);
+
+    }
+
+    async openListingForm() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+        // Assuming there is a button or icon to open the contact form in each card row
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick();
+        // Wait for contact form to be visible (adjust selector if needed)
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        await this.closeModalIfVisible();
+        await this.page.waitForTimeout(1000);
+
+        await this.page.waitForTimeout(1500)
+
+    }
+
+    // Fill required fields in the 'Create Listing' form and click "Save"
+    async createListingWithRequiredFields(propertyType: string, listingType: string, listingStatus: string) {
+
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(2000);
+        // Assuming there is a button or icon to open the contact form in each card row
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick({ force: true });
+        // Wait for contact form to be visible (adjust selector if needed)
+        const contactForm = this.page.locator('#rightbarwithscroll');
+        await expect(contactForm).toBeVisible({ timeout: 10000 });
+
+        // Fill and select the property address: "1/14 Thomas Street, Laidley, QLD 4341"
+        const propertyAddressSearchInput = this.page.locator('#rightbarwithscroll').getByRole('textbox', { name: 'Search' });
+        await expect(propertyAddressSearchInput).toBeVisible({ timeout: 10000 });
+        await propertyAddressSearchInput.fill('140 Coates Street, Laidley, QLD 4341');
+        // Wait for dropdown/options to appear and select the address
+        const addressOption = this.page.locator('div:nth-child(2) > .loop-item > div > .item-display');
+        await expect(addressOption).toBeVisible({ timeout: 10000 });
+        await addressOption.click();
+
+        // Open Property Type dropdown and search/select the option
+        const propertyTypeDropdown = this.page.locator('ng-select[formcontrolname="type"]');
+        await expect(propertyTypeDropdown).toBeVisible({ timeout: 10000 });
+        await propertyTypeDropdown.click();
+
+        // Search for the propertyType option
+        const propertyTypeSearchInput = this.page.locator('ng-select[formcontrolname="type"] input[type="text"], ng-select[formcontrolname="type"] input[role="combobox"]');
+        if (await propertyTypeSearchInput.isVisible({ timeout: 1000 }).catch(() => false)) {
+            await propertyTypeSearchInput.fill(propertyType);
+            await this.page.waitForTimeout(500); // Let options update if needed
+        }
+
+        const propertyTypeOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: propertyType }).first();
+        await propertyTypeOption.click();
+
+        // Open Listing Type dropdown, search and select option
+        const listingTypeDropdown = this.page.locator('ng-select[formcontrolname="listingType"], ng-select[formcontrolname="listing_type"]');
+        await expect(listingTypeDropdown).toBeVisible({ timeout: 10000 });
+        await listingTypeDropdown.click();
+        const listingTypeSearchInput = listingTypeDropdown.locator('input[type="text"]');
+        await expect(listingTypeSearchInput).toBeVisible({ timeout: 2000 });
+        await listingTypeSearchInput.fill(listingType);
+        await this.page.waitForTimeout(500); // Let options update if needed
+        const listingTypeOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: listingType }).first();
+        await listingTypeOption.click();
+
+        // Open Listing Status dropdown, search and select option
+
+        const listingStatusDropdown = this.page.locator('.cs-w-70.danger-tag > .ng-select-container > .ng-value-container > .ng-input > input')
+        await expect(listingStatusDropdown).toBeVisible({ timeout: 10000 })
+        await listingStatusDropdown.click();
+        // Correct way to access the search input for a native ng-select dropdown:
+        const listingStatusSearchInput = this.page.locator("//div[@aria-expanded='true']//input[@type='text']").first();
+        await listingStatusSearchInput.fill(listingStatus);
+        await this.page.waitForTimeout(500);
+        const listingStatusOption = this.page.locator('.ng-dropdown-panel .ng-option', { hasText: listingStatus }).first();
+        await listingStatusOption.click();
+
+        // Click the "Save" button
+        const saveButton = this.page.getByRole('button', { name: 'Save & Close' }).first();
+        await saveButton.click();
+
+        await expect(this.page.getByRole('alert', { name: 'Active listing already exist' })).toBeVisible()
+
+        await this.closeModalIfVisible();
+        await this.page.waitForTimeout(1000);
+
+        await this.page.waitForTimeout(1500)
+
+
+    }
+
+    // Creating a Listing with missing required fields for negative validation
+    async createListingWithMissingFields() {
+        // Navigate to Listings and open the listing form
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cardRows = this.locators.cardViewPropertyRow();
+        await expect(cardRows).toBeVisible({ timeout: 30000 });
+        await this.page.waitForTimeout(1000);
+        const contactFormBtn = this.page.locator("//button[contains(@class,'_addNew')]//i[contains(@class,'pi-plus')]")
+        await contactFormBtn.dblclick({ force: true });
+
+        // Wait for the form/modal to appear
+        const form = this.page.locator('#rightbarwithscroll, .p-dialog, .listing-form-modal, .add-listing-form').first();
+        await expect(form).toBeVisible({ timeout: 10000 })
+        // Click Save and expect validation error
+        const saveButton = this.page.getByRole('button', { name: /Save/i }).first();
+        await saveButton.click();
+        const closeBtn = this.page.locator('i.pi.pi-times.cursor-pointer.f-14').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click();
+        }
+        await this.page.waitForTimeout(1500)
+
+
+    }
+
+    async scrollToLoadMoreListings() {
+        await this.navigateToListings();
+        await this.switchToGridView();
+
+        const cards = this.page.locator('.s-property');
+        await expect(cards.first()).toBeVisible({ timeout: 20000 });
+
+        // Get total records from page footer
+        const recordsLabel = this.page.locator('p:has-text("Records:")');
+        await expect(recordsLabel).toBeVisible({ timeout: 10000 });
+
+        const totalRecordsText = await recordsLabel.textContent();
+        const totalRecords = totalRecordsText
+            ? parseInt(totalRecordsText.replace(/\D/g, ''), 10)
+            : 1000;
+
+        console.log("Total Records Label:", totalRecords);
+
+        let currentCount = await cards.count();
+        console.log("Initial cards:", currentCount);
+
+        let scrollAttempts = 0;
+        const maxScrollAttempts = 100;
+
+        let noChangeTimes = 0;
+
+        while (currentCount < totalRecords && scrollAttempts < maxScrollAttempts && noChangeTimes < 3) {
+            const prevCount = currentCount;
+
+            // Scroll to bottom
+            await this.page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+
+            // Wait for lazy loading items
+            await this.page.waitForTimeout(700);
+
+            currentCount = await cards.count();
+            console.log(`Loaded so far: ${currentCount}`);
+
+            if (currentCount === prevCount) {
+                noChangeTimes++; // count consecutive no-change attempts
+            } else {
+                noChangeTimes = 0; // reset when new cards appear
+            }
+
+            scrollAttempts++;
+        }
+
+        // FINAL small wait before last count (Fixes flaky mismatches)
+        await this.page.waitForTimeout(800);
+        currentCount = await cards.count();
+        console.log("Total cards loaded:", currentCount);
+
+        // Ensure we got all records
+        expect(currentCount).toBe(totalRecords);
+
+        return currentCount;
+    }
+
+
+    // Searching and then applying filters using already created functions
+    async applyListingFilters() {
+        await this.navigateToListings();
+        // Search for listing by name (using existing function)
+        await this.searchForValidListing('Dawood Ahmad');
+        // Select property type "House" (using existing function)
+        await this.searchWithinPropertyTypeFilter('House');
+        await this.searchWithinSuburbDropdown('Brisbane Airport');
+        await this.searchForListingStatus('For Sale');
+        await this.searchAndListingType('Set Sale');
+        await this.searchAgent();
+    }
+}

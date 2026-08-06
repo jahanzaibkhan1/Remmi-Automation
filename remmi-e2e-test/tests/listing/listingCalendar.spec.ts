@@ -1,5 +1,5 @@
-import { test } from '../../fixtures/session.fixture';
-import { ListingPage } from '../../pages/listing/ListingPage';
+﻿import { test } from '../../fixtures/session.fixture';
+import { ListingCalendarPage as ListingPage } from '../../pages/listing/ListingCalendarPage';
 
 test.describe('Listing side Menu Tests - Remmi E2E', () => {
 

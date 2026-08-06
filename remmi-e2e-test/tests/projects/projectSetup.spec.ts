@@ -1,5 +1,5 @@
-import { test } from '../../fixtures/session.fixture';
-import { ProjectPage } from '../../pages/projects/ProjectPage';
+﻿import { test } from '../../fixtures/session.fixture';
+import { ProjectSetupPage as ProjectPage } from '../../pages/projects/ProjectSetupPage';
 
 test.describe('Project Setup Tests', () => {
 

@@ -1,5 +1,5 @@
-import { test } from '../../fixtures/session.fixture';
-import { ContactPage } from '../../pages/contacts/ContactPage';
+﻿import { test } from '../../fixtures/session.fixture';
+import { ContactAssociationPage as ContactPage } from '../../pages/contacts/ContactAssociationPage';
 
 test.describe('Associations Tab Tests - Remmi E2E', () => {
 

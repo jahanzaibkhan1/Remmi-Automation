@@ -1,5 +1,5 @@
-import { test } from '../../fixtures/session.fixture';
-import { ContactPage } from '../../pages/contacts/ContactPage';
+﻿import { test } from '../../fixtures/session.fixture';
+import { ContactFormPage as ContactPage } from '../../pages/contacts/ContactFormPage';
 import * as path from 'path';
 import * as fs from 'fs';
 import { faker } from '@faker-js/faker'; // <-- FIX: add import for faker

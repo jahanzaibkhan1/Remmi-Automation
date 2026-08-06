@@ -1,5 +1,5 @@
-import { test } from '../../fixtures/session.fixture';
-import { ProjectPage } from '../../pages/projects/ProjectPage';
+﻿import { test } from '../../fixtures/session.fixture';
+import { ProjectLotListPage as ProjectPage } from '../../pages/projects/ProjectLotListPage';
 
 test.describe('Lot List Page', () => {
     test('Test 1: Search for specific lot', async ({ sessionPage }) => {

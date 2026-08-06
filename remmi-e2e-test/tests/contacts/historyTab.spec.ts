@@ -1,5 +1,5 @@
-import { test } from '../../fixtures/session.fixture';
-import { ContactPage } from '../../pages/contacts/ContactPage';
+﻿import { test } from '../../fixtures/session.fixture';
+import { ContactHistoryPage as ContactPage } from '../../pages/contacts/ContactHistoryPage';
 
 test.describe('History Tab Tests - Remmi E2E', () => {
 

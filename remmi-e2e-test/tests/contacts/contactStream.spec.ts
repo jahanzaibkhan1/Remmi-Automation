@@ -1,5 +1,5 @@
-import { test } from '../../fixtures/session.fixture';
-import { ContactPage } from '../../pages/contacts/ContactPage';
+﻿import { test } from '../../fixtures/session.fixture';
+import { ContactStreamPage as ContactPage } from '../../pages/contacts/ContactStreamPage';
 
 // Extend test to provide sessionPage for authenticated context
 

@@ -1,5 +1,5 @@
-import { test } from '../../fixtures/session.fixture';
-import { ProjectPage } from '../../pages/projects/ProjectPage';
+﻿import { test } from '../../fixtures/session.fixture';
+import { ProjectListViewPage as ProjectPage } from '../../pages/projects/ProjectListViewPage';
 
 test.describe('Projects - List View Tests', () => {
     test('Verify project search by name in List View', async ({ sessionPage }) => {

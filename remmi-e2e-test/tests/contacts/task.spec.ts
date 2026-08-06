@@ -1,5 +1,5 @@
-import { test } from '../../fixtures/session.fixture';
-import { ContactPage } from '../../pages/contacts/ContactPage';
+﻿import { test } from '../../fixtures/session.fixture';
+import { ContactTaskPage as ContactPage } from '../../pages/contacts/ContactTaskPage';
 
 test.describe('Contacts side Menu Tests - Remmi E2E', () => {
 
