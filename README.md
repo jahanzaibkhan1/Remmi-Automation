@@ -8,7 +8,7 @@ End-to-end test suite for the [Remmi](https://remmi.com.au) real estate platform
 
 | Tool | Purpose |
 |---|---|
-| Playwright | Browser automation & test runner |
+| Playwright | Browser automation & test runner (Chromium, Firefox, WebKit) |
 | TypeScript | Language |
 | Faker.js | Dynamic test data generation |
 | OTPlib | MFA / OTP handling |
@@ -141,7 +141,7 @@ Key settings in `playwright.config.ts`:
 
 | Setting | Value |
 |---|---|
-| Browser | Chromium (maximized) |
+| Browsers | Chromium, Firefox, WebKit (maximized) |
 | Workers | 1 (sequential) |
 | Retries | 3 |
 | Screenshots | On failure only |
