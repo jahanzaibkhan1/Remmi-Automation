@@ -71,7 +71,7 @@ Each spec file imports exactly one leaf page class and calls one page method per
 
 ```bash
 npm install
-npx playwright install chromium
+npx playwright install
 ```
 
 ### 2. Configure environment variables
