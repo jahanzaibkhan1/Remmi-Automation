@@ -110,9 +110,12 @@ npx playwright test
 
 ### Run a specific module
 ```bash
-npx playwright test remmi-e2e-test/tests/listing
+npx playwright test remmi-e2e-test/tests/login
+npx playwright test remmi-e2e-test/tests/dashboard
 npx playwright test remmi-e2e-test/tests/contacts
+npx playwright test remmi-e2e-test/tests/listing
 npx playwright test remmi-e2e-test/tests/projects
+npx playwright test remmi-e2e-test/tests/myprofile
 ```
 
 ### Run a specific spec file
