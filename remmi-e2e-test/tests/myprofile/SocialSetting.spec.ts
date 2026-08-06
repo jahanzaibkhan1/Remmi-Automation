@@ -1,5 +1,5 @@
 import { test } from '../../fixtures/session.fixture';
-import { MyProfilePage } from '../../pages/myprofile/MyProfilePage';
+import { MyProfileSocialPage as MyProfilePage } from '../../pages/myprofile/MyProfileSocialPage';
 
 test.describe('Social Settings Tests - Remmi E2E', () => {
   test('Test 1: The user can successfully upload social media links and the page updates correctly', async ({ sessionPage }) => {

@@ -1322,9 +1322,6 @@ export class DashboardPage extends BasePage {
 
     const visibleRows = await rows.count();
 
-      `EOI count from dashboard: ${eoiCount}, EOI table visible rows: ${visibleRows}`
-    );
-
     expect(visibleRows).toBeGreaterThan(0);
     await this.clickDashboardHomeIcon();
   }

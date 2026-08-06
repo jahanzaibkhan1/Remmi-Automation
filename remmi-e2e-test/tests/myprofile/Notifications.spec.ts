@@ -1,5 +1,5 @@
 import { test } from '../../fixtures/session.fixture';
-import { MyProfilePage } from '../../pages/myprofile/MyProfilePage';
+import { MyProfileNotificationsPage as MyProfilePage } from '../../pages/myprofile/MyProfileNotificationsPage';
 
 // ----------- Tests -----------
 

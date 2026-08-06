@@ -25,6 +25,7 @@
     "@faker-js/faker": "^10.1.0",
     "@playwright/test": "^1.56.0",
     "@types/node": "^24.12.2",
+    "@types/pngjs": "^6.0.5",
     "dotenv": "^17.2.3",
     "typescript": "^7.0.2"
   },

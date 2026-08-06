@@ -1,5 +1,5 @@
 import { test } from '../../fixtures/session.fixture';
-import { MyProfilePage } from '../../pages/myprofile/MyProfilePage';
+import { MyProfileTeamsPage as MyProfilePage } from '../../pages/myprofile/MyProfileTeamsPage';
 import * as path from 'path';
 import * as fs from 'fs';
 

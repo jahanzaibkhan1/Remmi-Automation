@@ -1,5 +1,5 @@
 import { test } from '../../fixtures/session.fixture';
-import { MyProfilePage } from '../../pages/myprofile/MyProfilePage';
+import { MyProfileAccessPage as MyProfilePage } from '../../pages/myprofile/MyProfileAccessPage';
 
 test.describe('Access Tab Tests - Remmi E2E', () => {
   test('Test case 2: The user can successfully select a user from Access tab', async ({ sessionPage }) => {

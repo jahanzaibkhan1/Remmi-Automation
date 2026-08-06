@@ -1439,7 +1439,7 @@ export class ContactPage {
         async function getCleanFullNameCells(page: any): Promise<string[]> {
             const nameValues: string[] = await page.$$eval(
                 "table tbody tr td:nth-child(1)",
-                (tds) =>
+                (tds: HTMLTableCellElement[]) =>
                     tds
                         .map((td) => td.textContent?.trim() || "")
                         .filter((txt) => txt && txt.length > 0 && txt.toLowerCase() !== 'full name')

@@ -1,5 +1,5 @@
 import { test } from '../../fixtures/session.fixture';
-import { MyProfilePage } from '../../pages/myprofile/MyProfilePage';
+import { MyProfileAssociationPage as MyProfilePage } from '../../pages/myprofile/MyProfileAssociationPage';
 
 test.describe('My Profile Associations Tab Tests - Remmi E2E', () => {
 
