@@ -144,7 +144,6 @@ Key settings in `playwright.config.ts`:
 | Browser | Chromium (maximized) |
 | Workers | 1 (sequential) |
 | Retries | 3 |
-| Timeout | 120s per test |
 | Screenshots | On failure only |
 | Video | Retained on failure |
 
