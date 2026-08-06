@@ -4,13 +4,7 @@ import { ListingBasePage } from './ListingBasePage';
 export class ListingHistoryPage extends ListingBasePage {
     async verifyHistoryTabDisplaysListingDetails() {
         // Go to listings grid page
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Open the first listing card
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         const primaryAgent = this.page.locator(
             'div.form-group:has-text("Primary Agent") ng-select'
@@ -58,13 +52,7 @@ export class ListingHistoryPage extends ListingBasePage {
     * Verifies that changing a field in a listing is reflected in the History tab.
     */
     async verifyListingFieldChangeIsReflectedInHistory() {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Open first listing
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         // Fill the Listing Type dropdown with "Conjunctional"
         const listingTypeDropdown = this.page.locator('ng-select[formcontrolname="listing_type"]').first();
@@ -148,13 +136,7 @@ export class ListingHistoryPage extends ListingBasePage {
      */
     async verifyChangedDateIsCorrect() {
 
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Open the first listing card
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         // Open the History tab
         const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
@@ -199,13 +181,7 @@ export class ListingHistoryPage extends ListingBasePage {
      * Verify if the 'Changed By' field displays the correct user who made changes
      */
     async verifyChangedByFieldIsCorrect(expectedUser: string) {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Open the first listing card
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         // Open the History tab
         const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
@@ -249,13 +225,7 @@ export class ListingHistoryPage extends ListingBasePage {
      * Check if the 'Event' status correctly indicates the type of action in listing history
      */
     async verifyEventStatusIsCorrect(expectedEventType: string) {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Open the first listing card
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         // Open the History tab
         const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
@@ -300,13 +270,7 @@ export class ListingHistoryPage extends ListingBasePage {
   * Verify if the 'Changed Field' column correctly records the modified field name in listing history
   */
     async verifyChangedFieldIsCorrect(expectedFieldName: string) {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Open first listing
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         // Open History tab
         const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
@@ -367,13 +331,7 @@ export class ListingHistoryPage extends ListingBasePage {
   * Verify search functionality in the history tab for a listing
   */
     async verifyHistorySearchFunctionality(searchTerm: string, expectedFieldName: string) {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Open first listing
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         // Open History tab
         const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
@@ -417,13 +375,7 @@ export class ListingHistoryPage extends ListingBasePage {
      * Check that searching with an invalid term returns no results in the history tab.
      */
     async verifyHistorySearchWithInvalidTerm(invalidSearchTerm: string) {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Open the first listing card
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         // Open the History tab
         const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
@@ -458,13 +410,7 @@ export class ListingHistoryPage extends ListingBasePage {
      * Verify that the history tab displays only relevant changes for a specific contact.
      */
     async verifyHistoryDisplaysRelevantChangesForContact(contactName: string) {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Open the first listing card
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await firstListingCard.waitFor({ state: 'visible', timeout: 30000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         // Open the History tab
         const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
@@ -504,13 +450,7 @@ export class ListingHistoryPage extends ListingBasePage {
   * Verifies the history tab for a listing when no changes have been made.
   */
     async verifyHistoryTabWithNoChanges(expectedEvent: string) {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Open first listing
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         // Open History tab
         const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
@@ -574,13 +514,7 @@ export class ListingHistoryPage extends ListingBasePage {
      * Verifies that the History tab table columns are visually aligned and data is readable.
      */
     async verifyHistoryRecordsUIAlignmentAndReadability() {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Open the first listing card
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         // Open the History tab
         const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
@@ -645,13 +579,7 @@ export class ListingHistoryPage extends ListingBasePage {
      * Check system behavior when history records are too large
      */
     async checkLargeHistoryRecordsBehavior() {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Open the first listing card
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         // Open the History tab
         const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
@@ -745,13 +673,7 @@ export class ListingHistoryPage extends ListingBasePage {
   * Checks if special characters in a given field are displayed correctly in the listing history.
   */
     async verifySpecialCharactersInHistory(specialChars: string) {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Open first listing
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await expect(firstListingCard).toBeVisible({ timeout: 30000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         // Update Display Price field
         const displayPriceInput = this.page.locator("input[formcontrolname='display_price']").first();
@@ -819,12 +741,7 @@ export class ListingHistoryPage extends ListingBasePage {
  * Verify all history records are rendered correctly
  */
     async checkRecordsLoadOnScrollInHistoryTab() {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        const firstCard = this.page.locator('.s-property').first();
-        await expect(firstCard).toBeVisible({ timeout: 15000 });
-        await firstCard.click();
+        await this.openFirstListingCard();
 
         const historyTab = this.page.getByRole('tab', { name: /History/i }).first();
         await expect(historyTab).toBeVisible({ timeout: 10000 });

@@ -1,16 +1,10 @@
-﻿import { expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { ListingBasePage } from './ListingBasePage';
 import { faker } from '@faker-js/faker';
 
 export class ListingNotesPage extends ListingBasePage {
     async verifyNoteTabOpensCorrectly() {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Click the first listing card
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         // Go to NOTE tab
         const noteTab = this.page.getByRole('tab', { name: /Notes/i });
@@ -32,13 +26,7 @@ export class ListingNotesPage extends ListingBasePage {
      * Verifies that clicking the "+" button in the Notes section displays the note fields.
      */
     async verifyNotesAddButtonDisplaysFields() {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Click the first listing card
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         // Go to NOTE tab
         const noteTab = this.page.getByRole('tab', { name: /Notes/i });
@@ -68,13 +56,7 @@ export class ListingNotesPage extends ListingBasePage {
      * Verifies that clicking "Cancel" removes the note entry form in the Notes section.
      */
     async verifyNotesCancelRemovesEntryForm() {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Click the first listing card
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         // Go to NOTE tab
         const noteTab = this.page.getByRole('tab', { name: /Notes/i });
@@ -114,13 +96,7 @@ export class ListingNotesPage extends ListingBasePage {
      */
 
     async verifyNotesSaveAddsNoteSuccessfully() {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Click the first listing card
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         // Go to NOTE tab
         const noteTab = this.page.getByRole('tab', { name: /Notes/i });
@@ -175,13 +151,7 @@ export class ListingNotesPage extends ListingBasePage {
 
     // Verify that a note with given title and content appears in the notes list
     async verifyNoteIsPresent() {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Click the first listing card
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
         await this.page.waitForTimeout(3000);
         // Go to NOTE tab
         const noteTab = this.page.getByRole('tab', { name: /Notes/i });
@@ -200,13 +170,7 @@ export class ListingNotesPage extends ListingBasePage {
 
     // Verify that clicking the edit icon allows updating a note
     async verifyNoteEditFunctionality() {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Click the first listing card
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         await this.page.waitForTimeout(3000);
 
@@ -257,13 +221,7 @@ export class ListingNotesPage extends ListingBasePage {
 
     // Verify that clicking the delete icon removes a note
     async verifyNoteDeleteFunctionality() {
-        await this.navigateToListings();
-        await this.switchToGridView();
-
-        // Click the first listing card
-        const firstListingCard = this.page.locator("//div[contains(@class,'s-property')]").first();
-        await expect(firstListingCard).toBeVisible({ timeout: 20000 });
-        await firstListingCard.click();
+        await this.openFirstListingCard();
 
         await this.page.waitForTimeout(3000);
 
@@ -314,8 +272,8 @@ export class ListingNotesPage extends ListingBasePage {
 
     }
 
-    // Editing a saved note should update it correctly
-    async verifyNotesditFunctionality() {
+    // Edits a note in the Personal Notes panel and deletes it as cleanup
+    async verifyPersonalNotesEditFunctionality() {
         await this.navigateToListings();
         await this.switchToGridView();
 

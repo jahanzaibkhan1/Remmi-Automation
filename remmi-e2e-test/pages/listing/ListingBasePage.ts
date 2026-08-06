@@ -117,24 +117,20 @@ export abstract class ListingBasePage extends BasePage {
         const dropdown = this.locators.selectByAgentDropdown();
         await expect(dropdown).toBeVisible({ timeout: 3000 });
         await dropdown.click({ force: true });
-        await this.page.waitForTimeout(500);
     }
 
     protected async searchSelectByAgent(name: string) {
-        // If ListingLocators.selectByAgentSearchInput exists, use it. Fallback to an input with correct placeholder.
         const searchInput = this.locators.selectByAgentSearchInput()
         await expect(searchInput).toBeVisible();
         await searchInput.click({ force: true });
         await searchInput.fill('');
         await searchInput.fill(name);
-        await this.page.waitForTimeout(400);
     }
 
     protected async selectSelectByAgentOption(agentName: string) {
         const option = this.locators.selectByAgentOption(agentName);
         await expect(option).toBeVisible({ timeout: 10000 });
         await option.click({ force: true });
-        await this.page.waitForTimeout(600);
     }
 
     protected async selectAllSelectByAgent() {
@@ -142,7 +138,6 @@ export abstract class ListingBasePage extends BasePage {
         const selectAllCheckbox = this.locators.selectByAgentSelectAll().first();
         await expect(selectAllCheckbox).toBeVisible();
         await selectAllCheckbox.click({ force: true });
-        await this.page.waitForTimeout(500);
     }
 
     protected async deselectAllSelectByAgent() {
@@ -150,7 +145,6 @@ export abstract class ListingBasePage extends BasePage {
         const selectAllCheckbox = this.locators.selectByAgentSelectAll().first();
         await expect(selectAllCheckbox).toBeVisible();
         await selectAllCheckbox.click({ force: true });
-        await this.page.waitForTimeout(500);
     }
 
     // Protected functions for "Contract Status" filter
@@ -158,7 +152,6 @@ export abstract class ListingBasePage extends BasePage {
         const dropdown = this.locators.contractStatusDropdown();
         await expect(dropdown).toBeVisible({ timeout: 3000 });
         await dropdown.click({ force: true });
-        await this.page.waitForTimeout(500);
     }
 
     protected async selectAllContractStatuses() {
@@ -166,7 +159,6 @@ export abstract class ListingBasePage extends BasePage {
         const selectAllCheckbox = this.locators.contractStatusSelectAll().first();
         await expect(selectAllCheckbox).toBeVisible();
         await selectAllCheckbox.click({ force: true });
-        await this.page.waitForTimeout(500);
     }
 
     protected async deselectAllContractStatuses() {
@@ -174,9 +166,7 @@ export abstract class ListingBasePage extends BasePage {
         const selectAllCheckbox = this.locators.contractStatusSelectAll().first();
         await expect(selectAllCheckbox).toBeVisible();
         await selectAllCheckbox.click({ force: true });
-        await this.page.waitForTimeout(500);
     }
-
 
     protected async searchContractStatus(status: string) {
         const searchInput = this.locators.contractStatusSearchInput();
@@ -184,14 +174,12 @@ export abstract class ListingBasePage extends BasePage {
         await searchInput.click({ force: true });
         await searchInput.fill('');
         await searchInput.fill(status);
-        await this.page.waitForTimeout(400);
     }
 
     protected async selectContractStatusOption(status: string) {
         const option = this.locators.contractStatusOption(status);
         await expect(option).toBeVisible({ timeout: 10000 });
         await option.click({ force: true });
-        await this.page.waitForTimeout(600);
     }
 
 
@@ -201,7 +189,6 @@ export abstract class ListingBasePage extends BasePage {
         const dropdown = this.locators.listingCreationDateDropdown();
         await expect(dropdown).toBeVisible({ timeout: 3000 });
         await dropdown.click({ force: true });
-        await this.page.waitForTimeout(500);
     }
 
     protected async searchListingCreationDate(searchText: string) {
@@ -210,14 +197,12 @@ export abstract class ListingBasePage extends BasePage {
         await searchInput.click({ force: true });
         await searchInput.fill('');
         await searchInput.fill(searchText);
-        await this.page.waitForTimeout(400);
     }
 
     protected async selectListingCreationDateOption(label: string) {
         const option = this.locators.listingCreationDateOption(label);
         await expect(option).toBeVisible({ timeout: 10000 });
         await option.click({ force: true });
-        await this.page.waitForTimeout(600);
     }
 
     protected async selectAllListingCreationDates() {
@@ -225,7 +210,6 @@ export abstract class ListingBasePage extends BasePage {
         const selectAllCheckbox = this.locators.listingCreationDateSelectAll().first();
         await expect(selectAllCheckbox).toBeVisible();
         await selectAllCheckbox.click({ force: true });
-        await this.page.waitForTimeout(500);
     }
 
     protected async deselectAllListingCreationDates() {
@@ -233,20 +217,25 @@ export abstract class ListingBasePage extends BasePage {
         const selectAllCheckbox = this.locators.listingCreationDateSelectAll().first();
         await expect(selectAllCheckbox).toBeVisible();
         await selectAllCheckbox.click({ force: true });
-        await this.page.waitForTimeout(500);
     }
 
-    // Public function to reset filters (clicks the Reset button)
     public async resetFilters() {
         const resetButton = this.page.getByRole('button', { name: /reset/i });
         await expect(resetButton).toBeVisible({ timeout: 10000 });
         await expect(resetButton).toBeEnabled();
         await resetButton.click({ force: true });
-        await this.page.waitForTimeout(1200);
     }
 
 
     //*************************************View Switching *************************************//
+
+    protected async openFirstListingCard(): Promise<void> {
+        await this.navigateToListings();
+        await this.switchToGridView();
+        const firstCard = this.page.locator("//div[contains(@class,'s-property')]").first();
+        await firstCard.waitFor({ state: 'visible', timeout: 30000 });
+        await firstCard.click();
+    }
 
     async switchToGridView() {
         await this.navigateToListings();

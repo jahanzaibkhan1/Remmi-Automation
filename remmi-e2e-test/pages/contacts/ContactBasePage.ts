@@ -42,6 +42,29 @@ export abstract class ContactBasePage extends BasePage {
 
         await this.openStreamTab();
     }
+    protected async fillDatePickerWithTomorrow(): Promise<void> {
+        const t = new Date();
+        t.setDate(t.getDate() + 1);
+        const targetDay = t.getDate();
+        const targetMonth = t.getMonth();
+        const targetYear = t.getFullYear();
+
+        const header = this.page.locator('.p-datepicker-title');
+        await header.waitFor({ state: 'visible' });
+        const [monthName, year] = (await header.innerText()).trim().split(' ');
+        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+        const monthDifference = (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
+
+        for (let i = 0; i < Math.abs(monthDifference); i++) {
+            await this.page.locator(monthDifference > 0 ? '.p-datepicker-next' : '.p-datepicker-prev').click();
+        }
+
+        await this.page.locator(
+            `.p-datepicker-calendar td:not(.p-disabled) .p-datepicker-day:not(.p-disabled),` +
+            `.p-datepicker-calendar td:not(.p-disabled) span:not(.p-disabled)`
+        ).filter({ hasText: String(targetDay) }).first().click({ force: true });
+    }
+
     async openTasksTab(): Promise<void> {
         const tasksTab = this.page.getByRole('tab', { name: /Task|Tasks/i });
         await tasksTab.waitFor({ state: 'visible' });
@@ -58,43 +81,10 @@ export abstract class ContactBasePage extends BasePage {
         const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
         await dateInput.waitFor({ state: "visible" });
         await dateInput.click();
-
-        const t = new Date();
-        t.setDate(t.getDate() + 1);
-        const targetDay = t.getDate();
-        const targetMonth = t.getMonth();
-        const targetYear = t.getFullYear();
-
-        const header = this.page.locator(".p-datepicker-title");
-        await header.waitFor({ state: "visible" });
-        const headerText = await header.innerText();
-        const [monthName, year] = headerText.trim().split(" ");
-        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
-
-        const monthDifference =
-            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
-
-        for (let i = 0; i < Math.abs(monthDifference); i++) {
-            if (monthDifference > 0) {
-                await this.page.locator(".p-datepicker-next").click();
-            } else {
-                await this.page.locator(".p-datepicker-prev").click();
-            }
-        }
-
-        const dayButton = this.page.locator(
-            `.p-datepicker-calendar td:not(.p-disabled) .p-datepicker-day:not(.p-disabled), .p-datepicker-calendar td:not(.p-disabled) span:not(.p-disabled)`
-        ).filter({ hasText: String(targetDay) }).first();
-
-        await dayButton.click({ force: true });
+        await this.fillDatePickerWithTomorrow();
 
         const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"] input');
-        const staffElement = await staffSelect.elementHandle();
-        if (staffElement) {
-            await this.page.evaluate((el) => {
-                el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
-            }, staffElement);
-        }
+        await staffSelect.scrollIntoViewIfNeeded();
         await staffSelect.waitFor({ state: "visible" });
         const assigneeLabel = this.page.locator('div').filter({ hasText: /^Jahanzaib Xenex$/ }).first();
         const isLabelVisible = await assigneeLabel.waitFor({ state: 'visible', timeout: 6000 }).then(() => true).catch(() => false);

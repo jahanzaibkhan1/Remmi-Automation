@@ -165,45 +165,11 @@ export class ContactTaskFormPage extends ContactBasePage {
         const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
         await dateInput.waitFor({ state: "visible" });
         await dateInput.click();
-
-        // Select tomorrow's date from the calendar
-        const t = new Date();
-        t.setDate(t.getDate() + 1);
-        const targetDay = t.getDate();
-        const targetMonth = t.getMonth();
-        const targetYear = t.getFullYear();
-
-        const header = this.page.locator(".p-datepicker-title");
-        await header.waitFor({ state: "visible" });
-        const headerText = await header.innerText();
-        const [monthName, year] = headerText.trim().split(" ");
-        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
-
-        const monthDifference =
-            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
-
-        for (let i = 0; i < Math.abs(monthDifference); i++) {
-            if (monthDifference > 0) {
-                await this.page.locator(".p-datepicker-next").click();
-            } else {
-                await this.page.locator(".p-datepicker-prev").click();
-            }
-        }
-
-        const dayButton = this.page.locator(
-            `.p-datepicker-calendar td:not(.p-disabled) .p-datepicker-day:not(.p-disabled), .p-datepicker-calendar td:not(.p-disabled) span:not(.p-disabled)`
-        ).filter({ hasText: String(targetDay) }).first();
-
-        await dayButton.click({ force: true });
+        await this.fillDatePickerWithTomorrow();
 
         // Assign staff "Jahanzaib Xenex" if not already selected
         const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"] input');
-        const staffElement = await staffSelect.elementHandle();
-        if (staffElement) {
-            await this.page.evaluate((el) => {
-                el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
-            }, staffElement);
-        }
+        await staffSelect.scrollIntoViewIfNeeded();
         await staffSelect.waitFor({ state: "visible" });
         const assigneeLabel = this.page.locator('div').filter({ hasText: /^Jahanzaib Xenex$/ }).first();
         const isLabelVisible = await assigneeLabel.waitFor({ state: 'visible', timeout: 6000 }).then(() => true).catch(() => false);
@@ -310,35 +276,7 @@ export class ContactTaskFormPage extends ContactBasePage {
         await dateInput.waitFor({ state: "visible" });
         await dateInput.click();
 
-        // Select tomorrow's date from the calendar
-        const t = new Date();
-        t.setDate(t.getDate() + 1);
-        const targetDay = t.getDate();
-        const targetMonth = t.getMonth();
-        const targetYear = t.getFullYear();
-
-        const header = this.page.locator(".p-datepicker-title");
-        await header.waitFor({ state: "visible" });
-        const headerText = await header.innerText();
-        const [monthName, year] = headerText.trim().split(" ");
-        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
-
-        const monthDifference =
-            (targetYear - parseInt(year)) * 12 + (targetMonth - monthIndex);
-
-        for (let i = 0; i < Math.abs(monthDifference); i++) {
-            if (monthDifference > 0) {
-                await this.page.locator(".p-datepicker-next").click();
-            } else {
-                await this.page.locator(".p-datepicker-prev").click();
-            }
-        }
-
-        const dayButton = this.page.locator(
-            `.p-datepicker-calendar td:not(.p-disabled) .p-datepicker-day:not(.p-disabled), .p-datepicker-calendar td:not(.p-disabled) span:not(.p-disabled)`
-        ).filter({ hasText: String(targetDay) }).first();
-
-        await dayButton.click({ force: true });
+        await this.fillDatePickerWithTomorrow();
 
         // Assign a staff if field is present (optional, skip if not present)
         const staffDropdown = this.page.locator('ng-select[formcontrolname="assignedUsers"] .ng-select-container');
@@ -538,28 +476,7 @@ export class ContactTaskFormPage extends ContactBasePage {
         const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
         await expect(dateInput).toBeVisible({ timeout: 10000 });
         await dateInput.click();
-        const t = new Date();
-        t.setDate(t.getDate() + 1);
-        const targetDay = t.getDate();
-        const targetMonth = t.getMonth();
-        const targetYear = t.getFullYear();
-        const header = this.page.locator(".p-datepicker-title");
-        await expect(header).toBeVisible();
-        const headerText = await header.innerText();
-        const [monthName, yearText] = headerText.trim().split(" ");
-        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
-        const monthDifference = (targetYear - parseInt(yearText)) * 12 + (targetMonth - monthIndex);
-        for (let i = 0; i < Math.abs(monthDifference); i++) {
-            if (monthDifference > 0) {
-                await this.page.locator('.p-datepicker-next').click();
-            } else if (monthDifference < 0) {
-                await this.page.locator('.p-datepicker-prev').click();
-            }
-        }
-        const dayLocator = this.page.locator('.p-datepicker-calendar td:not(.p-datepicker-other-month)').getByText(new RegExp(`^${targetDay}$`));
-        await expect(dayLocator.first()).toBeVisible();
-        await dayLocator.first().click();
-        await this.page.waitForTimeout(1200);
+        await this.fillDatePickerWithTomorrow();
         const timerLabel = this.page.getByText('Select Timer', { exact: true });
         await expect(timerLabel).toBeVisible({ timeout: 10000 });
         await timerLabel.click({ force: true });
@@ -584,35 +501,9 @@ export class ContactTaskFormPage extends ContactBasePage {
         const recurringDateInput = this.page.locator('input[placeholder="dd/mm/yy"]').last();
         await expect(recurringDateInput).toBeVisible({ timeout: 10000 });
         await recurringDateInput.click();
-        const recurringTomorrow = new Date();
-        recurringTomorrow.setDate(recurringTomorrow.getDate() + 1);
-        const recurringTargetDay = recurringTomorrow.getDate();
-        const recurringTargetMonth = recurringTomorrow.getMonth();
-        const recurringTargetYear = recurringTomorrow.getFullYear();
-        const recurringCalendarHeader = this.page.locator(".p-datepicker-title");
-        await expect(recurringCalendarHeader).toBeVisible();
-        const recurringCalendarHeaderText = await recurringCalendarHeader.innerText();
-        const [recurringMonthName, recurringYearText] = recurringCalendarHeaderText.trim().split(" ");
-        const recurringMonthIndex = new Date(`${recurringMonthName} 1, 2000`).getMonth();
-        const recurringMonthDifference = (recurringTargetYear - parseInt(recurringYearText)) * 12 + (recurringTargetMonth - recurringMonthIndex);
-        for (let i = 0; i < Math.abs(recurringMonthDifference); i++) {
-            if (recurringMonthDifference > 0) {
-                await this.page.locator('.p-datepicker-next').click();
-            } else if (recurringMonthDifference < 0) {
-                await this.page.locator('.p-datepicker-prev').click();
-            }
-        }
-        const recurringDayLocator = this.page.locator('.p-datepicker-calendar td:not(.p-datepicker-other-month)').getByText(new RegExp(`^${recurringTargetDay}$`));
-        await expect(recurringDayLocator.first()).toBeVisible();
-        await recurringDayLocator.first().click();
-        await this.page.waitForTimeout(1000);
+        await this.fillDatePickerWithTomorrow();
         const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"] input');
-        const staffElement = await staffSelect.elementHandle();
-        if (staffElement) {
-            await this.page.evaluate((el) => {
-                el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
-            }, staffElement);
-        }
+        await staffSelect.scrollIntoViewIfNeeded();
         await staffSelect.waitFor({ state: "visible" });
         const assigneeLabel = this.page.locator('div').filter({ hasText: /^Jahanzaib Xenex$/ }).first();
         const isLabelVisible = await assigneeLabel.waitFor({ state: 'visible', timeout: 6000 }).then(() => true).catch(() => false);
@@ -667,40 +558,11 @@ export class ContactTaskFormPage extends ContactBasePage {
         await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
         await taskTitleInput.fill(taskTitle);
 
-        // Set a due date (e.g., tomorrow)
+        // Set a due date (tomorrow)
         const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
         await expect(dateInput).toBeVisible({ timeout: 10000 });
         await dateInput.click();
-
-        // Pick tomorrow's date
-        const t = new Date();
-        t.setDate(t.getDate() + 1);
-        const targetDay = t.getDate();
-        const targetMonth = t.getMonth();
-        const targetYear = t.getFullYear();
-
-        // Get displayed calendar month & year
-        const header = this.page.locator(".p-datepicker-title");
-        await expect(header).toBeVisible();
-        const headerText = await header.innerText();
-        const [monthName, yearText] = headerText.trim().split(" ");
-        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
-
-        const monthDifference = (targetYear - parseInt(yearText)) * 12 + (targetMonth - monthIndex);
-        for (let i = 0; i < Math.abs(monthDifference); i++) {
-            if (monthDifference > 0) {
-                await this.page.locator('.p-datepicker-next').click();
-            } else if (monthDifference < 0) {
-                await this.page.locator('.p-datepicker-prev').click();
-            }
-        }
-
-        // Select the target day
-        const dayLocator = this.page.locator('.p-datepicker-calendar td:not(.p-datepicker-other-month)').getByText(new RegExp(`^${targetDay}$`));
-        await expect(dayLocator.first()).toBeVisible();
-        await dayLocator.first().click();
-
-        await this.page.waitForTimeout(1200);
+        await this.fillDatePickerWithTomorrow();
 
         // Select the timer (reminder) dropdown and choose 9:00 AM
         const timerLabel = this.page.getByText('Select Timer', { exact: true });
@@ -748,43 +610,10 @@ export class ContactTaskFormPage extends ContactBasePage {
         const recurringDateInput = this.page.locator('input[placeholder="dd/mm/yy"]').last();
         await expect(recurringDateInput).toBeVisible({ timeout: 10000 });
         await recurringDateInput.click();
-
-        // Calculate tomorrow's date
-        const recurringTomorrow = new Date();
-        recurringTomorrow.setDate(recurringTomorrow.getDate() + 1);
-        const recurringTargetDay = recurringTomorrow.getDate();
-        const recurringTargetMonth = recurringTomorrow.getMonth();
-        const recurringTargetYear = recurringTomorrow.getFullYear();
-
-        // Get displayed calendar month & year
-        const recurringCalendarHeader = this.page.locator(".p-datepicker-title");
-        await expect(recurringCalendarHeader).toBeVisible();
-        const recurringCalendarHeaderText = await recurringCalendarHeader.innerText();
-        const [recurringMonthName, recurringYearText] = recurringCalendarHeaderText.trim().split(" ");
-        const recurringMonthIndex = new Date(`${recurringMonthName} 1, 2000`).getMonth();
-
-        const recurringMonthDifference = (recurringTargetYear - parseInt(recurringYearText)) * 12 + (recurringTargetMonth - recurringMonthIndex);
-        for (let i = 0; i < Math.abs(recurringMonthDifference); i++) {
-            if (recurringMonthDifference > 0) {
-                await this.page.locator('.p-datepicker-next').click();
-            } else if (recurringMonthDifference < 0) {
-                await this.page.locator('.p-datepicker-prev').click();
-            }
-        }
-
-        // Select tomorrow in the calendar
-        const recurringDayLocator = this.page.locator('.p-datepicker-calendar td:not(.p-datepicker-other-month)').getByText(new RegExp(`^${recurringTargetDay}$`));
-        await expect(recurringDayLocator.first()).toBeVisible();
-        await recurringDayLocator.first().click();
-        await this.page.waitForTimeout(1000);
+        await this.fillDatePickerWithTomorrow();
 
         const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"] input');
-        const staffElement = await staffSelect.elementHandle();
-        if (staffElement) {
-            await this.page.evaluate((el) => {
-                el.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
-            }, staffElement);
-        }
+        await staffSelect.scrollIntoViewIfNeeded();
         await staffSelect.waitFor({ state: "visible" });
         const assigneeLabel = this.page.locator('div').filter({ hasText: /^Jahanzaib Xenex$/ }).first();
         const isLabelVisible = await assigneeLabel.waitFor({ state: 'visible', timeout: 6000 }).then(() => true).catch(() => false);
@@ -858,40 +687,11 @@ export class ContactTaskFormPage extends ContactBasePage {
         await expect(taskTitleInput).toBeVisible({ timeout: 10000 });
         await taskTitleInput.fill('Team Task');
 
-        // Set a due date (e.g., tomorrow)
+        // Set a due date (tomorrow)
         const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
         await expect(dateInput).toBeVisible({ timeout: 10000 });
         await dateInput.click();
-
-        // Pick tomorrow's date
-        const t = new Date();
-        t.setDate(t.getDate() + 1);
-        const targetDay = t.getDate();
-        const targetMonth = t.getMonth();
-        const targetYear = t.getFullYear();
-
-        // Get displayed calendar month & year
-        const header = this.page.locator(".p-datepicker-title");
-        await expect(header).toBeVisible();
-        const headerText = await header.innerText();
-        const [monthName, yearText] = headerText.trim().split(" ");
-        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
-
-        const monthDifference = (targetYear - parseInt(yearText)) * 12 + (targetMonth - monthIndex);
-        for (let i = 0; i < Math.abs(monthDifference); i++) {
-            if (monthDifference > 0) {
-                await this.page.locator('.p-datepicker-next').click();
-            } else if (monthDifference < 0) {
-                await this.page.locator('.p-datepicker-prev').click();
-            }
-        }
-
-        // Select the target day
-        const dayLocator = this.page.locator('.p-datepicker-calendar td:not(.p-datepicker-other-month)').getByText(new RegExp(`^${targetDay}$`));
-        await expect(dayLocator.first()).toBeVisible();
-        await dayLocator.first().click();
-
-        await this.page.waitForTimeout(1200);
+        await this.fillDatePickerWithTomorrow();
 
 
         const staffSelect = this.page.locator('ng-select[formcontrolname="assignedUsers"] input');
@@ -1296,39 +1096,11 @@ export class ContactTaskFormPage extends ContactBasePage {
         await taskTitleInput.click();
         await taskTitleInput.fill('Task copied');
 
-        // Fill in a due date - Pick tomorrow's date
+        // Fill in a due date (tomorrow)
         const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
         await expect(dateInput).toBeVisible({ timeout: 10000 });
         await dateInput.click();
-
-        // Calculate tomorrow's date
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const targetDay = tomorrow.getDate();
-        const targetMonth = tomorrow.getMonth();
-        const targetYear = tomorrow.getFullYear();
-
-        // Find calendar header and adjust to correct month/year
-        const header = this.page.locator(".p-datepicker-title");
-        await expect(header).toBeVisible();
-        const headerText = await header.innerText();
-        const [monthName, yearStr] = headerText.trim().split(" ");
-        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
-        const monthDifference = (targetYear - parseInt(yearStr)) * 12 + (targetMonth - monthIndex);
-
-        for (let i = 0; i < Math.abs(monthDifference); i++) {
-            if (monthDifference > 0) {
-                await this.page.locator(".p-datepicker-next").click();
-            } else {
-                await this.page.locator(".p-datepicker-prev").click();
-            }
-            await this.page.waitForTimeout(200);
-        }
-
-        // Select tomorrow's day
-        const dayLocator = this.page.locator(`.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`);
-        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
-        await dayLocator.first().click({ force: true });
+        await this.fillDatePickerWithTomorrow();
 
         // Save the copied task
         const saveBtn = this.page.getByRole('button', { name: /Save/i }).first();
@@ -1393,35 +1165,11 @@ export class ContactTaskFormPage extends ContactBasePage {
         await taskTitleInput.click();
         await taskTitleInput.fill(uniqueCopyTitle);
 
-        // Fill in due date - tomorrow
+        // Fill in due date (tomorrow)
         const dateInput = this.page.locator('p-calendar[formcontrolname="due_date"] input');
         await expect(dateInput).toBeVisible({ timeout: 10000 });
         await dateInput.click();
-
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const targetDay = tomorrow.getDate();
-        const targetMonth = tomorrow.getMonth();
-        const targetYear = tomorrow.getFullYear();
-
-        // Adjust calendar UI
-        const header = this.page.locator(".p-datepicker-title");
-        await expect(header).toBeVisible();
-        const headerText = await header.innerText();
-        const [monthName, yearStr] = headerText.trim().split(" ");
-        const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
-        const monthDifference = (targetYear - parseInt(yearStr)) * 12 + (targetMonth - monthIndex);
-        for (let i = 0; i < Math.abs(monthDifference); i++) {
-            if (monthDifference > 0) {
-                await this.page.locator(".p-datepicker-next").click();
-            } else {
-                await this.page.locator(".p-datepicker-prev").click();
-            }
-            await this.page.waitForTimeout(200);
-        }
-        const dayLocator = this.page.locator(`.p-datepicker-calendar td:not(.p-disabled) >> text="${targetDay}"`);
-        await dayLocator.first().waitFor({ state: "visible", timeout: 10000 });
-        await dayLocator.first().click({ force: true });
+        await this.fillDatePickerWithTomorrow();
 
         // Attempt to set the Select Listing value like the previous one (if present)
         // If you have a 'listingName' to keep in sync, extract it from the previous cell's content
